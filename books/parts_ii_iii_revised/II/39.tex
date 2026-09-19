@@ -1,0 +1,87 @@
+\chapter{From path integrals to committed quotes}\label{ch:quotes}
+A derivative tells us the effect of an infinitesimal displacement. A finite
+action travels through changing derivatives. Integrating them recovers the
+endpoint difference. This is the mathematical connection between force and
+exact EBU, and it remains valid whether or not a controller uses the force
+to choose the action.
+
+\section{One action, one chain rule}
+Let $\gamma(s)=z+s\delta$ for $0\leq s\leq1$, with $V$ continuously
+differentiable along this path. The chain rule gives
+\begin{equation}
+ \frac{d}{ds}V(\gamma(s))=\nabla V(\gamma(s))^T\delta.
+\end{equation}
+Integrate and change the sign:
+\begin{equation}\label{eq:path}
+ V(z)-V(z+\delta)
+ =-\int_0^1\nabla V(z+s\delta)^T\delta\,ds.
+\end{equation}
+For $\delta=qS_e$ with $q\geq0$, substitution $r=sq$ yields
+$\int_0^q f_e(z+rS_e)\,dr$. The changing force, not just its initial
+value, is integrated. A declared process burden is then subtracted separately.
+
+For the quadratic, $\mu(z+s\delta)=\mu(z)+sH\delta$. Integrating one
+and $s$ over $[0,1]$ immediately gives the finite expansion of Chapter 37.
+The average endpoint gradient is also exact:
+\begin{equation}
+ V(z)-V(z+\delta)
+ =-\tfrac12[\mu(z)+\mu(z+\delta)]^T\delta.
+\end{equation}
+This is not a general exact quadrature claim for arbitrary potentials. It
+works here because the gradient along the segment is affine.
+
+\section{Path arithmetic and path meaning}
+If the physical model declares constant-rate joint execution, $s$ can
+parameterize its realized path after normalizing duration. If only endpoints
+are declared, the same segment is an accounting interpolation. The endpoint
+identity is exact in both uses. Calling it an observed physical history
+requires the first additional declaration and, outside a simulation,
+appropriate measurement.
+
+More generally, a smooth potential integrates to the same total along any
+admissible sufficiently regular path between the same endpoints. This does
+not imply equal physical cost for every route: process burdens and other
+state coordinates may differ. It also does not imply equal child allocations
+when a group path is decomposed in different ways.
+
+\section{A schedule is a function, not a promise about one quantity}
+A pre-action quote can commit $q\mapsto E(q)$ on a physically accepted
+domain. For the Ridge--Vale example the schedule is $4q-q^2/4$.
+If the accepted upper quantity is four and the measured quantity is three,
+the committed schedule gives $E(3)=39/4$, not twelve. The measurement selects
+a point of an existing function; it does not authorize a new potential
+chosen after the outcome.
+
+Quantity shortfall does not always mean a smaller signed value. On a
+decreasing part of a concave schedule, less movement can have greater value.
+The schedule, not a verbal monotonicity assumption, governs the account.
+If quantity exceeds the committed domain, the old positive quote cannot
+simply be extended. The historical foundation retains an explicit
+overexecution boundary rather than inventing punitive physics.
+
+\section{Convexity and activation burden}
+For a convex differentiable $V$,
+$V(z+\delta)\geq V(z)+\nabla V(z)^T\delta$. Hence exact value is no
+greater than its tangent value when both subtract the same $C$. For the
+positive definite quadratic the inequality is strict for nonzero $\delta$.
+
+Along a fixed edge, the field-benefit schedule is concave. The complete
+schedule remains concave when the declared $C(q)$ is convex. Nonnegative
+cost alone is not sufficient. A fixed activation cost with $C(0)=0$ and
+$C(q)=c_0>0$ for $q>0$ creates a downward jump at zero; interpolation
+across it would invent an unregistered discount. The first prospective
+lossless domain avoids this complication by declaring $C=0$, not by
+claiming real operations are universally costless.
+
+\section{What a quote does not guarantee}
+A valid schedule does not establish permission, ownership, sensor integrity,
+or execution. A positive quote does not prove the action will occur. A
+negative quote does not prove that essential service should be denied.
+The mathematics describes represented field effect. Institutions and the
+experimental capacity policy are additional objects with additional claims.
+
+\section*{Chapter recap}
+The exact finite difference and the integrated force are two expressions for
+one field change. A committed schedule binds that expression to a baseline,
+rule and domain. Physical-path meaning and institutional consequences do
+not follow from integration alone.

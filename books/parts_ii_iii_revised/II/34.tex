@@ -1,0 +1,103 @@
+\chapter{Units, vectors and conservation}\label{ch:units}
+Many apparent disagreements about EBU are disagreements about units. One
+author writes $q$ for a rate, another for a finite quantity; both use the
+same symbol in a correct-looking equation. The error appears only when the
+duration differs from one. We will therefore identify quantity before
+performing algebra.
+
+\section{A dimensional dictionary}
+Write $\X$ for the unit of physical stock and $T$ for time. In the active
+Gaussian normalization, $V$ is dimensionless, as are its finite differences.
+Calling that numerical accounting unit EBU does not make it a joule, a litre
+or a currency unit. A later calibrated conversion must be declared rather
+than inferred from the name.
+
+\begin{center}
+\begin{tabular}{P{.39\linewidth}P{.48\linewidth}}
+\toprule Object & Unit and meaning\\\midrule
+$x_i,x_i^*,\sigma_i,q$ & $\X$: stock, reference, scale, finite withdrawal\\
+$j$ & $\X/T$: a rate\\
+$\mu_i=\partial V/\partial x_i$ & $1/\X$: potential change per unit stock\\
+$H_{ii}=1/\sigma_i^2$ & $1/\X^2$: curvature\\
+$q\mu_i$, $q^2H_{ii}$ & dimensionless finite-account terms\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+If a device operates at constant rate $j$ for duration $\Delta t$, its
+quantity is $q=\Delta t\,j$. Thus $\delta=S q$ and
+$\delta=\Delta t S j$ are equivalent descriptions, not two steps to apply
+successively. The historical foundation uses rate notation
+\cite{foundation}; this edition uses finite quantities in its active examples.
+
+\section{Reading a matrix multiplication}
+For a lossless chain $1\to2\to3$, let
+\begin{equation}
+ S=\begin{pmatrix}-1&0\\1&-1\\0&1\end{pmatrix},
+ \qquad q=\begin{pmatrix}a\\b\end{pmatrix}.
+\end{equation}
+Then
+\begin{equation}
+ Sq=\begin{pmatrix}-a\\a-b\\b\end{pmatrix}.
+\end{equation}
+The first cell loses $a$, the middle receives $a$ and sends $b$, and the
+last receives $b$. The middle coordinate is not a transport label that may
+be omitted: it is a physical stock with its own predecessor and successor.
+
+Every column of $S$ sums to zero. If $\mathbf1$ is the vector of ones,
+$\mathbf1^T S=0$, so
+\begin{equation}
+ \mathbf1^T(x+Sq)=\mathbf1^Tx.
+\end{equation}
+This proves conservation for the declared lossless increments. It does not
+prove nonnegativity: a request $a>x_1$ still conserves the algebraic total
+while making the source negative. Conservation and admissibility must be
+checked separately.
+
+\section{Loss is a physical account, not a vanished number}
+For a lossy transfer, a column may have $-1$ at the source and $\eta$ at the
+destination. Its sum is $-(1-\eta)$. To close a broader physical account,
+the missing quantity must enter a declared loss carrier or cross an explicit
+boundary. For instance an added coordinate $\ell$ can receive
+$(1-\eta)q$. That is a conservation declaration, not yet a valuation of
+$\ell$ or permission to charge a second process cost.
+
+The active first domain sets $\eta=1$. This does not dismiss loss. It avoids
+claiming that an unresolved loss-aware runtime and valuation convention has
+already been accepted. Part III returns to the old Definition 6.4 wording:
+adding a loss coordinate changes what can honestly be said about a carrier
+being absent from state.
+
+\section{Changing the physical unit}
+Suppose litres are replaced by millilitres. Multiply all stocks, references,
+scales and finite quantities by $c=1000$. Each standardized deviation remains
+unchanged:
+\begin{equation}
+ \frac{c x_i-c x_i^*}{c\sigma_i}
+ =\frac{x_i-x_i^*}{\sigma_i}.
+\end{equation}
+Consequently $V$ and exact EBU are unchanged. The marginal becomes
+$\mu_i/c$, while $q$ becomes $cq$; their product is unchanged. This is a
+useful dimensional check on an implementation specification.
+
+Changing $\sigma$ while keeping stocks fixed is not a unit conversion. It
+changes the model's relative sensitivity. Treating those operations as the
+same would hide a substantive calibration decision inside a formatting step.
+
+\section*{Worked checks}
+A rate of six units per hour over a quarter hour transfers $3/2$ units.
+Over two hours it transfers twelve. A routine that uses six in both cases
+has silently assumed a unit-duration interval.
+
+In the chain matrix, take $a=3$, $b=2$ and predecessor $(5,1,0)$.
+The declared endpoint is $(2,2,2)$, with total six before and after. Whether
+the middle cell may send two while initially holding one depends on timing:
+one may allow a declared inflow-funded simultaneous process, or require
+outgoing commitments to be covered by frozen stock. The matrix alone cannot
+settle that physical convention.
+
+\section*{Chapter recap}
+Vectors collect quantities; matrices express declared transformations. Units
+and column sums expose important errors, but they do not certify the whole
+physical process. Conservation, nonnegativity, timing and valuation each
+need their own check.

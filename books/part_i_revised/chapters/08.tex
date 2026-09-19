@@ -1,0 +1,126 @@
+\chapter{The physical question beneath an economic action}\label{ch:action}
+
+\section{Begin with something familiar: a water pump}
+Imagine a small town whose clinic receives water from a storage tank on a nearby ridge. A pump moves water through a pipe. The clinic pays an electricity bill, the operator receives wages, and the supplier sends an invoice. These monetary records are useful. They identify obligations, payments, and claims under the institutions in which the participants live.
+
+An engineer responsible for the same event needs another record. How much water left the source? How much reached the clinic? Which tanks changed? Was the water of the declared usable quality? What powered the pump? Did a pipe leak? What happened outside the chosen measurement boundary? A balanced invoice does not supply these answers. Conversely, a complete engineering account does not determine the legal price of water or the operator's wage.
+
+The introductory chapters have explained why this separation matters. We now build the mathematical account patiently, beginning with the physical event. The simple world used throughout the central chapters contains one homogeneous resource, measured in a common stock unit, written \(\X\). Its transfers are lossless unless an example explicitly announces another boundary. This is a deliberate teaching model. Real pumps and water networks use several carriers and can lose usable material. Their more complete representation must name those processes rather than hide them inside a convenient word such as ``delivery.''
+
+\begin{intuitionbox}{Two records of one event}
+A monetary account records institutional claims and payments. A physical account records stocks and transformations. EBU adds a declared valuation of the physical change: how much the change reduces or increases the represented deviation from a reference. Each record answers a different question.
+\end{intuitionbox}
+
+\section{Why the accounting object is an action}
+Ordinary language can compress a long chain into ``the clinic bought medicine.'' Physically, a precursor is produced, ingredients are transformed, a refrigerator maintains a temperature, a vehicle transports a package, and a nurse administers a dose. Several places, carriers, time intervals, and by-products can be involved. The invoice may combine them; a physical account cannot assume they have become one atomic event.
+
+An action in this book is a declared physical transformation with an identified affected state. For a simple transfer, that means a source, destination, resource identity, quantity, and event boundary. More complex transformations require a correspondingly richer description. ``Repair the pump'' is a meaningful practical instruction, but it becomes a quotable physical action only when the model specifies what measurable coordinate the repair changes. A stock-only model cannot see an improvement in machinery reliability merely because the prose calls it useful.
+
+This requirement can sound restrictive until we consider the alternative. If a model pays for any story about a better future, an actor can claim improvements that no represented variable records. If it pays only for today's material displacement, it may miss a valuable repair. The honest response is to identify the missing state or to state that this benefit lies outside the present account. Neither refusal to invent a number nor a zero value in a narrow model establishes that the work has no human value.
+
+\section{Five objects on the desk}
+Before calculating, place five distinct records beside one another. The first is the physical state: how much resource is present at each place. The second is the reference: the declared configuration against which deviation will be measured. The third is the action: the proposed change to the state. The fourth is permission: the rules that determine whether this action may occur. The fifth is the signed value: the finite change of a declared potential, with any separately justified process burden accounted once.
+
+Confusion usually begins when one record silently performs another's job. A large stock is treated as a high monetary balance. A positive value is treated as permission. A mathematical minimum is treated as proof of social justice. An action's owner is treated as its uniquely identified causal contributor. These substitutions may make a story move quickly, but they make its equations unreliable.
+
+\begin{center}
+\begin{tabular}{P{0.23\linewidth}P{0.64\linewidth}}
+\toprule
+Object & Question it answers\\
+\midrule
+Physical state & What quantity is present, where, in which unit?\\
+Reference & Against what declared configuration is deviation measured?\\
+Action & Which physical coordinates change, and by how much?\\
+Permission & Is that change admissible under the declared rules?\\
+Signed EBU & What exact represented change of burden accompanies it?\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Our running world: Ridge, Vale, and the clinic}
+Let Ridge be cell 1 and Vale be cell 2. Vale contains the clinic, but the scalar state records the resource in its tank, not the clinic's complete health or its patients' welfare. Initially Ridge has \(18\X\) and Vale has \(2\X\). The total is \(20\X\). We shall write this state as \(z=(18,2)^T\), introducing the vector notation fully in Chapter~\ref{ch:graph}.
+
+For the main example the declared reference is \(x^*=(10,10)^T\), and each cell has scale \(2\X\). The reference says what the model treats as its centre; the scale says how stock deviations are standardized. The potential is
+\begin{equation}
+ V(z)=\frac12\left(\frac{18-10}{2}\right)^2+
+       \frac12\left(\frac{2-10}{2}\right)^2=16.
+\end{equation}
+This equation will be derived and interpreted carefully in Chapters~\ref{ch:reference} and~\ref{ch:potential}. For now, read each fraction as a deviation measured in units of the declared scale. Squaring makes its contribution nonnegative. Adding the two contributions gives the represented burden of this particular state.
+
+Consider a lossless transfer of \(4\X\) from Ridge to Vale. Ridge then holds 14 and Vale 6. Total stock remains 20. Potential becomes
+\begin{equation}
+ V(14,6)=\frac12(2)^2+\frac12(-2)^2=4.
+\end{equation}
+In the ideal example there is no separate process burden, so the signed EBU is \(16-4=12\E\). The stock ledger and the EBU account have different balancing terms. Four physical units leave Ridge and enter Vale. Twelve EBU describe the decrease of the chosen potential. They are not twelve extra physical units created by the pipe.
+
+\diagram{transfer}{A four-unit lossless transfer preserves twenty physical units while reducing the declared potential from sixteen to four.}{fig:transfer}
+
+\section{What the first calculation does and does not say}
+The result \(12\E\) is exact arithmetic under the declared model. It does not establish that the reference is empirically correct, that the transfer is permitted by every relevant institution, or that the clinic has received every service it needs. It also does not identify how the number should be assigned to the pump owner, engineer, electricity supplier, and courier. Those are further questions.
+
+We can nevertheless learn something precise. Conserving total stock does not preserve its location. A lossless redistribution can reduce deviation without increasing mass. The change of potential accounts for positive EBU without requiring a matching negative receipt from another person. Whether an experimental capacity account or a future institution recognizes such a receipt is a separately declared rule.
+
+The same formula can also give a negative result. Sending \(17\X\) is physically possible in this simple two-tank example because Ridge begins with 18. The endpoint is \((1,19)\). Both cells are nine units from their references, and potential is \(20.25\). The signed field change is therefore \(16-20.25=-4.25\E\). A beneficial initial direction can become excessive when carried far enough. This is why a finite action, rather than only an initial tendency, must be valued.
+
+\section{Need does not disappear into a number}
+The choice to begin with a clinic keeps the purpose visible. It does not turn the potential into a complete theory of need. A clinic's water stock can be near its declared reference while an ambulance urgently needs fuel. A water transfer can lower this field's burden while leaving an unrelated medical shortage untouched. The model has one carrier; the world has many interdependent functions.
+
+An essential action may also have negative EBU in a declared field. Moving a scarce resource from one already deficient place to another may increase the chosen total deviation, even if an institution decides that an emergency justifies the action. Honest accounting retains the negative number and states the policy that allowed the action. Changing the reference or the formula after seeing the emergency would obscure the physical and institutional decision rather than explain it.
+
+In later research, a signed capacity rule may restrict which negative actions can be afforded. That proposal needs its own ownership map, account balances and acceptance rules. Subtracting two potentials does not supply those decisions. The mathematics here provides an exact valuation object with which the proposals can be stated and tested.
+
+\section{Every noun needs a measurement boundary}
+``Water'' is already a modelling choice. Potable water, contaminated water, steam, and water locked in soil are not interchangeable for every function. A homogeneous scalar model assumes that one declared unit has the same relevant meaning wherever it appears. If that assumption fails, the state needs more coordinates or a different domain.
+
+Similarly, a place must have a clear boundary. If the source meter measures withdrawal before a pump and the destination meter measures arrival after a leaking pipe, the two readings refer to different physical positions. A difference between them is information about the intervening process. Calling both readings ``the quantity'' erases that information.
+
+Time matters as well. A starting gauge reading and an integrated flow reading must belong to compatible event windows. If a tank receives rain between two observations, the action cannot claim that contribution merely because the final tank is fuller. External changes must be identified before the actor's baseline is frozen, or accounted separately under a declared event model. Our first closed examples contain no such external change during the action.
+
+\section{The useful discipline of an incomplete model}
+A small model is valuable when its omissions are explicit. It lets the reader see a conservation identity, a sign convention, and a finite calculation without attributing to the model every feature of a town. The danger is not simplicity itself. The danger is retaining the small equations while allowing the prose to claim the whole town.
+
+Suppose a technician repairs the clinic's insulation, lowering tomorrow's electricity need while leaving today's water stock unchanged. The present water field gives zero state-change value. That is an accurate report of its limited representation. To value the repair in a physical field, one might need a verified insulation or heat-loss coordinate, a declared potential for it, and a transformation connecting the repair to that coordinate. This book does not fabricate those definitions. It preserves the lesson: a physical consequence needs a represented carrier if the field is to see it.
+
+\begin{cautionbox}{Exact does not mean complete}
+An exact finite difference can be computed from an incomplete or poorly calibrated model. Exactness concerns the relation between the equation and its declared inputs. Empirical adequacy concerns whether those inputs and definitions represent the intended physical problem. The second question requires evidence beyond the algebra.
+\end{cautionbox}
+
+\section{Guided problem: write the action before pricing it}
+A courier moves four sealed containers of the represented resource from Ridge to Vale. Each container contains one stock unit. The route is declared lossless in this exercise. Write the physical action and its limits before using the potential.
+
+First identify the carrier. The stock unit is one container's verified contents, with a common quality definition at both places. Second identify the endpoints: source Ridge, destination Vale. Third state the finite quantity: \(q=4\X\), not four units per hour. Fourth write the changes: source \(-4\), destination \(+4\). Fifth check availability: Ridge has 18 and can supply four under the exercise's simple nonnegative-stock rule. Sixth name omissions: the transporter's fuel, labour, and vehicle wear are not physical coordinates in this two-stock illustration.
+
+The last point does not authorize arbitrary deductions. The ideal example explicitly sets process burden to zero. A more complete model would declare additional carriers or justify a separate physical process term with compatible units and no double counting. An invoice for fuel is not automatically such a term.
+
+Now calculate. The before-state potential is 16; the after-state potential is 4; signed EBU is 12. Report the conclusions in separate sentences: four stock units arrived, total stock was conserved, and represented deviation fell by twelve potential units. No statement about fairness or full clinical success has been established.
+
+\section{A useful question for the clinic's committee}
+Imagine the committee receives two reports about the same delivery. One says that four stock units arrived. The other says that the declared field improved by twelve EBU. The committee should not ask which report is the ``real'' one. It should ask what each establishes and which relevant facts remain outside both.
+
+The delivery record establishes quantity under its measurement boundary. The field account adds a comparison with the declared reference and scale. Neither report establishes whether the water arrived before a medical procedure, whether its quality was independently verified, or whether the remaining source stock is sufficient for functions absent from the model. These may be decisive practical facts.
+
+A good EBU account therefore invites additional questions instead of swallowing them. What carrier does the state represent? How was the reference chosen? Did an external change occur between measurements? Is the process burden complete enough for the intended use? Which claims are mathematical consequences, and which would require a field study?
+
+This posture is compatible with ambition. A research programme can aim to connect economic action more closely to the conditions supporting life while beginning with a model it can audit. The point of the narrow calculation is to establish dependable pieces of reasoning that can be extended carefully. Grand aims do not reduce the need for a clear four-unit transfer.
+
+For the reader, an especially productive habit is to translate every strong sentence back into a record. ``The clinic was helped'' might refer to delivered quantity, a lower potential, a measured service outcome, or a judgment about urgent need. Ask which one is meant. Then the statement can be tested or qualified at the appropriate level rather than accepted because its language sounds benevolent.
+
+\section{Common questions answered carefully}
+\emph{Is EBU another price?} It is a value defined from a declared physical field. A market price can be related to it by an institution, but the relationship requires its own rule. The equation does not supply one automatically.
+
+\emph{Does negative EBU mean a bad person?} The sign belongs to an action evaluated from a state under a fixed field. The same action at another state can have another sign. An actor's character is not a state coordinate.
+
+\emph{Does positive EBU prove permission?} No. A value can be calculated for a hypothetical transformation that has insufficient stock or violates a declared boundary. Permission must be checked independently, and an inadmissible point must not become an executable promise.
+
+\emph{Does zero EBU mean nothing happened?} No. A finite transfer can preserve potential while moving substantial stock. Our \(q=16\) transfer sends the main state from \((18,2)\) to \((2,18)\), with potential 16 at both ends. Equal potential does not mean identical state.
+
+\section{Practice and reflection}
+For a delivery you know, write a monetary description and a physical description. In the physical description identify the carrier, source, destination, finite quantity, timing, and any boundary crossings. Mark facts that a one-resource stock model would omit.
+
+For the main Ridge--Vale example, calculate the after-state and potential for \(q=8\). The endpoint is \((10,10)\), the potential is zero, and the field reduction is \(16\E\). Explain why this does not mean that eight water units became sixteen water units. Then calculate \(q=0\): the state is unchanged and EBU is zero. These two answers establish the anchors of the finite schedule developed later.
+
+Finally, explain in ordinary words why measuring an event and deciding who may perform it are separate tasks. A convincing answer should retain the clinic's practical need while refusing to make a valuation equation supply an undeclared social rule.
+
+\begin{intuitionbox}{What to carry forward}
+Begin with a physical action and a declared boundary. Keep stock, reference, permission, potential, and signed EBU distinct. The running example is small enough to audit completely. Its exact calculations teach an accounting structure; they do not establish an economy's long-run behaviour.
+\end{intuitionbox}

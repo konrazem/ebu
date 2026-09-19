@@ -1,0 +1,26 @@
+[
+  {
+    "part": "II",
+    "path": "output/pdf/EBP_Book_Part_II_Revised_Gaussian_Explanatory_Edition.pdf",
+    "sha256": "935cc2bdbf90e4579e2acfa96456c48927f390f075152d6c95e6d45d3e77e32e",
+    "new_edition_pages": 53,
+    "historical_pages": 30,
+    "total_pages": 83,
+    "historical_original_pdf_range": [
+      65,
+      94
+    ]
+  },
+  {
+    "part": "III",
+    "path": "output/pdf/EBP_Book_Part_III_Revised_Gaussian_Explanatory_Edition.pdf",
+    "sha256": "4d4b7381a81bfecfc821eb357b66cf9e75077119f54d6c95447a372777fa16f6",
+    "new_edition_pages": 43,
+    "historical_pages": 45,
+    "total_pages": 88,
+    "historical_original_pdf_range": [
+      66,
+      110
+    ]
+  }
+]

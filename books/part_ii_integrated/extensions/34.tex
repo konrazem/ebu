@@ -1,0 +1,100 @@
+\section{Why the transpose appears in the field equation}
+The transpose is not decorative notation. It makes the dimensions of an
+operation visible. If there are $n$ cells and $m$ available action directions,
+$S$ has $n$ rows and $m$ columns. A quantity vector $q$ has $m$ entries,
+so $Sq$ has $n$ entries: one stock change for each cell. The marginal
+$\mu$ has $n$ entries. Its transpose is a row, and $\mu^TSq$ is a
+single number. That number is the tangent potential change produced by
+the complete quantity vector.
+
+Associativity lets us calculate the same scalar in two stages. We can first
+form the physical change $Sq$ and then value its direction with $\mu^T$.
+Or we can first form the row $\mu^TS$, one marginal change per action
+direction, and then multiply by the quantities. Since
+$\mu^TS=(S^T\mu)^T$, defining $f=-S^T\mu$ gives
+\begin{equation}
+ -\mu^TSq=f^Tq.
+\end{equation}
+This is the whole sign convention in one line. A positive entry of $f$
+means that a small positive quantity in that declared direction reduces
+the potential. It does not authorize an action or select its quantity.
+
+For the chain matrix earlier in the chapter, let
+$\mu=(2,0,-2)^T$. Then $S^T\mu=(-2,-2)^T$, so both edge forces
+are two. For $q=(3,2)^T$, the tangent benefit is ten. Directly,
+$Sq=(-3,1,2)^T$, and $-\mu^TSq=-(-6-4)=10$.
+This checks the matrix arithmetic, not the exact finite value. The latter
+must still subtract the quadratic curvature contribution.
+
+\section{Addition of vectors does not establish simultaneous permission}
+Suppose a proposed group has three children. Writing their increments as
+columns makes their sum easy to inspect. A coordinate that is positive in
+one child and negative in another may cancel in the aggregate. Algebra
+records that cancellation exactly. Physical interpretation requires more.
+Did the middle tank hold the resource long enough to make the outgoing
+delivery? Was an intermediate conversion required? Could the two devices
+operate concurrently? These questions are not answered by a zero in the
+aggregate vector.
+
+The distinction is similar to adding deposits and withdrawals in a stock
+record. A zero net daily change does not prove that the stock was never
+empty during the day. A constant-rate simultaneous model can make a
+specific path declaration; an endpoint-only model leaves intermediate
+behavior unspecified. A chronological model needs actual ordered states.
+All three can share endpoints while representing different physical claims.
+
+\section{Weighted length and the quadratic form}
+The expression $v^THv$ looks more complicated than it is. With diagonal
+$H$, first multiply each entry $v_i$ by $1/\sigma_i^2$, then multiply
+again by $v_i$ and sum:
+\begin{equation}
+ v^THv=\sum_i\frac{v_i^2}{\sigma_i^2}.
+\end{equation}
+It is a squared length measured in the declared scales. Its value cannot
+be negative, and it vanishes only when every entry vanishes. Reversing a
+vector leaves this squared length unchanged, although it reverses the
+linear directional term $\mu^Tv$.
+
+This difference between the linear and quadratic terms explains a common
+finite-action surprise. A small movement toward the reference can be
+helpful, but extending the same movement far enough overshoots. The linear
+part grows with quantity; the curvature term grows with its square. A
+longer movement is therefore not just several copies of the original
+marginal improvement at an unchanged state.
+
+For the chain example with equal scales two and increment $(-3,1,2)$,
+the squared weighted length is $(9+1+4)/4=7/2$. Its half is $7/4$.
+If the marginals above came from a compatible Gaussian declaration,
+the exact finite field benefit would be $10-7/4=33/4$. For instance,
+state $(18,10,2)$ and reference $(10,10,10)$ provide precisely those
+marginals. The endpoint is $(15,11,4)$, with potential $31/4$ rather
+than the starting sixteen. Their difference is again $33/4$.
+
+\section{Coordinate changes and model changes}
+Reordering the list of cells changes the written vector, but not the
+physical account if every associated object is reordered consistently.
+The state, reference, scales, incidence rows and ownership identifiers
+must all follow the same permutation. Reordering just the state can turn
+a formally well-shaped matrix multiplication into the wrong physical
+calculation without producing a syntax error.
+
+Changing litres to millilitres is another consistent coordinate change,
+already checked above. Replacing a scale because one cell is judged more
+important is not. Nor is combining two distinct carriers into one scalar
+because they share a convenient numeric range. The first changes units;
+the second changes valuation; the third changes the represented world.
+Software needs identities that make these differences visible.
+
+\section{Practice: follow one symbol through every layer}
+Choose one edge quantity $q_e$. Identify its stock unit, its incidence
+column, the cells it changes, the constraints it consumes, and the
+corresponding force entry. Then identify the finite curvature term in
+which it appears alone and any cross terms in which it meets another
+quantity. Finally ask whether a named owner exists. The matrix will not
+supply that final answer.
+
+This exercise is worth doing before proceeding to proofs. Many later
+errors are not failures of advanced calculus. They are failures to carry
+one symbol's meaning consistently through a chain of otherwise correct
+operations. With this dimensional foundation, the next chapter can
+introduce the potential without asking the reader to trust opaque notation.

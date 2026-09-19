@@ -1,0 +1,570 @@
+{
+  "candidate_sha256": "1ef1a48b40e92dd5e3690c0997b083ae4022b512f13c267c2f9135a1ad57c3f6",
+  "rasterizer": "Poppler 26.05.0, 100 dpi",
+  "pages": 69,
+  "full_pass_pdf_sha256": "ebaeb3fcbe5658cc933181e1b431e1681a0f7d4fd377113f99ea6422c68f257a",
+  "final_changed_pages_reinspected": [
+    17,
+    18,
+    19,
+    21,
+    27,
+    36,
+    68
+  ],
+  "byte_identical_pages_carried_forward": 62,
+  "findings": [
+    {
+      "pdf_page": 1,
+      "printed_label": "i",
+      "png_sha256": "923f0ff791baff6aa2777a9465eec8ff7de3ff3a3323ac40eb2f7e21dc36fe3f",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Title hierarchy, aligned subtitle, candidate status and author/date clear."
+    },
+    {
+      "pdf_page": 2,
+      "printed_label": "ii",
+      "png_sha256": "05e55b8b29e149dc858658b078150a4051075bc11a8214ab0aad143e57d9620e",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Edition provenance and rights distinction legible; Roman footer correct."
+    },
+    {
+      "pdf_page": 3,
+      "printed_label": "iii",
+      "png_sha256": "f70141e348ec0977342d601018b3148aaa7fd05e1ffbbc2d3b606239553f64e9",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Reader route and equation guidance legible."
+    },
+    {
+      "pdf_page": 4,
+      "printed_label": "iv",
+      "png_sha256": "3556f38a4bc71615fc09c02633a8aad35d6dd9fcedec6457e2a09d079f3bfb93",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "All 18 chapter entries plus back matter fit one linked contents page."
+    },
+    {
+      "pdf_page": 5,
+      "printed_label": "1",
+      "png_sha256": "ae06fefb944dd25b1c7153cdc0cb99da210f1777a2c212ba2284615361d56cfc",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 6,
+      "printed_label": "2",
+      "png_sha256": "0eaf02644a743db2ba52b58a6317eada0f9d850e207b600d05ce23184094d43e",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Payment/physical-record schematic and caption fit; embedded labels readable."
+    },
+    {
+      "pdf_page": 7,
+      "printed_label": "3",
+      "png_sha256": "413c5d4436a3660a4bfd1147060bfd52e18c4c2cb46623d7bab4e43f60b6a69a",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Exercise and carry-forward labels render correctly; no glyph corruption."
+    },
+    {
+      "pdf_page": 8,
+      "printed_label": "4",
+      "png_sha256": "3165c70cede4aa254ef6c16cffd65ae89c68256f4a23bfbaa25a51e57701b90d",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 9,
+      "printed_label": "5",
+      "png_sha256": "fbc2f138ccf592d13a5b75550bf22ef2687a2a849e79e824deecfb8bdb0e79b3",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 10,
+      "printed_label": "6",
+      "png_sha256": "3a3603091f62fc7119b119bd3f4e9bd1f6d6c50aabc83688ee5f46d3e1f9828a",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Chapter-end exercise and transition intact."
+    },
+    {
+      "pdf_page": 11,
+      "printed_label": "7",
+      "png_sha256": "251d2deb0940462dfb73afd8aa8e95670968dbb129e39c86d77114f4ddafb5a7",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 12,
+      "printed_label": "8",
+      "png_sha256": "bd3e10a03cf2cf1961f4ce8257acb1ea6fa3749c06044aa1360b69f1eeafd27d",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 13,
+      "printed_label": "9",
+      "png_sha256": "a1445616cba82d68a529f6020241f9a92e9c98dac9fc1e1e9ed3a0bf897fe575",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 14,
+      "printed_label": "10",
+      "png_sha256": "c9ca4d1858bdca15e289606d23d816e2864acddcbb19172f8f3807326046904b",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Observation period, baseline and uncertainty notation legible."
+    },
+    {
+      "pdf_page": 15,
+      "printed_label": "11",
+      "png_sha256": "355c9f5a621c88443de5eff0291a2c393e52ac27509520394c30237cab69f5e5",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Three-row climate table fits; degree symbols and ranges clear."
+    },
+    {
+      "pdf_page": 16,
+      "printed_label": "12",
+      "png_sha256": "4bae91b7dc3259453e66cfc6528743025c3b767dd35d149c1a7cf4f36e7fa1d8",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 17,
+      "printed_label": "13",
+      "png_sha256": "236213c28ad78452c8aec586b47203841c6b93c0ae3bbc43f9c14760c577e193",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "List heading moved off the preceding page; clean section end."
+    },
+    {
+      "pdf_page": 18,
+      "printed_label": "14",
+      "png_sha256": "ca880e4a4f613e0e07bf70b10f9d7f4f2d1baf48a6c1f23bc1acac64c1ebf647",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "Seven-question heading, introduction and numbered list now together."
+    },
+    {
+      "pdf_page": 19,
+      "printed_label": "15",
+      "png_sha256": "64b442e9873b26c5a526b133d1bbc82ba1ac19d94eb46272a20cf58983d67b26",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "Continuation and chapter-end exercise fit after list reflow."
+    },
+    {
+      "pdf_page": 20,
+      "printed_label": "16",
+      "png_sha256": "44e806141fcbcaad3d8ede40da805f422a5eae1216b41f84318cf82cc1ef1999",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 21,
+      "printed_label": "17",
+      "png_sha256": "039b4d0ab33ce23bc6bd3cdd8cee1e16f03f092d66f8425e5865ab38a1fafec9",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "Controller label reduced to fit its box; all signal/inflow/outflow arrows readable."
+    },
+    {
+      "pdf_page": 22,
+      "printed_label": "18",
+      "png_sha256": "33568e9dbd047cad158731747e8078910f7a0090b54ab1e7b267620eb2d5ea45",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 23,
+      "printed_label": "19",
+      "png_sha256": "ab164150e48e1be20a81efc4e0c2802501eaac3d72fe63825f9d27ed374fc654",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 24,
+      "printed_label": "20",
+      "png_sha256": "4621d886eee223e8530ac180a29b89f92fbd79cd4a63eb7e5d0cd3272c0f365c",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 25,
+      "printed_label": "21",
+      "png_sha256": "f2d8f76c60fb733e6a434e525ebc311f305393023991113b97076028d5077046",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 26,
+      "printed_label": "22",
+      "png_sha256": "d669ca7b48e9f80e6f9841fea208144499eb91d4cc6223a02ef11743511e059a",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 27,
+      "printed_label": "23",
+      "png_sha256": "65a20570bd5481d6d07435f8e49be73f269e4fc67f578d0fc1aa2657c992d5ed",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "Removed overlapping redundant note from tank diagram; before/after labels and 3 L arrow clear."
+    },
+    {
+      "pdf_page": 28,
+      "printed_label": "24",
+      "png_sha256": "871c94022054511f387616c2a01ba52476ac04fd0a2cb726e2ef2b34e4ca1b5d",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 29,
+      "printed_label": "25",
+      "png_sha256": "19f40a1dc04091ddf0e062695d174db822ae1bb1cce4d21f921cc1f4e73db1f7",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Seven-layer event sequence fits and all arrows render."
+    },
+    {
+      "pdf_page": 30,
+      "printed_label": "26",
+      "png_sha256": "38d25b481978e556abcff9d21d2fb913085a6427186b8435194660e95365ceb7",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 31,
+      "printed_label": "27",
+      "png_sha256": "860686a547400dcf92f6046553036a535289fc77d6b650fc54287c0920bdf7e6",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 32,
+      "printed_label": "28",
+      "png_sha256": "e26085dd837af002805c2aab9e0419a2d1e29888103a18b583719a5f162dd990",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Reference compatibility equation and capacities legible."
+    },
+    {
+      "pdf_page": 33,
+      "printed_label": "29",
+      "png_sha256": "c4e1c517c6de31018af32fc91ed8fdaf3cbe65bffb7adec7365903da0b348464",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 34,
+      "printed_label": "30",
+      "png_sha256": "108cc83ec54f3cfe6a4204fa28530be219589acf493d05f6c2f1eed79ada2672",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 35,
+      "printed_label": "31",
+      "png_sha256": "a91d5a59ed23bd02c3305ab0acfce27bcb5bba7cd6f80d0c360beba344ced842",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Local quadratic formula, subscripts and worked arithmetic clear."
+    },
+    {
+      "pdf_page": 36,
+      "printed_label": "32",
+      "png_sha256": "acb72e57b3442f1451ea4ee7a7d138e102201851a672154255a6a5556e95a28c",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "Reference annotation moved away from curve; both styles/axes and density/log equations readable."
+    },
+    {
+      "pdf_page": 37,
+      "printed_label": "33",
+      "png_sha256": "3b472815705a2ecbb975ed93aa2c4e92084528eb544c3a2eba808c053225813c",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 38,
+      "printed_label": "34",
+      "png_sha256": "d7a3419768380cf986a1eae7f052e8ef0502af8aa67f85589de9403776b9de56",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 39,
+      "printed_label": "35",
+      "png_sha256": "a99af3e197d45707038dd2276a864b9ea33b374c1135b77fc4eefa94c537a816",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Affected-support cancellation and coupled-factor equation fit."
+    },
+    {
+      "pdf_page": 40,
+      "printed_label": "36",
+      "png_sha256": "b878a6ea3278905c9047c8edbb59d08dbf7483a42f8f8e7e0008b6ff469dacf0",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 41,
+      "printed_label": "37",
+      "png_sha256": "55aa9c2149117540e28b44e778b1c78a914f21ae8a6c829cfab891687c4c2612",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Difference quotient, marginal equation and sensitivity arithmetic readable."
+    },
+    {
+      "pdf_page": 42,
+      "printed_label": "38",
+      "png_sha256": "78c6b55fcfbdfe181519168a85d51316ef46660b8e67b42325a5c39ed84d4b25",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Directional equations and exercise fit; carry-forward stays on same page."
+    },
+    {
+      "pdf_page": 43,
+      "printed_label": "39",
+      "png_sha256": "c974cd323fc3a7842003a19aeadd5f611564831cbbcfd1430e4eadf92243d5b2",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Boxed finite expansion and diagonal Hessian fit within margins."
+    },
+    {
+      "pdf_page": 44,
+      "printed_label": "40",
+      "png_sha256": "7d201d7d1e01c34527aac6f3b4af2d3d5c89bc35500b65c5975235326dd9bce4",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Finite formula and all seven arithmetic rows legible."
+    },
+    {
+      "pdf_page": 45,
+      "printed_label": "41",
+      "png_sha256": "b099703c0c6dad1c3e2cecca755b65b6740cf033c51ca437f5ee4d4eed9e1d08",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Exact/linear curves distinguishable; axes say quantity, not time; endpoint exercise readable."
+    },
+    {
+      "pdf_page": 46,
+      "printed_label": "42",
+      "png_sha256": "68727d34038ead9de25c3904c57bfb3174ab47298449e0d04ac43635edda6fcf",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Boxed general equation, symbol explanations and units legible."
+    },
+    {
+      "pdf_page": 47,
+      "printed_label": "43",
+      "png_sha256": "c7104926b041d10425a07c8e30bbe74c74c00c741fd853a22a4726006ef1f123",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Full worked-account table fits, with clear columns and no clipped text."
+    },
+    {
+      "pdf_page": 48,
+      "printed_label": "44",
+      "png_sha256": "e326c9bd9761738e8899de5fc58398fb34b1c9f71165a7dfd240eb8ce13f3c67",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 49,
+      "printed_label": "45",
+      "png_sha256": "2bc3c3cb575cecdeed73db98b816d1436bc476e01a41774771b517445c78b8dc",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Three-tank setup and singleton/joint arithmetic readable."
+    },
+    {
+      "pdf_page": 50,
+      "printed_label": "46",
+      "png_sha256": "fe7f92022b7f82652b4c659c1a4a5f6e39a11a68c19eccf452b3a696247a459c",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Group schematic, caption, joint and cross-term equations fit."
+    },
+    {
+      "pdf_page": 51,
+      "printed_label": "47",
+      "png_sha256": "d70878be550d00bae83bf118384e7e45cd920033d36d70459e0c6af47fc8f900",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Path interpolation and integral signs/bounds legible."
+    },
+    {
+      "pdf_page": 52,
+      "printed_label": "48",
+      "png_sha256": "59f6488f4d6287dff30a9e99eda05b16af0e8bc0d8ab92072f880bcc2457aa24",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Two-line attribution and closure equations fit; no number collision."
+    },
+    {
+      "pdf_page": 53,
+      "printed_label": "49",
+      "png_sha256": "89b1d0257e5b31b6becd77ffecce98e2beb0338170ae62db0f41ce96e42acb3d",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 54,
+      "printed_label": "50",
+      "png_sha256": "c384a1b5594d584efd7808e9542e3157bd4329c233a029536f3ad1215bfbc792",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 55,
+      "printed_label": "51",
+      "png_sha256": "3e736ce577587d33c9ae22bbb36760903c665a8331bc96fa4c8cce673e61f638",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Telescoping and closed-cycle equations legible."
+    },
+    {
+      "pdf_page": 56,
+      "printed_label": "52",
+      "png_sha256": "1e998361138b684a5874c41d733a02dc5acbab7dea083869a61b8951ca497278",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Drive sign and prospective aggregate balance equation legible."
+    },
+    {
+      "pdf_page": 57,
+      "printed_label": "53",
+      "png_sha256": "2dfe9cfa612d0bf091ee5ffec4a7500e703638a26357e9087b92171e1946f5a9",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Long audit identity and finite-mass bound fit; exercise and transition remain together."
+    },
+    {
+      "pdf_page": 58,
+      "printed_label": "54",
+      "png_sha256": "e6c3b25b096d7bccf28f6d37c9b5cdfb007620bbfff1e5afded36bf3338c8ac3",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 59,
+      "printed_label": "55",
+      "png_sha256": "6845c6fcdfbdaee60f59eefbe287b75f02b7e50e8db09b2e44e87721912f6b43",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Text, headings, running header, page label and continuation checked; no clipping, overlap or missing glyphs found."
+    },
+    {
+      "pdf_page": 60,
+      "printed_label": "56",
+      "png_sha256": "82a82439fd772234cd735f2f27ddf9628756c067e0104f31bdabffa063cc3751",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Closing equation and scoped conclusion clear."
+    },
+    {
+      "pdf_page": 61,
+      "printed_label": "57",
+      "png_sha256": "28d515ea0cb246b4a6d9fd0aedaa6483850bde56deede0aab788640498cbb606",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Glossary bold terms render correctly; hanging entries legible."
+    },
+    {
+      "pdf_page": 62,
+      "printed_label": "58",
+      "png_sha256": "542e899bd0d8420dfed123971ef230d459effe3c9909d7f5f64aa247898086ee",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Glossary continuation has no missing symbols or clipped terms."
+    },
+    {
+      "pdf_page": 63,
+      "printed_label": "59",
+      "png_sha256": "644e7d91d83acc759bf87a7ffb38b7bc8ee51e1d43bc307fe9deab91aee9acb6",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Glossary definitions and units legible."
+    },
+    {
+      "pdf_page": 64,
+      "printed_label": "60",
+      "png_sha256": "1d19356fae9ea74763f180a52e6dee38c728aea654b94140617e1b2468668518",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Final four glossary entries intact; intentional chapter-end white space."
+    },
+    {
+      "pdf_page": 65,
+      "printed_label": "61",
+      "png_sha256": "15cd7570d7ed6fc90bb725072e00cf8305c21176149c966e07f8317998d79b33",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Symbol table first page fits; superscripts, Greek letters and units clear."
+    },
+    {
+      "pdf_page": 66,
+      "printed_label": "62",
+      "png_sha256": "61609e410b7c516c603622c67e7ddb899f9021f436c815cfaf3d652924a55449",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Repeated table header and continuation rows clear; closing notation guide legible."
+    },
+    {
+      "pdf_page": 67,
+      "printed_label": "63",
+      "png_sha256": "5448f2dd9d3e4f0098f75eea93f302db0f2c04aadb9b4c68c9d14a351f37e76e",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Bibliography labels and links readable; entry S07 remains complete."
+    },
+    {
+      "pdf_page": 68,
+      "printed_label": "64",
+      "png_sha256": "8881f979b29fc85223f2fb5dae36fd25db9d4171ed53ba66a458340b6da92fde",
+      "visually_inspected": true,
+      "basis": "Final corrected raster inspected directly",
+      "finding": "Sources running header corrected; factual source entries and linked titles fit."
+    },
+    {
+      "pdf_page": 69,
+      "printed_label": "65",
+      "png_sha256": "09152cc5ec77a93658ce722b0fb6300956a86e06bf7a8175a6865952c189b6a5",
+      "visually_inspected": true,
+      "basis": "Inspected prior raster, byte-identical to final raster",
+      "finding": "Local-source filenames break within margins; provenance note fits final page."
+    }
+  ]
+}

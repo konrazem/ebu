@@ -1,0 +1,44 @@
+\chapter{Functional balance, equilibrium and living nonequilibrium}\label{ch:balance}
+\question{Does balance mean that nothing moves?}
+
+A tank receives five litres each minute and delivers five litres each minute. Its level remains constant. Water nevertheless moves through it. Looking only at the level, we might call the situation steady; looking at the flows, we would not call it inactive.
+
+This small example prevents a large misunderstanding. A maintained condition can depend on continuing activity. It is possible to stop the activity and destroy the condition one wished to preserve.
+
+\section{A reference is a statement; an equilibrium is a property}
+A reference tells us where we want to compare a state. We might mark a tank at ten litres because that is the reference chosen for an illustrative calculation. The mark remains on the tank whether the pump is running or broken.
+
+An equilibrium of a specified dynamic law is a state that the law leaves unchanged under the stated inputs. To decide whether ten litres is an equilibrium, we need to know what the inflow, outflow and response rule do at ten litres. The reference label cannot answer that question.
+
+A steady state concerns selected quantities that remain constant over time. It can include throughput, as in the five-litres-per-minute example. Depending on which variables the model includes, the tank level can be a fixed point of its state equation while the larger physical apparatus keeps exchanging matter and energy. The apparent disagreement disappears when we state the model boundary.
+
+Thermodynamic equilibrium has a different meaning: the macroscopic driving differences for spontaneous processes have equilibrated under the specified constraints. A maintained living regime commonly requires continuing exchanges and dissipation. We should not equate a healthy organism with a closed system at thermodynamic equilibrium. Lan and colleagues' analysis and experiments on bacterial sensory adaptation provide a specific example in which maintaining adaptation requires continuing energy consumption.\cite{adaptation}
+
+The lesson for EBU is conceptual. Our dimensionless potential will not be thermodynamic free energy. Naming a mathematical field does not supply a thermodynamic law for an economy.
+
+\section{Staying inside, staying near, and returning}
+Several mathematical words describe different requirements.
+
+\textit{Forward invariance} means that, for a declared dynamic law and allowed inputs, starting inside a specified set keeps the state inside that set. For a tank model, the set might be the interval of physically allowed levels. This says where the state cannot leave, not where it must go.
+
+\textit{Boundedness} means that the state stays within some finite bounds. A tank can alternate between nearly empty and nearly full and still be bounded. If its capacity is finite, a bound may follow simply from the physical domain.
+
+\textit{Stability near an equilibrium} means, roughly, that sufficiently small initial disturbances remain small under the specified dynamics. \textit{Attraction} asks for more: states in a stated region approach the equilibrium as time passes. Stability and attraction need their own mathematical definitions when used in a theorem.
+
+\textit{Recovery} is an operational claim: after a specified disturbance, the system returns to a defined functional condition, perhaps within a required time. It depends on what counts as return and which disturbances are allowed. A system can remain bounded while never recovering.
+
+Imagine a marker that repeatedly crosses the middle of a finite ruler. Crossing the reference does not mean settling there. The marker can visit it repeatedly without approaching rest. This is a schematic distinction, not a generated trajectory. We need a rule of motion before drawing conclusions about its future.
+
+\section{Conservation answers another question}
+If two tanks exchange water without loss, their combined quantity stays the same. Yet one can become empty while the other holds nearly everything. Conservation is an inventory statement. It does not state that each location has an appropriate amount.
+
+Later, we will use a potential to distinguish such distributions. Even then, a low potential will describe closeness to a declared reference, not guarantee access, water quality or recovery. A poor reference can be reached exactly. A good reference can remain unreachable. The geometry and the dynamics are separate questions.
+
+\section{A practical reading rule}
+Whenever someone says a system is ``in balance'', ask which quantities, which boundary and which sense of balance they mean. Is a conserved stock unchanged? Are selected variables steady? Is an equilibrium stable? Is function being maintained by a controller? Has recovery actually been observed under a registered disturbance?
+
+These are not pedantic distinctions. A proof of one cannot be used as evidence of all the others. They will let us understand the useful identities later without turning them into promises they do not contain.
+
+\practice{A closed two-tank system always contains twenty litres. Is this a recovery theorem?}{No. It establishes a conserved total. A state such as $(20,0)$ can preserve that total indefinitely if the action rules leave it there. To establish recovery toward $(10,10)$, we need additional dynamics and a proof or appropriately scoped evidence.}
+
+\carry{Before asking how a model behaves, we must specify what it contains. We now construct a small physical world with explicit stocks, units, boundaries and actions.}

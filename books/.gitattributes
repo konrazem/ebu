@@ -1,0 +1,2 @@
+# PDF artifacts are binary, even when their internal streams are ASCII.
+*.pdf binary

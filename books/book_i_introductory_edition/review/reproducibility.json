@@ -1,0 +1,10 @@
+{
+  "before_sha256": "1ef1a48b40e92dd5e3690c0997b083ae4022b512f13c267c2f9135a1ad57c3f6",
+  "after_sha256": "1ef1a48b40e92dd5e3690c0997b083ae4022b512f13c267c2f9135a1ad57c3f6",
+  "byte_identical": true,
+  "six_figures_byte_identical": true,
+  "offline": true,
+  "command": "python3 build.py --only-cached",
+  "source_date_epoch": 1789776000,
+  "tectonic_deterministic_mode": true
+}

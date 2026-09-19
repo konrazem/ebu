@@ -1,0 +1,67 @@
+\chapter{The exact EBU equation}\label{ch:ebu}
+\question{What precisely is calculated for a declared physical action?}
+
+In words, the account is: the affected potential before the action, minus the affected potential after the action, minus any separately declared residual physical process burden that has not already been counted.
+
+The general notation is
+\begin{equation}\label{eq:ebu}
+ \boxed{\Delta E_a=V_A(z)-V_A(T_a(z))-C_a.}
+\end{equation}
+This is the book's central finite account. Its compactness should not hide the declarations needed to use it.\cite{foundation,gaussian}
+
+\section{Read every symbol}
+The subscript $a$ identifies the action. The symbol $z$ names the frozen action baseline: the state against which the action is evaluated. In the undriven tank example, $z=x$. If an external event is declared to occur before the action, $z$ is the state after that event. It is not a future outcome that the actor has secretly inspected.
+
+The expression $T_a(z)$ names the state produced by the declared action transformation. Here $T$ means transformation, not the superscript transpose. For a lossless edge, $T_a(z)=z+qS_e$. For a more complicated process, its actual map must be specified; it cannot be inferred from the value equation.
+
+The set $A$ contains the complete affected potential support. In the separable two-tank model it contains the source and destination. In a model with coupled factors it must include every changed factor, as Chapter~\ref{ch:potential} explained. $V_A$ sums those terms. Unchanged factors cancel, so the affected difference equals the full model difference under the cancellation assumptions.
+
+The term $C_a$ is a declared nonnegative physical action-process burden, measured in the same account unit as the potential, subject to the no-double-count boundary. It is zero for a genuine no-action event. The symbol $\Delta E_a$ is the signed action value; the delta announces a change-related account, not a stock of physical material.
+
+For our Gaussian ruler, $V_A$, $C_a$ and $\Delta E_a$ are dimensionless account quantities. In another calibrated potential, all three must share that potential's unit. Neither the letter E nor the project's name makes the result energy in joules.
+
+\section{A complete small account}
+Return to the three-litre delivery. Its teaching record can be read without software:
+
+\begin{center}\small
+\begin{tabular}{@{}p{107pt}p{239pt}@{}}
+\toprule
+Record field & Declared illustration\\
+\midrule
+Boundary & Two homogeneous water stocks; twenty litres total\\
+Ruler & Fixed references $(10,10)$ L; scales $(2,2)$ L\\
+Physical limits & Nonnegative stocks; each tank capacity twenty litres\\
+Baseline & $z=(14,6)^{\mathsf T}$ L; no intervening drive\\
+Action & Ridge to Vale, finite quantity three litres\\
+Endpoint & $T_a(z)=(11,9)^{\mathsf T}$ L\\
+Potential & $4$ before; $0.25$ after\\
+Process burden & $C_a=0$ in this idealised teaching world\\
+Result & $\Delta E_a=4-0.25-0=+3.75$\\
+Evidence status & Exact illustrative arithmetic; no measured execution\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The physical total is twenty litres both before and after. The potential falls by $3.75$. The two facts are compatible because water and represented deviation are different quantities. If the action were only proposed, this would be a prospective value, not evidence that three litres had actually arrived.
+
+A real record would need measurement uncertainty, observation times, action identity, model version and occurrence evidence. It would also need an explicitly declared policy for authorisation and settlement. Naming an actor in the record would not identify an employer, assign personal liability or decide compensation.
+
+\section{What belongs in process burden?}
+The ideal example sets $C_a=0$ because it deliberately contains only lossless stock transfers with no separately modelled residual process burden. It does not claim that real pumping, transport or maintenance is free.
+
+A later nonzero term would need an identified physical process, compatible calibration and an audit showing that the same contribution has not already been represented through the transition, affected state coordinates or finite potential difference. Source drawdown already valued in $V_A$ cannot be charged again under another name. Money prices, wages, inconvenience and fraud penalties do not silently become physical EBU terms.
+
+An unvalued physical ledger also does not automatically justify a process charge. The historical foundation contains a partially represented dissipation problem, and the current reconciliation leaves a loss-ledger interpretation unresolved. This edition does not settle it by choosing a convenient loss coefficient. Lossy worlds still require explicit physical carriers, sinks or boundary accounts and a separately justified valuation boundary.
+
+If a future state description represents a physical effect previously treated elsewhere, the two declarations must be reconciled so it is counted once. ``Residual'' is not a licence to insert whatever cost makes a preferred outcome appear.
+
+\section{Signs, drive and verification}
+A positive result means the declared potential reduction exceeds the declared process burden. A zero result means the net account is zero. A negative result means the represented account has worsened after including that burden. None of these signs measures a person's worth or automatically grants or denies essential service.
+
+If external drive changes $x$ into $z$ before an actor acts, compare $z$ with $T_a(z)$. For no action, $T_0(z)=z$ and $C_0=0$, so the actor's result is zero. Using the earlier $x$ instead would mix the external event's potential change into the actor's account. The shared-baseline discipline removes that immediate misattribution. It does not solve every question about later causal effects.\cite{foundation}
+
+For a pre-action quote, the rule, baseline conditions and permitted quantity domain must be declared before execution. Audit can verify occurrence and the relevant measured quantity under those rules; it cannot invent a more favourable ruler afterwards. A stale baseline, overexecution or failed sensor needs its declared failure treatment. Exact algebra cannot certify an unverified event.
+
+\practice{An action reduces represented potential by five. Someone proposes an extra charge of five for exactly the same represented source drawdown. What must the reviewer do?}{Reject the duplicate term. The effect is already inside the finite difference. A genuinely different residual physical process would require its own declaration and evidence; it cannot be established by relabelling the same five.}
+
+\carry{The equation measures one coherent physical change. When actions share a state, we need to understand the group endpoint before assigning any individual account lines.}

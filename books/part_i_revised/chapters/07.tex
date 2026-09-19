@@ -1,0 +1,128 @@
+\chapter{Equilibrium, reference and continuing life}\label{ch:equilibrium}
+
+\section{Three different meanings of ``balanced''}
+The clinic manager says the accounts are balanced. The caretaker says the tank is balanced because inflow equals outflow. A mathematician says a model is at equilibrium. The sentences sound similar, but their meanings depend on different objects. Confusion begins when a conclusion established for one is carried into another without explanation.
+
+A monetary balance concerns claims under accounting rules. A stock-flow balance concerns quantities within a boundary and interval. An equilibrium concerns a specified law of change. A reference concerns a chosen comparison configuration. A system may possess one of these properties while lacking another.
+
+The chapter's purpose is to make those distinctions comfortable before the book introduces a Gaussian landscape. We want the reader to see precisely why a smooth minimum is useful, and equally precisely why it is not a proof that a living or economic system will settle there. Words such as equilibrium, balance and stability should earn their meaning from the declared model.
+
+\section{A reference is a comparison, not a prediction}
+Suppose we declare a two-place reference of ten units at Ridge and ten at Vale. We write it as $x^*=(10,10)$. The star marks the reference; it does not mark an observed event, a historical average or a forecast. The actual state could be $(18,2)$, $(14,6)$ or something else.
+
+We can compare each actual state with the reference. At $(18,2)$, the deviations are eight and minus eight. At $(14,6)$, they are four and minus four. At $(10,10)$, both are zero. These are straightforward differences. A potential will later turn the vector of deviations into a declared scalar burden.
+
+Nothing in the reference declaration says that a valve will open. Nothing says which participant may use a pipe, or whether a pipe exists. The declaration also does not prove that ten units is the appropriate stock for either place. An applied reference needs reasons and evidence linked to the function it is meant to represent.
+
+References can serve different purposes in different disciplines. A calibration standard provides a comparison for an instrument. A design value specifies intended operating conditions. A statistical mean summarises a distribution. Our $x^*$ is a declared model reference. If an application wants to identify it with one of these other objects, it must supply the connection explicitly.
+
+\section{An equilibrium belongs to a law of change}
+To call a state an equilibrium, we must state the dynamics. In a simple discrete description, suppose a rule maps a current state $x$ to a next state $T(x)$. A state $\bar x$ is a fixed point of that rule when
+\begin{equation}
+T(\bar x)=\bar x.
+\end{equation}
+This equation defines a relation between a state and a particular rule. It does not say whether the state is desirable, fair or reachable from another state.
+
+Consider the rule ``do nothing''. Every state is then a fixed point in an action-only world. The state $(18,2)$ is as stationary as $(10,10)$. If the clinic needs a transfer, this stationarity can coexist with failed service. A fixed point therefore cannot be treated as a synonym for satisfactory function.
+
+Now consider a different hypothetical rule that always transfers a prescribed quantity when permitted. Its fixed points, if any, depend on the permission conditions and update law. Changing the rule can change the equilibria while leaving the potential unchanged. Conversely, changing the potential can change the evaluation of a fixed point without changing the physical rule.
+
+The lesson is that equilibrium is not a free-standing property of a list of numbers. It is a property of numbers under specified evolution. Whenever a claim says that an economy or resource system ``returns to equilibrium'', ask which variables, which dynamics, which disturbances and which sense of return are meant.
+
+\section{A steady state can contain continuing flow}
+The tank example adds another distinction. If equal quantities enter and leave during each interval, the stock can remain constant. The state is steady in that coordinate, but activity continues. A record of the stock alone cannot reveal whether the water is still or moving through.
+
+This matters for living systems and for infrastructure. Continuing function often depends on throughput, replacement, maintenance and exchange with surroundings. Describing a stable condition does not imply the absence of these processes. A model that represents them must specify both the state and the flows or transformations that sustain it.
+
+For our teaching model, the fixed-total internal-transfer world is deliberately narrower. It isolates redistribution of one conserved quantity. When we discuss ongoing withdrawal, regeneration or external supply conceptually, those processes are not thereby inserted into the equations. An extended world would need explicit terms and an appropriate physical boundary.
+
+The distinction prevents a misleading inference: a potential minimum in a closed redistribution model is not automatically the operating state of an open system providing continuous service. Withdrawal can move the open system away from the reference; replenishment can change the total; maintenance can affect available actions. Each process requires its own account.
+
+\section{Conservation restricts the possible reference}
+In the fixed-total model, the sum of stocks is $M$. A compatible reference must have the same total if exact matching is to be possible through internal lossless transfers. For two places with $M=20$, the reference $(10,10)$ is compatible. The reference $(12,12)$ requires a total of twenty-four and cannot be reached by merely rearranging twenty.
+
+This is not a subtle optimisation issue. It is a physical compatibility check. No controller, field or incentive can create the missing four units while the model remains closed and conservative. A calculation that appears to do so has changed a boundary, a state definition or an assumption, whether or not that change was admitted.
+
+Even compatible totals do not guarantee reachability. If Ridge and Vale have no connecting route, the difference cannot be corrected by the allowed actions. If a route points only one way, some states may permit correction and others may not. If physical limits restrict quantities, the path to the reference may require additional actions or may be unavailable.
+
+Thus three questions must be kept separate: is the reference arithmetically compatible, is it reachable through the allowed physical actions, and will a declared selector actually choose those actions? The first is a constraint check. The second concerns the action structure. The third concerns dynamics or policy.
+
+\begin{workedbox}{A reference that asks for missing resource}
+The actual state $(18,2)$ contains twenty units. The proposed reference $(12,12)$ contains twenty-four. Internal lossless transfer preserves the total, so it cannot reach that reference. Either the reference must be reconsidered for the closed model or an external addition must be explicitly declared. A potential can still be written around the incompatible reference, but zero burden would be physically unattainable within the stated world.
+\end{workedbox}
+
+\section{Stability is stronger than being an equilibrium}
+A state can be a fixed point and still behave differently when perturbed. To discuss stability, we must describe what counts as a small disturbance and what the subsequent dynamics do. Does the state remain near the fixed point? Does it return? Does the departure grow? These are different mathematical questions.
+
+An elementary analogy is a ball at rest on different surfaces, but even that analogy needs its own physical laws. A bowl suggests restoring motion under gravity and dissipation; a flat shelf suggests a different response; a crest suggests another. The shape alone is not a complete dynamics. Friction, constraints and applied forces determine the actual motion.
+
+The Gaussian potential in this book is a declared landscape for accounting. We shall use its derivatives to calculate marginal directions and its finite differences to evaluate completed changes. We do not silently assume a ball rolling under that potential, nor identify it with physical energy. A restoring controller would require an independently declared relation between the field and accepted action.
+
+This distinction is particularly important when the word ``homeostasis'' appears. A state with low represented burden has a property of the evaluation. A controller that repeatedly restores relevant function under disturbance has a property of behaviour. Establishing the first does not establish the second, although the first may be useful in designing or analysing the second.
+
+\section{What the Gaussian name contributes}
+The term Gaussian will enter through a mathematical shape. A positive scale and a reference define a normal-shaped reference expression; taking an appropriate relative negative logarithm produces a quadratic deviation measure. The later chapter derives that relation explicitly. The resulting potential is convenient because its gradient and finite changes can be computed exactly.
+
+The name does not claim that observed tank stocks follow a normal distribution. It does not claim that future disturbances are Gaussian, that people's needs are normally distributed or that a network has reached statistical equilibrium. Each of those would be an additional empirical or model assumption.
+
+Nor does the scale automatically represent measurement uncertainty. It is a declared physical scale for the deviation in the chosen coordinate. A sensor's uncertainty might influence an applied design, but identifying the two requires justification. Treating every sigma as a standard error simply because the symbol is familiar would change the model's meaning.
+
+The distinction is useful for readers approaching the mathematics without statistics. They can understand the potential as a smooth squared distance from a declared reference, with different scales changing the importance of a given physical deviation. The Gaussian relation explains the chosen form; it does not ask the reader to believe an unobserved probability law.
+
+\section{A reference can be revised, but not invisibly}
+Suppose Vale's clinic expands and the intended resource arrangement changes. A revised reference may be justified. The physical state at the instant of revision might remain exactly the same while the evaluated burden changes. That difference is caused by changing the evaluation, not by a resource transfer.
+
+If the account uses a fixed potential to value a sequence of actions, such a revision must be recorded as a separate change. Otherwise, an actor could appear to gain value merely because the target moved closer to the current state. Conversely, an actor could appear to lose value because a new requirement was introduced after the action.
+
+This is not an argument against learning or democratic revision. References should be reviewable when their purpose or evidence changes. It is an argument for preserving the identity of the account under which each claim was made. A new version can govern future evaluation while the old version remains available for interpreting earlier records.
+
+The same reasoning applies to changing scales. A larger scale can make the same deviation appear smaller in the potential. That is a change in evaluation, not proof that the physical condition improved. A record that separates physical change from model revision allows both to be discussed honestly.
+
+\section{The value of an action depends on its starting state}
+Imagine moving four units from Ridge to Vale. Starting from $(18,2)$, the endpoint is $(14,6)$. Starting from $(10,10)$, the endpoint is $(6,14)$. The action direction and quantity are the same; the starting states differ. Relative to the symmetric reference $(10,10)$, the first moves toward the reference and the second moves away.
+
+A name such as ``water delivery'' therefore cannot carry a universal sign. The physical context matters. The same route can relieve one imbalance and deepen another. Later the exact finite formula will make this dependence explicit, including the change of field during the transfer.
+
+This contextual character should not be confused with arbitrary judgement. Once the baseline, action, potential and process burden are fixed, the calculation is determined. What remains open is whether those declarations are appropriate for the intended application and how the institution uses the result. Determinacy within a model and justification of a model are separate achievements.
+
+The example also explains why a reference point is not an instruction to stop every useful activity. A service may require moving resource away from a reference at one moment and restoring it later through a separate process. The account should show those changes. A service policy must decide what actions are necessary and how continuing supply is arranged.
+
+\section{Reaching a point and staying there are different tasks}
+Suppose an allowed transfer takes the two-place world exactly to its declared reference. That calculation establishes an endpoint. To say that the system stays there, we need to know what happens next. A further request, an external withdrawal or a different actor's action can change the state. The first successful arrival supplies no general protection against those events.
+
+In the closed action-only teaching world, choosing no further actions does leave the state unchanged. This is a conditional fact about that simple world. In a world with continuing service, choosing no action may allow withdrawals to change the state. A claim about sustained balance must therefore include the process that creates the need for continuing response.
+
+There is also a distinction between one reachable point and a robust operating arrangement. A route might permit reaching the reference once while leaving no capacity for a later disturbance. To investigate robustness, a study must declare the disturbances and the available responses. The potential itself does not specify their frequency, magnitude or distribution.
+
+Keeping these tasks distinct helps organise the programme. Exact finite accounting explains a single accepted change. Sequential identities explain how declared changes add. Dynamic analysis or experiments examine behaviour under a specified evolution. Institutional investigation asks how those mechanisms operate among people. Each layer can build on earlier work while retaining its own unanswered questions.
+
+\section{The questions to ask before accepting an equilibrium claim}
+A claim that ``the field restores balance'' needs several questions. Is the field a potential derivative, an observed physical influence or a metaphor? What action law moves a quantity, under which constraints? Is the reference compatible and reachable?
+
+Identify the timescale and external processes: one action, an undisturbed sequence, or continuing demand and supply? Then identify the evidence: a conditional proof, software check, illustration or registered observation?
+
+A failed service demonstration may reflect an absent driving process, not a general impossibility. A static calculation is not a dynamic theorem. Precise vocabulary locates the remaining question.
+
+\section{Guided problems and answers}
+\subsection{The stationary unequal state}
+In a closed two-place world, a rule always chooses no action. Is $(18,2)$ an equilibrium under that rule? Does this establish satisfactory provision?
+
+It is a fixed point: the no-action update leaves the state unchanged. This establishes no service result. Service depends on the declared function and its criteria, neither of which the update rule supplies. Equilibrium and desirability are distinct questions.
+
+\subsection{The unattainable target}
+A closed system contains twenty units and declares reference $(12,12)$. Can a sequence of conservative transfers achieve zero deviation from this reference?
+
+No. The reference total differs from the physical total. Every internal lossless transfer preserves twenty, while the reference requires twenty-four. The mismatch must be resolved through a revised reference or an explicitly different open-system model; changing the action selector cannot remove it.
+
+\subsection{The revised scale}
+The physical state remains fixed, but the evaluator doubles a coordinate's deviation scale. Has a physical action improved the state?
+
+No physical change has been described. The numerical evaluation changes because the model changed. A proper record identifies that revision separately from actor-caused resource changes. Exact arithmetic cannot turn a change in definition into a performed action.
+
+\subsection{The Gaussian inference}
+A book uses a Gaussian-derived potential. May a reader conclude that observed stock fluctuations are normally distributed?
+
+No. A chosen reference shape does not establish a distribution of observations. That claim would require a statistical model and evidence appropriate to it. The potential can be used as a declared mathematical evaluation without making that empirical assertion.
+
+\section{What to carry forward}
+A reference states a comparison; equilibrium belongs to a law of change. Steady stock can coexist with continuing flow, and stability requires a dynamic argument. We now use these distinctions to construct physical states, actions and their exact signed account.

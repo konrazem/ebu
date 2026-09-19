@@ -1,0 +1,88 @@
+\chapter{Why local evaluation can be exact}\label{ch:local}
+The project asks for local valuation without a global observer deciding the
+worth of every action. The mathematical possibility comes from cancellation,
+not from approximating a large world by a small one. A local calculation is
+exact when it includes every potential term that can change.
+
+\section{The separable theorem}
+Let $V(x)=\sum_i v_i(x_i)$ and let $W$ contain all coordinates changed by
+$\delta$. For $i\notin W$, $z_i+\delta_i=z_i$. Split both sums:
+\begin{align}
+ V(z)-V(z+\delta)
+ &=\sum_{i\in W}[v_i(z_i)-v_i(z_i+\delta_i)]\\
+ &\quad+\sum_{i\notin W}[v_i(z_i)-v_i(z_i)]\\
+ &=V_W(z)-V_W(z+\delta).
+\end{align}
+No information about an unchanged term is needed to calculate its zero
+difference. This identity holds for nonlinear $v_i$ and does not require
+Gaussian geometry. The Gaussian model is one especially transparent
+specialization of the historical locality result \cite{foundation}.
+
+\section{A complete small example}
+Use references $(10,10,10)$ and scales $(2,2,2)$ at state $(18,2,12)$.
+The first two potential terms are eight each; the third is one-half.
+A four-unit transfer from cell one to cell two gives $(14,6,12)$, with
+potential terms two, two and one-half. The global difference is
+$16.5-4.5=12$. The two-endpoint local calculation is $16-4=12$.
+The remote cell's value was not assumed zero. It cancelled because it
+was unchanged.
+
+If an action also changes cell three, the proof demands its inclusion.
+Calling the third effect small or inconvenient does not permit its omission
+while retaining the adjective exact. One may define an approximation, but
+then its error and claim must be stated separately.
+
+\section{The factor version}
+A more general potential has factors
+\begin{equation}
+ V(x)=\sum_{\alpha\in\mathcal F}\phi_\alpha(x_{A_\alpha}),
+\end{equation}
+where $A_\alpha$ is the set of arguments used by factor $\alpha$. Let
+$\mathcal F_W=\{\alpha:A_\alpha\cap W\ne\varnothing\}$.
+Every factor outside $\mathcal F_W$ cancels, so the exact difference is
+the sum over $\mathcal F_W$. A factor in that set may require reading a
+coordinate outside $W$. Write support and read support need not coincide.
+
+For example a declared term $k(x_1-x_3)^2$ changes when an action changes
+cell one. Cell three may remain physically untouched, yet its current
+value is required to evaluate the factor. A two-endpoint view that omits
+it cannot be called complete for that expanded potential. This is an
+illustrative extension, not an adopted nonseparable Gaussian model.
+
+\section{Three different locality claims}
+\emph{Valuation locality} means the finite value needs only complete
+affected factors. \emph{Information locality} means a particular actor or
+module may access only specified records. \emph{Coordination locality}
+concerns how candidate groups are assembled and selected. A proof of the
+first does not establish the second or third.
+
+A central program could enumerate every group in the world and evaluate
+each group locally. Its values would satisfy cancellation, but the selector
+would still be global. Similarly a class named LocalView is not a complete
+security proof if a helper can read unrestricted state elsewhere. The implementation chapters later in this volume turn these distinctions into review questions without asserting that the
+future runtime already enforces them.
+
+\section{Frozen state and version completeness}
+Locality also requires agreement about time and parameters. Combining the
+source's present stock with the destination's stale stock does not evaluate
+one declared state. Changing a scale between the before and after terms
+does not compute one potential difference. Exact arithmetic cannot repair
+either mismatch.
+
+Thus a reconstructible local quote binds the state version, affected factor
+identities, reference/scale version, action increment and process-burden
+declaration. Hashes can identify those inputs. They cannot certify that a
+sensor observed reality correctly; that is a measurement question.
+
+\section*{Exercise and answer}
+Suppose a quote reports a difference of twelve while a global audit reports
+eleven. Name three possible causes before blaming numerical precision.
+An affected factor may be missing; the states may belong to different
+epochs; or one calculation may use a different parameter version. Each is
+a semantic discrepancy. The exact identity tells the reviewer where to
+look because, under its actual assumptions, such a difference is impossible.
+
+\section*{Chapter recap}
+Local exactness is a cancellation theorem over complete affected factors.
+It is powerful precisely because its boundary is precise. It does not
+certify sensors, ownership, or decentralized selection.

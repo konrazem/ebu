@@ -1,13 +1,30 @@
 # Book I blueprint: why EBU, and what its equation means
 
-**Status:** author-requested editorial architecture; no manuscript or PDF has
-been generated.
-**Working title:** *Why EBU? Life, Balance, and the Accounting of Physical
-Action*.
+> **Current eight-part update:** former Parts II and III are now combined as
+> Part II, continuing Chapters 33–62 after Part I's 1–32. Former IV–IX become
+> III–VIII. The latest brief requires at least 200 substantive pages per current
+> volume, preserved teaching depth and smaller headings. See
+> [the current series plan](EBU_FUTURE_BOOKS_STRUCTURE.md) and
+> `books/part_ii_integrated/EDITORIAL_CONTRACT.md`.
+> Older stage-specific scope/page-count wording below is retained as history,
+> not a competing current instruction. Original-source numbering stays unchanged.
+
+**Current author correction:** revise the original full-length explanatory
+Part I, preserve its style and coverage, and prioritize clear, thorough,
+well-written explanation. The current 200-page floor replaces the withdrawn
+300-page requirement and does not permit padding. The current
+32-chapter architecture is recorded in
+[BOOK_I_FULL_LENGTH_REVISION.md](BOOK_I_FULL_LENGTH_REVISION.md).
+The 18-chapter outline below is retained as earlier planning, not permission
+to condense the original textbook into a short introductory document.
+**Current title:** *Physical Intuition and the EBU Idea — Revised Gaussian Edition*.
 **Primary reader:** an interested non-specialist who can follow arithmetic but
 should not need prior economics, calculus, graph theory or programming.
-**Current boundary:** plan the new introductory book now; stop before authoring
-or rendering it. No experimental or implementation stage is authorized here.
+**Current boundary:** Book I authoring, rendering and review are authorized by
+the subsequent direct request. No experimental or scientific implementation
+stage is authorized. Original PDFs remain unchanged; subsequent permission
+also includes their combined continuation as Part II and the cross-volume
+typography/Onsager update, documented in `books/part_ii_integrated/README.md`.
 
 Read with [CURRENT_SCIENTIFIC_AUTHORITY.md](CURRENT_SCIENTIFIC_AUTHORITY.md),
 [LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md](LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md)

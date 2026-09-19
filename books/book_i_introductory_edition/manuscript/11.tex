@@ -1,0 +1,55 @@
+\chapter{The local Gaussian ruler}\label{ch:gaussian}
+\question{How can distance from a reference be measured transparently?}
+
+Start with the displacement: stock minus reference. Divide by the positive scale to express that displacement in comparable local scale units. Square the result so that equal-sized displacements above and below the reference contribute equally. Finally, multiply by one half, a convenient convention that simplifies the derivative later.
+
+These four operations define a local potential:
+\begin{equation}\label{eq:local}
+ V_i(x_i)=\frac12\left(\frac{x_i-x_i^\star}{\sigma_i}\right)^2,
+ \qquad \sigma_i>0.
+\end{equation}
+The subscript $i$ identifies a cell. The function $V_i$ turns its stock into a declared deviation score. Both numerator and denominator have stock units, so their ratio and its square are dimensionless. In this illustrative account, potential and EBU values therefore use a dimensionless account unit. They are not litres, joules or currency.
+
+\section{Calculating before interpreting}
+For a ten-litre reference and two-litre scale, a stock of fourteen litres gives
+\begin{equation}
+ V_i(14)=\frac12\left(\frac{14-10}{2}\right)^2
+ =\frac12(2)^2=2.
+\end{equation}
+A stock of six litres gives the same value: the standardised displacement is $-2$, whose square is four. At the reference, the displacement and potential are both zero.
+
+For a stock of twelve litres, the value is $\tfrac12(1)^2=0.5$. Doubling a displacement from two litres to four multiplies its squared contribution by four. This is a property of the chosen ruler. It is not an empirical assertion that every physical harm grows quadratically.
+
+If the scale were four litres instead of two, a four-litre displacement would contribute $0.5$ instead of $2$. A wider scale makes the same displacement count less. This is why scale selection cannot be hidden in implementation or adjusted after seeing an outcome.
+
+\illustration{quadratic}{Mathematically derived: $V_i=\tfrac12((x_i-10)/\sigma_i)^2$ for scales of two and four litres. Dashed and solid curves distinguish the scales without relying on colour. The curves are reference geometry, not measured fluctuations or simulated motion.}{fig:quadratic}
+
+\section{Why the word Gaussian?}
+A normal, or Gaussian, density has a familiar bell shape. In its standard mathematical definition, a location parameter sets its centre and a positive scale sets its width.\cite{normal} Using our symbols, a reference density on the real line would be
+\begin{equation}\label{eq:normal}
+ p_i(u)=\frac{1}{\sigma_i\sqrt{2\pi}}
+ \exp\!\left[-\frac12\left(\frac{u-x_i^\star}{\sigma_i}\right)^2\right].
+\end{equation}
+Here $u$ is a possible stock-coordinate value in the mathematical reference, $\pi$ is the circle constant and $\exp$ is the exponential function. A density has inverse-stock units; probabilities would come from integrating it over intervals under an adopted probability model.
+
+Compare the density at $u$ with its value at the centre. The identical normalising factors cancel. The negative natural logarithm of that ratio is
+\begin{equation}\label{eq:log}
+ -\log\frac{p_i(u)}{p_i(x_i^\star)}
+ =\frac12\left(\frac{u-x_i^\star}{\sigma_i}\right)^2.
+\end{equation}
+The logarithm reverses the exponential, and the minus sign makes the score grow away from the centre. The density ratio is dimensionless, so taking its logarithm is consistent with the units. This relative-log-density identity explains the name ``Gaussian ruler''.
+
+A reader need not use probabilities to use the quadratic definition. The bell shape explains an established mathematical connection. It does not provide evidence that the actual stocks or future trajectories follow a normal distribution.
+
+\section{The physical domain does not become Gaussian}
+The normal reference on the real line assigns density even to negative values. Our physical tanks do not permit negative stocks. They also have a fixed combined total, which couples their possible states: if one stock rises in a lossless transfer, another falls.
+
+Consequently, a sum of local quadratic terms does not establish independent normally distributed physical stocks. We use the reference geometry on a separately declared physical domain. A probability law for actual states would require additional assumptions about the process and would need separate justification.
+
+The name also has nothing to do with Gauss's divergence theorem, a theorem relating a field's flux through a boundary to its divergence inside. Neither that theorem nor a bell curve supplies a law of economic recovery. Here the connection is exactly the relative logarithm in equation~\eqref{eq:log}.
+
+A final caution concerns similar-looking functions. The score $1-\exp(-V_i)$ is bounded, whereas $V_i$ grows without a bound on the full real line. Their slopes and finite differences differ. Replacing one with the other changes the model; it is not cosmetic notation.
+
+\practice{With reference ten litres and scale two litres, what are the scores at eight, ten and twelve litres?}{They are $0.5$, $0$ and $0.5$. The equality on either side expresses symmetry of the ruler. It does not say that the corresponding physical conditions have equal consequences in every real application.}
+
+\carry{We have defined a local score and stated its limits. Next we add such scores to describe a joint state, while preserving the possibility of exact local evaluation.}

@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+<fontconfig>
+  <dir>/System/Library/Fonts</dir>
+  <cachedir>/Users/konrad.grzyb/code/ebu/books/part_i_revised/build/fontcache</cachedir>
+</fontconfig>

@@ -1,0 +1,441 @@
+{
+  "status": "AUTHOR_REVIEW_MANUSCRIPT",
+  "source_parent_head_at_recording": "05f3cb02d0c48e60de98342edfac9c36f2cecc6f",
+  "artifact": "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf",
+  "artifact_sha256": "ae175405bc2347cb881a3b2b5a2b9c39d7f3eb178d2bdd336c23c5fcd83993bb",
+  "pages": 284,
+  "trim_pdf_points": [
+    450,
+    666
+  ],
+  "repeat_build_byte_identical": true,
+  "arithmetic_checks": 127,
+  "scientific_experiments_executed": 0,
+  "original_pdfs": [
+    {
+      "part": "I",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_I_Unified_Explanatory_Edition.pdf",
+      "sha256": "335ed5c6d3541d48a61438e213a8a1148eb196649da83392a4ba0741ce65a4ad"
+    },
+    {
+      "part": "II",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "sha256": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095"
+    },
+    {
+      "part": "III",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "sha256": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019"
+    }
+  ],
+  "scientific_sources": [
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md",
+      "sha256": "21a6ce38b13e8967074ca16eac4d1eea80c125cc5ba59e87e2f3950b1000c9ee",
+      "git_blob_at_head": "c5a78ff2d1218e15d205040dff7846211bb92e4b"
+    },
+    {
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e",
+      "git_blob_at_head": "3311f8db171e81eb350134ad708632a8ca2743cd"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10",
+      "git_blob_at_head": "e4c5dbec7e025dba102f5fa5b26843f891ad881b"
+    },
+    {
+      "path": "results/v3.0/gate1dc/MANIFEST.md",
+      "sha256": "417552fce4681953d1b6d6bc3353d3e14f865aca2d17adefd1edf58a2528f9a8",
+      "git_blob_at_head": "d655bb1ccb89a3a33ef60d8a6a9718a2b0164cac"
+    }
+  ],
+  "files": [
+    {
+      "path": "BOOK_I_FULL_LENGTH_REVISION.md",
+      "sha256": "5427cbefc6b81f12b5539ca421836e7206d240fba3034d9204c4acdc3788ac49",
+      "bytes": 6521
+    },
+    {
+      "path": "BOOK_I_GENERATION_HANDOVER.md",
+      "sha256": "b16d791f8082a5d2e0ad8bdd8e9838ded5de6eb50d882f13984cb9c0ea5b808d",
+      "bytes": 21529
+    },
+    {
+      "path": "BOOK_I_INTRODUCTION_BLUEPRINT.md",
+      "sha256": "25d26fc4896ea23bc202c80766d2c31a5741430cab868913bf849c087709a0af",
+      "bytes": 29614
+    },
+    {
+      "path": "CURRENT_SCIENTIFIC_AUTHORITY.md",
+      "sha256": "88939ac6ef644800f7e6d12cb9ab5adad3aef96e7eca4e38d3b1d73748c7d44d",
+      "bytes": 7987
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "sha256": "e9361596e3424cc5043977715a474867116edbc2d01dc3b387401a41e8e0ec68",
+      "bytes": 8091
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md",
+      "sha256": "12bc1e016fbdb91fde0e3a9625a5d42b45019c4d7bda5c0c4729acf42f5ba15c",
+      "bytes": 28296
+    },
+    {
+      "path": "books/README.md",
+      "sha256": "d4fe9e13a1c2e60d34d0ec151cbcf6a9a17d16c88694a4fcfd32d3f13a28d924",
+      "bytes": 1534
+    },
+    {
+      "path": "books/part_i_revised/.gitignore",
+      "sha256": "81dcf4b5d9d580ece950626039704be36a4e6ea069ee46d682502411df3ecac6",
+      "bytes": 34
+    },
+    {
+      "path": "books/part_i_revised/EDITORIAL_CONTRACT.md",
+      "sha256": "0d14df96e36e940653b89520e0adc91580b253a0a3427f90f03fee10a181073d",
+      "bytes": 5875
+    },
+    {
+      "path": "books/part_i_revised/README.md",
+      "sha256": "9aa29bebfd5700d0063f3434c0d1fbe71eca0f788b237cb64d82c9938fa6c325",
+      "bytes": 3662
+    },
+    {
+      "path": "books/part_i_revised/book.tex",
+      "sha256": "95038782df4cf9cdd2940ae123a2e28d5cb243a0cd22c8df96b2549b29d1829d",
+      "bytes": 4490
+    },
+    {
+      "path": "books/part_i_revised/build_book.py",
+      "sha256": "2777de5b2c3899f82c516ca6661b32fb1ec8357bb7ba08d800aa0cd3f09f5038",
+      "bytes": 972
+    },
+    {
+      "path": "books/part_i_revised/chapters/01.tex",
+      "sha256": "e4c87a516e9d4517f6a164a705451e65de26ea7c7872e1f79de9e67991887c23",
+      "bytes": 17915
+    },
+    {
+      "path": "books/part_i_revised/chapters/02.tex",
+      "sha256": "87d56ad2c012ae8cba5594f63840a8ba5cf1ce7f542cbca2e498de261395a40b",
+      "bytes": 18049
+    },
+    {
+      "path": "books/part_i_revised/chapters/03.tex",
+      "sha256": "7b4b7b6af5ea9fddf18737a0b2fb7ca3465af182948bb98e165b7f66cdfba681",
+      "bytes": 17664
+    },
+    {
+      "path": "books/part_i_revised/chapters/04.tex",
+      "sha256": "883e3417bbc43b02c836c3e7231016614657672f4db3b9d8f5eb052691254293",
+      "bytes": 16908
+    },
+    {
+      "path": "books/part_i_revised/chapters/05.tex",
+      "sha256": "ad03469c51105a026081c737cc75f186aab85cb160cfae49bfb46479cff87610",
+      "bytes": 16825
+    },
+    {
+      "path": "books/part_i_revised/chapters/06.tex",
+      "sha256": "2b120f7d9691b0558bc0b695464b5fc7619dcc0b8c49f23f361e33435fc33e66",
+      "bytes": 16762
+    },
+    {
+      "path": "books/part_i_revised/chapters/07.tex",
+      "sha256": "c71d9018f8fab403b6006c16b5e5b998ce24dfd2a9d0a07b8dcb804c5c5f4bfc",
+      "bytes": 17630
+    },
+    {
+      "path": "books/part_i_revised/chapters/08.tex",
+      "sha256": "ffcffaa71c66c1071aa3a19f6458d29182318a228605d403fc1a27c2a7c3e3c4",
+      "bytes": 17740
+    },
+    {
+      "path": "books/part_i_revised/chapters/09.tex",
+      "sha256": "3a04dfe1d9ad83593a29550afc798d3d726db211e358c4d0865002184ea45fd7",
+      "bytes": 17609
+    },
+    {
+      "path": "books/part_i_revised/chapters/10.tex",
+      "sha256": "a18676567a1546091e9fcff67256e8403264e53441826cd4d5f850b12f0dac13",
+      "bytes": 16202
+    },
+    {
+      "path": "books/part_i_revised/chapters/11.tex",
+      "sha256": "9ba5802c59183af8fb55b07ec08c1f0bfd74ea67d3dcde453c35013ad781c948",
+      "bytes": 17172
+    },
+    {
+      "path": "books/part_i_revised/chapters/12.tex",
+      "sha256": "65b8e0494b718edf6bd55cb1f9c9b6a3acec0123ea46fc4a11ca0f3b7a606e1a",
+      "bytes": 18545
+    },
+    {
+      "path": "books/part_i_revised/chapters/13.tex",
+      "sha256": "9aaf19793454f1bebc236a3facdfb0a3a0e6bf2f9793746a7a3d4634dbdbb4d7",
+      "bytes": 21673
+    },
+    {
+      "path": "books/part_i_revised/chapters/14.tex",
+      "sha256": "12f5f9284516b3f285904386560eea620cd2145d60d0ae7dee1659ac28e03695",
+      "bytes": 18476
+    },
+    {
+      "path": "books/part_i_revised/chapters/15.tex",
+      "sha256": "8e5d79a08d509884f4525ad35df6af333dfc7bb6c597b6483a9e3ba3ccd64698",
+      "bytes": 17096
+    },
+    {
+      "path": "books/part_i_revised/chapters/16.tex",
+      "sha256": "25122d5c9411b6966ac32183685cc13bf30c50b7b69acd41f80f1c35ec177fc4",
+      "bytes": 17736
+    },
+    {
+      "path": "books/part_i_revised/chapters/17.tex",
+      "sha256": "e0916af03f73cdc48311319097463374d51a0207b06a79b089680aec08ab8b52",
+      "bytes": 14648
+    },
+    {
+      "path": "books/part_i_revised/chapters/18.tex",
+      "sha256": "e7710c093e321f7d80ce41a267ce7c892fb7252f3801e063d266aba81bc268c0",
+      "bytes": 14688
+    },
+    {
+      "path": "books/part_i_revised/chapters/19.tex",
+      "sha256": "d7256985aef4ffdef75f5f3f1bfd54586b1afa62f839e8c6d2ba92b0f48efd9a",
+      "bytes": 13871
+    },
+    {
+      "path": "books/part_i_revised/chapters/20.tex",
+      "sha256": "68dc395da8d375d6c51b8e9fa5278ca59ba7be07c83f0073dacc6e5b4cedf2be",
+      "bytes": 14054
+    },
+    {
+      "path": "books/part_i_revised/chapters/21.tex",
+      "sha256": "2bf03c330699e744b3a0e952deac7b452f8bf7f38f39b7fb507dee04b075b58d",
+      "bytes": 13030
+    },
+    {
+      "path": "books/part_i_revised/chapters/22.tex",
+      "sha256": "ffbc5a6bc2a7ce15c86cd8ad779ab3357e486d443ae0c64fe8b5288914d04989",
+      "bytes": 14876
+    },
+    {
+      "path": "books/part_i_revised/chapters/23.tex",
+      "sha256": "3d749816ea0f9c770804329b8eae8c88aed4a2c5340c0c8d65753e9d246c046a",
+      "bytes": 17426
+    },
+    {
+      "path": "books/part_i_revised/chapters/24.tex",
+      "sha256": "27f011ce61ccc665099b9db905efe00bd8957368fb0b0d1c3fec778b6ab51e84",
+      "bytes": 17180
+    },
+    {
+      "path": "books/part_i_revised/chapters/25.tex",
+      "sha256": "726ea40cc87e494defda0b3a21ff9c0f01c6fe3ba95968f7c61a8136a8d41071",
+      "bytes": 17563
+    },
+    {
+      "path": "books/part_i_revised/chapters/26.tex",
+      "sha256": "8ee225d2d3f501289606114a02f4c629dad469a100471c3e7ef80ef557ee834b",
+      "bytes": 16580
+    },
+    {
+      "path": "books/part_i_revised/chapters/27.tex",
+      "sha256": "fbfff235f51b992175c148c10e256045c6501e23e99dfb73d7b6431ae87635ed",
+      "bytes": 16848
+    },
+    {
+      "path": "books/part_i_revised/chapters/28.tex",
+      "sha256": "59b95895291e174b534d2532e9ccff21c26ecc5c1935c0391cb6b8627031ea1c",
+      "bytes": 17612
+    },
+    {
+      "path": "books/part_i_revised/chapters/29.tex",
+      "sha256": "47ab7a3aef080ebead3b5aa23bc407709c0dd9d73c4c720d21f2e4e826b8abec",
+      "bytes": 18041
+    },
+    {
+      "path": "books/part_i_revised/chapters/30.tex",
+      "sha256": "451066da4885cc9f1fb5a6133016824714839c751fbab3239f35861eac286428",
+      "bytes": 16921
+    },
+    {
+      "path": "books/part_i_revised/chapters/31.tex",
+      "sha256": "68975e07a9582720ec4004cdd13be41b0732344af2ef7b21ba01f4a0b1da622e",
+      "bytes": 18232
+    },
+    {
+      "path": "books/part_i_revised/chapters/32.tex",
+      "sha256": "12bfb34f2b2f6d66d08c0b0d31d9a1ca1fbef4e330fdcda153ec6454df6ce1ca",
+      "bytes": 23214
+    },
+    {
+      "path": "books/part_i_revised/core_notes.md",
+      "sha256": "2b0db57682ba1356a8070ac546c9eddf4bc6bb02b3f6e0ee8952383db06c7d33",
+      "bytes": 5635
+    },
+    {
+      "path": "books/part_i_revised/figures/account_layers.pdf",
+      "sha256": "35f2366df465120cd1f33aa0a331f0e81f43bead61c7c6bed93c909e0e05535e",
+      "bytes": 2092
+    },
+    {
+      "path": "books/part_i_revised/figures/finite.pdf",
+      "sha256": "0666e2b3e783d490dcb52236f89d510c2509a000877715ca0f4f0bb03454d72c",
+      "bytes": 5868
+    },
+    {
+      "path": "books/part_i_revised/figures/gaussian.pdf",
+      "sha256": "2ab1d6e6148cb31d5b292df5293fe19605a533d060f7f2e3ddff2914302d087f",
+      "bytes": 5378
+    },
+    {
+      "path": "books/part_i_revised/figures/group.pdf",
+      "sha256": "08bf6f1df6e78534535dbef781f9bb17247b3f535507feb83aa20045e6db48af",
+      "bytes": 2052
+    },
+    {
+      "path": "books/part_i_revised/figures/locality.pdf",
+      "sha256": "a847556ac9b2e755af5b7a58237f5f53d5499cc658342e814799be7636e5c237",
+      "bytes": 1932
+    },
+    {
+      "path": "books/part_i_revised/figures/marginal.pdf",
+      "sha256": "76fa1525bd26dcf88b5c1a5fed78c57320a3d25059191c1ba83291dba7290a20",
+      "bytes": 5750
+    },
+    {
+      "path": "books/part_i_revised/figures/potential.pdf",
+      "sha256": "3deddd9654900a0b8ea679a6ab5a5f7672d5ac25f47f8049a43614c25f5a2d1a",
+      "bytes": 5353
+    },
+    {
+      "path": "books/part_i_revised/figures/route.pdf",
+      "sha256": "a09b5e5ef04f706ab7aea22b2ad1eb732f2c4fce1d1cc12129d68ecfd612d7ee",
+      "bytes": 1968
+    },
+    {
+      "path": "books/part_i_revised/figures/sequence.pdf",
+      "sha256": "7afdfa64f696bf6018901af622e4fd7621780f01d3cd999a86c5a84d634bc6ae",
+      "bytes": 2064
+    },
+    {
+      "path": "books/part_i_revised/figures/transfer.pdf",
+      "sha256": "e5fd0438d069c7fb739c0e4119cdedb6ab57aeeb930f99ac3b07f4d87d4124be",
+      "bytes": 1852
+    },
+    {
+      "path": "books/part_i_revised/figures/two_records.pdf",
+      "sha256": "12036a609b9be156505e1234a6b3e17db484a969a709e6f2e1483d811ff51ed8",
+      "bytes": 2115
+    },
+    {
+      "path": "books/part_i_revised/figures.py",
+      "sha256": "dd092008ba113a329b3d773fd2df7efeb56346de1d7001dbf80650ae0ec78d1f",
+      "bytes": 5772
+    },
+    {
+      "path": "books/part_i_revised/finalize_manifest.py",
+      "sha256": "ac23436239cfbc21c2db0450a35384ab0a8c625452091b10715a2f83592dd0e2",
+      "bytes": 2864
+    },
+    {
+      "path": "books/part_i_revised/fontconfig.xml",
+      "sha256": "24b81a95fbade31ce4a893c09420f7513656693445b3c1b7436c379ffd33d14d",
+      "bytes": 214
+    },
+    {
+      "path": "books/part_i_revised/frontmatter.tex",
+      "sha256": "218af3b2450212dee728d4ed98be022beb08f9807985f38a85326607e59b6529",
+      "bytes": 10761
+    },
+    {
+      "path": "books/part_i_revised/glossary.tex",
+      "sha256": "fb195b84fed47facda9c23e5e7018961632a3b64036e0606c53993490d3d239c",
+      "bytes": 10054
+    },
+    {
+      "path": "books/part_i_revised/intro_notes.md",
+      "sha256": "527665217eb610c66cfd947ba4e06ab6039bee2ed8a7a3d88ffa915b63afc46b",
+      "bytes": 6447
+    },
+    {
+      "path": "books/part_i_revised/intro_sources.tex",
+      "sha256": "20c8f15c660d66c40c6f936a92f39a36a3445b0a2607399da471ca3e884fad0f",
+      "bytes": 3553
+    },
+    {
+      "path": "books/part_i_revised/prepare_baseline.py",
+      "sha256": "d1ea9ec7887dd7df29ad44d727c56976f31a2ab320b1941ef248ef108273871e",
+      "bytes": 1297
+    },
+    {
+      "path": "books/part_i_revised/prepare_review.py",
+      "sha256": "6946a85d1ea1367a7fcf47ea0a081a1c3247afd0456e0e540f78ddfc887922c7",
+      "bytes": 5115
+    },
+    {
+      "path": "books/part_i_revised/review/PARTS_II_III_COMPATIBILITY_REVIEW.md",
+      "sha256": "ec7b0c607d47413fc02db80ad681b64cea01181e504f1e6054943c1991a8e20d",
+      "bytes": 11657
+    },
+    {
+      "path": "books/part_i_revised/review/VERIFICATION_REPORT.md",
+      "sha256": "49f1846b22273f5a4c3762cfc134594dae7a8ffbfd2d293be4ce3bad1450bf9a",
+      "bytes": 7996
+    },
+    {
+      "path": "books/part_i_revised/review/artifact_checks.json",
+      "sha256": "30851923788b9506b925ab45c1e5a3cda18556265856af26078d26a25f6d0348",
+      "bytes": 3433
+    },
+    {
+      "path": "books/part_i_revised/review/original_outline_disposition.json",
+      "sha256": "a93f6108885cd110ce3f4d0ec3aa8db814318e11533377db616ec1a239334683",
+      "bytes": 181608
+    },
+    {
+      "path": "books/part_i_revised/review/revision_ledger.md",
+      "sha256": "c7270184582db7b57a5dedba333cad773f695a1ce38278a2ce59f35b15a5fcdd",
+      "bytes": 51509
+    },
+    {
+      "path": "books/part_i_revised/revision_ledger.py",
+      "sha256": "98a6539b47b4a5d8d6e327a2da2c112939ea6d4224255f0ef6ddc6987a91f940",
+      "bytes": 6317
+    },
+    {
+      "path": "books/part_i_revised/sources.tex",
+      "sha256": "6ee979b3a429b98757a881ffae30d7c0eab57cd319eddb5593fbaec8e56b8114",
+      "bytes": 4020
+    },
+    {
+      "path": "books/part_i_revised/studio_arithmetic.py",
+      "sha256": "f48445b3fc1ef3aa3b76125a0cb3dc354516ceacc4d616552eb9402b2da096e2",
+      "bytes": 7438
+    },
+    {
+      "path": "books/part_i_revised/studio_notes.md",
+      "sha256": "4bdfbe916dee6d667aa9293b29b6516d83fc1d6f214a6a82ab2949d892e4d4bd",
+      "bytes": 6049
+    },
+    {
+      "path": "books/part_i_revised/verify_arithmetic.py",
+      "sha256": "d07d90b06c309eb6c5126b60c9a2df6dbd5adebeb27f82d3e9f3f0bb7099f0ef",
+      "bytes": 2774
+    },
+    {
+      "path": "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "ae175405bc2347cb881a3b2b5a2b9c39d7f3eb178d2bdd336c23c5fcd83993bb",
+      "bytes": 1011092
+    }
+  ],
+  "inventory_exclusions": [
+    "this manifest",
+    "build caches",
+    "rendered review images",
+    "unchanged earlier short edition"
+  ]
+}

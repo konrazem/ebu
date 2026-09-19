@@ -1,0 +1,68 @@
+\chapter{Provenance, execution and immutable evidence}\label{ch:provenance}
+A result is not reproducible merely because its final number is saved.
+Another reader needs to know which model, protocol, implementation and
+environment produced it, whether the run completed, and whether the records
+were changed afterward. Provenance connects a claim to that chain.
+
+\section{The scientific packet precedes the run}
+A registered packet identifies hypotheses, domain, arms, parameters,
+randomness, metrics, falsifiers and interpretation rules. It also binds the
+implementation and execution environment. These decisions must precede
+outcome inspection; otherwise a successful-looking configuration can be
+selected from many attempts without saying so.
+
+The present book does not fill those fields for the Gaussian programme.
+It describes what must be declared. No horizon, seed family, numerical
+tolerance, performance threshold or cloud resource is frozen by an example
+in these chapters.
+
+\section{Attempt, run and completion are different objects}
+An invocation can fail before a scientific state transition. A campaign
+can contain many registered runs within one authorized attempt. A runner
+can finish producing output before the full study is durably finalized.
+These distinctions prevent both inflated execution claims and unauthorized
+retry disguised as routine continuation.
+
+Historical Gate 1D-C's manifest explicitly distinguishes the runner summary
+from the full-study completion sentinel \cite{gate}. That exact operational
+contract belongs to that study. A future Gaussian packet must define its
+own compatible mechanics and permissions, not inherit an old launch command.
+
+\section{Content identity and scientific meaning}
+Hashes identify bytes. A manifest should record the protocol, configuration,
+source versions and produced artifacts so their identities can be checked.
+Hashes do not certify a model's validity or a sensor's honesty. They make
+it harder to substitute one object for another unnoticed.
+
+Canonical serialization matters when equivalent-looking objects can produce
+different byte sequences. Numeric representation, key ordering and schema
+version are part of the identity contract. A replay should not silently
+normalize a value in a way that changes the registered scientific object.
+
+\section{What to retain in a trace}
+For each event, retain enough information to reconstruct its physical
+baseline, forcing, candidate/selected identities, accepted increment,
+valuation inputs, owner changes, account audit and refusal state. The exact
+schema is prospective, but its purpose is fixed: an independent reader must
+be able to tell what happened without trusting a narrative summary alone.
+
+Not every diagnostic belongs in the actor's view. A global evaluator may
+record quantities for analysis while the selector is forbidden to read them.
+Trace completeness and actor information locality are compatible when their
+data paths are separated.
+
+\section{Corrections should not erase history}
+If a result artifact is wrong, the correction stage should identify the
+original, the defect, the corrected interpretation and the authority for any
+replacement. Rewriting the original bytes until they fit a later story
+destroys the very evidence needed to understand the error.
+
+The book revision follows the same principle. Original PDFs and historical
+result artifacts are preserved. New exposition explains which model-specific
+claims do not transfer, rather than editing old experimental outcomes to
+look like Gaussian evidence.
+
+\section*{Chapter recap}
+Provenance makes a claim inspectable, not automatically true. Frozen
+scientific choices, exact identities, completion rules and preserved failures
+allow an independent review to determine what the evidence actually supports.

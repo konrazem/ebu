@@ -1,0 +1,12 @@
+{
+  "byte_identical": true,
+  "before": {
+    "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf": "ae175405bc2347cb881a3b2b5a2b9c39d7f3eb178d2bdd336c23c5fcd83993bb",
+    "output/pdf/EBP_Book_Part_II_Integrated_Gaussian_Explanatory_Edition.pdf": "23d9c6e0069c7fbe28bb3b91ca6cfcf1eb3b4d10b52d61b1ea17eb8eb0f40b5f"
+  },
+  "after": {
+    "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf": "ae175405bc2347cb881a3b2b5a2b9c39d7f3eb178d2bdd336c23c5fcd83993bb",
+    "output/pdf/EBP_Book_Part_II_Integrated_Gaussian_Explanatory_Edition.pdf": "23d9c6e0069c7fbe28bb3b91ca6cfcf1eb3b4d10b52d61b1ea17eb8eb0f40b5f"
+  },
+  "model_execution": false
+}

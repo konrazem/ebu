@@ -1,0 +1,90 @@
+\chapter{Sequences, cycles and external change}\label{ch:cycles}
+The simplest accounting theorem in EBU is also one of the most important.
+If every action begins where the previous one ended, the intermediate
+potentials cancel. A surprisingly large number of incorrect issuance rules
+fail because they stop using those live intermediate states.
+
+\section{Undriven telescoping}
+Let $x^0,x^1,\ldots,x^N$ be a declared sequence under one fixed potential,
+with action values $E_k=V(x^k)-V(x^{k+1})-C_k$. Then
+\begin{equation}\label{eq:telescope}
+ \sum_{k=0}^{N-1}E_k
+ =V(x^0)-V(x^N)-\sum_{k=0}^{N-1}C_k.
+\end{equation}
+To prove it, write the first two differences: $V(x^0)-V(x^1)$ and
+$V(x^1)-V(x^2)$. Their shared term cancels. Repeating that cancellation
+leaves only the first and last endpoints. Neither convexity nor Gaussian
+geometry is required for this algebraic identity.
+
+For a closed physical cycle $x^N=x^0$, the total is $-\sum C_k$.
+If all burdens are nonnegative, it cannot be positive. With $C=0$ it is
+zero, not necessarily negative. A reversible movement can return every
+represented coordinate to its start without making the account grow.
+
+\section{A live-state calculation}
+Use $(18,2)$ with reference $(10,10)$ and scales $(2,2)$. Transfer two
+units, then three, then one. The successive potentials are
+\begin{equation}
+ 16,\quad9,\quad9/4,\quad1.
+\end{equation}
+The action values are $7$, $27/4$ and $5/4$, whose sum is fifteen.
+That equals $16-1$. Quoting all three against the first state instead
+would replace the last two live values with unrelated counterfactuals.
+
+Splitting a transfer preserves the field total when the resulting sequence
+has the same endpoint. It need not preserve separate activation costs,
+physical delays or intervening disturbances. A theorem about endpoint
+differences is not a theorem that every way of organizing work costs the same.
+
+\section{Forcing before the action epoch}
+The new programme proposes an external change from $x_t$ to $z_t$ before
+actors evaluate their candidates. Define
+\begin{equation}
+ D_{\mathrm{ext},t}=V(z_t)-V(x_t),\qquad
+ E_t=V(z_t)-V(x_{t+1})-C_t.
+\end{equation}
+Add and subtract $V(x_t)$ in the second expression and sum:
+\begin{equation}\label{eq:driven}
+ \sum_{t=0}^{N-1}E_t
+ =V(x_0)-V(x_N)+\sum_{t=0}^{N-1}D_{\mathrm{ext},t}
+                  -\sum_{t=0}^{N-1}C_t.
+\end{equation}
+An actor who does nothing has zero field value at the shared post-forcing
+baseline. Nature's own change appears in $D_{\mathrm{ext}}$, not in an
+idle actor's income. The external term can be negative: forcing may move
+the system closer to the reference.
+
+The old D0 foundation uses a frozen-drive no-action successor. Its immediate
+cancellation reasoning is related, but its event order is not identical to
+this proposed forcing-first profile. An implementation needs an explicit
+profile contract rather than renaming one variable and claiming equivalence.
+
+\section{A forcing example with exact signs}
+Begin at reference $(10,10)$, where $V=0$. A conservative external shift
+produces $(14,6)$, where $V=4$. An actor then transfers two units back,
+ending at $(12,8)$ with $V=1$. The external audit is $+4$ and the actor's
+field value is $+3$. The total physical potential change is only $+1$;
+confusing it with actor value would get both the baseline and the sign wrong.
+
+If a later external shift takes $(12,8)$ to $(10,10)$, its audit is $-1$.
+No actor performed that improvement. Crediting it to the next idle actor
+would violate the declared separation even if a global sum happened to close.
+
+\section{Changing the potential is another accounted event}
+If parameters vary, simple telescoping under one $V$ no longer applies.
+Writing $V_t$ for the version at event $t$, parameter changes create terms
+such as $V_{t+1}(x)-V_t(x)$ even at unchanged physical state. A recalibration
+can therefore create apparent value unless its effect is separated from
+physical actions. The first model freezes references and scales precisely
+to avoid silently mixing those effects.
+
+The historical no-overissue theorem retains its original one-action and
+audit assumptions. This chapter derives a general endpoint identity; it
+does not retroactively broaden that source theorem's settlement scope.
+For simultaneous groups, the joint transition must be valued once and any
+division needs the distinct treatment of Chapters~\ref{ch:groups} and~\ref{ch:attribution}.
+
+\section*{Chapter recap}
+Live endpoints, fixed parameters and complete external accounting make the
+sum reconstructible. Closed-cycle closure rules out one accounting exploit.
+It does not prove that actors prefer recovery over cycling or refusal.

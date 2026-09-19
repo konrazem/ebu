@@ -11,11 +11,21 @@ Local Gaussian programme is the active **prospective research direction**.
 It is not a completed experiment, a universal theory of economic value, or an
 approved runnable study. No SD number is assigned.
 
-The authorized stage is repository/documentation reconciliation and book
-architecture. Book I will become an introduction from social/ecological
-motivation through homeostasis and declared reference geometry to exact EBU.
-Parts II and III remain preserved. **Stop before book generation, Gaussian
-code implementation, model transitions, experiments, AWS and publication.**
+The subsequent direct author request authorizes Book I manuscript revision,
+rendering and review: preserve the original explanatory style and breadth,
+expand the introduction and update the potential. The author's later
+instructions now combine former Parts II and III and request at least 200
+substantive pages per current volume, without typographic inflation.
+See [the full-length revision contract](BOOK_I_FULL_LENGTH_REVISION.md).
+The current editorial plan has eight parts, not nine. Former II/III become
+integrated Part II (Chapters 33–62), following Part I (Chapters 1–32); former
+IV–IX become III–VIII. Smaller headings and expanded Onsager exposition are
+retained. See `EBU_FUTURE_BOOKS_STRUCTURE.md` and
+`books/part_ii_integrated/EDITORIAL_CONTRACT.md`. The earlier 83/88-page drafts
+are preserved but superseded as replacement-book deliverables.
+Original PDFs remain preserved. Book-only derivations and typesetting confer
+no new scientific authority. **Stop before Gaussian scientific code
+implementation, model transitions, experiments, AWS and publication.**
 
 ## The four scientific categories
 
@@ -44,6 +54,11 @@ physical interpretation, institutional use or dynamical success.
    [Book I blueprint](BOOK_I_INTRODUCTION_BLUEPRINT.md).
 5. [Later implementation roadmap](LOCAL_GAUSSIAN_EBU_IMPLEMENTATION_ROADMAP.md):
    deferred work and explicit stop gates, not permission to start it.
+
+For the author's subsequent book-compatibility question, see the
+[Parts II/III review](books/part_i_revised/review/PARTS_II_III_COMPATIBILITY_REVIEW.md).
+It identifies old-potential dependencies and recommends revisions; it does not
+change mathematical authority, rewrite either volume or authorize execution.
 
 ## Precedence and supersession
 
@@ -106,6 +121,7 @@ Gaussian event ordering, selection locality, forcing/control coupling,
 registered metrics and numerical policy. None prevents honest theoretical
 exposition with its assumptions stated.
 
-For Book I, missing original manuscript/build provenance requires recovery or
-explicit new-source-edition authorization before generation. It is not a
-reason to invent an original source or delay the present chapter plan.
+For Book I, original manuscript/build provenance was not recovered. The revised
+edition explicitly reconstructs editable source from the supplied PDF under
+the author's subsequent revision request. It must not claim an original-source
+rebuild or silently replace the preserved original artifact.

@@ -1,0 +1,2228 @@
+[
+  {
+    "part": "II",
+    "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+    "sha256": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095",
+    "pages": 160,
+    "outline": [
+      {
+        "title": "Author, rights, and scientific scope",
+        "depth": 0,
+        "original_pdf_page": 2
+      },
+      {
+        "title": "Preface: from understanding to derivation",
+        "depth": 0,
+        "original_pdf_page": 3
+      },
+      {
+        "title": "From a physical story to a mathematical object",
+        "depth": 0,
+        "original_pdf_page": 12
+      },
+      {
+        "title": "The three questions that must not be merged",
+        "depth": 1,
+        "original_pdf_page": 12
+      },
+      {
+        "title": "A running example based on a genuine need",
+        "depth": 1,
+        "original_pdf_page": 13
+      },
+      {
+        "title": "What will be derived",
+        "depth": 1,
+        "original_pdf_page": 13
+      },
+      {
+        "title": "Quantities, units, indices, and state",
+        "depth": 0,
+        "original_pdf_page": 16
+      },
+      {
+        "title": "A quantity is more than a number",
+        "depth": 1,
+        "original_pdf_page": 16
+      },
+      {
+        "title": "What is a state?",
+        "depth": 1,
+        "original_pdf_page": 17
+      },
+      {
+        "title": "Units used in one field",
+        "depth": 1,
+        "original_pdf_page": 17
+      },
+      {
+        "title": "The lower, upper, and reserve symbols",
+        "depth": 1,
+        "original_pdf_page": 18
+      },
+      {
+        "title": "Time, rates, and the tick",
+        "depth": 1,
+        "original_pdf_page": 19
+      },
+      {
+        "title": "A first complete data record",
+        "depth": 1,
+        "original_pdf_page": 19
+      },
+      {
+        "title": "Vectors, matrices, and transposes",
+        "depth": 0,
+        "original_pdf_page": 21
+      },
+      {
+        "title": "A vector is an ordered column of numbers",
+        "depth": 1,
+        "original_pdf_page": 21
+      },
+      {
+        "title": "What does transpose mean?",
+        "depth": 1,
+        "original_pdf_page": 22
+      },
+      {
+        "title": "A matrix is a rule for combining vectors",
+        "depth": 1,
+        "original_pdf_page": 22
+      },
+      {
+        "title": "Identity vectors and edge columns",
+        "depth": 1,
+        "original_pdf_page": 23
+      },
+      {
+        "title": "The norm of a vector",
+        "depth": 1,
+        "original_pdf_page": 23
+      },
+      {
+        "title": "A transpose identity we will use later",
+        "depth": 1,
+        "original_pdf_page": 23
+      },
+      {
+        "title": "The graph as a map of permitted physical actions",
+        "depth": 0,
+        "original_pdf_page": 25
+      },
+      {
+        "title": "Nodes and edges",
+        "depth": 1,
+        "original_pdf_page": 25
+      },
+      {
+        "title": "What an edge must declare",
+        "depth": 1,
+        "original_pdf_page": 25
+      },
+      {
+        "title": "The support of an action",
+        "depth": 1,
+        "original_pdf_page": 26
+      },
+      {
+        "title": "Several edges at once",
+        "depth": 1,
+        "original_pdf_page": 26
+      },
+      {
+        "title": "Synchronous and sequential meaning",
+        "depth": 1,
+        "original_pdf_page": 27
+      },
+      {
+        "title": "Finite causal propagation",
+        "depth": 1,
+        "original_pdf_page": 27
+      },
+      {
+        "title": "Why the graph is not gravity",
+        "depth": 1,
+        "original_pdf_page": 28
+      },
+      {
+        "title": "Local penalties and the homeostatic potential",
+        "depth": 0,
+        "original_pdf_page": 29
+      },
+      {
+        "title": "The positive-part function",
+        "depth": 1,
+        "original_pdf_page": 29
+      },
+      {
+        "title": "A three-part local burden",
+        "depth": 1,
+        "original_pdf_page": 29
+      },
+      {
+        "title": "Why regenerative danger appears in the present",
+        "depth": 1,
+        "original_pdf_page": 30
+      },
+      {
+        "title": "A worked water example",
+        "depth": 1,
+        "original_pdf_page": 30
+      },
+      {
+        "title": "The global potential",
+        "depth": 1,
+        "original_pdf_page": 31
+      },
+      {
+        "title": "Convexity in plain language",
+        "depth": 1,
+        "original_pdf_page": 32
+      },
+      {
+        "title": "What the potential does not decide",
+        "depth": 1,
+        "original_pdf_page": 32
+      },
+      {
+        "title": "Marginal burden, edge force, and local flux",
+        "depth": 0,
+        "original_pdf_page": 34
+      },
+      {
+        "title": "A derivative as local slope",
+        "depth": 1,
+        "original_pdf_page": 34
+      },
+      {
+        "title": "The gradient vector",
+        "depth": 1,
+        "original_pdf_page": 35
+      },
+      {
+        "title": "Deriving the edge force",
+        "depth": 1,
+        "original_pdf_page": 35
+      },
+      {
+        "title": "Worked sign example",
+        "depth": 1,
+        "original_pdf_page": 35
+      },
+      {
+        "title": "A derived local flow law",
+        "depth": 1,
+        "original_pdf_page": 36
+      },
+      {
+        "title": "Force, request, permission, and settlement",
+        "depth": 1,
+        "original_pdf_page": 36
+      },
+      {
+        "title": "Why this is not an inverse-square law",
+        "depth": 1,
+        "original_pdf_page": 37
+      },
+      {
+        "title": "The exact local-to-global theorem",
+        "depth": 0,
+        "original_pdf_page": 38
+      },
+      {
+        "title": "The action transformation",
+        "depth": 1,
+        "original_pdf_page": 38
+      },
+      {
+        "title": "The theorem",
+        "depth": 1,
+        "original_pdf_page": 38
+      },
+      {
+        "title": "Why the result is both local and global",
+        "depth": 1,
+        "original_pdf_page": 39
+      },
+      {
+        "title": "A five-cell numerical example",
+        "depth": 1,
+        "original_pdf_page": 39
+      },
+      {
+        "title": "What happens with interaction terms?",
+        "depth": 1,
+        "original_pdf_page": 40
+      },
+      {
+        "title": "Measurement completeness and the receipt",
+        "depth": 1,
+        "original_pdf_page": 40
+      },
+      {
+        "title": "A counterexample to careless locality",
+        "depth": 1,
+        "original_pdf_page": 41
+      },
+      {
+        "title": "The exact finite EBU quote",
+        "depth": 0,
+        "original_pdf_page": 42
+      },
+      {
+        "title": "A shared no-action baseline",
+        "depth": 1,
+        "original_pdf_page": 42
+      },
+      {
+        "title": "Definition of the finite quote",
+        "depth": 1,
+        "original_pdf_page": 42
+      },
+      {
+        "title": "Why no action has exactly zero quote",
+        "depth": 1,
+        "original_pdf_page": 43
+      },
+      {
+        "title": "Medicine delivery: a complete calculation",
+        "depth": 1,
+        "original_pdf_page": 43
+      },
+      {
+        "title": "The same route at the wrong quantity",
+        "depth": 1,
+        "original_pdf_page": 44
+      },
+      {
+        "title": "The marginal bridge",
+        "depth": 1,
+        "original_pdf_page": 44
+      },
+      {
+        "title": "Why the linear quote is only a diagnostic",
+        "depth": 1,
+        "original_pdf_page": 45
+      },
+      {
+        "title": "The quote as an integral along the action path",
+        "depth": 1,
+        "original_pdf_page": 45
+      },
+      {
+        "title": "Quote, safety, and social priority",
+        "depth": 1,
+        "original_pdf_page": 46
+      },
+      {
+        "title": "Actions, receipts, and exact actor closure",
+        "depth": 0,
+        "original_pdf_page": 47
+      },
+      {
+        "title": "What an action receipt is",
+        "depth": 1,
+        "original_pdf_page": 47
+      },
+      {
+        "title": "A sequence of accepted transformations",
+        "depth": 1,
+        "original_pdf_page": 48
+      },
+      {
+        "title": "Exact receipt closure",
+        "depth": 1,
+        "original_pdf_page": 48
+      },
+      {
+        "title": "From action lines to actor accounts",
+        "depth": 1,
+        "original_pdf_page": 49
+      },
+      {
+        "title": "A two-actor medicine example",
+        "depth": 1,
+        "original_pdf_page": 50
+      },
+      {
+        "title": "Why payment language can mislead",
+        "depth": 1,
+        "original_pdf_page": 51
+      },
+      {
+        "title": "When there is one composite action",
+        "depth": 1,
+        "original_pdf_page": 51
+      },
+      {
+        "title": "Duplicate and missing receipts",
+        "depth": 1,
+        "original_pdf_page": 52
+      },
+      {
+        "title": "Changing the field definition",
+        "depth": 1,
+        "original_pdf_page": 52
+      },
+      {
+        "title": "Signed EBU and closed cycles",
+        "depth": 0,
+        "original_pdf_page": 54
+      },
+      {
+        "title": "Gross positive, gross negative, and net",
+        "depth": 1,
+        "original_pdf_page": 54
+      },
+      {
+        "title": "Exact reversal without process burden",
+        "depth": 1,
+        "original_pdf_page": 55
+      },
+      {
+        "title": "The complete zero identity",
+        "depth": 1,
+        "original_pdf_page": 55
+      },
+      {
+        "title": "Why electric-charge neutrality is the wrong rule",
+        "depth": 1,
+        "original_pdf_page": 56
+      },
+      {
+        "title": "Closed undriven cycles",
+        "depth": 1,
+        "original_pdf_page": 56
+      },
+      {
+        "title": "Natural drive over many ticks",
+        "depth": 1,
+        "original_pdf_page": 57
+      },
+      {
+        "title": "A recurring driven-need example",
+        "depth": 1,
+        "original_pdf_page": 58
+      },
+      {
+        "title": "Composition, simultaneity, and shared sources",
+        "depth": 0,
+        "original_pdf_page": 60
+      },
+      {
+        "title": "Sequential composition",
+        "depth": 1,
+        "original_pdf_page": 60
+      },
+      {
+        "title": "Splitting one quantity over live states",
+        "depth": 1,
+        "original_pdf_page": 60
+      },
+      {
+        "title": "The shared-source problem",
+        "depth": 1,
+        "original_pdf_page": 61
+      },
+      {
+        "title": "Sequential order is exact but not automatically fair",
+        "depth": 1,
+        "original_pdf_page": 62
+      },
+      {
+        "title": "What is already exact",
+        "depth": 1,
+        "original_pdf_page": 62
+      },
+      {
+        "title": "Aggregate physical constraints are separate",
+        "depth": 1,
+        "original_pdf_page": 62
+      },
+      {
+        "title": "A needs-based fan-out example",
+        "depth": 1,
+        "original_pdf_page": 63
+      },
+      {
+        "title": "Continuous-time dissipation, derived line by line",
+        "depth": 0,
+        "original_pdf_page": 65
+      },
+      {
+        "title": "Continuous time and the dot notation",
+        "depth": 1,
+        "original_pdf_page": 65
+      },
+      {
+        "title": "The chain rule for the field",
+        "depth": 1,
+        "original_pdf_page": 66
+      },
+      {
+        "title": "Turning the matrix term into edge forces",
+        "depth": 1,
+        "original_pdf_page": 66
+      },
+      {
+        "title": "Using the thresholded mobility law",
+        "depth": 1,
+        "original_pdf_page": 67
+      },
+      {
+        "title": "The continuous identity",
+        "depth": 1,
+        "original_pdf_page": 68
+      },
+      {
+        "title": "The undriven theorem",
+        "depth": 1,
+        "original_pdf_page": 68
+      },
+      {
+        "title": "Numerical two-cell example",
+        "depth": 1,
+        "original_pdf_page": 68
+      },
+      {
+        "title": "A driven example",
+        "depth": 1,
+        "original_pdf_page": 69
+      },
+      {
+        "title": "Counterexample: arbitrary circulation",
+        "depth": 1,
+        "original_pdf_page": 69
+      },
+      {
+        "title": "Potential descent and useful service",
+        "depth": 1,
+        "original_pdf_page": 70
+      },
+      {
+        "title": "Connection to Lyapunov reasoning",
+        "depth": 1,
+        "original_pdf_page": 70
+      },
+      {
+        "title": "Discrete time, curvature, and the safe timestep",
+        "depth": 0,
+        "original_pdf_page": 72
+      },
+      {
+        "title": "Forward Euler as a finite update",
+        "depth": 1,
+        "original_pdf_page": 72
+      },
+      {
+        "title": "What a Lipschitz gradient means",
+        "depth": 1,
+        "original_pdf_page": 72
+      },
+      {
+        "title": "The descent lemma",
+        "depth": 1,
+        "original_pdf_page": 73
+      },
+      {
+        "title": "Insert drive and edge dissipation",
+        "depth": 1,
+        "original_pdf_page": 73
+      },
+      {
+        "title": "The undriven one-edge certificate",
+        "depth": 1,
+        "original_pdf_page": 74
+      },
+      {
+        "title": "A numerical certificate",
+        "depth": 1,
+        "original_pdf_page": 75
+      },
+      {
+        "title": "A pure quadratic overshoot",
+        "depth": 1,
+        "original_pdf_page": 75
+      },
+      {
+        "title": "Exact remainder and upper bound",
+        "depth": 1,
+        "original_pdf_page": 76
+      },
+      {
+        "title": "The driven sufficient condition",
+        "depth": 1,
+        "original_pdf_page": 77
+      },
+      {
+        "title": "What the theorem excludes",
+        "depth": 1,
+        "original_pdf_page": 77
+      },
+      {
+        "title": "Network geometry and multi-edge timestep certificates",
+        "depth": 0,
+        "original_pdf_page": 79
+      },
+      {
+        "title": "Mobility as a diagonal matrix",
+        "depth": 1,
+        "original_pdf_page": 79
+      },
+      {
+        "title": "The spectral norm in plain language",
+        "depth": 1,
+        "original_pdf_page": 79
+      },
+      {
+        "title": "The global spectral certificate",
+        "depth": 1,
+        "original_pdf_page": 80
+      },
+      {
+        "title": "Why shared endpoints tighten the bound",
+        "depth": 1,
+        "original_pdf_page": 81
+      },
+      {
+        "title": "Active-set certificates",
+        "depth": 1,
+        "original_pdf_page": 81
+      },
+      {
+        "title": "A state-specific certificate",
+        "depth": 1,
+        "original_pdf_page": 82
+      },
+      {
+        "title": "Gershgorin and degree-based alternatives",
+        "depth": 1,
+        "original_pdf_page": 82
+      },
+      {
+        "title": "A small fan-out calculation",
+        "depth": 1,
+        "original_pdf_page": 83
+      },
+      {
+        "title": "Local decision versus global certification",
+        "depth": 1,
+        "original_pdf_page": 83
+      },
+      {
+        "title": "One-step preservation, feasibility, and genuine need",
+        "depth": 0,
+        "original_pdf_page": 85
+      },
+      {
+        "title": "The source-side update",
+        "depth": 1,
+        "original_pdf_page": 85
+      },
+      {
+        "title": "Deriving the safe export budget",
+        "depth": 1,
+        "original_pdf_page": 86
+      },
+      {
+        "title": "Why the positive part needs a feasibility flag",
+        "depth": 1,
+        "original_pdf_page": 86
+      },
+      {
+        "title": "A four-state classification",
+        "depth": 1,
+        "original_pdf_page": 87
+      },
+      {
+        "title": "A numerical feasible case",
+        "depth": 1,
+        "original_pdf_page": 87
+      },
+      {
+        "title": "A numerical infeasible case",
+        "depth": 1,
+        "original_pdf_page": 88
+      },
+      {
+        "title": "Measurement margins",
+        "depth": 1,
+        "original_pdf_page": 88
+      },
+      {
+        "title": "Several outgoing requests",
+        "depth": 1,
+        "original_pdf_page": 89
+      },
+      {
+        "title": "The one-step preservation theorem",
+        "depth": 1,
+        "original_pdf_page": 90
+      },
+      {
+        "title": "Why the theorem is an invariant implication",
+        "depth": 1,
+        "original_pdf_page": 91
+      },
+      {
+        "title": "Preservation is not service",
+        "depth": 1,
+        "original_pdf_page": 91
+      },
+      {
+        "title": "Need priority and emergency borrowing",
+        "depth": 1,
+        "original_pdf_page": 92
+      },
+      {
+        "title": "What descent does not add",
+        "depth": 1,
+        "original_pdf_page": 93
+      },
+      {
+        "title": "Long-range needs, paths, and Bellman reasoning",
+        "depth": 0,
+        "original_pdf_page": 95
+      },
+      {
+        "title": "From geographic points to accounting nodes",
+        "depth": 1,
+        "original_pdf_page": 95
+      },
+      {
+        "title": "Settlement along a realised path",
+        "depth": 1,
+        "original_pdf_page": 96
+      },
+      {
+        "title": "Planning costs versus settled EBU",
+        "depth": 1,
+        "original_pdf_page": 97
+      },
+      {
+        "title": "Bellman's principle",
+        "depth": 1,
+        "original_pdf_page": 97
+      },
+      {
+        "title": "A four-node medicine example",
+        "depth": 1,
+        "original_pdf_page": 98
+      },
+      {
+        "title": "Negative edge costs and cycles",
+        "depth": 1,
+        "original_pdf_page": 98
+      },
+      {
+        "title": "Fermat's principle and what it teaches",
+        "depth": 1,
+        "original_pdf_page": 99
+      },
+      {
+        "title": "Why gravity is not the route equation",
+        "depth": 1,
+        "original_pdf_page": 99
+      },
+      {
+        "title": "Several non-substitutable fields",
+        "depth": 1,
+        "original_pdf_page": 100
+      },
+      {
+        "title": "Repeated needs can reveal structural opportunities",
+        "depth": 1,
+        "original_pdf_page": 101
+      },
+      {
+        "title": "A repair-part example",
+        "depth": 1,
+        "original_pdf_page": 101
+      },
+      {
+        "title": "What route planning must not read",
+        "depth": 1,
+        "original_pdf_page": 101
+      },
+      {
+        "title": "Invariance, stability, and the long-run boundary",
+        "depth": 0,
+        "original_pdf_page": 104
+      },
+      {
+        "title": "Five terms that answer different questions",
+        "depth": 1,
+        "original_pdf_page": 104
+      },
+      {
+        "title": "Extending one-step preservation by induction",
+        "depth": 1,
+        "original_pdf_page": 105
+      },
+      {
+        "title": "What monotone potential proves",
+        "depth": 1,
+        "original_pdf_page": 105
+      },
+      {
+        "title": "Counterexample: the state moves on a level set",
+        "depth": 1,
+        "original_pdf_page": 106
+      },
+      {
+        "title": "Distance to a target set",
+        "depth": 1,
+        "original_pdf_page": 106
+      },
+      {
+        "title": "A conditional convergence lemma",
+        "depth": 1,
+        "original_pdf_page": 107
+      },
+      {
+        "title": "A practical-stability recurrence",
+        "depth": 1,
+        "original_pdf_page": 108
+      },
+      {
+        "title": "Persistent capacity and viability",
+        "depth": 1,
+        "original_pdf_page": 109
+      },
+      {
+        "title": "Infeasible need remains an outcome",
+        "depth": 1,
+        "original_pdf_page": 109
+      },
+      {
+        "title": "Why a long simulation is not a forever theorem",
+        "depth": 1,
+        "original_pdf_page": 110
+      },
+      {
+        "title": "What ``fixing the planet forever'' would require",
+        "depth": 1,
+        "original_pdf_page": 110
+      },
+      {
+        "title": "Collaboration as a physical hypothesis",
+        "depth": 1,
+        "original_pdf_page": 111
+      },
+      {
+        "title": "Adaptive infrastructure as a separate dynamics",
+        "depth": 1,
+        "original_pdf_page": 111
+      },
+      {
+        "title": "A theorem-development sequence",
+        "depth": 1,
+        "original_pdf_page": 112
+      },
+      {
+        "title": "An end-to-end field laboratory",
+        "depth": 0,
+        "original_pdf_page": 114
+      },
+      {
+        "title": "The physical question",
+        "depth": 1,
+        "original_pdf_page": 114
+      },
+      {
+        "title": "Step 1: declare the state vector",
+        "depth": 1,
+        "original_pdf_page": 115
+      },
+      {
+        "title": "Step 2: declare the local potentials",
+        "depth": 1,
+        "original_pdf_page": 115
+      },
+      {
+        "title": "Step 3: calculate every marginal",
+        "depth": 1,
+        "original_pdf_page": 116
+      },
+      {
+        "title": "Step 4: construct the edge vectors",
+        "depth": 1,
+        "original_pdf_page": 117
+      },
+      {
+        "title": "Step 5: compare marginal forces",
+        "depth": 1,
+        "original_pdf_page": 117
+      },
+      {
+        "title": "Step 6: freeze a candidate menu",
+        "depth": 1,
+        "original_pdf_page": 117
+      },
+      {
+        "title": "Step 7: enumerate clinic A exactly",
+        "depth": 1,
+        "original_pdf_page": 118
+      },
+      {
+        "title": "Step 8: enumerate clinic B exactly",
+        "depth": 1,
+        "original_pdf_page": 119
+      },
+      {
+        "title": "Step 9: apply the preservation budget",
+        "depth": 1,
+        "original_pdf_page": 120
+      },
+      {
+        "title": "Step 10: separate selection from execution",
+        "depth": 1,
+        "original_pdf_page": 120
+      },
+      {
+        "title": "Step 11: verify local-global equality",
+        "depth": 1,
+        "original_pdf_page": 121
+      },
+      {
+        "title": "Step 12: close an actor sequence",
+        "depth": 1,
+        "original_pdf_page": 121
+      },
+      {
+        "title": "Step 13: connect the new state to continuous flow",
+        "depth": 1,
+        "original_pdf_page": 122
+      },
+      {
+        "title": "Step 14: check an illustrative timestep certificate",
+        "depth": 1,
+        "original_pdf_page": 123
+      },
+      {
+        "title": "Negative control 1: omit efficiency",
+        "depth": 1,
+        "original_pdf_page": 124
+      },
+      {
+        "title": "Negative control 2: use the old state as baseline",
+        "depth": 1,
+        "original_pdf_page": 124
+      },
+      {
+        "title": "Negative control 3: rank by EBU per unit",
+        "depth": 1,
+        "original_pdf_page": 124
+      },
+      {
+        "title": "Negative control 4: settle the request instead of execution",
+        "depth": 1,
+        "original_pdf_page": 125
+      },
+      {
+        "title": "Negative control 5: duplicate a receipt",
+        "depth": 1,
+        "original_pdf_page": 125
+      },
+      {
+        "title": "Negative control 6: quote fan-out independently",
+        "depth": 1,
+        "original_pdf_page": 125
+      },
+      {
+        "title": "Negative control 7: give the budget to every edge",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "Negative control 8: use a timestep above the certificate",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "Negative control 9: project an impossible stock",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "Negative control 10: infer forever from 200 ticks",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "A compact symbol dictionary",
+        "depth": 1,
+        "original_pdf_page": 127
+      },
+      {
+        "title": "A claim ledger",
+        "depth": 1,
+        "original_pdf_page": 128
+      },
+      {
+        "title": "How to reconstruct a new action",
+        "depth": 1,
+        "original_pdf_page": 130
+      },
+      {
+        "title": "Review problems",
+        "depth": 1,
+        "original_pdf_page": 131
+      },
+      {
+        "title": "Selected worked answers",
+        "depth": 1,
+        "original_pdf_page": 132
+      },
+      {
+        "title": "A mathematics-reading clinic",
+        "depth": 1,
+        "original_pdf_page": 133
+      },
+      {
+        "title": "How to read a theorem without overreading it",
+        "depth": 1,
+        "original_pdf_page": 136
+      },
+      {
+        "title": "Second laboratory: the remote pump seal",
+        "depth": 1,
+        "original_pdf_page": 137
+      },
+      {
+        "title": "Audit worksheet for a new theorem or result",
+        "depth": 1,
+        "original_pdf_page": 140
+      },
+      {
+        "title": "Proof workshop: eight derivations to rebuild by hand",
+        "depth": 1,
+        "original_pdf_page": 141
+      },
+      {
+        "title": "Frequently asked conceptual questions",
+        "depth": 1,
+        "original_pdf_page": 147
+      },
+      {
+        "title": "Guided answers to foundational exercises",
+        "depth": 1,
+        "original_pdf_page": 150
+      },
+      {
+        "title": "Transition to empirical and implementation evidence",
+        "depth": 1,
+        "original_pdf_page": 155
+      },
+      {
+        "title": "References and source map",
+        "depth": 0,
+        "original_pdf_page": 157
+      }
+    ]
+  },
+  {
+    "part": "III",
+    "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+    "sha256": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019",
+    "pages": 153,
+    "outline": [
+      {
+        "title": "Author, rights, and scientific scope",
+        "depth": 0,
+        "original_pdf_page": 2
+      },
+      {
+        "title": "Preface: the evidence must remain attached to the claim",
+        "depth": 0,
+        "original_pdf_page": 3
+      },
+      {
+        "title": "From a mathematical law to an executable experiment",
+        "depth": 0,
+        "original_pdf_page": 14
+      },
+      {
+        "title": "Four questions, not one",
+        "depth": 1,
+        "original_pdf_page": 14
+      },
+      {
+        "title": "The evidence ladder",
+        "depth": 1,
+        "original_pdf_page": 15
+      },
+      {
+        "title": "Why a deterministic study still needs preregistration",
+        "depth": 1,
+        "original_pdf_page": 16
+      },
+      {
+        "title": "The two promises of this volume",
+        "depth": 1,
+        "original_pdf_page": 16
+      },
+      {
+        "title": "One action seen by every layer",
+        "depth": 1,
+        "original_pdf_page": 17
+      },
+      {
+        "title": "Why the book uses small needs-based stories",
+        "depth": 1,
+        "original_pdf_page": 17
+      },
+      {
+        "title": "The smallest executable world",
+        "depth": 0,
+        "original_pdf_page": 19
+      },
+      {
+        "title": "A cell is a measured local account",
+        "depth": 1,
+        "original_pdf_page": 19
+      },
+      {
+        "title": "The state vector is a list of simultaneous measurements",
+        "depth": 1,
+        "original_pdf_page": 19
+      },
+      {
+        "title": "An edge is a possible directed action",
+        "depth": 1,
+        "original_pdf_page": 20
+      },
+      {
+        "title": "The positive-part bracket",
+        "depth": 1,
+        "original_pdf_page": 21
+      },
+      {
+        "title": "From local penalties to a global field burden",
+        "depth": 1,
+        "original_pdf_page": 21
+      },
+      {
+        "title": "Units and the meaning of time",
+        "depth": 1,
+        "original_pdf_page": 21
+      },
+      {
+        "title": "A compact symbol-reading guide",
+        "depth": 1,
+        "original_pdf_page": 22
+      },
+      {
+        "title": "Scalar, vector, and function",
+        "depth": 1,
+        "original_pdf_page": 22
+      },
+      {
+        "title": "A complete three-cell example",
+        "depth": 1,
+        "original_pdf_page": 23
+      },
+      {
+        "title": "From a parameter card to two edge requests",
+        "depth": 1,
+        "original_pdf_page": 23
+      },
+      {
+        "title": "What the graph does and does not encode",
+        "depth": 1,
+        "original_pdf_page": 24
+      },
+      {
+        "title": "How the software protects the scientific meaning",
+        "depth": 0,
+        "original_pdf_page": 26
+      },
+      {
+        "title": "The implementation stack",
+        "depth": 1,
+        "original_pdf_page": 26
+      },
+      {
+        "title": "Reuse the physical law; do not retype it",
+        "depth": 1,
+        "original_pdf_page": 27
+      },
+      {
+        "title": "Decision path and evaluation path",
+        "depth": 1,
+        "original_pdf_page": 27
+      },
+      {
+        "title": "Fail closed rather than repair silently",
+        "depth": 1,
+        "original_pdf_page": 27
+      },
+      {
+        "title": "Import-safe libraries and runners",
+        "depth": 1,
+        "original_pdf_page": 28
+      },
+      {
+        "title": "An object-by-object journey through the stack",
+        "depth": 1,
+        "original_pdf_page": 28
+      },
+      {
+        "title": "Validation happens at construction time",
+        "depth": 1,
+        "original_pdf_page": 29
+      },
+      {
+        "title": "Why immutability matters",
+        "depth": 1,
+        "original_pdf_page": 29
+      },
+      {
+        "title": "One synchronous D0 tick, slowly",
+        "depth": 0,
+        "original_pdf_page": 31
+      },
+      {
+        "title": "The natural drive",
+        "depth": 1,
+        "original_pdf_page": 31
+      },
+      {
+        "title": "Marginal field signal",
+        "depth": 1,
+        "original_pdf_page": 31
+      },
+      {
+        "title": "Freeze first, then calculate every edge",
+        "depth": 1,
+        "original_pdf_page": 32
+      },
+      {
+        "title": "The incidence action without matrix anxiety",
+        "depth": 1,
+        "original_pdf_page": 32
+      },
+      {
+        "title": "A numerical tick",
+        "depth": 1,
+        "original_pdf_page": 33
+      },
+      {
+        "title": "The stock ledger",
+        "depth": 1,
+        "original_pdf_page": 33
+      },
+      {
+        "title": "Why D0 does not clip",
+        "depth": 1,
+        "original_pdf_page": 34
+      },
+      {
+        "title": "The timestep certificate in plain language",
+        "depth": 1,
+        "original_pdf_page": 34
+      },
+      {
+        "title": "A multi-edge trace row by hand",
+        "depth": 1,
+        "original_pdf_page": 34
+      },
+      {
+        "title": "Why summation order is recorded carefully",
+        "depth": 1,
+        "original_pdf_page": 35
+      },
+      {
+        "title": "P1C: how a source says ``not safely available''",
+        "depth": 0,
+        "original_pdf_page": 37
+      },
+      {
+        "title": "Threshold, field reference, and certified reserve",
+        "depth": 1,
+        "original_pdf_page": 37
+      },
+      {
+        "title": "The no-export successor",
+        "depth": 1,
+        "original_pdf_page": 38
+      },
+      {
+        "title": "Four source states",
+        "depth": 1,
+        "original_pdf_page": 38
+      },
+      {
+        "title": "Deriving the robust budget",
+        "depth": 1,
+        "original_pdf_page": 39
+      },
+      {
+        "title": "A worked budget",
+        "depth": 1,
+        "original_pdf_page": 39
+      },
+      {
+        "title": "Why incoming flow is excluded from permission",
+        "depth": 1,
+        "original_pdf_page": 40
+      },
+      {
+        "title": "One source, many outgoing requests",
+        "depth": 1,
+        "original_pdf_page": 40
+      },
+      {
+        "title": "A complete P1C tick with two destinations",
+        "depth": 1,
+        "original_pdf_page": 40
+      },
+      {
+        "title": "P1C and bounded service solve different boundary problems",
+        "depth": 1,
+        "original_pdf_page": 41
+      },
+      {
+        "title": "Why State R does not immediately export recovered surplus",
+        "depth": 1,
+        "original_pdf_page": 42
+      },
+      {
+        "title": "The one-step preservation theorem",
+        "depth": 1,
+        "original_pdf_page": 42
+      },
+      {
+        "title": "Permission is prior to EBU",
+        "depth": 1,
+        "original_pdf_page": 43
+      },
+      {
+        "title": "The exact local EBU quote",
+        "depth": 0,
+        "original_pdf_page": 45
+      },
+      {
+        "title": "Why the baseline is the no-action successor",
+        "depth": 1,
+        "original_pdf_page": 45
+      },
+      {
+        "title": "The exact equation",
+        "depth": 1,
+        "original_pdf_page": 45
+      },
+      {
+        "title": "The zero branch",
+        "depth": 1,
+        "original_pdf_page": 46
+      },
+      {
+        "title": "Exact finite difference versus linear diagnostic",
+        "depth": 1,
+        "original_pdf_page": 46
+      },
+      {
+        "title": "A worked overshoot",
+        "depth": 1,
+        "original_pdf_page": 47
+      },
+      {
+        "title": "Process burden and double counting",
+        "depth": 1,
+        "original_pdf_page": 47
+      },
+      {
+        "title": "The quote's information boundary",
+        "depth": 1,
+        "original_pdf_page": 48
+      },
+      {
+        "title": "A complete numerical quote",
+        "depth": 1,
+        "original_pdf_page": 48
+      },
+      {
+        "title": "Why the same shipment can change sign tomorrow",
+        "depth": 1,
+        "original_pdf_page": 49
+      },
+      {
+        "title": "Concavity does not mean monotone benefit",
+        "depth": 1,
+        "original_pdf_page": 49
+      },
+      {
+        "title": "Four sign patterns",
+        "depth": 1,
+        "original_pdf_page": 49
+      },
+      {
+        "title": "A quote is not a forecast of adaptation",
+        "depth": 1,
+        "original_pdf_page": 50
+      },
+      {
+        "title": "A needs-based example: emergency medicine",
+        "depth": 1,
+        "original_pdf_page": 50
+      },
+      {
+        "title": "Three essential transactions and their improvement paths",
+        "depth": 1,
+        "original_pdf_page": 51
+      },
+      {
+        "title": "Why cheap money can coexist with expensive EBU",
+        "depth": 1,
+        "original_pdf_page": 51
+      },
+      {
+        "title": "From quote to receipt and settlement",
+        "depth": 0,
+        "original_pdf_page": 53
+      },
+      {
+        "title": "Request, acceptance, measurement, and delivery",
+        "depth": 1,
+        "original_pdf_page": 53
+      },
+      {
+        "title": "A schedule, not one floating-point promise",
+        "depth": 1,
+        "original_pdf_page": 53
+      },
+      {
+        "title": "The quote epoch",
+        "depth": 1,
+        "original_pdf_page": 54
+      },
+      {
+        "title": "What happens on overexecution",
+        "depth": 1,
+        "original_pdf_page": 54
+      },
+      {
+        "title": "Duplicate and stale settlement",
+        "depth": 1,
+        "original_pdf_page": 54
+      },
+      {
+        "title": "The receipt line",
+        "depth": 1,
+        "original_pdf_page": 55
+      },
+      {
+        "title": "Exact actor-receipt closure",
+        "depth": 1,
+        "original_pdf_page": 55
+      },
+      {
+        "title": "Why EBU does not have to sum to zero like electric charge",
+        "depth": 1,
+        "original_pdf_page": 56
+      },
+      {
+        "title": "Observational quoting must be inert",
+        "depth": 1,
+        "original_pdf_page": 56
+      },
+      {
+        "title": "Two actors do not imply opposite signs",
+        "depth": 1,
+        "original_pdf_page": 57
+      },
+      {
+        "title": "One actor can perform several accountable actions",
+        "depth": 1,
+        "original_pdf_page": 57
+      },
+      {
+        "title": "Receipt closure versus monetary balance-sheet closure",
+        "depth": 1,
+        "original_pdf_page": 58
+      },
+      {
+        "title": "A complete receipt story",
+        "depth": 1,
+        "original_pdf_page": 58
+      },
+      {
+        "title": "Tests that can detect being wrong",
+        "depth": 0,
+        "original_pdf_page": 60
+      },
+      {
+        "title": "What a unit test can establish",
+        "depth": 1,
+        "original_pdf_page": 60
+      },
+      {
+        "title": "Non-vacuity",
+        "depth": 1,
+        "original_pdf_page": 60
+      },
+      {
+        "title": "Negative controls",
+        "depth": 1,
+        "original_pdf_page": 61
+      },
+      {
+        "title": "AST scans and runtime poison",
+        "depth": 1,
+        "original_pdf_page": 61
+      },
+      {
+        "title": "The runner self-match failure",
+        "depth": 1,
+        "original_pdf_page": 62
+      },
+      {
+        "title": "Numerical tolerances and physical margins",
+        "depth": 1,
+        "original_pdf_page": 62
+      },
+      {
+        "title": "Strict serialisation",
+        "depth": 1,
+        "original_pdf_page": 62
+      },
+      {
+        "title": "How to read a test count",
+        "depth": 1,
+        "original_pdf_page": 63
+      },
+      {
+        "title": "A reader's test checklist",
+        "depth": 1,
+        "original_pdf_page": 63
+      },
+      {
+        "title": "Following one assertion from theorem to failure mode",
+        "depth": 1,
+        "original_pdf_page": 63
+      },
+      {
+        "title": "Why short test runs are not hidden scientific runs",
+        "depth": 1,
+        "original_pdf_page": 64
+      },
+      {
+        "title": "Tests should survive refactoring but not semantic drift",
+        "depth": 1,
+        "original_pdf_page": 64
+      },
+      {
+        "title": "The first wind tunnel: D1 through D4",
+        "depth": 0,
+        "original_pdf_page": 66
+      },
+      {
+        "title": "D1: can the smallest world move downhill?",
+        "depth": 1,
+        "original_pdf_page": 66
+      },
+      {
+        "title": "D2: why route efficiency changes the correct resting point",
+        "depth": 1,
+        "original_pdf_page": 67
+      },
+      {
+        "title": "D3: one-hop causality",
+        "depth": 1,
+        "original_pdf_page": 67
+      },
+      {
+        "title": "D4: drive, regeneration, and useful service",
+        "depth": 1,
+        "original_pdf_page": 68
+      },
+      {
+        "title": "A trace-reading example",
+        "depth": 1,
+        "original_pdf_page": 69
+      },
+      {
+        "title": "What D1\u2013D4 established",
+        "depth": 1,
+        "original_pdf_page": 69
+      },
+      {
+        "title": "Learning from D5 through D8",
+        "depth": 0,
+        "original_pdf_page": 71
+      },
+      {
+        "title": "D5: a reserve fixture that was too forgiving",
+        "depth": 1,
+        "original_pdf_page": 71
+      },
+      {
+        "title": "Why a null result can be useful",
+        "depth": 1,
+        "original_pdf_page": 71
+      },
+      {
+        "title": "D6: a supply shock and a viability gap",
+        "depth": 1,
+        "original_pdf_page": 72
+      },
+      {
+        "title": "D7: a demand shock",
+        "depth": 1,
+        "original_pdf_page": 72
+      },
+      {
+        "title": "D8: deliberately crossing the timestep certificate",
+        "depth": 1,
+        "original_pdf_page": 72
+      },
+      {
+        "title": "The dimensionless timestep ratio",
+        "depth": 1,
+        "original_pdf_page": 73
+      },
+      {
+        "title": "What changed after these fixtures",
+        "depth": 1,
+        "original_pdf_page": 73
+      },
+      {
+        "title": "D9: when a soft warning meets a hard boundary",
+        "depth": 0,
+        "original_pdf_page": 75
+      },
+      {
+        "title": "The world and why it discriminates",
+        "depth": 1,
+        "original_pdf_page": 75
+      },
+      {
+        "title": "How to read the trajectory figure",
+        "depth": 1,
+        "original_pdf_page": 75
+      },
+      {
+        "title": "The exact committed outcomes",
+        "depth": 1,
+        "original_pdf_page": 76
+      },
+      {
+        "title": "A tick at the reserve",
+        "depth": 1,
+        "original_pdf_page": 77
+      },
+      {
+        "title": "Comparing tick 7, tick 8, and the later plateau",
+        "depth": 1,
+        "original_pdf_page": 77
+      },
+      {
+        "title": "Why ``dead source'' is not the only collapse indicator",
+        "depth": 1,
+        "original_pdf_page": 78
+      },
+      {
+        "title": "What D9 proved and observed",
+        "depth": 1,
+        "original_pdf_page": 78
+      },
+      {
+        "title": "A needs interpretation",
+        "depth": 1,
+        "original_pdf_page": 78
+      },
+      {
+        "title": "D10: a map of service, rationing, and collapse",
+        "depth": 0,
+        "original_pdf_page": 80
+      },
+      {
+        "title": "The two physical ratios",
+        "depth": 1,
+        "original_pdf_page": 80
+      },
+      {
+        "title": "The registered grid",
+        "depth": 1,
+        "original_pdf_page": 80
+      },
+      {
+        "title": "How to read the phase map",
+        "depth": 1,
+        "original_pdf_page": 81
+      },
+      {
+        "title": "Outcome counts",
+        "depth": 1,
+        "original_pdf_page": 81
+      },
+      {
+        "title": "Reading one vertical and one horizontal slice",
+        "depth": 1,
+        "original_pdf_page": 82
+      },
+      {
+        "title": "Why a colour map needs letters and counts",
+        "depth": 1,
+        "original_pdf_page": 82
+      },
+      {
+        "title": "Matching service where service is feasible",
+        "depth": 1,
+        "original_pdf_page": 82
+      },
+      {
+        "title": "Secondary slices",
+        "depth": 1,
+        "original_pdf_page": 83
+      },
+      {
+        "title": "Domain exits remain results",
+        "depth": 1,
+        "original_pdf_page": 83
+      },
+      {
+        "title": "The serialization incident",
+        "depth": 1,
+        "original_pdf_page": 84
+      },
+      {
+        "title": "What the map supports",
+        "depth": 1,
+        "original_pdf_page": 84
+      },
+      {
+        "title": "Gate 1B: does the quote code match the equation?",
+        "depth": 0,
+        "original_pdf_page": 86
+      },
+      {
+        "title": "Why equation conformance comes before behaviour",
+        "depth": 1,
+        "original_pdf_page": 86
+      },
+      {
+        "title": "Q1\u2013Q5: the five basic stories",
+        "depth": 1,
+        "original_pdf_page": 86
+      },
+      {
+        "title": "Q6\u2013Q8: curvature and the complete schedule",
+        "depth": 1,
+        "original_pdf_page": 87
+      },
+      {
+        "title": "Q9 and Q12: protocol violations are not valuations",
+        "depth": 1,
+        "original_pdf_page": 88
+      },
+      {
+        "title": "Q10 and Q11: telescoping with and without drive",
+        "depth": 1,
+        "original_pdf_page": 88
+      },
+      {
+        "title": "Q13 and Q14: the split-action trap",
+        "depth": 1,
+        "original_pdf_page": 89
+      },
+      {
+        "title": "Q15\u2013Q17: permission and observation",
+        "depth": 1,
+        "original_pdf_page": 89
+      },
+      {
+        "title": "Q18\u2013Q21: the boundary around the equation",
+        "depth": 1,
+        "original_pdf_page": 89
+      },
+      {
+        "title": "Random fixtures without behavioural randomness",
+        "depth": 1,
+        "original_pdf_page": 90
+      },
+      {
+        "title": "Audit independence",
+        "depth": 1,
+        "original_pdf_page": 90
+      },
+      {
+        "title": "What passed and what remains open",
+        "depth": 1,
+        "original_pdf_page": 90
+      },
+      {
+        "title": "How the groups cover the action lifecycle",
+        "depth": 1,
+        "original_pdf_page": 91
+      },
+      {
+        "title": "A reader's reconstruction of E1",
+        "depth": 1,
+        "original_pdf_page": 91
+      },
+      {
+        "title": "From adversarial search to service alignment",
+        "depth": 0,
+        "original_pdf_page": 93
+      },
+      {
+        "title": "Gate 1C as a falsification search",
+        "depth": 1,
+        "original_pdf_page": 93
+      },
+      {
+        "title": "The registered exploit predicate",
+        "depth": 1,
+        "original_pdf_page": 93
+      },
+      {
+        "title": "The encouraging result and its boundary",
+        "depth": 1,
+        "original_pdf_page": 94
+      },
+      {
+        "title": "The metrics answer different questions",
+        "depth": 1,
+        "original_pdf_page": 94
+      },
+      {
+        "title": "Why the no-action baseline was attractive",
+        "depth": 1,
+        "original_pdf_page": 95
+      },
+      {
+        "title": "Positive EBU with worse service",
+        "depth": 1,
+        "original_pdf_page": 95
+      },
+      {
+        "title": "The capability confounder",
+        "depth": 1,
+        "original_pdf_page": 96
+      },
+      {
+        "title": "Seed 0 as a concrete comparison",
+        "depth": 1,
+        "original_pdf_page": 96
+      },
+      {
+        "title": "Coverage is part of capability",
+        "depth": 1,
+        "original_pdf_page": 97
+      },
+      {
+        "title": "Gate 1D redesigns the service instrument",
+        "depth": 1,
+        "original_pdf_page": 97
+      },
+      {
+        "title": "Four capability-matched arms",
+        "depth": 1,
+        "original_pdf_page": 98
+      },
+      {
+        "title": "What Gate 1D observed",
+        "depth": 1,
+        "original_pdf_page": 98
+      },
+      {
+        "title": "The one-ULP diagnostic defect",
+        "depth": 1,
+        "original_pdf_page": 98
+      },
+      {
+        "title": "What was learned before O14",
+        "depth": 1,
+        "original_pdf_page": 99
+      },
+      {
+        "title": "O14: genuine destination choice and a flat outcome",
+        "depth": 0,
+        "original_pdf_page": 101
+      },
+      {
+        "title": "The six worlds as six questions",
+        "depth": 1,
+        "original_pdf_page": 101
+      },
+      {
+        "title": "What would count as informative in each world",
+        "depth": 1,
+        "original_pdf_page": 102
+      },
+      {
+        "title": "Five arms and the primary comparisons",
+        "depth": 1,
+        "original_pdf_page": 102
+      },
+      {
+        "title": "Why total quote, not EBU per unit",
+        "depth": 1,
+        "original_pdf_page": 103
+      },
+      {
+        "title": "One restricted-arm tick from menu to service",
+        "depth": 1,
+        "original_pdf_page": 103
+      },
+      {
+        "title": "Why selected quantity had to equal executed quantity",
+        "depth": 1,
+        "original_pdf_page": 104
+      },
+      {
+        "title": "The registered study and execution integrity",
+        "depth": 1,
+        "original_pdf_page": 105
+      },
+      {
+        "title": "What behaviour actually differed",
+        "depth": 1,
+        "original_pdf_page": 105
+      },
+      {
+        "title": "The primary null and F13",
+        "depth": 1,
+        "original_pdf_page": 105
+      },
+      {
+        "title": "How destination buffering creates a plateau",
+        "depth": 1,
+        "original_pdf_page": 106
+      },
+      {
+        "title": "Temporal multiplexing",
+        "depth": 1,
+        "original_pdf_page": 107
+      },
+      {
+        "title": "Walking through a W4 multiplexing cycle",
+        "depth": 1,
+        "original_pdf_page": 107
+      },
+      {
+        "title": "Hypotheses and falsifiers as two ledgers",
+        "depth": 1,
+        "original_pdf_page": 107
+      },
+      {
+        "title": "The S arm reaches the boundary",
+        "depth": 1,
+        "original_pdf_page": 108
+      },
+      {
+        "title": "The aggregate quote diagnostic",
+        "depth": 1,
+        "original_pdf_page": 108
+      },
+      {
+        "title": "Honest infeasibility in W6",
+        "depth": 1,
+        "original_pdf_page": 109
+      },
+      {
+        "title": "What O14 changes and what it cannot close",
+        "depth": 1,
+        "original_pdf_page": 109
+      },
+      {
+        "title": "What a real field account would have to observe",
+        "depth": 0,
+        "original_pdf_page": 111
+      },
+      {
+        "title": "There is no single planetary EBU sensor",
+        "depth": 1,
+        "original_pdf_page": 111
+      },
+      {
+        "title": "What must be measured at a cell",
+        "depth": 1,
+        "original_pdf_page": 111
+      },
+      {
+        "title": "What must be measured along an edge",
+        "depth": 1,
+        "original_pdf_page": 112
+      },
+      {
+        "title": "Needs must be represented without turning desire into physics",
+        "depth": 1,
+        "original_pdf_page": 112
+      },
+      {
+        "title": "Uncertainty has units",
+        "depth": 1,
+        "original_pdf_page": 113
+      },
+      {
+        "title": "Latency and stale state",
+        "depth": 1,
+        "original_pdf_page": 113
+      },
+      {
+        "title": "Reserve certification is a scientific institution",
+        "depth": 1,
+        "original_pdf_page": 114
+      },
+      {
+        "title": "Calibration governance",
+        "depth": 1,
+        "original_pdf_page": 114
+      },
+      {
+        "title": "Observability can reveal hidden inefficiency",
+        "depth": 1,
+        "original_pdf_page": 115
+      },
+      {
+        "title": "Repeated needs can reshape infrastructure",
+        "depth": 1,
+        "original_pdf_page": 116
+      },
+      {
+        "title": "Measurement power and privacy",
+        "depth": 1,
+        "original_pdf_page": 116
+      },
+      {
+        "title": "Sensor failure and strategic reporting",
+        "depth": 1,
+        "original_pdf_page": 117
+      },
+      {
+        "title": "A hospital measurement walk-through",
+        "depth": 1,
+        "original_pdf_page": 117
+      },
+      {
+        "title": "What the current implementation actually observes",
+        "depth": 1,
+        "original_pdf_page": 118
+      },
+      {
+        "title": "How to reproduce the evidence without rewriting it",
+        "depth": 0,
+        "original_pdf_page": 119
+      },
+      {
+        "title": "The four layers of a study record",
+        "depth": 1,
+        "original_pdf_page": 119
+      },
+      {
+        "title": "Commit and hash provenance",
+        "depth": 1,
+        "original_pdf_page": 119
+      },
+      {
+        "title": "Raw and canonical plan hashes",
+        "depth": 1,
+        "original_pdf_page": 120
+      },
+      {
+        "title": "Reading a summary",
+        "depth": 1,
+        "original_pdf_page": 120
+      },
+      {
+        "title": "What the comparison metrics mean",
+        "depth": 1,
+        "original_pdf_page": 121
+      },
+      {
+        "title": "Reading a JSONL trace",
+        "depth": 1,
+        "original_pdf_page": 122
+      },
+      {
+        "title": "Walking through one committed O14 row",
+        "depth": 1,
+        "original_pdf_page": 122
+      },
+      {
+        "title": "Why summary and trace are both needed",
+        "depth": 1,
+        "original_pdf_page": 125
+      },
+      {
+        "title": "The manifest as a human audit index",
+        "depth": 1,
+        "original_pdf_page": 125
+      },
+      {
+        "title": "A reproduction ladder",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "Why official runners resist a second execution",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "Rebuilding figures from committed data",
+        "depth": 1,
+        "original_pdf_page": 126
+      },
+      {
+        "title": "How to read the code without being a Python expert",
+        "depth": 1,
+        "original_pdf_page": 127
+      },
+      {
+        "title": "The technical stack and why it is deliberately small",
+        "depth": 1,
+        "original_pdf_page": 127
+      },
+      {
+        "title": "A map of the principal tests",
+        "depth": 1,
+        "original_pdf_page": 128
+      },
+      {
+        "title": "A code-to-claim example",
+        "depth": 1,
+        "original_pdf_page": 129
+      },
+      {
+        "title": "Preserving failed attempts",
+        "depth": 1,
+        "original_pdf_page": 130
+      },
+      {
+        "title": "A practical review session",
+        "depth": 1,
+        "original_pdf_page": 130
+      },
+      {
+        "title": "Reproducibility is not truth",
+        "depth": 1,
+        "original_pdf_page": 131
+      },
+      {
+        "title": "The claim ledger and the road beyond Part III",
+        "depth": 0,
+        "original_pdf_page": 133
+      },
+      {
+        "title": "What is derived mathematically",
+        "depth": 1,
+        "original_pdf_page": 133
+      },
+      {
+        "title": "What implementation tests support",
+        "depth": 1,
+        "original_pdf_page": 134
+      },
+      {
+        "title": "What finite studies observed",
+        "depth": 1,
+        "original_pdf_page": 134
+      },
+      {
+        "title": "What is not established",
+        "depth": 1,
+        "original_pdf_page": 135
+      },
+      {
+        "title": "Open problem O3: shared-source settlement",
+        "depth": 1,
+        "original_pdf_page": 135
+      },
+      {
+        "title": "Open problems O10 and O11: outcome sensitivity and alignment",
+        "depth": 1,
+        "original_pdf_page": 136
+      },
+      {
+        "title": "Gate 1E: delay and uncertainty",
+        "depth": 1,
+        "original_pdf_page": 137
+      },
+      {
+        "title": "The constrained theorem programme",
+        "depth": 1,
+        "original_pdf_page": 137
+      },
+      {
+        "title": "Long-range actions",
+        "depth": 1,
+        "original_pdf_page": 137
+      },
+      {
+        "title": "Adaptive infrastructure",
+        "depth": 1,
+        "original_pdf_page": 138
+      },
+      {
+        "title": "Collaboration as a material hypothesis",
+        "depth": 1,
+        "original_pdf_page": 138
+      },
+      {
+        "title": "Behaviour, poverty, and culture",
+        "depth": 1,
+        "original_pdf_page": 139
+      },
+      {
+        "title": "A game before an economy",
+        "depth": 1,
+        "original_pdf_page": 139
+      },
+      {
+        "title": "The research traditions beside this project",
+        "depth": 1,
+        "original_pdf_page": 140
+      },
+      {
+        "title": "How references should be used",
+        "depth": 1,
+        "original_pdf_page": 141
+      },
+      {
+        "title": "The long-term EBU economy as a research destination",
+        "depth": 1,
+        "original_pdf_page": 141
+      },
+      {
+        "title": "The long-run homeostasis statement",
+        "depth": 1,
+        "original_pdf_page": 142
+      },
+      {
+        "title": "What a future stability theorem would actually say",
+        "depth": 1,
+        "original_pdf_page": 142
+      },
+      {
+        "title": "A disciplined next sequence",
+        "depth": 1,
+        "original_pdf_page": 145
+      },
+      {
+        "title": "One future action from need to institutional learning",
+        "depth": 1,
+        "original_pdf_page": 146
+      },
+      {
+        "title": "What success would look like at each scale",
+        "depth": 1,
+        "original_pdf_page": 147
+      },
+      {
+        "title": "Closing perspective",
+        "depth": 1,
+        "original_pdf_page": 148
+      },
+      {
+        "title": "References and source map",
+        "depth": 0,
+        "original_pdf_page": 150
+      }
+    ]
+  }
+]

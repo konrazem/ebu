@@ -1,0 +1,45 @@
+"""Fixed textbook arithmetic only; no model imports, action execution or trajectory."""
+from fractions import Fraction as Q
+import studio_arithmetic as s
+
+start=len(s.checks)
+V=s.potential
+D=s.field_difference
+R=s.attribution
+check=s.check
+ref=(10,10);scale=(2,2)
+check('main local five-cell before',V((18,2,12,8,10),(10,)*5,(2,)*5),17)
+check('main local five-cell after',V((14,6,12,8,10),(10,)*5,(2,)*5),5)
+check('coupled counterexample separable before',V((6,4,3),(5,5,3),(1,1,1)),1)
+check('coupled counterexample separable after',V((5,5,3),(5,5,3),(1,1,1)),0)
+check('coupled full difference',1+Q(1,2)-2,Q(-1,2))
+check('main three-line first',D((18,2),(16,4),ref,scale),7)
+check('main three-line second',D((16,4),(13,7),ref,scale),Q(27,4))
+check('main three-line third',D((13,7),(12,8),ref,scale),Q(5,4))
+check('three-line with burdens',Q(7)-Q('.2')+Q('6.75')-Q('.3')+Q('1.25')-Q('.1'),Q('14.4'))
+check('main relay first',D((18,10,2),(14,14,2),(10,10,10),(2,2,2)),4)
+check('main relay second',D((14,14,2),(14,10,6),(10,10,10),(2,2,2)),8)
+check('main fanout potential',V((14,4,12),(10,10,10),(2,2,2)),7)
+check('main fanout field',D((18,2,10),(14,4,12),(10,10,10),(2,2,2)),9)
+check('main fanout child A',R((18,2,10),(-2,2,0),(-4,2,2),(10,10,10),(2,2,2)),Q('6.5'))
+check('main fanout child B',R((18,2,10),(-2,0,2),(-4,2,2),(10,10,10),(2,2,2)),Q('2.5'))
+check('shared-source initial',V((14,3,3),(8,6,6),(2,2,2)),Q('6.75'))
+check('shared-source final',V((10,5,5),(8,6,6),(2,2,2)),Q('.75'))
+check('shared-source standalone',D((14,3,3),(12,5,3),(8,6,6),(2,2,2)),Q('3.5'))
+check('shared-source correction',-Q(2)*Q(2)/4,-1)
+check('noninteger measured transfer',D((18,2),(Q('15.5'),Q('4.5')),ref,scale),Q('8.4375'))
+check('external audit increase',V((18,2),ref,scale)-V((16,4),ref,scale),7)
+check('external and actor net reduction',7-12,-5)
+check('essential transfer at reference',D((10,10),(8,12),ref,scale),-1)
+check('same value different state positive',D((6,14),(4,16),ref,scale),-5)
+check('same value different state negative',D((14,6),(12,8),ref,scale),3)
+check('small quantity finite field',4*Q('.1')-Q('.1')**2/4,Q('.3975'))
+check('unequal-scale curvature',Q(1,4)+Q(1,16),Q(5,16))
+check('unequal-scale finite q4',Q('2.5')*4-Q(5,32)*16,Q('7.5'))
+check('three-cell reference potential',V((2,8,10),(4,6,10),(2,2,4)),1)
+check('closed cycle burdens',-Q('5.2')+Q('3.9')+Q('.7'),Q('-.6'))
+check('closed cycle middle split',Q('1.96')+Q('1.94'),Q('3.9'))
+check('opposed at reference standalone',D((10,10),(6,14),ref,scale),-4)
+check('opposed at reference cross correction',-Q(-4)*4/4-Q(4)*(-4)/4,8)
+print(f'Additional core checks: {len(s.checks)-start}; combined exact checks: {len(s.checks)}.')
+print('All inputs are written teaching vectors/formulas. Scientific execution: NONE.')

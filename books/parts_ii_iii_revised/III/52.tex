@@ -1,0 +1,66 @@
+\chapter{Ownership, capacity and atomic accounting}\label{ch:accounting}
+The most important unimplemented boundary in the new programme is not a
+missing sum. It is the authority to interpret a particular sum as an owner's
+capacity change. Software can enforce an adopted rule, but it cannot obtain
+that rule from the fact that several numbers add correctly.
+
+\section{A child action is not its owner}
+A request can be made by a clinic, performed by a carrier and supplied by
+a depot. The action record may identify all three. None of those labels
+automatically defines who owns its path attribution. The prospective
+programme needs an explicit, versioned $\operatorname{owner}(a)$ map.
+
+Once each child has one declared owner, aggregation is straightforward:
+$\Delta B_i=\sum_{a:\operatorname{owner}(a)=i}R_a$. Closure follows
+by regrouping the finite sum. The difficult question is not whether the
+sum can be implemented, but which policy it represents and what claims
+may be made about it.
+
+\section{Same-event netting is a policy}
+Suppose one owner has child lines $+5$ and $-3$ and starts at zero.
+Owner-level same-event netting produces $+2$ and passes the proposed
+affordability rule. A policy requiring each negative child to be prefunded
+would refuse the negative child. A global-pooling policy could do something
+else again. These are distinct stochastic processes.
+
+Likewise, a group with owner changes $(+5,-3)$ is not affordable from
+two zero balances merely because its total is positive. One owner's surplus
+does not become another's funding under the no-transfer proposal. The
+implementation must not substitute a single aggregate-balance check for
+owner-wise checks.
+
+\section{All-or-nothing effects}
+If a selected group is accepted under a joint contract, physical and account
+updates must refer to that same group. A partial credit followed by a failed
+debit can create spendable capacity without the corresponding authorized
+event. A physical update followed by a lost receipt can make replay execute
+the same action twice.
+
+A later execution design must therefore define commit boundaries, durable
+identities and recovery behavior across the linked records. ``Atomic'' here
+means an all-or-nothing committed event under that contract; it does not
+mean hiding a multi-carrier physical chain inside one mega-action.
+
+\section{Audit is not a spendable pool}
+The external audit $J$ records signed forcing effects. It is not a wallet,
+loan facility or reward for the next actor. In the cost-free proposal,
+$V+\sum_iB_i-J=K$. A software routine must be able to check that
+identity without making $J$ available to the selector as spending capacity.
+
+The invariant alone cannot identify which record is wrong. An erroneous
+physical update and matching erroneous credit can cancel. Independent
+conservation, action-identity and owner-level checks are necessary in
+addition to the aggregate account residual.
+
+\section{Existing settlement machinery has a narrower meaning}
+The source-locked framework includes a repaired share-plus-residual closure
+validator on another lineage \cite{framework}. That is an implemented
+validation mechanism, not an adopted Gaussian owner rule. Its historical
+amendment's authoring-stage label is not the whole later implementation
+history; neither should later implementation be mistaken for scientific
+approval of the new capacity mechanism.
+
+\section*{Chapter recap}
+Capacity requires a declared ownership and update policy, exact owner-wise
+affordability, linked event identity and durable all-or-nothing effects.
+The book specifies the boundary; it does not claim that runtime exists.

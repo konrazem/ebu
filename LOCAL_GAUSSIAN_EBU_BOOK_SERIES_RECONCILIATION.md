@@ -1,5 +1,26 @@
 # EBU book-series reconciliation: Local Gaussian direction
 
+> **Current eight-part update:** former Parts II and III are now combined as
+> Part II, continuing Chapters 33–62 after Part I's 1–32. Former IV–IX become
+> III–VIII. The latest brief requires at least 200 substantive pages per current
+> volume, preserved teaching depth and smaller headings. See
+> [the current series plan](EBU_FUTURE_BOOKS_STRUCTURE.md) and
+> `books/part_ii_integrated/EDITORIAL_CONTRACT.md`.
+> Older stage-specific scope/page-count wording below is retained as history,
+> not a competing current instruction. Original-source numbering stays unchanged.
+
+> **Subsequent author correction:** Book I authoring and rendering are now
+> authorized. Revise the original 296-page explanatory book, retain its style
+> and teaching breadth. The author's later clarification removes the 300-page
+> minimum: clear, thorough and well-written explanation determines length. The current
+> 32-chapter map is [BOOK_I_FULL_LENGTH_REVISION.md](BOOK_I_FULL_LENGTH_REVISION.md).
+> Earlier compressed chapter allocations and stop-before-generation statements
+> below are preserved as reconciliation history, not the current output brief.
+> A subsequent request also authorizes revised Parts II/III and a cross-volume
+> typography/Onsager update. See `books/parts_ii_iii_revised/EDITORIAL_CONTRACT.md`.
+> Original PDFs and all scientific execution boundaries remain unchanged.
+> The 69-page candidate is preserved, not adopted as the replacement.
+
 **Status:** current editorial and research-allocation plan, not a manuscript,
 preregistration, scientific result, or implementation authorization.
 **Decision scope:** the author's 18 September 2026 request to reconcile the
@@ -119,10 +140,10 @@ tree. Branch names alone therefore cannot establish which book plan is current.
 |---|---|---|
 | `b4d346de02ea2d8d9fbdd8ade07335c0dd16862d` | Series readability and framework-alpha regeneration | Retain plain-language and eight-question mathematical explanation standards. Supersede blanket alpha-before-Book-I and mandatory trilogy regeneration gates for this request. |
 | `4e1f5bac478bc60554d1980208b7cd92883b2b85` | Canonical topology/motif replacement | Preserve physical/factor/interaction distinctions, canonical identity, sparse support and conditional recursive compression. Preserve removal of the electrical-voltage, physical-wave, phase-interference and superposition-as-EBU programmes. |
-| `5674ea9c33b72b94669c86e7e4f1a35c0db5775a` | Coupled interaction-inference-feedback programme | Retain prospective VI-IX ownership and causal limitations; do not activate a feedback controller inside the Gaussian study. |
+| `5674ea9c33b72b94669c86e7e4f1a35c0db5775a` | Coupled interaction-inference-feedback programme | Retain prospective current V–VIII ownership (formerly VI–IX) and causal limitations; do not activate a feedback controller inside the Gaussian study. |
 | `fa8c3f48a03cf520a273a8eb3cb70517070f71f6` | Mass-to-resource bridge | Preserve as a scoped later explanatory/dependency item, not a universal scalar conversion or present calibration. |
 | `064c2702259c48accad4864842330c3e7ca6a6ed` | Parameter identification and Onsager-like flow law | Preserve domain/identification programme. A flow law is additional dynamics, not the EBU definition. |
-| `1234710bbc332688cb4e1fb8be3653337ce82ac4` | Burden-to-damped-response exposition | Preserve the declared dispatch/residence model and bounded oscillator comparison in VIII; do not import its restoring mechanism into random-affordable falsification. |
+| `1234710bbc332688cb4e1fb8be3653337ce82ac4` | Burden-to-damped-response exposition | Preserve the declared dispatch/residence model and bounded oscillator comparison in current VII (formerly VIII); do not import its restoring mechanism into random-affordable falsification. |
 | `57507e1`, `c4aed04`, `4d15bbd` | Native-burden and later book synchronization | Preserve different models' native discrepancy functions and deferred cross-model evidence; no premature result chapter. |
 
 In the later book register, `research_notes/BURDEN_FEEDBACK_LORENTZ_BOOK_SECTION.md`
@@ -170,7 +191,7 @@ a later small compatibility revision, not current PDF mutation.
 | 14 | Action receipts and exact actor-level closure | 168 | Condense closure explanation in I.16-17. Keep attribution, ownership, capacity and causal evidence distinct. |
 | 15 | Closed cycles, splitting, and the no-free-reward theorem | 180 | Retain scoped telescoping/cycle identity, I.17; no universal incentive or driven-harvest theorem. |
 | 16 | Several actors on one nonlinear field | 187 | Retain group-value warning and simple example, I.16. Detailed common-path/Mobius/ownership goes II.37/VI. |
-| 17 | From one field to routes, resource accounts, and learning | 195 | Short bridge in I.18; detailed routes, vector accounts and learning VII/IX. Do not collapse heterogeneous resources. |
+| 17 | From one field to routes, resource accounts, and learning | 195 | Short bridge in the original introductory plan; detailed routes, vector accounts and learning belong in current VI/VIII (formerly VII/IX). Do not collapse heterogeneous resources. |
 | 18 | Practice studio: reading the Ridge-Vale state | 206 | Integrate simplified state examples into I.8-10; old example remains preserved in historical PDF. |
 | 19 | Practice studio: draw the action before calculating it | 213 | Integrate atomic-action practice into I.9/14. |
 | 20 | Practice studio: build the homeostatic landscape | 219 | Replace introductory hinge/L-U exercise with reference and Gaussian arithmetic, I.10-12. |
@@ -212,7 +233,7 @@ at PDF page 293.
 | 44 | An end-to-end field laboratory | 114 | Preserve worked historical model; make model/selector scope explicit in later compatibility note. |
 
 References start at PDF157. The full new motif/feedback programme belongs
-primarily in VI-VIII, not an automatic large addition to Part II.
+primarily in current V–VII (formerly VI–VIII), not an automatic large addition to Part II.
 
 ### 4.3 Part III: chapters 45-62
 
@@ -240,44 +261,44 @@ primarily in VI-VIII, not an automatic large addition to Part II.
 References start at PDF150. No new Gaussian result chapter exists, and none is
 authorized by this reconciliation.
 
-## 5. Future Parts IV-IX: ownership and dependency
+## 5. Future Parts III–VIII: ownership and dependency
 
-No extra volume or premature renumbering is needed. The old strictly linear
-"measurement -> time -> multiple actions" progression becomes a dependency
-graph: simultaneous foundations can precede the stochastic dynamics that use
-them, even when the many-action reference volume retains number VI.
+The author's later decision combines original Parts II and III as current Part II.
+The following forward-plan numbers are updated; original inventories above
+retain their historical numbering. Dependencies are claim-dependent, not a
+mandatory execution ladder.
 
 | Part | Current teaching ownership | Dependencies and restrictions |
 |---|---|---|
-| IV: Measurement, Evidence and Falsification | Outcome instruments, metrology, latency, controls, preregistration, reproducibility and historical Gate results | Uses II/III. New study methods do not inherit every historical P1C gate. Result sections require their actual committed evidence. |
-| V: Homeostasis, Recovery and Stochastic Dynamics | Invariance/stability/attraction distinctions; prospective Gaussian Stage A/B, capacity and external ledger; cycling, deadlock and control comparison; later regenerative/threshold domains | Uses IV methods and VI simultaneous foundation. Accounting closure is not recovery; boundedness on a closed finite simplex is not independent evidence of stabilization. |
-| VI: Multiple Actions, Interaction and Local Structure | Simultaneous groups, common-path identities, attribution limits, Mobius/feasible subsets, three topologies, canonical motifs and certified recursive compression | Uses I/II mathematics. No electric-wave programme, universal Fibonacci law, causal inference or settlement entitlement from an algebraic transform. |
-| VII: Across Distance | Typed routes, epochs, explicit losses/boundaries, provenance, scoped sensitivity/identification, infrastructure | Uses IV/VI. No distance tax/inverse-square EBU law, no hidden full-chain mega-action, no universal cross-resource scalar. |
-| VIII: Coordination, Memory and System Dynamics | Optional actor planning, timing, placement, memory, feedback, delay and domain dynamics | Uses V-VII. Optimization belongs to explicit external policies, not EBU measurement. Domain restoring laws stay out of the random-affordable test. |
-| IX: Institutions and an Action-Accounted Economy | Access, rights, poverty/disability, governance, responsibility, privacy, incentives, capacity institutions and transition | Uses surviving domain and social evidence. Per-cell synthetic capacity is not money or a complete entitlement system. Physics does not choose a constitution. |
+| III: Measurement, Evidence and Falsification | Outcome instruments, metrology, latency, controls, preregistration, reproducibility and historical Gate results | Uses II. New study methods do not inherit every historical P1C gate. Result sections require their actual committed evidence. |
+| IV: Homeostasis, Recovery and Stochastic Dynamics | Invariance/stability/attraction distinctions; prospective Gaussian Stage A/B, capacity and external ledger; cycling, deadlock and control comparison; later regenerative/threshold domains | Uses III methods and V simultaneous foundation. Accounting closure is not recovery; boundedness on a closed finite simplex is not independent evidence of stabilization. |
+| V: Multiple Actions, Interaction and Local Structure | Simultaneous groups, common-path identities, attribution limits, Mobius/feasible subsets, three topologies, canonical motifs and certified recursive compression | Uses I/II mathematics. No electric-wave programme, universal Fibonacci law, causal inference or settlement entitlement from an algebraic transform. |
+| VI: Across Distance | Typed routes, epochs, explicit losses/boundaries, provenance, scoped sensitivity/identification, infrastructure | Uses III/V. No distance tax/inverse-square EBU law, no hidden full-chain mega-action, no universal cross-resource scalar. |
+| VII: Coordination, Memory and System Dynamics | Optional actor planning, timing, placement, memory, feedback, delay and domain dynamics | Uses IV-VI. Optimization belongs to explicit external policies, not EBU measurement. Domain restoring laws stay out of the random-affordable test. |
+| VIII: Institutions and an Action-Accounted Economy | Access, rights, poverty/disability, governance, responsibility, privacy, incentives, capacity institutions and transition | Uses surviving domain and social evidence. Per-cell synthetic capacity is not money or a complete entitlement system. Physics does not choose a constitution. |
 
 Working titles can be refined at a later manuscript stage. The table allocates
 subjects, not guaranteed findings or an adopted economy.
 
 ### 5.1 Specific preserved later obligations
 
-- **VI:** raw versus normalized empty-set values; subset synthesis/inversion;
+- **V:** raw versus normalized empty-set values; subset synthesis/inversion;
   mixed differences; omitted-order error; upward-cone correction locality;
   feasible-poset limits; canonical identity distinct from measured value;
   query-complete lower bounds; certified history-wide recursive summaries.
-- **VII:** dependency propagation, metric-dependent adjoint sensitivity and
+- **VI:** dependency propagation, metric-dependent adjoint sensitivity and
   estimator/pseudoinverse distinction; none automatically identifies causation.
-- **VIII:** explicit correction state/action/receipt, hidden memory, feedback
+- **VII:** explicit correction state/action/receipt, hidden memory, feedback
   conditions, delay, overshoot and temporal oscillation (not a physical-wave
   inference); native-burden/response research remains prospective.
-- **IX:** cooperation, protected disclosure, appeals, responsibility, compensation
+- **VIII:** cooperation, protected disclosure, appeals, responsibility, compensation
   and fairness as institutional hypotheses, not results of field algebra.
 
 ### 5.2 No loss of historical mathematics
 
 The old Part I front-to-back threshold exposition can remain available as its
 identified historical edition. Moving a topic in a new reader's route is not
-deleting the theorem or invalidating its assumptions. Existing Parts II/III
+deleting the theorem or invalidating its assumptions. Original Parts II and III
 may therefore still contain L/U, Allee, D0 and P1C without contradicting the
 new series: they must be read as named model/domain histories, not universal
 definitions of EBU.

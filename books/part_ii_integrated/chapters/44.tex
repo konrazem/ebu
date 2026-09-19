@@ -1,0 +1,99 @@
+\chapter{Onsager-type dissipation and finite-step limits}\label{ch:dissipation}
+The force--mobility--flux structure deserves its own proof, both because it
+motivated earlier EBU models and because it shows how much a dynamical
+conclusion depends on the chosen response law. We derive the result without
+calling every Gaussian actor an Onsager controller.
+
+\section{The continuous-time calculation}
+Suppose, on a time interval where the declared physical model is valid,
+\begin{equation}
+ \dot x=u(x)+SJ(x),\qquad f=-S^T\mu,
+ \qquad J_e=M_e[f_e-\theta_e]_+.
+\end{equation}
+The chain rule gives
+\begin{equation}
+ \dot V=\mu^Tu+\mu^TSJ=\mu^Tu-\sum_e f_eJ_e.
+\end{equation}
+For an active edge, $J_e=M_e(f_e-\theta_e)>0$, so
+$f_e=J_e/M_e+\theta_e$. For an inactive edge both $J_e$ and its product
+with $f_e$ vanish. Consequently
+\begin{equation}\label{eq:dissipation}
+ \dot V=\mu^Tu-\sum_e\left(\frac{J_e^2}{M_e}+\theta_eJ_e\right).
+\end{equation}
+With $u=0$, $M_e>0$ and $\theta_e\geq0$, every subtracted term is
+nonnegative and $\dot V\leq0$. This is a theorem about this declared
+continuous-time law. It does not require the historical hinge potential;
+the chain rule works for the smooth Gaussian potential too.
+
+\section{What the proof did not check}
+Nothing in the sign calculation alone ensures nonnegative stock, physical
+capacity, or existence of a trajectory for all time. A source could be asked
+to send beyond its available stock. A later cap or projection may repair
+feasibility but changes the vector field. One must then verify the actual
+accepted flux's sign/constraint properties, not cite the unmodified equality.
+
+External drive contributes $\mu^Tu$ and can raise the potential. Vanishing
+flux also need not mean $x=x^*$. Directed edges, positive activation
+thresholds, disconnected components and physical constraints can create
+other stationary configurations. A nonincreasing scalar is not by itself a
+proof of convergence to its unique unconstrained minimizer.
+
+\section{The finite Euler update}
+Freeze $w=u+SJ$ and take $x^+=x+\Delta t\,w$. For the Gaussian model,
+\begin{equation}
+ V(x^+)-V(x)=\Delta t\,\mu^Tw+
+                   \tfrac12\Delta t^2w^THw.
+\end{equation}
+The second term is nonnegative and exact. Continuous-time dissipation can
+therefore coexist with an overshooting finite step. Put
+$D=-\mu^Tw$. If $D>0$ and $w\ne0$, a sufficient and in this quadratic
+case exact condition for nonincrease along that frozen direction is
+\begin{equation}
+ 0<\Delta t\leq\frac{2D}{w^THw}.
+\end{equation}
+This does not certify physical feasibility. If $D=0$ and $w\ne0$, every
+positive step raises $V$; if $w=0$, the state does not change.
+
+\section{A complete controller example}
+At $(18,2)$, use one edge, $M_e=1/2$, $\theta_e=0$ and $u=0$.
+Then $f=4$, $J=2$ and $w=(-2,2)$. We have $\mu^Tw=-8$ and
+$w^THw=2$, giving
+\begin{equation}
+ V(x^+)-V(x)=-8\Delta t+\Delta t^2.
+\end{equation}
+The nonincrease interval is $0\leq\Delta t\leq8$. At duration four,
+the quantity is eight and the reference is reached in this particular
+two-cell frozen step. At duration eight, the endpoint is $(2,18)$ and
+potential returns to sixteen. At duration nine, the physical endpoint
+$(0,20)$ is still nonnegative but has potential twenty-five. Continuous
+descent did not license an arbitrarily large Euler step.
+
+These are analytic substitutions into one frozen update, not a simulated
+time series or parameter search. Their role is to expose the curvature term.
+
+\section{Network geometry and a general bound}
+For a full vector of edge rates, the relevant quadratic is
+$J^TS^THSJ$. Shared nodes produce off-diagonal terms in $S^THS$ even
+when $H$ is diagonal. Thus a certificate derived by treating every edge in
+isolation can miss joint curvature.
+
+The Gaussian gradient is globally Lipschitz with constant
+$L=h_{\max}$. Indeed $\mu(x)-\mu(y)=H(x-y)$ and the diagonal operator
+norm of $H$ is $h_{\max}$. Therefore
+$w^THw\leq L\|w\|_2^2$, yielding the familiar sufficient descent-lemma
+bound. The original network and timestep proofs follow as a historical reading in this chapter, but their old numerical constants must not be copied over the new
+Hessian or a different actor law.
+
+\section{Why keep Onsager in the books?}
+It supplies a transparent benchmark of reasoning: declare a response,
+derive its sign structure, check feasibility, then inspect discretization.
+It also explains the origin of mobility and why force is not itself a flux.
+What it does not supply is a hidden restoring plant for the new programme.
+Random affordable actors can spend capacity on negative-valued actions;
+their increments are not generally $\Delta t SJ(f)$. Applying the theorem
+to them would change the subject of the experiment.
+
+\section*{Chapter recap}
+Onsager-type dissipation is retained as conditional mathematics and an
+explicit controller alternative. Exact finite EBU survives controller
+changes; the old controller's dynamical guarantees do not automatically do so.

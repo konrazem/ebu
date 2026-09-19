@@ -1,0 +1,1162 @@
+{
+  "scope": "Editorial/static inspection only; visual review is separate.",
+  "passed": true,
+  "checks": [
+    {
+      "check": "HEAD unchanged",
+      "passed": true,
+      "detail": "05f3cb02d0c48e60de98342edfac9c36f2cecc6f"
+    },
+    {
+      "check": "branch unchanged",
+      "passed": true,
+      "detail": "codex/local-gaussian-reconciliation"
+    },
+    {
+      "check": "tracked files unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "index unchanged",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "all new nonignored paths within authorized edition",
+      "passed": true,
+      "detail": 49
+    },
+    {
+      "check": "locked source: AGENTS.md",
+      "passed": true,
+      "detail": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e"
+    },
+    {
+      "check": "locked source: CURRENT_SCIENTIFIC_AUTHORITY.md",
+      "passed": true,
+      "detail": "92709b6f7e31497dfb48a50bcf45a9e4f7e3e406e59e367874ba897e3a1a75eb"
+    },
+    {
+      "check": "locked source: RECONCILIATION_COMPLETION_REPORT.md",
+      "passed": true,
+      "detail": "4a09cf93239090c715d98dcd19fa887aea33eb507a4b344512cdcb6ec57c0181"
+    },
+    {
+      "check": "locked source: BOOK_I_GENERATION_HANDOVER.md",
+      "passed": true,
+      "detail": "12a75b84dbdf145943d5de0a361d4a187409582dafdabab6300fc75f210a7c2e"
+    },
+    {
+      "check": "locked source: BOOK_I_INTRODUCTION_BLUEPRINT.md",
+      "passed": true,
+      "detail": "4ba34b2e4a167f72daa2c104041ac8bdfe97473c2432aa63c40d11f8cca9ca83"
+    },
+    {
+      "check": "locked source: BOOK_I_MOTIVATION_SOURCE_REGISTER.md",
+      "passed": true,
+      "detail": "984fe4d6685c76144f9b88978ce103c69687ff20d8227aaed1fdce2c5c1a4069"
+    },
+    {
+      "check": "locked source: LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md",
+      "passed": true,
+      "detail": "96a9e336230f80085558982f31ccde8caa754e68f6c6ade306743400e5cdc78f"
+    },
+    {
+      "check": "locked source: LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md",
+      "passed": true,
+      "detail": "21a6ce38b13e8967074ca16eac4d1eea80c125cc5ba59e87e2f3950b1000c9ee"
+    },
+    {
+      "check": "locked source: EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "passed": true,
+      "detail": "f1e8983bcad16343c0db79ec55763991e51f031864056c8dfc3cb17b56c15e2e"
+    },
+    {
+      "check": "locked source: V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "passed": true,
+      "detail": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e"
+    },
+    {
+      "check": "locked source: SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "passed": true,
+      "detail": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10"
+    },
+    {
+      "check": "locked source: PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "passed": true,
+      "detail": "ed1242b0965b154f07158bb8251747beab63b99cba9ed8971f1848bedb8d7e4f"
+    },
+    {
+      "check": "preserved PDF: EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "passed": true,
+      "detail": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019"
+    },
+    {
+      "check": "preserved page count: EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "passed": true,
+      "detail": 153
+    },
+    {
+      "check": "preserved PDF: EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "passed": true,
+      "detail": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095"
+    },
+    {
+      "check": "preserved page count: EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "passed": true,
+      "detail": 160
+    },
+    {
+      "check": "preserved PDF: EBP_Book_Part_I_Unified_Explanatory_Edition.pdf",
+      "passed": true,
+      "detail": "335ed5c6d3541d48a61438e213a8a1148eb196649da83392a4ba0741ce65a4ad"
+    },
+    {
+      "check": "preserved page count: EBP_Book_Part_I_Unified_Explanatory_Edition.pdf",
+      "passed": true,
+      "detail": 296
+    },
+    {
+      "check": "complete ordered baseline section inventory",
+      "passed": true,
+      "detail": 533
+    },
+    {
+      "check": "every inventory disposition is declared",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "markdown disposition has one row per section",
+      "passed": true,
+      "detail": 533
+    },
+    {
+      "check": "18 complete numbered chapters",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "labels unique",
+      "passed": true,
+      "detail": 45
+    },
+    {
+      "check": "all cross-references resolve in sources",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "all citations have bibliography entries",
+      "passed": true,
+      "detail": {
+        "citations": 19,
+        "entries": 19
+      }
+    },
+    {
+      "check": "six complete figure references",
+      "passed": true,
+      "detail": [
+        "two_records",
+        "regulation",
+        "transfer",
+        "quadratic",
+        "finite_value",
+        "group"
+      ]
+    },
+    {
+      "check": "final TeX log has no warnings/errors",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "no trailing whitespace: build.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: baseline_section_inventory.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: source_locks.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: build_manifest.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: render_review.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: book.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: README.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: verify_mathematics.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: figures.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: BUILD.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: verify_edition.py",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: VERIFICATION_REPORT.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: claim_source_ledger.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: content_disposition.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: mathematical_review.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/12.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/06.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/07.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/13.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/05.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/11.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/10.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/04.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/14.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/15.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/01.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/17.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/03.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/02.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/16.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/bibliography.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/glossary.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/18.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/09.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: manuscript/08.tex",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: review/mathematics_checks.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: review/edition_checks.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: review/visual_review.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: review/visual_review.md",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no trailing whitespace: review/reproducibility.json",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no blank PDF pages",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "no unresolved PDF reference or replacement glyph",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "check": "PDF page content within media box: 1",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 2",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 3",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 4",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 5",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 6",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 7",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 8",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 9",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 10",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 11",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 12",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 13",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 14",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 15",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 16",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 17",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 18",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 19",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 20",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 21",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 22",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 23",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 24",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 25",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 26",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 27",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 28",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 29",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 30",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 31",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 32",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 33",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 34",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 35",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 36",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 37",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 38",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 39",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 40",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 41",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 42",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 43",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 44",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 45",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 46",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 47",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 48",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 49",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 50",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 51",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 52",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 53",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 54",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 55",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 56",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 57",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 58",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 59",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 60",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 61",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 62",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 63",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 64",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 65",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 66",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 67",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 68",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "PDF page content within media box: 69",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "check": "expected page labels",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "pdf_sha256": "1ef1a48b40e92dd5e3690c0997b083ae4022b512f13c267c2f9135a1ad57c3f6",
+  "pdf_pages": 69,
+  "page_records": [
+    {
+      "pdf_page": 1,
+      "printed_label": "i",
+      "opening": "ENERGY BALANCE PROJECT / Why EBU? / Life, Balance, and the / Accounting of Physical Action / Book I / A new-so",
+      "characters": 184
+    },
+    {
+      "pdf_page": 2,
+      "printed_label": "ii",
+      "opening": "About this edition / Konrad Grzyb is the author and originator of the Energy Balance Project. / This can",
+      "characters": 1660
+    },
+    {
+      "pdf_page": 3,
+      "printed_label": "iii",
+      "opening": "An invitation to the reader / A clinic can pay its bills and still face a broken pump. It can also hav",
+      "characters": 1715
+    },
+    {
+      "pdf_page": 4,
+      "printed_label": "iv",
+      "opening": "Contents / 1 The question beneath an economy . . . . . . . . . . . . . . . . . . 1 / 2 What monetary sig",
+      "characters": 1589
+    },
+    {
+      "pdf_page": 5,
+      "printed_label": "1",
+      "opening": "BOOK I / CHAPTER 1 / The question beneath an economy / What are economic systems ultimately meant to mak",
+      "characters": 2187
+    },
+    {
+      "pdf_page": 6,
+      "printed_label": "2",
+      "opening": "2 Chapter 1 / or the increased ability to deliver water later? Those are different objects, / with diffe",
+      "characters": 1564
+    },
+    {
+      "pdf_page": 7,
+      "printed_label": "3",
+      "opening": "Why EBU? 3 / 1.3 The ethical starting point / The motivation of this book includes an ethical commitment",
+      "characters": 1779
+    },
+    {
+      "pdf_page": 8,
+      "printed_label": "4",
+      "opening": "BOOK I / CHAPTER 2 / What monetary signals can and cannot tell / us / Why can a financially attractive act",
+      "characters": 2097
+    },
+    {
+      "pdf_page": 9,
+      "printed_label": "5",
+      "opening": "Why EBU? 5 / 2.2 Consequences outside the transaction / An externality is an effect on people outside a ",
+      "characters": 2496
+    },
+    {
+      "pdf_page": 10,
+      "printed_label": "6",
+      "opening": "6 Chapter 2 / date is not a guarantee of every social or ecological function, but it is plainly / a feed",
+      "characters": 1040
+    },
+    {
+      "pdf_page": 11,
+      "printed_label": "7",
+      "opening": "BOOK I / CHAPTER 3 / Scarcity, access and unequal exposure / Why can needs remain unmet even when some r",
+      "characters": 2146
+    },
+    {
+      "pdf_page": 12,
+      "printed_label": "8",
+      "opening": "8 Chapter 3 / involves further conditions. A delivery record and a purchase record each / answer part of",
+      "characters": 2598
+    },
+    {
+      "pdf_page": 13,
+      "printed_label": "9",
+      "opening": "Why EBU? 9 / support. Recording resource use and deciding entitlements are separate tasks. / The commitm",
+      "characters": 1210
+    },
+    {
+      "pdf_page": 14,
+      "printed_label": "10",
+      "opening": "BOOK I / CHAPTER 4 / The condition of the planet and / conditional futures / What do environmental observa",
+      "characters": 1789
+    },
+    {
+      "pdf_page": 15,
+      "printed_label": "11",
+      "opening": "Why EBU? 11 / 4.2 Conditional pathways / The IPCC also assesses contrasting greenhouse-gas scenarios. It",
+      "characters": 2344
+    },
+    {
+      "pdf_page": 16,
+      "printed_label": "12",
+      "opening": "12 Chapter 4 / obtained where, by which process, for what use and with what residuals. The / account mus",
+      "characters": 1608
+    },
+    {
+      "pdf_page": 17,
+      "printed_label": "13",
+      "opening": "BOOK I / CHAPTER 5 / From diagnosis to a research question / What would an additional physical-action ac",
+      "characters": 1914
+    },
+    {
+      "pdf_page": 18,
+      "printed_label": "14",
+      "opening": "14 Chapter 5 / 5.2 Seven questions for a proposed account / Before calculating a pump-related value, we ",
+      "characters": 2185
+    },
+    {
+      "pdf_page": 19,
+      "printed_label": "15",
+      "opening": "Why EBU? 15 / under a separately declared capacity rule? A useful study must permit ad- / verse answers ",
+      "characters": 1930
+    },
+    {
+      "pdf_page": 20,
+      "printed_label": "16",
+      "opening": "BOOK I / CHAPTER 6 / Homeostasis: maintaining function / through change / How can a system remain function",
+      "characters": 1836
+    },
+    {
+      "pdf_page": 21,
+      "printed_label": "17",
+      "opening": "Why EBU? 17 / DECLARED ENGINEERING FEEDBACK / Measure level / Sensor / Compare / decide / Control rule / Change ",
+      "characters": 1595
+    },
+    {
+      "pdf_page": 22,
+      "printed_label": "18",
+      "opening": "18 Chapter 6 / tain an internal temperature while requiring electricity and rejecting heat. / These exam",
+      "characters": 2156
+    },
+    {
+      "pdf_page": 23,
+      "printed_label": "19",
+      "opening": "BOOK I / CHAPTER 7 / Functional balance, equilibrium and living / nonequilibrium / Does balance mean that ",
+      "characters": 2066
+    },
+    {
+      "pdf_page": 24,
+      "printed_label": "20",
+      "opening": "20 Chapter 7 / The lesson for EBU is conceptual. Our dimensionless potential will not be / thermodynamic",
+      "characters": 2340
+    },
+    {
+      "pdf_page": 25,
+      "printed_label": "21",
+      "opening": "Why EBU? 21 / 7.4 A practical reading rule / Whenever someone says a system is \u201cin balance\u201d, ask which q",
+      "characters": 1122
+    },
+    {
+      "pdf_page": 26,
+      "printed_label": "22",
+      "opening": "BOOK I / CHAPTER 8 / A physical world before an economic / account / What must a model record so that an a",
+      "characters": 1819
+    },
+    {
+      "pdf_page": 27,
+      "printed_label": "23",
+      "opening": "Why EBU? 23 / place and adding three at the other cancels in the sum: / \u2211 / i / x\u2032 / i = / \u2211 / i / xi = M. (8.3) / Thi",
+      "characters": 1348
+    },
+    {
+      "pdf_page": 28,
+      "printed_label": "24",
+      "opening": "24 Chapter 8 / come from the measured or declared accumulation over the interval; a single / endpoint ra",
+      "characters": 1868
+    },
+    {
+      "pdf_page": 29,
+      "printed_label": "25",
+      "opening": "BOOK I / CHAPTER 9 / Actions, actors and local information / Who acts, what is evaluated, and what infor",
+      "characters": 1549
+    },
+    {
+      "pdf_page": 30,
+      "printed_label": "26",
+      "opening": "26 Chapter 9 / not physical capability or legal permission. An unfavourable value does not / decide a pe",
+      "characters": 2346
+    },
+    {
+      "pdf_page": 31,
+      "printed_label": "27",
+      "opening": "Why EBU? 27 / mations and boundaries should remain traceable. One purchase need not / become one giant p",
+      "characters": 1580
+    },
+    {
+      "pdf_page": 32,
+      "printed_label": "28",
+      "opening": "BOOK I / CHAPTER 10 / Why a reference is necessary / Relative to what does a measured change count as im",
+      "characters": 1971
+    },
+    {
+      "pdf_page": 33,
+      "printed_label": "29",
+      "opening": "Why EBU? 29 / 10.2 A scale says how to read a displacement / We also declare a positive scale \u03c3i, pronou",
+      "characters": 2396
+    },
+    {
+      "pdf_page": 34,
+      "printed_label": "30",
+      "opening": "30 Chapter 10 / Normalising several quantities also does not establish an ethical exchange / rate betwee",
+      "characters": 828
+    },
+    {
+      "pdf_page": 35,
+      "printed_label": "31",
+      "opening": "BOOK I / CHAPTER 11 / The local Gaussian ruler / How can distance from a reference be measured transpare",
+      "characters": 1752
+    },
+    {
+      "pdf_page": 36,
+      "printed_label": "32",
+      "opening": "32 Chapter 11 / 0 / 2 / 4 / 6 / 8 / 2 / 6 / 10 / 14 / 18 / Stock x (L) / Local potential V_i (dimensionless) / Solid: scale 2 ",
+      "characters": 1335
+    },
+    {
+      "pdf_page": 37,
+      "printed_label": "33",
+      "opening": "Why EBU? 33 / its logarithm is consistent with the units. This relative-log-density identity / explains ",
+      "characters": 2069
+    },
+    {
+      "pdf_page": 38,
+      "printed_label": "34",
+      "opening": "BOOK I / CHAPTER 12 / From local references to a potential / How can local measurements describe a joint",
+      "characters": 1915
+    },
+    {
+      "pdf_page": 39,
+      "printed_label": "35",
+      "opening": "Why EBU? 35 / Our original three-litre Ridge-to-Vale transfer leaves those two extra tanks / unchanged. ",
+      "characters": 2127
+    },
+    {
+      "pdf_page": 40,
+      "printed_label": "36",
+      "opening": "36 Chapter 12 / 12.4 The global audit is not the actor\u2019s policy / Writing V is convenient for proving id",
+      "characters": 1107
+    },
+    {
+      "pdf_page": 41,
+      "printed_label": "37",
+      "opening": "BOOK I / CHAPTER 13 / Marginal field: what a small change means / What does the local slope say about a ",
+      "characters": 1720
+    },
+    {
+      "pdf_page": 42,
+      "printed_label": "38",
+      "opening": "38 Chapter 13 / 13.2 A direction combines two slopes / A conservative transfer removes stock at one endp",
+      "characters": 1992
+    },
+    {
+      "pdf_page": 43,
+      "printed_label": "39",
+      "opening": "BOOK I / CHAPTER 14 / A real action is finite / Why can a favourable direction become unfavourable when ",
+      "characters": 1776
+    },
+    {
+      "pdf_page": 44,
+      "printed_label": "40",
+      "opening": "40 Chapter 14 / quadratic geometry. \u201cExact\u201d here describes algebra, not a guarantee of exact / physical ",
+      "characters": 1692
+    },
+    {
+      "pdf_page": 45,
+      "printed_label": "41",
+      "opening": "Why EBU? 41 / -5 / 0 / 5 / 10 / 15 / 20 / 0 / 2 / 4 / 6 / 8 / 10 / Alternative quantity q (L), not time / Finite action value (d",
+      "characters": 1328
+    },
+    {
+      "pdf_page": 46,
+      "printed_label": "42",
+      "opening": "BOOK I / CHAPTER 15 / The exact EBU equation / What precisely is calculated for a declared physical acti",
+      "characters": 2001
+    },
+    {
+      "pdf_page": 47,
+      "printed_label": "43",
+      "opening": "Why EBU? 43 / unit. Neither the letter E nor the project\u2019s name makes the result energy in / joules. / 15.",
+      "characters": 2208
+    },
+    {
+      "pdf_page": 48,
+      "printed_label": "44",
+      "opening": "44 Chapter 15 / problem, and the current reconciliation leaves a loss-ledger interpretation un- / resolv",
+      "characters": 2305
+    },
+    {
+      "pdf_page": 49,
+      "printed_label": "45",
+      "opening": "BOOK I / CHAPTER 16 / One action, several actions and the path / between states / Why does a simultaneous ",
+      "characters": 1786
+    },
+    {
+      "pdf_page": 50,
+      "printed_label": "46",
+      "opening": "46 Chapter 16 / COMMON BASELINE: (14, 12, 4) L; V = 7 / Action a alone / (12, 12, 6) L / V = 3; value = 4 / Ac",
+      "characters": 1569
+    },
+    {
+      "pdf_page": 51,
+      "printed_label": "47",
+      "opening": "Why EBU? 47 / The correction need not always have this sign. Opposing increments can / cancel and yield ",
+      "characters": 1911
+    },
+    {
+      "pdf_page": 52,
+      "printed_label": "48",
+      "opening": "48 Chapter 16 / 16.4 A common-path attribution / Once the common straight path is declared, we can defin",
+      "characters": 2104
+    },
+    {
+      "pdf_page": 53,
+      "printed_label": "49",
+      "opening": "Why EBU? 49 / Identifying actual causal contributions requires the appropriate intervention / or causal ",
+      "characters": 1416
+    },
+    {
+      "pdf_page": 54,
+      "printed_label": "50",
+      "opening": "BOOK I / CHAPTER 17 / What follows mathematically, and what / does not / Which conclusions follow from def",
+      "characters": 1690
+    },
+    {
+      "pdf_page": 55,
+      "printed_label": "51",
+      "opening": "Why EBU? 51 / values are / E0 = V (x0) \u2212 V (x1) \u2212 C0, / E1 = V (x1) \u2212 V (x2) \u2212 C1. / Adding cancels the two ",
+      "characters": 2008
+    },
+    {
+      "pdf_page": 56,
+      "printed_label": "52",
+      "opening": "52 Chapter 17 / Returning one visible stock is not necessarily a complete cycle. Fuel con- / sumption, d",
+      "characters": 1905
+    },
+    {
+      "pdf_page": 57,
+      "printed_label": "53",
+      "opening": "Why EBU? 53 / Let an external audit J accumulate the drive term, so Jn+1 = Jn + Dext,n. / Add these decl",
+      "characters": 2310
+    },
+    {
+      "pdf_page": 58,
+      "printed_label": "54",
+      "opening": "BOOK I / CHAPTER 18 / The equation as a beginning, not a promise / What can we now say precisely, and wh",
+      "characters": 2196
+    },
+    {
+      "pdf_page": 59,
+      "printed_label": "55",
+      "opening": "Why EBU? 55 / physical account is not personal blame. A beneficial future field change does / not prove ",
+      "characters": 2400
+    },
+    {
+      "pdf_page": 60,
+      "printed_label": "56",
+      "opening": "56 Chapter 18 / The current series architecture gives later volumes distinct responsibilities. / Part IV",
+      "characters": 2094
+    },
+    {
+      "pdf_page": 61,
+      "printed_label": "57",
+      "opening": "Glossary / These definitions belong to the scope used in this book. A term can have / a different techni",
+      "characters": 1819
+    },
+    {
+      "pdf_page": 62,
+      "printed_label": "58",
+      "opening": "58 Glossary / Dissipation. Irreversible physical degradation of available driving differ- / ences. Its r",
+      "characters": 2061
+    },
+    {
+      "pdf_page": 63,
+      "printed_label": "59",
+      "opening": "Why EBU? 59 / Local information. Information available within a declared physical or in- / formational n",
+      "characters": 2007
+    },
+    {
+      "pdf_page": 64,
+      "printed_label": "60",
+      "opening": "60 Glossary / Stability . A specified form of controlled response to perturbation under a / specified dy",
+      "characters": 547
+    },
+    {
+      "pdf_page": 65,
+      "printed_label": "61",
+      "opening": "Symbols and units / The stock unit in the illustrations is the litre (L). A different homogeneous / reso",
+      "characters": 1356
+    },
+    {
+      "pdf_page": 66,
+      "printed_label": "62",
+      "opening": "62 Symbols and units / Symbol Meaning Unit here / E(0) / a Singleton value at common start Account unit / Ra",
+      "characters": 698
+    },
+    {
+      "pdf_page": 67,
+      "printed_label": "63",
+      "opening": "Sources and further reading / The factual references below support the selected claims, not EBU\u2019s effe",
+      "characters": 2083
+    },
+    {
+      "pdf_page": 68,
+      "printed_label": "64",
+      "opening": "64 Sources / [S08\u201309] IPCC (2023). Climate Change 2023: Synthesis Report. Summary / for Policymakers . I",
+      "characters": 2249
+    },
+    {
+      "pdf_page": 69,
+      "printed_label": "65",
+      "opening": "Why EBU? 65 / [M01] Grzyb, K., EBU project. V3.0 Local EBU Foundation Draft , / repository source / V3.0_L",
+      "characters": 2188
+    }
+  ],
+  "disposition_counts": {
+    "rewritten": 286,
+    "condensed": 103,
+    "relocated": 120,
+    "retained and rewritten": 10,
+    "omitted from new spine": 14
+  },
+  "rendered_word_count_approximate": 20148
+}

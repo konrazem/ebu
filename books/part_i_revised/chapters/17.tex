@@ -1,0 +1,131 @@
+\chapter{From a pre-action schedule to a measured record}\label{ch:lifecycle}
+
+\section{A promise is not yet a physical event}
+Ridge agrees to send four stock units to Vale. Before anything moves, we can calculate what that action would mean under the frozen model. Afterward, a meter may show that only three units moved. The proposed quantity, permitted quantity and observed quantity answer different questions. Keeping all three is part of a useful account.
+
+The preceding chapter gave an exact value for a finite action. Here we ask what information makes that equation reproducible across time. The object of interest is still a physical change. A message requesting a transfer does not move the water. A signed agreement does not prove delivery. A correct calculation of a planned successor does not prove that the successor occurred.
+
+The original book called this progression a quote-to-settlement lifecycle. We retain that teaching idea, while separating a physical value record from any later rule that changes a spendable balance. This chapter specifies the information relationships needed to understand an account. It does not adopt a complete operating protocol for the prospective Gaussian study.
+
+\begin{intuitionbox}{Three quantities in one story}
+The request says what an actor asks to do. The accepted domain says what the declared rules permit. The measured record says what the evidence supports as having occurred. A scientifically useful record never silently substitutes one for another.
+\end{intuitionbox}
+
+\section{Freeze the whole function, not one attractive point}
+For the recurring Ridge--Vale example, let
+\[
+ z=(18,2),\qquad x^*=(10,10),\qquad \sigma=(2,2),\qquad C=0.
+\]
+A lossless transfer of quantity $q$ changes the state to $(18-q,2+q)$. Its exact schedule is
+\begin{equation}
+ E(q)=4q-\frac{q^2}{4}.
+\end{equation}
+If the accepted domain is $0\le q\le4$, the quoted value at full execution is $E(4)=12$. The equation also specifies every smaller accepted quantity. At $q=3$ it gives $12-9/4=9.75$. That is the value of the three-unit event on this schedule.
+
+Multiplying the full quote by the fraction executed would give $12(3/4)=9$, which is different. The first three units and the fourth unit do not have the same marginal effect. We can see this without calculus: the three-unit successor is $(15,5)$, its potential is $25/4=6.25$, and $16-6.25=9.75$. The direct endpoint calculation agrees with the function.
+
+This is why a pre-action account should identify its whole domain and formula. A few selected values may illustrate the formula, but they do not replace it. A table can represent an exact schedule only if its interpolation rule is also justified. Connecting points with straight lines usually changes a curved function.
+
+\diagram{finite}{The full finite-value curve for the running two-cell example. A positive initial slope does not make every finite quantity beneficial.}{fig:finite}
+
+\section{The information held fixed}
+To reproduce the schedule, the reader needs the baseline state, coordinate ordering, action map, reference vector, positive scales, process-burden declaration, units and accepted domain. A version label should identify the equation and those definitions. A timestamp alone is insufficient: two records at the same time can describe different fields.
+
+The scope must also say whether $q$ is quantity or rate. Here $q$ is a quantity. If a meter reports a rate $j$ over duration $\Delta t$, then $q=\Delta t\,j$ when the rate is constant. A variable rate requires its time integral. Replacing a reported average rate with an instantaneous endpoint reading can change the quantity, even if the numerical values look similar.
+
+For a group, the record needs the accepted vector, the joint successor and the path convention if child attributions are displayed. A child's measured shortfall can change the group's field value and the attributions of other children. It cannot always be handled by independently scaling one child's old number. Chapter~\ref{ch:groups} explains the mathematical reason.
+
+\section{The shared baseline removes an external change}
+Suppose an external, lossless redistribution changes the physical state from $(16,4)$ to $(18,2)$ before the actor's epoch. Under our fixed potential,
+\[
+ V(16,4)=9,\qquad V(18,2)=16.
+\]
+The external change increased represented deviation by seven. The actor then transfers four units, ending at $(14,6)$ with $V=4$. The actor's field value is $16-4=12$.
+
+Using the earlier state as the actor's baseline would give $9-4=5$. It would mix the external worsening with the actor's improvement. Neither number is arithmetically mysterious; they answer different questions. The external record is $+7$ in potential change, while the action record is $+12$ in avoided potential. Together they explain why the complete interval changed potential by $4-9=-5$.
+
+Write the general relationship with pre-forcing state $x$, frozen post-forcing baseline $z$ and action successor $y$:
+\begin{align}
+ D_{\rm ext}&=V(z)-V(x),\\
+ E&=V(z)-V(y)-C,\\
+ V(x)-V(y)-C&=E-D_{\rm ext}.
+\end{align}
+The subtraction makes the attribution boundary explicit. Calling the external change a disturbance does not require it to increase burden. It can also reduce burden, in which case $D_{\rm ext}$ is negative.
+
+\begin{lawbox}{No-action neutrality}
+At the shared baseline, $E(0)=V(z)-V(z)-C(0)=0$ when $C(0)=0$. An idle actor receives no field reduction from an external event merely because that event preceded the observation. This is an algebraic statement within the declared comparison.
+\end{lawbox}
+
+\section{An epoch has a beginning and an expiry}
+Imagine a pump quote issued at 14:00 for a short movement of water. At 14:03 another pipe fails. If that failure changes a required precondition, the original quote may no longer describe the available action. A protocol must say whether the action can continue, whether its authorization expires, or whether a new epoch is opened.
+
+What cannot be justified by the original formula is silently choosing the most favourable baseline after seeing the outcome. An actor might prefer the high-burden state immediately after failure; an institution might prefer the lower-burden state before it. Reproducibility requires the comparison rule to be specified before those preferences can select it.
+
+A new epoch is not an admission that earlier arithmetic was wrong. It records that the facts or applicable model have changed. A useful archive keeps the earlier proposal, its expiry reason and the new proposal. This lets a later reviewer distinguish a legitimately revised opportunity from an outcome-dependent rewrite.
+
+The exact timing and expiry mechanics belong to a registered protocol. We need not invent them here to understand the boundary. The general requirement is consistency: the physical interval, state commitment, accepted domain and measurement claim must refer to the same event.
+
+\section{Shortfall, overexecution and missing evidence}
+For a measured quantity within the valid domain, the committed schedule can be evaluated at that quantity when its other assumptions remain satisfied. Our three-unit example is such a case. It does not require a new potential or a proportional approximation.
+
+If the accepted domain ended at four but the meter reports five, the physical report must retain five. A rule limiting accepted quantity cannot erase an extra unit from the reservoir. At the same time, the earlier commitment did not authorize five. Describing the physical consequence and deciding the institutional response are separate tasks.
+
+The mathematical function may be evaluable beyond its accepted domain, but mathematical evaluability is not permission. A retrospective diagnostic can explicitly calculate the consequence of overexecution under the frozen field. It must not be mislabeled as an authorized receipt or a precommitted positive credit.
+
+If the sensor is missing or inconsistent, ``not established'' is a possible outcome. Zero is a measured or derived value, not a universal substitute for uncertainty. Crediting the full request would invent execution; charging an arbitrary negative amount would invent a physical burden. Any sanctions or compensation need their own declared basis.
+
+\section{Identity prevents counting the same change twice}
+One transfer can appear in the source meter, the destination meter, a pump controller and a transporter's report. Those records can corroborate one another. They do not automatically describe four actions. A stable event identity connects them to one physical transformation.
+
+Conversely, a chain can contain several physical transformations under one invoice. Fuel use, electricity generation, delivery and water pumping must retain their physical boundaries where they are in scope. A commercial reference number can link the chain without collapsing its quantities or converting its resource units into one scalar.
+
+Repeated actions can be distinguished by their execution intervals and predecessor states. Splitting an actual continuous movement into bookkeeping pieces must not let each piece claim the same original improvement. If the pieces are sequential, each uses the preceding piece's successor. If they are simultaneous, the group account must reconcile their joint effect.
+
+\section{A hash protects a record, not a sensor}
+A digital fingerprint can help establish that the equation and inputs shown after an event match the committed bytes. It does not establish that the water existed, that a meter was calibrated, or that the declared reference was appropriate. Integrity of a file and truth of a measurement are different properties.
+
+For a physical account, the evidence chain can include device identity, calibration records, location, time interval, unit conversion, independent observations and documented corrections. The appropriate set depends on the domain. A teaching tank does not prescribe a surveillance system for a hospital.
+
+Records should explain uncertainty without burying it in the potential's scale. In the Gaussian model, $\sigma_i$ defines the reference geometry. A sensor's uncertainty concerns knowledge of $x_i$. Treating those as the same parameter would change both the meaning of the field and the meaning of confidence in the observation.
+
+\section{Corrections preserve the earlier account}
+Suppose a later calibration finds that a meter overstated delivery. A correction should identify the earlier record, the evidence for the correction and the authorized correction procedure. Deleting the earlier line conceals what participants actually knew and acted on at the time.
+
+A physical reversal is different. Returning water from Vale to Ridge is a new action with a new predecessor state. It may reverse the earlier endpoint change, but it is not a correction to the fact that the first action occurred. Its field value must be computed under the applicable fixed-field interval and any declared process burden.
+
+Versioning the potential is also different from correcting a measurement. If new evidence justifies a different reference, the same unchanged state can acquire a different potential. That is a model revision. It needs a separate reconciliation term when accounts span the change; it is not physical restoration by the actor.
+
+\section{A complete worked action record}
+Consider the three-unit shortfall again. A readable record contains the following facts:
+\begin{center}\small
+\begin{tabular}{P{0.30\linewidth}P{0.59\linewidth}}\toprule
+Item & Declared or observed content\\\midrule
+Physical object & Lossless Ridge-to-Vale transfer of one homogeneous stock\\
+Baseline & $(18,2)\X$, ordered Ridge then Vale\\
+Field & Reference $(10,10)\X$; scales $(2,2)\X$\\
+Domain & Accepted quantity between zero and four stock units\\
+Schedule & $E(q)=4q-q^2/4$, with $C=0$\\
+Observation & Three stock units transferred; endpoint $(15,5)\X$\\
+Calculation & Before $16$; after $6.25$; signed field value $9.75$\\
+Status & Illustrative arithmetic; no real event or spendable credit claimed\\\bottomrule
+\end{tabular}
+\end{center}
+The record is longer than the number 9.75 because it explains what the number means. Someone can check the arithmetic without knowing the actor's income, preferences or occupational status. Whether that person is entitled to compensation remains a separate question.
+
+\section{Guided problem: a changed observation}
+Keep the same frozen field and accepted domain. The source reports that $2.5\X$ left Ridge; the destination reports that $2.5\X$ arrived. Calculate the successor, its potential and the exact value. Then compare the result with scaling the full four-unit quote by the delivered fraction.
+
+The successor is $(15.5,4.5)\X$. Each endpoint differs from its reference by $5.5\X$ in magnitude. Thus $V=2(1/2)(5.5/2)^2=7.5625$, and the field reduction is $16-7.5625=8.4375$. Equivalently, the schedule gives $4(2.5)-(2.5)^2/4=8.4375$.
+
+Proportional scaling would give $12(2.5/4)=7.5$. It is smaller because it assigns the fourth unit's lower marginal contribution to earlier units as well. The endpoint equation avoids that substitution. The two meters agree on conservation in this illustration; agreement alone does not establish their calibration in a real application.
+
+\section{Practice and reflection}
+First, evaluate $E(1)$, $E(2)$ and $E(4)$. The answers are $3.75$, $7$ and $12$. Explain why doubling quantity from one to two does not double value. Next, suppose an external event takes $(18,2)$ to $(16,4)$ before a two-unit action. The new baseline has $V=9$; the action ends at $(14,6)$ with $V=4$, so the action value is $5$. The external potential change was $-7$. Neither should be replaced by the other.
+
+Finally, write an example of a missing measurement, a physical reversal and a field-version change. For each, name the record that must be retained and the new information that must be added. The purpose is to recognize distinct events before assigning numbers to them.
+
+\begin{intuitionbox}{What to carry forward}
+A schedule is a conditional account over a declared domain. Verified execution supplies the point to evaluate. External changes, expired conditions, missing evidence and later corrections remain visible. The equation determines the field difference; an institution must separately define the consequences of recording it.
+\end{intuitionbox}
+
+The next chapter follows these signed values into the real-needs examples that motivated the book. Understanding a positive number is incomplete until we can also explain a zero or a negative number without confusing the action with the person it serves.

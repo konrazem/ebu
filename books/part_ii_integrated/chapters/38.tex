@@ -1,0 +1,118 @@
+\chapter{Force, mobility, flux and finite action value}\label{ch:force}
+The potential describes a state. Its derivative describes how that potential
+changes in a direction. A constitutive response law describes how strongly
+a controller moves in response. A finite EBU quote describes the complete
+change caused by a specified action. These four statements fit together,
+but none should be substituted for another.
+
+\section{The force along a physical edge}
+For a lossless edge $i\to j$, the unit action column is
+$S_e=-e_i+e_j$, where $e_i$ is the coordinate vector with one at position
+$i$. The directional derivative is
+\begin{equation}
+ \mu^T S_e=-\mu_i+\mu_j.
+\end{equation}
+Define the field force with the sign that makes a small improvement positive:
+\begin{equation}\label{eq:force}
+ f_e=-S_e^T\mu=\mu_i-\mu_j.
+\end{equation}
+For the Gaussian potential this is
+\begin{equation}
+ f_e=\frac{x_i-x_i^*}{\sigma_i^2}
+       -\frac{x_j-x_j^*}{\sigma_j^2}.
+\end{equation}
+It compares standardized marginal deviations, not stocks alone. Two cells
+holding equal quantities can have different marginals if their references
+or scales differ. Conversely, unequal stocks can have equal marginals.
+
+In the historical loss-aware edge model $S_e=-e_i+\eta_e e_j$, the same
+chain rule gives $f_e=\mu_i-\eta_e\mu_j$. The efficiency belongs inside
+the derivative because it changes the physical transformation. This general
+directional identity does not by itself adopt a loss-aware runtime or
+resolve its separate conservation and cost declarations.
+
+\section{Mobility and the Onsager-type response}
+The historical reference is Onsager's 1931 work on coupled irreversible
+processes \cite{onsager-one,onsager-two}. It connects linear force--rate
+relations and reciprocal coefficients under microscopic-reversibility
+assumptions. EBU borrows a modelling structure, not an entitlement to those
+physical assumptions. A chosen deviation potential need not be free energy,
+and a declared mobility need not be an experimentally measured transport
+coefficient. This is why the qualifier ``Onsager-type'' matters.
+
+The reason for introducing the structure is constructive: it separates the
+state's driving slope from a mechanism's responsiveness, and it permits an
+explicit conditional dissipation calculation. It does not follow from the
+finite accounting identity. We can change the response law while retaining
+that identity, but we cannot then retain the old response law's dynamical proof.
+
+The original EBU books studied the directed threshold-mobility law
+\begin{equation}\label{eq:onsager}
+ J_e=M_e[f_e-\theta_e]_+,\qquad M_e>0,\quad\theta_e\geq0,
+\end{equation}
+where $[a]_+=\max(a,0)$. $J_e$ is a rate. $M_e$ is mobility: the strength
+of the declared response to force above threshold. In the present dimensionless
+potential normalization, $M_e$ has units $\X^2/T$ and $\theta_e$ has units
+$1/\X$. They are not the physical stock capacity or the persistent EBU
+capacity balance introduced later.
+
+This is the project's \emph{Onsager-type} constitutive controller. The
+unthresholded signed relation $J=Mf$ is linear; the positive-part directed
+version is piecewise linear and blocks reverse flow on that edge. Neither
+form is derived merely by defining $V$. Choosing it is a separate modelling
+decision. The name does not establish universal thermodynamic validity for
+an economic system, nor does it imply a general coupled reciprocal-mobility
+matrix. The historical proofs concern their explicitly stated diagonal,
+directed controller.
+
+If $M=2$, $f=1.4$ and $\theta=0.5$, the requested rate is $1.8$ in the
+corresponding units. Doubling mobility doubles this unconstrained request.
+It does not double the stock available at the source or authorize a physical
+cap to be exceeded. Permission may produce a different accepted rate, in
+which case a proof about the unconstrained law needs reinspection.
+
+\section{The exact finite quadratic}
+Let a declared action have finite increment $\delta$. Expanding the square,
+\begin{align}
+ V(z+\delta)
+ &=\tfrac12(z-x^*+\delta)^TH(z-x^*+\delta)\\
+ &=V(z)+\mu(z)^T\delta+\tfrac12\delta^TH\delta.
+\end{align}
+The two cross terms are equal because $H$ is symmetric. Therefore
+\begin{equation}\label{eq:finite}
+ E(\delta)=V(z)-V(z+\delta)-C
+ =-\mu(z)^T\delta-\tfrac12\delta^TH\delta-C.
+\end{equation}
+No small-action approximation was made. The first term is the tangent
+benefit; the second is the exact curvature correction. For $\delta=qS_e$
+on a lossless edge,
+\begin{equation}\label{eq:edgefinite}
+ E(q)=qf_e(z)-\frac{q^2}{2}
+       \left(\sigma_i^{-2}+\sigma_j^{-2}\right)-C(q).
+\end{equation}
+If $C=0$ and $f_e>0$, positive quantities give nonnegative value only up
+to $2f_e/(\sigma_i^{-2}+\sigma_j^{-2})$. Physical constraints can be
+tighter. The mathematical maximizer is half that upper zero, but the active
+random-affordable programme does not automatically choose the maximizer.
+
+\section{A force can be positive while a large action is harmful}
+At $z=(18,2)$, $x^*=(10,10)$ and $\sigma=(2,2)$, the marginals are
+$(2,-2)$, so $f=4$ and
+\begin{equation}
+ E(q)=4q-q^2/4.
+\end{equation}
+At $q=4$ the value is twelve. At $q=8$ it is sixteen. At $q=16$ it is
+zero, and at $q=17$ it is $-17/4$. The initial force stays four in the
+frozen tangent calculation, but the field changes along the finite action.
+Quoting $qf$ would ignore that change and overstate benefit.
+
+The Onsager controller would supply a rate based on the force and its own
+mobility/threshold. A duration turns that rate into a quantity. Exact EBU
+then values the resulting accepted quantity. Keeping these steps explicit
+prevents the words force, flux and value from collapsing into one number.
+
+\section*{Chapter recap}
+Force is a directional derivative; mobility is a constitutive response
+parameter; flux is the controller's rate; finite EBU is an endpoint
+difference. Chapter~\ref{ch:dissipation} derives the dissipation result for the Onsager-type
+law and explains exactly why it is not a recovery proof for a different actor.

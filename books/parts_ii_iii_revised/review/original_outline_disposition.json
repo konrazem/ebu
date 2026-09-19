@@ -1,0 +1,3541 @@
+{
+  "scope": "Chapter-level subject routing inherited by subsection entries; not a word-level completeness claim",
+  "entries": [
+    {
+      "part": "II",
+      "title": "Author, rights, and scientific scope",
+      "depth": 0,
+      "original_pdf_page": 2,
+      "revised_subject_home": "Revised front matter; original wording retained in source PDF",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Preface: from understanding to derivation",
+      "depth": 0,
+      "original_pdf_page": 3,
+      "revised_subject_home": "Revised front matter; original wording retained in source PDF",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "From a physical story to a mathematical object",
+      "depth": 0,
+      "original_pdf_page": 12,
+      "revised_subject_home": "II33",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The three questions that must not be merged",
+      "depth": 1,
+      "original_pdf_page": 12,
+      "revised_subject_home": "II33",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A running example based on a genuine need",
+      "depth": 1,
+      "original_pdf_page": 13,
+      "revised_subject_home": "II33",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What will be derived",
+      "depth": 1,
+      "original_pdf_page": 13,
+      "revised_subject_home": "II33",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Quantities, units, indices, and state",
+      "depth": 0,
+      "original_pdf_page": 16,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A quantity is more than a number",
+      "depth": 1,
+      "original_pdf_page": 16,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What is a state?",
+      "depth": 1,
+      "original_pdf_page": 17,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Units used in one field",
+      "depth": 1,
+      "original_pdf_page": 17,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The lower, upper, and reserve symbols",
+      "depth": 1,
+      "original_pdf_page": 18,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Time, rates, and the tick",
+      "depth": 1,
+      "original_pdf_page": 19,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A first complete data record",
+      "depth": 1,
+      "original_pdf_page": 19,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Vectors, matrices, and transposes",
+      "depth": 0,
+      "original_pdf_page": 21,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A vector is an ordered column of numbers",
+      "depth": 1,
+      "original_pdf_page": 21,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What does transpose mean?",
+      "depth": 1,
+      "original_pdf_page": 22,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A matrix is a rule for combining vectors",
+      "depth": 1,
+      "original_pdf_page": 22,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Identity vectors and edge columns",
+      "depth": 1,
+      "original_pdf_page": 23,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The norm of a vector",
+      "depth": 1,
+      "original_pdf_page": 23,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A transpose identity we will use later",
+      "depth": 1,
+      "original_pdf_page": 23,
+      "revised_subject_home": "II34",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The graph as a map of permitted physical actions",
+      "depth": 0,
+      "original_pdf_page": 25,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Nodes and edges",
+      "depth": 1,
+      "original_pdf_page": 25,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What an edge must declare",
+      "depth": 1,
+      "original_pdf_page": 25,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The support of an action",
+      "depth": 1,
+      "original_pdf_page": 26,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Several edges at once",
+      "depth": 1,
+      "original_pdf_page": 26,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Synchronous and sequential meaning",
+      "depth": 1,
+      "original_pdf_page": 27,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Finite causal propagation",
+      "depth": 1,
+      "original_pdf_page": 27,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why the graph is not gravity",
+      "depth": 1,
+      "original_pdf_page": 28,
+      "revised_subject_home": "II35",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Local penalties and the homeostatic potential",
+      "depth": 0,
+      "original_pdf_page": 29,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The positive-part function",
+      "depth": 1,
+      "original_pdf_page": 29,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A three-part local burden",
+      "depth": 1,
+      "original_pdf_page": 29,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why regenerative danger appears in the present",
+      "depth": 1,
+      "original_pdf_page": 30,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A worked water example",
+      "depth": 1,
+      "original_pdf_page": 30,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The global potential",
+      "depth": 1,
+      "original_pdf_page": 31,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Convexity in plain language",
+      "depth": 1,
+      "original_pdf_page": 32,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What the potential does not decide",
+      "depth": 1,
+      "original_pdf_page": 32,
+      "revised_subject_home": "II36",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Marginal burden, edge force, and local flux",
+      "depth": 0,
+      "original_pdf_page": 34,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A derivative as local slope",
+      "depth": 1,
+      "original_pdf_page": 34,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The gradient vector",
+      "depth": 1,
+      "original_pdf_page": 35,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Deriving the edge force",
+      "depth": 1,
+      "original_pdf_page": 35,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Worked sign example",
+      "depth": 1,
+      "original_pdf_page": 35,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A derived local flow law",
+      "depth": 1,
+      "original_pdf_page": 36,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Force, request, permission, and settlement",
+      "depth": 1,
+      "original_pdf_page": 36,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why this is not an inverse-square law",
+      "depth": 1,
+      "original_pdf_page": 37,
+      "revised_subject_home": "II37,44",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The exact local-to-global theorem",
+      "depth": 0,
+      "original_pdf_page": 38,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The action transformation",
+      "depth": 1,
+      "original_pdf_page": 38,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The theorem",
+      "depth": 1,
+      "original_pdf_page": 38,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why the result is both local and global",
+      "depth": 1,
+      "original_pdf_page": 39,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A five-cell numerical example",
+      "depth": 1,
+      "original_pdf_page": 39,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What happens with interaction terms?",
+      "depth": 1,
+      "original_pdf_page": 40,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Measurement completeness and the receipt",
+      "depth": 1,
+      "original_pdf_page": 40,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A counterexample to careless locality",
+      "depth": 1,
+      "original_pdf_page": 41,
+      "revised_subject_home": "II38",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The exact finite EBU quote",
+      "depth": 0,
+      "original_pdf_page": 42,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A shared no-action baseline",
+      "depth": 1,
+      "original_pdf_page": 42,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Definition of the finite quote",
+      "depth": 1,
+      "original_pdf_page": 42,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why no action has exactly zero quote",
+      "depth": 1,
+      "original_pdf_page": 43,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Medicine delivery: a complete calculation",
+      "depth": 1,
+      "original_pdf_page": 43,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The same route at the wrong quantity",
+      "depth": 1,
+      "original_pdf_page": 44,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The marginal bridge",
+      "depth": 1,
+      "original_pdf_page": 44,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why the linear quote is only a diagnostic",
+      "depth": 1,
+      "original_pdf_page": 45,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The quote as an integral along the action path",
+      "depth": 1,
+      "original_pdf_page": 45,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Quote, safety, and social priority",
+      "depth": 1,
+      "original_pdf_page": 46,
+      "revised_subject_home": "II39",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Actions, receipts, and exact actor closure",
+      "depth": 0,
+      "original_pdf_page": 47,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What an action receipt is",
+      "depth": 1,
+      "original_pdf_page": 47,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A sequence of accepted transformations",
+      "depth": 1,
+      "original_pdf_page": 48,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Exact receipt closure",
+      "depth": 1,
+      "original_pdf_page": 48,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "From action lines to actor accounts",
+      "depth": 1,
+      "original_pdf_page": 49,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A two-actor medicine example",
+      "depth": 1,
+      "original_pdf_page": 50,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why payment language can mislead",
+      "depth": 1,
+      "original_pdf_page": 51,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "When there is one composite action",
+      "depth": 1,
+      "original_pdf_page": 51,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Duplicate and missing receipts",
+      "depth": 1,
+      "original_pdf_page": 52,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Changing the field definition",
+      "depth": 1,
+      "original_pdf_page": 52,
+      "revised_subject_home": "II40,42,43",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Signed EBU and closed cycles",
+      "depth": 0,
+      "original_pdf_page": 54,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Gross positive, gross negative, and net",
+      "depth": 1,
+      "original_pdf_page": 54,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Exact reversal without process burden",
+      "depth": 1,
+      "original_pdf_page": 55,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The complete zero identity",
+      "depth": 1,
+      "original_pdf_page": 55,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why electric-charge neutrality is the wrong rule",
+      "depth": 1,
+      "original_pdf_page": 56,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Closed undriven cycles",
+      "depth": 1,
+      "original_pdf_page": 56,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Natural drive over many ticks",
+      "depth": 1,
+      "original_pdf_page": 57,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A recurring driven-need example",
+      "depth": 1,
+      "original_pdf_page": 58,
+      "revised_subject_home": "II40",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Composition, simultaneity, and shared sources",
+      "depth": 0,
+      "original_pdf_page": 60,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Sequential composition",
+      "depth": 1,
+      "original_pdf_page": 60,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Splitting one quantity over live states",
+      "depth": 1,
+      "original_pdf_page": 60,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The shared-source problem",
+      "depth": 1,
+      "original_pdf_page": 61,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Sequential order is exact but not automatically fair",
+      "depth": 1,
+      "original_pdf_page": 62,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What is already exact",
+      "depth": 1,
+      "original_pdf_page": 62,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Aggregate physical constraints are separate",
+      "depth": 1,
+      "original_pdf_page": 62,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A needs-based fan-out example",
+      "depth": 1,
+      "original_pdf_page": 63,
+      "revised_subject_home": "II41,42",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Continuous-time dissipation, derived line by line",
+      "depth": 0,
+      "original_pdf_page": 65,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Continuous time and the dot notation",
+      "depth": 1,
+      "original_pdf_page": 65,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The chain rule for the field",
+      "depth": 1,
+      "original_pdf_page": 66,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Turning the matrix term into edge forces",
+      "depth": 1,
+      "original_pdf_page": 66,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Using the thresholded mobility law",
+      "depth": 1,
+      "original_pdf_page": 67,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The continuous identity",
+      "depth": 1,
+      "original_pdf_page": 68,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The undriven theorem",
+      "depth": 1,
+      "original_pdf_page": 68,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Numerical two-cell example",
+      "depth": 1,
+      "original_pdf_page": 68,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A driven example",
+      "depth": 1,
+      "original_pdf_page": 69,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Counterexample: arbitrary circulation",
+      "depth": 1,
+      "original_pdf_page": 69,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Potential descent and useful service",
+      "depth": 1,
+      "original_pdf_page": 70,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Connection to Lyapunov reasoning",
+      "depth": 1,
+      "original_pdf_page": 70,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Discrete time, curvature, and the safe timestep",
+      "depth": 0,
+      "original_pdf_page": 72,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Forward Euler as a finite update",
+      "depth": 1,
+      "original_pdf_page": 72,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "What a Lipschitz gradient means",
+      "depth": 1,
+      "original_pdf_page": 72,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The descent lemma",
+      "depth": 1,
+      "original_pdf_page": 73,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Insert drive and edge dissipation",
+      "depth": 1,
+      "original_pdf_page": 73,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The undriven one-edge certificate",
+      "depth": 1,
+      "original_pdf_page": 74,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A numerical certificate",
+      "depth": 1,
+      "original_pdf_page": 75,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A pure quadratic overshoot",
+      "depth": 1,
+      "original_pdf_page": 75,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Exact remainder and upper bound",
+      "depth": 1,
+      "original_pdf_page": 76,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The driven sufficient condition",
+      "depth": 1,
+      "original_pdf_page": 77,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "What the theorem excludes",
+      "depth": 1,
+      "original_pdf_page": 77,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Network geometry and multi-edge timestep certificates",
+      "depth": 0,
+      "original_pdf_page": 79,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Mobility as a diagonal matrix",
+      "depth": 1,
+      "original_pdf_page": 79,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The spectral norm in plain language",
+      "depth": 1,
+      "original_pdf_page": 79,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The global spectral certificate",
+      "depth": 1,
+      "original_pdf_page": 80,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Why shared endpoints tighten the bound",
+      "depth": 1,
+      "original_pdf_page": 81,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Active-set certificates",
+      "depth": 1,
+      "original_pdf_page": 81,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A state-specific certificate",
+      "depth": 1,
+      "original_pdf_page": 82,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Gershgorin and degree-based alternatives",
+      "depth": 1,
+      "original_pdf_page": 82,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A small fan-out calculation",
+      "depth": 1,
+      "original_pdf_page": 83,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Local decision versus global certification",
+      "depth": 1,
+      "original_pdf_page": 83,
+      "revised_subject_home": "II44 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "One-step preservation, feasibility, and genuine need",
+      "depth": 0,
+      "original_pdf_page": 85,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The source-side update",
+      "depth": 1,
+      "original_pdf_page": 85,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Deriving the safe export budget",
+      "depth": 1,
+      "original_pdf_page": 86,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Why the positive part needs a feasibility flag",
+      "depth": 1,
+      "original_pdf_page": 86,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A four-state classification",
+      "depth": 1,
+      "original_pdf_page": 87,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A numerical feasible case",
+      "depth": 1,
+      "original_pdf_page": 87,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "A numerical infeasible case",
+      "depth": 1,
+      "original_pdf_page": 88,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Measurement margins",
+      "depth": 1,
+      "original_pdf_page": 88,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Several outgoing requests",
+      "depth": 1,
+      "original_pdf_page": 89,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "The one-step preservation theorem",
+      "depth": 1,
+      "original_pdf_page": 90,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Why the theorem is an invariant implication",
+      "depth": 1,
+      "original_pdf_page": 91,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Preservation is not service",
+      "depth": 1,
+      "original_pdf_page": 91,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Need priority and emergency borrowing",
+      "depth": 1,
+      "original_pdf_page": 92,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "What descent does not add",
+      "depth": 1,
+      "original_pdf_page": 93,
+      "revised_subject_home": "II45 + H-II",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "II",
+      "title": "Long-range needs, paths, and Bellman reasoning",
+      "depth": 0,
+      "original_pdf_page": 95,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "From geographic points to accounting nodes",
+      "depth": 1,
+      "original_pdf_page": 95,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Settlement along a realised path",
+      "depth": 1,
+      "original_pdf_page": 96,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Planning costs versus settled EBU",
+      "depth": 1,
+      "original_pdf_page": 97,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Bellman's principle",
+      "depth": 1,
+      "original_pdf_page": 97,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A four-node medicine example",
+      "depth": 1,
+      "original_pdf_page": 98,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative edge costs and cycles",
+      "depth": 1,
+      "original_pdf_page": 98,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Fermat's principle and what it teaches",
+      "depth": 1,
+      "original_pdf_page": 99,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why gravity is not the route equation",
+      "depth": 1,
+      "original_pdf_page": 99,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Several non-substitutable fields",
+      "depth": 1,
+      "original_pdf_page": 100,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Repeated needs can reveal structural opportunities",
+      "depth": 1,
+      "original_pdf_page": 101,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A repair-part example",
+      "depth": 1,
+      "original_pdf_page": 101,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What route planning must not read",
+      "depth": 1,
+      "original_pdf_page": 101,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Invariance, stability, and the long-run boundary",
+      "depth": 0,
+      "original_pdf_page": 104,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Five terms that answer different questions",
+      "depth": 1,
+      "original_pdf_page": 104,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Extending one-step preservation by induction",
+      "depth": 1,
+      "original_pdf_page": 105,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What monotone potential proves",
+      "depth": 1,
+      "original_pdf_page": 105,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Counterexample: the state moves on a level set",
+      "depth": 1,
+      "original_pdf_page": 106,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Distance to a target set",
+      "depth": 1,
+      "original_pdf_page": 106,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A conditional convergence lemma",
+      "depth": 1,
+      "original_pdf_page": 107,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A practical-stability recurrence",
+      "depth": 1,
+      "original_pdf_page": 108,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Persistent capacity and viability",
+      "depth": 1,
+      "original_pdf_page": 109,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Infeasible need remains an outcome",
+      "depth": 1,
+      "original_pdf_page": 109,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Why a long simulation is not a forever theorem",
+      "depth": 1,
+      "original_pdf_page": 110,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "What ``fixing the planet forever'' would require",
+      "depth": 1,
+      "original_pdf_page": 110,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Collaboration as a physical hypothesis",
+      "depth": 1,
+      "original_pdf_page": 111,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Adaptive infrastructure as a separate dynamics",
+      "depth": 1,
+      "original_pdf_page": 111,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A theorem-development sequence",
+      "depth": 1,
+      "original_pdf_page": 112,
+      "revised_subject_home": "II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "An end-to-end field laboratory",
+      "depth": 0,
+      "original_pdf_page": 114,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "The physical question",
+      "depth": 1,
+      "original_pdf_page": 114,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 1: declare the state vector",
+      "depth": 1,
+      "original_pdf_page": 115,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 2: declare the local potentials",
+      "depth": 1,
+      "original_pdf_page": 115,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 3: calculate every marginal",
+      "depth": 1,
+      "original_pdf_page": 116,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 4: construct the edge vectors",
+      "depth": 1,
+      "original_pdf_page": 117,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 5: compare marginal forces",
+      "depth": 1,
+      "original_pdf_page": 117,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 6: freeze a candidate menu",
+      "depth": 1,
+      "original_pdf_page": 117,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 7: enumerate clinic A exactly",
+      "depth": 1,
+      "original_pdf_page": 118,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 8: enumerate clinic B exactly",
+      "depth": 1,
+      "original_pdf_page": 119,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 9: apply the preservation budget",
+      "depth": 1,
+      "original_pdf_page": 120,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 10: separate selection from execution",
+      "depth": 1,
+      "original_pdf_page": 120,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 11: verify local-global equality",
+      "depth": 1,
+      "original_pdf_page": 121,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 12: close an actor sequence",
+      "depth": 1,
+      "original_pdf_page": 121,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 13: connect the new state to continuous flow",
+      "depth": 1,
+      "original_pdf_page": 122,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Step 14: check an illustrative timestep certificate",
+      "depth": 1,
+      "original_pdf_page": 123,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 1: omit efficiency",
+      "depth": 1,
+      "original_pdf_page": 124,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 2: use the old state as baseline",
+      "depth": 1,
+      "original_pdf_page": 124,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 3: rank by EBU per unit",
+      "depth": 1,
+      "original_pdf_page": 124,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 4: settle the request instead of execution",
+      "depth": 1,
+      "original_pdf_page": 125,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 5: duplicate a receipt",
+      "depth": 1,
+      "original_pdf_page": 125,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 6: quote fan-out independently",
+      "depth": 1,
+      "original_pdf_page": 125,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 7: give the budget to every edge",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 8: use a timestep above the certificate",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 9: project an impossible stock",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Negative control 10: infer forever from 200 ticks",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A compact symbol dictionary",
+      "depth": 1,
+      "original_pdf_page": 127,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A claim ledger",
+      "depth": 1,
+      "original_pdf_page": 128,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "How to reconstruct a new action",
+      "depth": 1,
+      "original_pdf_page": 130,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Review problems",
+      "depth": 1,
+      "original_pdf_page": 131,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Selected worked answers",
+      "depth": 1,
+      "original_pdf_page": 132,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "A mathematics-reading clinic",
+      "depth": 1,
+      "original_pdf_page": 133,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "How to read a theorem without overreading it",
+      "depth": 1,
+      "original_pdf_page": 136,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Second laboratory: the remote pump seal",
+      "depth": 1,
+      "original_pdf_page": 137,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Audit worksheet for a new theorem or result",
+      "depth": 1,
+      "original_pdf_page": 140,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Proof workshop: eight derivations to rebuild by hand",
+      "depth": 1,
+      "original_pdf_page": 141,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Frequently asked conceptual questions",
+      "depth": 1,
+      "original_pdf_page": 147,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Guided answers to foundational exercises",
+      "depth": 1,
+      "original_pdf_page": 150,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "Transition to empirical and implementation evidence",
+      "depth": 1,
+      "original_pdf_page": 155,
+      "revised_subject_home": "II46",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "II",
+      "title": "References and source map",
+      "depth": 0,
+      "original_pdf_page": 157,
+      "revised_subject_home": "Revised source map; complete old references remain in original PDF",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Author, rights, and scientific scope",
+      "depth": 0,
+      "original_pdf_page": 2,
+      "revised_subject_home": "Revised front matter; original wording retained in source PDF",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Preface: the evidence must remain attached to the claim",
+      "depth": 0,
+      "original_pdf_page": 3,
+      "revised_subject_home": "Revised front matter; original wording retained in source PDF",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "From a mathematical law to an executable experiment",
+      "depth": 0,
+      "original_pdf_page": 14,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Four questions, not one",
+      "depth": 1,
+      "original_pdf_page": 14,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The evidence ladder",
+      "depth": 1,
+      "original_pdf_page": 15,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why a deterministic study still needs preregistration",
+      "depth": 1,
+      "original_pdf_page": 16,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The two promises of this volume",
+      "depth": 1,
+      "original_pdf_page": 16,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "One action seen by every layer",
+      "depth": 1,
+      "original_pdf_page": 17,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why the book uses small needs-based stories",
+      "depth": 1,
+      "original_pdf_page": 17,
+      "revised_subject_home": "III47",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The smallest executable world",
+      "depth": 0,
+      "original_pdf_page": 19,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A cell is a measured local account",
+      "depth": 1,
+      "original_pdf_page": 19,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The state vector is a list of simultaneous measurements",
+      "depth": 1,
+      "original_pdf_page": 19,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "An edge is a possible directed action",
+      "depth": 1,
+      "original_pdf_page": 20,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The positive-part bracket",
+      "depth": 1,
+      "original_pdf_page": 21,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "From local penalties to a global field burden",
+      "depth": 1,
+      "original_pdf_page": 21,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Units and the meaning of time",
+      "depth": 1,
+      "original_pdf_page": 21,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A compact symbol-reading guide",
+      "depth": 1,
+      "original_pdf_page": 22,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Scalar, vector, and function",
+      "depth": 1,
+      "original_pdf_page": 22,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A complete three-cell example",
+      "depth": 1,
+      "original_pdf_page": 23,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "From a parameter card to two edge requests",
+      "depth": 1,
+      "original_pdf_page": 23,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What the graph does and does not encode",
+      "depth": 1,
+      "original_pdf_page": 24,
+      "revised_subject_home": "III48",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "How the software protects the scientific meaning",
+      "depth": 0,
+      "original_pdf_page": 26,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The implementation stack",
+      "depth": 1,
+      "original_pdf_page": 26,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Reuse the physical law; do not retype it",
+      "depth": 1,
+      "original_pdf_page": 27,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Decision path and evaluation path",
+      "depth": 1,
+      "original_pdf_page": 27,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Fail closed rather than repair silently",
+      "depth": 1,
+      "original_pdf_page": 27,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Import-safe libraries and runners",
+      "depth": 1,
+      "original_pdf_page": 28,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "An object-by-object journey through the stack",
+      "depth": 1,
+      "original_pdf_page": 28,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Validation happens at construction time",
+      "depth": 1,
+      "original_pdf_page": 29,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why immutability matters",
+      "depth": 1,
+      "original_pdf_page": 29,
+      "revised_subject_home": "III49\u201355",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "One synchronous D0 tick, slowly",
+      "depth": 0,
+      "original_pdf_page": 31,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The natural drive",
+      "depth": 1,
+      "original_pdf_page": 31,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Marginal field signal",
+      "depth": 1,
+      "original_pdf_page": 31,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Freeze first, then calculate every edge",
+      "depth": 1,
+      "original_pdf_page": 32,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The incidence action without matrix anxiety",
+      "depth": 1,
+      "original_pdf_page": 32,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A numerical tick",
+      "depth": 1,
+      "original_pdf_page": 33,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The stock ledger",
+      "depth": 1,
+      "original_pdf_page": 33,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why D0 does not clip",
+      "depth": 1,
+      "original_pdf_page": 34,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The timestep certificate in plain language",
+      "depth": 1,
+      "original_pdf_page": 34,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A multi-edge trace row by hand",
+      "depth": 1,
+      "original_pdf_page": 34,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why summation order is recorded carefully",
+      "depth": 1,
+      "original_pdf_page": 35,
+      "revised_subject_home": "III56",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "P1C: how a source says ``not safely available''",
+      "depth": 0,
+      "original_pdf_page": 37,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Threshold, field reference, and certified reserve",
+      "depth": 1,
+      "original_pdf_page": 37,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The no-export successor",
+      "depth": 1,
+      "original_pdf_page": 38,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Four source states",
+      "depth": 1,
+      "original_pdf_page": 38,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Deriving the robust budget",
+      "depth": 1,
+      "original_pdf_page": 39,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A worked budget",
+      "depth": 1,
+      "original_pdf_page": 39,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why incoming flow is excluded from permission",
+      "depth": 1,
+      "original_pdf_page": 40,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "One source, many outgoing requests",
+      "depth": 1,
+      "original_pdf_page": 40,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A complete P1C tick with two destinations",
+      "depth": 1,
+      "original_pdf_page": 40,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "P1C and bounded service solve different boundary problems",
+      "depth": 1,
+      "original_pdf_page": 41,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why State R does not immediately export recovered surplus",
+      "depth": 1,
+      "original_pdf_page": 42,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The one-step preservation theorem",
+      "depth": 1,
+      "original_pdf_page": 42,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Permission is prior to EBU",
+      "depth": 1,
+      "original_pdf_page": 43,
+      "revised_subject_home": "III56 + II45",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The exact local EBU quote",
+      "depth": 0,
+      "original_pdf_page": 45,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why the baseline is the no-action successor",
+      "depth": 1,
+      "original_pdf_page": 45,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The exact equation",
+      "depth": 1,
+      "original_pdf_page": 45,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The zero branch",
+      "depth": 1,
+      "original_pdf_page": 46,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Exact finite difference versus linear diagnostic",
+      "depth": 1,
+      "original_pdf_page": 46,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A worked overshoot",
+      "depth": 1,
+      "original_pdf_page": 47,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Process burden and double counting",
+      "depth": 1,
+      "original_pdf_page": 47,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The quote's information boundary",
+      "depth": 1,
+      "original_pdf_page": 48,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A complete numerical quote",
+      "depth": 1,
+      "original_pdf_page": 48,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why the same shipment can change sign tomorrow",
+      "depth": 1,
+      "original_pdf_page": 49,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Concavity does not mean monotone benefit",
+      "depth": 1,
+      "original_pdf_page": 49,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Four sign patterns",
+      "depth": 1,
+      "original_pdf_page": 49,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A quote is not a forecast of adaptation",
+      "depth": 1,
+      "original_pdf_page": 50,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A needs-based example: emergency medicine",
+      "depth": 1,
+      "original_pdf_page": 50,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Three essential transactions and their improvement paths",
+      "depth": 1,
+      "original_pdf_page": 51,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why cheap money can coexist with expensive EBU",
+      "depth": 1,
+      "original_pdf_page": 51,
+      "revised_subject_home": "III51",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "From quote to receipt and settlement",
+      "depth": 0,
+      "original_pdf_page": 53,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Request, acceptance, measurement, and delivery",
+      "depth": 1,
+      "original_pdf_page": 53,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A schedule, not one floating-point promise",
+      "depth": 1,
+      "original_pdf_page": 53,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The quote epoch",
+      "depth": 1,
+      "original_pdf_page": 54,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What happens on overexecution",
+      "depth": 1,
+      "original_pdf_page": 54,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Duplicate and stale settlement",
+      "depth": 1,
+      "original_pdf_page": 54,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The receipt line",
+      "depth": 1,
+      "original_pdf_page": 55,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Exact actor-receipt closure",
+      "depth": 1,
+      "original_pdf_page": 55,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why EBU does not have to sum to zero like electric charge",
+      "depth": 1,
+      "original_pdf_page": 56,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Observational quoting must be inert",
+      "depth": 1,
+      "original_pdf_page": 56,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Two actors do not imply opposite signs",
+      "depth": 1,
+      "original_pdf_page": 57,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "One actor can perform several accountable actions",
+      "depth": 1,
+      "original_pdf_page": 57,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Receipt closure versus monetary balance-sheet closure",
+      "depth": 1,
+      "original_pdf_page": 58,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A complete receipt story",
+      "depth": 1,
+      "original_pdf_page": 58,
+      "revised_subject_home": "III52",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Tests that can detect being wrong",
+      "depth": 0,
+      "original_pdf_page": 60,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What a unit test can establish",
+      "depth": 1,
+      "original_pdf_page": 60,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Non-vacuity",
+      "depth": 1,
+      "original_pdf_page": 60,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Negative controls",
+      "depth": 1,
+      "original_pdf_page": 61,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "AST scans and runtime poison",
+      "depth": 1,
+      "original_pdf_page": 61,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The runner self-match failure",
+      "depth": 1,
+      "original_pdf_page": 62,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Numerical tolerances and physical margins",
+      "depth": 1,
+      "original_pdf_page": 62,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Strict serialisation",
+      "depth": 1,
+      "original_pdf_page": 62,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "How to read a test count",
+      "depth": 1,
+      "original_pdf_page": 63,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A reader's test checklist",
+      "depth": 1,
+      "original_pdf_page": 63,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Following one assertion from theorem to failure mode",
+      "depth": 1,
+      "original_pdf_page": 63,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why short test runs are not hidden scientific runs",
+      "depth": 1,
+      "original_pdf_page": 64,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Tests should survive refactoring but not semantic drift",
+      "depth": 1,
+      "original_pdf_page": 64,
+      "revised_subject_home": "III54",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The first wind tunnel: D1 through D4",
+      "depth": 0,
+      "original_pdf_page": 66,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D1: can the smallest world move downhill?",
+      "depth": 1,
+      "original_pdf_page": 66,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D2: why route efficiency changes the correct resting point",
+      "depth": 1,
+      "original_pdf_page": 67,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D3: one-hop causality",
+      "depth": 1,
+      "original_pdf_page": 67,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D4: drive, regeneration, and useful service",
+      "depth": 1,
+      "original_pdf_page": 68,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "A trace-reading example",
+      "depth": 1,
+      "original_pdf_page": 69,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What D1\u2013D4 established",
+      "depth": 1,
+      "original_pdf_page": 69,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Learning from D5 through D8",
+      "depth": 0,
+      "original_pdf_page": 71,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D5: a reserve fixture that was too forgiving",
+      "depth": 1,
+      "original_pdf_page": 71,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why a null result can be useful",
+      "depth": 1,
+      "original_pdf_page": 71,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D6: a supply shock and a viability gap",
+      "depth": 1,
+      "original_pdf_page": 72,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D7: a demand shock",
+      "depth": 1,
+      "original_pdf_page": 72,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D8: deliberately crossing the timestep certificate",
+      "depth": 1,
+      "original_pdf_page": 72,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The dimensionless timestep ratio",
+      "depth": 1,
+      "original_pdf_page": 73,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What changed after these fixtures",
+      "depth": 1,
+      "original_pdf_page": 73,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D9: when a soft warning meets a hard boundary",
+      "depth": 0,
+      "original_pdf_page": 75,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The world and why it discriminates",
+      "depth": 1,
+      "original_pdf_page": 75,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "How to read the trajectory figure",
+      "depth": 1,
+      "original_pdf_page": 75,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The exact committed outcomes",
+      "depth": 1,
+      "original_pdf_page": 76,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "A tick at the reserve",
+      "depth": 1,
+      "original_pdf_page": 77,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Comparing tick 7, tick 8, and the later plateau",
+      "depth": 1,
+      "original_pdf_page": 77,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why ``dead source'' is not the only collapse indicator",
+      "depth": 1,
+      "original_pdf_page": 78,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What D9 proved and observed",
+      "depth": 1,
+      "original_pdf_page": 78,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "A needs interpretation",
+      "depth": 1,
+      "original_pdf_page": 78,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "D10: a map of service, rationing, and collapse",
+      "depth": 0,
+      "original_pdf_page": 80,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The two physical ratios",
+      "depth": 1,
+      "original_pdf_page": 80,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The registered grid",
+      "depth": 1,
+      "original_pdf_page": 80,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "How to read the phase map",
+      "depth": 1,
+      "original_pdf_page": 81,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Outcome counts",
+      "depth": 1,
+      "original_pdf_page": 81,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Reading one vertical and one horizontal slice",
+      "depth": 1,
+      "original_pdf_page": 82,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why a colour map needs letters and counts",
+      "depth": 1,
+      "original_pdf_page": 82,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Matching service where service is feasible",
+      "depth": 1,
+      "original_pdf_page": 82,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Secondary slices",
+      "depth": 1,
+      "original_pdf_page": 83,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Domain exits remain results",
+      "depth": 1,
+      "original_pdf_page": 83,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The serialization incident",
+      "depth": 1,
+      "original_pdf_page": 84,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What the map supports",
+      "depth": 1,
+      "original_pdf_page": 84,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Gate 1B: does the quote code match the equation?",
+      "depth": 0,
+      "original_pdf_page": 86,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why equation conformance comes before behaviour",
+      "depth": 1,
+      "original_pdf_page": 86,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q1\u2013Q5: the five basic stories",
+      "depth": 1,
+      "original_pdf_page": 86,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q6\u2013Q8: curvature and the complete schedule",
+      "depth": 1,
+      "original_pdf_page": 87,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q9 and Q12: protocol violations are not valuations",
+      "depth": 1,
+      "original_pdf_page": 88,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q10 and Q11: telescoping with and without drive",
+      "depth": 1,
+      "original_pdf_page": 88,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q13 and Q14: the split-action trap",
+      "depth": 1,
+      "original_pdf_page": 89,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q15\u2013Q17: permission and observation",
+      "depth": 1,
+      "original_pdf_page": 89,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Q18\u2013Q21: the boundary around the equation",
+      "depth": 1,
+      "original_pdf_page": 89,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Random fixtures without behavioural randomness",
+      "depth": 1,
+      "original_pdf_page": 90,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Audit independence",
+      "depth": 1,
+      "original_pdf_page": 90,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What passed and what remains open",
+      "depth": 1,
+      "original_pdf_page": 90,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "How the groups cover the action lifecycle",
+      "depth": 1,
+      "original_pdf_page": 91,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "A reader's reconstruction of E1",
+      "depth": 1,
+      "original_pdf_page": 91,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "From adversarial search to service alignment",
+      "depth": 0,
+      "original_pdf_page": 93,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Gate 1C as a falsification search",
+      "depth": 1,
+      "original_pdf_page": 93,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The registered exploit predicate",
+      "depth": 1,
+      "original_pdf_page": 93,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The encouraging result and its boundary",
+      "depth": 1,
+      "original_pdf_page": 94,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The metrics answer different questions",
+      "depth": 1,
+      "original_pdf_page": 94,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why the no-action baseline was attractive",
+      "depth": 1,
+      "original_pdf_page": 95,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Positive EBU with worse service",
+      "depth": 1,
+      "original_pdf_page": 95,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The capability confounder",
+      "depth": 1,
+      "original_pdf_page": 96,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Seed 0 as a concrete comparison",
+      "depth": 1,
+      "original_pdf_page": 96,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Coverage is part of capability",
+      "depth": 1,
+      "original_pdf_page": 97,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Gate 1D redesigns the service instrument",
+      "depth": 1,
+      "original_pdf_page": 97,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Four capability-matched arms",
+      "depth": 1,
+      "original_pdf_page": 98,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What Gate 1D observed",
+      "depth": 1,
+      "original_pdf_page": 98,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The one-ULP diagnostic defect",
+      "depth": 1,
+      "original_pdf_page": 98,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What was learned before O14",
+      "depth": 1,
+      "original_pdf_page": 99,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "O14: genuine destination choice and a flat outcome",
+      "depth": 0,
+      "original_pdf_page": 101,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The six worlds as six questions",
+      "depth": 1,
+      "original_pdf_page": 101,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What would count as informative in each world",
+      "depth": 1,
+      "original_pdf_page": 102,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Five arms and the primary comparisons",
+      "depth": 1,
+      "original_pdf_page": 102,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why total quote, not EBU per unit",
+      "depth": 1,
+      "original_pdf_page": 103,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "One restricted-arm tick from menu to service",
+      "depth": 1,
+      "original_pdf_page": 103,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Why selected quantity had to equal executed quantity",
+      "depth": 1,
+      "original_pdf_page": 104,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The registered study and execution integrity",
+      "depth": 1,
+      "original_pdf_page": 105,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What behaviour actually differed",
+      "depth": 1,
+      "original_pdf_page": 105,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The primary null and F13",
+      "depth": 1,
+      "original_pdf_page": 105,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "How destination buffering creates a plateau",
+      "depth": 1,
+      "original_pdf_page": 106,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Temporal multiplexing",
+      "depth": 1,
+      "original_pdf_page": 107,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Walking through a W4 multiplexing cycle",
+      "depth": 1,
+      "original_pdf_page": 107,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Hypotheses and falsifiers as two ledgers",
+      "depth": 1,
+      "original_pdf_page": 107,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The S arm reaches the boundary",
+      "depth": 1,
+      "original_pdf_page": 108,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "The aggregate quote diagnostic",
+      "depth": 1,
+      "original_pdf_page": 108,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "Honest infeasibility in W6",
+      "depth": 1,
+      "original_pdf_page": 109,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What O14 changes and what it cannot close",
+      "depth": 1,
+      "original_pdf_page": 109,
+      "revised_subject_home": "III57 + H-III",
+      "disposition": "Original page retained in historical appendix, with visual title/banner changes"
+    },
+    {
+      "part": "III",
+      "title": "What a real field account would have to observe",
+      "depth": 0,
+      "original_pdf_page": 111,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "There is no single planetary EBU sensor",
+      "depth": 1,
+      "original_pdf_page": 111,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What must be measured at a cell",
+      "depth": 1,
+      "original_pdf_page": 111,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What must be measured along an edge",
+      "depth": 1,
+      "original_pdf_page": 112,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Needs must be represented without turning desire into physics",
+      "depth": 1,
+      "original_pdf_page": 112,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Uncertainty has units",
+      "depth": 1,
+      "original_pdf_page": 113,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Latency and stale state",
+      "depth": 1,
+      "original_pdf_page": 113,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Reserve certification is a scientific institution",
+      "depth": 1,
+      "original_pdf_page": 114,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Calibration governance",
+      "depth": 1,
+      "original_pdf_page": 114,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Observability can reveal hidden inefficiency",
+      "depth": 1,
+      "original_pdf_page": 115,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Repeated needs can reshape infrastructure",
+      "depth": 1,
+      "original_pdf_page": 116,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Measurement power and privacy",
+      "depth": 1,
+      "original_pdf_page": 116,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Sensor failure and strategic reporting",
+      "depth": 1,
+      "original_pdf_page": 117,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A hospital measurement walk-through",
+      "depth": 1,
+      "original_pdf_page": 117,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What the current implementation actually observes",
+      "depth": 1,
+      "original_pdf_page": 118,
+      "revised_subject_home": "III58",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "How to reproduce the evidence without rewriting it",
+      "depth": 0,
+      "original_pdf_page": 119,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The four layers of a study record",
+      "depth": 1,
+      "original_pdf_page": 119,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Commit and hash provenance",
+      "depth": 1,
+      "original_pdf_page": 119,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Raw and canonical plan hashes",
+      "depth": 1,
+      "original_pdf_page": 120,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Reading a summary",
+      "depth": 1,
+      "original_pdf_page": 120,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What the comparison metrics mean",
+      "depth": 1,
+      "original_pdf_page": 121,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Reading a JSONL trace",
+      "depth": 1,
+      "original_pdf_page": 122,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Walking through one committed O14 row",
+      "depth": 1,
+      "original_pdf_page": 122,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why summary and trace are both needed",
+      "depth": 1,
+      "original_pdf_page": 125,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The manifest as a human audit index",
+      "depth": 1,
+      "original_pdf_page": 125,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A reproduction ladder",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Why official runners resist a second execution",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Rebuilding figures from committed data",
+      "depth": 1,
+      "original_pdf_page": 126,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "How to read the code without being a Python expert",
+      "depth": 1,
+      "original_pdf_page": 127,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The technical stack and why it is deliberately small",
+      "depth": 1,
+      "original_pdf_page": 127,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A map of the principal tests",
+      "depth": 1,
+      "original_pdf_page": 128,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A code-to-claim example",
+      "depth": 1,
+      "original_pdf_page": 129,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Preserving failed attempts",
+      "depth": 1,
+      "original_pdf_page": 130,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A practical review session",
+      "depth": 1,
+      "original_pdf_page": 130,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Reproducibility is not truth",
+      "depth": 1,
+      "original_pdf_page": 131,
+      "revised_subject_home": "III55",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The claim ledger and the road beyond Part III",
+      "depth": 0,
+      "original_pdf_page": 133,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What is derived mathematically",
+      "depth": 1,
+      "original_pdf_page": 133,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What implementation tests support",
+      "depth": 1,
+      "original_pdf_page": 134,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What finite studies observed",
+      "depth": 1,
+      "original_pdf_page": 134,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What is not established",
+      "depth": 1,
+      "original_pdf_page": 135,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Open problem O3: shared-source settlement",
+      "depth": 1,
+      "original_pdf_page": 135,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Open problems O10 and O11: outcome sensitivity and alignment",
+      "depth": 1,
+      "original_pdf_page": 136,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Gate 1E: delay and uncertainty",
+      "depth": 1,
+      "original_pdf_page": 137,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The constrained theorem programme",
+      "depth": 1,
+      "original_pdf_page": 137,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Long-range actions",
+      "depth": 1,
+      "original_pdf_page": 137,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Adaptive infrastructure",
+      "depth": 1,
+      "original_pdf_page": 138,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Collaboration as a material hypothesis",
+      "depth": 1,
+      "original_pdf_page": 138,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Behaviour, poverty, and culture",
+      "depth": 1,
+      "original_pdf_page": 139,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A game before an economy",
+      "depth": 1,
+      "original_pdf_page": 139,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The research traditions beside this project",
+      "depth": 1,
+      "original_pdf_page": 140,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "How references should be used",
+      "depth": 1,
+      "original_pdf_page": 141,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The long-term EBU economy as a research destination",
+      "depth": 1,
+      "original_pdf_page": 141,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "The long-run homeostasis statement",
+      "depth": 1,
+      "original_pdf_page": 142,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What a future stability theorem would actually say",
+      "depth": 1,
+      "original_pdf_page": 142,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "A disciplined next sequence",
+      "depth": 1,
+      "original_pdf_page": 145,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "One future action from need to institutional learning",
+      "depth": 1,
+      "original_pdf_page": 146,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "What success would look like at each scale",
+      "depth": 1,
+      "original_pdf_page": 147,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "Closing perspective",
+      "depth": 1,
+      "original_pdf_page": 148,
+      "revised_subject_home": "III59,60",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    },
+    {
+      "part": "III",
+      "title": "References and source map",
+      "depth": 0,
+      "original_pdf_page": 150,
+      "revised_subject_home": "Revised source map; complete old references remain in original PDF",
+      "disposition": "Subject rewritten selectively; full original treatment remains in source PDF"
+    }
+  ]
+}

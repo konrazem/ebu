@@ -1,0 +1,38 @@
+\chapter{Homeostasis: maintaining function through change}\label{ch:homeostasis}
+\question{How can a system remain functional while its components keep changing?}
+
+The clinic's tank need not remain motionless to provide reliable service. Water enters, water leaves, demand varies and the pump starts and stops. What matters is whether the system maintains the conditions required for its function, within declared limits and disturbances.
+
+This is a useful route into homeostasis. In physiology, homeostatic regulation concerns maintaining selected internal variables within ranges compatible with function. McFarland and colleagues' teaching framework emphasises regulated variables, continuing regulatory mechanisms and dependence on available environmental resources.\cite{homeostasis} The idea is active maintenance, not perfect constancy.
+
+\section{A controller has to do something}
+Consider a deliberately simple engineering arrangement. A level sensor measures water in a tank. A controller compares the measurement with a declared operating range. When the level falls sufficiently, it requests pumping. The motor and valve supply the physical response, provided power and source water are available. Demand and leakage disturb the level.
+
+Each part has a role. The sensor provides information. The operating range states a criterion. The control rule turns information into a request. The pump changes the physical state. A reserve provides time to respond. A record documents what happened. Removing one role may change the behaviour of the whole arrangement.
+
+Notice where choice entered: the control rule was explicitly specified. A scale drawn beside the tank did not start the pump. This distinction will matter later. An EBU potential can describe deviation and an EBU calculation can evaluate an action. Neither description secretly contains a pump command.
+
+\illustration{regulation}{Schematic engineering example: a declared level-control rule connects measurement to a pump response. The tank also exchanges water with its surroundings. This is an illustration of feedback, not an EBU controller or a simulated recovery trace.}{fig:regulation}
+
+\section{The conditions of maintaining a function}
+Suppose the controller is working but the upstream supply is empty. The requested response may be impossible. Suppose the supply exists but the sensor is late. The pump may act on a state that has already changed. Suppose the pump is powerful but the delivery pipe is too narrow. The limiting component may lie elsewhere in the chain.
+
+These are hypothetical engineering possibilities, not results of a clinical or EBU study. They explain why ``has feedback'' and ``will recover'' are different statements. A recovery claim needs a disturbance class, a specified mechanism, available resources and a definition of successful return.
+
+A reserve also has a precise role. Stored water can sustain service during a delay, but its presence is not an unlimited guarantee. The reserve must be compared with the rate of use and duration of interruption. A tank can remain above zero and still fail a service requirement if the outlet cannot supply water fast enough.
+
+\section{Functions can conflict}
+Maintaining one measured variable may consume another resource. A pump can hold tank level while drawing down its source. A refrigerator can maintain an internal temperature while requiring electricity and rejecting heat. These examples remind us to declare a boundary wide enough for the claim being made.
+
+Even the word ``normal'' needs care. A familiar value is not necessarily a desirable value. A preferred operating range is not automatically a measured population average. In biology, actual regulatory arrangements are more complex than our tank illustration. The analogy helps identify questions; it does not establish that economies obey the same equations as organisms.
+
+For the clinic, function includes more than water level. Quality, timing, equipment condition, staff and access may matter. A simplified model is allowed to represent fewer things, provided its conclusions stay within that smaller world. We should say ``this model evaluates these water-stock changes'', not quietly claim that it certifies the health of the institution.
+
+\section{Measurement and response remain separate}
+It is possible to build a controller that uses a valuation signal. It is also possible to ignore the signal, to use it only for audit, or to choose randomly among actions permitted by another rule. Those are different models of behaviour.
+
+The distinction protects the research question. If we inserted an automatic restoring mechanism and then observed return toward a reference, we would need to ask how much of the return came from that mechanism. The introductory construction does not assume such motion. We will first learn what the account measures.
+
+\practice{The level sensor reports that the tank is below its target. Name the extra facts needed before concluding that it will refill.}{We need a response rule, an available water source, a working pump and route, enough power, relevant delay information and a feasible balance between delivery and demand. The measured discrepancy alone supplies none of these.}
+
+\carry{Homeostasis means maintained function through a specified regulatory process. The next chapter separates that idea from equilibrium, steady state, stability and recovery, terms that are often used as if they meant the same thing.}

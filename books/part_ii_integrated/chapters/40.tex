@@ -1,0 +1,88 @@
+\chapter{Groups, cross terms and honest comparisons}\label{ch:groups}
+Two actors can share a source without either actor's request being wrong on
+its own. The problem is that both requests refer to one source, not two
+copies of it. Nonlinear valuation must therefore evaluate their joint change
+before asking how any resulting value might be divided.
+
+\section{One group, one endpoint}
+For fixed accepted increments $\delta_a$, define
+$\delta_G=\sum_{a\in G}\delta_a$. In the cost-free Gaussian domain,
+\begin{equation}
+ E_G=-\mu(z)^T\delta_G-\tfrac12\delta_G^TH\delta_G.
+\end{equation}
+Expand the quadratic sum. Symmetry of $H$ gives
+\begin{equation}\label{eq:cross}
+ E_G=\sum_{a\in G}E_a^{(0)}
+       -\sum_{a<b}\delta_a^TH\delta_b,
+\end{equation}
+where $E_a^{(0)}=V(z)-V(z+\delta_a)$ is the hypothetical value of child
+$a$ alone at the same baseline. These singleton values are not sequential
+receipts. The cross terms are exactly what their naive sum leaves out.
+
+\section{A shared-source calculation}
+At $(18,2)$ with the usual reference and scales, let two children each send
+two units along the same edge. Each alone has value seven. Together they
+send four and have value twelve, not fourteen. Their increments are both
+$(-2,2)$, so $\delta_A^TH\delta_B=2$ and the correction is $-2$.
+
+The same issue occurs when the destinations differ. If two children share
+only a source with quantities $a,b>0$, their cross term contains
+$ab/\sigma_i^2>0$. The joint field value is smaller than the sum of
+their separate source-relief claims by that amount. Disjoint changed
+coordinates have zero cross term for the diagonal model.
+
+Opposing increments can instead produce a positive correction. Take
+$\delta_A=(-2,2)$ and $\delta_B=(2,-2)$ at the same baseline. Their
+standalone values are seven and minus nine. The net increment is zero,
+so the group value is zero and the correction is $+2$. Positive
+nonadditivity here means cancellation of represented displacement. It is
+not proof that real physical circulation is free or socially beneficial.
+
+\section{Same-baseline nonadditivity is not a parallel advantage}
+Define $N_G=E_G-\sum_aE_a^{(0)}$. Now choose an admissible sequential
+schedule $\pi$, with complete endpoint $x_\pi$. Its field total is
+$V(z)-V(x_\pi)$. The comparator-relative difference is
+\begin{equation}
+ I_{G\mid\pi}=E_G-E_\pi=V(x_\pi)-V(z+\delta_G).
+\end{equation}
+When fixed additive increments can be serialized feasibly, the final
+endpoint is the same and $I_{G\mid\pi}=0$. Yet $N_G$ may be nonzero.
+The shared two-unit example has $N_G=-2$ and $I=0$: it contains nonlinear
+same-baseline double counting but no endpoint advantage of simultaneity.
+
+A resolver replay can change this comparison. If it recomputes accepted
+quantities after the first action, it may produce another endpoint. That
+is a different, explicitly named comparator, not evidence that the same
+accepted vector has two contradictory values. The bridge source
+\cite{bridge} distinguishes quantity-fixed from rule-replayed comparisons.
+
+\section{The conditional Boolean-lattice calculation}
+For a set $A$ of fixed children, let
+$F(A)=V(z)-V(z+\sum_{a\in A}\delta_a)$ and $F(\varnothing)=0$.
+The pair inclusion--exclusion coefficient is
+\begin{equation}
+ m_{ab}=F(\{a,b\})-F(\{a\})-F(\{b\})
+       =-\delta_a^TH\delta_b.
+\end{equation}
+Because the indicator expansion of $F$ has degree at most two, all
+coefficients of order three and higher vanish. This statement needs the
+same baseline, potential and fixed increments in every subset.
+
+If a subset reruns a resolver, its increments can differ. The resulting
+set function need not be quadratic in membership indicators. Furthermore,
+physically inadmissible subsets cannot be turned into valid interventions
+by algebraic convenience. Every relevant subset must be admitted under the
+declared protocol before a physical Boolean-lattice interpretation is made.
+Möbius analysis remains an optional diagnostic, not extra issuance.
+
+\section*{Questions to ask of a group claim}
+Were the children valued at one baseline or consecutive states? Were
+quantities held fixed or re-resolved? Is the comparator physically admissible?
+Does it include the same costs and complete state? Is a correction being
+mistaken for a causal contribution? These questions determine the meaning
+of an interaction number before its sign is interpreted.
+
+\section*{Chapter recap}
+The quadratic cross term explains why independent same-baseline values fail
+to close on a shared group. A named sequential comparator answers another
+question. Neither calculation supplies an ownership rule.

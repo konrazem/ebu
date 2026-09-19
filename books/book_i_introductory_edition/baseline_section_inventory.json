@@ -1,0 +1,5332 @@
+[
+  {
+    "id": "front",
+    "level": 0,
+    "chapter": null,
+    "title": "Author, rights, and scientific scope",
+    "pdf_page_start": 2,
+    "disposition": "rewritten",
+    "new_home": "new front matter / bibliography",
+    "reason": "New-source provenance, equation-reading guidance, new navigation and verified source map. Rights/scope distinction retained without claiming author acceptance of this candidate."
+  },
+  {
+    "id": "front",
+    "level": 0,
+    "chapter": null,
+    "title": "Preface: the question behind the project",
+    "pdf_page_start": 3,
+    "disposition": "rewritten",
+    "new_home": "new front matter / bibliography",
+    "reason": "New-source provenance, equation-reading guidance, new navigation and verified source map. Rights/scope distinction retained without claiming author acceptance of this candidate."
+  },
+  {
+    "id": "front",
+    "level": 0,
+    "chapter": null,
+    "title": "The route through the trilogy",
+    "pdf_page_start": 4,
+    "disposition": "rewritten",
+    "new_home": "new front matter / bibliography",
+    "reason": "New-source provenance, equation-reading guidance, new navigation and verified source map. Rights/scope distinction retained without claiming author acceptance of this candidate."
+  },
+  {
+    "id": "front",
+    "level": 0,
+    "chapter": null,
+    "title": "How to read an equation without fear",
+    "pdf_page_start": 25,
+    "disposition": "rewritten",
+    "new_home": "new front matter / bibliography",
+    "reason": "New-source provenance, equation-reading guidance, new navigation and verified source map. Rights/scope distinction retained without claiming author acceptance of this candidate."
+  },
+  {
+    "id": "1",
+    "level": 0,
+    "chapter": 1,
+    "title": "The physical question beneath an economic action",
+    "pdf_page_start": 26,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.1",
+    "level": 1,
+    "chapter": 1,
+    "title": "Begin with something familiar: a water pump",
+    "pdf_page_start": 26,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.2",
+    "level": 1,
+    "chapter": 1,
+    "title": "Why the accounting object is an action",
+    "pdf_page_start": 26,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.3",
+    "level": 1,
+    "chapter": 1,
+    "title": "Need, desire, and the limits of the physical model",
+    "pdf_page_start": 27,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.4",
+    "level": 1,
+    "chapter": 1,
+    "title": "Three quantities that must never be confused",
+    "pdf_page_start": 28,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.4.1",
+    "level": 2,
+    "chapter": 1,
+    "title": "Physical or functional state",
+    "pdf_page_start": 28,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.4.2",
+    "level": 2,
+    "chapter": 1,
+    "title": "Represented burden",
+    "pdf_page_start": 28,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.4.3",
+    "level": 2,
+    "chapter": 1,
+    "title": "Signed EBU for an action",
+    "pdf_page_start": 28,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.5",
+    "level": 1,
+    "chapter": 1,
+    "title": "A running world: Ridge, Vale, and the clinic",
+    "pdf_page_start": 29,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.6",
+    "level": 1,
+    "chapter": 1,
+    "title": "The map of laws we will build",
+    "pdf_page_start": 29,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.7",
+    "level": 1,
+    "chapter": 1,
+    "title": "Worked first account: repairing Vale's pump",
+    "pdf_page_start": 30,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.8",
+    "level": 1,
+    "chapter": 1,
+    "title": "Misconceptions to remove at the beginning",
+    "pdf_page_start": 31,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.9",
+    "level": 1,
+    "chapter": 1,
+    "title": "What has to be measured before the first EBU can exist",
+    "pdf_page_start": 32,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.10",
+    "level": 1,
+    "chapter": 1,
+    "title": "Relationship to existing accounting traditions",
+    "pdf_page_start": 32,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.11",
+    "level": 1,
+    "chapter": 1,
+    "title": "Why physical monitoring can be economically useful today",
+    "pdf_page_start": 33,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.12",
+    "level": 1,
+    "chapter": 1,
+    "title": "The first falsifiability questions",
+    "pdf_page_start": 33,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.13",
+    "level": 1,
+    "chapter": 1,
+    "title": "What to carry forward",
+    "pdf_page_start": 34,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.14",
+    "level": 1,
+    "chapter": 1,
+    "title": "Guided problem with solution: emergency winter heat",
+    "pdf_page_start": 34,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "1.15",
+    "level": 1,
+    "chapter": 1,
+    "title": "Practice and reflection",
+    "pdf_page_start": 34,
+    "disposition": "rewritten",
+    "new_home": "I.1-5, I.9, I.15, I.18",
+    "reason": "Preserve action/need/account separation; replace preview arithmetic and strengthen institutional limits."
+  },
+  {
+    "id": "2",
+    "level": 0,
+    "chapter": 2,
+    "title": "Cells, nodes, and edges: turning a world into a graph",
+    "pdf_page_start": 36,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.1",
+    "level": 1,
+    "chapter": 2,
+    "title": "Why a map must come before an actor",
+    "pdf_page_start": 36,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.2",
+    "level": 1,
+    "chapter": 2,
+    "title": "Vocabulary before notation",
+    "pdf_page_start": 36,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.3",
+    "level": 1,
+    "chapter": 2,
+    "title": "Edge means an allowed directed process",
+    "pdf_page_start": 37,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.4",
+    "level": 1,
+    "chapter": 2,
+    "title": "A scalar and a vector",
+    "pdf_page_start": 38,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.5",
+    "level": 1,
+    "chapter": 2,
+    "title": "What the superscript T means",
+    "pdf_page_start": 38,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.6",
+    "level": 1,
+    "chapter": 2,
+    "title": "Efficiency belongs to an edge",
+    "pdf_page_start": 39,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.7",
+    "level": 1,
+    "chapter": 2,
+    "title": "The edge incidence column",
+    "pdf_page_start": 39,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.8",
+    "level": 1,
+    "chapter": 2,
+    "title": "From columns to the incidence matrix",
+    "pdf_page_start": 40,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.9",
+    "level": 1,
+    "chapter": 2,
+    "title": "Worked calculation: reservoir, treatment plant, clinic",
+    "pdf_page_start": 40,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.10",
+    "level": 1,
+    "chapter": 2,
+    "title": "One source with several outgoing edges",
+    "pdf_page_start": 41,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.11",
+    "level": 1,
+    "chapter": 2,
+    "title": "A graph is not necessarily geographic distance",
+    "pdf_page_start": 42,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.12",
+    "level": 1,
+    "chapter": 2,
+    "title": "Misconceptions about graphs and notation",
+    "pdf_page_start": 42,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.13",
+    "level": 1,
+    "chapter": 2,
+    "title": "From a real place to a model cell: a careful procedure",
+    "pdf_page_start": 42,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.13.1",
+    "level": 2,
+    "chapter": 2,
+    "title": "Choose the physical carrier",
+    "pdf_page_start": 43,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.13.2",
+    "level": 2,
+    "chapter": 2,
+    "title": "Choose spatial and functional boundaries",
+    "pdf_page_start": 43,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.13.3",
+    "level": 2,
+    "chapter": 2,
+    "title": "Choose temporal resolution",
+    "pdf_page_start": 43,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.13.4",
+    "level": 2,
+    "chapter": 2,
+    "title": "Name every boundary crossing",
+    "pdf_page_start": 43,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.14",
+    "level": 1,
+    "chapter": 2,
+    "title": "Edge families beyond transport",
+    "pdf_page_start": 43,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.15",
+    "level": 1,
+    "chapter": 2,
+    "title": "Why stock vectors can include several coordinates per place",
+    "pdf_page_start": 44,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.16",
+    "level": 1,
+    "chapter": 2,
+    "title": "Data-record example for one edge",
+    "pdf_page_start": 44,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.17",
+    "level": 1,
+    "chapter": 2,
+    "title": "Manual matrix multiplication as local addition",
+    "pdf_page_start": 45,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.18",
+    "level": 1,
+    "chapter": 2,
+    "title": "Guided notation laboratory: read before calculating",
+    "pdf_page_start": 45,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.18.1",
+    "level": 2,
+    "chapter": 2,
+    "title": "Entry notation",
+    "pdf_page_start": 46,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.18.2",
+    "level": 2,
+    "chapter": 2,
+    "title": "Subscript versus superscript",
+    "pdf_page_start": 46,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.18.3",
+    "level": 2,
+    "chapter": 2,
+    "title": "Dimensions of a matrix product",
+    "pdf_page_start": 46,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.18.4",
+    "level": 2,
+    "chapter": 2,
+    "title": "Constructing S from a drawing",
+    "pdf_page_start": 47,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.19",
+    "level": 1,
+    "chapter": 2,
+    "title": "Worked matrix exercise with a branching source",
+    "pdf_page_start": 47,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.20",
+    "level": 1,
+    "chapter": 2,
+    "title": "Answers to the common notation questions",
+    "pdf_page_start": 48,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.21",
+    "level": 1,
+    "chapter": 2,
+    "title": "What to carry forward",
+    "pdf_page_start": 48,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.22",
+    "level": 1,
+    "chapter": 2,
+    "title": "Guided problem with solution: build S from words",
+    "pdf_page_start": 49,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "2.23",
+    "level": 1,
+    "chapter": 2,
+    "title": "Practice and reflection",
+    "pdf_page_start": 49,
+    "disposition": "condensed",
+    "new_home": "I.8-9, I.13; glossary",
+    "reason": "Teach stocks, directions and simple lists; detailed matrix laboratory remains in historical I and II.28-30."
+  },
+  {
+    "id": "3",
+    "level": 0,
+    "chapter": 3,
+    "title": "One physical tick: drive, transport, and loss",
+    "pdf_page_start": 51,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.1",
+    "level": 1,
+    "chapter": 3,
+    "title": "A state changes even when every actor rests",
+    "pdf_page_start": 51,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.2",
+    "level": 1,
+    "chapter": 3,
+    "title": "Rate is not quantity",
+    "pdf_page_start": 52,
+    "disposition": "retained and rewritten",
+    "new_home": "I.8, I.15; symbol table",
+    "reason": "Quantity/rate and measurement-interval distinction retained, with a new exact arithmetic example."
+  },
+  {
+    "id": "3.3",
+    "level": 1,
+    "chapter": 3,
+    "title": "Collecting drives into a vector",
+    "pdf_page_start": 52,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.4",
+    "level": 1,
+    "chapter": 3,
+    "title": "The synchronous discrete update (D0)",
+    "pdf_page_start": 52,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.5",
+    "level": 1,
+    "chapter": 3,
+    "title": "Why software loop order must not become physics",
+    "pdf_page_start": 53,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.6",
+    "level": 1,
+    "chapter": 3,
+    "title": "The exact stock-and-loss ledger",
+    "pdf_page_start": 53,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.7",
+    "level": 1,
+    "chapter": 3,
+    "title": "Worked tick: Ridge supplies Vale",
+    "pdf_page_start": 54,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.8",
+    "level": 1,
+    "chapter": 3,
+    "title": "Boundary corrections and phantom service",
+    "pdf_page_start": 55,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.9",
+    "level": 1,
+    "chapter": 3,
+    "title": "Local decision and global simulation manager",
+    "pdf_page_start": 55,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.10",
+    "level": 1,
+    "chapter": 3,
+    "title": "Misconceptions about a tick",
+    "pdf_page_start": 55,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.11",
+    "level": 1,
+    "chapter": 3,
+    "title": "Units laboratory: audit an equation before trusting it",
+    "pdf_page_start": 56,
+    "disposition": "retained and rewritten",
+    "new_home": "I.8, I.15; symbol table",
+    "reason": "Quantity/rate and measurement-interval distinction retained, with a new exact arithmetic example."
+  },
+  {
+    "id": "3.11.1",
+    "level": 2,
+    "chapter": 3,
+    "title": "A complete cause table for one cell",
+    "pdf_page_start": 56,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.11.2",
+    "level": 2,
+    "chapter": 3,
+    "title": "Worked component audit",
+    "pdf_page_start": 57,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.12",
+    "level": 1,
+    "chapter": 3,
+    "title": "Frozen-state counterexample: why sequential updates leak information",
+    "pdf_page_start": 57,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.13",
+    "level": 1,
+    "chapter": 3,
+    "title": "Measurement belongs to an interval, not just a number",
+    "pdf_page_start": 58,
+    "disposition": "retained and rewritten",
+    "new_home": "I.8, I.15; symbol table",
+    "reason": "Quantity/rate and measurement-interval distinction retained, with a new exact arithmetic example."
+  },
+  {
+    "id": "3.13.1",
+    "level": 2,
+    "chapter": 3,
+    "title": "Worked meter-envelope example",
+    "pdf_page_start": 58,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.13.2",
+    "level": 2,
+    "chapter": 3,
+    "title": "Why uncertainty is not another stock flow",
+    "pdf_page_start": 59,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.14",
+    "level": 1,
+    "chapter": 3,
+    "title": "Ledger troubleshooting checklist",
+    "pdf_page_start": 59,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.15",
+    "level": 1,
+    "chapter": 3,
+    "title": "What to carry forward",
+    "pdf_page_start": 60,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.16",
+    "level": 1,
+    "chapter": 3,
+    "title": "Guided problem with solution: reconstruct one tick from a record",
+    "pdf_page_start": 60,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "3.17",
+    "level": 1,
+    "chapter": 3,
+    "title": "Practice and reflection",
+    "pdf_page_start": 60,
+    "disposition": "relocated",
+    "new_home": "historical I.3; II/III",
+    "reason": "D0 tick chronology remains historical. New I.8 explains quantities, boundaries and conservation without a runner."
+  },
+  {
+    "id": "4",
+    "level": 0,
+    "chapter": 4,
+    "title": "Homeostasis as a landscape of burden",
+    "pdf_page_start": 62,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.1",
+    "level": 1,
+    "chapter": 4,
+    "title": "Why more is not the universal target",
+    "pdf_page_start": 62,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.2",
+    "level": 1,
+    "chapter": 4,
+    "title": "Vocabulary and symbols",
+    "pdf_page_start": 62,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.3",
+    "level": 1,
+    "chapter": 4,
+    "title": "The positive-part operator",
+    "pdf_page_start": 63,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.4",
+    "level": 1,
+    "chapter": 4,
+    "title": "Deficit and excess penalties",
+    "pdf_page_start": 63,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.5",
+    "level": 1,
+    "chapter": 4,
+    "title": "Why use a square?",
+    "pdf_page_start": 64,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.6",
+    "level": 1,
+    "chapter": 4,
+    "title": "From local burdens to a global functional",
+    "pdf_page_start": 64,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.7",
+    "level": 1,
+    "chapter": 4,
+    "title": "Worked landscape: equal total stock, unequal burden",
+    "pdf_page_start": 64,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.8",
+    "level": 1,
+    "chapter": 4,
+    "title": "The local marginal",
+    "pdf_page_start": 65,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.9",
+    "level": 1,
+    "chapter": 4,
+    "title": "Derivative as a nearby prediction",
+    "pdf_page_start": 65,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.10",
+    "level": 1,
+    "chapter": 4,
+    "title": "The gradient vector and dot product",
+    "pdf_page_start": 66,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.11",
+    "level": 1,
+    "chapter": 4,
+    "title": "A two-cell marginal calculation",
+    "pdf_page_start": 66,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.12",
+    "level": 1,
+    "chapter": 4,
+    "title": "Why a lower V is not complete success",
+    "pdf_page_start": 67,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.13",
+    "level": 1,
+    "chapter": 4,
+    "title": "Misconceptions about the potential",
+    "pdf_page_start": 67,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.14",
+    "level": 1,
+    "chapter": 4,
+    "title": "A gentle calculus bridge",
+    "pdf_page_start": 68,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.14.1",
+    "level": 2,
+    "chapter": 4,
+    "title": "Function",
+    "pdf_page_start": 68,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.14.2",
+    "level": 2,
+    "chapter": 4,
+    "title": "Derivative",
+    "pdf_page_start": 68,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.14.3",
+    "level": 2,
+    "chapter": 4,
+    "title": "Partial derivative",
+    "pdf_page_start": 68,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.14.4",
+    "level": 2,
+    "chapter": 4,
+    "title": "Directional derivative",
+    "pdf_page_start": 69,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.15",
+    "level": 1,
+    "chapter": 4,
+    "title": "Average slope versus endpoint difference",
+    "pdf_page_start": 69,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.16",
+    "level": 1,
+    "chapter": 4,
+    "title": "Convexity in ordinary language",
+    "pdf_page_start": 69,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.17",
+    "level": 1,
+    "chapter": 4,
+    "title": "Kinks, smoothness, and positive-part squares",
+    "pdf_page_start": 70,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.18",
+    "level": 1,
+    "chapter": 4,
+    "title": "A reader's sign routine",
+    "pdf_page_start": 70,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.19",
+    "level": 1,
+    "chapter": 4,
+    "title": "Piecewise form written without positive-part notation",
+    "pdf_page_start": 70,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.20",
+    "level": 1,
+    "chapter": 4,
+    "title": "Worked table across one viable band",
+    "pdf_page_start": 71,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.21",
+    "level": 1,
+    "chapter": 4,
+    "title": "Calibration and units of the weights",
+    "pdf_page_start": 72,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.22",
+    "level": 1,
+    "chapter": 4,
+    "title": "Why adding local burdens is a declaration",
+    "pdf_page_start": 72,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.23",
+    "level": 1,
+    "chapter": 4,
+    "title": "Guided finite-change comparison",
+    "pdf_page_start": 72,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.24",
+    "level": 1,
+    "chapter": 4,
+    "title": "Potential, target, and service",
+    "pdf_page_start": 73,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.25",
+    "level": 1,
+    "chapter": 4,
+    "title": "What to carry forward",
+    "pdf_page_start": 73,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.26",
+    "level": 1,
+    "chapter": 4,
+    "title": "Guided problem with solution: from state to gradient",
+    "pdf_page_start": 74,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "4.27",
+    "level": 1,
+    "chapter": 4,
+    "title": "Practice and reflection",
+    "pdf_page_start": 74,
+    "disposition": "rewritten",
+    "new_home": "I.6-7, I.10-14",
+    "reason": "Replace introductory hinge geometry with declared reference/scale and Gaussian arithmetic; preserve hinge proofs in II.31."
+  },
+  {
+    "id": "5",
+    "level": 0,
+    "chapter": 5,
+    "title": "Regeneration and danger encoded in the present",
+    "pdf_page_start": 76,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.1",
+    "level": 1,
+    "chapter": 5,
+    "title": "Current quantity and future capacity are different",
+    "pdf_page_start": 76,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.15, I.18",
+    "reason": "Separate stock from infrastructure capacity; record immediate burden, evidence/certification, prospective field versions, responsibility and compensation. No advance forecast credit."
+  },
+  {
+    "id": "5.2",
+    "level": 1,
+    "chapter": 5,
+    "title": "Four source types",
+    "pdf_page_start": 76,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.3",
+    "level": 1,
+    "chapter": 5,
+    "title": "Logistic regeneration",
+    "pdf_page_start": 77,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "5.4",
+    "level": 1,
+    "chapter": 5,
+    "title": "Harvest equilibria and the unstable lower root",
+    "pdf_page_start": 78,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.5",
+    "level": 1,
+    "chapter": 5,
+    "title": "Worked logistic source",
+    "pdf_page_start": 78,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "5.6",
+    "level": 1,
+    "chapter": 5,
+    "title": "The Allee effect",
+    "pdf_page_start": 78,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "5.7",
+    "level": 1,
+    "chapter": 5,
+    "title": "From an ecological threshold to a certified reserve",
+    "pdf_page_start": 79,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.8",
+    "level": 1,
+    "chapter": 5,
+    "title": "Adding regenerative danger to the potential",
+    "pdf_page_start": 79,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.9",
+    "level": 1,
+    "chapter": 5,
+    "title": "Worked reserve-pressure calculation",
+    "pdf_page_start": 80,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.10",
+    "level": 1,
+    "chapter": 5,
+    "title": "Why a soft reserve penalty is not a hard boundary",
+    "pdf_page_start": 80,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.11",
+    "level": 1,
+    "chapter": 5,
+    "title": "Persistent restoration and a missing coordinate",
+    "pdf_page_start": 81,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.15, I.18",
+    "reason": "Separate stock from infrastructure capacity; record immediate burden, evidence/certification, prospective field versions, responsibility and compensation. No advance forecast credit."
+  },
+  {
+    "id": "5.12",
+    "level": 1,
+    "chapter": 5,
+    "title": "Misconceptions about regeneration",
+    "pdf_page_start": 81,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.13",
+    "level": 1,
+    "chapter": 5,
+    "title": "Regeneration laboratory: evaluate the sign before the number",
+    "pdf_page_start": 82,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.14",
+    "level": 1,
+    "chapter": 5,
+    "title": "A driven reserve can exceed the ecological threshold",
+    "pdf_page_start": 82,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.15",
+    "level": 1,
+    "chapter": 5,
+    "title": "Soft potential versus hard permission in one calculation",
+    "pdf_page_start": 83,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.16",
+    "level": 1,
+    "chapter": 5,
+    "title": "Questions a real reserve certificate must answer",
+    "pdf_page_start": 83,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.17",
+    "level": 1,
+    "chapter": 5,
+    "title": "What to carry forward",
+    "pdf_page_start": 83,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.18",
+    "level": 1,
+    "chapter": 5,
+    "title": "Guided problem with solution: find an operational reserve",
+    "pdf_page_start": 84,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "5.19",
+    "level": 1,
+    "chapter": 5,
+    "title": "Practice and reflection",
+    "pdf_page_start": 84,
+    "disposition": "relocated",
+    "new_home": "historical I.5; II.41, prospective V",
+    "reason": "Regeneration, Allee mechanisms and reserve certification are domain-specific later material."
+  },
+  {
+    "id": "6",
+    "level": 0,
+    "chapter": 6,
+    "title": "From a marginal to a loss-aware edge force",
+    "pdf_page_start": 86,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.1",
+    "level": 1,
+    "chapter": 6,
+    "title": "What force means in this model",
+    "pdf_page_start": 86,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.2",
+    "level": 1,
+    "chapter": 6,
+    "title": "Symbols used in the derivation",
+    "pdf_page_start": 86,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.3",
+    "level": 1,
+    "chapter": 6,
+    "title": "Derivation by the chain rule",
+    "pdf_page_start": 87,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.4",
+    "level": 1,
+    "chapter": 6,
+    "title": "Efficiency and the destination marginal",
+    "pdf_page_start": 88,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.5",
+    "level": 1,
+    "chapter": 6,
+    "title": "Worked beneficial transfer",
+    "pdf_page_start": 88,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.6",
+    "level": 1,
+    "chapter": 6,
+    "title": "A loss-aware decision can reverse a loss-blind one",
+    "pdf_page_start": 89,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.7",
+    "level": 1,
+    "chapter": 6,
+    "title": "Mobility, threshold, and flux",
+    "pdf_page_start": 89,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "6.8",
+    "level": 1,
+    "chapter": 6,
+    "title": "Worked flux calculation",
+    "pdf_page_start": 90,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "6.9",
+    "level": 1,
+    "chapter": 6,
+    "title": "Force, flux, request, accepted quantity, and service",
+    "pdf_page_start": 90,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.10",
+    "level": 1,
+    "chapter": 6,
+    "title": "Physics analogy: useful structure without identity",
+    "pdf_page_start": 91,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.11",
+    "level": 1,
+    "chapter": 6,
+    "title": "Misconceptions about force",
+    "pdf_page_start": 91,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.12",
+    "level": 1,
+    "chapter": 6,
+    "title": "Directional derivative laboratory",
+    "pdf_page_start": 91,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.13",
+    "level": 1,
+    "chapter": 6,
+    "title": "Four endpoint combinations",
+    "pdf_page_start": 92,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.14",
+    "level": 1,
+    "chapter": 6,
+    "title": "Worked heterogeneous cells",
+    "pdf_page_start": 93,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.15",
+    "level": 1,
+    "chapter": 6,
+    "title": "Worked sign boundary: when an inefficient rescue stops helping",
+    "pdf_page_start": 93,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.15.1",
+    "level": 2,
+    "chapter": 6,
+    "title": "Why high stock and low stock are not enough",
+    "pdf_page_start": 94,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.15.2",
+    "level": 2,
+    "chapter": 6,
+    "title": "Force is a derivative, not an actor reward",
+    "pdf_page_start": 94,
+    "disposition": "retained and rewritten",
+    "new_home": "I.9, I.13, I.15, I.18",
+    "reason": "Preserve the layer-separation or information-boundary limitation explicitly in the new exposition."
+  },
+  {
+    "id": "6.16",
+    "level": 1,
+    "chapter": 6,
+    "title": "Threshold as a real modelling declaration",
+    "pdf_page_start": 95,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.17",
+    "level": 1,
+    "chapter": 6,
+    "title": "What to carry forward",
+    "pdf_page_start": 95,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.18",
+    "level": 1,
+    "chapter": 6,
+    "title": "Guided problem with solution: choose between two destinations",
+    "pdf_page_start": 95,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "6.19",
+    "level": 1,
+    "chapter": 6,
+    "title": "Practice and reflection",
+    "pdf_page_start": 95,
+    "disposition": "rewritten",
+    "new_home": "I.13-14; historical I.6 and II.32",
+    "reason": "Retain slope and finite-value distinction in a lossless example; lossy field/controller details remain historical."
+  },
+  {
+    "id": "7",
+    "level": 0,
+    "chapter": 7,
+    "title": "Continuous drive and dissipation",
+    "pdf_page_start": 97,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.1",
+    "level": 1,
+    "chapter": 7,
+    "title": "Why begin with continuous time",
+    "pdf_page_start": 97,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.2",
+    "level": 1,
+    "chapter": 7,
+    "title": "Vocabulary for the identity",
+    "pdf_page_start": 97,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.3",
+    "level": 1,
+    "chapter": 7,
+    "title": "Differentiate V along the trajectory",
+    "pdf_page_start": 98,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.4",
+    "level": 1,
+    "chapter": 7,
+    "title": "The undriven consequence",
+    "pdf_page_start": 99,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.5",
+    "level": 1,
+    "chapter": 7,
+    "title": "Worked two-cell identity",
+    "pdf_page_start": 99,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.6",
+    "level": 1,
+    "chapter": 7,
+    "title": "The dissipation potential",
+    "pdf_page_start": 99,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.7",
+    "level": 1,
+    "chapter": 7,
+    "title": "Rest states and what they do not prove",
+    "pdf_page_start": 100,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.8",
+    "level": 1,
+    "chapter": 7,
+    "title": "No non-zero Onsager null flow",
+    "pdf_page_start": 100,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "7.9",
+    "level": 1,
+    "chapter": 7,
+    "title": "What this theorem excludes",
+    "pdf_page_start": 101,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.10",
+    "level": 1,
+    "chapter": 7,
+    "title": "Misconceptions about dissipation",
+    "pdf_page_start": 101,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.11",
+    "level": 1,
+    "chapter": 7,
+    "title": "A three-cell continuous calculation",
+    "pdf_page_start": 101,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.12",
+    "level": 1,
+    "chapter": 7,
+    "title": "From an instantaneous identity to an interval account",
+    "pdf_page_start": 103,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.12.1",
+    "level": 2,
+    "chapter": 7,
+    "title": "Worked constant-rate interval",
+    "pdf_page_start": 103,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.12.2",
+    "level": 2,
+    "chapter": 7,
+    "title": "Why this is not the action-receipt sum",
+    "pdf_page_start": 104,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.13",
+    "level": 1,
+    "chapter": 7,
+    "title": "Why the identity is an audit template",
+    "pdf_page_start": 104,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.14",
+    "level": 1,
+    "chapter": 7,
+    "title": "Continuous descent is not a long-run stability theorem",
+    "pdf_page_start": 104,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.15",
+    "level": 1,
+    "chapter": 7,
+    "title": "What to carry forward",
+    "pdf_page_start": 104,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "7.16",
+    "level": 1,
+    "chapter": 7,
+    "title": "Practice and reflection",
+    "pdf_page_start": 104,
+    "disposition": "relocated",
+    "new_home": "historical I.7; II.38, prospective V",
+    "reason": "The continuous dissipation law is a specified controller, not intrinsic EBU motion."
+  },
+  {
+    "id": "8",
+    "level": 0,
+    "chapter": 8,
+    "title": "Finite timesteps, curvature, and the V2.8 certificate",
+    "pdf_page_start": 106,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.1",
+    "level": 1,
+    "chapter": 8,
+    "title": "Walking downhill with closed eyes",
+    "pdf_page_start": 106,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.2",
+    "level": 1,
+    "chapter": 8,
+    "title": "First-order term and curvature remainder",
+    "pdf_page_start": 106,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.3",
+    "level": 1,
+    "chapter": 8,
+    "title": "Deriving the one-step inequality",
+    "pdf_page_start": 107,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.4",
+    "level": 1,
+    "chapter": 8,
+    "title": "How to read an upper bound",
+    "pdf_page_start": 108,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.5",
+    "level": 1,
+    "chapter": 8,
+    "title": "One-edge undriven timestep",
+    "pdf_page_start": 108,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.6",
+    "level": 1,
+    "chapter": 8,
+    "title": "Worked certificate",
+    "pdf_page_start": 108,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.7",
+    "level": 1,
+    "chapter": 8,
+    "title": "From one edge to a graph",
+    "pdf_page_start": 109,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.8",
+    "level": 1,
+    "chapter": 8,
+    "title": "Active-set and Gershgorin bounds",
+    "pdf_page_start": 109,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "8.9",
+    "level": 1,
+    "chapter": 8,
+    "title": "Exact overshoot in the burden landscape",
+    "pdf_page_start": 109,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.10",
+    "level": 1,
+    "chapter": 8,
+    "title": "What V2.8 proves and what it does not",
+    "pdf_page_start": 110,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.11",
+    "level": 1,
+    "chapter": 8,
+    "title": "Misconceptions about discrete safety",
+    "pdf_page_start": 110,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.12",
+    "level": 1,
+    "chapter": 8,
+    "title": "Norm and spectral certificate without mystery",
+    "pdf_page_start": 111,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "8.13",
+    "level": 1,
+    "chapter": 8,
+    "title": "Two edges sharing a source",
+    "pdf_page_start": 111,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.14",
+    "level": 1,
+    "chapter": 8,
+    "title": "Curvature of overlapping penalty terms",
+    "pdf_page_start": 112,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.15",
+    "level": 1,
+    "chapter": 8,
+    "title": "Certificate versus exact finite evaluation",
+    "pdf_page_start": 112,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.16",
+    "level": 1,
+    "chapter": 8,
+    "title": "What to carry forward",
+    "pdf_page_start": 112,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.17",
+    "level": 1,
+    "chapter": 8,
+    "title": "Guided problem with solution: evaluate the full V2.8 bound",
+    "pdf_page_start": 113,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "8.18",
+    "level": 1,
+    "chapter": 8,
+    "title": "Adding a drive term to the same example",
+    "pdf_page_start": 114,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.19",
+    "level": 1,
+    "chapter": 8,
+    "title": "How to interpret numerical tolerance",
+    "pdf_page_start": 115,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "8.20",
+    "level": 1,
+    "chapter": 8,
+    "title": "Practice and reflection",
+    "pdf_page_start": 115,
+    "disposition": "relocated",
+    "new_home": "historical I.8; II.39-40, III.48",
+    "reason": "Preserve timestep and numerical certificates; teach only exact finite curvature in new I.14."
+  },
+  {
+    "id": "9",
+    "level": 0,
+    "chapter": 9,
+    "title": "Permission before value: the local preservation controller",
+    "pdf_page_start": 117,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.1",
+    "level": 1,
+    "chapter": 9,
+    "title": "The question a source must answer",
+    "pdf_page_start": 117,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.2",
+    "level": 1,
+    "chapter": 9,
+    "title": "Start from the no-export successor",
+    "pdf_page_start": 117,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.3",
+    "level": 1,
+    "chapter": 9,
+    "title": "Robust measurement margins",
+    "pdf_page_start": 118,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.4",
+    "level": 1,
+    "chapter": 9,
+    "title": "The one-step preservation proof",
+    "pdf_page_start": 118,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.5",
+    "level": 1,
+    "chapter": 9,
+    "title": "The four local source classes",
+    "pdf_page_start": 119,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "9.6",
+    "level": 1,
+    "chapter": 9,
+    "title": "Sharing one source budget",
+    "pdf_page_start": 120,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.7",
+    "level": 1,
+    "chapter": 9,
+    "title": "Worked multi-edge budget",
+    "pdf_page_start": 121,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.8",
+    "level": 1,
+    "chapter": 9,
+    "title": "Preservation and service are different outcomes",
+    "pdf_page_start": 122,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.9",
+    "level": 1,
+    "chapter": 9,
+    "title": "Positive quote does not grant permission",
+    "pdf_page_start": 122,
+    "disposition": "retained and rewritten",
+    "new_home": "I.9, I.13, I.15, I.18",
+    "reason": "Preserve the layer-separation or information-boundary limitation explicitly in the new exposition."
+  },
+  {
+    "id": "9.10",
+    "level": 1,
+    "chapter": 9,
+    "title": "A worked infeasibility case",
+    "pdf_page_start": 122,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.11",
+    "level": 1,
+    "chapter": 9,
+    "title": "Misconceptions about preservation",
+    "pdf_page_start": 123,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.12",
+    "level": 1,
+    "chapter": 9,
+    "title": "Running case: one reserve, three genuine needs",
+    "pdf_page_start": 123,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.13",
+    "level": 1,
+    "chapter": 9,
+    "title": "What can restore feasibility",
+    "pdf_page_start": 124,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.14",
+    "level": 1,
+    "chapter": 9,
+    "title": "Why priority allocation is not hidden inside EBU",
+    "pdf_page_start": 125,
+    "disposition": "retained and rewritten",
+    "new_home": "I.9, I.13, I.15, I.18",
+    "reason": "Preserve the layer-separation or information-boundary limitation explicitly in the new exposition."
+  },
+  {
+    "id": "9.15",
+    "level": 1,
+    "chapter": 9,
+    "title": "What to carry forward",
+    "pdf_page_start": 125,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.16",
+    "level": 1,
+    "chapter": 9,
+    "title": "Guided problem with solution: classify before allocating",
+    "pdf_page_start": 126,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.16.1",
+    "level": 2,
+    "chapter": 9,
+    "title": "Case A: preservable with surplus",
+    "pdf_page_start": 126,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.16.2",
+    "level": 2,
+    "chapter": 9,
+    "title": "Case B: exactly on the boundary",
+    "pdf_page_start": 126,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.16.3",
+    "level": 2,
+    "chapter": 9,
+    "title": "Case C: locally infeasible",
+    "pdf_page_start": 126,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.16.4",
+    "level": 2,
+    "chapter": 9,
+    "title": "Case D: recovery required",
+    "pdf_page_start": 126,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.17",
+    "level": 1,
+    "chapter": 9,
+    "title": "Robust margin sensitivity",
+    "pdf_page_start": 127,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "9.18",
+    "level": 1,
+    "chapter": 9,
+    "title": "Aggregate allocation audit",
+    "pdf_page_start": 127,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "9.19",
+    "level": 1,
+    "chapter": 9,
+    "title": "Practice and reflection",
+    "pdf_page_start": 127,
+    "disposition": "relocated",
+    "new_home": "historical I.9; II.41, III.49",
+    "reason": "P1C classes, margins and reserves do not govern the new illustrative world; generic feasibility remains I.9."
+  },
+  {
+    "id": "10",
+    "level": 0,
+    "chapter": 10,
+    "title": "The exact local signed EBU quote",
+    "pdf_page_start": 129,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.1",
+    "level": 1,
+    "chapter": 10,
+    "title": "The problem the quote must solve",
+    "pdf_page_start": 129,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.2",
+    "level": 1,
+    "chapter": 10,
+    "title": "The no-action successor z",
+    "pdf_page_start": 129,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.3",
+    "level": 1,
+    "chapter": 10,
+    "title": "The accepted action state",
+    "pdf_page_start": 130,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.4",
+    "level": 1,
+    "chapter": 10,
+    "title": "What belongs in process burden C",
+    "pdf_page_start": 130,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.5",
+    "level": 1,
+    "chapter": 10,
+    "title": "The exact equation",
+    "pdf_page_start": 131,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.6",
+    "level": 1,
+    "chapter": 10,
+    "title": "Dimensional audit",
+    "pdf_page_start": 131,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.7",
+    "level": 1,
+    "chapter": 10,
+    "title": "Worked positive quote",
+    "pdf_page_start": 132,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.8",
+    "level": 1,
+    "chapter": 10,
+    "title": "Why the linear quote is not settlement",
+    "pdf_page_start": 133,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.9",
+    "level": 1,
+    "chapter": 10,
+    "title": "Worked overshoot: zero marginal, negative exact quote",
+    "pdf_page_start": 133,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.10",
+    "level": 1,
+    "chapter": 10,
+    "title": "Exact quote as a path integral",
+    "pdf_page_start": 134,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.11",
+    "level": 1,
+    "chapter": 10,
+    "title": "The q=0 branch and activation cost",
+    "pdf_page_start": 134,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.12",
+    "level": 1,
+    "chapter": 10,
+    "title": "What the quote may and may not read",
+    "pdf_page_start": 134,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.13",
+    "level": 1,
+    "chapter": 10,
+    "title": "Misconceptions about the quote",
+    "pdf_page_start": 135,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.14",
+    "level": 1,
+    "chapter": 10,
+    "title": "Quote geometry through three pictures described in words",
+    "pdf_page_start": 135,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.14.1",
+    "level": 2,
+    "chapter": 10,
+    "title": "Only destination deficit is active",
+    "pdf_page_start": 135,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.14.2",
+    "level": 2,
+    "chapter": 10,
+    "title": "Source excess and destination deficit are both active",
+    "pdf_page_start": 135,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.14.3",
+    "level": 2,
+    "chapter": 10,
+    "title": "Both endpoints begin in-band",
+    "pdf_page_start": 136,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.15",
+    "level": 1,
+    "chapter": 10,
+    "title": "Quantity choice and the rest branch",
+    "pdf_page_start": 136,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.16",
+    "level": 1,
+    "chapter": 10,
+    "title": "Quote sign and EBU per unit",
+    "pdf_page_start": 136,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.17",
+    "level": 1,
+    "chapter": 10,
+    "title": "A process-burden classification exercise",
+    "pdf_page_start": 137,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.18",
+    "level": 1,
+    "chapter": 10,
+    "title": "Why the equation remains local with a global interpretation",
+    "pdf_page_start": 137,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.19",
+    "level": 1,
+    "chapter": 10,
+    "title": "Building a piecewise-quadratic schedule by breakpoints",
+    "pdf_page_start": 137,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.20",
+    "level": 1,
+    "chapter": 10,
+    "title": "Worked complete schedule",
+    "pdf_page_start": 138,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.21",
+    "level": 1,
+    "chapter": 10,
+    "title": "Why total EBU, not EBU per unit, ranks candidates",
+    "pdf_page_start": 138,
+    "disposition": "omitted from new spine",
+    "new_home": "historical selection-policy example",
+    "reason": "A ranking or maximization policy is not part of EBU measurement; new I.9/18 keep actor choice separate."
+  },
+  {
+    "id": "10.22",
+    "level": 1,
+    "chapter": 10,
+    "title": "Candidate menu and continuous vertex",
+    "pdf_page_start": 139,
+    "disposition": "omitted from new spine",
+    "new_home": "historical selection-policy example",
+    "reason": "A ranking or maximization policy is not part of EBU measurement; new I.9/18 keep actor choice separate."
+  },
+  {
+    "id": "10.23",
+    "level": 1,
+    "chapter": 10,
+    "title": "No-double-count audit",
+    "pdf_page_start": 139,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.24",
+    "level": 1,
+    "chapter": 10,
+    "title": "Manual quote checklist",
+    "pdf_page_start": 139,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.25",
+    "level": 1,
+    "chapter": 10,
+    "title": "What to carry forward",
+    "pdf_page_start": 140,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.26",
+    "level": 1,
+    "chapter": 10,
+    "title": "Guided problem with solution: quote every menu quantity",
+    "pdf_page_start": 140,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.27",
+    "level": 1,
+    "chapter": 10,
+    "title": "Continue beyond the accepted domain",
+    "pdf_page_start": 141,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.28",
+    "level": 1,
+    "chapter": 10,
+    "title": "First-order comparison",
+    "pdf_page_start": 142,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "10.29",
+    "level": 1,
+    "chapter": 10,
+    "title": "Practice and reflection",
+    "pdf_page_start": 142,
+    "disposition": "rewritten",
+    "new_home": "I.14-15",
+    "reason": "Retain exact finite local accounting; convert historical rate notation to declared finite quantity; preserve cost boundary."
+  },
+  {
+    "id": "11",
+    "level": 0,
+    "chapter": 11,
+    "title": "From pre-action schedule to measured settlement",
+    "pdf_page_start": 143,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.1",
+    "level": 1,
+    "chapter": 11,
+    "title": "Why one quoted number is not enough",
+    "pdf_page_start": 143,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.2",
+    "level": 1,
+    "chapter": 11,
+    "title": "The nine-event order",
+    "pdf_page_start": 143,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.3",
+    "level": 1,
+    "chapter": 11,
+    "title": "What a quote epoch commits",
+    "pdf_page_start": 144,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.4",
+    "level": 1,
+    "chapter": 11,
+    "title": "Clock, identity, and causality in one quote epoch",
+    "pdf_page_start": 144,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.4.1",
+    "level": 2,
+    "chapter": 11,
+    "title": "Worked partial-execution record",
+    "pdf_page_start": 145,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.4.2",
+    "level": 2,
+    "chapter": 11,
+    "title": "Identity prevents duplicate settlement",
+    "pdf_page_start": 145,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.5",
+    "level": 1,
+    "chapter": 11,
+    "title": "Exact natural-drive cancellation",
+    "pdf_page_start": 146,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.6",
+    "level": 1,
+    "chapter": 11,
+    "title": "Worked regeneration example",
+    "pdf_page_start": 146,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.7",
+    "level": 1,
+    "chapter": 11,
+    "title": "Long actions and changing conditions",
+    "pdf_page_start": 147,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.8",
+    "level": 1,
+    "chapter": 11,
+    "title": "Shortfall and overexecution",
+    "pdf_page_start": 147,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.9",
+    "level": 1,
+    "chapter": 11,
+    "title": "Worked schedule settlement",
+    "pdf_page_start": 148,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.10",
+    "level": 1,
+    "chapter": 11,
+    "title": "Why hash commitments help but do not prove truth",
+    "pdf_page_start": 148,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.11",
+    "level": 1,
+    "chapter": 11,
+    "title": "Misconceptions about settlement",
+    "pdf_page_start": 148,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.12",
+    "level": 1,
+    "chapter": 11,
+    "title": "A schedule is a scientific precommitment",
+    "pdf_page_start": 149,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.13",
+    "level": 1,
+    "chapter": 11,
+    "title": "Interpolation danger at an activation jump",
+    "pdf_page_start": 149,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.14",
+    "level": 1,
+    "chapter": 11,
+    "title": "Rejection and stale schedules",
+    "pdf_page_start": 149,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.15",
+    "level": 1,
+    "chapter": 11,
+    "title": "Audit failure is not a new physical value",
+    "pdf_page_start": 150,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.16",
+    "level": 1,
+    "chapter": 11,
+    "title": "What to carry forward",
+    "pdf_page_start": 150,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "11.17",
+    "level": 1,
+    "chapter": 11,
+    "title": "Practice and reflection",
+    "pdf_page_start": 150,
+    "disposition": "condensed",
+    "new_home": "I.9, I.15, I.18; II.35, III.51",
+    "reason": "Keep precommitment, occurrence and audit distinction; detailed historical lifecycle stays in II/III."
+  },
+  {
+    "id": "12",
+    "level": 0,
+    "chapter": 12,
+    "title": "Reading positive, zero, and negative EBU in real needs",
+    "pdf_page_start": 152,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.1",
+    "level": 1,
+    "chapter": 12,
+    "title": "The sign belongs to an action-state pair",
+    "pdf_page_start": 152,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.2",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 1: urgent medicine by an efficient route",
+    "pdf_page_start": 152,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.3",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 2: same medicine after the deficit is relieved",
+    "pdf_page_start": 153,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.4",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 3: overfilling creates a sign reversal",
+    "pdf_page_start": 153,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.5",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 4: water redistribution with loss",
+    "pdf_page_start": 153,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.6",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 5: a pump repair with two contributors",
+    "pdf_page_start": 154,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.7",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 6: necessary air delivery after a landslide",
+    "pdf_page_start": 155,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.8",
+    "level": 1,
+    "chapter": 12,
+    "title": "Example 7: restoration without a visible state coordinate",
+    "pdf_page_start": 155,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.15, I.18",
+    "reason": "Separate stock from infrastructure capacity; record immediate burden, evidence/certification, prospective field versions, responsibility and compensation. No advance forecast credit."
+  },
+  {
+    "id": "12.9",
+    "level": 1,
+    "chapter": 12,
+    "title": "How an action changes its own future opportunities",
+    "pdf_page_start": 155,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.10",
+    "level": 1,
+    "chapter": 12,
+    "title": "Misconceptions about signed results",
+    "pdf_page_start": 156,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.11",
+    "level": 1,
+    "chapter": 12,
+    "title": "Extended case study: keeping a rural clinic operational",
+    "pdf_page_start": 157,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.11.1",
+    "level": 2,
+    "chapter": 12,
+    "title": "Medicine stock",
+    "pdf_page_start": 157,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.11.2",
+    "level": 2,
+    "chapter": 12,
+    "title": "Refrigeration",
+    "pdf_page_start": 157,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.11.3",
+    "level": 2,
+    "chapter": 12,
+    "title": "Safe water",
+    "pdf_page_start": 157,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.11.4",
+    "level": 2,
+    "chapter": 12,
+    "title": "Generator repair part",
+    "pdf_page_start": 157,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.11.5",
+    "level": 2,
+    "chapter": 12,
+    "title": "Why the four receipts should remain linked",
+    "pdf_page_start": 158,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.12",
+    "level": 1,
+    "chapter": 12,
+    "title": "A sign table for decisions",
+    "pdf_page_start": 158,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.13",
+    "level": 1,
+    "chapter": 12,
+    "title": "How to communicate a negative essential receipt",
+    "pdf_page_start": 158,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.14",
+    "level": 1,
+    "chapter": 12,
+    "title": "What to carry forward",
+    "pdf_page_start": 158,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "12.15",
+    "level": 1,
+    "chapter": 12,
+    "title": "Practice and reflection",
+    "pdf_page_start": 158,
+    "disposition": "rewritten",
+    "new_home": "I.1, I.3, I.15, I.18",
+    "reason": "Preserve need/sign separation and missing-coordinate warning; replace historical numeric cases with scoped new examples."
+  },
+  {
+    "id": "13",
+    "level": 0,
+    "chapter": 13,
+    "title": "How a local action can have an exact global identity",
+    "pdf_page_start": 160,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.1",
+    "level": 1,
+    "chapter": 13,
+    "title": "The apparent paradox",
+    "pdf_page_start": 160,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.2",
+    "level": 1,
+    "chapter": 13,
+    "title": "Affected neighbourhood",
+    "pdf_page_start": 160,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.3",
+    "level": 1,
+    "chapter": 13,
+    "title": "The cancellation proof",
+    "pdf_page_start": 160,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.4",
+    "level": 1,
+    "chapter": 13,
+    "title": "Worked five-cell cancellation",
+    "pdf_page_start": 161,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.5",
+    "level": 1,
+    "chapter": 13,
+    "title": "What global means here",
+    "pdf_page_start": 162,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.6",
+    "level": 1,
+    "chapter": 13,
+    "title": "Why this is not remote action at a distance",
+    "pdf_page_start": 162,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.7",
+    "level": 1,
+    "chapter": 13,
+    "title": "When the proof must change",
+    "pdf_page_start": 162,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.8",
+    "level": 1,
+    "chapter": 13,
+    "title": "Global audit versus local decision",
+    "pdf_page_start": 163,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.9",
+    "level": 1,
+    "chapter": 13,
+    "title": "A repair rather than an edge",
+    "pdf_page_start": 163,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.10",
+    "level": 1,
+    "chapter": 13,
+    "title": "How to derive the information boundary from dependencies",
+    "pdf_page_start": 163,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.10.1",
+    "level": 2,
+    "chapter": 13,
+    "title": "Worked dependency calculation",
+    "pdf_page_start": 164,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.10.2",
+    "level": 2,
+    "chapter": 13,
+    "title": "Information minimization remains a theorem obligation",
+    "pdf_page_start": 165,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.11",
+    "level": 1,
+    "chapter": 13,
+    "title": "Misconceptions about local and global",
+    "pdf_page_start": 165,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.12",
+    "level": 1,
+    "chapter": 13,
+    "title": "Hierarchical locality",
+    "pdf_page_start": 165,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.13",
+    "level": 1,
+    "chapter": 13,
+    "title": "A counterexample to careless locality",
+    "pdf_page_start": 166,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.14",
+    "level": 1,
+    "chapter": 13,
+    "title": "Local proof, distributed computation, and central authority",
+    "pdf_page_start": 166,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.15",
+    "level": 1,
+    "chapter": 13,
+    "title": "What to carry forward",
+    "pdf_page_start": 166,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "13.16",
+    "level": 1,
+    "chapter": 13,
+    "title": "Practice and reflection",
+    "pdf_page_start": 166,
+    "disposition": "rewritten",
+    "new_home": "I.12, I.15, I.17; II.33",
+    "reason": "Give affected-support proof and explicit coupled-factor caveat; no distant-action or global-optimizer inference."
+  },
+  {
+    "id": "14",
+    "level": 0,
+    "chapter": 14,
+    "title": "Action receipts and exact actor-level closure",
+    "pdf_page_start": 168,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.1",
+    "level": 1,
+    "chapter": 14,
+    "title": "Receipt means a physical account line",
+    "pdf_page_start": 168,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.2",
+    "level": 1,
+    "chapter": 14,
+    "title": "Ordered authoritative states",
+    "pdf_page_start": 168,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.3",
+    "level": 1,
+    "chapter": 14,
+    "title": "The telescoping proof",
+    "pdf_page_start": 168,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.4",
+    "level": 1,
+    "chapter": 14,
+    "title": "From lines to actor totals",
+    "pdf_page_start": 169,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.5",
+    "level": 1,
+    "chapter": 14,
+    "title": "What the closure theorem assumes, line by line",
+    "pdf_page_start": 170,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.6",
+    "level": 1,
+    "chapter": 14,
+    "title": "Worked receipt from measured contributions",
+    "pdf_page_start": 170,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.7",
+    "level": 1,
+    "chapter": 14,
+    "title": "Worked three-actor repair",
+    "pdf_page_start": 172,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.8",
+    "level": 1,
+    "chapter": 14,
+    "title": "Natural drive between receipts",
+    "pdf_page_start": 172,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.9",
+    "level": 1,
+    "chapter": 14,
+    "title": "Recurring service and dangerous drive harvesting",
+    "pdf_page_start": 173,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.10",
+    "level": 1,
+    "chapter": 14,
+    "title": "Known contribution and nonlinear value",
+    "pdf_page_start": 173,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.11",
+    "level": 1,
+    "chapter": 14,
+    "title": "Natural events are not actors",
+    "pdf_page_start": 173,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.12",
+    "level": 1,
+    "chapter": 14,
+    "title": "Account balance is not physical capacity",
+    "pdf_page_start": 173,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.13",
+    "level": 1,
+    "chapter": 14,
+    "title": "Misconceptions about actor closure",
+    "pdf_page_start": 174,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.14",
+    "level": 1,
+    "chapter": 14,
+    "title": "Why closure resembles conservation without being stock conservation",
+    "pdf_page_start": 174,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.15",
+    "level": 1,
+    "chapter": 14,
+    "title": "Receipt example with mixed resource accounts",
+    "pdf_page_start": 175,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.16",
+    "level": 1,
+    "chapter": 14,
+    "title": "Corrections and reversals",
+    "pdf_page_start": 175,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.17",
+    "level": 1,
+    "chapter": 14,
+    "title": "Receipt completeness versus privacy",
+    "pdf_page_start": 175,
+    "disposition": "retained and rewritten",
+    "new_home": "I.9, I.13, I.15, I.18",
+    "reason": "Preserve the layer-separation or information-boundary limitation explicitly in the new exposition."
+  },
+  {
+    "id": "14.18",
+    "level": 1,
+    "chapter": 14,
+    "title": "From one receipt to system diagnostics",
+    "pdf_page_start": 176,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.19",
+    "level": 1,
+    "chapter": 14,
+    "title": "Receipt anatomy: one line in full",
+    "pdf_page_start": 176,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.20",
+    "level": 1,
+    "chapter": 14,
+    "title": "Four sign patterns for two actors",
+    "pdf_page_start": 177,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.20.1",
+    "level": 2,
+    "chapter": 14,
+    "title": "Both positive",
+    "pdf_page_start": 177,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.20.2",
+    "level": 2,
+    "chapter": 14,
+    "title": "First negative, second positive",
+    "pdf_page_start": 177,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.20.3",
+    "level": 2,
+    "chapter": 14,
+    "title": "First positive, second negative",
+    "pdf_page_start": 177,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.20.4",
+    "level": 2,
+    "chapter": 14,
+    "title": "Both negative",
+    "pdf_page_start": 177,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.21",
+    "level": 1,
+    "chapter": 14,
+    "title": "Composite action versus ordered lines",
+    "pdf_page_start": 178,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.22",
+    "level": 1,
+    "chapter": 14,
+    "title": "Closure audit procedure",
+    "pdf_page_start": 178,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.23",
+    "level": 1,
+    "chapter": 14,
+    "title": "What to carry forward",
+    "pdf_page_start": 178,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "14.24",
+    "level": 1,
+    "chapter": 14,
+    "title": "Practice and reflection",
+    "pdf_page_start": 178,
+    "disposition": "condensed",
+    "new_home": "I.16-17; II.35, prospective VI/IX",
+    "reason": "Retain closure and drive separation; distinguish path attribution, causal evidence, ownership and settlement."
+  },
+  {
+    "id": "15",
+    "level": 0,
+    "chapter": 15,
+    "title": "Closed cycles, splitting, and the no-free-reward theorem",
+    "pdf_page_start": 180,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.1",
+    "level": 1,
+    "chapter": 15,
+    "title": "The exploit we want to exclude",
+    "pdf_page_start": 180,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.2",
+    "level": 1,
+    "chapter": 15,
+    "title": "The assumptions matter",
+    "pdf_page_start": 180,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.3",
+    "level": 1,
+    "chapter": 15,
+    "title": "The closed-cycle result",
+    "pdf_page_start": 181,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.4",
+    "level": 1,
+    "chapter": 15,
+    "title": "Worked damage–repair loop",
+    "pdf_page_start": 181,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.5",
+    "level": 1,
+    "chapter": 15,
+    "title": "Back-and-forth transfer",
+    "pdf_page_start": 181,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.6",
+    "level": 1,
+    "chapter": 15,
+    "title": "Sequential splitting is neutral",
+    "pdf_page_start": 182,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.7",
+    "level": 1,
+    "chapter": 15,
+    "title": "Bounded issuance in an undriven region",
+    "pdf_page_start": 182,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.8",
+    "level": 1,
+    "chapter": 15,
+    "title": "Why changing the functional opens arbitrage",
+    "pdf_page_start": 182,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.9",
+    "level": 1,
+    "chapter": 15,
+    "title": "Driven cycles and recurring needs",
+    "pdf_page_start": 183,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.10",
+    "level": 1,
+    "chapter": 15,
+    "title": "Misconceptions about cycles",
+    "pdf_page_start": 183,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.11",
+    "level": 1,
+    "chapter": 15,
+    "title": "Cycle laboratory: distinguish state return from field return",
+    "pdf_page_start": 184,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.12",
+    "level": 1,
+    "chapter": 15,
+    "title": "Four ways a false profitable cycle can appear",
+    "pdf_page_start": 184,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.13",
+    "level": 1,
+    "chapter": 15,
+    "title": "Worked driven service cycle",
+    "pdf_page_start": 184,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.14",
+    "level": 1,
+    "chapter": 15,
+    "title": "Splitting and fixed activation burden",
+    "pdf_page_start": 185,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.15",
+    "level": 1,
+    "chapter": 15,
+    "title": "What to carry forward",
+    "pdf_page_start": 185,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "15.16",
+    "level": 1,
+    "chapter": 15,
+    "title": "Practice and reflection",
+    "pdf_page_start": 185,
+    "disposition": "rewritten",
+    "new_home": "I.17; II.36",
+    "reason": "Teach complete-state cycle and telescoping identities with fixed potential, drive and process-cost qualifications."
+  },
+  {
+    "id": "16",
+    "level": 0,
+    "chapter": 16,
+    "title": "Several actors on one nonlinear field",
+    "pdf_page_start": 187,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.1",
+    "level": 1,
+    "chapter": 16,
+    "title": "Physical quantities can be known while value allocation is hard",
+    "pdf_page_start": 187,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.2",
+    "level": 1,
+    "chapter": 16,
+    "title": "The canonical split counterexample",
+    "pdf_page_start": 187,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.3",
+    "level": 1,
+    "chapter": 16,
+    "title": "Convexity explains the direction of error",
+    "pdf_page_start": 188,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.4",
+    "level": 1,
+    "chapter": 16,
+    "title": "Group quote first",
+    "pdf_page_start": 188,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.5",
+    "level": 1,
+    "chapter": 16,
+    "title": "Allocation schemes and their tradeoffs",
+    "pdf_page_start": 188,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.6",
+    "level": 1,
+    "chapter": 16,
+    "title": "Disjoint simultaneous actions are simpler",
+    "pdf_page_start": 189,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.7",
+    "level": 1,
+    "chapter": 16,
+    "title": "Worked proportional allocation and its limitation",
+    "pdf_page_start": 189,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.8",
+    "level": 1,
+    "chapter": 16,
+    "title": "Known ownership does not create a conservation law",
+    "pdf_page_start": 190,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.9",
+    "level": 1,
+    "chapter": 16,
+    "title": "What O14 established",
+    "pdf_page_start": 190,
+    "disposition": "relocated",
+    "new_home": "historical I and III evidence chapters",
+    "reason": "No historical result is relabelled as Gaussian evidence; new I.17 explains the evidence boundary without reproducing result numbers."
+  },
+  {
+    "id": "16.10",
+    "level": 1,
+    "chapter": 16,
+    "title": "Misconceptions about multiple actors",
+    "pdf_page_start": 190,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.11",
+    "level": 1,
+    "chapter": 16,
+    "title": "Fan-out laboratory with distinct destinations",
+    "pdf_page_start": 191,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.12",
+    "level": 1,
+    "chapter": 16,
+    "title": "Overlap graph for actions",
+    "pdf_page_start": 191,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.13",
+    "level": 1,
+    "chapter": 16,
+    "title": "Properties an allocation rule should state",
+    "pdf_page_start": 192,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.14",
+    "level": 1,
+    "chapter": 16,
+    "title": "Why O3 remains scientifically open",
+    "pdf_page_start": 192,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.15",
+    "level": 1,
+    "chapter": 16,
+    "title": "Worked Aumann–Shapley intuition",
+    "pdf_page_start": 192,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.16",
+    "level": 1,
+    "chapter": 16,
+    "title": "Group receipt example with process burdens",
+    "pdf_page_start": 193,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.17",
+    "level": 1,
+    "chapter": 16,
+    "title": "Simultaneous physical execution versus sequential accounting",
+    "pdf_page_start": 193,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.18",
+    "level": 1,
+    "chapter": 16,
+    "title": "What to carry forward",
+    "pdf_page_start": 193,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "16.19",
+    "level": 1,
+    "chapter": 16,
+    "title": "Practice and reflection",
+    "pdf_page_start": 193,
+    "disposition": "rewritten",
+    "new_home": "I.16-17; II.37, prospective VI",
+    "reason": "Use Gaussian shared-destination arithmetic and common-path closure; no compulsory single-action restriction."
+  },
+  {
+    "id": "17",
+    "level": 0,
+    "chapter": 17,
+    "title": "From one field to routes, resource accounts, and learning",
+    "pdf_page_start": 195,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.1",
+    "level": 1,
+    "chapter": 17,
+    "title": "One scalar field is a foundation, not the whole economy",
+    "pdf_page_start": 195,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.2",
+    "level": 1,
+    "chapter": 17,
+    "title": "Positive and negative signs are not electric charge",
+    "pdf_page_start": 195,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.3",
+    "level": 1,
+    "chapter": 17,
+    "title": "Long-range need is a path problem",
+    "pdf_page_start": 196,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.4",
+    "level": 1,
+    "chapter": 17,
+    "title": "Worked two-route comparison",
+    "pdf_page_start": 196,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.5",
+    "level": 1,
+    "chapter": 17,
+    "title": "Receipts as an observability layer",
+    "pdf_page_start": 197,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.6",
+    "level": 1,
+    "chapter": 17,
+    "title": "From repeated need to structural change",
+    "pdf_page_start": 197,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.7",
+    "level": 1,
+    "chapter": 17,
+    "title": "Why cooperation may become materially advantageous",
+    "pdf_page_start": 198,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.8",
+    "level": 1,
+    "chapter": 17,
+    "title": "Action-level feedback and culture",
+    "pdf_page_start": 198,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.9",
+    "level": 1,
+    "chapter": 17,
+    "title": "Measurement without unlimited surveillance",
+    "pdf_page_start": 199,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.10",
+    "level": 1,
+    "chapter": 17,
+    "title": "Money during transition",
+    "pdf_page_start": 199,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.11",
+    "level": 1,
+    "chapter": 17,
+    "title": "Misconceptions about composition",
+    "pdf_page_start": 199,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.12",
+    "level": 1,
+    "chapter": 17,
+    "title": "A needs network rather than a catalogue of wants",
+    "pdf_page_start": 200,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.13",
+    "level": 1,
+    "chapter": 17,
+    "title": "How incentives can reshape a network",
+    "pdf_page_start": 201,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.14",
+    "level": 1,
+    "chapter": 17,
+    "title": "Poverty and access are direct design questions",
+    "pdf_page_start": 201,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.15",
+    "level": 1,
+    "chapter": 17,
+    "title": "Competition and cooperation",
+    "pdf_page_start": 201,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.16",
+    "level": 1,
+    "chapter": 17,
+    "title": "Transition scenarios",
+    "pdf_page_start": 202,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.17",
+    "level": 1,
+    "chapter": 17,
+    "title": "Long-range worked path with compounding efficiency",
+    "pdf_page_start": 202,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.18",
+    "level": 1,
+    "chapter": 17,
+    "title": "Why Fermat and Bellman are analogies, not magic",
+    "pdf_page_start": 203,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.19",
+    "level": 1,
+    "chapter": 17,
+    "title": "Needs-first route design",
+    "pdf_page_start": 203,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.20",
+    "level": 1,
+    "chapter": 17,
+    "title": "Structural response scenario",
+    "pdf_page_start": 204,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.21",
+    "level": 1,
+    "chapter": 17,
+    "title": "What to carry forward",
+    "pdf_page_start": 204,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "17.22",
+    "level": 1,
+    "chapter": 17,
+    "title": "Practice and reflection",
+    "pdf_page_start": 204,
+    "disposition": "condensed",
+    "new_home": "I.5, I.18; prospective VII-IX",
+    "reason": "Retain routes, resource boundaries, governance and learning as scoped forward questions, not established benefit."
+  },
+  {
+    "id": "18",
+    "level": 0,
+    "chapter": 18,
+    "title": "Practice studio: reading the Ridge–Vale state",
+    "pdf_page_start": 206,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.1",
+    "level": 1,
+    "chapter": 18,
+    "title": "The physical scene",
+    "pdf_page_start": 206,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.2",
+    "level": 1,
+    "chapter": 18,
+    "title": "Why a vector is written as a column",
+    "pdf_page_start": 207,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.3",
+    "level": 1,
+    "chapter": 18,
+    "title": "The superscript on a tick is not a power",
+    "pdf_page_start": 207,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.4",
+    "level": 1,
+    "chapter": 18,
+    "title": "What transpose means",
+    "pdf_page_start": 208,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.5",
+    "level": 1,
+    "chapter": 18,
+    "title": "The vector of ones and a total-stock question",
+    "pdf_page_start": 209,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.6",
+    "level": 1,
+    "chapter": 18,
+    "title": "A rate is not a quantity",
+    "pdf_page_start": 210,
+    "disposition": "retained and rewritten",
+    "new_home": "I.8, I.15; symbol table",
+    "reason": "Quantity/rate and measurement-interval distinction retained, with a new exact arithmetic example."
+  },
+  {
+    "id": "18.7",
+    "level": 1,
+    "chapter": 18,
+    "title": "Reading an expression aloud",
+    "pdf_page_start": 210,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.8",
+    "level": 1,
+    "chapter": 18,
+    "title": "Common misconceptions",
+    "pdf_page_start": 211,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.9",
+    "level": 1,
+    "chapter": 18,
+    "title": "What to carry forward",
+    "pdf_page_start": 211,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "18.10",
+    "level": 1,
+    "chapter": 18,
+    "title": "Practice and reflection",
+    "pdf_page_start": 211,
+    "disposition": "rewritten",
+    "new_home": "I.8, I.10, symbol table",
+    "reason": "Replace historical Ridge-Vale numbers with declared lossless tank arithmetic; integrate notation in its first use."
+  },
+  {
+    "id": "19",
+    "level": 0,
+    "chapter": 19,
+    "title": "Practice studio: draw the action before calculating it",
+    "pdf_page_start": 213,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.1",
+    "level": 1,
+    "chapter": 19,
+    "title": "Nodes are accountable local cells",
+    "pdf_page_start": 213,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.2",
+    "level": 1,
+    "chapter": 19,
+    "title": "Draw the physical support",
+    "pdf_page_start": 213,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.3",
+    "level": 1,
+    "chapter": 19,
+    "title": "Build the loss ledger from the column",
+    "pdf_page_start": 214,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.4",
+    "level": 1,
+    "chapter": 19,
+    "title": "Add the no-action drive",
+    "pdf_page_start": 215,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.5",
+    "level": 1,
+    "chapter": 19,
+    "title": "Reconstruct total stock change two ways",
+    "pdf_page_start": 216,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.6",
+    "level": 1,
+    "chapter": 19,
+    "title": "Why synchronous order matters",
+    "pdf_page_start": 217,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.7",
+    "level": 1,
+    "chapter": 19,
+    "title": "Action support can be larger than endpoints",
+    "pdf_page_start": 217,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.8",
+    "level": 1,
+    "chapter": 19,
+    "title": "Common misconceptions",
+    "pdf_page_start": 217,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.9",
+    "level": 1,
+    "chapter": 19,
+    "title": "What to carry forward",
+    "pdf_page_start": 217,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "19.10",
+    "level": 1,
+    "chapter": 19,
+    "title": "Practice and reflection",
+    "pdf_page_start": 217,
+    "disposition": "rewritten",
+    "new_home": "I.8-9, I.14-15",
+    "reason": "Integrate action drawing, boundary and units practice; retain detailed lossy and synchronous engine mechanics historically."
+  },
+  {
+    "id": "20",
+    "level": 0,
+    "chapter": 20,
+    "title": "Practice studio: build the homeostatic landscape",
+    "pdf_page_start": 219,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.1",
+    "level": 1,
+    "chapter": 20,
+    "title": "The positive-part switch",
+    "pdf_page_start": 219,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.2",
+    "level": 1,
+    "chapter": 20,
+    "title": "The local three-part potential",
+    "pdf_page_start": 220,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.3",
+    "level": 1,
+    "chapter": 20,
+    "title": "Ridge and Vale do not need identical terms",
+    "pdf_page_start": 220,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.4",
+    "level": 1,
+    "chapter": 20,
+    "title": "Calculate the frozen starting burden",
+    "pdf_page_start": 221,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.5",
+    "level": 1,
+    "chapter": 20,
+    "title": "Calculate the no-action successor",
+    "pdf_page_start": 221,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.6",
+    "level": 1,
+    "chapter": 20,
+    "title": "Calculate the action successor",
+    "pdf_page_start": 222,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.7",
+    "level": 1,
+    "chapter": 20,
+    "title": "See what the reserve term adds",
+    "pdf_page_start": 223,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.8",
+    "level": 1,
+    "chapter": 20,
+    "title": "Why a soft potential is not a hard wall",
+    "pdf_page_start": 223,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.9",
+    "level": 1,
+    "chapter": 20,
+    "title": "Common misconceptions",
+    "pdf_page_start": 223,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.10",
+    "level": 1,
+    "chapter": 20,
+    "title": "What to carry forward",
+    "pdf_page_start": 223,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "20.11",
+    "level": 1,
+    "chapter": 20,
+    "title": "Practice and reflection",
+    "pdf_page_start": 223,
+    "disposition": "rewritten",
+    "new_home": "I.10-12",
+    "reason": "Replace hinge exercises with explicit reference, scale and quadratic calculations; historical exercise preserved."
+  },
+  {
+    "id": "21",
+    "level": 0,
+    "chapter": 21,
+    "title": "Practice studio: from slope to force and flux",
+    "pdf_page_start": 226,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.1",
+    "level": 1,
+    "chapter": 21,
+    "title": "Differentiate one squared hinge",
+    "pdf_page_start": 226,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.2",
+    "level": 1,
+    "chapter": 21,
+    "title": "The complete local marginal",
+    "pdf_page_start": 227,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.3",
+    "level": 1,
+    "chapter": 21,
+    "title": "Calculate Ridge and Vale marginals",
+    "pdf_page_start": 227,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.4",
+    "level": 1,
+    "chapter": 21,
+    "title": "Derive the edge force rather than memorising it",
+    "pdf_page_start": 228,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.5",
+    "level": 1,
+    "chapter": 21,
+    "title": "Calculate the initial force",
+    "pdf_page_start": 228,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.6",
+    "level": 1,
+    "chapter": 21,
+    "title": "Why efficiency changes the decision",
+    "pdf_page_start": 229,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.7",
+    "level": 1,
+    "chapter": 21,
+    "title": "Convert force into the ideal flux",
+    "pdf_page_start": 229,
+    "disposition": "relocated",
+    "new_home": "historical I; II/III and prospective V",
+    "reason": "Domain-specific controller, threshold or numerical machinery excluded from the introductory progression; original scope preserved."
+  },
+  {
+    "id": "21.8",
+    "level": 1,
+    "chapter": 21,
+    "title": "A reserve state reverses the direction",
+    "pdf_page_start": 230,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.9",
+    "level": 1,
+    "chapter": 21,
+    "title": "Force is not the finite quote",
+    "pdf_page_start": 230,
+    "disposition": "retained and rewritten",
+    "new_home": "I.9, I.13, I.15, I.18",
+    "reason": "Preserve the layer-separation or information-boundary limitation explicitly in the new exposition."
+  },
+  {
+    "id": "21.10",
+    "level": 1,
+    "chapter": 21,
+    "title": "Common misconceptions",
+    "pdf_page_start": 231,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.11",
+    "level": 1,
+    "chapter": 21,
+    "title": "What to carry forward",
+    "pdf_page_start": 231,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "21.12",
+    "level": 1,
+    "chapter": 21,
+    "title": "Practice and reflection",
+    "pdf_page_start": 231,
+    "disposition": "rewritten",
+    "new_home": "I.13-14",
+    "reason": "Retain marginal-to-finite reasoning; remove flux law as default action selector."
+  },
+  {
+    "id": "22",
+    "level": 0,
+    "chapter": 22,
+    "title": "Practice studio: rank exact total EBU, not a ratio",
+    "pdf_page_start": 233,
+    "disposition": "omitted from new spine",
+    "new_home": "historical selection-policy example",
+    "reason": "A ranking or maximization policy is not part of EBU measurement; new I.9/18 keep actor choice separate."
+  },
+  {
+    "id": "22.1",
+    "level": 1,
+    "chapter": 22,
+    "title": "Freeze one quote epoch",
+    "pdf_page_start": 233,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.2",
+    "level": 1,
+    "chapter": 22,
+    "title": "Candidate zero: the exact rest branch",
+    "pdf_page_start": 234,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.3",
+    "level": 1,
+    "chapter": 22,
+    "title": "Candidate one: rate q=1X/T",
+    "pdf_page_start": 234,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.4",
+    "level": 1,
+    "chapter": 22,
+    "title": "Candidate two: rate q=2X/T",
+    "pdf_page_start": 236,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.5",
+    "level": 1,
+    "chapter": 22,
+    "title": "Why the ratio tends to favour small actions",
+    "pdf_page_start": 237,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.6",
+    "level": 1,
+    "chapter": 22,
+    "title": "Compare with the linear tangent",
+    "pdf_page_start": 237,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.7",
+    "level": 1,
+    "chapter": 22,
+    "title": "An extended diagnostic schedule",
+    "pdf_page_start": 238,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.8",
+    "level": 1,
+    "chapter": 22,
+    "title": "Physical feasibility comes first",
+    "pdf_page_start": 238,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.9",
+    "level": 1,
+    "chapter": 22,
+    "title": "Common misconceptions",
+    "pdf_page_start": 239,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.10",
+    "level": 1,
+    "chapter": 22,
+    "title": "What to carry forward",
+    "pdf_page_start": 239,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "22.11",
+    "level": 1,
+    "chapter": 22,
+    "title": "Practice and reflection",
+    "pdf_page_start": 239,
+    "disposition": "omitted from new spine",
+    "new_home": "historical I.22; later explicit policy comparison",
+    "reason": "Ranking candidates by EBU or EBU/unit is not the new measurement core. The original studio remains unchanged."
+  },
+  {
+    "id": "23",
+    "level": 0,
+    "chapter": 23,
+    "title": "Practice studio: a medicine route in local epochs",
+    "pdf_page_start": 241,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.1",
+    "level": 1,
+    "chapter": 23,
+    "title": "Declare the three-node cold chain",
+    "pdf_page_start": 241,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.2",
+    "level": 1,
+    "chapter": 23,
+    "title": "Epoch one: Ridge warehouse to the hub",
+    "pdf_page_start": 242,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.3",
+    "level": 1,
+    "chapter": 23,
+    "title": "Epoch two: hub to Vale clinic",
+    "pdf_page_start": 243,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.4",
+    "level": 1,
+    "chapter": 23,
+    "title": "Close the stock route",
+    "pdf_page_start": 244,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.5",
+    "level": 1,
+    "chapter": 23,
+    "title": "Close the EBU route",
+    "pdf_page_start": 245,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.6",
+    "level": 1,
+    "chapter": 23,
+    "title": "The actor-receipt closure, line by line",
+    "pdf_page_start": 245,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.7",
+    "level": 1,
+    "chapter": 23,
+    "title": "Two actors are not a payer and a payee",
+    "pdf_page_start": 247,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.8",
+    "level": 1,
+    "chapter": 23,
+    "title": "Why live order matters",
+    "pdf_page_start": 247,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.9",
+    "level": 1,
+    "chapter": 23,
+    "title": "Route planning and settlement are different",
+    "pdf_page_start": 248,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.10",
+    "level": 1,
+    "chapter": 23,
+    "title": "Need does not disappear when EBU is negative",
+    "pdf_page_start": 248,
+    "disposition": "retained and rewritten",
+    "new_home": "I.9, I.13, I.15, I.18",
+    "reason": "Preserve the layer-separation or information-boundary limitation explicitly in the new exposition."
+  },
+  {
+    "id": "23.11",
+    "level": 1,
+    "chapter": 23,
+    "title": "Common misconceptions",
+    "pdf_page_start": 248,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.12",
+    "level": 1,
+    "chapter": 23,
+    "title": "What to carry forward",
+    "pdf_page_start": 248,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "23.13",
+    "level": 1,
+    "chapter": 23,
+    "title": "Practice and reflection",
+    "pdf_page_start": 248,
+    "disposition": "relocated",
+    "new_home": "historical I.23; prospective VII",
+    "reason": "Detailed medicine route and epoch arithmetic belong in route treatment; retain need/permission separation in I.18."
+  },
+  {
+    "id": "24",
+    "level": 0,
+    "chapter": 24,
+    "title": "Practice studio: several actors at one source",
+    "pdf_page_start": 251,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.1",
+    "level": 1,
+    "chapter": 24,
+    "title": "Begin with a deliberately small counterexample",
+    "pdf_page_start": 251,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.2",
+    "level": 1,
+    "chapter": 24,
+    "title": "Calculate each independent frozen-source view",
+    "pdf_page_start": 252,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.3",
+    "level": 1,
+    "chapter": 24,
+    "title": "Calculate the exact group transformation",
+    "pdf_page_start": 252,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.4",
+    "level": 1,
+    "chapter": 24,
+    "title": "Why additive state change does not imply additive value",
+    "pdf_page_start": 253,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.5",
+    "level": 1,
+    "chapter": 24,
+    "title": "Add the two clinic benefits",
+    "pdf_page_start": 254,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.6",
+    "level": 1,
+    "chapter": 24,
+    "title": "Sequential settlement closes but exposes order",
+    "pdf_page_start": 254,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.7",
+    "level": 1,
+    "chapter": 24,
+    "title": "A symmetric proportional illustration",
+    "pdf_page_start": 255,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.8",
+    "level": 1,
+    "chapter": 24,
+    "title": "Three questions, three mathematical objects",
+    "pdf_page_start": 256,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.9",
+    "level": 1,
+    "chapter": 24,
+    "title": "Return to a physically safe Ridge budget",
+    "pdf_page_start": 256,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.10",
+    "level": 1,
+    "chapter": 24,
+    "title": "The physical cap does not solve EBU allocation",
+    "pdf_page_start": 257,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.11",
+    "level": 1,
+    "chapter": 24,
+    "title": "Actor closure where actions are separable",
+    "pdf_page_start": 257,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.12",
+    "level": 1,
+    "chapter": 24,
+    "title": "A complete reconstruction checklist",
+    "pdf_page_start": 258,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.13",
+    "level": 1,
+    "chapter": 24,
+    "title": "Worked audit: find the first broken line",
+    "pdf_page_start": 259,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.14",
+    "level": 1,
+    "chapter": 24,
+    "title": "Common misconceptions",
+    "pdf_page_start": 259,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.15",
+    "level": 1,
+    "chapter": 24,
+    "title": "Practice solutions for the earlier studios",
+    "pdf_page_start": 260,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.16",
+    "level": 1,
+    "chapter": 24,
+    "title": "What to carry forward",
+    "pdf_page_start": 261,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "24.17",
+    "level": 1,
+    "chapter": 24,
+    "title": "Practice and reflection",
+    "pdf_page_start": 261,
+    "disposition": "rewritten",
+    "new_home": "I.16",
+    "reason": "Consolidate with the group chapter; retain distinction among joint value, attribution and causality."
+  },
+  {
+    "id": "25",
+    "level": 0,
+    "chapter": 25,
+    "title": "Practice studio: run the complete account",
+    "pdf_page_start": 263,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.1",
+    "level": 1,
+    "chapter": 25,
+    "title": "The frozen input card",
+    "pdf_page_start": 263,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.2",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 1: state and graph",
+    "pdf_page_start": 264,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.3",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 2: present burden and slopes",
+    "pdf_page_start": 264,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.4",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 3: ideal force and request",
+    "pdf_page_start": 265,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.5",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 4: permission before value",
+    "pdf_page_start": 266,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.6",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 5: construct the shared no-action state",
+    "pdf_page_start": 266,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.7",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 6: calculate the accepted successor",
+    "pdf_page_start": 266,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.8",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 7: calculate exact total EBU",
+    "pdf_page_start": 267,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.9",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 8: settle measured execution",
+    "pdf_page_start": 268,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.10",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 9: close all three ledgers",
+    "pdf_page_start": 268,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.11",
+    "level": 1,
+    "chapter": 25,
+    "title": "Layer 10: label the evidence correctly",
+    "pdf_page_start": 269,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.12",
+    "level": 1,
+    "chapter": 25,
+    "title": "Common misconceptions",
+    "pdf_page_start": 269,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.13",
+    "level": 1,
+    "chapter": 25,
+    "title": "What to carry forward",
+    "pdf_page_start": 269,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "25.14",
+    "level": 1,
+    "chapter": 25,
+    "title": "Practice and reflection",
+    "pdf_page_start": 269,
+    "disposition": "rewritten",
+    "new_home": "I.14-17; historical I.25 and III",
+    "reason": "Replace engine walkthrough with static exact arithmetic and a worked action record."
+  },
+  {
+    "id": "26",
+    "level": 0,
+    "chapter": 26,
+    "title": "What is established, what failed, and what comes next",
+    "pdf_page_start": 272,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.1",
+    "level": 1,
+    "chapter": 26,
+    "title": "The evidence ladder is part of the theory",
+    "pdf_page_start": 272,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.2",
+    "level": 1,
+    "chapter": 26,
+    "title": "The continuous and discrete foundations",
+    "pdf_page_start": 273,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.3",
+    "level": 1,
+    "chapter": 26,
+    "title": "What V2.9 added",
+    "pdf_page_start": 273,
+    "disposition": "relocated",
+    "new_home": "historical I and III evidence chapters",
+    "reason": "No historical result is relabelled as Gaussian evidence; new I.17 explains the evidence boundary without reproducing result numbers."
+  },
+  {
+    "id": "26.4",
+    "level": 1,
+    "chapter": 26,
+    "title": "What Gate 1 added",
+    "pdf_page_start": 273,
+    "disposition": "relocated",
+    "new_home": "historical I and III evidence chapters",
+    "reason": "No historical result is relabelled as Gaussian evidence; new I.17 explains the evidence boundary without reproducing result numbers."
+  },
+  {
+    "id": "26.5",
+    "level": 1,
+    "chapter": 26,
+    "title": "What O14 measured",
+    "pdf_page_start": 273,
+    "disposition": "relocated",
+    "new_home": "historical I and III evidence chapters",
+    "reason": "No historical result is relabelled as Gaussian evidence; new I.17 explains the evidence boundary without reproducing result numbers."
+  },
+  {
+    "id": "26.6",
+    "level": 1,
+    "chapter": 26,
+    "title": "Why F13 is informative",
+    "pdf_page_start": 274,
+    "disposition": "relocated",
+    "new_home": "historical I and III evidence chapters",
+    "reason": "No historical result is relabelled as Gaussian evidence; new I.17 explains the evidence boundary without reproducing result numbers."
+  },
+  {
+    "id": "26.7",
+    "level": 1,
+    "chapter": 26,
+    "title": "Current law register",
+    "pdf_page_start": 274,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.8",
+    "level": 1,
+    "chapter": 26,
+    "title": "Major open mathematical obligations",
+    "pdf_page_start": 275,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.9",
+    "level": 1,
+    "chapter": 26,
+    "title": "Major empirical and social obligations",
+    "pdf_page_start": 276,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.10",
+    "level": 1,
+    "chapter": 26,
+    "title": "A final worked classification",
+    "pdf_page_start": 276,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.11",
+    "level": 1,
+    "chapter": 26,
+    "title": "The complete conceptual cycle",
+    "pdf_page_start": 276,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.12",
+    "level": 1,
+    "chapter": 26,
+    "title": "Misconceptions to carry no further",
+    "pdf_page_start": 277,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.13",
+    "level": 1,
+    "chapter": 26,
+    "title": "Questions a careful reader is likely to ask",
+    "pdf_page_start": 278,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14",
+    "level": 1,
+    "chapter": 26,
+    "title": "Capstone case: water, medicine, and a failed pump",
+    "pdf_page_start": 282,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.1",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 1: declare the water field",
+    "pdf_page_start": 282,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.2",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 2: derive request and permission",
+    "pdf_page_start": 283,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.3",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 3: calculate the exact quote",
+    "pdf_page_start": 283,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.4",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 4: report service",
+    "pdf_page_start": 284,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.5",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 5: account the repair part separately",
+    "pdf_page_start": 284,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.6",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 6: record two repair contributors",
+    "pdf_page_start": 284,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.7",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 7: preserve provenance",
+    "pdf_page_start": 285,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.14.8",
+    "level": 2,
+    "chapter": 26,
+    "title": "Step 8: learn without rewriting",
+    "pdf_page_start": 285,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.15",
+    "level": 1,
+    "chapter": 26,
+    "title": "Learning outcomes for the complete foundation",
+    "pdf_page_start": 285,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.16",
+    "level": 1,
+    "chapter": 26,
+    "title": "Plain-language dictionary of the complete foundation",
+    "pdf_page_start": 286,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.17",
+    "level": 1,
+    "chapter": 26,
+    "title": "Equation-to-story map",
+    "pdf_page_start": 288,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.18",
+    "level": 1,
+    "chapter": 26,
+    "title": "A compact synthesis of the complete account",
+    "pdf_page_start": 289,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.19",
+    "level": 1,
+    "chapter": 26,
+    "title": "Reader self-audit",
+    "pdf_page_start": 290,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "26.20",
+    "level": 1,
+    "chapter": 26,
+    "title": "What to carry forward",
+    "pdf_page_start": 291,
+    "disposition": "rewritten",
+    "new_home": "I.17-18; glossary and sources",
+    "reason": "Rebuild claim-status explanation; keep historical results in III rather than reproducing or relabelling them."
+  },
+  {
+    "id": "references",
+    "level": 0,
+    "chapter": null,
+    "title": "References and source map",
+    "pdf_page_start": 293,
+    "disposition": "rewritten",
+    "new_home": "new front matter / bibliography",
+    "reason": "New-source provenance, equation-reading guidance, new navigation and verified source map. Rights/scope distinction retained without claiming author acceptance of this candidate."
+  }
+]

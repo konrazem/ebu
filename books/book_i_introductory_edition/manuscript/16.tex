@@ -1,0 +1,89 @@
+\chapter{One action, several actions and the path between states}\label{ch:groups}
+\question{Why does a simultaneous group need one coherent before-and-after account?}
+
+A destination can receive water from more than one source. Each delivery can be measured, yet the value of the pair can differ from the sum of the values calculated for each delivery alone. The difficulty is not necessarily uncertainty about who delivered what. It can arise from the curvature of the declared ruler.
+
+To see it clearly, we use a new three-tank illustration. All references are ten litres and all scales are two litres. The common starting state is $(14,12,4)$ litres, so the total and the reference total are both thirty litres. Each tank has a physical capacity of twenty litres. Action $a$ sends two litres from the first tank to the third. Action $b$ sends two from the second to the third. Both the single actions and their group satisfy these declared constraints.
+
+\section{Calculate the group first}
+The initial potential is
+\begin{equation*}
+ V(14,12,4)=\frac{4^2+2^2+(-6)^2}{8}=7.
+\end{equation*}
+If $a$ happens alone, the endpoint is $(12,12,6)$ and the potential is three, giving value four. If $b$ happens alone, the endpoint is $(14,10,6)$ and the potential is four, giving value three. These are two alternative singleton calculations against the same start.
+
+If both actions happen, their joint endpoint is $(12,10,8)$, with potential one. The exact group field value is $7-1=6$, not $4+3=7$. The singleton sum has claimed one unit too much. Both singleton calculations included the earlier, steeper portion of the destination's relief.
+
+\illustration{group}{Schematic with exact arithmetic: two two-litre actions share one destination. Singleton alternatives from $(14,12,4)$ have values four and three; their joint endpoint has value six. No time evolution or experimental outcome is plotted.}{fig:group}
+
+This example uses zero separate process burden. Subtracting correctly declared costs from both sides would not by itself repair a duplicated field contribution. The joint field difference has to be right first.
+
+\section{The algebra of shared change}
+For fixed additive actions, let $\delta x_a$ be the increment of child $a$ and define
+\begin{equation}\label{eq:group}
+ \delta x_G=\sum_{a\in G}\delta x_a,\qquad
+ E_G=V(z)-V(z+\delta x_G).
+\end{equation}
+The set $G$ is the group. All increments use the same frozen baseline $z$, the same fixed potential and the declared joint action map. Additivity is an assumption about those physical increments, not a universal property of arbitrary processes.
+
+Expanding the quadratic for two actions gives
+\begin{equation}\label{eq:cross}
+ E_{\{a,b\}}=E_a^{(0)}+E_b^{(0)}
+ -\delta x_a^{\mathsf T}H\delta x_b.
+\end{equation}
+The superscript $(0)$ means a singleton value evaluated against the common start, not the state left by another action. The cross term measures the shared curvature contribution. It is dimensionless, because the two increments have stock units and $H$ has inverse-square-stock units.
+
+In our example, the two increments are $(-2,0,2)$ and $(0,-2,2)$ litres. With $H$ equal to one quarter on each diagonal in inverse-square-litres, their cross term is one. That accounts exactly for $6=4+3-1$.
+
+The correction need not always have this sign. Opposing increments can cancel and yield a negative cross term. For actions on disjoint coordinates in this diagonal model, the cross term is zero and singleton field values add. If a later potential couples coordinates, physical disjointness alone need not ensure disjoint potential support.
+
+These are facts about the specified increments and potential. If a resolver changes action quantities depending on which companions are present, one must evaluate the resulting actual joint map. It would be wrong to reuse a fixed-increment proof after changing its inputs.
+
+\section{What a path integral means}
+An integral adds continuously varying small contributions. For our purpose, imagine a straight interpolation from the starting state to the joint endpoint:
+\begin{equation*}
+ y(\lambda)=z+\lambda\delta x_G,\qquad 0\leq\lambda\leq1.
+\end{equation*}
+The dimensionless parameter $\lambda$ marks a fraction of the whole change. Zero is the start, one is the endpoint. It is not automatically clock time.
+
+The symbol $\nabla V$ means the gradient: the list of partial derivatives of $V$, equal to $\mu$ here. The rate of change of $V(y(\lambda))$ with respect to $\lambda$ is $\nabla V(y(\lambda))^{\mathsf T}\delta x_G$. Adding that rate along the complete path recovers the endpoint change. This is the fundamental theorem of calculus applied to the composed function. Reversing the sign gives
+\begin{equation}\label{eq:path}
+ E_G=-\int_0^1\nabla V(z+\lambda\delta x_G)^{\mathsf T}
+                  \delta x_G\,d\lambda.
+\end{equation}
+It holds for a fixed continuously differentiable potential along the declared path. The integral and endpoint difference are two exact expressions for the same field value. Process burden, when present, must be accounted separately.\cite{foundation,gaussian}
+
+For one transfer of quantity $q$, the same idea reads $E_e(q)=\int_0^q f_e(z+sS_e)\,ds$. The variable $s$ has stock units. Instead of multiplying all units by the initial field, the integral adds the changing field across the quantity interval. In the quadratic case it reproduces the finite correction from Chapter~\ref{ch:finite}.
+
+\section{A common-path attribution}
+Once the common straight path is declared, we can define a mathematical contribution for each fixed child increment:
+\begin{align}
+ R_a&=-\int_0^1\nabla V(z+\lambda\delta x_G)^{\mathsf T}
+                 \delta x_a\,d\lambda\label{eq:attribution}\\
+ &=-\mu(z)^{\mathsf T}\delta x_a
+   -\frac12\delta x_a^{\mathsf T}H\delta x_G.\nonumber
+\end{align}
+The second line uses the quadratic gradient $\mu(z)+\lambda H\delta x_G$ and the fact that the integral of $\lambda$ from zero to one is one half. $R_a$ has the same account unit as $E_G$ and can be positive, zero or negative. The subscript labels an action, not a legal owner.
+
+Add the first line over all children. The sum of their increments is $\delta x_G$, so linearity of multiplication and integration gives
+\begin{equation}\label{eq:closure}
+ \sum_{a\in G}R_a=E_G\qquad(C_G=0).
+\end{equation}
+This is exact mathematical closure under the stated assumptions. It is an Aumann--Shapley-type common-path marginal construction, a relationship already acknowledged in the historical foundation. It is not made unrelated to established allocation mathematics by giving its lines a new name.\cite{foundation,gaussian}
+
+For the three-tank example, the initial marginals are $(1,0.5,-1.5)$ inverse litres. The initial linear contributions are five for $a$ and four for $b$. Each has a common-path curvature subtraction of $1.5$, giving $R_a=3.5$ and $R_b=2.5$. Their sum is six, the exact group total.
+
+\section{Closure is not entitlement}
+The straight line could describe a physical constant-rate action-time model, but only if that model is explicitly declared and physically valid. If only endpoints are specified, it is an interpolation convention for accounting. The arithmetic is the same; the interpretation is not.
+
+Stock nonnegativity and upper capacities form a convex domain, so a straight segment between feasible endpoints remains within those particular bounds. That observation does not prove that real pipes, timing, intermediate stores or other action constraints realise the segment. A physically possible endpoint is not a complete physical history.
+
+Nor does closure show that $3.5$ and $2.5$ are unique causal contributions, fair shares, legal property or permission to spend. An ownership map, an institutional allocation rule and a capacity policy are additional declarations. Identifying actual causal contributions requires the appropriate intervention or causal model, not merely an integral that sums correctly.
+
+For comparison, if $a$ physically precedes $b$, its field value is four and the later value of $b$ is two. In the opposite order, $b$ gets three and the later $a$ gets three. Each sequence totals six because it reaches the same endpoint under fixed quantities. Different line allocations do not contradict the endpoint identity. They reveal different conventions or histories.
+
+If real ordering changes feasibility, duration or the final state, the comparison must name those changes. ``Sequential'' cannot be an unnamed universal alternative. The historical sequential-parallel bridge makes that comparison discipline explicit.\cite{bridge}
+
+\practice{At the reference, two ideal increments are exact opposites. What are the group's net increment and field value?}{The net increment is zero and the field value is zero. Each nonzero singleton would have negative value at the reference. Real resource use, wear or losses cannot be erased by cancellation of the displayed stock change; they would need representation in a more complete account.}
+
+\carry{We can account for simultaneous groups without imposing a single-action world. Next we collect the exact conclusions, including sequences and cycles, and distinguish them from claims about recovery.}

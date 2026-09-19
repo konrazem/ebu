@@ -1,0 +1,167 @@
+\chapter{Studio: build the Gaussian landscape}\label{ch:studio-potential}
+
+\begin{intuitionbox}{Physical picture: give distance a declared scale}
+Ridge has eighteen units where the teaching reference is ten. Vale has two where its reference is also ten. These are equal departures in opposite directions. A Gaussian landscape begins by measuring each departure in a declared local scale, then squaring and adding. The shape is simple enough to inspect completely, which makes its assumptions especially visible.
+\end{intuitionbox}
+
+The stock account has already told us what exists and what can move. It has not said how a distribution should be evaluated. This studio supplies a declared evaluation function and shows what follows from it. The reference is part of the model's functional hypothesis; a real application would need evidence and public justification for that hypothesis. Nothing in the name Gaussian chooses the right reference for a clinic.
+
+We retain the two-cell world with total \(20\X\), reference \(x^*=(10,10)^{\mathsf T}\X\), and positive scales \(\sigma_R=\sigma_V=2\X\). These numbers are fixed throughout a comparison. When an exercise changes one of them, it will say so. We assume no independent process burden for the ideal transfers, so \(C=0\).
+
+\section{Construct one local contribution slowly}
+
+For cell \(i\), define
+\begin{equation}
+V_i(x_i)=\frac12\left(\frac{x_i-x_i^*}{\sigma_i}\right)^2.
+\end{equation}
+Read the operations in their physical order. First subtract the reference from the present stock. Next divide by a stock scale. Then square the dimensionless displacement. Finally multiply by one half. The order matters: squaring the stock before subtracting the reference would define another function.
+
+At Ridge,
+\begin{align}
+x_R-x_R^*&=18-10=8\X,\\
+\frac{x_R-x_R^*}{\sigma_R}&=\frac{8\X}{2\X}=4,\\
+V_R(18)&=\frac12(4)^2=8.
+\end{align}
+At Vale,
+\begin{align}
+x_V-x_V^*&=2-10=-8\X,\\
+\frac{x_V-x_V^*}{\sigma_V}&=-4,\\
+V_V(2)&=\frac12(-4)^2=8.
+\end{align}
+The local contributions are equal, but the physical conditions are opposite. Ridge is above reference and Vale below. The sum
+\begin{equation}
+V(z)=V_R(18)+V_V(2)=16
+\end{equation}
+records total standardized squared deviation. It is dimensionless. It is not twenty stock units, sixteen joules, or a direct measurement of sixteen units of suffering.
+
+\section{Why the square is there}
+
+A signed sum of deviations would be zero at our starting state: \(8+(-8)=0\). That cancellation would conceal the distributional mismatch that this model was designed to represent. Squaring makes both deviations contribute positively. A state has zero potential only when every included deviation is zero, since every scale is strictly positive.
+
+Squaring also makes larger departures more costly at an increasing rate. With scale two, a displacement of two gives contribution \(1/2\), a displacement of four gives two, and a displacement of eight gives eight. Doubling the departure multiplies its contribution by four. This is a modelling choice with mathematical consequences; it is not an experimentally established universal response curve for every living system.
+
+The factor one half simplifies derivatives. It is not essential to the location of the minimum. Removing it would double every potential, marginal, and finite field value. That change could be handled consistently, but a receipt must identify which convention it used. Mixing conventions between the before and after sides would destroy the intended comparison.
+
+\section{Calculate several complete states}
+
+Keep the mass twenty and evaluate the following distributions:
+\begin{center}
+\begin{tabular}{P{0.26\linewidth}P{0.18\linewidth}P{0.18\linewidth}P{0.17\linewidth}}
+\toprule
+State & Ridge term & Vale term & Total \(V\)\\
+\midrule
+\((18,2)\) & \(8\) & \(8\) & \(16\)\\
+\((16,4)\) & \(4.5\) & \(4.5\) & \(9\)\\
+\((14,6)\) & \(2\) & \(2\) & \(4\)\\
+\((12,8)\) & \(0.5\) & \(0.5\) & \(1\)\\
+\((10,10)\) & \(0\) & \(0\) & \(0\)\\
+\((2,18)\) & \(8\) & \(8\) & \(16\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+Every row describes the same total stock. The potential changes because distribution changes. The final row has the same potential as the first, although Ridge and Vale exchange their positions relative to reference. Equality of scalar value is weaker than equality of state.
+
+Do not interpret the table as a sequence that a controller has produced. It is a set of declared states evaluated under one formula. The table tells us how the landscape is shaped. To obtain a history, we would need available actions, a selection rule, permission, and actual events. The potential does not move any stock by being evaluated.
+
+\section{Follow the conservation line}
+
+Write a two-cell state with total twenty as \((10+d,10-d)\), where \(-10\le d\le10\) in stock units. Substituting gives
+\begin{align}
+V(d)&=\frac{(d)^2}{8}+\frac{(-d)^2}{8}\\
+&=\frac{d^2}{4}.
+\end{align}
+The minimum lies at \(d=0\), which is the reference. Both ends of the physical line, \((20,0)\) and \((0,20)\), have potential twenty-five. On this closed line the potential cannot diverge to infinity: the domain itself is bounded.
+
+This matters for later scientific claims. Showing that a simulated history remains bounded in this finite closed model would not by itself establish a special stabilizing benefit of EBU. The model's nonnegative fixed-mass domain already supplies boundedness. More informative questions concern where time is spent, whether the reference is approached, how often actions are refused, and what cycles occur. None is answered by the table alone.
+
+\section{Why the word Gaussian is appropriate, and limited}
+
+Consider the positive shape
+\begin{equation}
+g_i(x_i)=\exp\!\left[-\frac12\left(\frac{x_i-x_i^*}{\sigma_i}\right)^2\right].
+\end{equation}
+It is highest at the reference and decreases symmetrically away from it. Taking its negative logarithm gives \(-\log g_i=V_i\). The potential is thus the relative negative logarithm of a Gaussian-shaped reference function, with its minimum set to zero.
+
+This observation explains a geometry. It does not prove that actual clinic stocks are normally distributed. A probability density would need a domain and normalization, and an empirical distribution would need observations. In our conserved model the coordinates are coupled by their fixed sum. One cannot independently draw an arbitrary Ridge stock and an arbitrary Vale stock while also insisting that they sum to twenty.
+
+Nor does the shape imply a restoring process. A ball on a physical surface has dynamics involving forces and constraints. Our landscape is an evaluation function until a separate actor or plant law is supplied. Reading a Gaussian curve as an automatic homeostatic mechanism would insert precisely the behaviour that the research programme needs to investigate.
+
+\section{Change a scale and watch what it changes}
+
+For this section, retain reference ten at each cell but change Ridge's scale to four while Vale's remains two. The starting state stays \((18,2)\). Ridge's contribution becomes
+\begin{equation}
+V_R(18)=\frac12(8/4)^2=2,
+\end{equation}
+while Vale's remains eight. The total is ten. After a four-unit transfer, the state is still \((14,6)\), because changing a scale moves no stock. Its potential is
+\begin{equation}
+\frac12(4/4)^2+\frac12(-4/2)^2=0.5+2=2.5.
+\end{equation}
+The field reduction is therefore \(7.5\), rather than twelve in the equal-scale example.
+
+A wider scale assigns less potential to a given displacement and a smaller marginal magnitude at that displacement. This is why scales must be justified instead of chosen to make a preferred action look good. Calling \(\sigma\) a standard deviation without evidence does not provide that justification. Here it is a declared stock scale. Measurement uncertainty is another issue and should not be silently substituted for functional sensitivity.
+
+Return to scale two at both cells after this comparison. A clear worksheet writes the changed assumptions beside each example, so that arithmetic from one landscape is not carried into another unnoticed.
+
+\section{Change a reference without changing the world}
+
+Now consider reference \((12,8)^{\mathsf T}\X\), again with both scales two. It is mass-compatible. At actual state \((18,2)\), the deviations are six and minus six, giving total potential nine. At \((14,6)\), the deviations are two and minus two, giving total potential one. The same four-unit physical transfer has field reduction eight under this changed reference.
+
+The difference from twelve is not an arithmetic conflict. Different functional references define different questions. A responsible account must disclose the reference and preserve its version. If society later revises what the reference should be, the change should be documented as a change of evaluation, with its own consequences for historical comparisons.
+
+An incompatible reference creates another issue. If references sum to twenty-two while the closed system holds twenty, all coordinates cannot reach their references simultaneously. One could still define a mathematical potential, but the claim that zero is reachable by internal redistribution would fail. Our main model avoids that conflict by requiring compatible total reference mass.
+
+\section{A soft landscape and a physical boundary}
+
+The Gaussian potential assigns values even to some numerical vectors that violate the physical domain. For instance, substitution at \((-1,21)\) is algebraically possible, but the negative stock is forbidden in our world. A formula's ability to return a number does not authorize its input as a physical state.
+
+The same principle holds for route caps. A transfer of eight from \((18,2)\) reaches the reference and gives the largest field reduction along that edge. If the route can carry only six in an action, eight is unavailable in that action. The potential does not enlarge the pipe. Keep domain constraints outside the evaluation formula and check them before interpreting a quoted candidate as selectable.
+
+\begin{cautionbox}{A small potential is a scoped statement}
+Small \(V\) means small standardized deviation in the coordinates and references that have been declared. It does not establish that every relevant need is represented, that a state is clinically safe, or that the reference is ethically sufficient. Those claims need their own evidence. The benefit of an explicit landscape is that its scope can be examined.
+\end{cautionbox}
+
+\section{Practice problems}
+
+\begin{enumerate}
+\item Using the base reference and scales, calculate both local terms and total potential at \((15,5)\), \((11,9)\), and \((0,20)\).
+\item At a single cell with reference ten and scale two, compare the contributions at stocks seven and thirteen. What information is lost when their equal values replace their states?
+\item Keep \((18,2)\), but use scales one and two at Ridge and Vale respectively. Calculate the total and compare it with sixteen.
+\item With base scales, use reference \((14,6)\). Calculate the field reduction of the transfer from \((18,2)\) to \((14,6)\).
+\item A modeller replaces \(V\) by \(1-\exp(-V)\). Is this merely another notation for the same finite field differences?
+\item Explain why \(V=0\) at \((10,10)\) neither consumes nor creates the total twenty units.
+\item A report says, ``The bell shape proves that repeated random action returns the clinic to ten.'' Identify the missing argument.
+\end{enumerate}
+
+\section{Worked answers}
+
+At \((15,5)\), each displacement has magnitude five. Each contribution is \(25/8=3.125\), so the total is \(6.25\). At \((11,9)\), each contribution is \(1/8=0.125\), total \(0.25\). At \((0,20)\), each is \(100/8=12.5\), total twenty-five. All three states conserve twenty units; their potentials are different evaluations of their distributions.
+
+Stocks seven and thirteen are three units below and above reference. Both contributions are \(9/8=1.125\). Their signs and therefore their local directions of improvement are lost if the state is discarded. A receipt should retain enough information to recover the distinction.
+
+With Ridge scale one, its contribution at eighteen is \(64/2=32\). Vale still contributes eight, total forty. This is a stronger declared sensitivity to Ridge deviation, not additional physical stock. With reference \((14,6)\), the original state has two displacements of magnitude four, total four. The successor is the new reference and has zero, giving field reduction four.
+
+The exponential replacement changes the finite differences. From potential sixteen to four, the original reduction is twelve. The transformed difference is \(\exp(-4)-\exp(-16)\), which is a different number and has different marginal sensitivity. A monotone transformation preserves state ordering but generally changes differences. EBU is built from differences, so the choice matters.
+
+Zero potential in the sixth question means that both present stocks equal their references. The physical total remains twenty. In the final question, a shape has been mistaken for a dynamics theorem. A law of action, a feasible menu, and a proof or registered study of the resulting process are needed. Random choice can include movements away from the reference, and permission may restrict the available return path.
+
+\section{A reference is not necessarily an empirical average}
+
+Suppose repeated observations at a clinic had arithmetic mean six units. It would not follow that six is the correct functional reference. The clinic might repeatedly be under-supplied. Conversely, a desired reference ten would not prove that ten is its historical average. An observational summary and a functional specification can agree, but they answer different questions.
+
+The same care applies to the scale. A measured standard deviation of two units describes variation in an observed series under its sampling conditions. A declared functional scale of two units describes how the potential weights displacement. Using the same number for both purposes would need an argument. Without one, the shared symbol could conceal a change of meaning.
+
+This does not make reference selection arbitrary. It makes its justification part of the model rather than an automatic consequence of a familiar probability curve. One may use physiological evidence, service requirements, engineering analysis, or a public decision procedure where appropriate. The resulting assumptions should be recorded in a form that another reader can challenge and revise transparently.
+
+\section{Equal raw stocks can have unequal marginal significance}
+
+Consider a changed three-cell example with stocks \((8,8,8)\), reference \((10,6,8)\), and scales two throughout. Both stock and reference totals are twenty-four. The actual stocks are equal, but the deviations are \((-2,2,0)\). Local potentials are \(0.5,0.5,0\), and the marginals are \((-0.5,0.5,0)\) in inverse-stock units.
+
+A lossless two-unit transfer from the second cell to the first reaches the reference and lowers potential by one. A rule based only on equality of raw stocks would see no imbalance. The declared functional reference sees a difference because the cells have different roles. Whether those roles justify references ten and six is a separate substantive question, but the arithmetic is clear once they are supplied.
+
+If the first cell's scale changes from two to four, its initial contribution falls from \(0.5\) to \(0.125\). The second still contributes \(0.5\), total \(0.625\). Reaching the same reference now has field value \(0.625\). Once again the physical transfer is unchanged and the evaluation differs. This is why a report should publish the field definition rather than only the final EBU number.
+
+An important limit remains. Unequal references can encode functional differences, but they can also encode poor assumptions or unjustified preferences. Mathematical consistency does not certify their legitimacy. The Gaussian construction makes such choices inspectable; it does not relieve the modeller of responsibility for them.
+
+\section{Carry the construction into the next studio}
+
+The landscape is now more than a name. You have constructed its local contributions, checked its units, followed the fixed-mass line, and seen how scales and references change its meaning. The next task is to differentiate it and compare a starting slope with a complete finite movement. That comparison will show why the exact EBU equation contains curvature even when the physical increment is as simple as four units along one edge.

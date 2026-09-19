@@ -1,0 +1,44 @@
+\chapter{Why a reference is necessary}\label{ch:reference}
+\question{Relative to what does a measured change count as improvement?}
+
+Three litres moved. That statement describes a physical quantity. It does not yet tell us whether the move improved the represented condition. A full tank may have needed relief, or it may have held a necessary reserve. The destination may have needed water, or it may already have been too full. A direction alone does not supply the criterion.
+
+A reference makes the comparison explicit. It says which stock at each cell anchors the ruler. We write the reference at cell $i$ as $x_i^\star$, pronounced ``x i star''. The star is a label for the declared reference, not multiplication and not a proof that the value is optimal.
+
+\section{A compatible reference}
+For the two-tank illustration, choose ten litres at Ridge and ten at Vale. The total reference is twenty litres, matching the total available water. These are teaching choices, not calibrated operating recommendations for a real clinic.
+
+For a closed world with fixed total $M$, a physically compatible reference must satisfy
+\begin{equation}\label{eq:compatibility}
+ x_i^\star\geq0,\qquad \sum_i x_i^\star=M.
+\end{equation}
+If a cell has a declared physical storage capacity $K_i$, it must also satisfy $x_i^\star\leq K_i$. All these quantities use the resource's stock unit. The conditions ensure that the reference does not demand negative stock, an unavailable total or a physically impossible volume at one cell.
+
+Compatibility is necessary for reaching the reference in this domain, but it is not enough. A disconnected pipe network might prevent water reaching a tank. A directed route might allow transfer only the wrong way. A restricted action menu might omit the required quantities. A minimum on paper cannot create a missing route.
+
+A reference need not assign equal stocks to all cells. Different roles may justify different values. This book uses equal values so that the arithmetic is easy to follow. Equality here is an illustrative symmetry, not a theorem about fair allocation.
+
+\section{A scale says how to read a displacement}
+We also declare a positive scale $\sigma_i$, pronounced ``sigma i'', in the same stock unit. The scale tells us how large a displacement is in the ruler's own terms.
+
+A two-litre displacement is one scale unit when $\sigma_i=2\ \mathrm{L}$, but two scale units when $\sigma_i=1\ \mathrm{L}$. The water did not change when the scale changed. The representation changed. Any scientific or institutional use of that difference needs a justification for the scale.
+
+In our recurring example, both scales are two litres. Ridge's displacement from reference is $14-10=4\ \mathrm{L}$; Vale's is $6-10=-4\ \mathrm{L}$. Dividing each by its scale gives $+2$ and $-2$, dimensionless numbers. The sign says which side of the reference the stock occupies.
+
+The scale is not automatically a tolerance, a safety margin, a measurement error or an observed standard deviation. It may be given one of those interpretations in a separately justified model, but its notation does not establish that interpretation. A positive scale is required because dividing by zero would leave the ruler undefined.
+
+\section{Who chooses the ruler?}
+For an application, the modeller needs a basis for the reference and scale: domain evidence, the intended function, a measurement method, uncertainty and a procedure for review. If the declaration affects rights or access, governance must also be explicit.
+
+A measured historical mean is not automatically a desirable reference. A system might have spent years in a deficient condition. Nor does a preferred reference automatically describe what its dynamics will maintain. Chapter~\ref{ch:balance} already separated a declared mark from an equilibrium.
+
+Versions matter. An action evaluated under one ruler must not be quietly re-evaluated under another because the second yields a preferred sign. If evidence justifies changing the model, old records retain their original declaration and the new version applies prospectively under declared rules. A reference is part of the account's identity.
+
+\section{What this choice leaves open}
+The simple Gaussian construction will penalise displacement in both directions. That makes a transparent teaching ruler, but real systems may have asymmetric risks, viable ranges or thresholds. Such structures need other justified potentials. Introducing this quadratic does not invalidate the historical threshold family or declare nature universally quadratic.
+
+Normalising several quantities also does not establish an ethical exchange rate between them. Dividing water by a water scale and medicine by a medicine scale does not prove that their scores may be combined into one universal welfare number.
+
+\practice{There are twenty litres, but the proposed reference is twelve litres in each of two tanks. What is wrong?}{The reference requires twenty-four litres. Its zero-deviation state is unavailable in the closed twenty-litre domain. A calculation can still evaluate displacements from it, but describing zero deviation as a physically compatible target would be false.}
+
+\carry{With a declared reference and positive scale, we can build a simple ruler. The next chapter explains every operation before giving that ruler its Gaussian name.}

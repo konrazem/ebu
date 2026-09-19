@@ -1,0 +1,73 @@
+\chapter{An exact evaluator and a trustworthy quote}\label{ch:evaluator}
+An evaluator's task is narrow: given a declared baseline and accepted finite
+action, return the corresponding value without moving the model. A narrow
+task is easier to audit because unexpected side effects have no legitimate
+place to hide.
+
+\section{Independent arithmetic routes}
+For the Gaussian domain, two direct routes should agree:
+\begin{align}
+ E_G&=V(z)-V(z+\delta_G),\\
+ E_G&=-\mu(z)^T\delta_G-\tfrac12\delta_G^TH\delta_G.
+\end{align}
+Local affected-factor evaluation provides a third comparison with the full
+diagnostic difference. These routes share a mathematical specification but
+can expose different implementation mistakes: wrong signs, omitted curvature,
+incomplete support or a stale baseline.
+
+A test that compares a function with another call to the same function is
+not an independent check. A fixed rational example with an independently
+written expected value is often more revealing than thousands of repeated
+calls through one mistaken helper.
+
+\section{Exact algebra and numerical representation}
+The formula is exact mathematics. Floating-point evaluation is not exact
+real arithmetic. A future protocol must specify whether representation is
+rational, fixed-point or floating-point, and what refusal or tolerance rules
+apply near zero, affordability and conservation boundaries.
+
+Reporting a residual of zero on selected fixtures does not prove all real
+inputs will produce exact machine zero. Conversely, choosing a convenient
+tolerance after observing a failure can weaken the scientific contract.
+The numerical policy must be fixed before outcomes can influence it.
+
+\section{Value, attribution and settlement have different outputs}
+The group value is a single field difference. A common-path evaluator can
+add $R_a$ for each child and verify $\sum_aR_a=E_G$. A settlement service
+would additionally require an accepted owner/policy map and a valid event
+identity. Combining all three in one return value called reward invites
+the caller to assume an authority that the evaluator never established.
+
+The preserved candidate code already distinguishes physical constant-rate
+path semantics from endpoint interpolation. That distinction is reusable
+as an idea. Its mere presence in a candidate module does not authorize
+spendable Gaussian capacity or prove every interpretation guard sufficient.
+
+\section{A quote must describe what was accepted}
+For a one-dimensional accepted schedule, the record can identify the full
+function on its accepted domain. A measured shortfall can select a point
+on that precommitted function. For a simultaneous group, changing one child
+may alter every path attribution. The applicable multidimensional or
+re-epoching contract must therefore be declared rather than extrapolated
+from the simplest single-action schedule.
+
+An overshoot outside a committed domain is a protocol violation. It does
+not justify an improvised positive credit, nor an arbitrary punishment
+presented as physical EBU. Physical measurement, account calculation and
+sanctions remain separate questions.
+
+\section*{Worked evaluator audit}
+At $(18,2)$, reference $(10,10)$, scales $(2,2)$ and quantity four,
+the endpoint is $(14,6)$. The potential route gives $16-4=12$.
+The tangent is sixteen and the curvature correction four, again giving
+twelve. A returned value of sixteen suggests the finite evaluator has
+silently become a first-order approximation. A returned value of fourteen
+for two two-unit children suggests independent singleton values were added.
+
+Neither error is cured by increasing decimal precision. The wrong
+mathematical object was computed.
+
+\section*{Chapter recap}
+Exact evaluation needs a complete baseline, support, increment and numerical
+policy. A successful calculation is not permission to execute, and a closing
+decomposition is not authorization to credit an owner.

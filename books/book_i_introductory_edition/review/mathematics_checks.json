@@ -1,0 +1,523 @@
+{
+  "scope": "Static exact arithmetic and polynomial coefficients only; no scientific model imports, transitions, simulations, random draws or parameter searches.",
+  "passed": true,
+  "count": 86,
+  "checks": [
+    {
+      "check": "quantity = 2 L/min times 1.5 min",
+      "actual": "3",
+      "expected": "3",
+      "passed": true
+    },
+    {
+      "check": "two-tank starting total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "two-tank displayed endpoint total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "two-tank reference mass",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "incompatible 12/12 target exceeds available total",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "one-cell score at 14 L, scale 2 L",
+      "actual": "2",
+      "expected": "2",
+      "passed": true
+    },
+    {
+      "check": "one-cell score at 14 L, scale 4 L",
+      "actual": "1/2",
+      "expected": "1/2",
+      "passed": true
+    },
+    {
+      "check": "local scores at 8,10,12 L",
+      "actual": "(Fraction(1, 2), Fraction(0, 1), Fraction(1, 2))",
+      "expected": "(Fraction(1, 2), Fraction(0, 1), Fraction(1, 2))",
+      "passed": true
+    },
+    {
+      "check": "two-tank initial potential",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "two-tank 18/2 potential",
+      "actual": "16",
+      "expected": "16",
+      "passed": true
+    },
+    {
+      "check": "table q=0: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=0: potential",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "table q=0: endpoint difference",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "table q=0: quadratic expression",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "table q=0: source/destination arithmetic",
+      "actual": "(14, 6)",
+      "expected": "(14, 6)",
+      "passed": true
+    },
+    {
+      "check": "table q=0: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "table q=1: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=1: potential",
+      "actual": "9/4",
+      "expected": "9/4",
+      "passed": true
+    },
+    {
+      "check": "table q=1: endpoint difference",
+      "actual": "7/4",
+      "expected": "7/4",
+      "passed": true
+    },
+    {
+      "check": "table q=1: quadratic expression",
+      "actual": "7/4",
+      "expected": "7/4",
+      "passed": true
+    },
+    {
+      "check": "table q=1: source/destination arithmetic",
+      "actual": "(13, 7)",
+      "expected": "(13, 7)",
+      "passed": true
+    },
+    {
+      "check": "table q=1: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "table q=3: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=3: potential",
+      "actual": "1/4",
+      "expected": "1/4",
+      "passed": true
+    },
+    {
+      "check": "table q=3: endpoint difference",
+      "actual": "15/4",
+      "expected": "15/4",
+      "passed": true
+    },
+    {
+      "check": "table q=3: quadratic expression",
+      "actual": "15/4",
+      "expected": "15/4",
+      "passed": true
+    },
+    {
+      "check": "table q=3: source/destination arithmetic",
+      "actual": "(11, 9)",
+      "expected": "(11, 9)",
+      "passed": true
+    },
+    {
+      "check": "table q=3: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "table q=4: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=4: potential",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "table q=4: endpoint difference",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "table q=4: quadratic expression",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "table q=4: source/destination arithmetic",
+      "actual": "(10, 10)",
+      "expected": "(10, 10)",
+      "passed": true
+    },
+    {
+      "check": "table q=4: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "table q=6: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=6: potential",
+      "actual": "1",
+      "expected": "1",
+      "passed": true
+    },
+    {
+      "check": "table q=6: endpoint difference",
+      "actual": "3",
+      "expected": "3",
+      "passed": true
+    },
+    {
+      "check": "table q=6: quadratic expression",
+      "actual": "3",
+      "expected": "3",
+      "passed": true
+    },
+    {
+      "check": "table q=6: source/destination arithmetic",
+      "actual": "(8, 12)",
+      "expected": "(8, 12)",
+      "passed": true
+    },
+    {
+      "check": "table q=6: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "table q=8: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=8: potential",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "table q=8: endpoint difference",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "table q=8: quadratic expression",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "table q=8: source/destination arithmetic",
+      "actual": "(6, 14)",
+      "expected": "(6, 14)",
+      "passed": true
+    },
+    {
+      "check": "table q=8: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "table q=9: physical total",
+      "actual": "20",
+      "expected": "20",
+      "passed": true
+    },
+    {
+      "check": "table q=9: potential",
+      "actual": "25/4",
+      "expected": "25/4",
+      "passed": true
+    },
+    {
+      "check": "table q=9: endpoint difference",
+      "actual": "-9/4",
+      "expected": "-9/4",
+      "passed": true
+    },
+    {
+      "check": "table q=9: quadratic expression",
+      "actual": "-9/4",
+      "expected": "-9/4",
+      "passed": true
+    },
+    {
+      "check": "table q=9: source/destination arithmetic",
+      "actual": "(5, 15)",
+      "expected": "(5, 15)",
+      "passed": true
+    },
+    {
+      "check": "table q=9: capacity bounds",
+      "actual": "True",
+      "expected": "True",
+      "passed": true
+    },
+    {
+      "check": "three-litre initial marginal prediction",
+      "actual": "6",
+      "expected": "6",
+      "passed": true
+    },
+    {
+      "check": "three-litre curvature correction",
+      "actual": "9/4",
+      "expected": "9/4",
+      "passed": true
+    },
+    {
+      "check": "departure from reference",
+      "actual": "-1/4",
+      "expected": "-1/4",
+      "passed": true
+    },
+    {
+      "check": "four-cell initial value",
+      "actual": "5",
+      "expected": "5",
+      "passed": true
+    },
+    {
+      "check": "four-cell endpoint value",
+      "actual": "5/4",
+      "expected": "5/4",
+      "passed": true
+    },
+    {
+      "check": "affected support cancellation",
+      "actual": "15/4",
+      "expected": "15/4",
+      "passed": true
+    },
+    {
+      "check": "marginal at Ridge",
+      "actual": "1",
+      "expected": "1",
+      "passed": true
+    },
+    {
+      "check": "marginal at Vale",
+      "actual": "-1",
+      "expected": "-1",
+      "passed": true
+    },
+    {
+      "check": "local sensitivity example",
+      "actual": "-79/800",
+      "expected": "-79/800",
+      "passed": true
+    },
+    {
+      "check": "group reference and starting mass",
+      "actual": "30",
+      "expected": "30",
+      "passed": true
+    },
+    {
+      "check": "group initial potential",
+      "actual": "7",
+      "expected": "7",
+      "passed": true
+    },
+    {
+      "check": "singleton a endpoint potential",
+      "actual": "3",
+      "expected": "3",
+      "passed": true
+    },
+    {
+      "check": "singleton b endpoint potential",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "group endpoint potential",
+      "actual": "1",
+      "expected": "1",
+      "passed": true
+    },
+    {
+      "check": "additive displayed increments",
+      "actual": "(-2, -2, 4)",
+      "expected": "(-2, -2, 4)",
+      "passed": true
+    },
+    {
+      "check": "signed cross term",
+      "actual": "1",
+      "expected": "1",
+      "passed": true
+    },
+    {
+      "check": "a: initial linear contribution",
+      "actual": "5",
+      "expected": "5",
+      "passed": true
+    },
+    {
+      "check": "a: common-path correction",
+      "actual": "3/2",
+      "expected": "3/2",
+      "passed": true
+    },
+    {
+      "check": "a: common-path attribution",
+      "actual": "7/2",
+      "expected": "7/2",
+      "passed": true
+    },
+    {
+      "check": "b: initial linear contribution",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "b: common-path correction",
+      "actual": "3/2",
+      "expected": "3/2",
+      "passed": true
+    },
+    {
+      "check": "b: common-path attribution",
+      "actual": "5/2",
+      "expected": "5/2",
+      "passed": true
+    },
+    {
+      "check": "common-path closure",
+      "actual": "6",
+      "expected": "6",
+      "passed": true
+    },
+    {
+      "check": "singleton excess",
+      "actual": "6",
+      "expected": "6",
+      "passed": true
+    },
+    {
+      "check": "a then b endpoint differences",
+      "actual": "(Fraction(4, 1), Fraction(2, 1))",
+      "expected": "(Fraction(4, 1), Fraction(2, 1))",
+      "passed": true
+    },
+    {
+      "check": "b then a endpoint differences",
+      "actual": "(Fraction(3, 1), Fraction(3, 1))",
+      "expected": "(Fraction(3, 1), Fraction(3, 1))",
+      "passed": true
+    },
+    {
+      "check": "opposing increment cross term",
+      "actual": "-2",
+      "expected": "-2",
+      "passed": true
+    },
+    {
+      "check": "opposing singleton sum corrected",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "two displayed sequential accounts telescope",
+      "actual": "4",
+      "expected": "4",
+      "passed": true
+    },
+    {
+      "check": "ideal closed cycle",
+      "actual": "0",
+      "expected": "0",
+      "passed": true
+    },
+    {
+      "check": "0.3 L boundary loss arithmetic",
+      "actual": "3/10",
+      "expected": "3/10",
+      "passed": true
+    },
+    {
+      "check": "expanded endpoint minus initial coefficients",
+      "actual": "(0, 2, 1)",
+      "expected": "(0, 2, 1)",
+      "passed": true
+    },
+    {
+      "check": "mixed quadratic coefficient",
+      "actual": "-1",
+      "expected": "-1",
+      "passed": true
+    },
+    {
+      "check": "capacity-audit identity coefficients",
+      "actual": "(0, 0, 0)",
+      "expected": "(0, 0, 0)",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+\chapter{The exact local signed EBU quote}\label{ch:quote}
+
+\section{The pieces now fit together}
+We have a physical state, an action map, a compatible reference, a positive scale at each cell, a potential, and a declared admissible action. We can now state the signed finite EBU quote without asking any symbol to perform an undeclared task.
+
+The quote compares the represented field before and after the action, from one frozen baseline. It subtracts only a separately declared physical action-process burden that is not already represented in the state change or potential difference. The result is a signed total for a finite quantity. It can be positive, zero, or negative.
+
+The ideal main model sets the separate process burden to zero. That choice simplifies the first domain and must remain visible. It does not claim that real transport consumes no energy or causes no wear. It says those carriers are outside this illustrative lossless scalar account, whose adequacy is limited accordingly.
+
+\section{The shared baseline \(z\)}
+The baseline \(z\) is the state from which the accepted event is evaluated. It is shared by both sides of the quote. If an external change has occurred before the action epoch, it is already reflected in \(z\) and separately recorded. If no external change occurs in the example, \(z\) is simply the current state.
+
+For a finite source-side quantity \(q\) on edge \(e\), the action successor is \(z+S_e q\). The notation uses quantity directly. A rate-based description must first convert \(q=\Delta t j\). The current finite formula does not multiply this quantity by time again.
+
+The no-action comparison at this event is \(z\) itself under the declared action-only interval. More elaborate event models can have shared drive and different chronology, but they must explicitly define the baseline. A historical no-action successor computed from a drive law cannot be imported into a forcing-first event by reusing the letter \(z\) alone.
+
+\section{The local equation}
+Let \(A\) be the set of coordinates whose potential terms are affected by the action. In the separable model, a single edge has \(A=\{i,j\}\). Define \(V_{\mathrm{loc}}=\sum_{k\in A}V_k\). The quote is
+\begin{equation}\label{eq:exact-local-ebu}
+ E_a(q)=V_{\mathrm{loc}}(z)-V_{\mathrm{loc}}(z+S_e q)-C_a(q).
+\end{equation}
+For a lossless edge this is
+\begin{align}
+ E_a(q)={}&V_i(z_i)+V_j(z_j)\\
+         &-V_i(z_i-q)-V_j(z_j+q)-C_a(q).
+\end{align}
+Every unchanged local term would cancel if we wrote the global potential instead. Thus the field component is exactly the global potential difference while requiring only the affected local terms. Chapter~\ref{ch:locality} develops that identity and its limits in more detail.
+
+\begin{lawbox}{The exact signed finite account}
+Signed EBU equals before-potential minus after-potential, evaluated under one declared field and baseline, minus any justified non-duplicated process burden. Positive means net reduction of that represented burden. The definition does not itself choose the action or assign institutional rights to the resulting number.
+\end{lawbox}
+
+\section{The Gaussian form}
+Substituting the exact quadratic expansion gives
+\begin{equation}\label{eq:gaussian-exact-ebu}
+ E_a(q)=-\mu(z)^TS_e q-\frac12q^2 S_e^THS_e-C_a(q).
+\end{equation}
+For one lossless transfer,
+\begin{equation}
+ E_a(q)=q(\mu_i-\mu_j)
+ -\frac{q^2}{2}\left(\frac1{\sigma_i^2}+\frac1{\sigma_j^2}\right)-C_a(q).
+\end{equation}
+The marginals in this expression are evaluated at \(z\). Writing them without their arguments is a typographical convenience, not permission to substitute values from another epoch.
+
+The equation has a useful division of labour. The linear term is the initial field contribution. The quadratic term accounts for its change over the finite displacement. The final term, when present, belongs to a separately justified process category. The first two terms already include the source and destination consequences represented by the potential.
+
+\section{What one EBU measures here}
+Because each standardized deviation is dimensionless, \(V\) is dimensionless. We label a unit of its signed finite account \(\E\). This label helps distinguish the value from stock units, but it does not make the value a joule, litre, or legal currency unit.
+
+The scale declarations determine the size of the numbers. If all scales were multiplied by two while physical stocks and references remained unchanged, every potential and cost-free field value would be divided by four. That would be a different valuation geometry. Cross-model numerical comparisons therefore require compatible definitions, not merely the same printed acronym.
+
+\begin{center}
+\begin{tabular}{P{0.31\linewidth}P{0.23\linewidth}P{0.33\linewidth}}
+\toprule
+Quantity & Unit & Interpretation\\
+\midrule
+\(q\), \(z_i\), \(\sigma_i\) & \(\X\) & Physical quantity or scale\\
+\(\mu_i\), \(f_e\) & \(\X^{-1}\) & Potential change per stock\\
+\(H_{ii}\) & \(\X^{-2}\) & Curvature per squared stock\\
+\(qf_e\), \(q^2k_e\) & dimensionless & Finite field-account terms\\
+\(C_a\), \(E_a\) & potential-account unit & Declared process burden and signed EBU\\
+\bottomrule
+\end{tabular}
+\end{center}
+The table is a practical way to catch a repeated timestep or a rate accidentally used as a quantity. Every term subtracted from a potential must have the same unit.
+
+\section{The main quote, step by step}
+Freeze the baseline \((18,2)\), reference \((10,10)\), scales \((2,2)\), lossless edge Ridge-to-Vale, and \(C=0\). The source contains eighteen units, so the isolated physical interval is \(0\leq q\leq18\). The complete schedule is
+\begin{equation}
+ E(q)=4q-\frac{q^2}{4}.
+\end{equation}
+At \(q=4\), compute before-potential 16. Apply the actual finite changes \((-4,+4)\), producing \((14,6)\). Compute after-potential four. Subtract to obtain \(12\E\).
+
+At \(q=8\), the endpoint is the reference and after-potential is zero, giving \(16\E\). At \(q=16\), the reflected state has potential 16, giving zero. At \(q=17\), after-potential is 20.25, giving \(-4.25\E\). The formula records all signs with one rule.
+
+No separate restoration bonus is added to the positive cases. No separate moral penalty is added to the negative case. A single finite difference expresses the state-dependent valuation. That symmetry is essential for the later accounting identities for splitting and closed cycles.
+
+\section{Process burden: classify before subtracting}
+A proposed \(C_a\) must identify a physical action-process burden that is not already represented through the state transition or evaluated field. It must use compatible potential units, be declared before the action, and satisfy the relevant non-duplication rule. In the standard nonnegative convention, \(C_a(q)\geq0\) and \(C_a(0)=0\).
+
+Source drawdown is already in \(V_i(z_i)-V_i(z_i-q)\). Destination receipt is already in its corresponding term. Adding another deduction called ``stock depletion'' for the same represented consequence would count it twice. Similarly, if an equipment-wear coordinate already enters the field, its burden cannot be charged again as if absent.
+
+Monetary price, wages, inconvenience, and protocol penalties are not automatically physical burden. They may be important institutional or economic quantities, but converting them into \(C_a\) requires a separately justified model. The physical account must not quietly import a market price as a law of environmental value.
+
+\begin{center}
+\begin{tabular}{P{0.40\linewidth}P{0.47\linewidth}}
+\toprule
+Candidate item & Treatment\\
+\midrule
+Source deviation already in \(V_i\) & Included in the finite field change; no second subtraction.\\
+Destination deviation already in \(V_j\) & Included in the finite field change; no second subtraction.\\
+Distinct unrepresented physical process & Candidate for a declared, calibrated process term.\\
+Purchase price or wage & Belongs to an institutional/economic account unless a separate theory justifies another role.\\
+Fraud or access penalty & Belongs to governance and protocol enforcement.\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{A physical ledger does not settle the cost classification}
+An extended model may include a loss accumulator to close its physical conservation account. Whether a related physical burden belongs in its potential, in a justified process term, or in neither is a further definition. One cannot infer permission for a cost merely because the accumulator is absent from \(V\), nor assume that every bookkeeping coordinate already prices every consequence of loss.
+
+The classification must identify the physical carrier and the particular burden being represented. If an old rationale assumed that no destroyed-stock coordinate existed, adding such a coordinate changes the premise of that rationale. The wording and authority need reconciliation before reusing the cost formula. This book's ideal lossless core avoids asserting that this open extension has been resolved.
+
+There is also no justification for inventing extra burdens merely because upstream and downstream actions exist. A fuel-to-electricity-to-water chain needs linked physical transformations and complete accounts. It does not need arbitrary surcharges at every label. Each actual burden is represented once in its declared place.
+
+\section{An illustrative cost extension}
+To understand the algebra, suppose a separate, explicitly hypothetical physical process has already been justified with \(C(q)=q/2\). This changes the ideal example's cost assumption and is not a fitted real-world calibration. The total schedule becomes
+\begin{equation}
+ E_C(q)=\frac72q-\frac{q^2}{4}.
+\end{equation}
+At four units the field reduction remains twelve, while the process burden is two, giving total ten. The physical source and destination stocks remain \((14,6)\). The process declaration changes the extended account, not the water transfer already specified.
+
+The ledger identity is
+\begin{equation}
+ E_C(q)+\bigl[V(z+S_eq)-V(z)\bigr]+C(q)=0.
+\end{equation}
+For this example it is \(10+(4-16)+2=0\). The identity is a direct rearrangement of the definition. It shows where the signed value balances, but it does not validate the physical calibration of \(C\).
+
+If the candidate cost has no defensible carrier or duplicates field burden, the correct response is to reject the declaration, not to praise the arithmetic because it closes. Any subtraction closes its own rearranged equation; scientific meaning requires more.
+
+\section{The zero branch and an activation burden}
+In the main cost-free model, \(E(0)=0\) directly. If a distinct physical process has a fixed activation burden \(c_0>0\), a possible declared function is \(C(0)=0\) and \(C(q)=c_0+C_{\mathrm{cont}}(q)\) for positive \(q\). The exact no-action branch remains zero, while an arbitrarily small positive action can incur the fixed activation burden.
+
+This creates a downward jump in the total value as one leaves zero. It must not be interpolated away. A quote representation that joins the zero point smoothly to a positive-quantity branch would describe another cost law.
+
+The field schedule is concave. The total schedule is concave on a domain when the subtracted cost is convex there. A fixed activation jump is not convex at the included rest point, so full-domain concavity cannot be inferred. None of these shape facts replaces the requirement that the complete schedule be defined before execution.
+
+\section{A quote is a function, not one optimistic number}
+An action may execute less than its offered quantity. A committed schedule specifies what the value would be at every allowed measured point. In the Gaussian core the function is a simple polynomial with a stated domain and parameter version. The actor and auditor need not invent a new valuation rule if the measured quantity differs within that domain.
+
+Suppose the main schedule allows up to six units, but the action delivers four. Evaluating the predeclared function at four gives twelve. Replacing the function after delivery with a more favourable scale or reference would be revaluation. The distinction concerns when the rule was fixed, not whether the final measured point was known in advance.
+
+If execution exceeds the accepted physical domain, the original quote does not silently expand. The physical deviation and protocol violation must be recorded. Any richer debit or remedy needs its own prior rule; an auditor cannot manufacture an arbitrary punishment after seeing the outcome. The detailed lifecycle is the subject of Chapter~\ref{ch:lifecycle}.
+
+\section{Local information and complete affected terms}
+For one lossless edge under the separable potential, the quote reads endpoint stocks, endpoint references and scales, the action quantity, edge identity, accepted domain, and any justified local process declaration. It can evaluate four local potential numbers and the cost. It need not inspect distant stocks or calculate a global sum.
+
+A researcher may calculate global diagnostics for analysis, but those diagnostics are not thereby actor inputs. Likewise, a prospective capacity check may read balances as part of its own layer; that does not make balances inputs to the physical field valuation. Keeping the computational boundaries explicit helps avoid a hidden optimizer or information advantage.
+
+If a richer potential adds a factor involving several coordinates, every affected factor must be included. Omitting it while retaining the claim of exact locality would be wrong. Locality means the complete affected dependency set, not a fixed two-cell rule regardless of the actual potential.
+
+\section{Single action and group value}
+For a group with net increment \(\delta_G\), the exact joint account is
+\begin{equation}
+ E_G=V_{\mathrm{loc}}(z)-V_{\mathrm{loc}}(z+\delta_G)-C_G.
+\end{equation}
+This evaluates the group endpoint once from the common baseline. It does not establish each child's entitlement or causal contribution. A declared straight-path decomposition can produce child numbers that sum exactly to the field reduction, but the interpretation of that decomposition requires its own assumptions.
+
+It is therefore possible to know the exact joint value while a proposed capacity policy remains unregistered because ownership or attribution semantics are open. That is an honest boundary between an established algebraic object and an incomplete institutional or experimental rule. The later group chapters develop the distinction without forcing a one-action-only world.
+
+\section{Guided problem: audit a misleading quote}
+A report for the main four-unit action says: ``Starting field four, quantity four, so EBU sixteen. The destination received four units; subtract four more for source depletion, leaving twelve.'' The final number happens to equal the correct answer. Is the derivation acceptable?
+
+No. The initial sixteen is a linear overestimate. The subtracted four happens to match the curvature term for this fixture, but labelling it source depletion misclassifies its meaning and risks double counting. At another quantity, the accidental correction would fail. The exact derivation is \(16-4=12\) from endpoint potentials, or \(4q-q^2/4\) from quadratic expansion.
+
+This exercise shows why a correct final number is insufficient evidence of a correct account. Units, categories, baseline, and derivation must also match the definition. Otherwise a fixture can pass by cancellation of two mistakes.
+
+\section{Guided problem: compare totals and intensities}
+For the main schedule, \(q=2\) has total seven and intensity \(7/2=3.5\) EBU per stock unit. The four-unit action has total twelve and intensity three. The eight-unit action has total sixteen and intensity two.
+
+The smaller action has the highest intensity among these options, while the largest listed action has the highest total. Neither observation defines the programme's selector. They are different diagnostics. A report should state which quantity it uses and what question that quantity answers.
+
+If the practical concern is a specified delivered service, comparisons may also need equal service or an explicit service metric. Potential change alone does not ensure comparable clinical outcomes. That issue belongs in research design rather than being resolved by whichever ratio favours one action.
+
+\section{Practice and reflection}
+Compute the main quote at \(q=6\). The after-state is \((12,8)\), after-potential one, and EBU fifteen. Verify the exact quadratic formula gives the same result. Then apply the explicitly hypothetical \(C(q)=q/2\): the field component remains fifteen, process burden is three, and total is twelve.
+
+Explain why a cost called ``wage'' cannot simply be subtracted from a dimensionless physical potential. A complete answer identifies both the unit mismatch and the absence of a declared physical interpretation. This does not deny the importance of wages; it keeps distinct accounts meaningful.
+
+Finally describe the minimum information needed to reproduce a quote: a fixed potential version, affected baseline coordinates, complete action increment, admitted quantity domain, and any process declaration. Add a sentence distinguishing a reproducible mathematical quote from evidence that the field represents all relevant consequences.
+
+\begin{intuitionbox}{What to carry forward}
+The exact local quote is a finite signed potential difference minus declared, non-duplicated physical process burden. The Gaussian form includes curvature exactly. Its schedule and domain precede execution. It supplies a valuation object, while physical permission, group attribution, capacity policy, and real-world usefulness retain their own requirements.
+\end{intuitionbox}

@@ -1,0 +1,55 @@
+\chapter{From local references to a potential}\label{ch:potential}
+\question{How can local measurements describe a joint state without every actor inspecting the whole world?}
+
+Ridge contributes a local score of two and Vale contributes two. To describe their joint state, declare the total potential to be the sum of the local terms:
+\begin{equation}\label{eq:potential}
+ V(x)=\sum_{i=1}^{n}V_i(x_i).
+\end{equation}
+The summation sign means ``add for every cell from one to $n$''. The list $x$ contains all stocks. In the two-tank illustration, $V(14,6)=2+2=4$.
+
+The addition is part of the model. It says these local contributions enter one compatible account. It does not prove that all ecological and human consequences can be represented by one scalar. In this chapter, all cells contain one homogeneous resource and use the explicitly declared ruler.
+
+\section{Same total, different potential}
+Compare three states, each containing twenty litres. At $(14,6)$, the potential is four. At $(10,10)$, both displacements vanish and the potential is zero. At $(18,2)$, the standardised displacements are $+4$ and $-4$, giving $8+8=16$.
+
+The physical total cannot distinguish these distributions. The potential can, because it measures location-specific displacement from the reference. Neither operation creates or destroys water. The potential is not a conserved stock.
+
+This also shows why the word ``burden'' has to be qualified. In this model it means represented squared deviation. It does not mean an independent observation that one state caused sixteen units of real-world harm. Interpretation requires a justified link between the chosen reference geometry and the physical function of interest.
+
+\section{Why unchanged terms cancel}
+Imagine extending the illustration with two other tanks. They hold twelve and eight litres, each with reference ten and scale two. The four-cell world now contains forty litres, exactly matching the four references. Each of the extra tanks contributes $0.5$.
+
+Our original three-litre Ridge-to-Vale transfer leaves those two extra tanks unchanged. The full potential is five before the transfer and $1.25$ afterwards:
+\begin{align*}
+ V_{\rm before}&=2+2+0.5+0.5=5,\\
+ V_{\rm after}&=0.125+0.125+0.5+0.5=1.25.
+\end{align*}
+The reduction is $3.75$. Looking only at Ridge and Vale gives $4-0.25=3.75$ as well. The other terms were not approximated; they cancelled exactly.
+
+Let $A$ be the set of all cells whose terms can change in the action, and let $V_A$ be their sum. If $x'$ agrees with $x$ outside $A$, then
+\begin{equation}\label{eq:locality}
+ V(x)-V(x')=V_A(x)-V_A(x').
+\end{equation}
+To prove it, split each full sum into affected and unaffected terms. Every unaffected term has the same value on both sides and subtracts to zero. This is the separable local-to-global identity in the historical foundation, expressed here for the Gaussian model.\cite{foundation}
+
+It is useful because an exact local difference need not require a whole-world scan. The proof still depends on one fixed potential, correct action support and unchanged terms outside it. It cannot certify that the model includes all relevant real effects.
+
+\section{If the potential has coupled factors}
+A later model might include a factor depending on two stocks together. Suppose, as a mathematical extension, it adds
+\begin{equation*}
+ W(x_2,x_3)=\gamma(x_2-x_3)^2,
+\end{equation*}
+where $\gamma$ has inverse-square-stock units so that $W$ remains dimensionless. Changing $x_2$ can change $W$ even when $x_3$ stays fixed. Reading only the cell-two term would then omit a changed contribution.
+
+The correct affected support includes every potential factor touched by the action and the variables needed to evaluate those factors. Cancellation still works for genuinely unchanged factors. ``Local'' is therefore a dependency claim that must be checked against the actual function.
+
+Physical topology, potential dependencies and action interaction are distinct. A pipe describes an allowed physical transfer. A potential factor describes which variables the ruler couples. Two actions can interact in valuation by changing the same coordinate even when the potential itself is a sum of independent cell terms. Chapter~\ref{ch:groups} makes that last point concrete.
+
+\section{The global audit is not the actor's policy}
+Writing $V$ is convenient for proving identities and reviewing the complete account. It does not require actors to rank actions by a global score. A theorem can mention a full sum while a local calculation uses only affected terms.
+
+Nor does local evaluation prove decentralised governance. Someone still declares references, certifies inputs and resolves disputes. Distributed calculation and institutional authority are different matters. Mathematics can reduce the required information without choosing a constitution.
+
+\practice{An unchanged tank contributes seven units of potential before and after an action. How much does it contribute to that action's value?}{Zero: $7-7=0$. Its current condition may matter for other questions. It contributes nothing to this finite difference only because the action leaves the term unchanged under the same potential version.}
+
+\carry{A potential describes states. To understand the initial direction of a change, we next examine its local rate of change: the marginal.}

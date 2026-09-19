@@ -1,0 +1,74 @@
+\chapter{The smallest honest Gaussian world}\label{ch:world-schema}
+The first active world should be small enough that every represented
+quantity has an unambiguous meaning. Small does not mean vague. A two-cell
+model with mixed units and hidden replenishment is less interpretable than
+a larger model with explicit boundaries.
+
+\section{Physical state and reference are different records}
+The stock vector $x$ changes when physical actions or forcing occur. The
+reference $x^*$ and scales $\sigma$ are fixed configuration in the first
+domain. Both state and reference are nonnegative and share total mass $M$;
+every scale is finite and strictly positive. NaN, infinity, a zero scale
+or a negative stock is not a small deviation to smooth away.
+
+The potential is
+\begin{equation}
+ V(x)=\tfrac12\sum_i((x_i-x_i^*)/\sigma_i)^2.
+\end{equation}
+It is a derived value, not another physical carrier. Storing a cached value
+may be convenient, but replay must be able to recompute it from the exact
+declared state and configuration. Updating the cache without the state, or
+the state without invalidating the cache, risks valuing a nonexistent world.
+
+\section{Accounts belong beside, not inside, the stock vector}
+The proposed augmented record includes physical state $x$, persistent
+capacity $B$, signed external audit $J$, and random-stream replay coordinates.
+They have linked versions but distinct meanings. Adding an EBU balance to a
+water total is dimensionally invalid. Treating a physical capacity constraint
+as a spendable balance is semantically invalid even if both are numbers.
+
+The old candidate C3 export budget also used a letter resembling $B$.
+That does not make it the new persistent account. A safe specification
+uses explicit type names and conversions where necessary, not a shared
+generic field called budget for every purpose.
+
+\section{Atomic action declarations}
+An action records its identity, source, destination, finite quantity, carrier,
+write support and relevant constraints. For a lossless transfer,
+$\delta_a=q_a(-e_i+e_j)$. A group retains every child and its accepted
+increment; it also records the aggregate $\delta_G$.
+
+The source-side quantity convention must remain explicit when importing
+historical rate-based examples. A duration belongs in the conversion
+$q=\Delta t j$, not in both the conversion and the finite evaluator.
+Non-unit-duration fixtures expose errors that unit-duration examples hide.
+
+\section{What is deliberately absent}
+The active first domain contains no Allee regeneration, lower/upper
+homeostatic band, hidden demand-serving controller or autonomous gradient
+flow. Its reference is not an empirically fitted stationary mean by default.
+Its scales are not automatically measurement-error bars. It contains one
+homogeneous conserved scalar, not an uncalibrated mixture of energy, water,
+medicine and welfare.
+
+This is a scope statement, not a claim those phenomena are unimportant.
+Adding them later changes state, dynamics or valuation and must receive
+its own derivation and registration. An honest small world provides a
+controlled question; an underspecified broad world provides ambiguous answers.
+
+\section*{A configuration audit}
+Suppose a proposed file gives $x=(18,2)$, reference $(10,10)$ and
+scales $(2,2)$. It passes the elementary domain checks. Replace the reference
+with $(12,12)$ and closed mass compatibility fails. Replace a scale with
+zero and valuation is undefined. Add a regenerative source label without
+a regeneration law and the label has supplied no physical mechanism.
+
+Each failure should identify the exact predicate and field. ``Invalid
+configuration'' alone is difficult to audit. Silently normalizing the
+reference or clipping a stock would make the accepted model differ from
+the author's declaration.
+
+\section*{Chapter recap}
+Typed state, fixed geometry and complete action declarations make later
+checks meaningful. The first world is intentionally limited; its limitations
+must remain readable rather than filled with inherited historical defaults.

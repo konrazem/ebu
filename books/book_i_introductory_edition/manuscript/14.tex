@@ -1,0 +1,70 @@
+\chapter{A real action is finite}\label{ch:finite}
+\question{Why can a favourable direction become unfavourable when taken too far?}
+
+Our starting field from Ridge to Vale is positive. That does not mean sending all of Ridge's water is beneficial under the declared ruler. During a transfer, Ridge moves down toward its reference and Vale moves up toward its reference. After both reach it, further movement takes them away again.
+
+We need the endpoint, not just the first slope. For a proposed increment $\delta x$, first check physical feasibility and form $x+\delta x$. In the ideal lossless model with no separate process burden, define the field value as the potential before minus the potential after:
+\begin{equation}\label{eq:finite-def}
+ E(\delta x)=V(x)-V(x+\delta x).
+\end{equation}
+The sign convention is deliberate. A reduction in represented deviation gives a positive result. $E$ is in the same dimensionless account units as $V$.
+
+\section{The whole correction is calculable}
+For one cell, expansion of the square is exact:
+\begin{equation*}
+ (x_i+\delta x_i-x_i^\star)^2
+ =(x_i-x_i^\star)^2+2(x_i-x_i^\star)\delta x_i+(\delta x_i)^2.
+\end{equation*}
+Divide by $2\sigma_i^2$ and add across cells. The first terms reproduce $V(x)$; the middle terms give $\sum_i\mu_i\delta x_i$; the remaining terms are the curvature contribution.
+
+A compact way to write the last sum uses $H$, the diagonal curvature matrix:
+\begin{equation}\label{eq:hessian}
+ H=\operatorname{diag}(1/\sigma_1^2,\ldots,1/\sigma_n^2).
+\end{equation}
+``Diagonal'' means the listed entries lie on the diagonal and the other entries are zero. Consequently $\delta x^{\mathsf T}H\delta x$ is simply $\sum_i(\delta x_i)^2/\sigma_i^2$. No prior matrix knowledge is needed to evaluate it. Each entry of $H$ has inverse-square-stock units.
+
+Subtracting the expansion from the starting potential gives
+\begin{equation}\label{eq:finite}
+ \boxed{E(\delta x)=-\mu(x)^{\mathsf T}\delta x
+ -\frac12\delta x^{\mathsf T}H\delta x.}
+\end{equation}
+The first term is the initial slope prediction. The second subtracts the finite curvature correction. There are no omitted higher-order terms for this fixed quadratic geometry. ``Exact'' here describes algebra, not a guarantee of exact physical measurements or floating-point arithmetic.\cite{gaussian,foundation}
+
+Because all scales are positive, the curvature sum is positive for every nonzero increment. The linear prediction therefore overstates the finite field reduction. This is the quadratic instance of the convexity argument in the historical foundation. We have derived the claim for this model; we have not assumed a recovery law.
+
+\section{The transfer formula}
+For a transfer of finite quantity $q$, the source change is $-q$ and the destination change is $+q$. Substitution gives
+\begin{equation}\label{eq:edge-finite}
+ E_e(q)=qf_e-\frac{q^2}{2}
+ \left(\frac1{\sigma_i^2}+\frac1{\sigma_j^2}\right).
+\end{equation}
+The units confirm the calculation: stock times inverse stock in the first term, and stock squared times inverse stock squared in the second. Both are dimensionless. The formula assumes a fixed reference and scales, the stated lossless action, a feasible endpoint and zero separate process burden.
+
+In our example $f_e=2\ \mathrm{L}^{-1}$ and both scales are two litres. For a numerical quantity $q$ expressed in litres, the value is $2q-q^2/4$. The table compares alternatives from the same starting state; its rows are not consecutive model steps.
+
+\begin{center}\small
+\begin{tabular}{@{}rrrr@{}}
+\toprule
+$q$ (L) & Endpoint (L) & $V$ after & $E$\\
+\midrule
+0 & $(14,6)$ & 4 & 0\\
+1 & $(13,7)$ & 2.25 & 1.75\\
+3 & $(11,9)$ & 0.25 & 3.75\\
+4 & $(10,10)$ & 0 & 4\\
+6 & $(8,12)$ & 1 & 3\\
+8 & $(6,14)$ & 4 & 0\\
+9 & $(5,15)$ & 6.25 & $-2.25$\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The three-litre action gives $6-9/4=3.75$, rather than the linear prediction of six. The nine-litre action is feasible with the declared capacities but has a negative value. Passing the minimum is not immediately the same as having a negative total value: the six-litre action has overshot the reference yet still ends closer than it began.
+
+\illustration{finite_value}{Mathematically derived: alternative finite quantities from the same $(14,6)$-litre baseline. The horizontal axis is quantity, not time. The dashed initial prediction exceeds the exact quadratic value. A maximum in the graph does not select an actor policy.}{fig:finite}
+
+\section{At the reference}
+At $x=x^\star$, every marginal is zero. Equation~\eqref{eq:finite} becomes $E=-\tfrac12\delta x^{\mathsf T}H\delta x$, strictly negative for any nonzero net increment. A nonempty group of opposing actions can have zero net increment; that is a different case. In the ideal cost-free account its field value is zero, not negative merely because several actions were listed.
+
+\practice{Starting at $(10,10)$ litres, move one litre from Ridge to Vale. Calculate the exact field value.}{The endpoint is $(9,11)$. Each cell contributes $\tfrac12(1/2)^2=0.125$, so $E=0-0.25=-0.25$. The zero initial slope did not make the finite action free of represented deviation.}
+
+\carry{The finite endpoint difference is the core object. We now put it into the general EBU equation and explain the process-burden boundary that the ideal example has deliberately set to zero.}

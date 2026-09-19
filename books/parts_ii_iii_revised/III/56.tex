@@ -1,0 +1,74 @@
+\chapter{The historical engine and the Onsager connection}\label{ch:legacy-engine}
+The older implementation is not simply the new model with a different
+potential expression. It has a particular natural drive, flux controller,
+permission layer and event order. Understanding those choices is necessary
+both to preserve its results and to avoid importing them accidentally.
+
+\section{Why force, mobility and flux entered EBU}
+Onsager's primary papers concern coupled irreversible processes and linear
+force--rate relations under microscopic-reversibility assumptions
+\cite{onsager-one,onsager-two}. The useful modelling pattern for EBU was
+to separate a directional driving force from a response coefficient. The
+earlier D0 design made that relationship explicit instead of treating the
+potential's derivative as though it were already a physical flow.
+
+Its local marginal came from the historical hinge potential. For an edge
+with usable-delivery efficiency $\eta_e$, the directional force was
+$f_e=\mu_i-\eta_e\mu_j$. The controller requested
+\begin{equation}
+ J_e=M_e[f_e-\theta_e]_+.
+\end{equation}
+Mobility $M_e$ controls responsiveness; $\theta_e$ is an edge activation
+threshold. It is distinct from Allee or homeostatic stock thresholds.
+Neither coefficient is an EBU balance or a source's physical stock.
+
+This adaptation is called Onsager-type because the model declares its own
+potential and directed threshold response. It does not establish that the
+potential is thermodynamic free energy, or that a social network satisfies
+microscopic reversibility or reciprocal transport coefficients. The reason
+to use it is the transparent conditional force--flux calculation, not the
+prestige of an analogy.
+
+\section{D0's synchronous update}
+The historical map freezes state, computes the natural drive $u(x)$ and
+edge requests, then applies a synchronous Euler update of the form
+$x^+=x+\Delta t(u+SJ)$. Frozen synchronous evaluation prevents a newly
+updated neighbor from influencing another edge within the same nominal
+step. Sequentially mutating an edge loop would implement a different
+propagation rule.
+
+Part II derives the continuous-time dissipation structure and its finite-step
+curvature correction. The historical tests concern their registered hinge
+model and certificates. Replacing the evaluator with a Gaussian formula
+while retaining the old drive and selector would create a hybrid model,
+not automatically implement the new programme.
+
+\section{P1C is a permission layer with premises}
+The historical P1C classifier distinguishes regenerative and other source
+types and their admissibility states. The robust budget's arithmetic assumes
+the applicable source classification. For a finite or irreversible stock,
+the preservation policy does not become an internal-transfer permission
+merely because a helper can compute a positive number.
+
+The distinction between $R_{\mathrm{eff}}$ and homeostatic $R$ also survives.
+The former bounds export under a source certificate; it does not itself
+deliver resource to a destination below its own reference or reserve. A
+resolver's protection cannot be used to delete another controller's service
+logic while claiming the same function remains.
+
+\section{What is retained and what is not imported}
+Keep historical D0/P1C, quote code and evidence immutable. Reuse reviewed
+ideas such as complete support, frozen identities and exact finite
+evaluation. Do not import Allee drive, gradient-best selection, service-first
+comparators or finite-source export prohibitions into the Gaussian random
+actor process without a separate scientific declaration.
+
+Likewise, retaining the Onsager explanation does not make it the active
+actor policy. It remains a mathematically meaningful controller alternative
+and an important part of the project's history. The new process asks a
+different question about random affordable actions.
+
+\section*{Chapter recap}
+The historical engine supplies mechanisms, proofs and evidence at a known
+scope. Its force--mobility--flux architecture should be explained, not hidden;
+its controller should not be silently reused under a different study name.

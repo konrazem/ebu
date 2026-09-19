@@ -1,0 +1,103 @@
+\documentclass[11pt,twoside,openany]{book}
+\usepackage[paperwidth=450pt,paperheight=666pt,inner=48pt,outer=38pt,top=40pt,bottom=44pt,headheight=14pt,headsep=13pt]{geometry}
+\usepackage{amsmath,amssymb,graphicx,booktabs,longtable,array,xcolor,hyperref,fancyhdr,titlesec,microtype}
+\definecolor{ink}{HTML}{173E48}
+\definecolor{quiet}{HTML}{56666A}
+\hypersetup{colorlinks=true,linkcolor=ink,citecolor=ink,urlcolor=ink,pdftitle={Why EBU? Life, Balance, and the Accounting of Physical Action},pdfauthor={Konrad Grzyb},pdfsubject={New-source Book I introductory edition; candidate for review}}
+\urlstyle{same}
+\setlength{\parindent}{12pt}
+\setlength{\parskip}{2pt}
+\linespread{1.04}
+\setcounter{tocdepth}{0}
+\titleformat{\chapter}[display]{\color{ink}\normalfont}{\small\sffamily BOOK I\quad /\quad CHAPTER \thechapter}{8pt}{\raggedright\hyphenpenalty=10000\fontsize{21}{24}\selectfont}
+\titlespacing*{\chapter}{0pt}{0pt}{18pt}
+\titleformat{\section}{\color{ink}\normalfont\large}{\thesection}{0.65em}{}
+\titlespacing*{\section}{0pt}{14pt plus 3pt minus 2pt}{6pt}
+\titleformat{\subsection}{\normalfont\bfseries}{\thesubsection}{0.6em}{}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[LE,RO]{\small\sffamily\thepage}
+\fancyhead[LO]{\small\sffamily Why EBU?}
+\fancyhead[RE]{\small\sffamily\nouppercase{\leftmark}}
+\renewcommand{\chaptermark}[1]{\markboth{Chapter \thechapter}{}}
+\renewcommand{\headrulewidth}{0.3pt}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\small\sffamily\thepage}\renewcommand{\headrulewidth}{0pt}}
+\newcommand{\question}[1]{\noindent\textit{#1}\par\medskip}
+\newcommand{\carry}[1]{\par\medskip\noindent\textbf{Carry forward.} #1\par}
+\newcommand{\practice}[2]{\par\medskip\noindent\textbf{Pause and try.} #1\par\noindent\textit{A worked response.} #2\par}
+\newcommand{\illustration}[3]{\begin{figure}[!htbp]\centering\includegraphics[width=\linewidth]{figures/#1.pdf}\caption{\small #2}\label{#3}\end{figure}}
+\newcommand{\unit}{\mathrm{L}}
+\setlength{\emergencystretch}{1.4em}
+\widowpenalty=10000\clubpenalty=10000
+\raggedbottom
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.85}
+\setlength{\intextsep}{10pt}
+\let\cleardoublepage\clearpage
+\makeatletter
+\renewcommand{\l@chapter}[2]{\@dottedtocline{0}{0pt}{1.8em}{#1}{#2}}
+\makeatother
+\begin{document}
+\frontmatter
+\begin{titlepage}
+\color{ink}
+\noindent\small\sffamily ENERGY BALANCE PROJECT\par
+\vspace{49pt}
+\noindent\fontsize{42}{45}\selectfont Why EBU?\par
+\vspace{20pt}
+\noindent\fontsize{23}{29}\selectfont Life, Balance, and the\par\noindent Accounting of Physical Action\par
+\vspace{32pt}\hrule\vspace{21pt}
+\noindent\large Book I\par
+\vspace{8pt}\noindent\normalsize A new-source introductory edition\par
+\vfill
+\noindent\large Konrad Grzyb\par
+\vspace{20pt}
+\noindent\small\sffamily CANDIDATE FOR AUTHOR REVIEW\par
+\vspace{5pt}\noindent 19 September 2026\par
+\end{titlepage}
+\chapter*{About this edition}
+Konrad Grzyb is the author and originator of the Energy Balance Project. This candidate was researched, drafted and typeset with AI assistance under the author's instruction. It is presented for review; its delivery does not imply the author's acceptance, external peer review or publication.
+
+This is a new manuscript. The preserved first volume, \textit{Physical Intuition and the EBU Idea}, provides a content baseline, but its original editable sources and complete build system have not been recovered. The new teaching order follows the project's September 2026 introductory blueprint. Original Parts I, II and III remain unchanged. Chapter numbers in this edition are new: a reference to historical Part II.33 still means Chapter 33 of the preserved Part II.
+
+The software repository has a separate MIT licence. That software licence is not a licence for reproducing the preserved books. This candidate introduces no new rights grant. Source identities, content dispositions and build instructions accompany the editable manuscript.
+
+The book separates observed evidence, definitions, conditional mathematics, illustrative examples, proposed rules and open questions. It reports no new scientific experiment. Numerical tank examples are arithmetic teaching devices, not field measurements or a registered experimental parameter set. Every illustration is labelled by its status.
+
+The Local Gaussian model is a prospective research direction. Its equations can be explained and checked before a new experiment. Its practical usefulness, recovery behaviour and institutional consequences cannot be established by explanation alone.
+\chapter*{An invitation to the reader}
+A clinic can pay its bills and still face a broken pump. It can also have a working pump while the people who need its water cannot reach it. These are different failures. To understand them, we need to keep physical function, institutional claims and human access in view at the same time.
+
+This book asks whether a precise account of physical actions could contribute something useful to that task. It does not begin by asking the reader to accept a new economy. It begins by asking what a record would have to say before it deserved our trust.
+
+The first five chapters develop the reason for the question. Chapters 6--9 introduce functioning systems, physical boundaries and actions. Chapters 10--13 build a declared ruler, one step at a time. Chapters 14--17 use it to calculate finite changes and explain exactly which identities follow. Chapter 18 returns to the clinic and the work still ahead.
+
+No calculus, graph theory or programming is assumed. When a new symbol appears, first read its name and unit. Follow the arithmetic before trying to remember the formula. A superscript may mean a square, a reference label or a transpose; the text will say which. The glossary and symbol table are there for returning to an idea, not for memorising them before beginning.
+
+The recurring tank example is deliberately small. Its simplicity lets us see where a sign comes from, where a term cancels and where an assumption enters. We will not pretend that two water stocks represent an entire clinic, much less the planet.
+
+A useful outcome is the ability to ask a better question of any EBU claim: what changed, relative to which reference, inside which boundary, and with what evidence?
+\tableofcontents
+\mainmatter
+\input{manuscript/01.tex}
+\input{manuscript/02.tex}
+\input{manuscript/03.tex}
+\input{manuscript/04.tex}
+\input{manuscript/05.tex}
+\input{manuscript/06.tex}
+\input{manuscript/07.tex}
+\input{manuscript/08.tex}
+\input{manuscript/09.tex}
+\input{manuscript/10.tex}
+\input{manuscript/11.tex}
+\input{manuscript/12.tex}
+\input{manuscript/13.tex}
+\input{manuscript/14.tex}
+\input{manuscript/15.tex}
+\input{manuscript/16.tex}
+\input{manuscript/17.tex}
+\input{manuscript/18.tex}
+\backmatter
+\input{manuscript/glossary.tex}
+\input{manuscript/bibliography.tex}
+\end{document}

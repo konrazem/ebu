@@ -1,0 +1,173 @@
+\chapter{Studio: draw the action before calculating it}\label{ch:studio-action}
+
+\begin{intuitionbox}{Physical picture: an arrow needs a physical meaning}
+An arrow from Ridge to Vale can stand for a permitted movement of stock. It must say which stock moves, which way it moves, how much leaves, and where that quantity arrives. A line drawn on a map supplies none of those facts by itself. This studio builds an action record whose conservation can be checked before any EBU appears.
+\end{intuitionbox}
+
+Keep the state card from Chapter~\ref{ch:studio-state}: Ridge holds \(18\X\), Vale holds \(2\X\), and the represented total is \(20\X\). This is the same homogeneous lossless teaching world. We begin with only one directed route. No regeneration, consumption, leakage, or unrecorded import acts during the action. If another mechanism is later added, it will receive its own explicit line.
+
+The purpose is not to deny that real delivery needs vehicles, labour, energy, and time. It is to make the physical scope readable. A simple model should show what it represents and where its conclusions stop. Hiding a complication is dangerous; declaring a limited question is often useful.
+
+\section{Name the graph}
+
+Let the node set be \(N=\{R,V\}\), where \(R\) means Ridge and \(V\) means Vale. The directed edge is \(e=(R,V)\). Its ordered pair says that Ridge is the source and Vale is the destination. A reverse route \((V,R)\), if available, is a separate member of the edge set. It may have a different physical capacity or require different equipment.
+
+For the present edge, declare a lossless transformation and a finite route cap \(6\X\) per action epoch, shared by all simultaneous actions using this route. This cap is illustrative physical input. It is not derived from the reference stock, the potential, or the amount of EBU a transfer might produce. An engineer would need to justify an empirical cap through the actual equipment and operating conditions.
+
+The model admits quantities satisfying
+\begin{equation}
+0\le q\le 6\X,\qquad q\le z_R.
+\end{equation}
+The first restriction is the route limit. The second prevents withdrawing more than the source contains. A destination capacity, if relevant, would add a further constraint; none is needed for the small quantities used here. Absence from this example does not establish absence from real clinics.
+
+\section{Build the action column}
+
+The coordinate vectors
+\begin{equation}
+e_R=\begin{pmatrix}1\\0\end{pmatrix},
+\qquad e_V=\begin{pmatrix}0\\1\end{pmatrix}
+\end{equation}
+select Ridge and Vale. A lossless transfer has column
+\begin{equation}
+S_e=-e_R+e_V=\begin{pmatrix}-1\\1\end{pmatrix}.
+\end{equation}
+Multiply this dimensionless column by the finite quantity \(q\). For \(q=4\X\),
+\begin{equation}
+\delta=S_eq=\begin{pmatrix}-4\\4\end{pmatrix}\X.
+\end{equation}
+There is no extra duration in this expression. If the input had instead been a rate, we would first calculate \(q=\Delta t j\). The action column describes a change per source-side unit; it does not know whether that unit was moved slowly or quickly.
+
+The action support is \(\{R,V\}\), because those are the stock coordinates changed by this simplified action. A receipt can be local because the unaffected coordinates cancel from the potential difference. Locality does not allow us to omit an affected coordinate. If a battery is part of the physical model and the delivery changes it, the support must expand.
+
+\section{Make a stock receipt before a value receipt}
+
+For the four-unit proposal, write
+\begin{center}
+\begin{tabular}{P{0.38\linewidth}P{0.19\linewidth}P{0.28\linewidth}}
+\toprule
+Physical line & Quantity & Role\\
+\midrule
+Ridge withdrawal & \(4\X\) & Source decrease\\
+Vale delivery & \(4\X\) & Destination increase\\
+Loss in this model & \(0\X\) & Declared idealization\\
+Unmoved Ridge stock & \(14\X\) & Remaining stock\\
+New Vale stock & \(6\X\) & Successor stock\\
+\bottomrule
+\end{tabular}
+\end{center}
+The transfer closure is \(4=4+0\). The system closure is \(18+2=14+6\). These are related checks with different scopes: one follows the moved quantity, the other follows the whole represented stock.
+
+Now imagine a transcription error changes Vale's delivery to five while leaving withdrawal four. The system would gain one unit. No positive value calculation can validate that transformation. Correct the physical record first. Conversely, a transfer that conserves stock can still move it into an unsuitable place. Conservation is a prerequisite of this model, not a complete evaluation of its consequences.
+
+\section{Add a hub without pretending it is a direct edge}
+
+Replace the two-node route with a three-node route for this section only. The coordinate order becomes Ridge, hub, Vale, and the initial state is
+\begin{equation}
+x^0=\begin{pmatrix}18\\0\\2\end{pmatrix}\X.
+\end{equation}
+There are two directed edges, \(R\to H\) and \(H\to V\), with columns
+\begin{equation}
+S_1=\begin{pmatrix}-1\\1\\0\end{pmatrix},
+\qquad
+S_2=\begin{pmatrix}0\\-1\\1\end{pmatrix}.
+\end{equation}
+Four units first move from Ridge to the hub:
+\begin{equation}
+x^1=x^0+4S_1=(14,4,2)^{\mathsf T}\X.
+\end{equation}
+Then three units move from the hub to Vale:
+\begin{equation}
+x^2=x^1+3S_2=(14,1,5)^{\mathsf T}\X.
+\end{equation}
+The warehouse released four, the clinic received three, and the hub retained one. The account closes without loss: \(4=3+1\). Stock left at an intermediate node has not vanished.
+
+The second action is feasible from \(x^1\), where the hub holds four. It is not feasible as a standalone withdrawal from \(x^0\), where the hub holds zero. A drawing of the whole route should preserve this dependency. Writing the final net increment \((-4,1,3)^{\mathsf T}\X\) is useful for checking endpoints, but it does not make the two physical acts interchangeable or erase the need to supply the hub first.
+
+\section{A simultaneous sum requires a simultaneous contract}
+
+Return to the two-node state. Two carriers propose quantities three and two on the same edge. If the physical contract permits their joint action, its net increment is
+\begin{equation}
+\delta_G=S_e(3+2)=(-5,5)^{\mathsf T}\X.
+\end{equation}
+The aggregate quantity five is within the illustrative route cap six and the source stock eighteen. Both child records can be preserved even though the endpoint is calculated once.
+
+If the carriers each propose four, each proposal individually fits the six-unit cap, but their sum eight does not. Testing each request alone is insufficient when both use the same resource. The group must be assessed against the aggregate constraint. How an over-capacity group is rejected, reduced, or reassembled is a declared resolver policy. We do not choose one merely to obtain a convenient total.
+
+Notice that the word ``simultaneous'' adds more than a plus sign. It requires an account of overlapping use, accepted quantities, common inputs, and whether intermediate constraints matter. The endpoint arithmetic can be simple while the physical permission question remains substantial. Chapter~\ref{ch:studio-group} will return to the distinct question of valuing a permitted group.
+
+\section{Represent external change as its own event}
+
+Suppose an external mechanism transfers one unit from Ridge to Vale before the actor's epoch. The old state is \(x=(18,2)^{\mathsf T}\X\), and the post-forcing baseline is
+\begin{equation}
+z=x+(-1,1)^{\mathsf T}\X=(17,3)^{\mathsf T}\X.
+\end{equation}
+The actor then proposes four units, yielding \((13,7)^{\mathsf T}\X\). The external increment and actor increment are both conservative, but they belong to different records. The actor's quote compares \((17,3)\) with \((13,7)\). It does not claim the earlier movement as its own.
+
+With the base reference and scales, the old potential is sixteen and the post-forcing potential is \(12.25\). Thus forcing lowered potential by \(3.75\). That fact belongs to the external audit. The actor's later field reduction is \(12.25-2.25=10\). The complete change of thirteen and three quarters is the sum of two identified causes. Keeping the causes separate is useful even when they happen to point in the same direction.
+
+An external inflow would require an explicit boundary crossing and change the closed-system mass. We have used conservative forcing here so that the total remains twenty. The phrase ``external'' identifies who or what determines the event, not necessarily a physical inflow from outside the represented boundary.
+
+\section{When one action touches another resource}
+
+Imagine a real carrier uses a battery while moving medicine. A physical action record might contain medicine increment \((-4,+4)\X\) and battery withdrawal \(0.2\mathrm{kWh}\). These are linked effects of a declared transformation. They do not become comparable by placing them in one column.
+
+The medicine total still closes in medicine units. The energy account needs its own carriers, conversion mechanism, and explicit dissipation or boundary. If a separately declared energy potential exists, it can produce an energy-field result. We should retain the two results as named components until a justified common valuation has been supplied. The fact that both results are numerically dimensionless after normalization does not establish ecological or ethical interchangeability.
+
+A process burden can represent a declared physical action burden not already counted through evaluated state effects. It must name what it covers. ``There was a vehicle'' is not a calibration. Nor may the same battery depletion be counted fully in an energy potential and again under another label without an explicit non-overlapping definition. In the ideal stock calculations of this studio, \(C=0\) is declared for simplicity; real transport has not thereby been proved free.
+
+\section{Audit a flawed action drawing}
+
+Consider this report: ``Ridge has eighteen units. Two carriers each take four. The route cap is six per epoch, so each is below the cap. Vale receives nine after efficient handling. The source is recorded as twelve because that is a preferred operating level.''
+
+The first defect is aggregate permission: eight exceeds six. The second is physical closure: eight withdrawn cannot produce nine delivered in the declared lossless transfer. The third is an invented source correction: eighteen minus eight is ten, not twelve. A preferred state cannot replace an endpoint. This report contains several distinct errors, and identifying the first does not make the rest irrelevant. A useful review records each defect while refusing to certify the event.
+
+It is tempting to solve such a report by adjusting one number until the totals agree. Resist that temptation. A corrected receipt needs evidence about what happened or a corrected prospective transformation. Conservation gives a consistency condition, not permission to invent observations.
+
+\section{Practice, with complete answers}
+
+\begin{enumerate}
+\item A route admits at most \(5\X\), and Ridge contains \(4\X\). Is a proposal of \(4.5\X\) admissible under the two declared restrictions?
+\item From the original two-node state, write the action column for a permitted reverse transfer of \(1\X\), and give its successor.
+\item In the hub example, send four on the first edge and all four on the second. Give both live states and verify total stock.
+\item Two proposals of \(3.5\X\) share the six-unit route. What does the aggregate check establish, and what does it leave undecided?
+\item A delivery record lists source withdrawal four, clinic delivery three, and hub remainder one. Does that prove a loss of one? Explain using the complete boundary.
+\item Draw a linked fuel, electricity, pumping, and water movement account. Which quantities can be added physically, and which must remain in distinct units?
+\end{enumerate}
+
+The first proposal fails the stock restriction even though it passes the route cap. Its hypothetical source would be \(-0.5\X\). The joint admissible maximum under just these two restrictions is four, but that observation does not automatically resize a submitted proposal. Resizing requires a declared procedure and a new accepted quantity.
+
+For the second answer, the reverse column is \((1,-1)^{\mathsf T}\). The successor is \((19,1)^{\mathsf T}\X\). Both entries remain nonnegative, and the total remains twenty. Reverse permission was supplied explicitly by the question; it did not follow from the existence of the forward arrow.
+
+For the third, the states are \((14,4,2)^{\mathsf T}\X\) and \((14,0,6)^{\mathsf T}\X\). Both sum to twenty. The hub empties without becoming negative. It was necessary as an intermediate location even though its initial and final stocks are both zero. Endpoint equality at one coordinate does not prove that nothing happened there.
+
+For the fourth, the requested aggregate is seven, so the submitted group fails the cap. This establishes refusal of that exact joint proposal under the stated contract. It does not decide whether one carrier should proceed, whether both should reduce quantities, or whether the group should wait. Those are additional choices.
+
+For the fifth, the apparent difference is inventory retained at the hub. The complete route closes as \(4=3+1\), with zero declared loss. A clinic-only boundary might record three units entering it, but that narrower boundary cannot explain the whole source withdrawal without the route record.
+
+The final drawing should retain at least four linked transformations. Fuel conversion changes a fuel store and energy carriers; electricity delivery changes the relevant electrical account; pump operation converts delivered energy into mechanical action with declared dissipation; water movement changes the source and destination water stocks. Litres of fuel, kilowatt-hours, and cubic metres of water cannot be summed as if they were one material. The chain identifies dependency without inventing a universal scalar. Each actual plant needs far more specific mechanisms than this sketch supplies.
+
+\section{Endpoint feasibility and path feasibility}
+
+In the present additive lossless model, if both endpoint stocks are nonnegative, the straight interpolation between them is also nonnegative. Each intermediate coordinate is a weighted average of its before and after values:
+\begin{equation}
+x_i(s)=(1-s)z_i+s z_i',\qquad 0\le s\le1.
+\end{equation}
+Since both weights and both endpoint values are nonnegative, the intermediate value is nonnegative. This is a small conditional proof that can simplify a stock-only path check.
+
+It does not prove that every physical mechanism connecting those endpoints is possible. A valve might be closed for part of the interval, two carriers might compete for a loading bay, or a medicine might require a temperature condition not represented in the stock vector. Those constraints are not addressed by nonnegative interpolation. The scope of the proof should stay as small as its premises.
+
+The hub example shows another limitation. Its final net increment has a nonnegative endpoint, but applying the second child before the first fails. A net path and a sequence of atomic actions are different physical descriptions. If the model realizes the two-stage route, its intermediate state is \((14,4,2)\), not an arbitrary interpolation chosen for convenience.
+
+This is also why an action record should distinguish a mechanism from an endpoint. Two different mechanisms can leave the same stocks while using different resources. A medicine shipment by insulated road vehicle and a shipment by aircraft might deliver the same quantity to the same clinic, yet have very different energy and timing accounts. The stock potential would give the same stock-field difference, while a fuller account could distinguish the routes.
+
+\section{A naming exercise for the action support}
+
+Take a pen and circle every noun in the proposed sentence: ``A refrigerated carrier takes medicine from the warehouse through the hub to the clinic.'' The nouns do not all correspond to the same kind of model object. Warehouse, hub, and clinic can name stock locations. Carrier can name an actor and a physical vehicle. Refrigeration can name a transformation involving energy and temperature. The action support should be built from the affected state variables, not merely from this grammatical list.
+
+For example, naming the carrier does not automatically create a new stock coordinate. Conversely, failing to mention heat in the sentence does not make actual heat production disappear from a complete energy account. The state schema determines what is measured, while the physical mechanism determines which of those measurements change. Keeping both explicit is a stronger habit than assuming that a familiar everyday noun already defines a scientific variable.
+
+\section{The drawing is part of the mathematics}
+
+An action column is a compact physical statement. Its negative entries name withdrawals and its positive entries name arrivals. A graph declares which transformations are available. Live route states reveal causal order. Aggregate checks prevent several actions from spending the same physical capacity twice. External events remain separately identified, and additional resources expand the account instead of disappearing into an attractive value number.
+
+The next studio takes this explicit physical world and builds its Gaussian potential. Because the state and transformation are now clear, changes in the potential can be understood as changes in evaluation rather than mysterious changes in the stock itself.

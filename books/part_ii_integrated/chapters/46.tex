@@ -1,0 +1,209 @@
+\chapter{A complete Gaussian field laboratory}\label{ch:lab}
+This laboratory is a sequence of exact worked calculations. It is not a
+trajectory produced by the research engine and not a proposed configuration
+for a scientific campaign. Its purpose is to let the reader reconstruct
+every important distinction with pencil-and-paper arithmetic.
+
+\section{Write the declaration before calculating}
+For the first cases, use two cells with
+\begin{equation}
+ z=(18,2),\quad x^*=(10,10),\quad\sigma=(2,2),
+ \quad H=\operatorname{diag}(1/4,1/4).
+\end{equation}
+Both state and reference sum to twenty. The action is a lossless transfer
+from the first cell to the second, with finite quantity $q$. The increment
+is $(-q,q)$. The illustrative physical domain permits $0\leq q\leq18$;
+there is no separate destination cap in this example. Process burden is zero.
+
+The initial potential is
+\begin{equation}
+ V(z)=\tfrac12[(8/2)^2+(-8/2)^2]=16.
+\end{equation}
+The marginals are $(2,-2)$, so the field force is four. Substitution into
+the exact finite expression gives $E(q)=4q-q^2/4$. Every later number
+should be checked both from that polynomial and from the endpoint potential.
+
+\section{A menu with favorable and adverse quantities}
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule $q$ & Endpoint & $V$ after & $E(q)$\\\midrule
+0 & $(18,2)$ & 16 & 0\\
+1 & $(17,3)$ & $49/4$ & $15/4$\\
+2 & $(16,4)$ & 9 & 7\\
+4 & $(14,6)$ & 4 & 12\\
+8 & $(10,10)$ & 0 & 16\\
+12 & $(6,14)$ & 4 & 12\\
+16 & $(2,18)$ & 16 & 0\\
+17 & $(1,19)$ & $81/4$ & $-17/4$\\
+18 & $(0,20)$ & 25 & $-9$\\\bottomrule
+\end{tabular}
+\end{center}
+Each row conserves twenty and has nonnegative stocks. Therefore physical
+feasibility alone does not choose the helpful rows. Conversely, the two
+zero-valued quantities mean very different things: $q=0$ does nothing,
+while $q=16$ exchanges the deviations and returns to the same potential.
+Equal potential is not equal state.
+
+The table is not a controller instruction. Selecting eight because it has
+the largest value would define an optimizer. Choosing uniformly from a
+declared affordable subset would define another process. Listing analytical
+options does not authorize either one as the scientific study.
+
+\section{Check the integral independently}
+Along the transfer, $f(r)=4-r/2$. For $q=4$,
+\begin{equation}
+ \int_0^4(4-r/2)\,dr=[4r-r^2/4]_0^4=12.
+\end{equation}
+The initial-tangent estimate is sixteen, overvaluing the action by four.
+The average force along the segment is $(4+2)/2=3$, and multiplying by
+quantity four again gives twelve. The endpoint-force averaging is exact
+because this particular gradient is affine, not because trapezoidal
+quadrature is exact for all field models.
+
+At $q=12$, the final force is minus two. The average is one and the
+integral is twelve. Some portions of the path improve the potential and
+later portions worsen it, yet the total remains positive. A positive
+integral is not a statement that every infinitesimal part was beneficial.
+
+\section{Separate force from an Onsager response}
+Declare, only for this illustration, $M_e=1/2$ and $\theta_e=0$.
+At the original state the requested rate is two. Duration $1/2$ gives
+quantity one and exact field value $15/4$. Duration two gives quantity
+four and value twelve. Duration four gives quantity eight and value sixteen.
+These are three frozen-step calculations, not repeated steps in one run.
+
+If instead the flux were recalculated continuously as the state moved,
+the force would fall and so would the flux. It would be a mistake to
+interpret the frozen duration-four jump as the solution of that differential
+equation. ``Same starting force'' does not mean ``same time evolution.''
+
+\section{Local evaluation with a nonzero remote term}
+Append a third cell at stock twelve, reference ten and scale two, but do
+not change it. The initial global potential becomes $33/2$. After the
+four-unit transfer it is $9/2$. The remote half-unit contribution is
+present in both and cancels. Local valuation still gives twelve.
+
+Now imagine the transfer also consumes stock from that third cell. The
+former two-cell formula is no longer a complete local account. The example
+does not need a numerical error to demonstrate the problem: its support
+assumption has changed. A correct implementation should reject the incomplete
+declaration rather than silently use the old result.
+
+\section{Sequential receipts and reversed order}
+Divide a four-unit transfer into quantities one and three. If one occurs
+first, its value is $15/4$ and the subsequent three-unit value is
+$49/4-4=33/4$. If three occurs first, its value is $39/4$ and the last
+one-unit value is $25/4-4=9/4$. Both sums are twelve.
+
+The intermediate state explains the different child values. There is no
+contradiction to reconcile by averaging the orders unless a separate
+allocation rule asks for such an average. The physical sequence already
+defines which live state each action used.
+
+If an extra nonnegative activation burden is incurred for each separate
+action, splitting can change the net total. The field sum still telescopes;
+the process-cost sum changes. An implementation must not quote the one-action
+cost and then execute two independently activated operations under it.
+
+\section{A simultaneous group on the same source}
+Let both two-unit children be accepted on the same baseline. The net
+increment is $(-4,4)$ and the group field value is twelve. Same-baseline
+singletons each show seven, yielding a misleading fourteen if added as
+though independent. The missing cross correction is minus two.
+
+Under the declared straight common path, the attribution to each child is
+six. This is easy to check from the average group gradient, or by giving
+each child half of the identical net direction. Closure is $6+6=12$.
+It does not prove that each actor owns six units of spendable capacity.
+
+For unequal children of one and three units, common-path values become
+three and nine. These differ from both ordered sequential splits above.
+The group field result is the same because the endpoint is the same;
+the child interpretations refer to different declared constructions.
+
+\section{Cancellation and a signed child account}
+Use the same baseline but take opposing children $(-2,2)$ and $(2,-2)$.
+The net endpoint is unchanged. Standalone values are $7$ and $-9$,
+while common-path values are $8$ and $-8$. Both the group value and the
+sum of path values are zero. The singleton sum is minus two.
+
+If each child belongs to a different zero-balance owner, the proposed
+owner-wise affordability rule refuses the owner charged eight. If both
+belong to one owner, same-event netting gives zero. This is an explicit
+demonstration that ownership policy can matter even when the physical net
+change is identical. It is not a recommendation to choose the ownership
+map that produces a desired outcome.
+
+\section{A different scale is a different model}
+Keep the original state and reference but change scales to $(2,4)$.
+The initial potential is ten, marginals are $(2,-1/2)$, and field is
+$5/2$. For quantity four the curvature coefficient is
+$\tfrac12(1/4+1/16)=5/32$, so
+\begin{equation}
+ E(4)=4(5/2)-(5/32)16=15/2.
+\end{equation}
+The endpoint potential is $5/2$, agreeing with $10-5/2=15/2$.
+Nothing physical changed between this declaration and the earlier example.
+The change in value comes from the declared scale at the second cell.
+Any empirical use must therefore justify and version that declaration.
+
+Changing to smaller physical units would instead rescale stock, reference,
+quantity and scale together and leave EBU unchanged. A field account that
+changes when only the unit label changes has a dimensional bug.
+
+\section{A route whose first step is unfavorable}
+Declare a new three-cell example with state $(10,10,2)$, reference
+$(6,6,10)$ and equal scales two. Both totals are twenty-two. The initial
+potential is twelve. A four-unit transfer from the first cell to the
+second gives $(6,14,2)$ with potential sixteen, so its value is minus four.
+A subsequent eight-unit transfer from the second cell to the third reaches
+the reference $(6,6,10)$ and has value sixteen. The route total is twelve.
+
+This is a physically feasible quantity-fixed sequence under simple stock
+nonnegativity. It illustrates the difference between favorable endpoint
+value and intermediate affordability. A zero-balance owner cannot pay the
+first negative action under the proposed no-borrowing rule. The later
+positive action does not retroactively authorize it. A different grouping,
+timing or ownership policy would be a different declared experiment.
+
+\section{Forcing and the complete account}
+Begin instead at $(10,10)$ with $V=0$, zero balances and zero external
+audit. A conservative shock gives $(14,6)$, with $D_{\mathrm{ext}}=4$.
+One two-unit restoring transfer ends at $(12,8)$, with potential one and
+field value three. If the candidate account policy credits that action
+to its declared owner, the invariant reads
+\begin{equation}
+ 1+3-4=0.
+\end{equation}
+Now consider a possible reverse two-unit action from $(12,8)$ back to
+$(14,6)$. Its value is minus three. An owner with balance three can afford
+it, returning to potential four and balance zero, still with audit four.
+Both accounts close. Recovery has been undone. This is a counterexample
+to the claim that the accounting invariant alone forces monotone recovery.
+
+No random process has been run to obtain this pair of possibilities. It is
+an algebraic construction showing what the proposed rules allow. A later
+study must determine how often such events arise under its actual menus and
+sampling, without changing those rules after seeing results.
+
+\section{A reproducible hand calculation}
+For every candidate, a reader should be able to list the baseline, references,
+scales, child increments, complete support, physical constraints, before/after
+potential, group value and optional path values. If capacity is discussed,
+the owner map and prior balances must also be listed. If forcing occurs,
+the before-forcing state and signed audit must be listed separately.
+
+An unexplained number in any one of those positions should interrupt the
+claim. The appropriate response is not to fill it with a plausible value.
+It is to identify which declaration, measurement or authority is missing.
+This is how a careful laboratory connects to the fail-closed software
+architecture developed in the following chapters of this volume.
+
+\section*{Final synthesis}
+The Gaussian model gives exact, local finite accounting and a transparent
+curvature correction. It supports conditional path and telescoping proofs,
+and it makes group interaction calculable. The Onsager-type controller gives
+an additional conditional dissipation law when it is explicitly chosen.
+Random-affordable action is a different prospective process. Its useful,
+adverse and inconclusive outcomes remain to be investigated, not written
+into the definition of success.

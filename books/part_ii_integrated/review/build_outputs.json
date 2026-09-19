@@ -1,0 +1,13 @@
+{
+  "path": "output/pdf/EBP_Book_Part_II_Integrated_Gaussian_Explanatory_Edition.pdf",
+  "pages": 285,
+  "new_typeset_pages": 122,
+  "historical_source_pages": 163,
+  "sha256": "23d9c6e0069c7fbe28bb3b91ca6cfcf1eb3b4d10b52d61b1ea17eb8eb0f40b5f",
+  "original_sha256": {
+    "II": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095",
+    "III": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019"
+  },
+  "model_execution": false,
+  "scientific_evidence_created": false
+}

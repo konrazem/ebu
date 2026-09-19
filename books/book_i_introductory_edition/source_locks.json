@@ -1,0 +1,77 @@
+{
+  "starting_head": "05f3cb02d0c48e60de98342edfac9c36f2cecc6f",
+  "branch": "codex/local-gaussian-reconciliation",
+  "source_mode": "NEW-SOURCE BOOK I EDITION",
+  "source_date": "2026-09-19",
+  "documents": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e"
+    },
+    {
+      "path": "CURRENT_SCIENTIFIC_AUTHORITY.md",
+      "sha256": "92709b6f7e31497dfb48a50bcf45a9e4f7e3e406e59e367874ba897e3a1a75eb"
+    },
+    {
+      "path": "RECONCILIATION_COMPLETION_REPORT.md",
+      "sha256": "4a09cf93239090c715d98dcd19fa887aea33eb507a4b344512cdcb6ec57c0181"
+    },
+    {
+      "path": "BOOK_I_GENERATION_HANDOVER.md",
+      "sha256": "12a75b84dbdf145943d5de0a361d4a187409582dafdabab6300fc75f210a7c2e"
+    },
+    {
+      "path": "BOOK_I_INTRODUCTION_BLUEPRINT.md",
+      "sha256": "4ba34b2e4a167f72daa2c104041ac8bdfe97473c2432aa63c40d11f8cca9ca83"
+    },
+    {
+      "path": "BOOK_I_MOTIVATION_SOURCE_REGISTER.md",
+      "sha256": "984fe4d6685c76144f9b88978ce103c69687ff20d8227aaed1fdce2c5c1a4069"
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md",
+      "sha256": "96a9e336230f80085558982f31ccde8caa754e68f6c6ade306743400e5cdc78f"
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md",
+      "sha256": "21a6ce38b13e8967074ca16eac4d1eea80c125cc5ba59e87e2f3950b1000c9ee"
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "sha256": "f1e8983bcad16343c0db79ec55763991e51f031864056c8dfc3cb17b56c15e2e"
+    },
+    {
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10"
+    },
+    {
+      "path": "PART_I_EXPLANATORY_VISUAL_AND_INSTITUTIONAL_REVISION_PLAN.md",
+      "sha256": "ed1242b0965b154f07158bb8251747beab63b99cba9ed8971f1848bedb8d7e4f"
+    }
+  ],
+  "preserved_pdfs": [
+    {
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "pages": 153,
+      "sha256": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019"
+    },
+    {
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "pages": 160,
+      "sha256": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095"
+    },
+    {
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_I_Unified_Explanatory_Edition.pdf",
+      "pages": 296,
+      "sha256": "335ed5c6d3541d48a61438e213a8a1148eb196649da83392a4ba0741ce65a4ad"
+    }
+  ],
+  "author_request": {
+    "path": "/Users/konrad.grzyb/.codex/attachments/5f5d2098-6a68-489f-b2a3-161ae4b0a711/pasted-text.txt",
+    "sha256": "4c6b5a8259ce527c11622287f64f99b44db71a5d667ecc863173e8393a93f18b"
+  }
+}

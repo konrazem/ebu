@@ -1,0 +1,163 @@
+\chapter{Action receipts and exact closure}\label{ch:receipts}
+
+\section{A receipt is a physical account line}
+A shop receipt records a commercial exchange. An EBU action record identifies a represented physical transformation, its baseline, its endpoint and the rule used to evaluate it. Calling both objects receipts should not make us assume that they have the same balancing entry.
+
+In the ideal field account, a positive action value can be balanced by a reduction in potential. It need not be a transfer from a buyer's negative account. This is an algebraic relationship among values. Whether an institution issues a transferable claim on that basis is a further rule.
+
+The preceding chapter showed why one action can be evaluated locally. We now connect many such lines. The basic calculation is simple: a state used as the endpoint of one action becomes the starting point of the next. Its potential appears once with a minus sign and once with a plus sign, and the two occurrences cancel.
+
+\section{Write the actual chain of states}
+Consider a sequence
+\begin{equation}
+ x_0\longrightarrow x_1\longrightarrow\cdots\longrightarrow x_m.
+\end{equation}
+The arrows describe authoritative physical transitions in a fixed accounting model. For the moment, no external change occurs between them. Define the signed value of line $r$ as
+\begin{equation}
+ E_r=V(x_{r-1})-V(x_r)-C_r.
+\end{equation}
+Each line can be computed from its complete affected factors. The local-to-global identity then lets us write the global expression without requiring every actor to read the whole field.
+
+The order is not merely the order in which files happen to arrive. If two actions overlap physically, a software sorting rule does not prove that one observed state preceded the other. Such actions can be recorded as a joint transition with their child identities retained. The telescoping calculation concerns successive authoritative transitions, which may be whole groups; individual group attributions require the separate treatment in Chapter~\ref{ch:groups}.
+
+\section{The proof of receipt closure}
+Sum the lines and expand the first few terms:
+\begin{align}
+ \sum_{r=1}^{m}E_r
+ &=V(x_0)-V(x_1)+V(x_1)-V(x_2)\notag\\
+ &\quad+\cdots+V(x_{m-1})-V(x_m)-\sum_{r=1}^{m}C_r\\
+ &=V(x_0)-V(x_m)-\sum_{r=1}^{m}C_r.
+\end{align}
+Equivalently,
+\begin{equation}\label{eq:receipt-closure}
+ \sum_rE_r+\left[V(x_m)-V(x_0)\right]+\sum_rC_r=0.
+\end{equation}
+The middle states did not become physically irrelevant. They are essential for checking each action. They simply disappear from this sum because their potential values are used consistently at adjacent boundaries.
+
+\begin{lawbox}{Conditional receipt closure}
+Under one fixed potential and a correctly linked sequence of complete state transitions, exact endpoint differences telescope. Signed action values equal endpoint potential reduction minus the declared total process burden. This proves an accounting identity, not a theorem of fair distribution or eventual recovery.
+\end{lawbox}
+
+The historical single-action theorem retains the execution and audit assumptions under which it was stated. Writing the general endpoint identity here does not retroactively replace those assumptions with a new operational protocol. The distinction lets us teach the algebra fully without changing scientific history.
+
+\section{A complete Gaussian example with three lines}
+Start from $(18,2)\X$, with references $(10,10)\X$ and scales $(2,2)\X$. Three lossless transfers send quantities 2, 3 and 1 in that order. The states and potential values are
+\[
+ (18,2)\to(16,4)\to(13,7)\to(12,8),
+ \qquad 16\to9\to9/4\to1.
+\]
+With $C_r=0$, the three lines have values
+\[
+ E_1=7,\qquad E_2=27/4=6.75,\qquad E_3=5/4=1.25.
+\]
+Their sum is 15, exactly $16-1$. We can check every endpoint with $V(x)=((x_1-10)^2+(x_2-10)^2)/8$.
+
+Notice that the three-unit middle action has a smaller value than a three-unit action considered alone at the original state. After the first action, the system is already closer to its reference. Reusing the original baseline for the middle line would describe a different counterfactual and break the chain.
+
+\begin{center}
+\begin{tabular}{rrrrr}\toprule
+Line & Quantity & $V$ before & $V$ after & $E_r$\\\midrule
+1 & 2 & 16 & 9 & 7\\
+2 & 3 & 9 & $9/4$ & $27/4$\\
+3 & 1 & $9/4$ & 1 & $5/4$\\\bottomrule
+\end{tabular}
+\end{center}
+
+This table is an illustrative calculation on supplied states. It does not report a sequence executed by the research software. Paper arithmetic and empirical execution have different evidential roles even when they use the same equation.
+
+\diagram{sequence}{Three consecutive finite differences telescope to fifteen. Every action uses the endpoint of the preceding action as its own baseline.}{fig:sequence}
+
+\section{What if a declared process burden is added?}
+To isolate the algebra, suppose a separately justified extension assigns nonduplicated burdens $C_1=0.2$, $C_2=0.3$ and $C_3=0.1$. Then the net lines are $6.8$, $6.45$ and $1.15$, summing to $14.4$. Equation~\eqref{eq:receipt-closure} gives
+\[
+ 14.4+(1-16)+0.6=0.
+\]
+The numbers show how the account would close; they are not physical estimates for pumps or couriers. A real use would need to identify the process, its carrier, its unit conversion and why it was not already valued through the represented state.
+
+The first lossless Gaussian model sets $C=0$. We introduce the hypothetical extension so readers can follow the general equation without importing a hidden transport penalty into every example. Mere distance or the presence of several actors is not a licence to invent extra burden.
+
+\section{From action lines to attributed totals}
+Suppose the first and third sequential lines are assigned to actor A and the second to actor B under an explicitly declared record-ownership rule. Let $T_A$ and $T_B$ denote these attributed history totals, reserving $B_i$ for the prospective capacity account introduced later. With zero process burden,
+\[
+ T_A=7+1.25=8.25,\qquad T_B=6.75.
+\]
+Their sum is the same 15. This is a partition of existing lines. It does not create an additional physical effect or require a payer.
+
+The partition must include each complete line exactly once if these totals are to close. Excluding negative lines, copying a positive line to two actors, or retaining only the largest observed values changes the sum. A useful audit checks the mapping as well as the arithmetic.
+
+Assigning an entire sequential line is simpler than dividing a simultaneous group. Known quantities and identities do not automatically determine unique child field values in a nonlinear group. A group record may have a correct total even while its individual interpretation remains unresolved.
+
+\section{Why positive-only recording fails}
+Consider a first action that moves potential from 1 to 4, followed by one that moves it from 4 to 0. With no process burden, the values are $-3$ and $+4$. The net reduction is 1, agreeing with the endpoint difference.
+
+If the negative entry is dropped and only the positive one retained, the account reports 4. Three units of represented worsening have disappeared from the history. No rounding or statistical explanation is needed: the omission is visible in the exact equation.
+
+This example does not by itself choose how an institution should treat debt or support an essential negative action. It says that a physical history must retain the signed effect even if institutional responsibility is shared, guaranteed or handled separately. Compensation rules cannot change what the represented state did.
+
+\section{External changes between recorded actions}
+Now let an external event first take $x_t$ to $z_t$, and let the action take $z_t$ to $x_{t+1}$. Define
+\begin{equation}
+ D_{{\rm ext},t}=V(z_t)-V(x_t).
+\end{equation}
+The action value is $E_t=V(z_t)-V(x_{t+1})-C_t$. Adding and subtracting $V(x_t)$ gives
+\begin{equation}
+ E_t=V(x_t)-V(x_{t+1})+D_{{\rm ext},t}-C_t.
+\end{equation}
+Sum over the recorded interval:
+\begin{equation}\label{eq:driven-closure}
+ \sum_tE_t=V(x_0)-V(x_N)+\sum_tD_{{\rm ext},t}-\sum_tC_t.
+\end{equation}
+External worsening can replenish deviation that later actions reduce. External improvement can reduce it without actor contribution. Both cases are represented by the signed external term. Describing all external changes as positive would discard half of the possible accounting situations.
+
+For example, start at $(10,10)$ with potential zero. An external redistribution produces $(14,6)$ with potential 4. A two-unit corrective transfer then produces $(12,8)$ with potential 1. The actor value is 3, and $0-1+4=3$. The external event has no actor receipt; its separate potential change explains the total.
+
+\section{A prospective capacity account}
+The Local Gaussian research proposal considers an additional rule: use declared child attributions to update persistent nonnegative action-capacity balances. The mathematical word capacity here names permission to make later modeled actions under that proposed rule. It is neither water stock nor installed pump capacity.
+
+Let $B_i$ be those balances and $J$ the cumulative external potential change. If the adopted updates satisfy
+\[
+ \sum_i\Delta B_i=V(z_t)-V(x_{t+1}),\qquad
+ \Delta J=D_{{\rm ext},t},
+\]
+in the ideal $C=0$ model, then
+\begin{equation}
+ V(x_{t+1})+\sum_iB_{i,t+1}-J_{t+1}
+ =V(x_t)+\sum_iB_{i,t}-J_t.
+\end{equation}
+This follows by substitution. It is a theorem about the stated update equations. It does not prove that they are the right permissions for an economy, that every actor can act, or that the physical state will return to its reference.
+
+Owner mapping, simultaneous netting, path meaning, numerical boundaries and action selection remain parts of the proposed model specification. The group closure identity does not decide them. A balance may become a consequence of a rule; that does not make the rule a consequence of the identity.
+
+The prospective zero-genesis rule starts capacity accounts at zero. It does not quietly authorize borrowing, an automatic refill or an external event credit. Any such mechanism would change the proposal and need its own explicit authority; physical stock is not initial account capacity.
+
+\section{Physical conservation and value closure}
+In a lossless stock transfer, $\sum_i x_i$ remains constant. In a beneficial transfer, $V$ falls. The conserved stock and the changing potential therefore cannot be the same quantity.
+
+Our repeated example makes this concrete. Both $(18,2)$ and $(14,6)$ contain twenty stock units. Their potentials are sixteen and four. A field reduction of twelve does not mean that twelve stock units were produced or removed. It is the change of a dimensionless standardized discrepancy.
+
+Likewise, equation~\eqref{eq:receipt-closure} is an exact reconciliation of signed numbers derived from a potential. It is not a new physical conservation law for energy, matter or money. Calling its terms ``balanced'' is justified; calling the EBU number a conserved material token would change the meaning.
+
+\section{An audit begins with the links}
+To check a sequence, first compare adjacent state identities. Does each successor really match the next predecessor within the declared action-only interval? If not, determine whether an external event, field revision or missing action explains the gap.
+
+Next check the potential version and complete affected factors for each line. Recalculate its before and after values and any process burden. Confirm that one physical event has not generated several independent settled copies. Finally compare the sum with the endpoint and external terms.
+
+A remaining residual is information. It can indicate arithmetic error, omitted state, an unmatched version, duplicate accounting or a numerical approximation needing its own bound. In a real implementation the declared numerical policy governs interpretation. A reviewer should not simply insert a balancing entry whose physical meaning is unknown.
+
+\section{Guided problem: find the missing line}
+A record begins at potential 16 and ends at 1. It lists values 7 and 1.25, with no external event or process burden. What value is missing if the history is otherwise complete?
+
+The endpoint reduction is 15. The visible lines sum to 8.25, so the missing value is 6.75. This identifies the required residual, not the missing physical event. In the earlier three-line example it belongs to the transfer from $(16,4)$ to $(13,7)$. Without those state records we cannot infer its source, destination or performer merely from 6.75.
+
+This distinction is useful in audit: a closure discrepancy can locate a problem numerically without reconstructing its cause. The missing evidence must still be obtained.
+
+\section{Practice and reflection}
+Choose three intermediate potentials between an initial 20 and final 5. Calculate four exact action differences. Their sum must be 15 even if one intermediate step increases potential. Add nonnegative process burdens totaling 2 and verify a net of 13. Explain why this exercise demonstrates telescoping but does not demonstrate physical feasibility of the chosen states.
+
+Now insert an external worsening of 3 during the interval. If the physical endpoints and total process burden remain as stated, the action sum required by equation~\eqref{eq:driven-closure} is 16. An explicit chain must identify where the external change occurred. A numerical total alone cannot establish that history.
+
+\begin{intuitionbox}{What to carry forward}
+Complete, consistently linked endpoint differences telescope. A partition of valid lines preserves their sum; duplicate or missing lines do not. External change and process burden remain explicit. A capacity or institutional account can use these records only under an additional declared rule.
+\end{intuitionbox}
+
+The next chapter uses the same identity to examine cycles and splitting. It will show exactly what a closed account rules out, and why that conclusion is narrower than a guarantee against every possible incentive problem.

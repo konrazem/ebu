@@ -1,0 +1,94 @@
+\chapter{Gaussian reference geometry}\label{ch:geometry}
+The word Gaussian can suggest random noise, a bell-shaped histogram or a
+statistical fit. Here its primary role is geometric. We declare a reference
+and a positive scale at each cell, measure deviation in units of that scale,
+square it and add. No observations have to be normally distributed for that
+mathematical definition to make sense.
+
+\section{The potential and its matrix form}
+Define
+\begin{equation}\label{eq:potential}
+ V(x)=\frac12\sum_{i=1}^n\frac{(x_i-x_i^*)^2}{\sigma_i^2}
+     =\frac12(x-x^*)^T H(x-x^*),
+ \qquad H=\operatorname{diag}(\sigma_i^{-2}).
+\end{equation}
+The factor $1/2$ simplifies derivatives. Each diagonal entry of $H$ is
+positive. Thus for a nonzero vector $v$,
+$v^THv=\sum_i v_i^2/\sigma_i^2>0$. This is positive definiteness, and it
+gives $V\geq0$ with equality exactly at $x=x^*$.
+
+Because the reference is assumed compatible with the physical domain, it is
+also the unique minimizer on that domain. A minimum of a function is not
+yet an attracting state of a process. It is a geometric fact available
+before an actor law has been specified.
+
+\section{Deriving the marginal and curvature}
+Differentiate one summand. The derivative of $(x_i-x_i^*)^2$ is
+$2(x_i-x_i^*)$, cancelling the factor $1/2$. Hence
+\begin{equation}
+ \mu_i(x_i)=\frac{x_i-x_i^*}{\sigma_i^2},
+ \qquad \mu(x)=H(x-x^*),\qquad \nabla^2V=H.
+\end{equation}
+The marginal is negative below reference and positive above it. There is
+no flat healthy band. A stock very close to its reference has a small,
+usually nonzero marginal. This is a substantive departure from the old
+hinge family, not a cosmetic rewriting of its coefficients.
+
+Let $h_{\min}=\min_i\sigma_i^{-2}$ and
+$h_{\max}=\max_i\sigma_i^{-2}$. Then
+\begin{equation}
+ \frac{h_{\min}}2\|x-x^*\|_2^2\leq V(x)
+ \leq\frac{h_{\max}}2\|x-x^*\|_2^2.
+\end{equation}
+These inequalities follow by replacing each positive diagonal weight with
+its smallest or largest value. They relate potential to Euclidean distance
+under this declared calibration. They do not say that Euclidean distance is
+a complete measure of human or ecological function.
+
+\section{What changing a scale does}
+Take $(x_1,x_2)=(18,2)$, reference $(10,10)$ and scales $(2,2)$.
+The standardized deviations are $(4,-4)$ and $V=16$. If only the first
+scale becomes one, the potential becomes
+$\tfrac12(8^2+(-4)^2)=40$. The physical state has not changed; the
+declared sensitivity has. That is why comparisons across parameter versions
+need explicit recalibration records.
+
+The shape $\exp[-V(x)]$ resembles a Gaussian density, but it is not itself
+a normalized probability law. Restricting to fixed mass couples the
+coordinates, and the nonnegative boundary further changes the domain. A
+claim about the distribution of actual states needs a stochastic transition
+law and evidence or proof about that law. A bell-shaped reference geometry
+cannot supply those missing ingredients.
+
+\section{An incompatible-reference extension, not the active model}
+To see why mass compatibility is load-bearing, temporarily allow
+$\sum_i x_i^*\ne M$ and ignore the nonnegative boundary while minimizing
+on the affine mass plane. A Lagrange multiplier $\lambda$ gives
+\begin{equation}
+ H(x-x^*)=\lambda\mathbf1,
+ \qquad x_i=x_i^*+\lambda\sigma_i^2,
+ \qquad\lambda=\frac{M-\sum_i x_i^*}{\sum_i\sigma_i^2}.
+\end{equation}
+This candidate solves the nonnegative problem only if all its entries are
+nonnegative; otherwise active-boundary conditions are required. Even in the
+interior, the constrained optimum need not have $\mu_i=0$: its marginals
+are equal, so conservative transfers have no first-order benefit.
+
+The active examples do not use this extension. It is included to show why
+``zero gradient,'' ``constrained minimum'' and ``declared reference'' are
+not universally interchangeable phrases.
+
+\section*{Exercises and answers}
+At $(14,6)$ with reference $(10,10)$ and scales $(2,2)$, the marginals are
+$(1,-1)$ and $V=4$. At $(10,10)$ both vanish. At $(2,18)$ the potential is
+again sixteen, but the marginals reverse sign. Equal potential does not mean
+equal state or equal consequences for a directed action menu.
+
+Explain why removing the old Allee term does not prove regeneration safe.
+The new closed lossless domain contains no such regenerative dynamics. The
+old theorem has not been refuted; its plant is simply not the active one.
+
+\section*{Chapter recap}
+Gaussian geometry supplies a smooth, strictly convex quadratic and constant
+curvature. It makes several derivations exact and simple. It does not supply
+calibration, a probability law, a controller or a theorem of recovery.

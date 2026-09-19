@@ -1,0 +1,69 @@
+\section{A constrained reference is not a Gaussian probability law}
+There are two different uses of the same exponential expression. One may
+define a geometric score $V(x)$ and note that $\exp[-V(x)]$ has a
+Gaussian shape. Or one may define a probability measure proportional to
+that expression on a specified domain, with a specified base measure and
+normalizing constant. The second is an additional model. It does not follow
+from the first and does not describe an actor process until a connection
+to that process is established.
+
+Conservation makes the distinction concrete. In two cells with total mass
+twenty, choosing $x_1$ determines $x_2=20-x_1$. They cannot be independent
+random coordinates on that mass line. A diagonal Hessian still gives a
+separable formula on the ambient space, but the feasible states are
+coupled by the constraint. A simulation histogram resembling a bell would
+also not prove independent Gaussian coordinates.
+
+The same care applies to the scale $\sigma_i$. In this book it is a
+declared width in physical stock units. Calling it a standard deviation
+would require a specified probability distribution and calibration. Calling
+it a measurement error would require a sensor-error model. Neither role
+is obtained simply because statistical notation often uses the same letter.
+
+\section{The reference and the directions the world can use}
+In an unconstrained ambient space, a vanishing gradient characterizes the
+minimum of this strictly convex quadratic. A conserved world moves only
+in directions whose entries sum to zero. If every allowed directional
+derivative is zero, the state need not have zero ambient gradient in a
+more general incompatible-reference problem. Equal marginals can make
+all conservative first-order transfers neutral while the individual
+marginals are nonzero.
+
+The active compatible-reference model avoids that particular ambiguity at
+its global minimum, but graph restrictions can create another. If the
+graph has disconnected components, no internal action can change a
+component's total mass. A reference compatible with global mass may still
+be incompatible with a component's available mass. Thus global compatibility
+is not a reachability theorem even for an otherwise continuous action set.
+
+One can see this without running a process. Divide four cells into two
+disconnected pairs. If the first pair holds twelve units but its two
+references sum to twenty, no transfer confined to that pair can meet both
+references. Movement elsewhere does not repair the missing route. A global
+potential may show a persistent deviation that is structurally impossible
+to remove under the declared topology.
+
+\section{Why a small potential is an incomplete functional statement}
+Because the potential sums standardized squared deviations, a small value
+does bound each represented standardized deviation. In fact,
+\begin{equation}
+ \frac{|x_i-x_i^*|}{\sigma_i}\leq\sqrt{2V(x)}
+ \quad\hbox{for every represented cell }i.
+\end{equation}
+The proof uses nonnegativity: an individual summand cannot exceed the
+whole sum. This is a useful geometric guarantee. It concerns represented
+coordinates and declared scales only.
+
+It does not establish the adequacy of the reference for health, the
+quality of the resource, access for an unrepresented household or the
+absence of damage outside the system boundary. Those concerns are not
+counterexamples to the inequality. They are reasons to avoid assigning
+the inequality a meaning it never had. Functional calibration and
+representational completeness require additional evidence and choices.
+
+Conversely, a large potential does not prove that one actor caused the
+departure or owes compensation for it. Initial conditions and external
+forcing can create deviation before the actor chooses anything. The
+following chapters therefore bind value to a specific transition and
+baseline, rather than treating the state score as a debt automatically
+assigned to whoever happens to be present.

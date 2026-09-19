@@ -1,0 +1,182 @@
+\chapter{Studio: a medicine route in local epochs}\label{ch:studio-route}
+
+\begin{intuitionbox}{Physical picture: a distant need is reached through local acts}
+Medicine is stored at Ridge, passes through a regional hub, and reaches Vale clinic. The journey has an order: the hub must receive stock before it can dispatch it. Each transfer changes a live local state. Keeping those changes visible lets the route close without inventing a special force for distance or crediting the same clinic improvement twice.
+\end{intuitionbox}
+
+This cold-chain teaching scene uses a fully declared lossless Gaussian account. It is a stock-routing illustration, not a model of clinical treatment. Medicine is treated as one homogeneous divisible stock, measured in \(\X\). This is appropriate for arithmetic, while an operational medical system would need product identity, dose, expiry, temperature, sterility, and other non-interchangeable properties. Arrival at a clinic is also different from administration to a patient.
+
+The route is deliberately simple enough to reconstruct line by line. Its importance lies in the accounting pattern: atomic transformations, live predecessors, resource-specific ledgers, and a final comparison that cancels intermediate terms only when the assumptions allow it.
+
+\section{Declare the route's changed data}
+
+This is a three-cell example, so do not import the two-cell reference without adjustment. The coordinate order is warehouse \(W\), hub \(H\), clinic \(C\). Define
+\begin{equation}
+x^0=(10,0,2)^{\mathsf T}\X,
+\quad x^*=(6,0,6)^{\mathsf T}\X,
+\quad \sigma=(2,2,2)^{\mathsf T}\X.
+\end{equation}
+Both actual and reference totals are twelve. The reference assigns zero persistent stock to the hub in this simplified model. That does not mean a real hub should hold no safety inventory. It is a declared teaching assumption that makes temporary inventory visible as a deviation.
+
+The two lossless edges are \(W\to H\) and \(H\to C\). Their columns are
+\begin{equation}
+S_1=(-1,1,0)^{\mathsf T},\qquad S_2=(0,-1,1)^{\mathsf T}.
+\end{equation}
+We inspect the specified quantities \(q_1=5\X\) and \(q_2=4\X\). Assume the corresponding route capacities permit these quantities. No external change occurs between the two action epochs, and the same potential remains fixed. The ideal process burdens are \(C_1=C_2=0\).
+
+The potential is
+\begin{equation}
+V(x)=\frac{(x_W-6)^2+x_H^2+(x_C-6)^2}{8}.
+\end{equation}
+At the start it is \((16+0+16)/8=4\). This equation and its data define the scope of every value below. They are not clinical valuations of a real warehouse or patient.
+
+\section{First epoch: move five units to the hub}
+
+The first atomic transfer has increment \((-5,5,0)^{\mathsf T}\X\). Its successor is
+\begin{equation}
+x^1=(5,5,2)^{\mathsf T}\X.
+\end{equation}
+Warehouse stock falls by five, hub stock rises by five, and clinic stock remains two. The total is still twelve. The resulting local contributions are
+\begin{align}
+V_W(5)&=(-1)^2/8=0.125,\\
+V_H(5)&=5^2/8=3.125,\\
+V_C(2)&=(-4)^2/8=2.
+\end{align}
+Together they give \(V(x^1)=5.25\), so the first field receipt is
+\begin{equation}
+E_1=4-5.25=-1.25.
+\end{equation}
+The first step increases the represented potential. It creates temporary hub inventory and takes the warehouse slightly below its reference before improving the clinic stock. This result is not concealed because the route has a desirable final purpose. The finite equation evaluates the state change specified for this epoch.
+
+The negative line is also not a judgement that the carrier is bad or that the patient's need is illegitimate. It is a scoped result under the chosen intermediate-state potential. A policy that requires every individual step to have nonnegative value might block this route. Whether to permit grouped commitments, finance an intermediate step, choose another path, or change the institutional arrangement is a separate question. The arithmetic does not select the answer.
+
+\section{Second epoch: dispatch four units to Vale}
+
+The second transfer begins from \(x^1\), where the hub contains five. It withdraws four and delivers four, leaving one at the hub:
+\begin{equation}
+x^2=(5,1,6)^{\mathsf T}\X.
+\end{equation}
+The clinic now equals its declared reference. The final local contributions are \(0.125\), \(0.125\), and zero, total \(0.25\). The second receipt is therefore
+\begin{equation}
+E_2=5.25-0.25=5.
+\end{equation}
+Notice that the second action reduces potential at both the hub and clinic. It does not change warehouse stock. The warehouse contribution is present in a global evaluation but cancels between the two sides. A local evaluation can omit that unchanged contribution while retaining the full field difference.
+
+If the second action had been quoted independently against \(x^0\), it would attempt to withdraw four from an empty hub. The vector formula would produce a negative coordinate, but the physical action would be inadmissible. Correct live ordering is thus needed for feasibility as well as for value.
+
+\section{Close the physical route}
+
+Track the five units removed from the warehouse:
+\begin{equation}
+5\X=4\X\ \hbox{at the clinic}+1\X\ \hbox{remaining at the hub}.
+\end{equation}
+Both transfer efficiencies are one and both declared losses are zero. The warehouse's final five plus the hub's one plus the clinic's six reconstruct the original twelve units.
+
+The retained hub unit may be useful later, but this receipt does not invent its future delivery. It is present inventory. Likewise, the clinic's receipt of four does not prove that four units were administered effectively. Consumption, treatment, wastage, and disposal would require further physical transformations and any additional state needed to describe them.
+
+This is why a route record is more informative than one net sentence saying ``five units were sent to help Vale.'' That sentence does not reveal where the fifth unit remains, what the hub did, or whether the clinic actually received the planned amount. The local records preserve those distinctions.
+
+\section{Close the value route by cancellation}
+
+Add the two signed results:
+\begin{equation}
+E_1+E_2=-1.25+5=3.75.
+\end{equation}
+The endpoint calculation gives the same answer:
+\begin{equation}
+V(x^0)-V(x^2)=4-0.25=3.75.
+\end{equation}
+Write the unsimplified sum to see why:
+\begin{align}
+E_1+E_2
+&=[V(x^0)-V(x^1)]+[V(x^1)-V(x^2)]\\
+&=V(x^0)-V(x^2).
+\end{align}
+The same intermediate potential occurs once with a minus sign and once with a plus sign. Its cancellation requires the second receipt to use the actual state left by the first, under the same potential definition.
+
+For a longer sequence with process burdens,
+\begin{equation}
+\sum_{k=1}^{m}E_k=V(x^0)-V(x^m)-\sum_{k=1}^{m}C_k
+\end{equation}
+under the action-only, fixed-potential assumptions. The identity does not promise a useful endpoint. A route that returns to its starting state has zero total field difference and, with nonnegative process burden, nonpositive net value. A route that increases the potential has a negative field total even if every record is perfectly consistent.
+
+\section{Preserve actor records without inventing ownership}
+
+Suppose Carrier A performed the first transfer and Carrier B performed the second. The physical action register can attach each signed receipt to the responsible record. Summing those records gives \(-1.25+5=3.75\). Carrier B's five is not a transfer of five from Carrier A. Closure includes the decrease of the field potential.
+
+Attaching a record to a performer also does not decide who owns a spendable balance, how an employer and employee share an entitlement, or how a public service is funded. Those are institutional definitions. A ledger can preserve who performed which transformation while leaving such questions open. The book uses actor names to maintain accountability, not to deduce a complete legal economy from telescoping.
+
+If one organization performed both transfers, its recorded route total would still be \(3.75\). Renaming performers changes neither the states nor their potential. Splitting one physical act into several labels must not duplicate the same state change. Each performed transformation belongs once in the chain of endpoints.
+
+\section{A separately declared process account}
+
+For an algebraic extension, suppose justified non-overlapping burdens are \(C_1=0.2\) and \(C_2=0.3\). The physical medicine endpoints remain the same. The net results become \(-1.45\) and \(4.7\), summing to \(3.25\). Direct closure gives
+\begin{equation}
+4-0.25-(0.2+0.3)=3.25.
+\end{equation}
+These illustrative burdens should not be described as measured refrigeration costs. In a real plant, refrigeration would involve electricity, heat, equipment, and timing. If their consequences are represented and evaluated elsewhere, the separate burden must exclude duplication. The stock-only idealization can be useful without pretending to provide that complete calibration.
+
+Different route lengths matter through declared physical mechanisms such as travel time, energy use, loss, storage, and capacity. There is no universal inverse-square EBU price of geographical distance in this account. Two routes of equal length can have different physical effects; two routes of different length can have similar effects. Their actual transformations must decide the comparison.
+
+\section{Do not hide a physical chain inside a route name}
+
+The medicine route is one resource account. To see how another resource chain should be represented, consider a separate illustrative pumping chain with explicit energy carriers. One megajoule of fuel energy is withdrawn. A declared conversion produces \(0.3\) megajoules of electrical energy and \(0.7\) megajoules of heat. The energy balance is \(1=0.3+0.7\).
+
+A following delivery stage transfers the \(0.3\) megajoules to the pump boundary, delivering \(0.24\) and recording \(0.06\) as heat. The pump stage then uses the delivered \(0.24\) megajoules to perform a specified water movement of \(2\X\), with its complete mechanical and thermal endpoint accounted for; in this deliberately simplified endpoint example all \(0.24\) ultimately appears as heat and no energy remains stored mechanically. The water ledger separately records \(-2\X\) at its source and \(+2\X\) at its destination.
+
+The completed energy account is one megajoule of initial fuel energy represented by one megajoule of final heat across the declared stages. The water account conserves its own quantity. We do not add two water units to one megajoule. Nor does conservation alone establish that the stated conversion or pump performance describes real equipment. Those rates and mechanisms are illustrative declarations that a real engineering model would need to justify.
+
+This linked description prevents two opposite mistakes. The upstream fuel use does not disappear into a single ``water delivery'' label, and an extra burden is not invented merely because several named stages exist. Each physical consequence enters its proper account once. Any cross-resource scalar requires a separate justified conversion rule; it does not follow from the existence of the chain.
+
+\section{What if something happens between route epochs?}
+
+Return to the medicine route with zero process burden. After \(x^1=(5,5,2)\), suppose an external conservative mechanism moves one unit from the hub back to the warehouse, giving the next baseline \(z^2=(6,4,2)\). Its potential is four. The external potential change is \(4-5.25=-1.25\).
+
+The second carrier now moves four units from this new baseline, reaching \((6,0,6)\), potential zero. Its receipt is four. Actor-associated receipts sum to \(-1.25+4=2.75\). The total endpoint reduction from the original state is four, so it would be wrong to assign all four to the actors. The missing \(1.25\) of reduction belongs to the intervening external event.
+
+Equivalently, with signed external potential increment \(D_{\rm ext}=-1.25\),
+\begin{equation}
+\sum E_k=V(x^0)-V(x^2)+D_{\rm ext}=4-1.25=2.75.
+\end{equation}
+The sign is worth checking: an external improvement lowers potential, so its signed increment is negative and it reduces the part attributable to the actions. A disturbance that raises potential would have the opposite sign. External does not mean harmful by definition.
+
+\section{Practice route variants}
+
+\begin{enumerate}
+\item In the original route, keep the first quantity five but change the second to three. Calculate both endpoint states, final potential, second receipt, and route total.
+\item Instead use quantities four and four. Does the first receipt remain negative? Find both values and the final state.
+\item Keep the original five-and-four route, but set the separately justified burdens to \(0.4\) and \(0.6\). Calculate the net route total.
+\item Explain why the hub-to-clinic action cannot simply be swapped to the first position in the original route.
+\item If all route medicine is ultimately administered, what new physical record is missing from this studio?
+\item The first carrier calls its negative value an error because the patient needs medicine. What part of the calculation, if any, follows from that need alone?
+\end{enumerate}
+
+\section{Solutions}
+
+With quantities five and three, the first successor stays \((5,5,2)\) and the final state is \((5,2,5)\). Its deviations are \((-1,2,-1)\), squared sum six, potential \(0.75\). The second receipt is \(5.25-0.75=4.5\), and the route total is \(-1.25+4.5=3.25\). Two units remain at the hub, three were delivered to the clinic, and the source withdrawal five closes as \(2+3\).
+
+With quantities four and four, the intermediate state is \((6,4,2)\), potential four, giving first receipt zero. The final state is the reference \((6,0,6)\), potential zero, giving second receipt four. The route total is four. These numbers compare declared alternatives; they do not establish a universal rule that every route must use the best endpoint under this potential.
+
+The burdens in the third problem sum to one, so net route value is \(3.75-1=2.75\). In the fourth problem, the original hub has no medicine. Dispatching four first violates nonnegative stock. A schedule with borrowing, advance reservations, or another supply would be a changed physical or institutional arrangement and would need declaration.
+
+Administration requires a further transformation describing what leaves usable clinic inventory, what physical state or carrier receives it, and which outcomes are evaluated over which horizon. Arrival is not treatment success. Finally, the patient's need motivates the route and may motivate support for it, but does not change the arithmetic under the declared potential. If the potential omits a relevant function, that is a model criticism to make openly. Silently changing an inconvenient intermediate result is not a correction.
+
+\section{Planning a route is not performing its future}
+
+Before departure, a planner can calculate the specified five-and-four route from estimated states. The prospective sum \(3.75\) is then a forecast under those assumptions. It must not be recorded as a completed improvement merely because the two arithmetic steps telescope. The hub may receive less, a vehicle may be delayed, or another event may change clinic stock before delivery.
+
+A useful route plan therefore retains its planned local states and quantities, while performed receipts retain observed or otherwise verified local states and quantities. The difference is not a reason to discard the plan. It is evidence about prediction quality and operational conditions. Over many properly recorded journeys, such differences may motivate a better route model or infrastructure changes.
+
+Those later improvements also require their own physical accounts. Building a regional storage facility might reduce future transport burdens, but construction itself uses resources and does not automatically create a present stock-field credit equal to every forecast saving. A forecast and a performed transformation belong to different evidence categories. Any scheme for recognizing persistent future effects needs a declared horizon, state representation, and validation method.
+
+\section{Boundary changes during a journey}
+
+Suppose a shipment leaves the represented region at one checkpoint and re-enters at another. A local observer may see an outward boundary flux followed later by an inward flux. The wider route account may represent the in-transit stock continuously. Both descriptions can be coherent if their boundaries and identifiers are explicit.
+
+Trouble arises when a report uses the narrow boundary to claim that stock disappeared and the wide boundary to claim that it was available, without recording the change of scope. The same shipment must remain traceable through the chosen carriers. A transit coordinate can be useful because it prevents an in-between quantity from being counted simultaneously at the warehouse and clinic or being omitted from both without explanation.
+
+In the present three-cell example, the hub supplies that visible intermediate location. It is not a universal model of transport time. An actual cold chain may need several transit and condition coordinates. The principle is to add enough physical state to answer the stated question, then evaluate the affected factors consistently. More named coordinates are useful only when they correspond to declared quantities or conditions that the account can support.
+
+\section{A route is an explanation, not just a total}
+
+The route total is compact because the local record is complete. Its meaning can be unfolded into quantities, places, ordering, external events, and separate resources. That is the value of patient accounting. A long journey need not become a mysterious distant interaction, and a useful final purpose need not erase difficult intermediate states. The next studio turns from ordered links to several actors sharing one simultaneous field, where a correct group total still leaves a distinct attribution question.

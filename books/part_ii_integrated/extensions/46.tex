@@ -1,0 +1,431 @@
+\section{A three-cell laboratory: the hub participates even when it does not change}
+The two-cell examples isolate curvature cleanly. A hub introduces another
+question: can two actions interact even when the hub's final stock equals
+its starting stock? Use
+\begin{equation}
+ z=(18,10,2),\quad x^*=(10,10,10),\quad\sigma=(2,2,2).
+\end{equation}
+Initial potential is sixteen and the marginals are $(2,0,-2)$.
+Action A transfers four from Ridge to Hub; action B transfers four from
+Hub to Vale. Their increments are
+\begin{equation}
+ \delta_A=(-4,4,0),\qquad\delta_B=(0,-4,4).
+\end{equation}
+Alone, A ends at $(14,14,2)$ and B alone ends at $(18,6,6)$.
+Each endpoint has potential twelve, so each singleton value is four.
+Together their increment is $(-4,0,4)$; their endpoint is $(14,10,6)$,
+with potential four. The group value is twelve, not eight.
+
+Calculate the cross term explicitly:
+\begin{equation}
+ \delta_A^TH\delta_B
+ =\tfrac14[(-4)0+4(-4)+0(4)]=-4.
+\end{equation}
+The correction to the singleton sum is therefore plus four. It arises
+because the hypothetical singleton endpoints separately disturb the hub
+in opposite directions, whereas the joint endpoint does not. No
+nonseparable potential was introduced. Shared-coordinate action structure
+is sufficient to create the interaction.
+
+\section{Three descriptions of the same aggregate endpoint}
+Serialize A first, then B, keeping these quantities fixed and assuming
+the simple stock constraints allow both. A contributes four and B then
+contributes eight. Reverse the order: B contributes four and A then eight.
+Both serialized field totals are twelve. Hence the positive correction
+against hypothetical same-baseline singletons is not a positive advantage
+against either of these actual sequential endpoints.
+
+For the constant-rate common group path, the hub stays at ten throughout.
+The gradient averaged along the path is $(3/2,0,-3/2)$. Therefore
+\begin{equation}
+ R_A=-(3/2,0,-3/2)\cdot(-4,4,0)=6,
+ \qquad R_B=6.
+\end{equation}
+The split $(6,6)$ closes on twelve, just as the two sequential splits
+$(4,8)$ and $(8,4)$ do. They refer to different descriptions of how
+children contribute along a declared path. The equality of their totals
+does not identify one split as causal, fair or institutionally required.
+
+The reader should be able to explain all three descriptions without saying
+that the same physical experiment has three contradictory outcomes. Only
+one physical chronology or path is actually declared in any given model.
+The other calculations are named comparisons or conventions.
+
+\section{A shared-source laboratory with three children}
+Now use four cells, all with reference ten and scale two, at
+\begin{equation}
+ z=(18,6,6,10).
+\end{equation}
+The total is forty and the initial potential is twelve. Three children
+each withdraw two from the first cell, delivering respectively to cells
+two, three and four. The final group state is $(12,8,8,12)$ and its
+potential is two. Thus the group field value is ten.
+
+The singleton values are five, five and three. All three share the source;
+each pair has $\delta_a^TH\delta_b=1$. The singleton sum thirteen
+therefore needs three corrections of minus one, yielding ten. A program
+that only checks whether destination supports are disjoint will miss the
+common source and return the wrong total.
+
+For the common path, $\mu(z)=(2,-1,-1,0)$ and
+$H\delta_G=(-3/2,1/2,1/2,1/2)$. The path-average gradient is
+\begin{equation}
+ \bar\mu=(5/4,-3/4,-3/4,1/4).
+\end{equation}
+Dotting it negatively with each child gives $(4,4,2)$. The values add
+to ten. Notice that the child ending at an already-at-reference destination
+still has a positive net value here: its source relief outweighs the
+destination's added deviation. The account describes the combined physical
+change, not only a destination label.
+
+\section{Write the entire subset table before interpreting it}
+For those same fixed increments, evaluate every subset at the same frozen
+baseline:
+\begin{center}
+\begin{tabular}{cr}
+\toprule Subset & Field value\\\midrule
+$\varnothing$ & 0\\
+A & 5\\
+B & 5\\
+C & 3\\
+AB & 9\\
+AC & 7\\
+BC & 7\\
+ABC & 10\\\bottomrule
+\end{tabular}
+\end{center}
+Each pair coefficient is minus one. The third-order coefficient is
+$10-9-7-7+5+5+3=0$. This cancellation illustrates the quadratic
+membership structure. It is not a measured absence of all three-way
+physical effects in nature.
+
+Before calling the table a physical subset experiment, check that each
+subset is admissible under the same protocol. If a coupled machine can
+perform only all three children together, the singleton rows remain
+algebraic counterfactuals, not admissible interventions. If a resolver
+changes quantities separately for each subset, the table must be recomputed
+with those quantities, and the fixed-increment degree argument may fail.
+Do not fill missing physical rows with convenient numbers merely to make
+an inversion formula available.
+
+\section{An independence check with disjoint actions}
+Let four cells start at $(14,6,14,6)$, again with reference ten and
+scale two. One action sends two from cell one to cell two; another sends
+two from cell three to cell four. Initial potential is eight. Each action
+reduces its pair's potential from four to one, so each field value is
+three. The group endpoint $(12,8,12,8)$ has potential two, giving six.
+
+The increments have disjoint support, and the diagonal Hessian gives zero
+cross term. Here independent singleton addition is valid. The lesson is
+not that singleton addition is always wrong; it is that its validity has
+a precise condition that can be checked. If both actions share a physical
+machine limit, valuation may still add while joint permission fails.
+Independence of field terms is not independence of every constraint.
+
+\section{A positive group can have an unaffordable child owner}
+Return to three cells, at $(14,6,10)$ with the same references and
+scales. Let A send two from cell one to cell two and B send two from
+cell two to cell three. The group endpoint is $(12,6,12)$.
+Potential changes from four to three, so the group value is one.
+
+The initial gradient is $(1,-1,0)$ and the net increment is
+$(-2,0,2)$. The average gradient along the group path is
+$(3/4,-1,1/4)$. Hence
+\begin{equation}
+ R_A=7/2,\qquad R_B=-5/2,\qquad R_A+R_B=1.
+\end{equation}
+This is an exact example of a positive group total with a negative
+child attribution. If two different owners start with zero balances,
+the proposed owner-wise rule refuses B's debit. If one owner holds both
+children, same-event netting gives plus one and would pass that account
+condition. Physical feasibility is the same in both descriptions.
+
+The example is not an argument for selecting whichever ownership map
+admits the group. It proves that the ownership map is a load-bearing model
+choice. Scientific comparison requires that choice to be declared before
+outcomes are inspected. It cannot be inferred from the favorable sign
+of the group total.
+
+\section{A missed factor can mimic an attractive improvement}
+Suppose the two-cell lossless example is expanded to represent a third
+physical resource consumed by pumping. The expanded potential might
+contain a factor of that resource, and the accepted action might change
+it. A quote that still uses only the water endpoints would omit a
+changed term. Even if its arithmetic for water is perfect, it would no
+longer be the complete exact local quote for the expanded declaration.
+
+There are two legitimate ways to keep a teaching model simple. One is
+to leave pumping energy outside its scope and state the limitation.
+The other is to represent it and include the corresponding affected
+factors or a separately justified residual burden. What is not legitimate
+is to claim complete multi-carrier valuation while counting the same
+physical effect in both places, or in neither place, without disclosure.
+
+This is also why a fuel-to-electricity-to-water chain should remain a
+linked sequence of atomic physical transformations when it is in scope.
+The water endpoint does not tell the reader which upstream transformations
+occurred or which loss boundary they crossed. A convenient aggregate
+action label cannot repair missing physical representation.
+
+\section{Recalibration is not physical work}
+Take the original two-cell state $(18,2)$ and leave it unchanged.
+With reference $(10,10)$ and scales two, potential is sixteen.
+If both scales are revised to four, potential becomes four. The twelve-unit
+difference is not an actor's physical improvement. No resource moved.
+It is a change in the declared comparison geometry.
+
+The active first programme freezes scales and references, so this event
+is outside its action loop. A later adaptive-calibration model would need
+an explicit parameter-change account. Otherwise an actor could appear
+to earn value by changing the ruler rather than the world. Version
+commitments protect the distinction between these operations; numerical
+precision alone cannot.
+
+\section{Build a receipt that another reader can reconstruct}
+For the three-child source example, a minimal mathematical audit records
+the ordered state $(18,6,6,10)$, the ordered reference and scales,
+the three named increments, their sum, the before and after potentials,
+the group value ten, and the chosen path values $(4,4,2)$. It also
+records that the quantities are source-side quantities, not rates.
+
+An implementation-grade record needs more: state and parameter identities,
+the accepted physical constraints, path semantics, numerical policy,
+and evidence that the executed increment matched the valued increment.
+A capacity record additionally needs a declared owner map, prior balances
+and a separately authorized update rule. Each layer answers a question
+that the preceding arithmetic cannot answer by itself.
+
+If a reader cannot determine whether the state list is ordered Ridge,
+Hub, Vale or another way, even the first calculation is not reproducible.
+If the owner map is missing, the field value can still be correct while
+the capacity account remains undefined. An honest report can say both
+things at once rather than treating the missing layer as permission to
+guess.
+
+\section{A final diagnostic exercise}
+Imagine a report for the three-child source example gives the group
+value thirteen, says every owner starts at zero, and claims that a
+closing receipt proves fair compensation. Identify three separate issues.
+First, thirteen is the sum of same-baseline singletons; the actual joint
+field value is ten. Second, balances alone do not identify owners or the
+rule mapping path values to accounts. Third, no corrected sum would prove
+fairness. Those defects require different repairs.
+
+Now imagine the report instead gives ten and correct path values but
+executes only two of the three children. The formula has not failed.
+The event identity has: a different increment was performed. A receipt
+must correspond to that actual authorized event or the system must refuse
+under its declared deviation procedure. Carry this distinction into the
+software chapters. Their central job is to prevent a correct calculation
+from becoming a misleading record of a different occurrence.
+
+\section{A route-and-repair reading: the remote pump seal}
+The original laboratory also used a remote pump seal to explain genuine
+need, route choice and live-state replanning. That lesson deserves to
+survive the change in potential. A water-treatment plant needs a working
+seal before a deadline; rail and air offer different delays and physical
+burdens. A route is not valuable or worthless merely because it is long.
+The represented endpoint, timing, feasibility and actual process matter.
+
+This repair is not an action inside the first homogeneous-scalar Gaussian
+world. A seal is a discrete functional item, not divisible water, and a
+plant's working condition is not automatically a scalar stock coordinate.
+A broader domain must declare the transformation and its functional
+representation. Keeping that boundary visible preserves the example's
+meaning without pretending the first experiment already models maintenance.
+
+The original example assigns illustrative planning burdens of nine to
+rail and seventeen to air before additional packaging. It also records
+usable factors $0.99\cdot0.99=0.9801$ and
+$0.99\cdot0.98=0.9702$. A fraction of a seal may be useless, so
+these products cannot simply be treated as divisible functional delivery.
+Packaging, reliability and item-count assumptions must be explicit.
+The historical exercise later assumes successful functional delivery;
+that is a teaching assumption, not a measured guarantee that probability
+one can be certified in a real transport system.
+
+Suppose a flood closes the planned rail connection after the first segment.
+The planned endpoint is no longer the live physical situation. Replanning
+must start from the actual hub state and the new route constraints.
+An old positive forecast is not a receipt for an unperformed route. If
+the flood also changes represented physical state or parameters, that
+external change needs its own account; it cannot be hidden inside an
+actor's next value.
+
+The original's separate fixed-state accounting exercise lists potentials
+$80,76,74,68,5$ and burdens $3,1,8,4$. Under one fixed potential
+and with every intervening change included in those declared actions,
+the signed lines are $1,1,-2,59$, summing to fifty-nine. Endpoint
+closure gives the same $80-5-16=59$. If an unrecorded external change
+occurs between those states, this simple actor-only telescoping would
+need the external correction derived earlier. The arithmetic cannot
+certify that all such events were recorded.
+
+Repeated repairs can motivate separate studies of spare inventory,
+local manufacture, standardization or predictive maintenance. They do
+not justify crediting today's actor with all forecast future savings.
+Those interventions have their own physical costs, uncertainty and
+institutional questions. The future Part VI develops routes and
+transformations; Part VII develops explicit coordination policies.
+Neither is hidden inside the present random actor.
+
+\section{Proof workshop: rebuild the argument in eight passes}
+The goal of this workshop is not to memorize eight displayed equations.
+It is to learn how to reconstruct a result and state where it stops.
+For each pass, first write the objects and assumptions, then the algebra,
+then one conclusion that the algebra does not establish.
+
+\subsection{Pass 1: conservation from the transformation matrix}
+Begin with $x^+=x+Sq$. Multiply by the row of ones. If every column
+of $S$ sums to zero, the total before and after is equal for every
+quantity vector. This is a structural statement about the declared
+transformation matrix. To complete a physical validation, separately
+check nonnegative coordinates, allowed quantities and any joint constraint.
+An impossible negative source is not repaired by the conservation proof.
+
+Now replace one destination coefficient by $\eta<1$. The old
+column sum changes. State explicitly whether the missing carrier enters
+a loss coordinate or crosses an external boundary. Do not repair the
+mass equation by adding a burden number to it: burden and physical
+stock have different units and meanings.
+
+\subsection{Pass 2: differentiate the declared potential}
+Start with one term $\tfrac12(x_i-x_i^*)^2/\sigma_i^2$.
+Keep the reference and scale fixed while differentiating. Recover
+$\mu_i=(x_i-x_i^*)/\sigma_i^2$ and curvature
+$1/\sigma_i^2$. Explain why differentiating a moving scale or
+reference would create additional terms. The fixed-parameter condition
+is part of the calculation, not a footnote to discard afterward.
+
+Check the units: marginal has inverse-stock units and curvature has
+inverse-stock-squared units under dimensionless normalization. Finally
+explain why a derivative does not identify an actor's preferred action.
+It describes a directional property of a function before a choice rule
+has been defined.
+
+\subsection{Pass 3: expand a finite movement}
+Write $y=z-x^*$ and expand
+$\tfrac12(y+\delta)^TH(y+\delta)$. The two cross terms
+are equal because $H$ is symmetric. Subtract the initial potential
+and change the sign to obtain exact field benefit. The positive
+quadratic term in potential becomes a negative curvature correction
+in benefit. Check the result at zero increment and at the reference.
+
+At the reference a nonzero net increment has strictly negative field
+value. A nonempty cancelling group has zero net increment instead.
+The proof distinguishes those cases and therefore cannot be paraphrased
+as ``every nonempty group at equilibrium has negative value.''
+
+\subsection{Pass 4: cancel unchanged factors}
+Partition the potential's factors into those touched by the action's
+write support and those untouched. Subtract before and after. Every
+untouched factor cancels exactly, leaving the complete affected-factor
+sum. For a factor involving several cells, include all arguments needed
+to evaluate it even when some are not changed.
+
+The proof establishes the locality of this value calculation. It does
+not prove that a world-wide group enumerator is decentralized. Write
+that limitation beside the theorem so the word local does not quietly
+change meaning between a mathematical and an architectural claim.
+
+\subsection{Pass 5: recover the path integral}
+Let $\gamma(s)=z+s\delta$. Apply the chain rule to
+$V(\gamma(s))$ and integrate from zero to one. The endpoint
+difference follows from the fundamental theorem of calculus. In the
+quadratic case the gradient is affine, so integrating it gives the
+mean of its endpoint gradients exactly.
+
+Then state which path meaning is in force. Is it a constant-rate
+model-realized trajectory or merely an endpoint interpolation? The
+integral identity does not choose. An observed real-world path requires
+more than an equality between two endpoint calculations.
+
+\subsection{Pass 6: compose children before dividing value}
+Expand the square of $\sum_a\delta_a$. Keep all pair cross
+terms. Their omission is the precise defect in summing independent
+same-baseline singletons. Next integrate each child against the same
+group gradient. Summing those child integrals recovers the integral
+of the net increment and hence group closure.
+
+The closure proof has no requester, supplier, beneficiary or owner in
+it. That absence is informative. It is why choosing an owner map is
+another modelling step rather than a missing algebraic manipulation.
+Adding a label to a child does not add a theorem of entitlement.
+
+\subsection{Pass 7: telescope a sequence, then insert forcing}
+Write three consecutive field differences and cancel intermediate
+potentials visibly. Extend the pattern to any finite sequence. For
+a closed cycle the field sum vanishes; nonnegative separately declared
+burdens make net value nonpositive. Do not replace the live baseline
+of every line by the first state.
+
+Now insert a forcing step before each actor epoch. Add and subtract
+the pre-forcing potential. The new external terms explain why an
+actor-only sum need not equal the overall endpoint difference. This
+is not a failure of telescoping; it is the account of an additional
+kind of change that must not be credited as actor work.
+
+\subsection{Pass 8: derive the account invariant conditionally}
+Assume an explicitly adopted owner rule whose signed changes sum to
+the field value, and a signed external ledger updated only by forcing.
+Add the potential change, balance change and negative audit change.
+All terms cancel under those definitions. Record the invariant and
+its initial constant.
+
+Finally construct the restoring-and-reversing pair already shown in
+the laboratory. Both events satisfy the invariant, yet the second
+undoes recovery by spending prior capacity. This last step prevents
+the workshop from ending with an unjustified dynamical conclusion.
+The invariant constrains accounting; the declared stochastic process
+still determines which permitted events occur.
+
+\section{Ten mistakes a laboratory should expose}
+\textbf{1. Omitting efficiency outside the lossless domain.}
+The destination increment changes, so both the physical balance and
+the directional derivative change. A lossless example cannot certify
+a loss-aware implementation.
+
+\textbf{2. Valuing from the pre-forcing state.}
+This folds nature's change into the actor's line. Keep the external
+record and the post-forcing baseline separate.
+
+\textbf{3. Ranking by value per unit without declaring an optimizer.}
+A ratio may be a legitimate diagnostic or policy in another model.
+Using it to select actions changes the current unweighted-random
+question, even if the finite quote itself is exact.
+
+\textbf{4. Settling the requested quantity instead of the accepted event.}
+The same action name can conceal a different increment. Bind quantity
+and baseline to the event identity, not just to a display label.
+
+\textbf{5. Counting one receipt twice.}
+Arithmetic correctness of each copy does not make the second copy a
+second physical occurrence. An account needs exactly-once identity and
+replay rules as well as a correct subtraction.
+
+\textbf{6. Pricing shared-source children independently.}
+The common source changes only once in the joint endpoint. Restore
+the cross terms or evaluate the complete endpoint directly.
+
+\textbf{7. Giving the full source budget to every edge.}
+Individually valid requests can be jointly impossible. A physical
+budget has one scope; duplicating its record does not duplicate stock.
+
+\textbf{8. Reading continuous dissipation as a finite-step guarantee.}
+The exact curvature term survives discretization. Check the accepted
+finite increment and physical feasibility independently.
+
+\textbf{9. Projecting an invalid endpoint while keeping its quote.}
+A clipped successor is another physical map. It needs the value of
+that map and an explicit permission rule, not a repaired-looking state
+attached to the unrepaired record.
+
+\textbf{10. Inferring forever from a finite study.}
+A completed horizon establishes observations on that registered horizon.
+Unlimited-time claims need their own theorem or evidential argument.
+Neither a large test count nor a smooth plot removes that boundary.
+
+These mistakes are not ten ways the same equation fails. They are
+ten ways a reader or implementation can quietly substitute a different
+object for the one the equation describes. The following software
+chapters turn that diagnosis into inspectable responsibilities.

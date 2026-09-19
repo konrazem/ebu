@@ -1,0 +1,139 @@
+\chapter{Local actions and exact global identities}\label{ch:locality}
+
+\section{The apparent paradox}
+An action at Ridge and Vale can be valued using Ridge and Vale data. Yet we have described its field effect as a change in a potential summed across a whole network. How can a calculation that does not read the other locations give the complete result?
+
+The answer is cancellation. Under the declared separable potential, every untouched location contributes exactly the same term before and after the action. When those terms are subtracted, they disappear. The local calculation is not a statistical estimate of the remaining world; it is the part of an exact difference that survives.
+
+This distinction is central to the project. It explains how a local action account can be mathematically complete within a declared model. It also identifies the boundary of that claim: the model's potential must include the relevant effects, and the action's evaluation must include every term that actually changes.
+
+\section{Support means the coordinates changed}
+Let $\delta$ be an action's finite increment. Define its write support by
+\begin{equation}
+ W=\{i:\delta_i\ne0\}.
+\end{equation}
+For a positive lossless transfer along $i\to j$, this set contains $i$ and $j$. A group can change more coordinates. A proposed edge of zero quantity changes none, even though its name still refers to two endpoints.
+
+Support is an algebraic description of the state change, not a prediction of every future consequence. Water arriving at Vale may enable a later transfer to another place. That later event has its own increment and baseline. It does not automatically appear in the present endpoint difference.
+
+For the Gaussian model,
+\[
+ V(x)=\sum_{i=1}^{N}V_i(x_i),\qquad
+ V_i(x_i)=\frac{(x_i-x_i^*)^2}{2\sigma_i^2}.
+\]
+Each local term depends on one coordinate and fixed local parameters. This is what makes endpoint support sufficient for the present model.
+
+\section{The cancellation proof, one line at a time}
+Write the complete difference as a sum:
+\begin{align}
+ V(z)-V(z+\delta)
+ &=\sum_{i=1}^{N}\left[V_i(z_i)-V_i(z_i+\delta_i)\right].
+\end{align}
+For an index outside $W$, the increment is zero. Its summand is therefore $V_i(z_i)-V_i(z_i)=0$. Removing those zero summands gives
+\begin{equation}\label{eq:local-cancel}
+ V(z)-V(z+\delta)
+ =\sum_{i\in W}\left[V_i(z_i)-V_i(z_i+\delta_i)\right].
+\end{equation}
+Define $V_{\rm loc}$ as the sum over $W$. Equation~\eqref{eq:local-cancel} says that its before/after difference is the same as the global difference. The proof does not need the values of the unchanged terms.
+
+\begin{lawbox}{Exact local-to-global cancellation}
+Under one fixed separable potential, with a correctly declared action increment, the sum of the changed local terms equals the complete potential difference. Every unchanged term cancels. This equality concerns the declared model; it does not prove the model contains every consequence that matters.
+\end{lawbox}
+
+Notice what the proof did not use. It did not require equal references, equal scales or a Gaussian shape. The same cancellation works for any fixed sum of one-coordinate functions. Gaussian geometry provides convenient explicit formulas for the changed terms; additivity provides locality.
+
+\section{A five-cell numerical account}
+Take five cells with reference $10\X$ and scale $2\X$ each. Let
+\[
+ z=(18,2,12,8,10)\X.
+\]
+The corresponding potential terms are $(8,8,1/2,1/2,0)$, so the global potential is 17. Transfer $4\X$ from cell 1 to cell 2. The successor is $(14,6,12,8,10)\X$, with terms $(2,2,1/2,1/2,0)$ and total 5.
+
+The global reduction is $17-5=12$. The local reduction is $(8+8)-(2+2)=12$. Reading the last three stocks would add no information needed for this action value, provided the declared state transition really leaves them unchanged and the potential has the stated separable form.
+
+The whole network still has potential 5 after the transfer. The action improved its own affected region; it did not certify that all cells reached their references. Local correctness and system-wide completion are separate propositions.
+
+\diagram{locality}{The unchanged cells jointly contribute one unit to both global totals and cancel. The local calculation includes both changed endpoints.}{fig:locality}
+
+\section{Global refers to the declared boundary}
+The adjective ``global'' can sound larger than the mathematics. Here it means all coordinates in the declared model. It does not mean all of Earth, all future time, every ecosystem, every financial consequence or every dimension of wellbeing.
+
+Suppose the modeled network contains only five tanks. Equation~\eqref{eq:local-cancel} gives the exact change of that five-tank potential. If the pump also consumes electricity outside the represented boundary, the identity remains true for the tanks while the physical description is incomplete for a claim about the whole operation.
+
+The proper response is to identify the missing carrier and intended scope. A linked electrical account can preserve the physical transformation. A calibrated extension might later place several effects in one declared functional. Neither extension follows merely from calling the five-tank sum global.
+
+\section{When a neighbour must also be read}
+A future potential might contain a factor depending on two coordinates, such as a declared interaction $w_{ij}(x_i,x_j)$. Changing $x_i$ can then change that factor even if $x_j$ stays fixed. Reading only the one-coordinate term at $i$ would miss part of the difference.
+
+To express the general rule, suppose
+\begin{equation}
+ V(x)=\sum_{f\in\mathcal F}\phi_f(x_{D_f}),
+\end{equation}
+where $D_f$ is the set of coordinates used by factor $f$. The affected factors satisfy $D_f\cap W\ne\varnothing$. Every other factor cancels. Evaluation needs the union of coordinates read by the affected factors, which can be larger than the write support.
+
+This is a conditional extension of the same cancellation argument. It does not adopt a new coupled potential for the present book's examples. It explains how to check locality if a later model needs such a potential.
+
+\section{A counterexample to endpoint-only reading}
+Consider an explicitly different teaching functional,
+\[
+ \widetilde V(x)=\sum_{i=1}^{3}V_i(x_i)+\tfrac12(x_2-x_3)^2,
+\]
+with dimensionless numerical stock coordinates for this illustration, references $(5,5,3)$ and unit scales. Move one unit from cell 1 to cell 2, starting from $(6,4,3)$. The successor is $(5,5,3)$. Both the reference and physical state have total stock thirteen.
+
+The separable part changes from $1/2+1/2+0=1$ to zero, a reduction of 1. The interaction changes from $1/2(4-3)^2=1/2$ to $1/2(5-3)^2=2$, an increase of $3/2$. The complete field reduction is therefore $1-3/2=-1/2$.
+
+An endpoint calculation that retained only $V_1$ and $V_2$ would report $+1$, including the wrong sign. A correct local calculation reads $x_3$ because the interaction factor involving $x_2$ depends on it. The direct write support is $\{1,2\}$; the information neighbourhood is $\{1,2,3\}$.
+
+The example also shows why the potential's dependency list is part of its scientific declaration. Locality cannot be imposed independently of the equation. Read too little and a changed term disappears. Read more than necessary and a selector may gain information that its design did not intend to expose.
+
+\section{Three different graphs}
+The physical graph connects locations by possible actions. The factor graph connects variables used together in the potential. The action-interaction graph connects action increments whose joint value contains a cross term. These graphs can differ.
+
+Our main potential is separable, so its coordinate Hessian is diagonal. Nevertheless, two actions can both withdraw from Ridge. Their increments overlap in the Ridge coordinate, producing a quadratic cross term. A diagonal potential therefore does not imply independent action values.
+
+Conversely, two physical edges can be far apart in a drawing but belong to the same modeled factor if the declared functional couples their variables. Geographic distance alone is not a reliable definition of a mathematical neighbourhood. The relevant question is dependency, followed by whether that dependency is physically justified.
+
+Keeping the three graphs separate helps a reader avoid a common shortcut: ``local'' does not mean every kind of interaction is absent. It means the required information and support have been specified.
+
+\section{Global audit and actor information}
+A scientific evaluator may calculate full $V$ to compare it with the sum of local effects. This is a useful arithmetic and implementation check. It can reveal a missing endpoint, duplicated factor, stale baseline or sign error.
+
+That capability does not determine what an actor may inspect when selecting an action. If a future study defines local actors, its input boundary must be enforced independently of the evaluator's larger view. The evaluator can observe a result without providing that result as a decision signal.
+
+Likewise, an EBU-blind random proposal mechanism should not quietly read global potential to choose which candidates to offer. Local valuation and local selection are different design properties. Demonstrating the former by cancellation does not establish the latter.
+
+This chapter uses paper calculations. It does not claim that a particular future software harness has already enforced every information boundary. A software claim needs its own implemented interface, tests and source identity.
+
+\section{Local computation does not choose governance}
+The theorem shows that some calculations can use small neighbourhoods. Different devices could compute them, and independent auditors could reproduce them. These possibilities do not settle who may certify references, own sensors, approve model changes or resolve a dispute.
+
+A centrally governed system can calculate local differences. A distributed institution can perform occasional global audits. Neither arrangement is made inevitable by a sum of potential terms. Political authority must be described in its own language rather than inferred from a graph drawing.
+
+Privacy raises a related issue. A valid physical calculation may need quantities and dependencies while requiring little personal information. Whether a public record must identify an individual is an institutional decision. Mathematical support tells us which variables the calculation needs; it does not demand unlimited disclosure.
+
+\section{Aggregation can erase the effect}
+Suppose someone replaces Ridge and Vale by a single cell containing their total $20\X$. The internal four-unit transfer leaves that total unchanged. If the aggregate potential depends only on the total, it reports zero change. The fine account reports a reduction of 12.
+
+There is no algebraic contradiction. The aggregate description discarded distribution between the two locations, precisely the information on which the fine potential depends. An aggregate account that is intended to preserve that effect needs additional state, such as internal deviation, or a justified summary of its potential.
+
+This matters for hierarchical systems. A building can expose boundary flows to a district, but a district total alone does not reproduce every room's temperature or water distribution. A sound hierarchy must state what each level retains and which questions cannot be answered after aggregation.
+
+The introductory locality theorem is not an automatic theorem of lossless compression. It gives a starting point for designing summaries and a test for checking them: does the summary preserve the specific field difference the application claims to compute?
+
+\section{Guided problem: determine the necessary reads}
+Take six independent Gaussian terms. An action changes coordinates 1 and 4. Which terms must be evaluated? Only $V_1$ and $V_4$, using their before and after coordinates and fixed parameters. Every other term cancels.
+
+Now add a factor $w_{45}(x_4,x_5)$ and another $w_{56}(x_5,x_6)$. The action changes $x_4$ but not $x_5$. It changes $w_{45}$, so $x_5$ must be read. It does not directly change $w_{56}$, whose two inputs remain the same. The necessary coordinates are 1, 4 and 5 for this declared instantaneous action.
+
+The answer would change if the transformation also updated $x_5$ or if another factor depended on $x_4$. This is why one must inspect the actual action map rather than propagate ``affected'' indefinitely through a diagram. Future influence and present algebraic dependence are different things.
+
+\section{Practice and reflection}
+In the five-cell numerical example, replace the four-unit transfer by two units. The first two potential terms change from $(8,8)$ to $(4.5,4.5)$; their reduction is 7. The remaining terms still sum to 1, so the global potential changes from 17 to 10, also a reduction of 7.
+
+Next, draw a physical path of four locations. Identify one transfer's write support. Add a hypothetical pair factor connecting one of its endpoints to a neighbour and write the resulting information neighbourhood. Explain why a causal prediction about the neighbour's later behaviour would require more than this factor list.
+
+Finally, explain the aggregation counterexample in words a new reader can understand. A good answer says that total quantity was preserved while internal distribution changed. It does not say that conservation failed or that the local-to-global theorem was approximate.
+
+\begin{intuitionbox}{What to carry forward}
+Local exactness follows from the cancellation of unchanged factors. Its scope comes from the potential and action dependencies. A complete local calculation can equal a global model difference while leaving empirical completeness, selection, privacy and governance as separate questions.
+\end{intuitionbox}

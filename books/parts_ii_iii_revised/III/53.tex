@@ -1,0 +1,70 @@
+\chapter{Randomness, paired controls and reproducibility}\label{ch:randomness}
+``Use the same seed'' sounds like a complete reproducibility instruction.
+It is not. Two implementations can start from the same seed and consume
+draws in different orders, causing every later disturbance or choice to
+diverge. Scientific pairing requires a more explicit account of randomness.
+
+\section{Separate the sources of randomness}
+The programme distinguishes nature or forcing draws from actor-selection
+draws. If proposals are random, their stream also needs an explicit role.
+A counter-addressed design can associate each draw with coordinates such
+as stream, epoch, event and attempt, so an extra actor draw does not shift
+future nature draws. This is a candidate implementation technique, not
+a substitute for registering the actual stochastic law.
+
+The generator, distribution transform, coordinate schema and retry behavior
+all belong to the reproducibility contract. Independent seeds alone do not
+prove independence of every downstream mechanism or prevent a helper from
+reading a future draw.
+
+\section{The physical-random comparison}
+The proposed comparison uses the same declared physical domain and menu
+construction but omits the EBU-capacity affordability filter. It is not an
+EBU maximizer, a service optimizer or the historical full multi-edge P1C
+arm. Those alternatives answer other questions.
+
+Control parity means equal rules where equality was promised, not equal
+realized actions. Once states differ, physical feasibility can make their
+menus differ. A comparison must report that difference rather than force
+one arm to perform an invalid action to keep a superficial pairing.
+
+\section{Common raw draws versus common applied forcing}
+Imagine a raw forcing draw proposes moving three units out of a cell.
+One arm currently holds four there and another holds two. The same raw
+proposal is feasible for one and infeasible for the other. Rejection,
+clipping or resampling can yield different applied disturbances.
+
+Thus shared raw randomness does not guarantee shared physical exposure.
+A future protocol must declare the handling rule, record raw and applied
+objects separately and determine how exposure differences affect the
+comparison. Silently promising both forms of equality would be false.
+
+This is not a reason to abandon paired designs. It is a reason to specify
+what is paired. The scientific question may concern response under common
+raw environmental opportunities, or response to identical admissible
+physical inputs. They are different estimands when feasibility depends on
+the evolving state.
+
+\section{Restart without a new experiment}
+A reproducible checkpoint must restore stock, balances, audit, parameter
+version, pending event identity and random-stream coordinates together.
+Restoring only the stock can leave an apparently identical physical world
+with different future affordability or random choices.
+
+Whether a restart is permitted after partial execution belongs to the
+study's operational contract. A book cannot grant an extra scientific
+attempt by calling it recovery. Historical Gate 1D-C illustrates why
+execution attempts and completion sentinels are separately recorded.
+
+\section*{Practice question}
+Two arms have equal initial state and equal nature seed but use one shared
+random generator for nature and actors. The EBU arm rejects more candidates
+and consumes extra draws. Are future nature inputs paired? Not necessarily.
+The rejection path has changed draw consumption. An independently addressed
+nature stream would remove this particular coupling, while state-dependent
+forcing feasibility would remain a separate issue.
+
+\section*{Chapter recap}
+Reproducibility concerns the exact stochastic process, not a seed label.
+Fair comparison requires explicit stream ownership, exposure accounting
+and restart semantics.

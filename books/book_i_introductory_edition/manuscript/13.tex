@@ -1,0 +1,50 @@
+\chapter{Marginal field: what a small change means}\label{ch:marginal}
+\question{What does the local slope say about a small transfer?}
+
+Ridge is above reference and Vale below it. Removing a little from Ridge and adding a little to Vale reduces both contributions. We want a number for this immediate sensitivity, while remembering that a real delivery is finite.
+
+A derivative is the limiting ratio of a change in potential to an increasingly small change in stock. It describes the starting slope, not the entire finite difference.
+
+\section{Finding the slope without guessing}
+Write $d=x_i-x_i^\star$ for the displacement in one cell and let $h$ be a small stock increment. Expanding the square gives
+\begin{equation*}
+ V_i(x_i+h)-V_i(x_i)
+ =\frac{d}{\sigma_i^2}h+\frac{h^2}{2\sigma_i^2}.
+\end{equation*}
+Divide by $h\ne0$. The ratio is $d/\sigma_i^2+h/(2\sigma_i^2)$. As $h$ tends to zero, the second term tends to zero. The derivative, called the local marginal burden here, is therefore
+\begin{equation}\label{eq:mu}
+ \mu_i=\frac{x_i-x_i^\star}{\sigma_i^2}.
+\end{equation}
+The Greek letter $\mu$, pronounced ``mu'', names the slope. A dimensionless potential differentiated with respect to litres has units $\mathrm{L}^{-1}$. A marginal is neither a stock nor a completed action value.
+
+For Ridge, $\mu_1=(14-10)/4=1\ \mathrm{L}^{-1}$. For Vale, $\mu_2=(6-10)/4=-1\ \mathrm{L}^{-1}$. A negative slope means that adding a small amount lowers the local potential. A positive slope means that adding a small amount raises it. At the reference the slope is zero.
+
+For an arithmetic check, add $0.1$ litre to Vale while examining its local term alone. The linear prediction is $-1(0.1)=-0.1$. The exact change is $-0.1+0.1^2/8=-0.09875$. The local prediction is close for this small increment but is not identical. Examining one term this way is a sensitivity calculation, not a proposal to create water in the closed world.
+
+\section{A direction combines two slopes}
+A conservative transfer removes stock at one endpoint while adding it at another. Let $e_i$ mean a list with one in position $i$ and zero elsewhere. For edge $e$ from $i$ to $j$, define
+\begin{equation}\label{eq:edge}
+ S_e=-e_i+e_j,\qquad \delta x=qS_e.
+\end{equation}
+The direction list $S_e$ is dimensionless. Multiplying it by the stock quantity $q$ produces the increment $\delta x$: negative at the source, positive at the destination. For two cells it is simply $q(-1,+1)^{\mathsf T}$.
+
+The list of local marginals is written $\mu$. Its dot product with a change list means multiply matching entries and add. Thus
+\begin{equation*}
+ \mu^{\mathsf T}\delta x=\mu_i(-q)+\mu_jq.
+\end{equation*}
+The transpose arranges this multiplication and addition. The result is the first-order potential change. For positive value to mean reduction, define the directional field
+\begin{equation}\label{eq:field}
+ f_e=-\mu^{\mathsf T}S_e=\mu_i-\mu_j.
+\end{equation}
+It has inverse-stock units. Multiplying by a small quantity gives a first-order field value in the potential's units.
+
+In the recurring example, $f_e=1-(-1)=2\ \mathrm{L}^{-1}$ from Ridge to Vale. Reversing direction gives $-2\ \mathrm{L}^{-1}$. When both tanks are at reference, both marginals and the initial field are zero. These signs describe local geometry, not moral categories.
+
+\section{A field is not a command}
+Here ``field'' means local marginal information for states and directions, not an electromagnetic field. The project literature sometimes calls $f_e$ a force, but it is not measured in newtons and does not push an actor.
+
+A flow requires an additional rate law, including feasibility and time. Selection requires an actor policy. Differentiation provides neither. An actor may decline a positive-valued option.
+
+\practice{With $\mu_i=0.5\ \mathrm{L}^{-1}$ and $\mu_j=0.5\ \mathrm{L}^{-1}$, what is the initial directional field?}{It is zero. The first-order changes at the endpoints cancel. This does not make an arbitrary finite transfer neutral: curvature can still increase the joint potential, as the next chapter shows.}
+
+\carry{A delivery is finite. Its value requires the entire endpoint change.}

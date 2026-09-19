@@ -1,0 +1,133 @@
+\chapter{Quantities, boundaries, and one physical change}\label{ch:conservation}
+
+\section{The ledger underneath every valuation}
+Before asking whether an action improves the represented world, ask whether its physical account closes. A transfer cannot deliver more of the homogeneous resource than the declared source withdraws in a lossless model. A missing quantity cannot disappear because a potential decreases. An extra quantity cannot enter because an account has enough capacity to pay for it.
+
+The main model has a finite number of nonnegative stocks and a fixed total \(M\). It represents internal relocation of one homogeneous scalar. The physical state space is
+\begin{equation}
+ \mathcal{X}_M=\left\{x\in\mathbb{R}^N:\ x_i\geq0,\quad
+                         \sum_i x_i=M\right\}.
+\end{equation}
+This set is called a simplex. The unfamiliar name adds no new assumption: every coordinate is nonnegative and all coordinates share one total. In two cells with total 20, specifying Ridge's stock determines Vale's stock as \(20-x_1\). The two numbers cannot vary independently while the total remains fixed.
+
+\section{Quantity is not rate}
+We use \(q\) for a finite source-side quantity. It has the same stock unit as \(x_i\). If a flow rate \(j\) is constant over a duration \(\Delta t\), the quantity is
+\begin{equation}
+ q=\Delta t\,j.
+\end{equation}
+The rate has units \(\X/\text{time}\); multiplying by duration gives \(\X\). Once the finite quantity has been formed, the action increment is \(S_e q\). Multiplying it by \(\Delta t\) again would count time twice.
+
+For example, a rate of eight units per hour acting for half an hour moves four units. The same quantity is moved by a rate of two units per hour for two hours, if the declared process is constant and no other event intervenes. The endpoint stock change is the same in this ideal example. Other physical consequences, such as equipment heating or delay, may differ in a richer model and would need representation there.
+
+If the rate varies, quantity is the integrated rate, \(q=\int j(t)\,dt\). One cannot replace this integral by initial rate times duration without an assumption that makes that replacement valid. The finite account begins once the event's quantity has been established; it need not pretend every physical flow is constant.
+
+\begin{center}
+\begin{tabular}{P{0.28\linewidth}P{0.25\linewidth}P{0.34\linewidth}}
+\toprule
+Object & Unit & Example\\
+\midrule
+Stock \(x_i\) & \(\X\) & 18 units in Ridge\\
+Rate \(j_e\) & \(\X/\mathrm{hour}\) & 8 units per hour\\
+Duration \(\Delta t\) & hour & one-half hour\\
+Quantity \(q_e\) & \(\X\) & 4 units sent\\
+Increment \(S_e q_e\) & \(\X\) per coordinate & \((-4,4)^T\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{The exact internal-transfer identity}
+Let \(\mathbf{1}\) be the column vector whose entries are all one. Its transpose sums a state: \(\mathbf{1}^Tx=\sum_i x_i\). Every lossless incidence column has one \(-1\) and one \(+1\), so
+\begin{equation}
+ \mathbf{1}^TS_e=0.
+\end{equation}
+For a group of additive transfer increments \(\delta_G=\sum_{a\in G}S_aq_a\), linearity gives \(\mathbf{1}^T\delta_G=0\). Hence
+\begin{equation}
+ \mathbf{1}^T(z+\delta_G)=\mathbf{1}^Tz=M.
+\end{equation}
+This is an exact algebraic conservation identity under the declared transfer model. It does not require that the action lowers potential or that an actor acts wisely. A damaging relocation conserves the same total as a helpful one.
+
+The identity also does not by itself ensure nonnegative stocks. A proposal to send 25 units from Ridge's initial 18 has changes \((-25,25)\), whose sum is zero, but its endpoint is \((-7,27)\). Conservation and feasibility are separate conditions. The negative coordinate rejects the proposal under our physical domain.
+
+\section{Worked ledger for Ridge and Vale}
+The starting state is \(z=(18,2)^T\). For \(q=4\), the source loses four and the destination gains four. The physical residual is
+\begin{equation}
+ r_M=(14+6)-(18+2)=0.
+\end{equation}
+At \(q=8\), the state is \((10,10)^T\), with the same zero residual. At \(q=17\), it is \((1,19)^T\), again with zero residual. Yet their finite field values are different: \(12\), \(16\), and \(-4.25\), respectively, under the main potential.
+
+This comparison is worth reading slowly. The physical total cannot determine the distributional potential. The potential cannot replace the stock ledger. They answer complementary questions about the same action. A programme that reports only one of them has left the other question unanswered.
+
+\section{The event boundary determines what is credited}
+The symbol \(z\) denotes the shared pre-action baseline. In an undisturbed illustrative event, it is simply the current state. In a later forcing-first model, an external event changes an earlier state \(x\) to \(z\); the actor then acts from \(z\). Both sides of the actor's finite comparison use that same baseline.
+
+Suppose an external conservative relocation moves the system from \((10,10)\) to \((18,2)\). Its total stock is still 20, but it has increased potential from zero to 16. An actor then transfers four back toward the reference, producing \((14,6)\) and potential 4. The actor's field reduction is 12. The external increase of 16 belongs in the external account, not as an actor debit or credit created by relabelling time.
+
+These are three declared states used in an algebraic illustration, not a simulated trajectory or scientific observation. Their purpose is to make the baseline visible. If an account instead compared the final potential 4 directly with the earlier reference potential zero and called the result the actor's effect, it would combine the external event and the action. The resulting \(-4\) would answer another question.
+
+\section{No hidden creation by clipping}
+Suppose a proposed update produces \((-1,21)\). Replacing \(-1\) by zero may seem like harmless housekeeping. It changes total stock from 20 to 21. If the positive coordinate is also adjusted, a new redistribution has occurred. Either way, the operation is a physical or mathematical correction requiring an explicit account.
+
+For the main model, infeasible actions are excluded before execution. We do not repair their successors silently. A broader model may include spill, saturation, external replenishment, or emergency corrections, but those processes must carry named increments or boundary entries. A state projection can be a useful numerical procedure; it is not automatically a law of physical conservation.
+
+This principle is more general than water. A inventory programme that sets a negative medicine count to zero has not produced medicine, but it has changed its reported record. An account should expose the disagreement so that its cause can be investigated. Concealing it creates an apparently consistent state while destroying the information needed to explain the event.
+
+\section{What changes when a route loses usable stock}
+The central study model is lossless. To understand the boundary discipline, consider a separate accounting illustration with efficiency \(\eta=0.8\). A source sends \(q=5\), a destination receives four, and one unit enters a declared loss compartment \(\ell\). The extended increment is
+\begin{equation}
+ (\Delta x_i,\Delta x_j,\Delta\ell)=(-5,4,1).
+\end{equation}
+Its entries sum to zero. The usable-stock total falls by one, while the extended carrier account remains conserved. Alternatively, a model may record the one unit crossing an explicit external boundary. It may not leave the unit unnamed.
+
+The loss coordinate need not enter the potential used in the main model. A physical ledger and a valuation functional have different scopes. But its absence from \(V\) does not by itself authorize a second charge. Any proposed process burden must identify exactly which physical burden is unrepresented by the finite field difference and satisfy the applicable non-duplication rule. A stock-accounting coordinate alone neither establishes nor resolves that valuation question.
+
+\begin{cautionbox}{A zero residual is necessary but incomplete}
+The numbers \((-5,3,2)\) also sum to zero, but they do not satisfy the declared \(\eta=0.8\) transfer rule. Check the source withdrawal, destination delivery, and loss relation separately. Conservation of a total cannot certify every component of a physical transformation.
+\end{cautionbox}
+
+This illustrative extension does not adopt a loss-aware runtime or modify the lossless first domain. It shows why an eventual extension needs more than changing a coefficient in the EBU equation. The physical transformation and its boundary accounts must be specified first.
+
+\section{A homogeneous carrier is a strong simplification}
+A conserved scalar is not a claim that all useful things can be added in one physical unit. One litre of water and one kilowatt-hour of electricity cannot become two units of a single conserved stock merely because both support a clinic. Their linked use requires separate carriers and a transformation relation with consistent dimensions.
+
+The same applies to physical degradation. Energy can remain conserved while its usefulness changes. A stock of usable doses may fall when medicines expire although their material constituents remain. The carrier named by a coordinate must therefore be explicit: usable resource under a declared quality definition, elemental mass, energy, or another measured quantity. Its conservation statement applies to that declaration and boundary.
+
+Our ideal transfers preserve the homogeneous scalar exactly. They are a clean setting for learning local finite accounting. Extending them to heterogeneous resource chains is scientific work, not a change of labels. It must preserve what is conserved, represent relevant changes of quality, and avoid an unlicensed conversion between different EBU accounts.
+
+\section{Net change and gross movement}
+Two opposite transfers can leave stocks unchanged while moving a substantial gross quantity. Suppose the two lossless directions between Ridge and Vale are both declared, and an event sends three units each way. The increments \((-3,3)\) and \((3,-3)\) add to zero. The endpoint is the initial state.
+
+The stock ledger correctly reports zero net change. A separate action record correctly reports six units of gross source-side movement, three on each route. Neither description should erase the other. If the complete physical model includes process energy or equipment wear, those can change even when the represented stock increment cancels. The ideal cost-free scalar example records zero field value for the net event because its endpoints coincide; it does not make a claim about an actual pump's energy use.
+
+This distinction prevents another kind of hidden correction. An auditor should not delete both action lines merely because their increments cancel. The lines identify what was attempted or executed, while the endpoint describes the resulting stock distribution. Physical feasibility may depend on gross use of a route or shared machine, so it too can differ between an empty event and a nonempty cancelling group.
+
+\section{Conservation under a change of accounting boundary}
+Imagine observing only Vale. A four-unit delivery raises its stock by four. Within this smaller boundary the delivery is an inflow. Now enlarge the boundary to include Ridge. The same event is an internal transfer with zero total change. The physical event did not change; the boundary did.
+
+Write this explicitly before comparing two ledgers. A local total can rise while the global total is conserved, because the local boundary has an incoming edge. A statement such as ``stock increased'' is incomplete until its region and carrier are named. EBU's local potential difference can still be calculated, but a source contribution must not disappear just because the reader looks only at the destination's tank.
+
+For any region, add the stock changes of its cells. Every transfer with both endpoints inside contributes minus and plus the same quantity, cancelling internally. Edges entering the region contribute positively; edges leaving contribute negatively. This cancellation is the regional version of the all-ones-vector identity. It explains why enlarging a boundary changes which terms are called external without changing the complete physical account.
+
+In a real study, changing the boundary can also change which consequences are represented and hence which potential terms are needed. It must therefore be recorded as a model revision, not as a way to make an inconvenient burden vanish from a report. A narrower account can be useful if its scope is stated honestly.
+
+\section{Measurement is not a new flow}
+Real gauges have finite resolution, calibration limitations, and timing uncertainty. Removing numerical error-controller material from the introductory model does not make these practical issues disappear. They belong in the interpretation of observed records and in later domain validation.
+
+If a gauge reports 18 units, the underlying quantity may not be known with infinite precision. The algebraic example treats the input as exact so that its mathematical implications are visible. An empirical application must state how the input was obtained and what uncertainty accompanies it. It must not insert measurement uncertainty into the stock equation as though uncertainty were additional water.
+
+A measured residual can reflect an omitted flow, incompatible timestamps, sensor bias, or computational rounding. A declaration of acceptable measurement agreement must precede judging a real record. Choosing a convenient allowance after observing an inconvenient mismatch would not establish conservation. The equations here specify the physical target against which such a measurement protocol would be assessed.
+
+\section{Guided problem: reconstruct a branching event}
+Consider a new three-cell state \((9,3,0)^T\), with lossless edges from cell 1 to cells 2 and 3. The finite quantities are two and four. The increments are \((-2,2,0)^T\) and \((-4,0,4)^T\). Their sum is \((-6,2,4)^T\), and the endpoint is \((3,5,4)^T\).
+
+Check the ledger three ways. Cell by cell, source withdrawal is six and total delivery is six. By totals, the starting 12 equals the ending 12. By matrix structure, each column sums to zero, so every linear combination does too. The agreement is not three independent empirical tests; it is three views of one declared algebraic identity.
+
+Now alter only the second quantity to eight. Aggregate withdrawal becomes ten, exceeding the source's nine. The formal endpoint is \((-1,5,8)^T\). The total remains 12, but the state is infeasible. Do not clip its first entry or report the eight-unit delivery as executed service. The example demonstrates why a joint source check belongs before an accepted event.
+
+Finally convert rates correctly. If the valid quantities two and four were delivered over one-quarter hour at constant rates, the rates were eight and sixteen units per hour. If those same rates acted for half an hour, the quantities would double. A duration change can therefore alter physical feasibility even when the rates appear unchanged.
+
+\section{Practice with answers}
+A lossless edge carries a constant rate of three units per hour for two-thirds of an hour. The finite quantity is two units. Starting from \((7,1)\), the endpoint is \((5,3)\), and total stock remains eight. Explain why writing \(x'=x+\Delta t S q\) with this already integrated \(q=2\) would be wrong.
+
+In a separate extended loss ledger, a source sends ten units at \(\eta=0.9\). Destination delivery is nine and the loss-compartment increment is one. A record showing destination eight and loss two has zero total residual but violates the stated efficiency. Identify the missing component check.
+
+For the main model, a no-action event has \(q=0\), so \(\delta=0\) and state is unchanged. If a real observer nevertheless sees a change, at least one premise of the no-action, no-external-change illustration does not describe the observation. The response is to locate the process or measurement issue, not to declare that zero caused a nonzero transition.

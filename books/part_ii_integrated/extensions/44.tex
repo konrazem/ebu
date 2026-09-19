@@ -1,0 +1,79 @@
+\section{Solving the two-cell response, not merely one Euler step}
+The earlier example froze the initial flux before taking a finite step.
+We can also solve its continuous response exactly, which helps explain
+why those are different objects. Keep total mass twenty, references
+$(10,10)$, scales two, one forward edge, mobility $1/2$, zero threshold
+and no external drive. Write
+\begin{equation}
+ x_1=10+y,\qquad x_2=10-y,\qquad y(0)=8.
+\end{equation}
+For $y\geq0$, the force is $y/2$ and the flux is $y/4$.
+Conservation gives $\dot y=-y/4$. Separate variables, or differentiate
+the proposed solution, to obtain
+\begin{equation}
+ y(t)=8e^{-t/4},\qquad V(t)=y(t)^2/4=16e^{-t/2}.
+\end{equation}
+For every finite nonnegative time the stocks remain nonnegative and the
+force stays in the chosen forward direction. The reference is approached
+asymptotically. It is not reached at the finite duration four simply
+because the frozen Euler step of that duration landed there.
+
+The solution is a conditional analytic example, not an experimental run.
+It depends on the chosen continuous response law. Replacing that law by
+random finite actions does not preserve the differential equation, so the
+exponential expression cannot be advertised as the predicted recovery
+curve of the new programme.
+
+\section{A response threshold can leave residual deviation}
+Keep the same example but take a fixed threshold $0<\theta<4$.
+While $y>2\theta$, the forward flux is
+$(y-2\theta)/4$. Therefore
+\begin{equation}
+ y(t)=2\theta+(8-2\theta)e^{-t/4}.
+\end{equation}
+This tends to $2\theta$, not zero. The limiting potential is
+$\theta^2$. Below the activation threshold the directed law has no
+forward flow. If the initial $y$ were already at most $2\theta$ and
+nonnegative, this edge alone would remain inactive.
+
+This elementary calculation shows why nonincrease of a potential is not
+the same as attraction to its minimum. The threshold is a response
+parameter, not an Allee stock threshold. Removing the latter from the
+Gaussian geometry does not remove the former from an optional controller
+that explicitly declares it. The random-affordable proposal contains
+neither response threshold by default.
+
+\section{What positive clipping preserves and what it changes}
+Suppose an otherwise admissible historical flux is reduced edge by edge
+by factors $0\leq\alpha_e\leq1$, so the accepted rate is
+$\widetilde J_e=\alpha_eJ_e$. On every active edge the original law
+has $f_e\geq\theta_e\geq0$. Thus
+$f_e\widetilde J_e\geq0$, and with no drive the chain rule still gives
+\begin{equation}
+ \dot V=-\sum_e f_e\widetilde J_e\leq0.
+\end{equation}
+This sign argument is weaker than the original equality expressed in
+$J_e^2/M_e+\theta_eJ_e$. The accepted rate no longer necessarily
+satisfies the original constitutive equation with the old mobility.
+Preserving a sign does not preserve every quantitative statement.
+
+Nor does this argument cover an arbitrary resolver. A resolver that changes
+directions, introduces compensating transformations or changes the state
+before evaluation needs its own analysis. In discrete time even positive
+clipping still leaves a curvature term to check for the accepted increment.
+A feasibility improvement is not automatically a numerical descent proof.
+
+\section{The three meanings of a safe step}
+A step can be safe with respect to nonnegative stock, safe with respect
+to a specified reserve certificate, or safe with respect to nonincrease
+of the chosen potential. These properties can overlap, but they are not
+synonyms. The two-cell duration-nine example earlier was physically
+nonnegative and nevertheless increased potential. A tiny step with the
+wrong physical support can be impossible however small its numerical
+truncation error would be.
+
+For this reason the detailed historical proofs that follow should be
+read as several conditional certificates, not one universal safety
+theorem. Their line-by-line derivations remain valuable precisely because
+the reader can see where each premise enters and decide whether it belongs
+to the current model.

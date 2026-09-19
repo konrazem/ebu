@@ -1,0 +1,96 @@
+\chapter{From a physical story to a mathematical claim}\label{ch:contract}
+A store has more water than its declared reference and a clinic has less.
+Moving water from one to the other seems helpful. Mathematics begins by
+asking what that sentence has left unspecified. How much water? Which
+reference? Which route? What else changes? Does the action remain helpful
+when it is large? Who is permitted to perform it? The value of a formal
+model is not that it makes these questions disappear. It gives each question
+an object precise enough to inspect.
+
+\section{The declared world}
+Let there be a finite number $n$ of accounting cells, with state
+\begin{equation}
+ x=(x_1,\ldots,x_n)^T\in\mathcal X_M,
+ \qquad \mathcal X_M=\{x\in\mathbb R^n:x_i\geq0,\ \sum_i x_i=M\}.
+\end{equation}
+Every $x_i$ measures the same homogeneous resource. The superscript $T$
+turns a written row into a column. The set $\mathcal X_M$ is the nonnegative
+fixed-mass simplex: all ways of distributing the same total $M$ among the
+cells. For two cells it is a line segment, not the whole plane. For three it
+is a triangle embedded in three-dimensional space.
+
+The programme declares a reference $x^*\in\mathcal X_M$ and scales
+$\sigma_i>0$. Membership of the reference in the same simplex matters.
+If two cells contain twenty units in total, references requiring twelve
+units in each cannot be reached by closed internal transfer. That mismatch
+is not an actor failure. It is a different modelling problem.
+
+Compatibility is necessary, not sufficient, for reachability. A graph with
+no route to the clinic cannot deliver water there. A menu containing only
+four-unit transfers may be unable to remove a one-unit discrepancy exactly.
+The geometry says which states are allowed by total mass; the action system
+says which transitions are available.
+
+\section{Definition, proposition and evidence}
+We define a potential and derive its consequences. A definition is a choice
+about the model, not a discovery that nature uses that formula. A proposition
+may then be true for every state in the declared domain. A worked example
+can help a reader follow the proof but cannot replace it. An experiment
+would examine a specified transition process under registered conditions.
+
+The programme document \cite{programme} makes this distinction explicit.
+The active model is prospective. Its exact quadratic identities can be
+proved now. Whether a random-affordable actor process produces useful
+recovery, distribution or long-run behavior is a different question.
+
+\begin{lawbox}{Standing assumptions for active examples}
+One homogeneous conserved scalar; a finite number of cells; nonnegative
+stocks; fixed compatible references; fixed positive scales; lossless internal
+actions; additive declared increments. Unless a section explicitly says
+otherwise, separate process burden is zero. No restoring dynamics or
+optimizing actor is hidden in these assumptions.
+\end{lawbox}
+
+\section{What the state leaves outside}
+A simple water stock model does not automatically represent water quality,
+pumping energy, soil damage or a patient's health. These omissions limit the
+claim. They cannot be repaired by saying the scalar potential is holistic.
+If quality is consequential, it needs a represented coordinate or an
+explicitly scoped limitation. If pumping consumes electricity, a broader
+physical account must link that transformation to an energy carrier.
+
+Nor does the model identify a reference with a moral optimum. A reference
+may later be informed by functional evidence and public choices, but the
+proof that follows only knows its declared number. Keeping this boundary
+visible lets mathematical work proceed without pretending that calibration
+or governance has already been solved.
+
+\section{A useful proof-reading habit}
+Before accepting a theorem, write its domain in words. When we later prove
+that $V$ is bounded, the reason will be finite mass and fixed scales, not an
+EBU controller. When we prove that a sequence telescopes, the reason will be
+consecutive endpoint cancellation, not benevolent actors. When we prove that
+path contributions sum to the group value, the reason will be linearity and
+the fundamental theorem of calculus, not a fair ownership rule.
+
+This habit prevents a correct sentence from acquiring an incorrect sequel.
+``The accounts close'' does not imply ``the world recovers.'' ``The action
+has positive value'' does not imply ``the action is physically possible.''
+Each sequel needs its own premises.
+
+\section*{Exercises and discussion}
+For a three-cell world with mass twelve, decide whether $(4,4,4)$,
+$(5,5,5)$ and $(12,0,0)$ are compatible references. The first and third are;
+the second is not. Compatibility of the third still says nothing about
+whether the graph can move all stock to cell one.
+
+Explain why the phrase ``Gaussian equilibrium'' is potentially misleading.
+The Gaussian construction defines reference geometry. To call the reference
+an equilibrium of a process, one must specify that process and show that it
+leaves the reference unchanged. To call it attracting requires more still.
+
+\section*{Chapter recap}
+A model needs a domain, a state, a reference, a transformation and a claim.
+The rest of this volume makes those objects explicit. Its mathematical
+results are conditional statements about the declared objects, not a
+shortcut around physical measurement or scientific testing.

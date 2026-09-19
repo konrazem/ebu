@@ -1,0 +1,154 @@
+\chapter{Studio: compare actions without hiding a policy}\label{ch:studio-choice}
+
+\begin{intuitionbox}{Physical picture: a menu is not a command}
+Four, eight, and twelve units can all move from Ridge toward Vale in a suitably permissive route. They produce different endpoints and different EBU values. Writing those values in a table helps us understand the alternatives. It does not establish that the largest value must be selected. An account describes consequences; a policy specifies how a choice is made.
+\end{intuitionbox}
+
+This studio develops a patient comparison of finite alternatives while keeping the purpose of each comparison visible. We will not build an EBU-maximizing controller into the definition of value. The current research question leaves actor choice and repeated behaviour open. The exact quote can be used within several policies, including a declared random choice among admitted candidates. Which policy is scientifically useful must be separately specified and assessed.
+
+Our initial state, reference, and scales remain the familiar Ridge--Vale data. The ideal process burden is zero. For the main table, declare the finite candidate menu
+\begin{equation}
+\mathcal Q=\{0,2,4,8,12,16,17\}\X.
+\end{equation}
+Assume a route cap of eighteen for this illustration, so every listed quantity passes the simple route and nonnegative-source checks. A finite menu is a declared restriction on candidates. The underlying stock is divisible; the table does not claim that these are the only physically conceivable quantities.
+
+\section{Complete every column before comparing}
+
+The exact formula from Chapter~\ref{ch:studio-field} is
+\begin{equation}
+E(q)=4q-q^2/4.
+\end{equation}
+For each candidate, record its quantity, endpoint, endpoint potential, total value, and value per unit when that ratio is defined:
+\begin{center}
+\begin{tabular}{P{0.09\linewidth}P{0.21\linewidth}P{0.15\linewidth}P{0.14\linewidth}P{0.17\linewidth}}
+\toprule
+\(q\) & Endpoint & \(V_{\rm after}\) & \(E(q)\) & \(E(q)/q\)\\
+\midrule
+0 & \((18,2)\) & 16 & 0 & undefined\\
+2 & \((16,4)\) & 9 & 7 & 3.5\\
+4 & \((14,6)\) & 4 & 12 & 3\\
+8 & \((10,10)\) & 0 & 16 & 2\\
+12 & \((6,14)\) & 4 & 12 & 1\\
+16 & \((2,18)\) & 16 & 0 & 0\\
+17 & \((1,19)\) & 20.25 & \(-4.25\) & \(-0.25\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+Quantities and endpoint entries are in \(\X\); ratio entries have inverse-stock units. The table's total values are dimensionless signed EBU numbers under the declared convention.
+
+Take time to reconstruct the row for twelve. The source falls from eighteen to six, the destination rises from two to fourteen, and each endpoint is four units from its reference. Each local contribution is two, total four. The difference from sixteen is twelve. The transfer crossed the reference after eight units and continued beyond it, but its endpoint still has less potential than the original state.
+
+The four-unit and twelve-unit rows share total value twelve while producing different states. A scalar tie does not imply equivalent future opportunities. Ridge has fourteen in one case and six in the other. A later demand at Ridge may therefore distinguish the two states even though the current potential does not.
+
+\section{Totals and ratios ask different questions}
+
+Among the positive rows, the two-unit action has the largest value per unit, while the eight-unit action has the largest total field reduction. This is not a contradiction. The ratio asks how much average field reduction accompanies each transferred unit. The total asks how much the whole candidate changes the field.
+
+For positive \(q\), division gives
+\begin{equation}
+\frac{E(q)}q=4-q/4.
+\end{equation}
+The average decreases with quantity in this example. The first units traverse the steepest part of the landscape. Later units approach and may pass the reference. Total value can continue increasing while the average falls, just as a larger collection can have a larger sum but a smaller average.
+
+At \(q=0\), total value is exactly zero, but the ratio is \(0/0\) and is undefined. The limiting ratio as positive quantity tends to zero is four; that derivative-like limit must not be entered as the ratio of a performed zero action. A software table that silently substitutes zero or four needs an explicit display convention so that readers do not mistake it for division.
+
+Neither column is automatically the selection rule. A researcher who substitutes the ratio for a registered total-based policy changes the experiment. A researcher who selects the total maximum when the programme specifies unweighted random choice also changes the experiment. Correct arithmetic is compatible with an incorrect implementation of the intended question.
+
+\section{Three possible rules on the same physical menu}
+
+To see the separation clearly, consider three hypothetical policies. The first selects the greatest total EBU. The second selects the greatest positive EBU per transferred unit. The third selects uniformly among the declared physically admissible candidates, including rest. On the table above, the first selects eight, the second selects two, and the third has seven possible outcomes.
+
+These are definitions of three different choice mechanisms. The first two are useful comparisons for understanding what columns mean, but this studio adopts neither as EBU law. The third is also incomplete until its menu, duplicate handling, eligibility, and random mechanism are specified. Calling a policy ``random'' does not supply those details.
+
+Suppose the same physical four-unit candidate appears twice in the menu under two labels. Uniform choice over records would then give that physical transformation twice the weight. Uniform choice over distinct transformations would not. If group membership also matters, deciding what counts as a duplicate becomes more subtle. The menu is therefore part of the scientific specification rather than a clerical prelude.
+
+\section{Permission can remove the apparent best row}
+
+Change only the route cap to \(6\X\). Among the listed candidates, zero, two, and four remain admissible. The reference-reaching eight-unit row is now a diagnostic outside the available menu. Its attractive value does not open the route.
+
+Do not replace the excluded eight-unit candidate by six without saying so. Six is physically possible under the new cap, but it was not a member of the declared finite menu. Adding it changes the menu. Its value would be fifteen, which can be calculated analytically, but an experiment that freezes a menu must preserve that distinction between possible quantities and registered candidates.
+
+This may feel fussy in a small example. It becomes important when researchers inspect outcomes and begin adding convenient alternatives. A menu that is revised after seeing which choices improve the desired metric is no longer the same prospective comparison. The book's arithmetic can explore alternatives freely; a scientific study needs the exploration and the frozen test to be clearly distinguished.
+
+\section{Keep capacity accounting visible}
+
+The prospective programme also considers persistent signed capacity accounts. Such an account is different from source stock and from route capacity. Its update rule, ownership map, group netting, and initial conditions are institutional model choices. They do not follow from the equation for \(E\).
+
+For a narrow illustration only, suppose one actor owns one action record, the rule updates its account by the full signed value, and its balance must remain nonnegative. If its balance is three, the candidate with value \(-4.25\) would fail that particular affordability rule because \(3-4.25<0\). If the balance were five, the same candidate would pass it. The physical endpoint would be identical in both cases.
+
+This illustrates what an affordability filter means; it does not register the programme's general settlement policy. Simultaneous groups require declared attribution and ownership, and same-event netting raises additional questions. Zero-value candidates also require a clear rule: a positive physical movement with zero net value can pass a simple nonnegative-balance check, so the account does not automatically prevent cycles.
+
+The value law remains the same across the two hypothetical balances. What changes is which candidates the policy admits. If a later study aims to compare random physical choice with random affordable choice, the common physical menu and the additional accounting filter must be separately recorded. Otherwise an observed difference might be caused by unequal physical opportunities.
+
+\section{Add a declared process burden}
+
+For this section only, replace \(C=0\) with the illustrative schedule \(C(q)=0.25q\), where the coefficient has the units needed to return a dimensionless burden. It must represent a separately justified action burden, not a second charge for the same endpoint effects. Then
+\begin{equation}
+E_C(q)=3.75q-q^2/4.
+\end{equation}
+At two, four, and eight, the values become \(6.5\), \(11\), and \(14\). At sixteen the value becomes minus four, although the endpoint field potential still equals its starting value. A movement with zero field difference can have negative net value when real process burden is included.
+
+The physical states in the table do not change merely because this extra accounting term is introduced. If the burden corresponds to a represented energy use, however, that physical coordinate must already be included in the broader account. A coefficient in a value formula cannot substitute for a missing energy balance. The exercise isolates the algebraic role of a burden after its meaning has been declared.
+
+\section{A changed baseline creates a new schedule}
+
+Return to \(C=0\), but suppose a separately recorded conservative disturbance has moved the state to \((16,4)\) before the actor's epoch. Its potential is nine and its edge field is three. The new exact schedule is
+\begin{equation}
+E_{\mathrm{new}}(q)=3q-q^2/4.
+\end{equation}
+The four-unit value is now eight, not twelve. The reference is reached at six. A stored quote from \((18,2)\) therefore cannot be treated as timeless pricing for the route.
+
+A rest candidate still gives zero because it compares the new baseline with itself. The external mechanism's reduction from sixteen to nine is not assigned to the resting actor. If an audit adds it to every candidate's value, it creates a fictitious reward for doing nothing and duplicates the same external change across alternatives.
+
+\section{A worksheet for an honest comparison}
+
+A useful comparison sheet keeps six matters visible: the shared baseline; the exact potential definition; the physical candidate and accepted quantity; the permission verdict; the signed finite value; and the declared selection rule. It also retains rejected candidates with their reasons when that is part of the audit design. Rejection is information, not a value of zero.
+
+There is a further distinction between the selected proposal and the performed transformation. If four was selected but three was actually delivered in the lossless account, the successor is \((15,5)\) and the value is \(9.75\). The difference from the planned twelve should be explained through the recorded execution, not hidden by retaining the old quote.
+
+The comparison table can support learning: a reader can see which quantities overshoot, which caps bind, and which process burdens matter. Learning from it does not automatically authorize an optimizer, a policy change, or an experimental run. The policy must remain visible precisely because it shapes what the accounting will later observe.
+
+\section{Practice cases}
+
+\begin{enumerate}
+\item Use the base menu \(\{0,1,3,5\}\X\). Calculate endpoint potential, total EBU, and defined per-unit ratios. Which rows would total and ratio maximizers choose?
+\item Put a physical cap of \(4\X\) on that menu. List admitted candidates. Should the five-unit row be reported as zero EBU?
+\item An actor with illustrative balance one faces value \(-0.5\). Under the simple signed update described above, calculate its successor balance. Does this calculate physical permission?
+\item At base state, compare a four-unit transfer with a twelve-unit transfer on potential and final Ridge stock. Explain why neither number alone specifies an all-purpose winner.
+\item A menu contains \(0,2,4,4,8\), and selection is uniform over entries. What probability is assigned to the four-unit transformation? Compare with uniform choice over distinct quantities.
+\item From \((16,4)\), calculate the exact value of a two-unit action and identify the external audit contribution that must not be included.
+\end{enumerate}
+
+\section{Solutions}
+
+For the first menu, the endpoint potentials at one, three, and five are \(12.25\), \(6.25\), and \(2.25\). Their total values are \(3.75\), \(9.75\), and \(13.75\). Their ratios are \(3.75\), \(3.25\), and \(2.75\). A total maximizer would choose five; a positive-ratio maximizer would choose one. These answers identify hypothetical rules, not a recommendation.
+
+With cap four, the admitted listed quantities are zero, one, and three. Five is physically excluded. Its mathematical value under a hypothetical unconstrained movement is still \(13.75\), but that value does not make it selectable. Reporting exclusion as zero would erase the difference between an unavailable action and a genuine zero-value action.
+
+The balance update in the third problem is \(1-0.5=0.5\), which is nonnegative. Physical permission remains a separate check. A balance can permit an account update without establishing stock availability, a usable route, or destination capacity.
+
+Four and twelve both reduce potential by twelve, but they leave Ridge stocks fourteen and six respectively. They also deliver different quantities to Vale. A policy concerned with immediate delivery, future Ridge supply, route use, or another registered metric may distinguish them. The field total should be reported faithfully without being promoted into every possible objective.
+
+Uniform choice over the five entries assigns probability \(2/5\) to quantity four. Uniform choice over the four distinct quantities assigns \(1/4\). This difference exists before any physical event. The sampling unit is part of the model.
+
+Finally, from \((16,4)\), a two-unit action gives \(3(2)-4/4=5\). The earlier forcing reduction from sixteen to nine was seven. It belongs to the external record. The complete reduction from \((18,2)\) to the final \((14,6)\) is twelve, decomposed as seven external and five actor-associated under this chronology.
+
+\section{Service records need their own definitions}
+
+Suppose a separate service task requests four units at Vale during the action. For this paragraph only, define immediate fulfilled service as \(\min(q,4)\), and unfilled requested service as \(4-\min(q,4)\). These are declared service metrics in stock units. At quantities two, four, and eight, fulfilled service is two, four, and four respectively, while field value is seven, twelve, and sixteen.
+
+The eight-unit action has a larger field reduction than the four-unit action, but it does not fulfill more of this particular four-unit request. Its additional delivery may become inventory, may serve another declared need, or may be unnecessary. The service definition must say which. This example shows why service and EBU should be reported separately even when both improve over some range.
+
+Conversely, a positive service number does not prove that a delivery lowers the field. From the reference, a two-unit transfer could satisfy a newly declared request while increasing the chosen stock potential. That tension may reveal that the state representation needs a demand or consumption mechanism, or that a distinct institutional decision is required. It should not be resolved by replacing the negative value with zero or changing the reference after observing the result.
+
+A future study about sustained provision must represent how demand affects stocks or other state variables. A request that merely caps proposals does not by itself remove resources from a clinic, create a deficit, or generate regeneration. The dynamics must include the mechanisms whose effects the study intends to examine. This book's finite examples teach an accounting foundation; they do not claim that a closed stock transfer alone models continuing life support.
+
+\section{An honest negative result}
+
+Imagine a registered comparison later finds that the proposed random-affordable policy refuses many necessary intermediate actions while the physical-random comparator performs more service. If the world, metrics, and information boundaries were properly specified, that would be an informative adverse finding. The account should make it possible to see why refusal occurred: physical impossibility, lack of declared action capacity, or another explicit condition.
+
+Changing the menu after seeing this result to remove the inconvenient comparator choices would answer another question. A new design may be worth studying, but it should be recorded as new. Scientific usefulness comes from learning which assumptions support which behaviour, not from arranging the reporting vocabulary so that every outcome sounds successful.
+
+\section{Carry the separation forward}
+
+Exact value permits comparison; it does not choose an action. A study must remain open to refusal, cycling, recovery or poor performance. The next studio follows a medicine route through successive baselines, including a useful journey with a negative intermediate value.

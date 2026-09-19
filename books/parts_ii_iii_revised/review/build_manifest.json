@@ -1,0 +1,429 @@
+{
+  "status": "AUTHOR_REVIEW_UNCOMMITTED",
+  "starting_head": "05f3cb02d0c48e60de98342edfac9c36f2cecc6f",
+  "final_head": "05f3cb02d0c48e60de98342edfac9c36f2cecc6f",
+  "artifacts": [
+    {
+      "part": "II",
+      "path": "output/pdf/EBP_Book_Part_II_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "935cc2bdbf90e4579e2acfa96456c48927f390f075152d6c95e6d45d3e77e32e",
+      "new_edition_pages": 53,
+      "historical_pages": 30,
+      "total_pages": 83,
+      "historical_original_pdf_range": [
+        65,
+        94
+      ],
+      "chapters": [
+        {
+          "chapter": 33,
+          "pdf_page": 8
+        },
+        {
+          "chapter": 34,
+          "pdf_page": 11
+        },
+        {
+          "chapter": 35,
+          "pdf_page": 14
+        },
+        {
+          "chapter": 36,
+          "pdf_page": 17
+        },
+        {
+          "chapter": 37,
+          "pdf_page": 20
+        },
+        {
+          "chapter": 38,
+          "pdf_page": 23
+        },
+        {
+          "chapter": 39,
+          "pdf_page": 26
+        },
+        {
+          "chapter": 40,
+          "pdf_page": 29
+        },
+        {
+          "chapter": 41,
+          "pdf_page": 32
+        },
+        {
+          "chapter": 42,
+          "pdf_page": 35
+        },
+        {
+          "chapter": 43,
+          "pdf_page": 37
+        },
+        {
+          "chapter": 44,
+          "pdf_page": 40
+        },
+        {
+          "chapter": 45,
+          "pdf_page": 43
+        },
+        {
+          "chapter": 46,
+          "pdf_page": 46
+        }
+      ],
+      "checks": [
+        "nonempty pages",
+        "original trim",
+        "chapter order",
+        "references and citations",
+        "no overfull/missing glyph warnings",
+        "no text outside media boxes",
+        "all pages rendered"
+      ]
+    },
+    {
+      "part": "III",
+      "path": "output/pdf/EBP_Book_Part_III_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "4d4b7381a81bfecfc821eb357b66cf9e75077119f54d6c95447a372777fa16f6",
+      "new_edition_pages": 43,
+      "historical_pages": 45,
+      "total_pages": 88,
+      "historical_original_pdf_range": [
+        66,
+        110
+      ],
+      "chapters": [
+        {
+          "chapter": 47,
+          "pdf_page": 8
+        },
+        {
+          "chapter": 48,
+          "pdf_page": 10
+        },
+        {
+          "chapter": 49,
+          "pdf_page": 12
+        },
+        {
+          "chapter": 50,
+          "pdf_page": 15
+        },
+        {
+          "chapter": 51,
+          "pdf_page": 17
+        },
+        {
+          "chapter": 52,
+          "pdf_page": 19
+        },
+        {
+          "chapter": 53,
+          "pdf_page": 21
+        },
+        {
+          "chapter": 54,
+          "pdf_page": 23
+        },
+        {
+          "chapter": 55,
+          "pdf_page": 25
+        },
+        {
+          "chapter": 56,
+          "pdf_page": 27
+        },
+        {
+          "chapter": 57,
+          "pdf_page": 29
+        },
+        {
+          "chapter": 58,
+          "pdf_page": 32
+        },
+        {
+          "chapter": 59,
+          "pdf_page": 35
+        },
+        {
+          "chapter": 60,
+          "pdf_page": 37
+        }
+      ],
+      "checks": [
+        "nonempty pages",
+        "original trim",
+        "chapter order",
+        "references and citations",
+        "no overfull/missing glyph warnings",
+        "no text outside media boxes",
+        "all pages rendered"
+      ]
+    }
+  ],
+  "arithmetic_checks": 69,
+  "model_transitions": 0,
+  "scientific_experiments": 0,
+  "originals": [
+    {
+      "part": "II",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "sha256": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095",
+      "pages": 160
+    },
+    {
+      "part": "III",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "sha256": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019",
+      "pages": 153
+    }
+  ],
+  "original_outline_entries_mapped": 442,
+  "source_locks": [
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md",
+      "sha256": "21a6ce38b13e8967074ca16eac4d1eea80c125cc5ba59e87e2f3950b1000c9ee",
+      "git_blob_at_head": "c5a78ff2d1218e15d205040dff7846211bb92e4b"
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_FRAMEWORK_DECISION.md",
+      "sha256": "8276e352b9133d2666809ea51cb0323d176a6af1551aba12ea39efb53c941b82",
+      "git_blob_at_head": "8940e4d70ce35e034c55d4914dda017da878c1dd"
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_IMPLEMENTATION_ROADMAP.md",
+      "sha256": "33527c86e87db5793db820d24b713b3351d62d67c7b87fc2cf2d194049d24129",
+      "git_blob_at_head": "430cae4110b3c86ce4517881fa447703b2c1776e"
+    },
+    {
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e",
+      "git_blob_at_head": "3311f8db171e81eb350134ad708632a8ca2743cd"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10",
+      "git_blob_at_head": "e4c5dbec7e025dba102f5fa5b26843f891ad881b"
+    },
+    {
+      "path": "results/v3.0/gate1dc/MANIFEST.md",
+      "sha256": "417552fce4681953d1b6d6bc3353d3e14f865aca2d17adefd1edf58a2528f9a8",
+      "git_blob_at_head": "d655bb1ccb89a3a33ef60d8a6a9718a2b0164cac"
+    }
+  ],
+  "files": [
+    {
+      "path": "books/part_i_revised/book.tex",
+      "sha256": "95038782df4cf9cdd2940ae123a2e28d5cb243a0cd22c8df96b2549b29d1829d"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/.gitignore",
+      "sha256": "81dcf4b5d9d580ece950626039704be36a4e6ea069ee46d682502411df3ecac6"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/EDITORIAL_CONTRACT.md",
+      "sha256": "95ebd69fdd1bca5afaae23065348d3405a428571d1b20498379b05ebd4d50ab2"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/33.tex",
+      "sha256": "9e85b9a9ff740ac8ec5ddfdf795af540ff0a925c948ec55a7fae6d588f1ae692"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/34.tex",
+      "sha256": "871781ed54b1f8b9186bbf4d5de46ace291a98ef4de3468dc3f9760c5f91b603"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/35.tex",
+      "sha256": "a64dfa87588ba8c486ce68b81a6342ea3364ab2ce7402875628bee401d31f8be"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/36.tex",
+      "sha256": "4205283b9438a00544cc2012bf266a5965a7e173045f87393a299eed95cbbb69"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/37.tex",
+      "sha256": "0c288b009efd883bdd79bd9b16c958b378f8cd5560d5690bf2c03ee5a5a7fe7b"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/38.tex",
+      "sha256": "e5811800d37a16093e9b415759f6fd2f785cb46aeae331b09871ec1523a7f679"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/39.tex",
+      "sha256": "2765726258b55d15c25f313351e112abc580f9b4b5e3fbaedef73442dbd25734"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/40.tex",
+      "sha256": "9413c305e60e56c497dfbda7414eabeb6765e3949d99dcda8be266327c17981a"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/41.tex",
+      "sha256": "b3acd75afc7204237ea17fe883e853bc07a3c905bbb534575f56b5ece5bf7d7d"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/42.tex",
+      "sha256": "e42d58c4d9c6be27e6b3632bef1dc966e2d7808c5669bd75d5489ffd50bce647"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/43.tex",
+      "sha256": "e2b67457bb604872d7fb4f5ef464644900c3d1d85b37cc91e176a51460bd069a"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/44.tex",
+      "sha256": "6a0332595443896fa37b131f2a33ecdeb9ab5b5234691d43199b63aa02cfcc6d"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/45.tex",
+      "sha256": "d017c9291e404e10837b638781abd42bfb7394126215c05e2979ae419e796447"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/46.tex",
+      "sha256": "66d8e6080809b17ccb4962c9f001d079c0adf3a187e0bf2574fcbf175ec641e7"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/frontmatter.tex",
+      "sha256": "467e9eaf6ca76395ece91c92742a31712a6af67461fcbe876a82246315792706"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/II/historical_intro.tex",
+      "sha256": "2e7daf2a8e76a5ce5c85cb2b73955975131e0162307ed48c5460c7287876bda6"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/47.tex",
+      "sha256": "61111a0a32516001cd5e1c9722b3167604599fdd41270dc25faa28ce2c5e7f50"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/48.tex",
+      "sha256": "5d1024703d47864fa6cec9c8750016a74bd2b400cc2abc5ec6eae5a43bc4069c"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/49.tex",
+      "sha256": "430056ceb54321f87e96889dfbd4e8ae47d37fe966ccf011347ca6a2962f8779"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/50.tex",
+      "sha256": "a2e44e58b755f1af31685e0bca646d3bacb785785a77c3f678b85f8e0ba04241"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/51.tex",
+      "sha256": "e0649d25c09bf6aa51303060a18cbf6bceb3d9327ad90142f8f1c877fae6c915"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/52.tex",
+      "sha256": "c01712e82f9d3354269cfd8d324d8000b6fcdeb1e764847b925bb5728976b51a"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/53.tex",
+      "sha256": "22c57f0d2f6a092fdee6a3a5b5d5698d4b29a6ef3d8a455615bf88f2a89afb41"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/54.tex",
+      "sha256": "653d749c6c05547ec9280d374ea94d9d09143b793f2a6dee9f681284a7352110"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/55.tex",
+      "sha256": "a4969a1cf00dbde885081e7fecb4d045a5bfdbc66826dabb92a4d5f5a75bcfc6"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/56.tex",
+      "sha256": "bb67dc0716037b42c0dbc8728b8090ef219ea7745a9279c9b18c4e83edb4ef2d"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/57.tex",
+      "sha256": "41951467ad5551e79d2687ab422d73708d877a8051e8d0a95f2694c2dc1c14c1"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/58.tex",
+      "sha256": "72a59b8bcca8d85c127a4714a8e0501fb3c5966979739116071dd282ebdf9ea3"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/59.tex",
+      "sha256": "60325cda5dc139b2ec6d89ac328750dfadc8191b29fc3074ed5c8ed003ef2093"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/60.tex",
+      "sha256": "4141e8b10dc5fb44c6c03a78d18470ad6c250ed42e62d7c9833f07e241722443"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/frontmatter.tex",
+      "sha256": "478fda894a479ca71a709cecbd2246c684adc4a6dc4c747e863a6075d73caef3"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/III/historical_intro.tex",
+      "sha256": "a929714b22d11184ad742a7ddb4f914322107d760eee40b1b7718563436fe0d3"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/README.md",
+      "sha256": "a2dfd0e4afcf90279b3b16ec65221fb20f5a2b1f334875513d1bc759d0aafecc"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/build_books.py",
+      "sha256": "efc948e8c560e867ddce1130d7622a512193bbb7fab41966d8c58ded4dd12221"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/finalize_records.py",
+      "sha256": "706aa74b1688c42b5175be1d763e60497796a3ef654971e0eb5dcd48496f7b7c"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/part_II.tex",
+      "sha256": "513fae382d150623eb94e5df03c96d4b0c0d308c24a161da1aa2a87317caeb45"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/part_III.tex",
+      "sha256": "07174bb0073d5fee6bd5403f1faf6b36acca8b8e9a08ef3d90d267a1c9a1e72b"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review/VERIFICATION_REPORT.md",
+      "sha256": "14e0e31eba678fa29933d1c0c542a62ecb0a9c8b911a6a929514f6b12399d837"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review/artifact_checks.json",
+      "sha256": "408b7efe3f287ad24e7455788fbbd114caef80f7cc891947602c8104f0cdd987"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review/build_outputs.json",
+      "sha256": "610afb7a36efe0596cb1436586aeb7ad9f3220cdc9d4cf8d5294df6f97ac29bc"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review/original_inventory.json",
+      "sha256": "005c4641433cca8837c54c8b4a06fa54a78774f47ba52f79b80f7dca0626c562"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review/original_outline_disposition.json",
+      "sha256": "02b693e0c27df0723515af69fb52e330d9012a69b47dd373d6bd3345b6b8a501"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review/repeat_build.json",
+      "sha256": "bf70cbec30ccef0b681124e587154f59d0bbc35a4a1d8e538d85a3758ec1260e"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/review_books.py",
+      "sha256": "fd1ce2174bf5f9348149fa11bf5d844e3c433ae248d6fc13bc64e5faf24d7f0d"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/setup_books.py",
+      "sha256": "e2175d22080663f078ea4a74998ecb76f4875ec4dbf863682adb94d203c9f264"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/sources.tex",
+      "sha256": "2d330e6f00ceee48c58462e070397912824e1e7bc449823874ca588ab1f8acec"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/verify_arithmetic.py",
+      "sha256": "1bda0b5d7b82ed38ce064911dd3b8c3452bd7429f7d702937b58dd6fae263a22"
+    },
+    {
+      "path": "books/parts_ii_iii_revised/verify_repeat_build.py",
+      "sha256": "54c33a1de707743205266c54e978410fb51c281ee344efcf2c707c0cbea649db"
+    },
+    {
+      "path": "output/pdf/EBP_Book_Part_III_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "4d4b7381a81bfecfc821eb357b66cf9e75077119f54d6c95447a372777fa16f6"
+    },
+    {
+      "path": "output/pdf/EBP_Book_Part_II_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "935cc2bdbf90e4579e2acfa96456c48927f390f075152d6c95e6d45d3e77e32e"
+    }
+  ]
+}

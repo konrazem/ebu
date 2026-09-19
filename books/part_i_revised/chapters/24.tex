@@ -1,0 +1,186 @@
+\chapter{Studio: reading the Ridge--Vale state}\label{ch:studio-state}
+
+\begin{intuitionbox}{Physical picture: begin with the objects}
+Ridge has a store. Vale has a clinic. At the instant we inspect them, the store contains eighteen units of one usable stock and the clinic contains two. Before asking what a transfer is worth, we must learn to say exactly what those two numbers describe. A reliable calculation begins with names, units, and an order of coordinates.
+\end{intuitionbox}
+
+This studio returns to the small world that has accompanied the main chapters. Its pace is deliberately slower. Reading a definition is one skill; rebuilding a complete calculation from a blank sheet is another. Work with a pencil, leaving enough space to write a sentence beside each equation. The sentence should say what changed physically. If the sentence and the equation disagree, stop at that line. A later correct multiplication cannot repair a mistaken description of the action.
+
+Our numbers are teaching data. They are not measurements from a real clinic, nor recommended stocks for any medical service. In the closed illustration, \(\X\) denotes the unit of a single homogeneous, divisible resource. We use one resource throughout a calculation. We do not combine water, medicine, electricity, and health into an unnamed stock merely because each can be represented by a number.
+
+\section{Make a state card}
+
+Write the following card before doing arithmetic:
+\begin{center}
+\begin{tabular}{P{0.13\linewidth}P{0.24\linewidth}P{0.19\linewidth}P{0.27\linewidth}}
+\toprule
+Index & Place & Symbol & Present stock\\
+\midrule
+1 & Ridge store & \(x_1\) & \(18\X\)\\
+2 & Vale clinic & \(x_2\) & \(2\X\)\\
+\bottomrule
+\end{tabular}
+\end{center}
+The state is the ordered column
+\begin{equation}
+z=\begin{pmatrix}18\\2\end{pmatrix}\X.
+\end{equation}
+The letter \(z\) identifies the frozen state from which the actions in this epoch will be compared. ``Frozen'' means that all candidate calculations use these same recorded inputs. It does not mean that time has physically stopped, or that observations cannot become stale. A practical system needs a rule for recognizing a new epoch when relevant conditions change.
+
+The subscript in \(x_2\) names the second entry. It does not multiply \(x\) by two. The brackets gather two measurements into one mathematical object without mixing their locations. Ridge's eighteen remain at Ridge. Vale's two remain at Vale. The vector records their relation to the model's coordinate list.
+
+Now deliberately reverse the list of places. If Vale is placed first, the same physical situation is represented by \((2,18)^{\mathsf T}\). That is a harmless change of notation only if every associated vector and matrix is reordered too. Reversing the state while leaving an action column unchanged describes a different event. This is why names belong beside numbers even when the numerical exercise is small.
+
+\section{Separate a state from a change}
+
+A stock tells us what is present. An increment tells us how that stock changes. A lossless transfer of four units from Ridge to Vale has increment
+\begin{equation}
+\delta=\begin{pmatrix}-4\\+4\end{pmatrix}\X.
+\end{equation}
+The minus sign is attached to Ridge because Ridge gives up stock. The plus sign is attached to Vale because Vale receives stock. Add corresponding entries:
+\begin{align}
+z+\delta
+&=\begin{pmatrix}18-4\\2+4\end{pmatrix}\X\\
+&=\begin{pmatrix}14\\6\end{pmatrix}\X.
+\end{align}
+Read this aloud: the successor contains fourteen units at Ridge and six at Vale. Do not read it as ``the system gained four.'' One place gained four, another lost four, and the complete system gained zero.
+
+The present chapter performs arithmetic on declared before and after states. It does not execute a research model. In an empirical application, the first vector would come from observations, the proposed increment from a transformation model, and the successor would require confirmation. Those three sources of information should remain visible in a receipt. A predicted successor is not made observed merely by writing an equality in a planning sheet.
+
+\section{Use the vector of ones to ask a physical question}
+
+Let
+\begin{equation}
+\mathbf 1=\begin{pmatrix}1\\1\end{pmatrix}.
+\end{equation}
+Its transpose is the row \(\mathbf 1^{\mathsf T}=(1,1)\). Multiplying this row by a state column adds the entries:
+\begin{equation}
+\mathbf 1^{\mathsf T}z=18+2=20\X.
+\end{equation}
+For the change,
+\begin{equation}
+\mathbf 1^{\mathsf T}\delta=-4+4=0\X.
+\end{equation}
+For the successor,
+\begin{equation}
+\mathbf 1^{\mathsf T}(z+\delta)=14+6=20\X.
+\end{equation}
+These lines agree. We have checked conservation of the represented resource for this transformation. We have not checked whether the distribution meets a clinic's actual needs, whether transport is authorized, or whether a route exists. Each of those questions requires information beyond the total.
+
+Suppose a copied receipt instead says \(z'=(14,5.8)^{\mathsf T}\X\). Its total is \(19.8\X\). In the present lossless two-cell model this is an inconsistency. Do not relabel the missing \(0.2\X\) as ``burden'' and continue. Either the copied numbers are wrong, the transformation was not lossless, or the boundary omits a carrier or loss destination. A more detailed physical model can represent losses, but it must declare where the missing quantity went. The scalar potential does not perform that physical bookkeeping.
+
+\section{Transpose and dot product, without mystery}
+
+The superscript \(\mathsf T\) changes a column into a row. It changes orientation, not contents:
+\begin{equation}
+\begin{pmatrix}a\\b\end{pmatrix}^{\mathsf T}=(a,b).
+\end{equation}
+A row times a column is a dot product. Multiply entries that share a position, then add. For example,
+\begin{equation}
+(3,-2)\begin{pmatrix}5\\4\end{pmatrix}=3(5)+(-2)(4)=7.
+\end{equation}
+The result is one number. It is not the vector \((15,-8)^{\mathsf T}\), although that vector contains the two contributions before they are summed.
+
+Later we will derive the marginal vector at our Ridge--Vale state. With reference stocks \((10,10)^{\mathsf T}\X\) and scales \((2,2)^{\mathsf T}\X\), it is
+\begin{equation}
+\mu(z)=\begin{pmatrix}2\\-2\end{pmatrix}\X^{-1}.
+\end{equation}
+Use it here simply to practise the operation:
+\begin{equation}
+\mu(z)^{\mathsf T}\delta=2(-4)+(-2)(4)=-16.
+\end{equation}
+The units cancel: \(\X^{-1}\X=1\). This is the linear change predicted by the starting marginal. It is not the exact finite potential change. Curvature will add four, giving \(-12\) overall. The distinction is introduced now so that a familiar-looking dot product never quietly becomes a complete receipt.
+
+\section{A quantity and a rate need different names}
+
+In this edition, \(q\) is a finite source-side quantity. A rate is written \(j\). If a constant rate lasts for duration \(\Delta t\), then
+\begin{equation}
+q=\Delta t\,j.
+\end{equation}
+For \(j=8\X/\mathrm{T}\) and \(\Delta t=0.5\mathrm{T}\),
+\begin{equation}
+q=(0.5\mathrm{T})(8\X/\mathrm{T})=4\X.
+\end{equation}
+The units of time cancel. The increment is therefore \((-4,4)^{\mathsf T}\X\). Adding the numerical rate eight directly to Vale's stock would be wrong: it would add a quantity per time to a quantity. Multiplying the finite quantity four by the duration again would also be wrong. The conversion is made once.
+
+The same finite transfer could occur at rate four for one time unit, or rate sixteen for one quarter of a time unit, if those rates were physically permissible. In this ideal stock-only illustration they have the same endpoint. This does not establish that their real energy requirements, risks, or process burdens are equal. Duration can matter through additional declared physical mechanisms. We have only held those mechanisms outside this elementary account.
+
+\section{References and scales are data of another kind}
+
+Place two more columns beside the state card:
+\begin{equation}
+x^*=\begin{pmatrix}10\\10\end{pmatrix}\X,
+\qquad
+\sigma=\begin{pmatrix}2\\2\end{pmatrix}\X.
+\end{equation}
+The star marks a declared reference. It does not mean multiplication, an especially accurate measurement, or a prediction of the next state. The reference says where this model places zero standardized deviation. The scale says how a stock displacement is converted into a dimensionless displacement. Neither is inferred from the numbers eighteen and two alone.
+
+Compute the deviation entry by entry:
+\begin{equation}
+z-x^*=\begin{pmatrix}8\\-8\end{pmatrix}\X.
+\end{equation}
+Divide each entry by its own scale:
+\begin{equation}
+\left(\frac{z_i-x_i^*}{\sigma_i}\right)_{i=1,2}
+=\begin{pmatrix}4\\-4\end{pmatrix}.
+\end{equation}
+The standardized vector has no stock unit. Ridge is four declared scales above its reference; Vale is four scales below. Squaring these entries will remove the signs, which is useful for a nonnegative potential but loses information about direction. Keep the signed deviations in the worksheet. A scalar score should not replace the state that gave rise to it.
+
+The reference total is twenty, matching the actual total. Thus the reference is compatible with conservation in this small world. Compatibility is necessary for reaching it by internal transfers, but not sufficient. A closed gate, an absent route, a forbidden direction, or an action menu with unsuitable quantities may still prevent access to the reference.
+
+\section{Labels for observation, definition, and consequence}
+
+Give each line of the worksheet a source label. The stocks eighteen and two are \emph{illustrative inputs}. The coordinate order and the potential family are \emph{definitions}. The sum twenty is an \emph{arithmetic consequence}. The claim that an actual tank holds eighteen units would be an \emph{observation} requiring an instrument and a time. The claim that ten units is a suitable functional reference would require a calibration argument.
+
+These labels are not ceremonial. Consider two errors that produce the same attractive final number. In one, the stock was mistyped. In the other, the chosen reference did not describe the relevant function. The first may be fixed by correcting a record. The second requires reconsidering a model assumption. If every number is simply called ``the data,'' the two problems become difficult to distinguish.
+
+\section{Guided practice}
+
+Work through the following linked tasks before reading the solutions. Each task changes only the facts it explicitly names. Otherwise retain the lossless homogeneous resource and the coordinate order Ridge, Vale.
+
+\begin{enumerate}
+\item Start from \((12,8)^{\mathsf T}\X\). Transfer \(3\X\) from Ridge to Vale. Write the increment, successor, and both totals.
+\item A clerk writes the same action as \((+3,-3)^{\mathsf T}\X\). What physical event would that column describe? Is it merely an alternative notation?
+\item Write \((7,-2,4)^{\mathsf T}\) as a row and take its dot product with \((1,3,-1)^{\mathsf T}\).
+\item A constant rate of \(6\X/\mathrm{T}\) lasts \(0.25\mathrm{T}\). Find the finite quantity and the successor from our original state.
+\item For that successor, calculate deviations from \((10,10)^{\mathsf T}\X\) and standardized deviations using scale two at both cells.
+\item The reference is changed to \((12,8)^{\mathsf T}\X\). Does the actual stock change? Does the reference remain mass-compatible? Which entries on the worksheet must be recalculated?
+\item A report gives only the total \(20\X\). Can you reconstruct the state? Supply two nonnegative states with that total.
+\item Explain why a number labelled \(\E\) cannot be added to twenty stock units to obtain a larger stock.
+\end{enumerate}
+
+\section{Solutions and reading the mistakes}
+
+For the first task, the increment is \((-3,3)^{\mathsf T}\X\), so the successor is \((9,11)^{\mathsf T}\X\). Both totals are twenty. This action passes the elementary nonnegative-stock check. Whether it is otherwise permitted depends on the route's declared conditions.
+
+The clerk's column in the second task describes movement from Vale to Ridge. It reverses the physical direction under the fixed coordinate order. It can represent the original action only if the coordinate list and every associated object are also reversed. A sign error is not repaired by saying that vectors are abstract.
+
+The third dot product is \(7(1)+(-2)(3)+4(-1)=7-6-4=-3\). For the fourth task, the finite quantity is \(1.5\X\). The successor is \((16.5,3.5)^{\mathsf T}\X\). In the fifth, the signed deviations are \((6.5,-6.5)^{\mathsf T}\X\), and the standardized deviations are \((3.25,-3.25)^{\mathsf T}\). A decimal quantity is allowed here because divisibility is part of the teaching model; a model of indivisible packages would need another action domain.
+
+Changing the reference in task six moves no stock. Its total remains twenty. Deviations, potential, marginals, and subsequent EBU comparisons must be recomputed under the new definition. Historical receipts should retain their old definition rather than being silently rewritten. A reference change is itself something the audit record must make visible.
+
+For task seven, \((18,2)^{\mathsf T}\X\) and \((10,10)^{\mathsf T}\X\) both have total twenty, yet describe different distributions. There are many more. Conservation alone does not locate stock. For task eight, stock and EBU are different mathematical objects: one measures a physical quantity, while the other records a signed result derived from a declared potential and process account. A positive result does not fill a tank.
+
+\section{A three-cell reading exercise}
+
+Add a local store called Hill with stock \(5\X\). For this exercise the coordinate order is Ridge, Vale, Hill, and the state is \((18,2,5)^{\mathsf T}\X\). Its total is twenty-five. An increment \((-4,3,1)^{\mathsf T}\X\) would produce \((14,5,6)^{\mathsf T}\X\). The increment sums to zero, so the endpoint total is again twenty-five.
+
+The new column describes a distribution of one withdrawal across two destinations. It does not specify whether that distribution occurs in one simultaneous event or two ordered actions. The endpoint arithmetic alone cannot tell us the timing. To know it, we need the action record. This is a first example of the difference between information contained in a vector and information needed to explain the vector.
+
+Try reading the same column as two child increments, \((-3,3,0)^{\mathsf T}\X\) and \((-1,0,1)^{\mathsf T}\X\). Their sum is the original increment. The decomposition identifies amounts on two routes but still leaves physical permission and the event order to be declared. If an intermediate source restriction applies, the order may matter even though addition of the final increments is commutative.
+
+To evaluate a potential in this larger world, we must add a Hill reference and scale. We cannot append its stock to the old state while silently omitting its contribution if Hill changes. One mass-compatible illustrative reference is \((10,10,5)^{\mathsf T}\X\), with scales two at all three places. Another compatible reference could distribute twenty-five differently. Choosing between them needs a functional argument; conservation alone does not choose it.
+
+There is a useful lesson about matrices here. A two-entry marginal cannot be multiplied against a three-entry increment to obtain a valid complete dot product. The dimensions disagree because the descriptions disagree. A dimension check is therefore more than a rule learned in linear algebra. It can reveal a missing part of the physical account.
+
+\section{Keep an observation time on the card}
+
+Imagine that the stock card was copied at nine o'clock and the action was considered at ten. A label saying ``eighteen'' is not enough to establish that eighteen remained available. The card needs an observation time or an event identifier, together with the rule that says when a record remains valid. If another carrier used the source meanwhile, the old state is a historical observation rather than the current baseline.
+
+The book's frozen examples avoid this complication by declaration. A real measurement system cannot avoid it by typography. It must connect the action to the observations and commitments that support it. That requirement does not turn the arithmetic into a numerical uncertainty controller. It simply preserves the meaning of the word ``present'' when the record is used.
+
+\section{What to carry forward}
+
+You can now read the state without treating notation as a barrier. A coordinate has a name, a unit, and a fixed position. An increment has a physical direction. A total asks a conservation question. A reference and a scale describe the evaluation model. A dot product combines matched coordinates but acquires its meaning from the quantities being multiplied. These habits will remain useful when there are hundreds of nodes instead of two.
+
+In Chapter~\ref{ch:studio-action}, we will put a graph around the numbers. The key task will be to write the complete physical transformation before calculating its value. If the transformation is incomplete, the cleanest later potential calculation will still answer the wrong question.

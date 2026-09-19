@@ -1,0 +1,127 @@
+\chapter{Closed cycles, splitting and external change}\label{ch:cycles}
+
+\section{The tempting damage-and-repair loop}
+Imagine moving water away from a useful distribution and then moving it back. The return movement can have positive field value. Could an actor record only the return and claim a reward forever? The exact account answers this by retaining both movements and their true baselines.
+
+The question is not whether repair can be helpful. Repair can reduce real represented damage. The question is whether a closed sequence can create a positive \emph{net} field account while returning every represented coordinate to where it started under the same field.
+
+This chapter develops the original book's closed-cycle and splitting ideas using Gaussian examples. It keeps the theorem's assumptions visible. A closed physical sequence, a driven service cycle and a change of model definition are different cases; treating all of them as one kind of loop obscures the calculation.
+
+\section{What closes in a closed cycle?}
+Let an action sequence start at $x_0$ and end at $x_m=x_0$. Assume a fixed potential, complete authoritative states, no unrecorded external event, unique action records and declared nonnegative process burdens. Telescoping gives
+\begin{equation}\label{eq:cycle}
+ \sum_{r=1}^{m}E_r=-\sum_{r=1}^{m}C_r\le0.
+\end{equation}
+In the ideal $C=0$ example, the net is exactly zero. With genuine nonduplicated process burden it is negative.
+
+\begin{lawbox}{Closed-cycle identity}
+For a consistently recorded, undriven closed state sequence under one fixed potential, the field differences sum to zero. Net EBU is therefore minus the declared total process burden. The result does not require Gaussian geometry, but it does require the same function at both appearances of every intermediate state.
+\end{lawbox}
+
+If successive transitions are joint groups, the same endpoint calculation applies to their group totals. This does not establish arbitrary individual settlement rules inside each group. Nor does it silently replace the narrower operational assumptions of historical no-overissue theorems.
+
+\section{A lossless Gaussian loop}
+Begin at the reference $(10,10)\X$, with scales $(2,2)\X$. Transfer $2\X$ from Ridge to Vale. The successor $(8,12)\X$ has potential 1, so the action has value $-1$. Transfer the same quantity back. The endpoint returns to $(10,10)\X$ and potential zero, producing value $+1$.
+
+The sum is zero. The return action really did lower the represented deviation. Its positive sign was not false. What would be false is calling that sign the net result of the whole loop while hiding the preceding negative action.
+
+Suppose a separately declared physical extension charges $0.1$ per actual pump activation, with no duplication in the state potential. The two values become $-1.1$ and $+0.9$, giving $-0.2$. The extra terms are justified only if there were two physical activations of the declared kind. They cannot be invented merely to make a loop unattractive.
+
+\section{Return of a visible variable is not full return}
+A battery can return to the same charge while its health has changed. A tank can return to the same volume while its water quality has worsened. A vehicle can return to its depot after consuming fuel elsewhere. Closing one displayed coordinate does not establish that the complete physical state is unchanged.
+
+If the omitted variable is outside the declared model, the mathematical cycle may be closed within that smaller model. The limitation is then representational: the account cannot support a broader statement about the whole process. Adding a loss coordinate or boundary flow can make the physical record more complete without automatically adding a new term to the value potential.
+
+This is why conservation and valuation were introduced separately. An explicit sink may explain where quantity went. Whether the sink is valued by $V$ requires its own declared definition. A physical loss must never be made to disappear simply because its valuation remains open.
+
+\section{Sequential splitting does not create field value}
+Return to the starting imbalance $(18,2)\X$. An unsplit four-unit transfer ends at $(14,6)\X$ and has field value 12. Now split it into two genuine sequential two-unit transfers. The first ends at $(16,4)\X$ and gives 7. The second begins there, ends at $(14,6)\X$ and gives 5. Thus
+\[
+ 7+5=12.
+\]
+The second action cannot also claim 7. That number belongs to a two-unit counterfactual starting from the original state. Using it twice would sum two different hypothetical accounts, not the actual sequential history.
+
+In general, if an intermediate state is $y$,
+\begin{align}
+ &[V(x)-V(y)]+[V(y)-V(z)]\\
+ &\hspace{35pt}=V(x)-V(z).
+\end{align}
+The equality says nothing about the number of real activations, measurement costs or physical losses. For equality of \emph{net} EBU, the split and unsplit process burdens must also match.
+
+\section{Splitting an identity differs from splitting a process}
+An actor may divide a name or record into smaller pieces without changing the physical process. That should not create additional field reduction. A correctly linked account preserves the endpoint identity.
+
+Physically stopping and restarting a machine can be different. It may change energy use, wear, temperature or another represented state. If those consequences are declared and measured, the split and unsplit actions no longer have the same complete endpoint and burden. A difference in value then records a physical difference rather than a reward for paperwork.
+
+The same distinction applies to a group attribution. Dividing a fixed increment into proportional child increments along the same path preserves their summed path attribution by linearity. It does not prove that a strategic actor cannot change the accepted quantities, group membership or feasible menu through a different declaration. Those are mechanism questions beyond this arithmetic.
+
+\section{An undriven net bound}
+For a nonnegative potential and nonnegative process burdens, telescoping also gives
+\begin{equation}
+ \sum_r E_r
+ =V(x_0)-V(x_m)-\sum_rC_r\le V(x_0).
+\end{equation}
+An undriven history cannot produce a cumulative net greater than its initial represented potential under these assumptions. In the recurring example, that upper bound is sixteen.
+
+The word net matters. Positive and negative entries can alternate. Their sum can be bounded while the sum of positive entries alone grows if repeated damage is separately retained as negative entries. The theorem is not a bound on gross activity, total wages, physical throughput or useful care.
+
+It also does not imply that the bound is attainable. The action graph may prevent reaching the reference; permissions may exclude useful movements; an actor may choose poorly or not act. An upper bound on an account does not supply a mechanism that achieves it.
+
+\section{Equal potential is weaker than equal state}
+States $(18,2)$ and $(2,18)$ have the same potential. A lossless sixteen-unit transfer connects them and gives zero field value. That is an equal-potential transition, but it is not a closed state cycle.
+
+The distinction matters for future opportunities. An edge leaving Ridge may now have much less available stock; an edge leaving Vale may have much more. A later action can therefore differ even though the prior scalar potential was equal.
+
+The algebra of zero endpoint difference only requires equal potentials. Calling the process a closed \emph{physical} cycle requires the stronger state equality, including all relevant coordinates. The book uses the stronger wording when claiming a return of the represented system.
+
+\section{External forcing can recreate deviation}
+Start at $(10,10)$. An external lossless redistribution changes the state to $(14,6)$, increasing potential by four. An action returns it to $(10,10)$, reducing potential by four. Repeating this externally driven pattern can produce repeated positive action values.
+
+There is no violation of equation~\eqref{eq:cycle}, because the interval is not undriven. The external record supplies the missing term:
+\[
+ \sum_tE_t=V(x_0)-V(x_N)+\sum_tD_{{\rm ext},t}-\sum_tC_t.
+\]
+After ten illustrative repetitions with zero process burden, the action values sum to forty and the external potential increases sum to forty. This is arithmetic on a specified pattern, not a simulated trajectory or an assertion that a particular actor would repeat the correction.
+
+A real recurring need may create such a pattern, but it must be modeled through physical consumption, transformation or boundary exchange. In a closed homogeneous stock demonstration, saying ``demand consumed four'' without a carrier or boundary would break conservation. A desire, request and physical sink are not interchangeable.
+
+\section{Who caused the purported external event?}
+The accounting classification must be honest. If an actor deliberately caused a damaging movement and later repaired it, describing the first movement as an unrelated natural disturbance can hide the actor's negative line. The closed-cycle theorem cannot repair a falsified event classification.
+
+This is a causal and verification question. A chronology alone does not establish responsibility, and a physical balance alone does not identify intention. A deployed account would need a declared event model and evidence for its attribution decisions.
+
+The correct scientific conclusion remains narrow: separating an external term makes the algebra explicit. It does not prove that every real-world external term can be identified without uncertainty or strategic manipulation. Those problems require later methods and evidence.
+
+\section{Changing the ruler creates a model-change term}
+Suppose the state is $(14,6)$ with reference $(10,10)$. Under scales $(2,2)$, its potential is 4. Under scales $(4,4)$, its potential is 1. No water moved. The difference of three came from changing the ruler.
+
+If an account evaluated earlier actions with the first scale and later actions with the second, the intermediate potential terms would no longer cancel without an additional term. Let $V^{\rm old}$ and $V^{\rm new}$ be the two definitions. At a fixed revision state $x$, define
+\begin{equation}
+ D_{\rm model}(x)=V^{\rm new}(x)-V^{\rm old}(x).
+\end{equation}
+This term records a change of representation. It is neither an actor's physical restoration nor a newly discovered physical loss. How an institution handles existing balances after revision is a separate policy question.
+
+References and scales may need revision as knowledge improves. The lesson is not to freeze an inadequate model forever. It is to preserve the distinction between learning about the world and changing the world, so that an account remains auditable through both.
+
+\section{Bounded deviation does not prove recovery}
+In the first Gaussian physical domain, each nonnegative stock is at most the fixed total $M$. With finitely many fixed references and positive scales, $V$ has a finite bound on that domain. This is true even for a mechanism that never approaches the reference.
+
+A system can remain trapped away from its reference, alternate between two states or refuse every available action while remaining bounded. Therefore reporting only that the potential did not diverge would not establish homeostatic recovery in such a world.
+
+The prospective capacity invariant in Chapter~\ref{ch:receipts} adds an accounting constraint. It still does not choose the next action. To establish attraction, a proof would need assumptions on the transition mechanism; to demonstrate recovery empirically, a registered study would need appropriate observations and controls. Neither task is completed by boundedness alone.
+
+\section{Guided problem: audit a three-line loop}
+Let the successive potential values be $2,7,3,2$, with process burdens $0.2,0.1,0.3$. Compute each line:
+\[
+ E_1=2-7-0.2=-5.2,\quad
+ E_2=7-3-0.1=3.9,\quad
+ E_3=3-2-0.3=0.7.
+\]
+The sum is $-0.6$, exactly minus total process burden. These supplied potential values illustrate closure; a complete physical example would also need admissible states and actions producing them.
+
+Now split the middle line through potential 5 with burdens $0.04$ and $0.06$. The new values are $1.96$ and $1.94$, summing to the same $3.9$. If both pieces were instead valued from potential 7, they would not describe that sequential split.
+
+\section{Practice and reflection}
+Use the Gaussian reference state $(10,10)$, move to $(7,13)$ and then return. The intermediate potential is $9/4$, so the two cost-free values are $-9/4$ and $+9/4$. Add one actual activation burden of $c$ to each action and express the net as $-2c$.
+
+Next, describe a process returning a tank's volume while changing its quality. State which additional coordinate or boundary record would be necessary to assess closure of the intended physical scope. Finally, explain why a trapped state with constant nonzero potential satisfies boundedness while failing recovery.

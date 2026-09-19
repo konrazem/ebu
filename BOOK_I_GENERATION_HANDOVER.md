@@ -1,4 +1,34 @@
-# Deferred external-Claude handover: Book I authoring
+# Book I authoring handover — current correction and historical prompt
+
+> **Current eight-part update:** former Parts II and III are now combined as
+> Part II, continuing Chapters 33–62 after Part I's 1–32. Former IV–IX become
+> III–VIII. The latest brief requires at least 200 substantive pages per current
+> volume, preserved teaching depth and smaller headings. See
+> [the current series plan](EBU_FUTURE_BOOKS_STRUCTURE.md) and
+> `books/part_ii_integrated/EDITORIAL_CONTRACT.md`.
+> Older stage-specific scope/page-count wording below is retained as history,
+> not a competing current instruction. Original-source numbering stays unchanged.
+
+## Current controlling correction
+
+The author has now authorized a full revision of the original explanatory
+Part I, preserving its style and substantial coverage. The 300-page minimum
+was withdrawn; the latest combined-volume brief sets a 200-page floor while
+requiring clarity, depth and quality rather than padding.
+Use [BOOK_I_FULL_LENGTH_REVISION.md](BOOK_I_FULL_LENGTH_REVISION.md)
+and `books/part_i_revised/`. The prior 69-page candidate remains preserved and
+is not the intended replacement. Original editable source was not recovered;
+the current manuscript is explicitly reconstructed from the supplied PDF.
+
+Do not use the older prompt below to create another shortened 18-chapter book.
+Its stop-before-authoring language describes the earlier reconciliation stage,
+which the subsequent authoring request superseded. Scientific implementation,
+experiments, AWS and publication remain outside scope. Subsequent direct author
+permission includes the combined Part II and smaller headings/expanded Onsager
+exposition in both current volumes; see `books/part_ii_integrated/README.md`.
+No message is sent to Claude or any user task by storing this handover.
+
+## Preserved earlier handover
 
 **Status:** prepared prompt for a later, explicitly authorized task. It is not
 an instruction to begin authoring now. No message has been sent to Claude or

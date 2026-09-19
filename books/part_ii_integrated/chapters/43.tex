@@ -1,0 +1,89 @@
+\chapter{Capacity accounts and random affordable action}\label{ch:capacity}
+The new research question is not whether a controller can be written to
+move downhill. The Onsager-type example already shows how a particular
+response law can have a descent property. The proposed question is what
+happens when actors choose without ranking EBU, but their choices are
+restricted by a separately declared capacity account.
+
+\section{The policy, stated conditionally}
+Let $B_i\geq0$ be persistent experimental capacity for owner $i$, initially
+zero. It is not physical stock, installed pumping capacity or a real-world
+monetary entitlement. Suppose an explicitly adopted owner/path policy would
+assign group changes $\Delta B_i$ satisfying
+\begin{equation}
+ \sum_i\Delta B_i=E_G.
+\end{equation}
+The proposed affordability condition is
+\begin{equation}
+ B_i+\Delta B_i\geq0\quad\hbox{for every affected owner }i.
+\end{equation}
+The intended policy permits same-event signed netting within one owner,
+not across all owners. It introduces no loan, refill or global pool.
+Its adoption is a modelling choice still requiring the programme's declared
+authority, not a consequence of Chapter~\ref{ch:attribution}.
+
+\section{Why positive group value is insufficient}
+Consider a candidate whose owner changes are $(3,-1)$ and whose aggregate
+value is two. With zero balances, it is unaffordable for the second owner.
+Positive total value does not cover that owner's debit unless a different
+policy explicitly permits pooling. Conversely, if one owner holds both
+child actions, same-owner netting would produce $+2$ and pass. Ownership
+can therefore change the feasible stochastic process without changing the
+physical endpoint or group field value.
+
+With positive existing capacity, a negative-valued action may be affordable.
+That is not an accounting error. It is one intended reason this policy is
+not a monotone potential-descent controller. Whether spending later enables
+useful action or merely produces cycles is a research question.
+
+\section{The external-audit invariant}
+Let $J$ accumulate $D_{\mathrm{ext},t}=V(z_t)-V(x_t)$ and suppose
+the adopted cost-free updates are exact. Then
+\begin{align}
+ J_{t+1}&=J_t+D_{\mathrm{ext},t},\\
+ \sum_iB_{i,t+1}&=\sum_iB_{i,t}+V(z_t)-V(x_{t+1}).
+\end{align}
+Adding terms yields
+\begin{equation}\label{eq:invariant}
+ V(x_{t+1})+\sum_iB_{i,t+1}-J_{t+1}
+ =V(x_t)+\sum_iB_{i,t}-J_t=K.
+\end{equation}
+At reference with zero genesis and zero audit, $K=0$. Forcing does not
+directly fund an actor. Its signed potential change enters $J$ so that
+the full account can be reconstructed.
+
+After a single shock, suppose $J=4$ and $K=0$. If an actor reduces potential
+to one, total capacity becomes three. Later an affordable negative action
+could raise potential to two while lowering total capacity to two. The
+identity permits this. It gives a constraint, not a ranking of choices.
+
+\section{What can be proved about the reference}
+At $x=x^*$, any nonzero net increment has
+$E_G=-\tfrac12\delta_G^TH\delta_G<0$. At zero balances, owner-wise
+affordability would require every $\Delta B_i\geq0$, making their sum
+nonnegative. Thus no nonzero-net action can be affordable there under the
+stated cost-free policy. A cancelling group may have zero aggregate change;
+its owner-level feasibility still depends on the declared attribution/map.
+
+This is a conditional statement about zero genesis at the reference. After
+a shock and earned capacity, the account can permit uphill movement.
+Therefore the zero-genesis observation does not establish attraction from
+disturbed states or long-run recovery.
+
+\section{Random choice is not mathematical neutrality}
+``Choose uniformly'' is incomplete until the sample space is fixed. Uniform
+choice among edges differs from uniform choice among quantities, groups or
+owners. If one physical option appears twice under different identifiers,
+sampling entries gives it twice the probability. A finite menu is also not
+the same as the continuum of all physically possible quantities.
+
+The programme intends EBU-blind candidate construction and unweighted choice
+among affordable physically feasible options, with a physical-random control
+that lacks the affordability filter. Exact menu, duplicate, no-action and
+group-assembly semantics remain load-bearing decisions. They must not be
+chosen after inspecting which version makes EBU look better.
+
+\section*{Chapter recap}
+Capacity and external audit can satisfy an exact conditional invariant.
+That invariant does not make the policy fair, decentralized, monotone or
+successful. Those are separate statements about the declared process.

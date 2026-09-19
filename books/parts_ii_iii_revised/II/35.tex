@@ -1,0 +1,85 @@
+\chapter{Graphs, supports and physically admissible groups}\label{ch:graphs}
+An edge is a possible physical transformation, not a promise that a helpful
+transfer can always occur. A route, a pump and a warehouse doorway may each
+impose limits independent of any potential. Begin with those limits, because
+an exact value for an impossible action is only a counterfactual calculation.
+
+\section{Three graphs with different jobs}
+The physical graph lists allowed transformations. The potential-factor graph
+lists which state coordinates a term in $V$ depends on. The action-interaction
+graph records overlap or coupling between actions. In the diagonal Gaussian
+model every potential factor has one coordinate, yet two physical actions
+can interact because they both change the same source. A diagonal Hessian
+does not make all edge actions independent.
+
+For action $a$, its write support is the set of coordinates with nonzero
+increment $\delta_a$. Its constraint support includes capacities, reservations
+or aggregate budgets it uses. Two actions may have disjoint write supports
+but share a machine capacity. Conversely, reading the same immutable scale
+does not by itself create a shared physical constraint.
+
+\section{Joint feasibility is not singleton feasibility}
+Suppose Ridge contains five units. Two requests each withdraw three units
+from Ridge to different destinations. Each is individually nonnegative at
+its endpoint, but their group withdraws six and is invalid. Testing children
+one at a time against the same five units does not validate their sum.
+
+With $q_a\geq0$, a conservative frozen-stock rule might require
+\begin{equation}
+ \sum_{a:\,\mathrm{src}(a)=i}q_a\leq z_i.
+\end{equation}
+This is an example of a declared rule, not a newly adopted programme policy.
+A plant that permits concurrent incoming flow to fund outgoing flow requires
+a different timing and feasibility contract. Endpoint nonnegativity alone
+does not prove that an unmodelled intermediate mechanism can perform it.
+
+Destination capacity is another independent constraint. If a tank can hold
+ten and begins at eight, two incoming deliveries of two each cannot both
+fit merely because their separate endpoints do. Physical capacity is not
+the Gaussian reference. A reference may be six even when the tank can hold
+ten; exceeding the reference can be feasible but increase potential.
+
+\section{The straight segment and its limited guarantee}
+The simplex is convex. If $z$ and $z+\delta_G$ lie in it, then
+\begin{equation}
+ z+s\delta_G=(1-s)z+s(z+\delta_G),\qquad 0\leq s\leq1,
+\end{equation}
+also lies in it. This proves nonnegative conserved stock along the aggregate
+straight interpolation. It does not prove child-specific rate limits,
+mechanical synchronization, queue clearance or causal access to incoming
+stock. Those are additional constraints on a physical realization.
+
+This distinction matters when a path integral is later described as physical.
+The same segment can be a valid mathematical interpolation even when the
+plant has not declared constant-rate joint execution. The integral identity
+survives; the physical-path interpretation does not follow automatically.
+
+\section{Grouping without losing atomic actions}
+A joint group retains child identities and increments. It is not an excuse
+to conceal a fuel-to-electricity-to-pump-to-water chain inside one undifferentiated
+operation. Distinct carriers and intermediate transformations must remain
+traceable when they belong to the represented scope.
+
+The analytical bridge \cite{bridge} groups coupled actions under a common
+accounting boundary and distinguishes physical grouping from receipt batching.
+Batching independent records can reduce administrative overhead, but it does
+not create a new physical synergy. Conversely, simultaneous actions sharing
+a source need joint evaluation even if their paperwork is submitted separately.
+
+\section*{Exercises with reasoning}
+Take a source with six units and two proposed quantities $(4,4)$. A common
+cap of six with proportional scaling would yield $(3,3)$. The number three
+comes from that resolver, not from the value equation. If the resolver were
+priority-based, a different accepted vector could be physically admissible.
+Never price $(4,4)$ and execute $(3,3)$ under the old value record.
+
+Now let two accepted actions use disjoint nodes and disjoint constraints.
+With a separable potential, their finite values add because the affected
+terms are disjoint. If a new pair factor couples one node from each action,
+the independence proof no longer applies even though the physical edges
+remain disjoint. The correct affected support follows the potential factors.
+
+\section*{Chapter recap}
+The graph says what can connect, support says what changes, constraints say
+what is permitted, and the potential says how the represented change is
+valued. None can silently perform the job of another.

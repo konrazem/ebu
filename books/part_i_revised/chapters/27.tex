@@ -1,0 +1,200 @@
+\chapter{Studio: from slope to finite field effect}\label{ch:studio-field}
+
+\begin{intuitionbox}{Physical picture: the first slope is not the whole journey}
+At Ridge eighteen and Vale two, a small transfer toward Vale reduces both standardized deviations. But the advantage of the next unit changes as the transfer proceeds. A finite account must follow that change. The quadratic landscape lets us see the complete relation between local slope and exact endpoint value without approximation.
+\end{intuitionbox}
+
+Use the base state \(z=(18,2)^{\mathsf T}\X\), reference \((10,10)^{\mathsf T}\X\), scales two, and the lossless edge Ridge to Vale. For this studio, suppose quantities from zero to eighteen are available for algebraic inspection. Actual route permission can be narrower; the extended range is a diagnostic of the equation. It does not override a cap declared in a different example.
+
+\section{Differentiate one local contribution}
+
+Write the local function in a form that makes its constants visible:
+\begin{equation}
+V_i(x_i)=\frac{(x_i-x_i^*)^2}{2\sigma_i^2}.
+\end{equation}
+Differentiate with respect to \(x_i\), holding the reference and scale fixed:
+\begin{align}
+\mu_i(x_i)
+&=\frac{1}{2\sigma_i^2}\,2(x_i-x_i^*)\\
+&=\frac{x_i-x_i^*}{\sigma_i^2}.
+\end{align}
+The derivative is called the marginal. Its unit is inverse stock because the potential is dimensionless. At Ridge it is \((18-10)/4=2\X^{-1}\). At Vale it is \((2-10)/4=-2\X^{-1}\).
+
+The signs have direct meaning. Adding a small amount to Ridge at eighteen increases the potential; removing a small amount decreases it. Adding a small amount to Vale at two decreases the potential. These statements concern local changes under this declared function. They do not tell a carrier how to act or establish that all real needs have been represented.
+
+\section{Derive the edge field from the physical column}
+
+Along a finite transfer coordinate \(r\), the physical state is
+\begin{equation}
+x(r)=z+S_er=(18-r,2+r)^{\mathsf T}\X.
+\end{equation}
+When \(r\) increases, Ridge decreases at unit rate with respect to \(r\), while Vale increases at unit rate. The chain rule gives
+\begin{equation}
+\frac{dV(x(r))}{dr}=-\mu_R(x_R(r))+\mu_V(x_V(r)).
+\end{equation}
+Define the burden-reducing edge field as its negative:
+\begin{equation}
+f(r)=\mu_R(x_R(r))-\mu_V(x_V(r)).
+\end{equation}
+For our numbers,
+\begin{align}
+\mu_R(x_R(r))&=(8-r)/4,\\
+\mu_V(x_V(r))&=(-8+r)/4,\\
+f(r)&=4-r/2.
+\end{align}
+At the start, \(f(0)=4\X^{-1}\). After four units, it is two. After eight, it is zero. After twelve, it is minus two. The field changes continuously because the Gaussian potential has continuous derivatives.
+
+The field is a directional diagnostic. We introduce no mobility coefficient or automatic flux law here. Knowing that one infinitesimal direction lowers the potential does not mean the model selects that direction, or that actors must choose the quantity where the field becomes zero.
+
+\section{Calculate the exact endpoint difference}
+
+At quantity \(q\), the endpoint potential is
+\begin{align}
+V(z+S_eq)
+&=\frac{(8-q)^2}{8}+\frac{(-8+q)^2}{8}\\
+&=\frac{(8-q)^2}{4}.
+\end{align}
+The starting value is sixteen, and \(C=0\). Therefore
+\begin{align}
+E(q)&=16-\frac{(8-q)^2}{4}\\
+&=16-\frac{64-16q+q^2}{4}\\
+&=4q-\frac{q^2}{4}.
+\end{align}
+Here and below, numerical quantities are expressed in the declared stock unit. The first term is the initial field multiplied by quantity. The second is the exact curvature correction. It is not a numerical safety allowance or a guessed penalty. It follows from expanding the square.
+
+For \(q=4\), the starting-field product is sixteen and the correction is four, giving twelve. For \(q=8\), the product is thirty-two and the correction is sixteen, giving sixteen. Extending the starting slope indefinitely would count gains that are no longer present along the finite movement.
+
+\section{Recover the same answer by integration}
+
+The field along the path is \(4-r/2\). Integrating it from zero to the performed quantity gives
+\begin{align}
+\int_0^q f(r)\,dr
+&=\int_0^q(4-r/2)\,dr\\
+&=\left[4r-r^2/4\right]_0^q\\
+&=4q-q^2/4.
+\end{align}
+This agrees with the endpoint difference. The agreement is an instance of the fundamental theorem of calculus under the stated differentiability and path assumptions. We are not numerically approximating the integral in this example; both evaluations are exact algebra.
+
+Another parameterization runs from \(s=0\) to \(s=1\), with state \(z+s\delta\) and fixed increment \(\delta=S_eq\). In that notation the field contribution is
+\begin{equation}
+-\int_0^1\nabla V(z+s\delta)^{\mathsf T}\delta\,ds.
+\end{equation}
+The factor \(\delta\) contains the full quantity. Omitting it would integrate a marginal but fail to obtain the finite action value. The negative sign appears because positive EBU means a reduction in potential.
+
+If a model declares constant-rate simultaneous execution, the straight path can be that model's realized path. When only endpoints are supplied, it is a chosen interpolation used to decompose the difference. Arithmetic alone does not prove which physical time path occurred.
+
+\section{Use the Hessian to see the general pattern}
+
+For fixed positive scales, the Hessian matrix is
+\begin{equation}
+H=\begin{pmatrix}1/4&0\\0&1/4\end{pmatrix}\X^{-2}.
+\end{equation}
+It records how marginals change with stock. The exact quadratic identity is
+\begin{equation}
+V(z+\delta)-V(z)=\mu(z)^{\mathsf T}\delta+\frac12\delta^{\mathsf T}H\delta.
+\end{equation}
+For \(\delta=(-4,4)^{\mathsf T}\X\), the first term is minus sixteen. The matrix product gives
+\begin{equation}
+\delta^{\mathsf T}H\delta
+=\frac{(-4)^2}{4}+\frac{4^2}{4}=8.
+\end{equation}
+Half of that is four. Thus the potential change is \(-16+4=-12\), and the EBU field reduction is twelve.
+
+Because every diagonal entry of \(H\) is positive, \(\delta^{\mathsf T}H\delta>0\) for every nonzero increment. A tangent estimate of the field reduction therefore overstates the exact finite reduction by this positive quadratic term. That conclusion relies on this fixed quadratic model. It should not be stretched into a claim about every conceivable potential or hidden action-dependent parameter.
+
+\section{Read positive, zero, and negative values on one curve}
+
+Factor the exact expression:
+\begin{equation}
+E(q)=\frac{q(16-q)}4.
+\end{equation}
+For positive quantities below sixteen, this expression is positive. At zero it is zero because no action occurred. At sixteen it is also zero, but for a very different reason: the state becomes \((2,18)\), whose potential equals the original sixteen. A large movement took place even though its net field value is zero.
+
+At seventeen, the endpoint is \((1,19)\), with potential \(81/4=20.25\). The field value is \(16-20.25=-4.25\). This endpoint still has nonnegative stocks. Thus physical feasibility under the simple stock constraint and positive EBU are different questions.
+
+The zero of the field at quantity eight and the second zero of the total value at sixteen are also different. At eight, an additional tiny forward movement begins to increase potential, but the completed action has already reduced potential by sixteen. Confusing a marginal zero with a total zero would erase the distinction between the next unit and the whole action.
+
+\section{Recalculate a short execution}
+
+Suppose a proposal and accepted plan both specify four units, but the recorded execution is only three. The endpoint is \((15,5)\), potential \(6.25\), and exact field value \(9.75\). The unperformed fourth unit must not receive the planned value. Its incremental contribution, had it occurred next, would have been \(12-9.75=2.25\).
+
+That incremental number can be checked from the live state. At \((15,5)\), the edge field is \(2.5\). A further one-unit transfer has exact value \(2.5(1)-1/4=2.25\). The two live values, \(9.75\) and \(2.25\), add to twelve. Two independent three- or one-unit values taken from the old state would answer a different question.
+
+The example shows why a receipt needs the actual quantity and the correct predecessor. For a short execution within the original declared domain, evaluate the precommitted schedule at the measured quantity. Do not substitute the planned four-unit value or change the schedule after the event. Baseline, field and physical-map assumptions must still match. A numerical result should never outlive the assumptions that gave it meaning.
+
+\section{What changes when process burden is declared}
+
+Keep the physical four-unit transfer and suppose a separate, non-overlapping action burden is explicitly declared as \(C=0.5\). The field reduction remains twelve. Net value becomes \(E=11.5\). The identity reads
+\begin{equation}
+11.5+(4-16)+0.5=0.
+\end{equation}
+The process line changes the action account, not the already computed endpoint potential. This example does not establish a real calibration for any vehicle or medical delivery. Its purpose is to show where a justified burden would enter. A consequence already charged through the represented state change and evaluated potential must not be subtracted again. Any additional process term must cover a distinct, declared physical contribution not already counted there. Merely recording a loss in a conservation ledger does not establish whether the chosen potential has charged it; that valuation boundary must also be explicit.
+
+\section{Guided practice}
+
+\begin{enumerate}
+\item Calculate the initial field, exact value, and tangent overstatement for a two-unit transfer from the base state.
+\item At quantity six along the path, calculate both marginals and the edge field. Then find the value of the completed six-unit transfer.
+\item Starting from the reference \((10,10)\), calculate the value of a two-unit forward transfer. Explain why an initial field of zero does not imply that its finite value is zero.
+\item Divide a four-unit transfer into two consecutive two-unit actions. Calculate each live value and their sum.
+\item Repeat the fourth problem but quote both actions independently from the original state. What sum do you obtain, and why is it different?
+\item Use scales four at Ridge and two at Vale. Derive the initial field and the curvature coefficient for this changed model.
+\item Explain whether a negative field forbids a movement by mathematics alone.
+\end{enumerate}
+
+\section{Worked answers and diagnostic questions}
+
+The initial field in the first problem is four. Exact value at two is \(8-1=7\). The tangent predicts eight and overstates by one. In the second problem the intermediate stocks are twelve and eight, so marginals are \(0.5\) and \(-0.5\), field one. Completed value is \(24-9=15\). The current field one is not the total value fifteen.
+
+At the reference, the initial marginal vector is zero. The two-unit movement has curvature term \(q^2/4=1\), so its value is minus one. It leaves the minimum of the potential. The absence of a first-order change is compatible with a nonzero second-order change.
+
+For two consecutive two-unit actions from \((18,2)\), the first value is seven and the live state is \((16,4)\), with potential nine. The second reaches \((14,6)\), potential four, so its value is five. Total twelve matches the one-step endpoint comparison. The independent same-baseline calculation instead gives seven plus seven, or fourteen. It repeats the more favourable starting conditions and overlooks the shared curvature correction.
+
+With scales four and two, the marginals at \((18,2)\) are \(0.5\) and \(-2\), so the initial field is \(2.5\). The finite expression is
+\begin{equation}
+E(q)=2.5q-\frac12\left(\frac1{16}+\frac14\right)q^2
+=2.5q-\frac5{32}q^2.
+\end{equation}
+At four it gives ten minus two and a half, or seven and a half, agreeing with the previous studio. This is a useful independent check because it reaches the same number by slopes and curvature instead of direct local squares.
+
+For the final question, a field sign evaluates a direction under the declared potential. Permission and selection require separately stated rules. An actor could perform a physically allowed negative-value movement under a policy that admits it, possibly using an explicitly defined capacity account. This studio supplies neither that policy nor its authorization. It keeps the evaluation transparent so that a later policy can be examined honestly.
+
+\section{An exact midpoint check}
+
+Because the marginal of a quadratic is affine, the average marginal along a straight path equals the marginal at the path midpoint. This gives a third way to check the finite field difference. For a four-unit transfer, the midpoint is \((16,4)\), where the edge field is three. Multiplying that midpoint field by the full quantity four gives twelve, exactly.
+
+To derive the claim rather than memorize a shortcut, write
+\begin{equation}
+\mu(z+s\delta)=\mu(z)+sH\delta.
+\end{equation}
+Integrating over \(s\) yields \(\mu(z)+\tfrac12H\delta\), which is precisely \(\mu(z+\delta/2)\). Therefore
+\begin{equation}
+V(z)-V(z+\delta)=-\mu(z+\delta/2)^{\mathsf T}\delta.
+\end{equation}
+This is exact for the fixed quadratic and straight interpolation. It is not a general claim that every nonlinear potential can be integrated from one midpoint evaluation. With another potential, midpoint evaluation may only approximate the integral, and its error would need analysis appropriate to that function.
+
+For the eight-unit transfer, the midpoint is \((14,6)\), where field two times quantity eight gives sixteen. For sixteen units, the midpoint is the reference and its field is zero, giving zero total value even though the path first lowers and then raises the potential. The positive and negative portions cancel in the exact integral.
+
+\section{Inspect a transfer from an unequal-scale state}
+
+Use the changed scales from the last exercise: four at Ridge and two at Vale. The initial field is \(2.5\) and its slope along the transfer is \(-5/16\), so
+\begin{equation}
+f(r)=2.5-\frac5{16}r.
+\end{equation}
+For a four-unit action, the midpoint quantity is two and its field is \(2.5-10/16=1.875\). Multiplying by four gives \(7.5\), exactly the endpoint difference. The same shortcut works because the field is affine, not because the scales are equal.
+
+The field becomes zero at quantity eight in this particular changed-scale example because both cells still share the compatible reference ten and the transfer path passes through it. With different reference totals or a higher-dimensional constrained movement, a zero along one edge need not mean that every coordinate equals its reference. It means the two endpoint marginals balance along that permitted direction.
+
+For example, take two local stocks fourteen and eleven, both with reference ten, but scales four and two respectively. Their marginals are both one quarter, despite unequal stocks and nonzero deviations. The lossless field between them is zero at that instant. A small finite transfer on that edge still adds a positive curvature term and therefore has negative field value. This local example need not be the whole conserved system: additional cells can hold the compensating deficit required for a compatible global reference. Equal local marginals express a balance of sensitivity along one edge, not a declaration that the entire represented world is at its reference.
+
+\section{The difference between a direction and a destination}
+
+A positive starting field says that sufficiently small forward movement lowers this differentiable potential. It does not identify a unique finite action. Several quantities in the menu can lower it, and their other consequences can differ. Even the continuous maximum of the finite expression is a feature of the evaluation curve, not evidence that an actor should or can choose it.
+
+This distinction protects the intended research question. If every example quietly uses the optimum as the performed quantity, readers may come away believing that EBU itself contains an optimizing controller. Our examples instead calculate declared quantities and preserve adverse or zero outcomes. The field can then be used as an account of action without smuggling a preferred dynamics into its definition.
+
+\section{The useful habit}
+
+Whenever you see a product of starting field and finite quantity, ask where the curvature went. For the Gaussian landscape, there is an exact answer: half the Hessian quadratic form. Whenever you see an integral, ask which path and parameterization it describes. Whenever you see a signed value, ask which actual predecessor and quantity produced it. Those questions turn a compact equation into a reconstructible account.
+
+Chapter~\ref{ch:studio-choice} will place several such accounts beside one another. Comparing them is arithmetic. Choosing among them is a further rule, and we will keep that rule visible.

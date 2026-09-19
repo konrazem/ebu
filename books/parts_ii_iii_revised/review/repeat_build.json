@@ -1,0 +1,14 @@
+{
+  "before": {
+    "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf": "cbae29f9081b2512352a84f4feecf387c65f44e0b975b9d08e3ce111fe7a7b4b",
+    "output/pdf/EBP_Book_Part_II_Revised_Gaussian_Explanatory_Edition.pdf": "935cc2bdbf90e4579e2acfa96456c48927f390f075152d6c95e6d45d3e77e32e",
+    "output/pdf/EBP_Book_Part_III_Revised_Gaussian_Explanatory_Edition.pdf": "4d4b7381a81bfecfc821eb357b66cf9e75077119f54d6c95447a372777fa16f6"
+  },
+  "after": {
+    "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf": "cbae29f9081b2512352a84f4feecf387c65f44e0b975b9d08e3ce111fe7a7b4b",
+    "output/pdf/EBP_Book_Part_II_Revised_Gaussian_Explanatory_Edition.pdf": "935cc2bdbf90e4579e2acfa96456c48927f390f075152d6c95e6d45d3e77e32e",
+    "output/pdf/EBP_Book_Part_III_Revised_Gaussian_Explanatory_Edition.pdf": "4d4b7381a81bfecfc821eb357b66cf9e75077119f54d6c95447a372777fa16f6"
+  },
+  "byte_identical": true,
+  "scope": "PDF generation only; no scientific execution"
+}

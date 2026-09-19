@@ -1,0 +1,164 @@
+\chapter{Studio: several actors at one source}\label{ch:studio-group}
+
+\begin{intuitionbox}{Physical picture: two known movements still share one curve}
+Two carriers can report their quantities perfectly and still share the same changing source stock. Knowing each movement does not make a squared potential linear. We must first calculate the joint physical endpoint and its exact field value. A declared path can then divide that value arithmetically, while questions of ownership and fair settlement remain distinct.
+\end{intuitionbox}
+
+The examples in this studio are deliberately small. Their arithmetic can be inspected without a simulation, and their limitations can be stated precisely. No actor is allowed to claim the entire benefit of the group's common change. At the same time, we do not solve a general institutional allocation problem by calling an exact sum a fair share.
+
+Start with the base Ridge--Vale state \((18,2)^{\mathsf T}\X\), reference \((10,10)^{\mathsf T}\X\), scales two, and zero process burden. Suppose two actors, A and B, each move two units on the same lossless edge during a declared joint event. Physical permission admits their total quantity four. Their names identify child action records.
+
+\section{Compute the tempting independent sum}
+
+If A acted alone from the frozen state, the endpoint would be \((16,4)\), whose potential is nine. Its standalone field value would be \(16-9=7\). B's separate same-baseline hypothetical calculation is identical. Adding the two hypothetical values gives fourteen.
+
+But the actual joint increment is \((-4,4)^{\mathsf T}\X\), and the joint endpoint is \((14,6)\), whose potential is four. The group value is twelve. The independent sum therefore exceeds the group value by two.
+
+Both standalone calculations are mathematically correct as counterfactual one-action comparisons. The error appears when they are described as additive records of the same joint event. Each grants its child the complete original source and destination conditions. The second copy fails to include how the other child changes the shared field.
+
+This is a useful example because no uncertainty, missing actor identity, or physical loss is needed to create the discrepancy. Even exact quantities and a very simple separable potential do not authorize naive independent addition.
+
+\section{Identify the cross term}
+
+Let \(\delta_A\) and \(\delta_B\) be the two increments. The Gaussian group field reduction is
+\begin{equation}
+F_G=-\mu(z)^{\mathsf T}(\delta_A+\delta_B)
+-\frac12(\delta_A+\delta_B)^{\mathsf T}H(\delta_A+\delta_B).
+\end{equation}
+Expanding the quadratic and subtracting the standalone sum gives
+\begin{equation}
+F_G-(F_A^{(0)}+F_B^{(0)})=-\delta_A^{\mathsf T}H\delta_B.
+\end{equation}
+For \(\delta_A=\delta_B=(-2,2)^{\mathsf T}\X\) and \(H=\operatorname{diag}(1/4,1/4)\), the product is
+\begin{equation}
+\delta_A^{\mathsf T}H\delta_B=\frac{4}{4}+\frac{4}{4}=2.
+\end{equation}
+The diagnostic correction is minus two, exactly the difference between twelve and fourteen.
+
+The potential's Hessian is diagonal, yet the actions interact in this comparison because they change the same coordinates. A diagonal state potential does not imply that every pair of action values is additive. The action supports and the potential structure must both be examined.
+
+\section{Compare a genuine live sequence}
+
+If A physically goes first, its value is seven and the live state becomes \((16,4)\). B then begins from that state and reaches \((14,6)\), giving value \(9-4=5\). The live sum is twelve. If B goes first, the named actors exchange seven and five, while the total remains twelve.
+
+This sequence has the same endpoint as the simultaneous group, under our fixed quantities and permission assumptions. Its total field value is therefore equal to the group's. The same-baseline correction of minus two is not evidence of an extra physical benefit or harm caused uniquely by simultaneity. It compares the joint endpoint with a naive sum of counterfactual standalone values.
+
+In the terminology of the bridge developed in the main chapters, endpoint-equivalent serial and parallel accounts can have zero comparator-relative difference while still having nonzero same-baseline non-additivity. The two diagnostics answer different questions. Calling both simply ``interaction'' would make the numerical example hard to interpret.
+
+\section{Declare one common path attribution}
+
+Let the group increment be \(\delta_G=\delta_A+\delta_B\). Along the declared straight path \(z+s\delta_G\), define the field attribution
+\begin{equation}
+R_a=-\int_0^1\nabla V(z+s\delta_G)^{\mathsf T}\delta_a\,ds.
+\end{equation}
+For the fixed Gaussian model this is exactly
+\begin{equation}
+R_a=-\mu(z)^{\mathsf T}\delta_a-\frac12\delta_a^{\mathsf T}H\delta_G.
+\end{equation}
+In the symmetric example, the first term for A is eight. The cross product with the full group increment is four, so half is two. Thus \(R_A=8-2=6\), and likewise \(R_B=6\). They sum to twelve.
+
+Closure follows by summing the increments inside the integral:
+\begin{align}
+\sum_aR_a
+&=-\int_0^1\nabla V(z+s\delta_G)^{\mathsf T}\delta_G\,ds\\
+&=V(z)-V(z+\delta_G).
+\end{align}
+This is an exact mathematical decomposition under the declared path. It does not prove that six is an actor's property, wage, causal entitlement, or fair reward. Those meanings need additional rules and arguments. A sum can be exact without its terms acquiring every interpretation one might want.
+
+If the physical model explicitly realizes constant-rate child movements, the path can describe that model's actual trajectory through stock space. If only endpoints are known, the same arithmetic is an interpolation convention. We must state which interpretation is in force. Neither can be generalized to an unobserved real physical path by changing the name of the formula.
+
+\section{Use unequal children and different destinations}
+
+Add a third cell, a second destination called Hill. This changes the coordinate list and the reference. Set
+\begin{equation}
+z=(18,2,10)^{\mathsf T}\X,
+\quad x^*=(10,10,10)^{\mathsf T}\X,
+\quad\sigma=(2,2,2)^{\mathsf T}\X.
+\end{equation}
+The total is thirty, and initial potential is sixteen. A sends four to Vale, so \(\delta_A=(-4,4,0)^{\mathsf T}\X\). B sends two to Hill, so \(\delta_B=(-2,0,2)^{\mathsf T}\X\). Assume the joint six-unit source withdrawal and both destination receipts are permitted.
+
+The endpoint is \((12,6,12)\), with squared deviations \(4+16+4=24\), potential three. Hence the group value is thirteen. A alone has value twelve. B alone reaches \((16,2,12)\), potential thirteen, and has value three. The independent sum is fifteen, again two above the group result.
+
+The initial marginal vector is \((2,-2,0)^{\mathsf T}\X^{-1}\). For A, the linear field term is sixteen. Its Hessian product with \(\delta_G=(-6,4,2)^{\mathsf T}\X\) is
+\begin{equation}
+\frac{(-4)(-6)+4(4)+0(2)}4=10.
+\end{equation}
+Half of this is five, so \(R_A=11\). For B, the linear field term is four and the Hessian product is
+\begin{equation}
+\frac{(-2)(-6)+0(4)+2(2)}4=4,
+\end{equation}
+giving \(R_B=4-2=2\). The path attributions close as \(11+2=13\).
+
+Equal division would instead give \(6.5\) to each child. Division proportional to quantity would give \(26/3\) and \(13/3\). Each pair sums to thirteen, but the pairs are different. Closure alone therefore cannot identify a unique split. The declared path adds mathematical structure; a settlement institution would need to justify why that structure should govern its balances.
+
+\section{Check both sequential orders in the unequal case}
+
+When A goes first, it contributes twelve. The intermediate state is \((14,6,10)\), potential four. B then reaches the final potential three, contributing one. The pair is twelve and one.
+
+When B goes first, it contributes three. The intermediate state is \((16,2,12)\), potential thirteen. A then reduces that to three, contributing ten. The pair assigned to A and B is ten and three. Both orders sum to thirteen, and the common-path pair eleven and two lies between these two order-specific assignments in this quadratic example.
+
+That numerical relation is instructive, but it should not be casually promoted into a universal fairness theorem. It depends on the particular path and model. More general mechanisms can change endpoints with order, forbid some serializations, or change accepted quantities. A comparison must name the sequential schedule and say whether it keeps the group quantities fixed or reruns a resolver.
+
+\section{Opposing movement and the meaning of cancellation}
+
+Return to the two-cell base state. Let A move two units from Ridge to Vale and B move two in the reverse direction. Declare that the joint physical mechanism permits these opposing transfers. The net increment is zero, so the group endpoint equals the baseline and the ideal field value is zero.
+
+A alone has value seven. B alone reaches \((20,0)\), potential twenty-five, and has value minus nine. The standalone sum is minus two, while the group value is zero. The same-baseline correction is therefore plus two.
+
+On the constant-state common path, the group increment is zero. The path formula gives \(R_A=8\) and \(R_B=-8\), which sum to zero. These terms are a decomposition using the declared child increments; they are not evidence that eight units of physical stock or money passed from B to A. They also do not prove that real opposing transport has no cost. The ideal account set process burden to zero. Any actual energy use or loss must remain in its proper physical account.
+
+This example corrects another tempting inference: positive non-additivity need not demonstrate a special cooperative mechanism. Here it comes from cancelling increments under a curved potential. To claim a physical synergy of parallel execution, one must compare with an admissible named alternative and establish a difference in complete endpoints or declared burdens.
+
+\section{Physical permission is still aggregate}
+
+Take the unequal three-cell example with total proposed withdrawal six. If a newly declared source handling cap is five, that exact group is inadmissible. The mathematical value thirteen does not remove the violation. We must not execute six and then clip the source to a preferred number while leaving both destinations unchanged.
+
+A resolver could reject the group, select a subset, or produce a new accepted vector under a separately declared rule. Whatever it does, value and attribution must use the accepted physical increments. The old calculations for quantities four and two cannot simply be attached to a resized event.
+
+Group assembly also has an information boundary. A calculation that needs the shared source and two destinations is local to that support, but the procedure that searches many groups and selects one may require broader information. Local valuation does not automatically prove that selection is decentralized. A future implementation must specify both.
+
+\section{Practice and answers}
+
+\begin{enumerate}
+\item In the two-cell base example, let both actors move one unit forward. Calculate standalone values, group value, the correction, and both path attributions.
+\item Let A move one and B move three forward on the same edge. Find the group value and common-path attributions. Compare with A-first live values.
+\item In the unequal three-cell example, add separately declared child process burdens \(0.5\) and \(0.25\). What is the net group result if these burdens are additive and not already represented?
+\item Two actions touch disjoint coordinate pairs in a diagonal Gaussian potential. What does the cross product say about their same-baseline correction, assuming both standalone and joint actions are admissible?
+\item Why does giving an exact attribution formula a new name fail to establish ownership?
+\end{enumerate}
+
+For the first problem, each standalone value is \(4-1/4=3.75\). Their sum is \(7.5\), while the two-unit group has value seven, so the correction is \(-0.5\). Each common-path attribution is \(3.5\). A sequential order instead yields \(3.75\) followed by \(3.25\).
+
+For quantities one and three, the total quantity is four and group value twelve. Along the common path, the average field is three, giving attributions three and nine. A first alone has value \(3.75\), and the subsequent three-unit action contributes \(12-3.75=8.25\). The difference is an attribution consequence of path or order, not missing stock.
+
+The net group result in problem three is \(13-0.5-0.25=12.25\). The field attributions eleven and two still sum to thirteen. Subtracting the separately assigned burdens gives \(10.5\) and \(1.75\), sum \(12.25\), under the expressly declared additive burden allocation. If a process burden belongs to the group mechanism and is not separable by child, its own allocation needs a declaration.
+
+Disjoint supports make \(\delta_A^{\mathsf T}H\delta_B=0\) for a diagonal Hessian, so the correction is zero under the stated fixed-increment assumptions. This does not establish independence for a nonseparable potential, shared constraints, or a resolver that changes quantities across counterfactual subsets.
+
+Finally, naming a formula establishes vocabulary. Ownership requires a model or institutional rule identifying who may hold or spend a record, and why. The closure proof supplies neither. Preserving that boundary makes the mathematics more useful because it can support several explicitly debated institutions without claiming to have already proved their legitimacy.
+
+\section{Splitting a label under a fixed common path}
+
+There is one narrow invariance that the path formula makes easy to verify. Suppose an action increment \(\delta_A\) is divided into two child records \(\delta_{A_1}\) and \(\delta_{A_2}\) whose sum is exactly \(\delta_A\). Hold the complete group increment, baseline, potential, path, and every other accepted increment fixed. Since the formula is linear in the child increment,
+\begin{equation}
+R_{A_1}+R_{A_2}=R_A.
+\end{equation}
+Thus merely dividing one recorded increment into two labels does not change its combined field attribution under these fixed conditions.
+
+For the unequal three-cell example, split A's four-unit movement into two two-unit child records on the same edge. Each receives \(5.5\) under the unchanged common path, and their sum is eleven. The group value remains thirteen. This is a direct algebraic check, not evidence from actors trying to manipulate a live system.
+
+The qualifications matter. If splitting changes how a resolver allocates capacity, which group is sampled, who owns a record, or which candidate passes affordability, the fixed conditions no longer hold. The simple linearity proof then does not establish incentive compatibility of the whole mechanism. A complete policy must examine those effects separately. This is why a locally neat attribution identity should not be advertised as a universal solution to strategic request splitting.
+
+\section{When a subset comparison is undefined}
+
+The standalone values in this studio exist because each child transformation is individually meaningful and physically admissible from the common state. That need not hold for every group. In the medicine route, the hub-to-clinic child cannot occur first when the hub is empty. Treating it as an independently admissible subset would invent a counterfactual outside the physical model.
+
+More elaborate subset decompositions require an explicit protocol for each subset and every relevant subset must be admissible for a full Boolean-lattice formula. If removing one child changes the quantities allowed for the others, those resolved quantities must be recorded. The fixed-increment quadratic cross-term calculation cannot silently stand in for such a re-resolved family.
+
+It is perfectly acceptable for a diagnostic to be undefined. That is more informative than filling a table with values for impossible actions. The joint event can still have an exact endpoint account even when a proposed collection of counterfactual child comparisons does not exist.
+
+\section{What the complete group record contains}
+
+A trustworthy group record keeps the common baseline, each child increment, aggregate permission, the joint endpoint, and the exact group field reduction. If path attributions are displayed, it also records the declared path semantics. If a sequential comparison is made, it records the order and the accepted quantities in that comparison. These entries let another reader reconstruct the distinctions instead of inferring them from a single headline number.
+
+The final studio will use this same discipline to audit a complete account from input card to closing identity. The aim is not to multiply paperwork. It is to make every compact claim reversible into a physical statement, a definition, a calculation, and a clearly delimited interpretation.

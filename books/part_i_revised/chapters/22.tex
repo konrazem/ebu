@@ -1,0 +1,156 @@
+\chapter{Several actors on one nonlinear field}\label{ch:groups}
+
+\section{Known quantities do not make value linear}
+Two couriers each deliver two units from Ridge to Vale. We know their identities, quantities and directions. Yet valuing each delivery as though the other did not exist gives a different sum from valuing the combined four-unit movement. The difficulty is not missing quantity data. It is the curvature of the potential.
+
+Physical increments can add linearly while the value of their sum remains nonlinear. This distinction is already present in a diagonal Gaussian potential. It does not require a mysterious nonlocal force or a new physical interaction between the couriers.
+
+This chapter retains the original shared-source lesson and updates its arithmetic. It also makes the common-path decomposition explicit. A decomposition that closes mathematically is useful, but its interpretation must be stated: path accounting, physical realization, causal contribution and institutional entitlement are different claims.
+
+\section{The two-courier counterexample}
+Use the repeated state $(18,2)\X$, references $(10,10)\X$, scales $(2,2)\X$ and $C=0$. Let the increments be
+\[
+ \delta_A=(-2,2)\X,\qquad \delta_B=(-2,2)\X.
+\]
+Either courier alone would produce $(16,4)\X$, reducing potential from 16 to 9. The two same-baseline singleton values therefore sum to $7+7=14$.
+
+Their actual joint increment is $(-4,4)\X$, producing $(14,6)\X$ with potential 4. The joint field value is 12. The difference of two is not a rounding error or an unobserved physical loss. It is the discrepancy between a joint finite difference and a sum of different counterfactual finite differences.
+
+\begin{cautionbox}{A counterfactual sum is not the joint account}
+Each singleton value asks what would happen if that child acted alone at the frozen baseline. The joint value asks what happens when the accepted children act together. On a nonlinear field these are different comparisons, even when the child quantities are known exactly.
+\end{cautionbox}
+
+If the couriers actually act sequentially, the values are 7 and 5, which sum to 12. A physically meaningful sequence supplies different baselines. If execution is simultaneous, inventing that sequence afterward gives an allocation convention, not an observed intermediate history.
+
+\section{The exact group formula}
+Let the accepted increments be $\delta_a$, and define $\delta_G=\sum_{a\in G}\delta_a$. Under fixed Gaussian geometry,
+\begin{equation}
+ E_G=-\mu(z)^T\delta_G-\tfrac12\delta_G^TH\delta_G
+\end{equation}
+in the ideal cost-free field account. Here $H=\operatorname{diag}(1/\sigma_i^2)$ and $\mu(z)=H(z-x^*)$.
+
+The same-baseline singleton sum uses $\delta_a$ separately in each quadratic term. Expanding the joint square gives
+\begin{equation}\label{eq:group-nonadd}
+ E_G-\sum_a E_a^{(0)}
+ =-\sum_{a<b}\delta_a^TH\delta_b.
+\end{equation}
+The superscript $(0)$ marks the common frozen baseline. It does not denote an observed first step. The right-hand side is a signed cross-term diagnostic for these fixed increments and this fixed potential.
+
+For the two couriers, $H=\operatorname{diag}(1/4,1/4)$ and $\delta_A^TH\delta_B=2$, giving $12-14=-2$. The shared coordinates and directions determine the sign.
+
+\diagram{group}{Two separately evaluated two-unit actions each have value seven at the frozen baseline. The joint four-unit action has value twelve, not fourteen. A declared straight-path decomposition assigns six to each.}{fig:group}
+
+\section{The discrepancy can have either sign}
+Convexity does not make every group discrepancy negative. Consider opposing increments from the reference state $(10,10)$:
+\[
+ \delta_A=(-2,2),\qquad\delta_B=(2,-2).
+\]
+Each action alone increases potential to 1, so each singleton value is $-1$. Their joint increment is zero and the ideal group field value is zero. Thus $E_G-(E_A^{(0)}+E_B^{(0)})=2$.
+
+The cross product is $-2$, agreeing with equation~\eqref{eq:group-nonadd}. Two same-direction increments gave a negative discrepancy; opposing increments give a positive one. The physical feasibility of the combined flows must still be declared. Endpoint cancellation does not automatically permit unlimited circulation or establish that the real process is free.
+
+For disjoint coordinate supports under diagonal $H$, the cross product is zero. The field values then add. Shared physical constraints can nevertheless couple the permitted quantities. An arithmetic additivity result does not remove a common pump-capacity or source-availability constraint.
+
+\section{One declared path through the joint change}
+Consider the straight path
+\begin{equation}
+ \gamma(s)=z+s\delta_G,\qquad 0\le s\le1.
+\end{equation}
+The parameter $s$ says what fraction of the joint increment has been included in this mathematical path. If the physical model explicitly stipulates constant-rate simultaneous execution, that path can also be its realized state path. If only endpoints are specified, it is a declared interpolation convention.
+
+For each child, define the simultaneous-path field attribution
+\begin{equation}\label{eq:path-child}
+ R_a=-\int_0^1\nabla V(z+s\delta_G)^T\delta_a\,ds.
+\end{equation}
+The minus sign follows the book's convention: reducing potential gives positive field value. The integral sums the child's directional contribution along the common path. Every child uses that same path; choosing a different path for each would require a different argument for closure.
+
+This construction has Aumann--Shapley-type common-path mathematics. Naming that relationship is an attribution of mathematical structure, not an adoption of a fairness theorem or a claim that physical matter follows a cooperative-game allocation rule.
+
+\section{Why the path contributions close}
+Add equation~\eqref{eq:path-child} over children. Finite summation and integration commute, and the child increments sum to $\delta_G$:
+\begin{align}
+ \sum_aR_a
+ &=-\int_0^1\nabla V(z+s\delta_G)^T\delta_G\,ds\\
+ &=-\int_0^1\frac{d}{ds}V(z+s\delta_G)\,ds\\
+ &=V(z)-V(z+\delta_G).
+\end{align}
+The last step is the fundamental theorem of calculus, under the differentiability and path-domain assumptions. Our fixed quadratic satisfies the required smoothness.
+
+\begin{lawbox}{Common-path closure}
+For fixed additive child increments and one declared differentiable common path of the stated form, the signed derivative integrals sum to the exact group field reduction. The theorem establishes the sum. It does not establish ownership, causal necessity, fair shares or permission to spend an attribution.
+\end{lawbox}
+
+If process burdens are included, the group net also subtracts $C_G$. Dividing that burden among children is another declared accounting step unless independently measured child burdens already provide the division. The field integral alone should not be described as the complete net receipt in that case.
+
+\section{The Gaussian integral is explicit}
+Because the Gaussian gradient is affine,
+\[
+ \nabla V(z+s\delta_G)=\mu(z)+sH\delta_G.
+\]
+Substitute into equation~\eqref{eq:path-child} and integrate $1$ and $s$:
+\begin{equation}
+ R_a=-\mu(z)^T\delta_a-\tfrac12\delta_a^TH\delta_G.
+\end{equation}
+No numerical quadrature is needed for this quadratic. The expression includes the way each child overlaps the full group increment. It does not merely divide the total by the number of names on the record.
+
+For the symmetric two-courier example, each attribution is 6 and their sum is 12. The same-baseline singleton value was 7, while the first and second sequential values were 7 and 5. These are three different questions with compatible arithmetic.
+
+\section{Unequal quantities on the same edge}
+Let A send one unit and B send three from the same baseline $(18,2)$. The group still sends four units and has field value 12. The singleton values are
+\[
+ E_A^{(0)}=4-1/4=3.75,\qquad
+ E_B^{(0)}=12-9/4=9.75,
+\]
+summing to 13.5. The cross-term correction is $-1.5$.
+
+Along the common path, A's increment is one quarter of the total and B's is three quarters, so their field attributions are 3 and 9. This proportionality follows here because the increments are collinear and use the same path. It is not a universal justification for dividing all group values by sent quantity.
+
+If the actions use different destinations, different scales or different physical maps, equal sent quantities need not have equal directional field effects. A proportional policy can still be defined, but it answers a policy question distinct from the common-path calculation.
+
+\section{A fan-out example with distinct destinations}
+Use three locations with $z=(18,2,10)$, references $(10,10,10)$ and scales all equal to 2. Let A send two units from location 1 to 2 and B send two from location 1 to 3. The increments are $(-2,2,0)$ and $(-2,0,2)$.
+
+Initial potential is 16. The joint successor is $(14,4,12)$, whose terms are $2$, $4.5$ and $0.5$, totaling 7. Group value is 9. Acting alone, A gives 7 and B gives 3, totaling 10. Their one-unit discrepancy comes from the shared source coordinate.
+
+The common-path attributions are $6.5$ to A and $2.5$ to B. They sum to 9. Equal sent quantities did not yield equal attributions because one destination began below reference while the other began at reference. The arithmetic describes the declared path; whether these are appropriate economic shares remains a separate question.
+
+\section{Three comparisons that must stay separate}
+The group-versus-singletons discrepancy compares simultaneous execution with two or more counterfactuals that each start alone. A parallel-versus-sequential comparison uses a complete sequential history. An institutional allocation compares ways of distributing a given joint number.
+
+With fixed additive increments and the same endpoint, each physically feasible sequential order and the group have the same total field value. A feasible joint endpoint alone does not guarantee feasible intermediate states in every order. The singleton sum can still differ. Thus a nonzero singleton discrepancy does not establish that simultaneity created a physical efficiency gain.
+
+If a resolver changes quantities when actions are replayed sequentially, or a delay changes the state, the sequential endpoint can differ. The comparison then has to identify the ordering, resolver, timing and endpoint. Reporting an ``interaction benefit'' without naming this comparator leaves its meaning incomplete.
+
+\section{Grouping follows dependencies}
+A shared coordinate often requires joint valuation. Shared constraints can also require joint physical resolution even when the eventual increments happen to have disjoint support. Relevant dependencies include overlapping execution or reservation intervals, common capacities, and effects on another action's feasibility or completion.
+
+A conservative grouping design collects connected dependent actions within a compatible accounting boundary. This prevents an action indirectly linked through a third child from being treated as independent without examination. It is a design rule requiring declared supports and timing; it is not established merely by two actors belonging to the same organization.
+
+Every group should preserve its child records. Joint evaluation does not erase who sent what, which edge was used or which evidence supports the quantities. It acknowledges that the group's nonlinear field total must be computed together.
+
+\section{Why an allocation remains an additional choice}
+Many numerical allocations can sum to 12. Equal shares, proportional shares and some marginal constructions all close in a symmetric example. Closure alone cannot distinguish them. An institution may also consider responsibility, measured effort, guaranteed access, bargaining power and risk.
+
+Even attractive algebraic properties have precise scope. Relabeling fixed children leaves the common-path formula unchanged. Proportionally splitting a fixed child preserves its summed attribution. But changing requests can change physical acceptance, group composition and affordability. Those effects require analysis of the entire mechanism.
+
+The prospective Gaussian programme proposes using a declared path attribution in an action-capacity rule. That proposal can be studied without pretending it has already solved economic fairness. A negative result about the mechanism would not invalidate the calculus identity; a correct identity would not rescue a poorly performing mechanism.
+
+\section{A limited interaction diagnostic}
+For a fixed set of increments and a shared baseline, define $F(A)=V(z)-V(z+\sum_{a\in A}\delta_a)$. Its pair interaction is $-\delta_a^TH\delta_b$, and higher-than-pair terms vanish for this quadratic set function. This is an algebraic property of the fixed-increment definition.
+
+If each subset reruns an allocation rule, its accepted increments may change. Then the function is no longer simply the same quadratic evaluated on subsets of fixed vectors, and the degree argument need not apply. Boolean-lattice formulas also require every subset being used to be admissible.
+
+The book needs none of these subset diagnostics to calculate the main group total. They are optional later analysis, not extra value that can be issued on top of the endpoint difference. Adding ``interaction reward'' after already recording the full group value would count part of the same change twice.
+
+\section{Guided problem and practice}
+At $(18,2)$, let A and B each send one unit. Each singleton value is $3.75$; the two-unit joint value is 7. The discrepancy is $-0.5$. Common-path attributions are $3.5$ each. Sequential values are $3.75$ then $3.25$. Explain every number by identifying its baseline and comparison.
+
+Next use the reference state and opposing one-unit increments. Each singleton has value $-0.25$, the joint value is zero and the discrepancy is $+0.5$. The common-path gradient is zero throughout the constant joint state path, so both field attributions are zero. State why this does not show that two real pump operations consume no energy.
+
+Finally, describe two different institutional shares that sum to the fan-out total 9. The fact that you can do so is enough to show that a sum identity does not uniquely specify ownership. It does not establish that either rule is desirable.
+
+\begin{intuitionbox}{What to carry forward}
+Accepted increments determine a joint endpoint and an exact group value. Same-baseline singleton values need not add. A declared common path supplies an exact decomposition, whose physical and institutional interpretation must be stated separately. The group total is never enlarged by adding its own interaction diagnostic again.
+\end{intuitionbox}
+
+The next chapter carries this discipline beyond one local group, to routes, different resource accounts and the slower decisions that might learn from repeated physical records.

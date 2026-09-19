@@ -1,0 +1,82 @@
+\chapter{A path attribution is not an entitlement}\label{ch:attribution}
+Once the group value is known, one may want a number beside each child
+action. A decomposition can be mathematically exact without being a uniquely
+identified causal contribution. The difference must be kept visible before
+any such number is connected to a persistent account.
+
+\section{The declared common-path decomposition}
+Choose the straight group path $\gamma(s)=z+s\delta_G$. Define
+\begin{equation}\label{eq:attribution}
+ R_a=-\int_0^1\mu(z+s\delta_G)^T\delta_a\,ds
+     =-\mu(z)^T\delta_a-\tfrac12\delta_a^TH\delta_G.
+\end{equation}
+The last equality uses the affine Gaussian gradient. Sum over children:
+\begin{align}
+ \sum_aR_a
+ &=-\int_0^1\mu(z+s\delta_G)^T\sum_a\delta_a\,ds\\
+ &=-\int_0^1\mu(z+s\delta_G)^T\delta_G\,ds=E_G.
+\end{align}
+This proves closure for the cost-free domain. If $C_G\ne0$, the path
+terms still sum to the field component; allocating or accounting for cost
+requires its own declaration. It must not disappear in the notation.
+
+\section{What the formula assigns in a small group}
+Let the children send one and three units from Ridge to Vale at $(18,2)$.
+The group increment is $(-4,4)$ and its value is twelve. Initial tangent
+benefits are four and twelve. Curvature corrections are one and three, so
+$R_A=3$, $R_B=9$. The total closes exactly.
+
+Their standalone values are $15/4$ and $39/4$, summing to $27/2$.
+Their sequential live values depend on order. Sending one first gives
+$15/4$ followed by $33/4$; sending three first gives $39/4$ followed by
+$9/4$. Both sequential sums equal twelve. Neither ordered split is the
+same as $(3,9)$, because it describes another allocation convention.
+
+The sum identity cannot tell us which of these child descriptions is fair,
+deserved or causally identified. It tells us which declared arithmetic is
+being used and whether that arithmetic closes on the group.
+
+\section{Physical path versus interpolation}
+Under a declared constant-rate physical model, each child's normalized
+rate contributes $\delta_a$ along the common path. The integral then
+decomposes that model path. Under endpoint interpolation it is an accounting
+construction. Identical arithmetic does not erase the distinction.
+
+Historical sources use the name radial Aumann--Shapley for related path
+allocation \cite{foundation}. Using or avoiding that name does not resolve
+the interpretation. The scientifically useful record specifies the actual
+path and assumptions, labels the result as a mathematical attribution, and
+states what it does not establish: ownership, fairness, causal entitlement,
+or permission to spend.
+
+\section{Splitting and cancellation}
+Suppose one child is replaced by two proportional subchildren with increments
+$\lambda\delta_a$ and $(1-\lambda)\delta_a$, while the group path is
+unchanged. The formula is linear in the child increment, so their attributed
+values add to the original $R_a$. This is a limited mathematical splitting
+property. A split that changes grouping, fees, ownership or feasibility is
+not covered by it.
+
+If $\delta_G=0$, the formula becomes $R_a=-\mu(z)^T\delta_a$.
+These child values can be nonzero and cancel. In the opposing two-unit
+example they are $+8$ and $-8$, while the group has zero value. This
+illustration makes the interpretive risk vivid: a cancelling endpoint does
+not establish a gift of eight units to one participant and a legitimate
+charge of eight to another.
+
+\section{From children to owners is another map}
+If a prospective policy assigns every child a unique owner, then finite-sum
+rearrangement gives
+\begin{equation}
+ \Delta B_i=\sum_{a:\,\operatorname{owner}(a)=i}R_a,
+ \qquad \sum_i\Delta B_i=\sum_aR_a.
+\end{equation}
+The second equality is exact once the map exists. It does not select the
+map. A requester, provider, beneficiary and physical source can be different
+entities. Substituting one for another because a software field is convenient
+would change the policy while leaving the arithmetic looking correct.
+
+\section*{Chapter recap}
+Common-path attribution provides an explicit, auditable decomposition. Its
+proof closes a sum. Ownership and spendability require separate prospective
+authority even for a group with only one child.

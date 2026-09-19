@@ -1,0 +1,106 @@
+\chapter{Why the physical question matters}\label{ch:motivation}
+
+\section{Begin with the clinic before it opens}
+The first patient has not arrived, but the clinic is already depending on an extraordinary arrangement. Water has reached a clean tank. Electricity is available to a refrigerator. A road is passable. A trained person has checked the medicine. A drain carries waste away from the room in which another person will receive care. None of these conditions is produced by the word ``healthcare''. Each depends on particular things being present, in a particular condition, at the right place and time.
+
+Imagine that this clinic stands in Vale, below a settlement called Ridge. Ridge has a water store and a workshop. Vale has its own store, the clinic and a collection of homes. People travel between them, repair equipment, make agreements and pay bills. We shall return to these places throughout the book. They are invented teaching places: their simplicity helps us examine one question at a time. They are not observations from a successful EBU economy.
+
+On Monday, the clinic pays an invoice for water. Its accounts show the payment correctly. On Tuesday, the inlet valve fails and the clinic's tank stays nearly empty. Nothing about the correctness of Monday's payment changes this fact. A nurse can hold a valid receipt while standing beside a dry tap. Equally, water might arrive because a neighbour helps, even though no sale occurs. The physical event and the monetary event can be connected without being the same event.
+
+This is the point from which the Energy Balance Project begins. We want to understand how an economic arrangement could remain answerable to the physical conditions on which its participants depend. That ambition is larger than the mathematics developed here. The mathematics supplies a carefully bounded account of physical changes; whether an institution built around such an account would be useful, fair or reliable is a further question.
+
+\begin{intuitionbox}{The first separation}
+An invoice records a recognised transaction. A physical account records a declared change in the world. A service record asks whether the intended function was available. All three may concern the same morning at the clinic, but none automatically answers the other two questions.
+\end{intuitionbox}
+
+\section{What it means to support life}
+The expression ``support life'' can become so broad that it explains nothing. Here it begins with identifiable functions. A household needs water suitable for its intended use. A medicine store needs conditions that preserve the medicine. A person needs access to food, shelter, care and the relationships and institutions through which these are obtained. A landscape may sustain processes on which a settlement depends without being owned by any single participant.
+
+A useful description therefore specifies the function before selecting a number. Litres of water measure quantity. They do not, by themselves, measure quality, accessibility or timeliness. Kilograms of food do not identify its nutritional suitability for a particular person. A count of hospital beds does not say whether trained staff and essential supplies are present. The temptation to find one impressive number is strong precisely because the full question is difficult.
+
+Our response will be to keep the representation explicit. A model includes some variables and omits others. When it includes water stock but omits water quality, its conclusions concern stock under the stated quality assumption. The omitted variable does not become unimportant. It becomes a limit of the conclusion. Declaring that limit is part of building a useful theory, rather than a reason to abandon theory altogether.
+
+The word ``functional'' will be important. A system is functional relative to something it is meant or understood to do. A full tank disconnected from every tap may be physically intact and functionally useless for washing. A bridge can retain its mass after losing its ability to carry a vehicle. Conversely, a repair can restore a vital function while adding little material. Physical description must sometimes represent configuration and condition as well as quantity.
+
+The first mathematical model in this edition deliberately chooses a narrower object: one homogeneous, conserved scalar distributed among places. Within that model, units are interchangeable in the declared physical sense. The choice is a teaching and research boundary. It does not claim that water, medicine, biodiversity and electricity are interchangeable, or that they should be added as though their units were identical.
+
+\section{Why monetary success can leave a physical question open}
+Suppose the clinic's accountant reports that expenditure matched the budget. This is valuable information. It helps establish that purchases were authorised and that obligations can be met. Yet the sentence leaves open whether the tank filled, whether the pump will work tomorrow and whether every patient can reach the building. Those questions require additional observations and decisions.
+
+The same distinction applies at a larger scale. A profitable enterprise may preserve a resource well, or may use it in a way whose consequences fall outside its accounts. A public programme may provide an essential service while operating at a monetary cost. These are logical possibilities, not a claim that profit is always harmful or public spending always beneficial. The point is that one outcome cannot be inferred solely from the sign of another account.
+
+It would consequently be too strong to say that money has no connection to life or the environment. People buy food, finance water treatment, pay carers and fund restoration with money. Contracts, taxes and regulations can connect monetary consequences to physical behaviour. The precise concern is that a monetary balance, by itself, contains no general theorem guaranteeing preservation of every life-supporting function. Such preservation requires additional institutions, information and physical action.
+
+EBU asks whether an explicit account of represented physical change could contribute something useful to that arrangement. The proposal is not justified simply by naming shortcomings elsewhere. It must make its own definitions clear, expose its own failures and eventually face comparisons that could show it unnecessary. A theory gains credibility by making a difficult question examinable, not by assuming that dissatisfaction with the present proves the alternative.
+
+\diagram{two_records}{A financial record and a physical record describe different aspects of the same provision. Neither automatically contains the other.}{fig:two-records}
+
+\section{Three objects that will accompany us}
+The first object is the \emph{physical state}. In the small teaching world this can be a list of stocks, one for each place. If Ridge has eighteen units and Vale has two, we write the pair as $(18,2)$. This list reports where the represented resource is. It does not state a price, an entitlement or a moral ranking.
+
+The second object is the \emph{represented burden}. A declared function assigns a number to the state relative to a declared reference and scale. The reference says which configuration the account uses for comparison. The scale says how differences are measured. Later we shall develop a smooth quadratic construction related to a Gaussian reference. Neither the reference nor its scale can be discovered merely by writing a formula on a page.
+
+The third object is the \emph{signed action result}. Once a physical action is specified, its result compares represented burden before and after the action and subtracts any separately justified process burden. The sign reports the direction of that declared comparison. It does not announce whether an actor is virtuous, whether a patient deserves care or whether a wallet should receive a payment.
+
+These objects answer successive questions: what is present, how the represented state is evaluated, and what difference a particular action makes to that evaluation. Confusing them produces surprisingly persuasive mistakes. A larger stock is not automatically a better state. A lower burden is not automatically a complete social improvement. A positive result is not automatically a right to compensation.
+
+\section{A first account without a valuation}
+Let the two stores contain twenty units in total. Ridge holds eighteen and Vale holds two. A declared lossless transfer moves four units from Ridge to Vale. The physical account is
+\begin{equation}
+ (18,2)\longrightarrow(14,6),\qquad 18+2=14+6=20.
+\end{equation}
+This is an account of a hypothetical change. It is not a simulation, and the numbers are not registered study parameters. The equality simply checks that the same twenty units are represented on both sides of the transfer.
+
+Several useful questions remain unanswered. Were four units legally available for transfer? Could the pipe carry them? Did the clinic ask for them? What quantity should remain at Ridge? Does six at Vale serve the intended function? What payment, if any, was agreed? The conservation equality cannot answer these questions because their information is absent from the equality.
+
+This restraint is a strength. If the physical equality also purported to settle ownership and need, it would conceal institutional choices inside arithmetic. Instead, we can attach additional records to the same event. A permission record describes what could be accepted. A demand record describes the request. A valuation record applies the declared function. A monetary record describes payment. Common event identity allows the records to be compared while their meanings remain distinct.
+
+\begin{workedbox}{Read only what the record contains}
+The transfer from $(18,2)$ to $(14,6)$ establishes a four-unit decrease at Ridge and a four-unit increase at Vale under the lossless declaration. It establishes no EBU value until the reference, scales and burden function have been declared. It establishes no payment until an institutional rule or agreement supplies one.
+\end{workedbox}
+
+\section{What changes when the example becomes real}
+A real installation would need observations, not just written numbers. The source and destination meters must refer to compatible quantities and time intervals. Water held in the pipe might need representation. A leak would require an explicit account. Quality assumptions would need checking. An event that was requested but never performed must not be recorded as a completed physical contribution.
+
+Measurement uncertainty remains real even though this edition removes numerical-error controllers from its instructional core. The removal simplifies the theory being taught; it does not create perfect instruments. A future measurement system would have to declare calibration, uncertainty, missing-data handling and correction procedures. Exact algebra tells us what follows from declared inputs. It cannot certify those inputs by itself.
+
+Boundaries matter as much as instruments. If the account includes only the two tanks, water temporarily stored in the pipe appears to have disappeared unless transit is declared. If it includes an external source, inflow across the boundary must be distinguished from an actor's internal redistribution. If it includes electricity consumption, the relevant carrier and conversion must be specified. The reader should get into the habit of asking, ``Where did the thing go?'' before asking, ``What number did the action earn?''
+
+A full causal chain may therefore contain several linked actions: producing electricity, delivering it, using it in a pump and transferring water. These actions should not be compressed into one unexplained event merely because one customer receives one invoice. Nor should an extra burden be invented at every link simply because a chain exists. Each represented physical effect needs one declared accounting place.
+
+\section{An event needs an identity}
+Suppose two people both report that they delivered the same four units. One opened the valve and the other read the meter. Both may have contributed useful work, but there was one physical transfer. Recording two complete four-unit transfers would describe a world that did not occur. Recording one transfer does not imply that only one person deserves recognition; it means that the physical event and the attribution of human contributions need distinct records.
+
+The event record should therefore identify the source, destination, interval and measured quantity before any attribution is attempted. It can then identify the associated participants and their declared roles. A correction should point back to the same event rather than silently insert a second event. These are ordinary documentary requirements with important mathematical consequences: an exact field change must not be counted repeatedly under several descriptions.
+
+The converse mistake is also possible. Two genuinely separate transfers may have equal quantities and use the same route at different times. They should not be merged merely because their descriptions look alike. Their baselines can differ, so their EBU results can differ as well. A useful physical account preserves enough identity to distinguish repetition of a record from repetition of an action. This is one reason that verification remains part of the subject even when the arithmetic fits on a single line.
+
+\section{Why a simple world is worth studying}
+The small Ridge--Vale world is not offered as a miniature society with all the important details retained. It is a controlled language for learning. Two stocks make it possible to see the source decrease and destination increase on the same line. One resource makes conservation unambiguous. A fixed reference makes it possible to distinguish a physical change from a change in evaluation.
+
+The simplifications also create obligations. We must not call the model regenerative when no regeneration appears in it. We must not infer continuing service from a single transfer. We must not claim that a conserved total prevents local deprivation. We must not use mathematical smoothness as evidence that institutions will be smooth, responsive or fair. Each extension requires its own stated mechanism.
+
+There is nevertheless substantial work to do within this narrow world. A finite transfer differs from an infinitesimal suggestion. Several actions can share a nonlinear field. A path can be used for an accounting decomposition without being an observed physical trajectory. Local records can close against a global potential under specific assumptions. These are meaningful questions before any claim about a national economy is attempted.
+
+\section{The human purpose does not disappear into the model}
+An account can help reveal that maintaining a clinic is physically expensive in a particular location. It cannot decide that people in that location should lose care. The appropriate response might be better infrastructure, shared support, a different route, a public guarantee or a reconsideration of the representation. The burden number provides information for a decision; the decision remains accountable to people.
+
+Likewise, a person who cannot perform a measured action still has needs. Children, disabled people, ill people and carers must not become invisible because a convenient model records certain transfers more easily than other contributions. The project's motivation includes a commitment to essential support. That commitment is ethical and institutional; it is not a theorem produced by the sign of an equation.
+
+This book consequently asks the reader to hold two ideas together. Physical consequences should remain visible, including inconvenient consequences of necessary actions. Human rights and access should not be reduced to the ability to produce a favourable physical score. Honest accounting and humane institutions have different jobs, and a responsible design must explain how they interact.
+
+\section{Guided problems and answers}
+\subsection{The missing two units}
+The clinic pays for ten units. Its inlet meter records eight. What can be concluded, and what must be investigated?
+
+The payment record establishes the monetary transaction or contractual claim according to its terms. The inlet reading supplies evidence about arrival at that meter. Their difference does not identify a cause. Two units could remain in transit, have leaked, have been measured differently or have been incorrectly invoiced. The next useful step is to reconcile boundaries and timestamps, then inspect the relevant observations. Assigning an EBU result before identifying the physical event would conceal the uncertainty.
+
+\subsection{The helpful action with no sale}
+A neighbour transfers four units to the clinic without requesting money. Does the absence of a sale prevent a physical account?
+
+No. The source, destination, quantity and resulting states can be recorded independently of payment. A signed EBU result would additionally require the declared valuation. Whether the neighbour should receive recognition, reimbursement or credit is a separate institutional question. Recording the event does not require inventing a customer or treating the clinic's gain as a monetary loss to someone else.
+
+\subsection{The balanced total}
+Two arrangements contain twenty units: $(18,2)$ and $(10,10)$. Are they equally good because their totals agree?
+
+Conservation establishes that the totals agree. It does not establish equivalent function. If the places have different needs or capabilities, even equal stocks need not be an appropriate reference. A later valuation must declare what it compares and why. The equal pair will be useful in our teaching fixture because we explicitly choose equal references, not because equality of allocation is derived from conservation.

@@ -1,148 +1,157 @@
-# EBU book series — current architecture
+# EBU book series — eight-part architecture
 
-Status: current **editorial architecture**, 18 September 2026. Not a manuscript,
-new theorem, result, preregistration or permission to execute a study.
+Status: current editorial plan, updated by the author's instruction to combine
+former Parts II and III. This changes teaching order and forward numbering,
+not scientific authority, historical results, or execution permission.
 
-This replaces the forward-planning role of the older register. Exact snapshots
-of the V3, framework and later Stage F versions remain in
-[the history directory](docs/history/README.md). Historical mathematical and
-scientific sources are not superseded by a change in teaching order.
+## 1. The current decision
 
-## 1. The author's current decision
+The first two volumes form one continuous course. Part I explains why the
+project is being investigated and introduces its physical and mathematical
+objects. Part II joins rigorous derivation to implementation and evidence.
+The former nine-part plan is now an **eight-part plan**.
 
-1. Make Book I a substantial, accessible introduction, starting with why the
-   project is being investigated.
-2. Explain homeostasis, functional balance and kinds of equilibrium before
-   introducing mathematical field language.
-3. Introduce declared local Gaussian reference geometry, potential, marginal
-   field, finite physical action, process burden and exact EBU.
-4. Remove Allee thresholds, L/U machinery, heavy numerical-error certificates
-   and the history of implementation repairs from the main introductory
-   narrative. Preserve their legitimate historical/domain-specific homes.
-5. End with the EBU equation, conditional identities and a clear account of
-   what remains unproved—not promised experimental success.
-6. Preserve Parts II and III; record only targeted future compatibility work.
-7. Finish this documentation stage, then stop. Book I generation is next,
-   under a separate instruction; test-environment implementation follows later.
+Each current volume should contain at least 200 pages of substantive teaching
+at the already reduced heading sizes and unchanged body size. Page count is
+a delivery constraint, not a reason to add filler, inflate typography, repeat
+arguments, or claim completeness. Preserve the originals' depth and important
+reasoning. The earlier 83/88-page selective drafts are superseded as deliverables,
+but retained unchanged for traceability.
 
-Theory exposition is not gated on an unperformed experiment. Experimental
-claims still require actual evidence. Removing technical error analysis from
-Book I does not mean concealing uncertainty, assumptions or corrected errors.
+## 2. Exact old-to-new map
 
-## 2. Source and chapter map
-
-The [complete series reconciliation](LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md)
-records all 62 current chapters, PDF page starts, dispositions and source hashes.
-The supplied editions are:
-
-- Part I: *Physical Intuition and the EBU Idea*, 296 pages.
-- Part II: *Mathematical Structure and Proof*, 160 pages.
-- Part III: *Preservation, Code, and Evidence*, 153 pages.
-
-The PDF baseline is identifiable; its original editable manuscripts and
-deterministic build recipe were not located in the bounded search. Do not
-claim a reproducible rebuild. A later Book I task must either recover those
-sources or explicitly establish a new source edition.
-
-## 3. New Book I spine
-
-Working title: **Why EBU? Life, Balance, and the Accounting of Physical Action**.
-
-| Part of the narrative | Chapters | Purpose |
+| Current part | Teaching responsibility | Previous numbering |
 |---|---|---|
-| Why ask the question? | 1–5 | Monetary signals, their limits, scarcity/access, socioeconomic conditions, planetary observations and conditional futures; existing institutions and the research gap |
-| What should a physical account describe? | 6–9 | Homeostasis, functional balance, steady state versus equilibrium, stocks/flows/boundaries, atomic actions and actor choice |
-| How is deviation represented? | 10–13 | Declared references/scales, Gaussian ruler, additive local potential and marginal field |
-| What does a finite action mean? | 14–16 | Finite curvature, exact EBU, process-burden boundary, simultaneous groups and path meaning |
-| What is established? | 17–18 | Conditional mathematics, assumptions, non-claims and the equation as the beginning of a research programme |
+| I | Physical intuition, motivation and the EBU idea | I, unchanged |
+| II | Mathematics, implementation and evidence | II and III, combined |
+| III | Measurement, evidence and falsification | IV |
+| IV | Homeostasis, recovery and stochastic dynamics | V |
+| V | Multiple actions, interaction and local structure | VI |
+| VI | Across distance | VII |
+| VII | Coordination, memory and system dynamics | VIII |
+| VIII | Institutions and an action-accounted economy | IX |
 
-The [detailed blueprint](BOOK_I_INTRODUCTION_BLUEPRINT.md) defines each chapter's
-question, scope and teaching sequence. The
-[motivation source register](BOOK_I_MOTIVATION_SOURCE_REGISTER.md) distinguishes
-observations, economic concepts, projections, normative aims and EBU proposals.
+This table governs **future-book references**. Historical editions, source
+inventories, original chapter/equation references, frozen plans and result
+artifacts retain their original identifiers. Do not globally replace Roman
+numerals in scientific sources.
 
-The accessible teaching order for an important equation is: problem, objects,
-symbols and units, calculation, interpretation, reason for using it,
-assumptions, and failure of applicability. Avoid decorative diagrams and
-page-count quotas. Figures should clarify a relationship the text cannot
-communicate as well.
+## 3. Part I: understand the objects
 
-## 4. Parts II and III
+The expanded 32-chapter manuscript is the starting point, not a short summary.
+Its sequence remains: motivation; homeostasis and kinds of equilibrium;
+stocks, boundaries, conservation and atomic physical actions; references and
+scales; Gaussian potential and marginal field; force, mobility and Onsager-type
+flux; finite action and process burden; local and group accounting; extensive
+practice studios; conditional identities and open questions.
 
-Part II remains the rigorous mathematics home. Preserve threshold-model proofs
-as proofs about that model. Later targeted notes can distinguish potential
-families, optional flow laws, exact Gaussian specialization, group attribution
-and proposed capacity semantics. Do not label a gradient flow as compulsory
-EBU dynamics.
+Retain the physical/teaching style and smaller headings. Remove old threshold
+machinery from the active introductory model, not from historical sources.
+Update the ending and reader route so that the reader continues directly to
+the combined Part II. The motivation must distinguish factual evidence,
+normative concerns and claims that EBU has not established.
 
-Part III remains implementation and evidence history. Preserve D0/P1C, D1–D10,
-Gate 1B, service and O14 findings under their original designs. Later roadmap
-notes may explain the new programme; they may not rewrite old runs as Gaussian
-evidence. No current PDF mutation is authorized.
+Current editable source: `books/part_i_revised/`.
 
-## 5. Future volumes and dependencies
+## 4. Part II: derive, implement, examine evidence
 
-Keep the existing numbering for discoverability, but replace the old strict
-single-action-first ladder with claim-dependent prerequisites.
+Current editable source: `books/part_ii_integrated/`.
+Main chapters continue at 33 and end at 62.
 
-| Volume | Working responsibility | Relationship to the new direction |
-|---|---|---|
-| IV — Measurement, Evidence and Falsification | Metrology, uncertainty, controls, provenance, informative comparisons and historical Gate 1D-C | Methods support new tests without importing all historical P1C gates |
-| V — Homeostasis, Recovery and Stochastic Dynamics | Conditional invariance/stability, Stage A/B, capacity/external audit, cycling, refusal and later domain-specific regeneration | No recovery theorem or stationary process is presumed |
-| VI — Multiple Actions, Interaction and Local Structure | Common-baseline groups, path attribution, admissible subset diagnostics, physical/factor/interaction topology, canonical motifs and certified recursive compression | Supplies mathematical prerequisites to simultaneous work in V |
-| VII — Across Distance | Typed routes, transformations, losses, changing states, local epochs and boundary roll-up | Distance has no automatic tax or inverse-square field interpretation |
-| VIII — Coordination, Memory and System Dynamics | Optional actor/planner policies, timing, topology, memory, identification and feedback | Optimization and restoring dynamics must be explicit separate models |
-| IX — Institutions and an Action-Accounted Economy | Access, rights, poverty/disability, privacy, governance, incentives, responsibility and transition | Experimental capacity is not automatically money or a fair access rule |
+| Chapters | Teaching dependency |
+|---|---|
+| 33–39 | Domain and units before geometry, feasibility, local support, force and exact finite quotation |
+| 40–43 | Joint group value before path attribution; sequences/external change before persistent capacity and its conditional invariant |
+| 44–46 | Declared dynamics, numerical limits, permission and routes before a full Gaussian field laboratory |
+| 47–53 | Software objects and physical permission before chronology, selection, valuation and account commitment |
+| 54–56 | Random-stream/coupling meaning before test claims and immutable provenance |
+| 57–60 | Historical engine before its experimental sequence, null/flat outcomes, later finalized evidence and measurement limits |
+| 61–62 | Limits of long-run inference and an end-to-end audit; no invented Gaussian results |
 
-Dependencies in plain language:
+Historical proofs and experiments are integrated as complete, labelled
+readings within the relevant current chapters, not a detached dump at the
+back. Their own assumptions and numbering remain visible. New explanatory
+bridges identify what transfers, what must be re-derived, and what stays
+historical. Original PDFs remain unchanged.
 
-- I provides shared vocabulary; II provides scoped proofs; III preserves code
-  and evidence history.
-- IV's methods and VI's group foundations feed V's simultaneous studies.
-- VI supports VII; VII and V inform VIII.
-- IX draws on surviving evidence from all, including adverse and null results.
+The current map is a reconstruction, not recovery of the original TeX.
+The coverage ledger must say which original material was rewritten,
+retained verbatim as a source reading, replaced with a Gaussian derivation,
+or left in the preserved original. It must not equate a subject-level map
+with sentence-by-sentence retention.
 
-This is not a mandate to write nine books immediately. No manuscript page
-counts or publication dates are frozen.
+## 5. Responsibilities of the six later parts
 
-## 6. Preserve later-lineage work without reviving abandoned programmes
+### III — Measurement, evidence and falsification
 
-The newer framework book plan removed electrical-voltage, physical-wave,
-phase-interference and superposition-as-EBU programmes in favor of canonical
-topology/motif identity and local structural analysis. The older K1–K6 list
-is preserved historically, **not reinstated as a mandatory generation gate**.
+Metrology, units, uncertainty, latency, controls, preregistration, provenance,
+informative comparisons and interpretation of adverse or null results.
+Part II teaches the existing evidence record; Part III develops the methods.
+Historical Gate 1D-C stays attached to its actual protocol and result manifest.
 
-Later coupled interaction, feedback, parameter identification, mass/resource
-bridges, native burden and bounded oscillator discussions are retained as
-prospective domain or actor research. They do not supply built-in restoring
-motion to the Gaussian plant. The inherited
-V-to-marginal-to-force-to-flux chain is conditional controller mathematics,
-not the definition of EBU.
+### IV — Homeostasis, recovery and stochastic dynamics
 
-N/H/X, service-first C0–C5 and Direction C are not active Book V prerequisites.
-The old 27–42-page Part I addition and multi-thousand-page future estimates
-are withdrawn as current editorial targets, not falsified scientific results.
+Invariance, stability and attraction; prospective Gaussian Stage A/B; capacity
+and external audit; cycling, refusal, distribution and exposure; later
+domain-specific regeneration. No recovery theorem or stationary augmented
+process is presumed. Boundedness on the closed finite-mass simplex is not an
+independent demonstration of EBU stabilization.
 
-## 7. Generation gates by claim, not by volume label
+### V — Multiple actions, interaction and local structure
 
-Book I definitions and exact conditional derivations may be written before
-experiments. Before generation, establish source-edition provenance, the
-chapter/proof claim ledger, source-locked factual references, and preservation
-rules. Then visually inspect the generated artifact in its entirety.
+Common baselines, path attribution and its limits; admissible subset diagnostics;
+physical, factor and action-interaction topology; canonical motifs; certified
+recursive compression. The introductory identities in Part II are prerequisites,
+not a substitute for these deeper subjects. No algebraic decomposition proves
+causal ownership, fairness or settlement entitlement.
 
-A result chapter requires the actual committed result and its limitations.
-A dynamical theorem requires a proof under explicit action/forcing assumptions.
-An institutional recommendation requires its own normative argument and
-relevant evidence; mathematical closure alone is insufficient.
+### VI — Across distance
 
-Every volume separates: definition, conditional identity/theorem,
-implementation conformance, observation, hypothesis, analogy, institutional
-proposal and open problem. Prior-art and novelty claims need a dedicated
-literature check; a new notation is not a novelty proof.
+Typed routes, linked physical transformations, explicit losses and boundaries,
+local epochs, provenance and scoped sensitivity/identification. No automatic
+distance tax, inverse-square EBU field, hidden mega-action or universal
+cross-resource scalar is assumed.
 
-## 8. Current stop point
+### VII — Coordination, memory and system dynamics
 
-This architecture and the linked blueprints are the deliverable. No manuscript
-or PDF is generated in this stage; no Gaussian model or experiment begins.
-Use [the generation handover](BOOK_I_GENERATION_HANDOVER.md) only after the
-author starts that next task. It has not been sent to Claude.
+Explicit actor/planner policies, timing, topology, placement, memory, feedback,
+delay and identification. Optimization and restoring dynamics belong to
+separately declared models. They are not hidden inside the random-affordable
+actor or inferred from an accounting identity.
+
+### VIII — Institutions and an action-accounted economy
+
+Access, rights, poverty and disability, privacy, governance, responsibility,
+cooperation, compensation, incentives, appeals and transition. Experimental
+capacity is not automatically money or a fair entitlement. Scientific
+measurement does not choose a constitution.
+
+## 6. Dependencies, not a mandatory execution ladder
+
+- I supplies shared vocabulary; II supplies the scoped mathematical,
+  implementation and evidence foundation.
+- III's methods and V's group foundations support IV's simultaneous studies.
+- V supports VI; IV–VI inform VII.
+- VIII draws on surviving scientific and social evidence, including adverse
+  outcomes, and on explicit normative reasoning.
+
+Books can explain definitions and conditional derivations before experiments.
+A result chapter requires actual committed evidence. An implementation chapter
+must distinguish implemented, accepted, prospective and unavailable routes.
+This plan does not authorize writing the six later manuscripts now.
+
+## 7. Preservation and current boundaries
+
+The original editions are I: 296 pages, II: 160 pages, III: 153 pages.
+Their identities and original 62-chapter inventory remain in
+`LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md`.
+The prior plans are preserved in Git and `docs/history/`.
+
+The old electrical/wave/superposition programme is not revived.
+N/H/X and service-first C0–C5/Direction C are not active prerequisites of
+current Part IV. Historical domain-specific dynamics remain scoped history.
+
+Authorized here: editorial reorganization, manuscript revision, book rendering
+and review, plus the separately requested reviewed local book-only commit.
+Not authorized: scientific runtime changes, transitions, experiments, AWS,
+changes to frozen results or pushes.

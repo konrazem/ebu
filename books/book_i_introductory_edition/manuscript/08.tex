@@ -1,0 +1,50 @@
+\chapter{A physical world before an economic account}\label{ch:world}
+\question{What must a model record so that an action has a physical meaning?}
+
+We begin with two tanks, Ridge and Vale. Each holds the same homogeneous resource. In the illustration we call the unit a litre, written L, and assume equal water quality and fixed conditions under which the volumes add. A real application would need to justify that simplification. Continuously divisible means that fractions of a litre are allowed; it does not mean all quantities must be integers.
+
+The model is closed during the action we evaluate: nothing enters or leaves the two-tank boundary. Transfers are idealised as lossless. We exclude pumping energy, wear and water-quality differences from this teaching world. Those omissions make it manageable, not physically complete.
+
+\section{Stock, list and total}
+Let Ridge hold fourteen litres and Vale six. A compact state description is
+\begin{equation}
+ x=(14,6)^{\mathsf T}\ \mathrm{L},\qquad M=14+6=20\ \mathrm{L}.
+\end{equation}
+The letter $x$ is a list of stocks in a fixed order. The superscript $\mathsf T$, called transpose, says to treat the displayed horizontal list as a column. It is not a power. The letter $M$ names the total represented resource.
+
+A subscript identifies an entry: $x_1$ is Ridge and $x_2$ is Vale. A general world has finitely many cells, numbered $1$ to $n$. A cell is an accountable portion of the model, not necessarily a biological cell or a point on a geographic grid. The notation $\sum_i x_i$ means add the stocks of all its cells.
+
+\section{A finite transfer}
+Move three litres from Ridge to Vale. Write this finite quantity as $q=3\ \mathrm{L}$. The prime on $x'$ means the state after this action. Then
+\begin{equation}\label{eq:transfer}
+ x_i'=x_i-q,\qquad x_j'=x_j+q.
+\end{equation}
+Here $i$ names the source and $j$ the destination. The calculation gives $x'=(11,9)^{\mathsf T}\ \mathrm{L}$. The total remains twenty litres because subtracting three at one place and adding three at the other cancels in the sum:
+\begin{equation}
+ \sum_i x_i'=\sum_i x_i=M.
+\end{equation}
+This is a conditional conservation identity. It assumes the stated lossless internal transfer. It is useful because a broken total points to a missing crossing, an incorrect action or inconsistent measurements. It does not tell us whether $(11,9)$ is desirable.
+
+A feasible action cannot withdraw more than the source contains or overflow a declared physical storage capacity. If both tanks have a physical capacity of twenty litres, the example satisfies those restrictions. Route limits, permissions to use the pipe and other constraints must be declared if they are part of the model. They are not supplied by subtraction.
+
+\illustration{transfer}{Schematic with exact arithmetic: a three-litre lossless transfer changes $(14,6)$ to $(11,9)$ and preserves the twenty-litre total. Values are invented for teaching; no model was executed.}{fig:transfer}
+
+\section{Rate is not quantity}
+A rate says how much moves per unit time. If a constant rate is $r=2\ \mathrm{L/min}$ over an interval $\Delta t=1.5\ \mathrm{min}$, then
+\begin{equation}\label{eq:rate}
+ q=r\Delta t=3\ \mathrm{L}.
+\end{equation}
+The minutes cancel when the units multiply. Once $q$ has been formed, we do not multiply it by time again. If the rate varies, the total quantity must come from the measured or declared accumulation over the interval; a single endpoint rate generally does not suffice.
+
+Some historical EBU sources use the symbol $q$ for a rate. In this edition $q$ always denotes a finite quantity. The convention is explicit because an unnoticed change of meaning can produce a correct-looking equation with incorrect units.
+
+\section{What changes when a boundary is open?}
+Suppose instead that three litres leave Ridge and only 2.7 arrive at Vale. The represented stocks fall by 0.3 litres. That amount needs a named physical destination or boundary account, such as leakage outside the measured tanks. Calling it ``loss'' does not explain where the matter went.
+
+This physical bookkeeping does not yet determine an EBU process charge. We first record the transfer and its boundary crossings; later we ask which effects are represented in the potential and whether any justified residual burden remains. A loss ledger and a valued potential factor are distinct records.
+
+Likewise, repairing the pipe may change its physical capacity while leaving current water volume unchanged. A stock-only list cannot represent that improvement. We would need evidence of the changed property and a justified prospective model update. Adding a hopeful future story to the present stock difference would not fix the missing coordinate.
+
+\practice{Starting from $(14,6)$ litres, calculate the endpoint of a six-litre transfer. Is conserving twenty litres enough to show improvement?}{The endpoint is $(8,12)$ litres and the total is twenty. Conservation alone cannot compare it with the start. We need a declared reference and measure, introduced in Chapters~\ref{ch:reference}--\ref{ch:potential}.}
+
+\carry{An action is a physical change before it is a value. The next chapter places that change among feasibility, information, permission and actor choice.}

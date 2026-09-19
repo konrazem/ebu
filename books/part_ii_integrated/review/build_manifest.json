@@ -1,0 +1,434 @@
+{
+  "status": "AUTHOR_REVIEW_MANUSCRIPTS",
+  "branch_at_recording": "codex/book-series-eight-parts",
+  "source_parent_head_at_recording": "05f3cb02d0c48e60de98342edfac9c36f2cecc6f",
+  "current_series_parts": 8,
+  "artifacts": [
+    {
+      "path": "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "ae175405bc2347cb881a3b2b5a2b9c39d7f3eb178d2bdd336c23c5fcd83993bb",
+      "pages": 284
+    },
+    {
+      "path": "output/pdf/EBP_Book_Part_II_Integrated_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "23d9c6e0069c7fbe28bb3b91ca6cfcf1eb3b4d10b52d61b1ea17eb8eb0f40b5f",
+      "pages": 285
+    }
+  ],
+  "integrated_main_chapters": [
+    33,
+    62
+  ],
+  "new_typeset_pages": 122,
+  "historical_source_pages": 163,
+  "repeat_build_byte_identical": true,
+  "fixed_arithmetic_checks": {
+    "part_i": 127,
+    "earlier_ii_iii": 69,
+    "new_extensions": 36
+  },
+  "model_transitions": 0,
+  "scientific_experiments": 0,
+  "scientific_sources_unchanged": [
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_PROGRAMME_RECONCILIATION.md",
+      "sha256": "21a6ce38b13e8967074ca16eac4d1eea80c125cc5ba59e87e2f3950b1000c9ee",
+      "git_blob_at_head": "c5a78ff2d1218e15d205040dff7846211bb92e4b"
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_FRAMEWORK_DECISION.md",
+      "sha256": "8276e352b9133d2666809ea51cb0323d176a6af1551aba12ea39efb53c941b82",
+      "git_blob_at_head": "8940e4d70ce35e034c55d4914dda017da878c1dd"
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_IMPLEMENTATION_ROADMAP.md",
+      "sha256": "33527c86e87db5793db820d24b713b3351d62d67c7b87fc2cf2d194049d24129",
+      "git_blob_at_head": "430cae4110b3c86ce4517881fa447703b2c1776e"
+    },
+    {
+      "path": "V3.0_LOCAL_EBU_FOUNDATION_DRAFT.md",
+      "sha256": "0846df40140e81230d95e3b8e5dea0974fe26e344217f8097797d5669540189e",
+      "git_blob_at_head": "3311f8db171e81eb350134ad708632a8ca2743cd"
+    },
+    {
+      "path": "SEQUENTIAL_PARALLEL_BRIDGE.md",
+      "sha256": "34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10",
+      "git_blob_at_head": "e4c5dbec7e025dba102f5fa5b26843f891ad881b"
+    },
+    {
+      "path": "results/v3.0/gate1dc/MANIFEST.md",
+      "sha256": "417552fce4681953d1b6d6bc3353d3e14f865aca2d17adefd1edf58a2528f9a8",
+      "git_blob_at_head": "d655bb1ccb89a3a33ef60d8a6a9718a2b0164cac"
+    }
+  ],
+  "original_pdfs": [
+    {
+      "part": "I",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_I_Unified_Explanatory_Edition.pdf",
+      "sha256": "335ed5c6d3541d48a61438e213a8a1148eb196649da83392a4ba0741ce65a4ad"
+    },
+    {
+      "part": "II",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_II_Unified_Explanatory_Edition.pdf",
+      "sha256": "c36e3fad562455808775a3470b8c270faf089b2843dbe17b03635a31e1179095"
+    },
+    {
+      "part": "III",
+      "path": "/Users/konrad.grzyb/Documents/EBU/v4/EBP_Book_Part_III_Unified_Explanatory_Edition.pdf",
+      "sha256": "0ab9b352c0464c8a15bd603845c8f8aa3d71b06d470e12ea1b5e393cef154019"
+    }
+  ],
+  "files": [
+    {
+      "path": "BOOK_I_FULL_LENGTH_REVISION.md",
+      "sha256": "5427cbefc6b81f12b5539ca421836e7206d240fba3034d9204c4acdc3788ac49",
+      "bytes": 6521
+    },
+    {
+      "path": "BOOK_I_GENERATION_HANDOVER.md",
+      "sha256": "b16d791f8082a5d2e0ad8bdd8e9838ded5de6eb50d882f13984cb9c0ea5b808d",
+      "bytes": 21529
+    },
+    {
+      "path": "BOOK_I_INTRODUCTION_BLUEPRINT.md",
+      "sha256": "25d26fc4896ea23bc202c80766d2c31a5741430cab868913bf849c087709a0af",
+      "bytes": 29614
+    },
+    {
+      "path": "CURRENT_SCIENTIFIC_AUTHORITY.md",
+      "sha256": "88939ac6ef644800f7e6d12cb9ab5adad3aef96e7eca4e38d3b1d73748c7d44d",
+      "bytes": 7987
+    },
+    {
+      "path": "EBU_FUTURE_BOOKS_STRUCTURE.md",
+      "sha256": "e9361596e3424cc5043977715a474867116edbc2d01dc3b387401a41e8e0ec68",
+      "bytes": 8091
+    },
+    {
+      "path": "LOCAL_GAUSSIAN_EBU_BOOK_SERIES_RECONCILIATION.md",
+      "sha256": "12bc1e016fbdb91fde0e3a9625a5d42b45019c4d7bda5c0c4729acf42f5ba15c",
+      "bytes": 28296
+    },
+    {
+      "path": "books/.gitattributes",
+      "sha256": "00b031c15498ff86ea01e05e776efbcb5c728772dc1ca5263b5fefd24650b227",
+      "bytes": 85
+    },
+    {
+      "path": "books/README.md",
+      "sha256": "d4fe9e13a1c2e60d34d0ec151cbcf6a9a17d16c88694a4fcfd32d3f13a28d924",
+      "bytes": 1534
+    },
+    {
+      "path": "books/part_i_revised/review/build_manifest.json",
+      "sha256": "4f3d190d7ecc93c2b6da44537d2b36623f9ba8ec6b1058e0e4db0ff59e81ba8a",
+      "bytes": 15385
+    },
+    {
+      "path": "books/part_ii_integrated/.gitignore",
+      "sha256": "9916d36e10c4d6638329e9e82876189b8d34f6e378a49503b97c263fcadebcec",
+      "bytes": 49
+    },
+    {
+      "path": "books/part_ii_integrated/EDITORIAL_CONTRACT.md",
+      "sha256": "e14f0ba884edbfa0aabba09759a7085b4920e4971ec0f01fca5855a91e9c62df",
+      "bytes": 3145
+    },
+    {
+      "path": "books/part_ii_integrated/README.md",
+      "sha256": "0b78ce13202ed49acc5409761861e533ec46f8bbabaf4063fd14dc8301ace7cd",
+      "bytes": 2201
+    },
+    {
+      "path": "books/part_ii_integrated/book.tex",
+      "sha256": "ede2bc1b19f4365851a3f6d1911e519b5d95c23f9a01e1d6728f569987093e67",
+      "bytes": 268
+    },
+    {
+      "path": "books/part_ii_integrated/build_book.py",
+      "sha256": "b2d86b464d00f0ab0ce840c4388547c839d220ac782c5a4bd97474052d84b636",
+      "bytes": 7474
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/33.tex",
+      "sha256": "9e85b9a9ff740ac8ec5ddfdf795af540ff0a925c948ec55a7fae6d588f1ae692",
+      "bytes": 5407
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/34.tex",
+      "sha256": "044b94b23a10ffc4eadfb9f904772316a228591629867d139f3e96978aa1dfb2",
+      "bytes": 4858
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/35.tex",
+      "sha256": "4205283b9438a00544cc2012bf266a5965a7e173045f87393a299eed95cbbb69",
+      "bytes": 4653
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/36.tex",
+      "sha256": "a64dfa87588ba8c486ce68b81a6342ea3364ab2ce7402875628bee401d31f8be",
+      "bytes": 4899
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/37.tex",
+      "sha256": "bebc151e521f8c56a43d28aa36f8c2b2317f7fcc716cfcb73b31683f18212d0b",
+      "bytes": 4730
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/38.tex",
+      "sha256": "30ff671b2ddfc7b5466dbf75e423aa820658fa9de9802b159778889ebb6b670c",
+      "bytes": 6033
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/39.tex",
+      "sha256": "717730b72897d4197c24035a7c65cb6a23cb9fb7f966a1b99e86a175b48aca61",
+      "bytes": 4541
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/40.tex",
+      "sha256": "b3acd75afc7204237ea17fe883e853bc07a3c905bbb534575f56b5ece5bf7d7d",
+      "bytes": 4600
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/41.tex",
+      "sha256": "e42d58c4d9c6be27e6b3632bef1dc966e2d7808c5669bd75d5489ffd50bce647",
+      "bytes": 4238
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/42.tex",
+      "sha256": "52dde46d5fd13d9775780787a9605aafb728ac7e8c4fac33412df9750de6757b",
+      "bytes": 4662
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/43.tex",
+      "sha256": "5d55377530f01dd2aca529e13117c9c8b66c95890a23c035219eadc4d10a67bc",
+      "bytes": 4638
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/44.tex",
+      "sha256": "cae350e3e2f624a307eae28b1afd215ba7f7b00741cec7bbd3732b35382c893b",
+      "bytes": 4966
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/45.tex",
+      "sha256": "a9fd1cde3d08fdcb583e58f049300336f4fcda47d7ad4fd1ba59f387338e1105",
+      "bytes": 5116
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/46.tex",
+      "sha256": "d8f23b3d27b54346d24ff3f448dbbeed260d96bd6d74b695b9496f874ed38ade",
+      "bytes": 10931
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/47.tex",
+      "sha256": "61111a0a32516001cd5e1c9722b3167604599fdd41270dc25faa28ce2c5e7f50",
+      "bytes": 4252
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/48.tex",
+      "sha256": "5d1024703d47864fa6cec9c8750016a74bd2b400cc2abc5ec6eae5a43bc4069c",
+      "bytes": 4041
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/49.tex",
+      "sha256": "e799004475471187fae1d20d889d84975b7045074d916fa61f0cec8afa85182e",
+      "bytes": 5395
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/50.tex",
+      "sha256": "430056ceb54321f87e96889dfbd4e8ae47d37fe966ccf011347ca6a2962f8779",
+      "bytes": 3870
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/51.tex",
+      "sha256": "a2e44e58b755f1af31685e0bca646d3bacb785785a77c3f678b85f8e0ba04241",
+      "bytes": 3959
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/52.tex",
+      "sha256": "e0649d25c09bf6aa51303060a18cbf6bceb3d9327ad90142f8f1c877fae6c915",
+      "bytes": 3907
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/53.tex",
+      "sha256": "c01712e82f9d3354269cfd8d324d8000b6fcdeb1e764847b925bb5728976b51a",
+      "bytes": 3632
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/54.tex",
+      "sha256": "22c57f0d2f6a092fdee6a3a5b5d5698d4b29a6ef3d8a455615bf88f2a89afb41",
+      "bytes": 3869
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/55.tex",
+      "sha256": "500197c33ab28b9fcd5bf7031e42c0a9b1b83af4b18c0c32b03b8548d5e81551",
+      "bytes": 4026
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/56.tex",
+      "sha256": "a4969a1cf00dbde885081e7fecb4d045a5bfdbc66826dabb92a4d5f5a75bcfc6",
+      "bytes": 3802
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/57.tex",
+      "sha256": "5bdc11ee19dcbbda2fda33f11fc6432367c46ddc4bc9c6634ace104b563ae1b3",
+      "bytes": 4157
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/58.tex",
+      "sha256": "622d663003df6c2dfe804934409cc4900dc319fbc8c9aa0f1bbd4c65dcb079de",
+      "bytes": 5946
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/59.tex",
+      "sha256": "b2d4f8d44fd61e589366e89caac2b50c49ed3615aaa201992d593afbdaa0f817",
+      "bytes": 4584
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/60.tex",
+      "sha256": "72a59b8bcca8d85c127a4714a8e0501fb3c5966979739116071dd282ebdf9ea3",
+      "bytes": 4575
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/61.tex",
+      "sha256": "60325cda5dc139b2ec6d89ac328750dfadc8191b29fc3074ed5c8ed003ef2093",
+      "bytes": 4198
+    },
+    {
+      "path": "books/part_ii_integrated/chapters/62.tex",
+      "sha256": "c0e4ef1c5cccd45b0d5b1e531e82064474770520a99cc0dc8605f4e26fab6d3b",
+      "bytes": 5911
+    },
+    {
+      "path": "books/part_ii_integrated/extensions/34.tex",
+      "sha256": "1dc1a7721ebc7eee39eededdf4607e993df7418ce2f0557624c6899cdf79e9ac",
+      "bytes": 5564
+    },
+    {
+      "path": "books/part_ii_integrated/extensions/35.tex",
+      "sha256": "8902994e02c149d526cb50ef1ecec91459a5f44d2e8b80ad7bcd55b042788ce3",
+      "bytes": 3980
+    },
+    {
+      "path": "books/part_ii_integrated/extensions/44.tex",
+      "sha256": "1d9ae0cdc803f4c0b997737c1a71fe26185e7048f6b7e3a3ed7bb983903a52cf",
+      "bytes": 4064
+    },
+    {
+      "path": "books/part_ii_integrated/extensions/46.tex",
+      "sha256": "8e04093544440aab9255f5c89242f9d5d6c71c1fb9a380e1dbac87ff4b6dbed0",
+      "bytes": 22455
+    },
+    {
+      "path": "books/part_ii_integrated/extensions/47.tex",
+      "sha256": "43c1fecc67ab40f8e90900c873b6675bfc9438bd8a7c75aebbcaa9007fceea42",
+      "bytes": 4613
+    },
+    {
+      "path": "books/part_ii_integrated/finalize_manifest.py",
+      "sha256": "009c8380466b0240be27cae19e88d9c3d9ce14983d59bf78e30615e3ce2795f8",
+      "bytes": 3733
+    },
+    {
+      "path": "books/part_ii_integrated/frontmatter.tex",
+      "sha256": "fc9a94802bc7e0cfdbc1b15320492842df4a21d3684301bd6d295e20ae0c228c",
+      "bytes": 7558
+    },
+    {
+      "path": "books/part_ii_integrated/migration.json",
+      "sha256": "bcae9aa844d1f34a90de67c55d4939179994cab49edf7d0ecb489197085955d3",
+      "bytes": 913
+    },
+    {
+      "path": "books/part_ii_integrated/prepare_sources.py",
+      "sha256": "9a2758315617f7ae2183af31ebcf08f0e7da0f7a5a030cb752f5d0f88bc0aa5f",
+      "bytes": 3355
+    },
+    {
+      "path": "books/part_ii_integrated/readings.json",
+      "sha256": "4279b24c4fc81c7220c51700461089a9902e96f40a48e54d4025e493bae064ff",
+      "bytes": 8642
+    },
+    {
+      "path": "books/part_ii_integrated/review/SOURCE_COVERAGE.md",
+      "sha256": "c46b1994406499f85fe5fe79752bdf0c945673eceb3c8acfaaa244654f1d5df8",
+      "bytes": 6097
+    },
+    {
+      "path": "books/part_ii_integrated/review/VERIFICATION_REPORT.md",
+      "sha256": "a3c2fc5127df34d88691ecc7feb9bbfe28a47e8381dd30c964d32f4ac5ed6c1f",
+      "bytes": 8845
+    },
+    {
+      "path": "books/part_ii_integrated/review/arithmetic_checks.json",
+      "sha256": "248b90d176aa8e26518cbafc76b129e71f3827be2c52d7749e9e2d6f2e767852",
+      "bytes": 3128
+    },
+    {
+      "path": "books/part_ii_integrated/review/artifact_checks.json",
+      "sha256": "88ebda7705cac93b9a67a681be7401d86459f8b2969dae6accfddf4dd2ccc970",
+      "bytes": 21062
+    },
+    {
+      "path": "books/part_ii_integrated/review/build_outputs.json",
+      "sha256": "8fc82692ace9fbccd806196c95b4aae4b40e3edd967f84f29d2af94ceb5a7f2d",
+      "bytes": 498
+    },
+    {
+      "path": "books/part_ii_integrated/review/repeat_build.json",
+      "sha256": "9a61de69d2fb9008a6a28060017535ba05484bc65311ae78d9d40128c1c426b8",
+      "bytes": 672
+    },
+    {
+      "path": "books/part_ii_integrated/review/source_coverage.json",
+      "sha256": "14c157f113ab44928a6815b79ad9ec3b554b3ba8b1c80ca0285277ea8fbee891",
+      "bytes": 180899
+    },
+    {
+      "path": "books/part_ii_integrated/review_book.py",
+      "sha256": "e452b6886cd84c0bf50f51567ddfecb5223887e06dba060e1ebe20fafe1266ed",
+      "bytes": 4383
+    },
+    {
+      "path": "books/part_ii_integrated/series.tex",
+      "sha256": "b994d70fa88b5a599298506dc814133a739424c8e585400b90f7a69b23e8c688",
+      "bytes": 2138
+    },
+    {
+      "path": "books/part_ii_integrated/source_coverage.py",
+      "sha256": "1d12e8afa41b635c8aaa89d69a843c31338ca7a173f8b7934ec25b8cedf93d61",
+      "bytes": 4329
+    },
+    {
+      "path": "books/part_ii_integrated/sources.tex",
+      "sha256": "074bb0a9db3cb9f8d99bbe1be7e4af6fe02e32730e859938e572b0f8ca4c1c51",
+      "bytes": 3859
+    },
+    {
+      "path": "books/part_ii_integrated/verify_examples.py",
+      "sha256": "d40802345ae6073ca2a8e69854ff0cf8207eb3f610714e244534a7de1c3aa87c",
+      "bytes": 3289
+    },
+    {
+      "path": "books/part_ii_integrated/verify_repeat_build.py",
+      "sha256": "0753892d34f48bf2a4d7e56ff3544b329cc84dbd32703a941d8adf1ace2f1a6a",
+      "bytes": 1077
+    },
+    {
+      "path": "output/pdf/EBP_Book_Part_II_Integrated_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "23d9c6e0069c7fbe28bb3b91ca6cfcf1eb3b4d10b52d61b1ea17eb8eb0f40b5f",
+      "bytes": 1865528
+    },
+    {
+      "path": "output/pdf/EBP_Book_Part_I_Revised_Gaussian_Explanatory_Edition.pdf",
+      "sha256": "ae175405bc2347cb881a3b2b5a2b9c39d7f3eb178d2bdd336c23c5fcd83993bb",
+      "bytes": 1011092
+    }
+  ],
+  "exclusions": [
+    "this manifest",
+    "build caches",
+    "rendered page images",
+    "preserved intermediate editions, which retain their own records"
+  ]
+}

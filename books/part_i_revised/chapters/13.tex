@@ -1,0 +1,226 @@
+\chapter{From a marginal to an edge field}\label{ch:field}
+
+\section{What the word field means here}
+A map of local potential values is not yet an action account. To understand a proposed transfer, we need to know how the potential changes in the direction of that transfer. The marginal at each cell tells us how its local contribution responds to a small addition. The edge field combines the source and destination responses with the physical signs of the action.
+
+In this book, the edge field is a directional derivative of a declared potential. It is sometimes called a force by analogy with potential-based physics. Its unit here is potential per stock, not newtons. We derive its formula from the action column and the chain rule; no gravitational or electromagnetic law is assumed.
+
+This careful use of the word field matters. It gives us a useful mathematical structure without claiming that the potential is a newly discovered physical interaction. A stock distribution and a declared Gaussian reference determine the values. An actor or physical law still has to specify what happens next.
+
+\section{The direction of one lossless transfer}
+For an edge \(e=(i\to j)\), the state after a finite quantity \(q\) is \(z+S_e q\). Its source coordinate is \(z_i-q\); its destination coordinate is \(z_j+q\). To find the initial response, imagine changing \(q\) by a very small amount while holding the initial baseline fixed.
+
+The source changes at minus one stock unit per unit sent, and the destination changes at plus one. The chain rule gives
+\begin{equation}
+ \left.\frac{d}{dq}V(z+S_e q)\right|_{q=0}
+ =-\mu_i(z_i)+\mu_j(z_j).
+\end{equation}
+Define the edge field with the opposite sign, so a burden-reducing direction has a positive field:
+\begin{equation}\label{eq:lossless-edge-field}
+ f_e(z)=\mu_i(z_i)-\mu_j(z_j)=-\mu(z)^TS_e.
+\end{equation}
+This sign convention is the bridge to signed EBU. The potential change is negative when a small action improves the field. The corresponding field improvement is positive.
+
+\section{Deriving the equation one term at a time}
+The source contribution to the derivative is \(\mu_i\,dx_i/dq\). Because \(dx_i/dq=-1\), this is \(-\mu_i\). The destination contribution is \(\mu_j\,dx_j/dq=+\mu_j\). Every unaffected coordinate has derivative zero and contributes nothing. Adding these terms gives the potential derivative; negating it gives \(f_e\).
+
+At the main state \((18,2)\), the marginals are \(2\) and \(-2\). Removing a small amount from Ridge lowers its local potential, because Ridge is above reference. Adding that amount to Vale also lowers its local potential, because Vale is below reference. Thus
+\begin{equation}
+ f_e=2-(-2)=4.
+\end{equation}
+The two beneficial endpoint effects add. An infinitesimal sent quantity \(dq\) changes potential to first order by \(-4\,dq\).
+
+The field does not mean that every finite quantity earns \(4q\). It is the starting slope. As Ridge loses stock and Vale gains it, both marginals move toward zero. The exact finite calculation must include that change.
+
+\begin{workedbox}{A small quantity and its changing slope}
+Starting at \((18,2)\), sending \(q=0.1\) gives exact field reduction \(4(0.1)-(0.1)^2/4=0.3975\). The initial-slope estimate is \(0.4\). Their difference, \(0.0025\), comes from curvature. It is a known algebraic term in this model, not an unexplained numerical discrepancy.
+\end{workedbox}
+
+\section{Four endpoint patterns}
+The signs of the endpoint marginals help interpret the direction, but the difference determines the result. An above-reference source has positive marginal. A below-reference destination has negative marginal. Together they give positive field. If both are below reference, removing source stock is locally harmful while adding destination stock is locally helpful; their magnitudes compete.
+
+If both are above reference, withdrawal helps the source while delivery worsens the destination. Again, the field compares the two effects. A below-reference source sending to an above-reference destination has negative field because both endpoint contributions raise burden.
+
+\begin{center}
+\begin{tabular}{P{0.25\linewidth}P{0.25\linewidth}P{0.37\linewidth}}
+\toprule
+Source & Destination & Initial effect\\
+\midrule
+Above reference & Below reference & Both changes lower local burden.\\
+Below reference & Below reference & Source harm competes with destination relief.\\
+Above reference & Above reference & Source relief competes with destination harm.\\
+Below reference & Above reference & Both changes raise local burden.\\
+\bottomrule
+\end{tabular}
+\end{center}
+These statements concern the declared potential. They do not decide whether the transfer serves an urgent need or violates another constraint. An application can require additional measurements of service and feasibility.
+
+\section{Raw stock is not the field}
+Two cells can contain the same stock and have different marginals because their references or scales differ. In a separate two-cell illustration, let both stocks be eight, references be ten and six, and scales both two. The marginals are \(-1/2\) and \(+1/2\). Sending from the second cell to the first initially lowers potential, although the raw stocks are equal.
+
+The reference totals and stock totals in this example are both 16, so the comparison is compatible with the closed domain. The field expresses deviation relative to function as declared by the model. It is not simply a pressure to equalize every raw number.
+
+Unequal scales provide another distinction. Keep the main stocks and references but change scales to \((2,4)\) for this sensitivity illustration. Marginals become \(2\) and \(-1/2\), so the field is \(2.5\), rather than four. The physical action column is unchanged. The model's valuation geometry has changed, and the record must identify that new declaration.
+
+\section{Field along a finite path}
+For the Gaussian potential, the marginal changes linearly with stock. Along \(z+S_eq\),
+\begin{align}
+ \mu_i(q)&=\frac{z_i-x_i^*-q}{\sigma_i^2},\\
+ \mu_j(q)&=\frac{z_j-x_j^*+q}{\sigma_j^2}.
+\end{align}
+Their difference is
+\begin{equation}\label{eq:field-along-edge}
+ f_e(q)=f_e(0)-q\left(\frac1{\sigma_i^2}+\frac1{\sigma_j^2}\right).
+\end{equation}
+The slope of the field along the action is negative because both positive curvature contributions add. In the main example this becomes \(f_e(q)=4-q/2\).
+
+At \(q=0\), the field is four. At \(q=4\), it is two. At \(q=8\), it is zero. Beyond eight, it is negative. These are field values at points along the same declared path, not different schedules chosen after the result. The whole function follows from the initial state, reference, scales, and action direction.
+
+The quantity eight reaches the reference for both cells in the symmetric fixture. That coincidence is special to the compatible two-cell setup. In a larger system, equality of marginals on one edge does not imply that every coordinate equals its reference.
+
+\diagram{marginal}{The instantaneous field along the running transfer falls as the quantity increases. Integrating it, rather than multiplying its starting value by every finite quantity, gives the exact finite difference.}{fig:marginal}
+
+\section{Zero field deserves careful reading}
+A zero edge field says the initial directional derivative is zero. It does not say the direction has zero finite cost. In the Gaussian model the curvature along every nonzero transfer direction is positive. Therefore a finite move from a point with \(f_e=0\) increases the potential, unless the net physical increment is zero.
+
+At the reference \((10,10)\), both marginals vanish. Sending two units gives \((8,12)\). Each endpoint is one scale from reference and contributes one-half, so total potential rises to one. The initial field was zero; exact finite EBU is minus one. The difference is fully explained by the quadratic term.
+
+A zero field can also arise from equal nonzero endpoint marginals in a larger or differently constrained world. It means there is no first-order improvement along that edge. It does not certify that the complete represented world is at its minimum or that its real needs are satisfied.
+
+\section{The graph form of the field}
+Collect the edge fields into a vector \(f\). With the incidence matrix \(S\), the compact expression is
+\begin{equation}
+ f=-S^T\mu.
+\end{equation}
+The transpose turns each edge column into a row that selects the source and destination marginals. If there are \(N\) cells and \(m\) edges, \(S^T\) has shape \(m\times N\), so the result has one field value per edge.
+
+For a separately declared three-cell chain with marginals \((2,0,-1)^T\) and edges \(1\to2\), \(2\to3\), the fields are two and one. The field vector reports the two directional slopes. It does not choose the first edge, allocate stock, or decide whether both actions can occur together.
+
+This is an example of local computation with global notation. The formula is compact for a proof, but each edge needs only the relevant endpoint marginals under the separable model. A manager may assemble the whole vector for diagnostics; that does not authorize an actor to read a global score or a future outcome.
+
+\section{Reverse directions and cycles}
+If the reverse lossless edge exists, its column is \(-S_e\) and its field at the same state is \(-f_e\). At the main baseline, Ridge-to-Vale has field four and Vale-to-Ridge has field minus four. At a later state their values must be reevaluated. A reverse action performed after a forward action does not use the old reverse marginal.
+
+Around a directed cycle of lossless edges evaluated at one common state, marginal differences cancel. For a three-cell cycle,
+\begin{equation}
+ (\mu_1-\mu_2)+(\mu_2-\mu_3)+(\mu_3-\mu_1)=0.
+\end{equation}
+This is an identity for initial fields at that state. It does not claim that arbitrary unequal finite quantities around the cycle have zero value, nor that the physical cycle is free of real process burden. The complete finite state increment and any declared process costs still determine the account.
+
+If equal simultaneous quantities circulate around a lossless closed cycle, the net stock increment can be zero. The field component is then zero because the endpoint equals the baseline. Actual circulation may use energy, time, or equipment in a fuller model. Those carriers must be represented before claims about their burden are made.
+
+\section{The field around a shared source}
+Consider a separate three-cell fixture with state \((14,3,3)\), reference \((8,6,6)\), and equal scales two. Both state and reference sum to twenty. The marginals are \((1.5,-0.75,-0.75)\). The source-to-each-destination field is therefore \(2.25\).
+
+The equality of the two starting fields says the destinations are symmetric under this declaration. It does not allocate a source quantity to either actor. If one actor sends two units, the source marginal falls by one-half and its destination marginal rises by one-half. Recomputing the other edge at the resulting state gives a smaller source contribution even though its own destination has not changed.
+
+This is why several actors cannot each treat a shared initial field as an unlimited personal resource. Their actions use one physical coordinate. The correct joint finite value includes that shared curvature. A simultaneous attribution convention can divide a joint value under declared path semantics, but it cannot create several independent copies of the source's starting state.
+
+An experiment should therefore distinguish equal local fields, equal finite quotes, equal physical permissions, and equal selection probabilities. They coincide only under additional symmetry conditions. For example, unequal quantity menus can produce unequal group frequencies even when endpoint parameters are identical. These are protocol properties, not new forces in the potential.
+
+\section{A field can be useful even when it is not followed}
+A thermometer remains informative when nobody turns the heater on. Similarly, the derivative of a potential can diagnose the initial effect of a candidate action even when the actor chooses differently. The value's explanatory role does not require an automatic law of obedience.
+
+This makes negative outcomes interpretable. If a permitted and affordable random action moves uphill, the field account can record the increase without treating it as a malfunction of the equation. The question for later research is how the complete policy changes the distribution of such events over time. That question needs the actor process, forcing, and account rules in addition to the local derivative.
+
+\section{An explicitly separate loss-aware boundary illustration}
+For a declared lossy transfer, the source changes by \(-q\) and the usable destination by \(+\eta q\). If the local potential covers those two usable-stock coordinates, the chain rule would give \(f=\mu_i-\eta\mu_j\). If a loss coordinate enters the potential, its derivative contribution must also be included. The general formula is always minus the gradient dotted with the complete action direction.
+
+For example, with \(\mu_i=-1\), \(\mu_j=-3\), and \(\eta=1/4\), the two-coordinate expression is \(-1+3/4=-1/4\). Source harm exceeds delivered relief. A lossless expression would give two and answer the wrong physical question. This illustration changes the transformation, so it is outside the main lossless domain and does not authorize an implemented lossy study.
+
+The lesson is structural. Derive the field from the actual declared state change. Do not derive a convenient lossless slope and then add an arbitrary adjustment elsewhere to compensate. Physics determines the directional derivative's coefficients.
+
+\section{Where the Onsager connection comes from}
+Lars Onsager's two 1931 papers studied coupled irreversible processes, including
+heat conduction, electrical transport and diffusion. Their reciprocal relations
+connect response coefficients under microscopic-reversibility assumptions.
+The theory concerns thermodynamic forces and fluxes in a linear-response
+setting; it is not a general statement that every system follows a gradient
+of any function one chooses \cite{onsager-one,onsager-two}.
+
+The useful idea for EBU is to distinguish a driving difference from the
+strength of response. Think of two otherwise similar routes with the same
+endpoint marginal difference. One route can carry a large flow; the other
+responds slowly. The field difference and the route's responsiveness describe
+different things. This is why the original EBU architecture introduced an
+Onsager-type force--mobility--flux structure rather than treating the marginal
+itself as a transported quantity.
+
+\section{Force, mobility and flux in the EBU model}
+For a lossless edge, the already derived field force is
+\(f_e=\mu_i-\mu_j\). The earlier EBU controller used
+\begin{equation}\label{eq:intro-onsager}
+ J_e=M_e[f_e-\theta_e]_+,\qquad M_e>0,\quad\theta_e\geq0.
+\end{equation}
+Here \(J_e\) is a flow rate and \(M_e\) is mobility: the declared response
+per unit force. The positive-part operation \([a]_+=\max(a,0)\) permits
+flow only in the declared edge direction and only above the activation
+threshold \(\theta_e\). This edge activation threshold is not an Allee
+threshold or a lower/upper homeostatic stock band. It belongs to this optional
+controller, not to the Gaussian potential.
+
+In the dimensionless Gaussian normalization, force has units \(\X^{-1}\),
+mobility has units \(\X^2/\mathrm{time}\), and their product has units of
+stock per time. A finite duration gives quantity \(q=\Delta t J_e\).
+Physical permission still has to check that quantity; high mobility cannot
+create stock that the source does not hold.
+
+At the main baseline the force is four. As a separate controller illustration,
+choose mobility one-half and activation threshold zero. The requested rate
+is two stock units per time unit. Over half a time unit it requests one
+stock unit. The exact finite field value of that quantity is \(15/4\), not
+the initial-force estimate four. Mobility sets the response rate; the finite
+equation values the complete accepted change. These illustrative choices are
+not a registered experimental configuration.
+
+\section{Why borrow this structure, and where does it stop?}
+The structure makes a conditional descent argument possible. If there is no
+external drive and the physical evolution is exactly \(\dot x=SJ\), then
+the chain rule gives \(\dot V=-\sum_e f_eJ_e\). For the declared
+threshold-mobility response, every active product is nonnegative, so that
+particular continuous-time law cannot increase the potential. Part II derives
+this carefully and explains the extra conditions needed for finite timesteps.
+
+This is a reason to study the controller, not evidence that economic actors
+obey it. The EBU potential is not automatically thermodynamic free energy,
+and its decrease is not automatically measured entropy production. Nor does
+using diagonal mobilities demonstrate Onsager reciprocity for a real coupled
+social or ecological system. The original physical analogy motivates a
+mathematical architecture; the declared model still has to stand on its own.
+
+\section{Why the actor law remains an explicit choice}
+It would be possible to propose a flow proportional to positive field, or to choose whichever edge has the largest field. Either choice would add a controller. It might be useful for a different research question, but it would not follow from Equation~\ref{eq:lossless-edge-field} alone.
+
+The present prospective programme keeps the valuation rule distinct from the actor's choice. Feasible candidate actions can receive positive, zero, or negative values. A separately declared capacity policy can filter affordability. Random selection among remaining options is another declared step. Replacing that selection by largest field or largest finite EBU would change the experiment's subject.
+
+This distinction also prevents an easy but circular success claim. If a plant is given autonomous restoring flow, observing movement toward the reference does not by itself demonstrate an economic accounting mechanism's contribution. The field may inform analysis without being a hidden force that physically compels the actors.
+
+\section{Guided problem: equal field, unequal finite behaviour}
+Two separate hypothetical edges have the same initial field four. Edge A connects cells with scales two and two, so its curvature along quantity is \(1/4+1/4=1/2\). Edge B connects cells with scales one and one, so its curvature is two. Their initial tangents match, but their fields fall at different rates as quantity increases.
+
+For a quantity of two, the exact field reductions, derived fully next chapter, are
+\begin{align}
+ F_A(2)&=4(2)-\tfrac12(1/2)(2)^2=7,\\
+ F_B(2)&=4(2)-\tfrac12(2)(2)^2=4.
+\end{align}
+Both calculations assume compatible declared states that give initial field four and permit the quantity. The example isolates curvature; it is not a recommendation between two real services. It shows why the starting field cannot replace a finite schedule.
+
+Now ask what would happen at quantity four. Edge A gives \(16-4=12\), while B gives \(16-16=0\). The same initial field is consistent with very different finite values. A complete quote requires the potential along the action direction, not merely one slope sample.
+
+\section{A sign routine for every new example}
+When a formula feels abstract, first state the physical change: the source loses and the destination gains. Next ask how each change affects its local potential. Translate those answers into derivative signs. Only then combine the terms.
+
+For an above-reference source, \(\mu_i>0\), so its negative stock increment contributes a negative potential change. For a below-reference destination, \(\mu_j<0\), so its positive stock increment also contributes a negative change. The negative of their sum is positive field. This routine is slower than memorizing a sign, but it is much harder to misuse when the carrier or action direction changes.
+
+The routine also exposes ambiguous action descriptions. If one cannot say which coordinate decreases, it is too early to calculate the field. A transformation involving several inputs and outputs needs a correspondingly complete column before the dot product has physical meaning.
+
+\section{Practice with solutions}
+In the main model, calculate the field after sending four units from Ridge to Vale. The endpoint is \((14,6)\), marginals are \((1,-1)\), and the field is two. After a total of eight units, both marginals and the field are zero. After a total of twelve, marginals are \((-1,1)\), and the field is minus two.
+
+For a separate compatible state \((9,7)\), reference \((10,6)\), and equal scales two, marginals are \((-1/4,1/4)\). The field from the second cell to the first is one-half. A transfer in that direction initially improves the potential even though the sending cell has the smaller raw stock.
+
+Finally explain why a reported field of \(4\X^{-1}\) cannot be entered as four stock units in a physical ledger. Its unit is different and its meaning is a derivative. To form a first-order field change one multiplies by quantity; to form exact finite EBU one evaluates the complete finite difference and any declared process burden.
+
+\begin{intuitionbox}{What to carry forward}
+The edge field is the negative directional derivative of the declared potential. For a lossless transfer it is \(\mu_i-\mu_j\). It combines endpoint slopes, changes along finite motion, and supplies no actor policy by itself. Exact finite value requires the curvature that the starting slope omits.
+\end{intuitionbox}

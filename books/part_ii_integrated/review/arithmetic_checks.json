@@ -1,0 +1,154 @@
+{
+  "checks": 36,
+  "all_passed": true,
+  "execution_class": "fixed-state exact rational arithmetic",
+  "model_imports": 0,
+  "model_transitions": 0,
+  "scientific_runs": 0,
+  "details": [
+    {
+      "label": "weighted chain endpoint",
+      "exact_value": "31/4"
+    },
+    {
+      "label": "weighted chain finite value",
+      "exact_value": "33/4"
+    },
+    {
+      "label": "hub A singleton",
+      "exact_value": "4"
+    },
+    {
+      "label": "hub A common path",
+      "exact_value": "6"
+    },
+    {
+      "label": "hub B singleton",
+      "exact_value": "4"
+    },
+    {
+      "label": "hub B common path",
+      "exact_value": "6"
+    },
+    {
+      "label": "hub group",
+      "exact_value": "12"
+    },
+    {
+      "label": "three-child subset ()",
+      "exact_value": "0"
+    },
+    {
+      "label": "three-child subset (0,)",
+      "exact_value": "5"
+    },
+    {
+      "label": "three-child subset (1,)",
+      "exact_value": "5"
+    },
+    {
+      "label": "three-child subset (2,)",
+      "exact_value": "3"
+    },
+    {
+      "label": "three-child subset (0, 1)",
+      "exact_value": "9"
+    },
+    {
+      "label": "three-child subset (0, 2)",
+      "exact_value": "7"
+    },
+    {
+      "label": "three-child subset (1, 2)",
+      "exact_value": "7"
+    },
+    {
+      "label": "three-child subset (0, 1, 2)",
+      "exact_value": "10"
+    },
+    {
+      "label": "pair coefficient (0, 1)",
+      "exact_value": "-1"
+    },
+    {
+      "label": "pair coefficient (0, 2)",
+      "exact_value": "-1"
+    },
+    {
+      "label": "pair coefficient (1, 2)",
+      "exact_value": "-1"
+    },
+    {
+      "label": "third coefficient",
+      "exact_value": "0"
+    },
+    {
+      "label": "three-child attribution 0",
+      "exact_value": "4"
+    },
+    {
+      "label": "three-child attribution 1",
+      "exact_value": "4"
+    },
+    {
+      "label": "three-child attribution 2",
+      "exact_value": "2"
+    },
+    {
+      "label": "disjoint group",
+      "exact_value": "6"
+    },
+    {
+      "label": "positive group signed child A",
+      "exact_value": "7/2"
+    },
+    {
+      "label": "positive group signed child B",
+      "exact_value": "-5/2"
+    },
+    {
+      "label": "positive group endpoint",
+      "exact_value": "1"
+    },
+    {
+      "label": "scale change only",
+      "exact_value": "12"
+    },
+    {
+      "label": "repair rail factor",
+      "exact_value": "9801/10000"
+    },
+    {
+      "label": "repair air factor",
+      "exact_value": "4851/5000"
+    },
+    {
+      "label": "repair signed lines",
+      "exact_value": "59"
+    },
+    {
+      "label": "repair endpoint less burdens",
+      "exact_value": "59"
+    },
+    {
+      "label": "continuous force coefficient",
+      "exact_value": "1/2"
+    },
+    {
+      "label": "continuous response coefficient",
+      "exact_value": "1/4"
+    },
+    {
+      "label": "continuous initial potential",
+      "exact_value": "16"
+    },
+    {
+      "label": "continuous potential exponent coefficient",
+      "exact_value": "1/2"
+    },
+    {
+      "label": "threshold limiting potential coefficient",
+      "exact_value": "1"
+    }
+  ]
+}
