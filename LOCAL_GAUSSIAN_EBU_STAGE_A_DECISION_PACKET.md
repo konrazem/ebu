@@ -144,6 +144,15 @@ actions differ between arms.
 
 ## H. Numeric representation and tolerance
 
+**Author-ratified as the G0 Exact Arithmetic Decision.** The Stage-A
+conformance world uses rationally representable state values, equilibrium
+references, Gaussian scales, transfer quantities, forcing amplitudes,
+capacities and ledgers. Quadratic potential values, marginals, finite EBU,
+simultaneous-group EBU and common-path receipts are therefore evaluated
+exactly. Foundation invariants use exact equality, not floating tolerances.
+Floating-point tolerance is reserved for later empirical statistics or model
+extensions that genuinely require approximate numerics.
+
 **Exact rational arithmetic** (`fractions.Fraction`) is the frozen policy.
 All configuration inputs (`x0`, `x*`, `sigma`, quanta, magnitudes) are
 rationals. `V`, `mu`, `E`, `R_a`, `B`, `J` are then exactly representable,
@@ -161,8 +170,16 @@ Simpson and composite rules all return the exact integral in rational
 arithmetic. Numerical path closure is therefore an exact identity, and
 reported residuals are exact zeros rather than small floats.
 
-A float64 shadow may be computed for reporting only. It never participates
-in feasibility, affordability, selection or invariant decisions.
+Floating point has no role in the Stage-A conformance world. A float64
+shadow may be computed for presentation only and never participates in
+feasibility, affordability, selection or any invariant decision. Approximate
+numerics are reserved for later empirical statistics or model extensions that
+genuinely require them.
+
+Inputs are validated rather than coerced: `numerics.exact` refuses a `float`
+outright instead of converting it, because a binary64 literal such as `0.1` is
+not the decimal the author wrote and adopting the binary value silently would
+make an exact identity depend on representation error.
 
 ## I. No-action and deadlock semantics
 
