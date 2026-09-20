@@ -1,0 +1,660 @@
+{
+  "arms": [
+    "ebu_affordability_random_actor",
+    "physical_feasibility_random_actor"
+  ],
+  "artifact_count": 128,
+  "artifacts": [
+    {
+      "bytes": 94764,
+      "file": "replicate_000_ebu_affordability_random_actor.json.gz",
+      "sha256": "3dd9fcf92980406dabaac8b7507d7bdbb2c00e54423f1ea1a489fd8b3c4a4060"
+    },
+    {
+      "bytes": 99748,
+      "file": "replicate_000_physical_feasibility_random_actor.json.gz",
+      "sha256": "3edcbda206b90a015d4c610ca8621821e197550c3e1eb6b73fe6859a5ed4dcda"
+    },
+    {
+      "bytes": 93553,
+      "file": "replicate_001_ebu_affordability_random_actor.json.gz",
+      "sha256": "d1de724fd53ae806962c4ac673f828059289fc107e302b9689b9f4428b1b316b"
+    },
+    {
+      "bytes": 97328,
+      "file": "replicate_001_physical_feasibility_random_actor.json.gz",
+      "sha256": "959b4403bcd24b7d8c1263ea0acbb5ca62c934830609815fbe831e53e27dd3a1"
+    },
+    {
+      "bytes": 94314,
+      "file": "replicate_002_ebu_affordability_random_actor.json.gz",
+      "sha256": "051a16ddea94e34a579a004c22b996564c351e95fa9987d98a5397b151bfe085"
+    },
+    {
+      "bytes": 98710,
+      "file": "replicate_002_physical_feasibility_random_actor.json.gz",
+      "sha256": "81d51eaf540c162f6d1758f47fc3b19b91736b33b328b7376f7ff68eb0d25674"
+    },
+    {
+      "bytes": 94353,
+      "file": "replicate_003_ebu_affordability_random_actor.json.gz",
+      "sha256": "178e5cd7836d7c7d14be2795c5a93e26f15ba4f3872076f6214d0d5cfe63b1cc"
+    },
+    {
+      "bytes": 99039,
+      "file": "replicate_003_physical_feasibility_random_actor.json.gz",
+      "sha256": "a9572bd53483bc1805eda5a84f673ac16885398516aa937dd3499404d0662136"
+    },
+    {
+      "bytes": 95423,
+      "file": "replicate_004_ebu_affordability_random_actor.json.gz",
+      "sha256": "a22da8c9c7f37050a403c9de7cb48c3726927ac20f3fbe4f0b54057896113446"
+    },
+    {
+      "bytes": 101559,
+      "file": "replicate_004_physical_feasibility_random_actor.json.gz",
+      "sha256": "613d81a585d362ef6afa77df259d6d2ab5a9053e0123c4f117dec4903a958ead"
+    },
+    {
+      "bytes": 94477,
+      "file": "replicate_005_ebu_affordability_random_actor.json.gz",
+      "sha256": "b75b793ce9a01c176d8990ff785e4b4ccad87541d3665cca974a600a10c17c4f"
+    },
+    {
+      "bytes": 97672,
+      "file": "replicate_005_physical_feasibility_random_actor.json.gz",
+      "sha256": "0afabbcb47b7de0033c35f89394f0245e2458bab0286db1756d6a083bf543ff1"
+    },
+    {
+      "bytes": 95147,
+      "file": "replicate_006_ebu_affordability_random_actor.json.gz",
+      "sha256": "63c3cb91af14bb80e7ba385237f4748e20d7e9416bab01bb97d233fc74ad7d94"
+    },
+    {
+      "bytes": 98090,
+      "file": "replicate_006_physical_feasibility_random_actor.json.gz",
+      "sha256": "66b09cbfdc59ea4e6549e825051a59bc20d50564a2cbc39a5f59b755be89ba46"
+    },
+    {
+      "bytes": 94145,
+      "file": "replicate_007_ebu_affordability_random_actor.json.gz",
+      "sha256": "7e7173aea367c1320a1ccf0e6e6cf12bb1e9eaedf93c81093441942b1e51365a"
+    },
+    {
+      "bytes": 97406,
+      "file": "replicate_007_physical_feasibility_random_actor.json.gz",
+      "sha256": "2c6dd80d16e52c82e0cf1679013f46f436107bc37a644238a37d00d4bf120c5b"
+    },
+    {
+      "bytes": 91453,
+      "file": "replicate_008_ebu_affordability_random_actor.json.gz",
+      "sha256": "20329d49d72d14e6322ed3e0146c3844400866cd3c8919ee3b098c4bd7c92134"
+    },
+    {
+      "bytes": 98430,
+      "file": "replicate_008_physical_feasibility_random_actor.json.gz",
+      "sha256": "a6c2332931e76d7613c94da9cd6b19b2143cf4f8b8b6a05b04911c4b26709a43"
+    },
+    {
+      "bytes": 91417,
+      "file": "replicate_009_ebu_affordability_random_actor.json.gz",
+      "sha256": "f67487ca761ba1442a641335f08d933f78b838eb5ecc22c26757de064d6b7395"
+    },
+    {
+      "bytes": 97272,
+      "file": "replicate_009_physical_feasibility_random_actor.json.gz",
+      "sha256": "73b01f0bf9820ff95801a179ce4d83ded2dcffb9472e125595a29d8417b4ceb4"
+    },
+    {
+      "bytes": 94007,
+      "file": "replicate_010_ebu_affordability_random_actor.json.gz",
+      "sha256": "3da1c39b9166d1321ccb6d71adae6adc90db82e7c2967a5a7bc338856740db92"
+    },
+    {
+      "bytes": 99711,
+      "file": "replicate_010_physical_feasibility_random_actor.json.gz",
+      "sha256": "f9d5e771200c3c544dac8c0b1ce76e7e0e951e9bf3a5c94158a63ff088c4857c"
+    },
+    {
+      "bytes": 92611,
+      "file": "replicate_011_ebu_affordability_random_actor.json.gz",
+      "sha256": "cb5942ac9b7a6dcf550e6d8aff4d7be8d711186e19c06ba811435841d4c0036c"
+    },
+    {
+      "bytes": 97703,
+      "file": "replicate_011_physical_feasibility_random_actor.json.gz",
+      "sha256": "0a43f203903fc96796c9a4591f4b9ab95b8d3db2cae609596d065fba0a3f3deb"
+    },
+    {
+      "bytes": 93629,
+      "file": "replicate_012_ebu_affordability_random_actor.json.gz",
+      "sha256": "d5501c99ebdaa66e76ac7346b3bcf402f510b349039e6b80d0f254498d851dbb"
+    },
+    {
+      "bytes": 98169,
+      "file": "replicate_012_physical_feasibility_random_actor.json.gz",
+      "sha256": "8f6128e7ed6b0849bc04f60ccbe569e76f1af80d6ea0ca2098963364f3acc18c"
+    },
+    {
+      "bytes": 93506,
+      "file": "replicate_013_ebu_affordability_random_actor.json.gz",
+      "sha256": "4954eb4e0e5279599ba7888d73e9cf4702d372bfff2c166c7c73a158f0a9de16"
+    },
+    {
+      "bytes": 99051,
+      "file": "replicate_013_physical_feasibility_random_actor.json.gz",
+      "sha256": "086e89f7e872ded2152bbd2b40e14452ebd053ce51e9a0fabd06d4b1e49d0ee4"
+    },
+    {
+      "bytes": 95158,
+      "file": "replicate_014_ebu_affordability_random_actor.json.gz",
+      "sha256": "82bd30967453f5ef0823fb6dd305f64002a8c52493515407b3e95e13a86e6ee6"
+    },
+    {
+      "bytes": 99098,
+      "file": "replicate_014_physical_feasibility_random_actor.json.gz",
+      "sha256": "4eeacf1cff894fe82985b9fbcbfcd2595f249d25cedd61dff1a956e7146e9ddf"
+    },
+    {
+      "bytes": 92756,
+      "file": "replicate_015_ebu_affordability_random_actor.json.gz",
+      "sha256": "2c5a11ac4cff95ed7a6b60da4510fe78ddabd28a5371f0ce85aaa804ab7512ca"
+    },
+    {
+      "bytes": 99234,
+      "file": "replicate_015_physical_feasibility_random_actor.json.gz",
+      "sha256": "c7845e6944f5b9438e17e672b7a4aa64880f3bcccc2c5ab795d9f552b7dd2e50"
+    },
+    {
+      "bytes": 95325,
+      "file": "replicate_016_ebu_affordability_random_actor.json.gz",
+      "sha256": "ed09260bc95c73be56d9b264683b0c5a65564e69a642076728588a6cffa617b1"
+    },
+    {
+      "bytes": 100277,
+      "file": "replicate_016_physical_feasibility_random_actor.json.gz",
+      "sha256": "bafbd1ff3c070961ff7d9c4aaccbaa90d1182a1219828a4e3b6d649c31dcb674"
+    },
+    {
+      "bytes": 95256,
+      "file": "replicate_017_ebu_affordability_random_actor.json.gz",
+      "sha256": "40659568f8a4b645a894f6a95e0ed8ecf950c012ec3c826b415751b9f7b52777"
+    },
+    {
+      "bytes": 99227,
+      "file": "replicate_017_physical_feasibility_random_actor.json.gz",
+      "sha256": "6e51ee65d2f5a16c8a6c93ec76483f09b1446b5385ad39fa64b7f5752cee994d"
+    },
+    {
+      "bytes": 93636,
+      "file": "replicate_018_ebu_affordability_random_actor.json.gz",
+      "sha256": "b1359b5aaf11fbddc077c36c477bf1608f2481465652938bf1fdc52015820675"
+    },
+    {
+      "bytes": 99717,
+      "file": "replicate_018_physical_feasibility_random_actor.json.gz",
+      "sha256": "17af18fd1e59e9059b66ea7ab62529055569398bc5e0841155226ce69de36aad"
+    },
+    {
+      "bytes": 92607,
+      "file": "replicate_019_ebu_affordability_random_actor.json.gz",
+      "sha256": "ac2160c7bbd94e2b3da685d4b3ae1aa1fba5b76f1b6427a8be265d20e8c02540"
+    },
+    {
+      "bytes": 96546,
+      "file": "replicate_019_physical_feasibility_random_actor.json.gz",
+      "sha256": "fdce20427ba17da3d7a2f1711c4622ab8c803e801ed373391791dacf4e4d01ad"
+    },
+    {
+      "bytes": 94299,
+      "file": "replicate_020_ebu_affordability_random_actor.json.gz",
+      "sha256": "c73489a6a7f34210ec308c50d938bb109f85470fc24c9ffeb148cc57639f12fc"
+    },
+    {
+      "bytes": 96330,
+      "file": "replicate_020_physical_feasibility_random_actor.json.gz",
+      "sha256": "04e4cf6bafa786109951434f0eee58121f1754b77378f1e918938491d0c26ea4"
+    },
+    {
+      "bytes": 93459,
+      "file": "replicate_021_ebu_affordability_random_actor.json.gz",
+      "sha256": "15c86b41dc9893cdffda80532699bf1b3cb8bbb9fde4d356146874d1f36bb233"
+    },
+    {
+      "bytes": 97717,
+      "file": "replicate_021_physical_feasibility_random_actor.json.gz",
+      "sha256": "1d7079a0b451d6bda0678dfd896ce6475666e396d70b8bb1e1d849048483b828"
+    },
+    {
+      "bytes": 93442,
+      "file": "replicate_022_ebu_affordability_random_actor.json.gz",
+      "sha256": "722e70709272ec4d2867baf3f9ae2399b33b8287ea843c06afc2595aba2aff86"
+    },
+    {
+      "bytes": 99531,
+      "file": "replicate_022_physical_feasibility_random_actor.json.gz",
+      "sha256": "24dc317479a28092c8fe0833c1f9ac5e058e18015a7eb9353c36365533ef1f12"
+    },
+    {
+      "bytes": 94626,
+      "file": "replicate_023_ebu_affordability_random_actor.json.gz",
+      "sha256": "d995e1cc73e781b8306a9da2b34e9eec9026fc8b3f1159abba564d53f2c20d1c"
+    },
+    {
+      "bytes": 99195,
+      "file": "replicate_023_physical_feasibility_random_actor.json.gz",
+      "sha256": "eaba0ead10c9810a306cef333a8cffff5c8fd05af499971f43274485636cd84c"
+    },
+    {
+      "bytes": 94979,
+      "file": "replicate_024_ebu_affordability_random_actor.json.gz",
+      "sha256": "a8b8d5bc2ab646dfb2cc9d1c27ca77909b4525d390a198e0c503f057a1034cac"
+    },
+    {
+      "bytes": 99891,
+      "file": "replicate_024_physical_feasibility_random_actor.json.gz",
+      "sha256": "4b9df756d113ea696bb2576568aea13382571253ccbedba11819a0c9ac38873c"
+    },
+    {
+      "bytes": 93717,
+      "file": "replicate_025_ebu_affordability_random_actor.json.gz",
+      "sha256": "197a9dcf05e41b4526ab862d23768d6f21e5389ab2ce26bdd96dafdbb073b178"
+    },
+    {
+      "bytes": 98115,
+      "file": "replicate_025_physical_feasibility_random_actor.json.gz",
+      "sha256": "4c6e21df371ef3477bc4e90d2b8727cc16c93ac18a8314123e0ebe327fea2333"
+    },
+    {
+      "bytes": 94543,
+      "file": "replicate_026_ebu_affordability_random_actor.json.gz",
+      "sha256": "c9b42845385d0d91f6f3395982cb6974bc7c0268922a6141fde86763d246452b"
+    },
+    {
+      "bytes": 100256,
+      "file": "replicate_026_physical_feasibility_random_actor.json.gz",
+      "sha256": "de85460466c036950e2e5c82499e5397ba5d8ed092365fd2497ecd534851abff"
+    },
+    {
+      "bytes": 94389,
+      "file": "replicate_027_ebu_affordability_random_actor.json.gz",
+      "sha256": "f854fd9d07eae361fe406da7e68a7e12d95b676570f771fe78fdacd26943479c"
+    },
+    {
+      "bytes": 97204,
+      "file": "replicate_027_physical_feasibility_random_actor.json.gz",
+      "sha256": "8fe5cd775f770d93d3ac3ed72aa5c3483b5fdbd50a7d0b5556c730826878e016"
+    },
+    {
+      "bytes": 94719,
+      "file": "replicate_028_ebu_affordability_random_actor.json.gz",
+      "sha256": "cd2f04c534f806332279d6f735758bf4caf0af5a62ed02b238760c36599a6c22"
+    },
+    {
+      "bytes": 98258,
+      "file": "replicate_028_physical_feasibility_random_actor.json.gz",
+      "sha256": "680ee66d0f694d55ddcd6bf489244ec3133de9ebc53df28c42a4ab91930baf65"
+    },
+    {
+      "bytes": 92594,
+      "file": "replicate_029_ebu_affordability_random_actor.json.gz",
+      "sha256": "ec515b83613f1418b0fedc99dbbff0358d02f5dff20d1912cf5aaf5394f6beb6"
+    },
+    {
+      "bytes": 96703,
+      "file": "replicate_029_physical_feasibility_random_actor.json.gz",
+      "sha256": "521777675f07e462e291ad4cd7ecb2f9ff4eb7747a7ef47baa0a721e5461227b"
+    },
+    {
+      "bytes": 94491,
+      "file": "replicate_030_ebu_affordability_random_actor.json.gz",
+      "sha256": "7457b77c94ac8aacaa3d1ab3ff0f1a6c5a0addd5ae643d4cfc22d57dc8d796c6"
+    },
+    {
+      "bytes": 96984,
+      "file": "replicate_030_physical_feasibility_random_actor.json.gz",
+      "sha256": "ccd4e51d7663459f1a8a8447dc9d91f39ecba2a3c7b614df9b426b53a00cdae2"
+    },
+    {
+      "bytes": 93902,
+      "file": "replicate_031_ebu_affordability_random_actor.json.gz",
+      "sha256": "e0c1adb622daff7a51b17d9fcc820de42d3f146a43b3d0429891530cb772b2f4"
+    },
+    {
+      "bytes": 99400,
+      "file": "replicate_031_physical_feasibility_random_actor.json.gz",
+      "sha256": "cc0010e840cfb192d4ec506a654bc553271a129c6d48ad1eaff51cc75658116f"
+    },
+    {
+      "bytes": 95839,
+      "file": "replicate_032_ebu_affordability_random_actor.json.gz",
+      "sha256": "f98f7d71b464a11faeb5d610bf52f97fe94e1c4ef1f7ad40c1462914d63e0946"
+    },
+    {
+      "bytes": 98995,
+      "file": "replicate_032_physical_feasibility_random_actor.json.gz",
+      "sha256": "b98121a5bf9f1c239f27411987adc8ffe6fdbf7b98acb866a85c8cfef54328a9"
+    },
+    {
+      "bytes": 93185,
+      "file": "replicate_033_ebu_affordability_random_actor.json.gz",
+      "sha256": "dc550658c56b5416512ae5a4317c4de49aafc24bfa328f76eec5f0fec70a0658"
+    },
+    {
+      "bytes": 99095,
+      "file": "replicate_033_physical_feasibility_random_actor.json.gz",
+      "sha256": "2b035cd9e28aebd1d48991fd787b05e7dc9b95724009aef09efaf61c4e28676b"
+    },
+    {
+      "bytes": 93751,
+      "file": "replicate_034_ebu_affordability_random_actor.json.gz",
+      "sha256": "c8d4f5532209d380dc04c38290178a05becf2ebdc60960ca48f1cd9c76bba9a6"
+    },
+    {
+      "bytes": 96596,
+      "file": "replicate_034_physical_feasibility_random_actor.json.gz",
+      "sha256": "9f723b6ce57aed8188308816a44393e9d80bd516114069cf32d76dfc62be6e76"
+    },
+    {
+      "bytes": 92735,
+      "file": "replicate_035_ebu_affordability_random_actor.json.gz",
+      "sha256": "e7fbf6120a660b3961029674268225214a8486e602c57fca58afcc78f42a9c4d"
+    },
+    {
+      "bytes": 99166,
+      "file": "replicate_035_physical_feasibility_random_actor.json.gz",
+      "sha256": "357ab536a4cc2ffd2f41afe411e1a97a58bf5bc547f710b2a75ec2a1d1039c8c"
+    },
+    {
+      "bytes": 92861,
+      "file": "replicate_036_ebu_affordability_random_actor.json.gz",
+      "sha256": "5ba167ebce6542effd2ac5a38ff8984896bcb620ee8cafabac3bfe9bd8658ce9"
+    },
+    {
+      "bytes": 97972,
+      "file": "replicate_036_physical_feasibility_random_actor.json.gz",
+      "sha256": "5b657366d7a096de50bb0b867db85aa0fb85713754bb17cb2681e79cd5ad5237"
+    },
+    {
+      "bytes": 94905,
+      "file": "replicate_037_ebu_affordability_random_actor.json.gz",
+      "sha256": "77e00b46c64fc7b0d6998ca9a0e5ceb96626967f324f6992ec60c5bc960f323b"
+    },
+    {
+      "bytes": 99460,
+      "file": "replicate_037_physical_feasibility_random_actor.json.gz",
+      "sha256": "b492ddb786359de15db932627264187cd8377f318f02481c998762c81b4f4dc2"
+    },
+    {
+      "bytes": 93529,
+      "file": "replicate_038_ebu_affordability_random_actor.json.gz",
+      "sha256": "5622ac859e76a935f0b25c701c9fc731e9ef20e421cdb91340d3b63048cef1f2"
+    },
+    {
+      "bytes": 98161,
+      "file": "replicate_038_physical_feasibility_random_actor.json.gz",
+      "sha256": "e87508dc12bda9e545f641034275f67af97da549582a76c195bf3a8f78fee776"
+    },
+    {
+      "bytes": 93112,
+      "file": "replicate_039_ebu_affordability_random_actor.json.gz",
+      "sha256": "c40cc0968e3073fc0dabe3de62e114396ff7ff7911774e9e85c120800abd9ff8"
+    },
+    {
+      "bytes": 99081,
+      "file": "replicate_039_physical_feasibility_random_actor.json.gz",
+      "sha256": "512284440601fe745821686fcb3237026be3c8e90d3a376ce431759bb7aec349"
+    },
+    {
+      "bytes": 93749,
+      "file": "replicate_040_ebu_affordability_random_actor.json.gz",
+      "sha256": "bceb26b2c0a426e7fea87202c00037063b1d7482cf22a87e8ec6037edb3f429e"
+    },
+    {
+      "bytes": 98166,
+      "file": "replicate_040_physical_feasibility_random_actor.json.gz",
+      "sha256": "4ae723d5e2730464060d62680725abd9675b1d929cc8a4f4ee498b3a37fad8b9"
+    },
+    {
+      "bytes": 93842,
+      "file": "replicate_041_ebu_affordability_random_actor.json.gz",
+      "sha256": "abc7225cb763fb36db18f713ebf42c4952c6413e7f8dec640d7af633b00136c2"
+    },
+    {
+      "bytes": 98343,
+      "file": "replicate_041_physical_feasibility_random_actor.json.gz",
+      "sha256": "6e372a33902c48d46441b3617515298e93b1c6af6ec133199b59c4d92bb9561b"
+    },
+    {
+      "bytes": 94421,
+      "file": "replicate_042_ebu_affordability_random_actor.json.gz",
+      "sha256": "f329d74471fc3584138c49cb30eaca4d591d391b875e07d86af05c99b7816af0"
+    },
+    {
+      "bytes": 99288,
+      "file": "replicate_042_physical_feasibility_random_actor.json.gz",
+      "sha256": "f385eb65c44155b4bdc598730220057fcdd83f88d60604353e94dd7ac4a63128"
+    },
+    {
+      "bytes": 95115,
+      "file": "replicate_043_ebu_affordability_random_actor.json.gz",
+      "sha256": "774d3c7bb4919c5c21477543adbe9c06cbfb72b71ace30ac60fd1900ce9be161"
+    },
+    {
+      "bytes": 98509,
+      "file": "replicate_043_physical_feasibility_random_actor.json.gz",
+      "sha256": "9244d9620c8d314732e4ed5cb6c0474e19cb04de3941c03b70773c53fc72c0ce"
+    },
+    {
+      "bytes": 93157,
+      "file": "replicate_044_ebu_affordability_random_actor.json.gz",
+      "sha256": "8d2512687d2979f1adca5f2e45daccb33fe99c7656db148d92461360c6aa53f2"
+    },
+    {
+      "bytes": 98619,
+      "file": "replicate_044_physical_feasibility_random_actor.json.gz",
+      "sha256": "921b973b51674c6ce6a3739e448232b2a45191e368143d6c480b892ff1469c40"
+    },
+    {
+      "bytes": 92390,
+      "file": "replicate_045_ebu_affordability_random_actor.json.gz",
+      "sha256": "171dd39a67e0811a20a7be0a8e91c0431f76ab9c17a84c3921146345fa84789d"
+    },
+    {
+      "bytes": 98016,
+      "file": "replicate_045_physical_feasibility_random_actor.json.gz",
+      "sha256": "1d006e368cf2a8cd13aabdc627cff18a632d391a17d1b83d23c1c77183269258"
+    },
+    {
+      "bytes": 95014,
+      "file": "replicate_046_ebu_affordability_random_actor.json.gz",
+      "sha256": "84375dde60c697dbfb2ae6a10011d4046ef4df608775706cbc6130bae6e03380"
+    },
+    {
+      "bytes": 98862,
+      "file": "replicate_046_physical_feasibility_random_actor.json.gz",
+      "sha256": "f5ea9b5f0f032c391246f15df1daf8511fb7825002a93d7da1c25a0e1521b29a"
+    },
+    {
+      "bytes": 94758,
+      "file": "replicate_047_ebu_affordability_random_actor.json.gz",
+      "sha256": "3572cca188bbfa342f2e0c0c24c802085441a30b4b477efa8ff8c85139a8602c"
+    },
+    {
+      "bytes": 97825,
+      "file": "replicate_047_physical_feasibility_random_actor.json.gz",
+      "sha256": "07c53432fba33e04454a6efdcf32445297a4c8e46ada5fe3694fb7ec8ed19cbe"
+    },
+    {
+      "bytes": 93125,
+      "file": "replicate_048_ebu_affordability_random_actor.json.gz",
+      "sha256": "20c275300af7e509b1c313d37f77be5245010fae7a7017fc8450fbdf52c34482"
+    },
+    {
+      "bytes": 99229,
+      "file": "replicate_048_physical_feasibility_random_actor.json.gz",
+      "sha256": "bc7569305e95e5b553f13872ca3b5bc7bf08f6c7942e211143af3306cd85aff3"
+    },
+    {
+      "bytes": 94077,
+      "file": "replicate_049_ebu_affordability_random_actor.json.gz",
+      "sha256": "c71127d2df95e480d0491bb386b28ba0a3415d3a04f306e08ab445b8a729767a"
+    },
+    {
+      "bytes": 100147,
+      "file": "replicate_049_physical_feasibility_random_actor.json.gz",
+      "sha256": "8d3f5aa61d1292720780aefe42d30de0ce0eec576b8166b1cd94a667c92ac5ff"
+    },
+    {
+      "bytes": 93845,
+      "file": "replicate_050_ebu_affordability_random_actor.json.gz",
+      "sha256": "34ec220d4d09b8e0c17d5cceaefc708a715595c2e05304500178c04ee3f16d3d"
+    },
+    {
+      "bytes": 98229,
+      "file": "replicate_050_physical_feasibility_random_actor.json.gz",
+      "sha256": "110b74e8e6040d34577c3c7fe8c027aa56468a98cbabeb2d0ab2a15032621c47"
+    },
+    {
+      "bytes": 92806,
+      "file": "replicate_051_ebu_affordability_random_actor.json.gz",
+      "sha256": "8b722efcbb80fa4d321b3b3d1cf3ce2377077b0c00423cbe7e2e1b810081635a"
+    },
+    {
+      "bytes": 98799,
+      "file": "replicate_051_physical_feasibility_random_actor.json.gz",
+      "sha256": "723493bb1418aff5bf5ba5a7afe3768bff11d8227e6484cd7c08dc367788f9fe"
+    },
+    {
+      "bytes": 93390,
+      "file": "replicate_052_ebu_affordability_random_actor.json.gz",
+      "sha256": "9d6971834abcaa3b9e5413987a75e79d5427e6291b0b17e34c4465f243ce5981"
+    },
+    {
+      "bytes": 99340,
+      "file": "replicate_052_physical_feasibility_random_actor.json.gz",
+      "sha256": "e46c35e7e06f4caa5b8813748b8a909649d249830a736755822c008dd653a6e2"
+    },
+    {
+      "bytes": 93793,
+      "file": "replicate_053_ebu_affordability_random_actor.json.gz",
+      "sha256": "011320e6bd867e57468e888fc0c22c43c9af94522d448c3f06c69f075168c975"
+    },
+    {
+      "bytes": 97041,
+      "file": "replicate_053_physical_feasibility_random_actor.json.gz",
+      "sha256": "213b6b85ca08e30ef22d14b0f6bca1561da3f4a369357c4c48bc5bd2b60091c1"
+    },
+    {
+      "bytes": 93681,
+      "file": "replicate_054_ebu_affordability_random_actor.json.gz",
+      "sha256": "134c39d50e2a3f3a65fb7343a99077b3098b5da4ff9253b944b80ee6038c8af4"
+    },
+    {
+      "bytes": 99250,
+      "file": "replicate_054_physical_feasibility_random_actor.json.gz",
+      "sha256": "1425d554201352dcee4e1a84a191e31c1d3f15db43ea0d2f6d521bf79c0d952f"
+    },
+    {
+      "bytes": 93869,
+      "file": "replicate_055_ebu_affordability_random_actor.json.gz",
+      "sha256": "00da2f24197b7e1a73f1360abce83fe0f6823026d6214ebca9a2e6d5b88fc752"
+    },
+    {
+      "bytes": 100712,
+      "file": "replicate_055_physical_feasibility_random_actor.json.gz",
+      "sha256": "18db49014b65ebab08ccefffb28e3b44c7d64aecdd5a22dc15c559b6c666f72d"
+    },
+    {
+      "bytes": 94691,
+      "file": "replicate_056_ebu_affordability_random_actor.json.gz",
+      "sha256": "b85b5587758e7d873a5124e72b5b6c712a96eca67f84186d5eb3a7d2ab27cd85"
+    },
+    {
+      "bytes": 98214,
+      "file": "replicate_056_physical_feasibility_random_actor.json.gz",
+      "sha256": "9e99d82da58c61cdad9b0527dc0d632d20424e3a1b08743fc1b37a30bc4637ed"
+    },
+    {
+      "bytes": 92382,
+      "file": "replicate_057_ebu_affordability_random_actor.json.gz",
+      "sha256": "6eb9297674d0d819ed8b2554d8c98d946d92c42f8abbeaf41ad2411ae18c8f7c"
+    },
+    {
+      "bytes": 99438,
+      "file": "replicate_057_physical_feasibility_random_actor.json.gz",
+      "sha256": "452186bf36ceed10da9a3ff70b0e1905f272a51948c4accc037b80ac779a4b7f"
+    },
+    {
+      "bytes": 93924,
+      "file": "replicate_058_ebu_affordability_random_actor.json.gz",
+      "sha256": "29c41a68ebdd380d048e8a45fe89d5c44c9e19a80194fa8cee4e7acfb7e2b60c"
+    },
+    {
+      "bytes": 99136,
+      "file": "replicate_058_physical_feasibility_random_actor.json.gz",
+      "sha256": "ee6cf714577b0b37a941329bb79d4a60df087efb3b708daa0c8277ad262910e0"
+    },
+    {
+      "bytes": 94911,
+      "file": "replicate_059_ebu_affordability_random_actor.json.gz",
+      "sha256": "961a006c6f6c76ac5f8e2333fd7af08fd52d8bf6c076cf67477a572ce243cb81"
+    },
+    {
+      "bytes": 97830,
+      "file": "replicate_059_physical_feasibility_random_actor.json.gz",
+      "sha256": "22de1fbf4044696b2492bc5b86543d483af5a0c0a5b95bbcdf409e82bec44ae5"
+    },
+    {
+      "bytes": 94960,
+      "file": "replicate_060_ebu_affordability_random_actor.json.gz",
+      "sha256": "e075eeccd0c75e204fe45fc15d896f2232cffe9453c15bd158bec7d8149219e6"
+    },
+    {
+      "bytes": 99936,
+      "file": "replicate_060_physical_feasibility_random_actor.json.gz",
+      "sha256": "dfe23d72964d0bfad3215f37a36c44ea1cab055a89e5dbdf2b9d29d99ed02637"
+    },
+    {
+      "bytes": 94007,
+      "file": "replicate_061_ebu_affordability_random_actor.json.gz",
+      "sha256": "b6bc6af590df9636f241671f447178fdee5b2a5e402f704e0e15deda1a1fe3ce"
+    },
+    {
+      "bytes": 98915,
+      "file": "replicate_061_physical_feasibility_random_actor.json.gz",
+      "sha256": "be2bcf14bb03789e26fad2b11e2a7efcea4d5c24a33068d80cd4cb734400951d"
+    },
+    {
+      "bytes": 94043,
+      "file": "replicate_062_ebu_affordability_random_actor.json.gz",
+      "sha256": "e7119459cff1b8f8a2363dbca12b4671181d3ce33fb96ba5e861b30b25ff358f"
+    },
+    {
+      "bytes": 98718,
+      "file": "replicate_062_physical_feasibility_random_actor.json.gz",
+      "sha256": "a61dad2e440f2cf3df5303cd15dd37deda4d2e2d134f6c590c62086446debce8"
+    },
+    {
+      "bytes": 94995,
+      "file": "replicate_063_ebu_affordability_random_actor.json.gz",
+      "sha256": "5eb950eccb41f38fb2b6b6c9e0bc9517f10f14bbb5e71ff3f42d158ce8e588e6"
+    },
+    {
+      "bytes": 98811,
+      "file": "replicate_063_physical_feasibility_random_actor.json.gz",
+      "sha256": "698c3db8f8f2bb7e59a1c7d1df0be44b4470db2a366e36864b2081c9272dcf3e"
+    }
+  ],
+  "block": 2048,
+  "burn_in": 2048,
+  "configuration_identity": "46b71dd1e09d283346216470e347d33320233176c91a3523d0765f69037a48f2",
+  "forcing_quantum": "1",
+  "horizon": 8192,
+  "preregistration_commit": "4c826a9be4c6306fa57698eb23c1076ebf75b970",
+  "protocol_id": "EBU-STAGE-B-V1",
+  "registered_code_identity": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+  "replicates": 64,
+  "total_ticks": 1048576,
+  "v_max_exact": "300"
+}
