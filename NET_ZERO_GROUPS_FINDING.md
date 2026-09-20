@@ -86,11 +86,34 @@ executed was:
 | EBU-random | 0.208 | 0.771 | 0.729 |
 | EBU-aligned | **0.417** | 1.000 | 1.000 |
 
-The aligned arm parks on the null action in roughly two ticks in five. On this
-one short probe its occupancy is unchanged by removing net-zero groups, so the
-loophole is **not** obviously what produces its occupancy — but one 48-tick
-probe at one load and one seed settles nothing, and the rate is high enough
-that the question cannot be waved away.
+The aligned arm parks on the null action in roughly two ticks in five.
+
+The full rehearsal — 192 runs of 2048 ticks across both menu rules, three loads
+and eight mechanically derived seeds — puts numbers on it
+(**REHEARSAL / NON-CONFIRMATORY**). Median null-action rate and median `O95`:
+
+| load | policy | null rate | `O95` registered menu | `O95` strict menu |
+|---|---|---|---|---|
+| `1/4` | control | 14.6% | 0.0085 | 0.0117 |
+| `1/4` | hostile | 9.0% | 0.0000 | 0.0000 |
+| `1/4` | EBU-random | 13.7% | 0.1156 | 0.1097 |
+| `1/4` | aligned | **75.5%** | 1.0000 | 1.0000 |
+| `1/2` | EBU-random | 13.7% | 0.0905 | 0.0736 |
+| `1/2` | aligned | **50.8%** | 1.0000 | 1.0000 |
+| `1` | EBU-random | 13.8% | 0.0661 | 0.0495 |
+| `1` | aligned | 0.0% | 1.0000 | 1.0000 |
+
+Two things follow. **The loophole is heavily used** — the aligned arm spends
+three quarters of its ticks on a null action at the mildest load, falling to
+zero at the heaviest where a real reversal always scores higher. **But it does
+not change any qualitative conclusion**: removing net-zero groups lowers
+EBU-random's occupancy modestly (0.116 to 0.110, 0.091 to 0.074, 0.066 to
+0.050) and leaves every arm ordering intact. The aligned arm holds `O95 = 1`
+either way, for the separate structural reason proved in
+`ENDPOINT_SATURATION_FINDING.md`.
+
+So the decision below is not about rescuing a result. It is about whether the
+registered world should contain a costless null action at all.
 
 ### 3.2 It contradicts a stated property of Capacity V1
 

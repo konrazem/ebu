@@ -56,9 +56,10 @@ aligned arm in all six load/menu cells.
 ## 2. Floor saturation — EBU-hostile
 
 Not a theorem; strong and consistent rehearsal evidence. Median `O95` for the
-hostile arm was `0.0000` in five of the six load/menu cells and `0.0016` in the
-sixth, with median `R^2` between 210 and 266 and peaks at 542 against a vertex
-maximum of 600. The hostile arm is pinned far outside the region.
+hostile arm was `0.0000` in four of the six load/menu cells and `0.0007` and
+`0.0010` in the other two, with median `R^2` between 207 and 277 and peaks at
+542 against a vertex maximum of 600. The hostile arm is pinned far outside the
+region under every load and both menu rules.
 
 Unlike Theorem A this depends on the capacity economy — the hostile actor must
 first earn capacity from disturbances before it can fund damage — so it is
@@ -66,13 +67,13 @@ recorded as an empirical regularity, not proved.
 
 ## 3. Consequence: `O95` cannot discriminate the four arms
 
-Rehearsal medians, `O95` (**REHEARSAL / NON-CONFIRMATORY**):
+Rehearsal medians, `O95`, registered menu (**REHEARSAL / NON-CONFIRMATORY**):
 
 | load | control | hostile | EBU-random | aligned |
 |---|---|---|---|---|
-| `1/4` | 0.0146 | 0.0000 | 0.1549 | **1.0000** |
-| `1/2` | 0.0111 | 0.0000 | 0.0967 | **1.0000** |
-| `1` | 0.0150 | 0.0000 | 0.0589 | **1.0000** |
+| `1/4` | 0.0085 | 0.0000 | 0.1156 | **1.0000** |
+| `1/2` | 0.0130 | 0.0000 | 0.0905 | **1.0000** |
+| `1` | 0.0173 | 0.0007 | 0.0661 | **1.0000** |
 
 Two arms sit at the ceiling and the floor. Of the three registered contrasts:
 
@@ -93,9 +94,15 @@ separates all four arms monotonically (**REHEARSAL / NON-CONFIRMATORY**):
 
 | load | aligned | EBU-random | control | hostile |
 |---|---|---|---|---|
-| `1/4` | 0 | 21 | 122 | 236 |
-| `1/2` | 0 | 42 | 114 | 260 |
-| `1` | 0 | 62 | 128 | 266 |
+| `1/4` | 0 | 26 | 126 | 207 |
+| `1/2` | 0 | 42 | 126 | 277 |
+| `1` | 0 | 56 | 124 | 276 |
+
+Note the ordering: the hostile arm sits **further out than the unconstrained
+control**, at roughly twice its median radius. Affordability does not confine a
+deliberately destructive actor better than randomness does — it funds one. That
+is a preliminary signal about mission section 13's Q3 and it is exactly what
+`O95` cannot show, because both arms read 0.0000 there.
 
 It has range at both extremes: a hostile arm that was twice as destructive, or
 an aligned arm that overshot, would both be visible. `O95` would record neither.
