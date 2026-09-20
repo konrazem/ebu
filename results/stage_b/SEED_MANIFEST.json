@@ -1,0 +1,410 @@
+{
+  "configuration": {
+    "arms": [
+      "ebu_affordability_random_actor",
+      "physical_feasibility_random_actor"
+    ],
+    "block": 2048,
+    "blocks": 3,
+    "burn_in": 2048,
+    "configuration_id": "cfg-3cell-stage-b-v1",
+    "declared_mass": "30",
+    "empty_group_in_menu": false,
+    "event_profile": "EBU-GAUSSIAN-EVENT-PROFILE-v1",
+    "forcing_every_tick": true,
+    "forcing_quantum": "1",
+    "horizon": 8192,
+    "max_group_size": 2,
+    "null_forcing_rule": "per-arm admissibility; no resample/clip/reverse/substitute",
+    "numeric_policy": "exact rational, tolerance 0",
+    "owner_rule": "owner(a)=src(a)",
+    "potential_family": "EBU-POTENTIAL-LOCAL-GAUSSIAN-L1-v1",
+    "protocol_id": "EBU-STAGE-B-V1",
+    "quanta": [
+      "1"
+    ],
+    "reference": [
+      "10",
+      "10",
+      "10"
+    ],
+    "replicates": 64,
+    "scales": [
+      "1",
+      "1",
+      "1"
+    ],
+    "study_id": "ebu-stage-b-v1",
+    "v_max": "300"
+  },
+  "configuration_identity": "46b71dd1e09d283346216470e347d33320233176c91a3523d0765f69037a48f2",
+  "derivation": {
+    "encoding": "ASCII, no trailing newline",
+    "example_preimage": "EBU-STAGE-B-V1|4c826a9be4c6306fa57698eb23c1076ebf75b970|000|FORCING",
+    "preimage_format": "PROTOCOL_ID|preregistration_commit|rrr|STREAM",
+    "replicate_padding": "3 decimal digits",
+    "rule": "first 8 bytes big-endian unsigned of SHA256(ASCII preimage)",
+    "separator_byte": "0x7C",
+    "streams": [
+      "FORCING",
+      "ACTOR"
+    ]
+  },
+  "horizon": 8192,
+  "preregistration_commit": "4c826a9be4c6306fa57698eb23c1076ebf75b970",
+  "prior_exploratory_conformance_exposure": {
+    "note": "Deliberately outside the derived manifest; no registered trajectory was observed before registration.",
+    "purpose": "software conformance of the continuous-forcing and NULL_FORCING path",
+    "stage_a_disclosure_retained": [
+      [
+        11,
+        29
+      ],
+      [
+        11,
+        30
+      ],
+      [
+        11,
+        31
+      ],
+      [
+        3,
+        7
+      ]
+    ],
+    "stage_b_pairs": [
+      [
+        1,
+        1
+      ]
+    ],
+    "stage_b_ticks_observed": 512
+  },
+  "protocol_id": "EBU-STAGE-B-V1",
+  "registered_code_identity": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+  "replicates": 64,
+  "seed_pairs": [
+    {
+      "actor_seed": 12769276063996453382,
+      "forcing_seed": 2560722281092108291,
+      "replicate": 0
+    },
+    {
+      "actor_seed": 9368245402883409958,
+      "forcing_seed": 7984296982334049256,
+      "replicate": 1
+    },
+    {
+      "actor_seed": 5409254891164155330,
+      "forcing_seed": 7126821197103216933,
+      "replicate": 2
+    },
+    {
+      "actor_seed": 15923432534318340786,
+      "forcing_seed": 11038325825422850316,
+      "replicate": 3
+    },
+    {
+      "actor_seed": 16569221832252104504,
+      "forcing_seed": 9920893265175345941,
+      "replicate": 4
+    },
+    {
+      "actor_seed": 9916511116453123253,
+      "forcing_seed": 4785511435714420886,
+      "replicate": 5
+    },
+    {
+      "actor_seed": 4836016178887185431,
+      "forcing_seed": 16392105340730272027,
+      "replicate": 6
+    },
+    {
+      "actor_seed": 3683028707593084536,
+      "forcing_seed": 13239622264778183444,
+      "replicate": 7
+    },
+    {
+      "actor_seed": 827269163287314208,
+      "forcing_seed": 5588966756323128398,
+      "replicate": 8
+    },
+    {
+      "actor_seed": 9860397520045574906,
+      "forcing_seed": 4680005134816089402,
+      "replicate": 9
+    },
+    {
+      "actor_seed": 11967148201137559495,
+      "forcing_seed": 17642944960824933687,
+      "replicate": 10
+    },
+    {
+      "actor_seed": 1727576446128410236,
+      "forcing_seed": 2530948538550802760,
+      "replicate": 11
+    },
+    {
+      "actor_seed": 10135204614387881519,
+      "forcing_seed": 10395539154453465825,
+      "replicate": 12
+    },
+    {
+      "actor_seed": 9405939383532333194,
+      "forcing_seed": 11175610579440823949,
+      "replicate": 13
+    },
+    {
+      "actor_seed": 3620546934389825371,
+      "forcing_seed": 3985772114109591120,
+      "replicate": 14
+    },
+    {
+      "actor_seed": 1333961163279129679,
+      "forcing_seed": 17912900708277135435,
+      "replicate": 15
+    },
+    {
+      "actor_seed": 15016211801137796957,
+      "forcing_seed": 17184321135732047791,
+      "replicate": 16
+    },
+    {
+      "actor_seed": 4675865516992140391,
+      "forcing_seed": 3526036950134017397,
+      "replicate": 17
+    },
+    {
+      "actor_seed": 6641570786437683206,
+      "forcing_seed": 15693652468478188630,
+      "replicate": 18
+    },
+    {
+      "actor_seed": 7171461957074111124,
+      "forcing_seed": 3160601494923268405,
+      "replicate": 19
+    },
+    {
+      "actor_seed": 10183309715798245913,
+      "forcing_seed": 16660909716617935682,
+      "replicate": 20
+    },
+    {
+      "actor_seed": 11907391756410991011,
+      "forcing_seed": 8974145442350247838,
+      "replicate": 21
+    },
+    {
+      "actor_seed": 17952989236215126876,
+      "forcing_seed": 17356419724158814599,
+      "replicate": 22
+    },
+    {
+      "actor_seed": 159702157370765473,
+      "forcing_seed": 6892829638672809292,
+      "replicate": 23
+    },
+    {
+      "actor_seed": 6766661407087851985,
+      "forcing_seed": 15207808902784121439,
+      "replicate": 24
+    },
+    {
+      "actor_seed": 17180454406990559189,
+      "forcing_seed": 6077746622683548658,
+      "replicate": 25
+    },
+    {
+      "actor_seed": 15494517263157950313,
+      "forcing_seed": 7161830390905538064,
+      "replicate": 26
+    },
+    {
+      "actor_seed": 14759497160238682320,
+      "forcing_seed": 6732636142378698064,
+      "replicate": 27
+    },
+    {
+      "actor_seed": 1093004710299441512,
+      "forcing_seed": 5587350607589548649,
+      "replicate": 28
+    },
+    {
+      "actor_seed": 12742030259455808031,
+      "forcing_seed": 2881748363466347987,
+      "replicate": 29
+    },
+    {
+      "actor_seed": 14273021660719634508,
+      "forcing_seed": 1090025485430151838,
+      "replicate": 30
+    },
+    {
+      "actor_seed": 13597576419134443709,
+      "forcing_seed": 10261946618800468313,
+      "replicate": 31
+    },
+    {
+      "actor_seed": 12934029565330716101,
+      "forcing_seed": 15294890700056850672,
+      "replicate": 32
+    },
+    {
+      "actor_seed": 9465961931873822925,
+      "forcing_seed": 10069860193769327816,
+      "replicate": 33
+    },
+    {
+      "actor_seed": 4482523984372514559,
+      "forcing_seed": 13658329437858537609,
+      "replicate": 34
+    },
+    {
+      "actor_seed": 9725030504882393548,
+      "forcing_seed": 3914057869945389928,
+      "replicate": 35
+    },
+    {
+      "actor_seed": 116943182499344455,
+      "forcing_seed": 15702432704131241376,
+      "replicate": 36
+    },
+    {
+      "actor_seed": 11082415216115524706,
+      "forcing_seed": 16547631286460449699,
+      "replicate": 37
+    },
+    {
+      "actor_seed": 2506243308953764920,
+      "forcing_seed": 11336205388705166975,
+      "replicate": 38
+    },
+    {
+      "actor_seed": 923010085934030447,
+      "forcing_seed": 8869955156659340682,
+      "replicate": 39
+    },
+    {
+      "actor_seed": 15193351200038426961,
+      "forcing_seed": 14271571793006151553,
+      "replicate": 40
+    },
+    {
+      "actor_seed": 16347606934015547064,
+      "forcing_seed": 6869222766195956949,
+      "replicate": 41
+    },
+    {
+      "actor_seed": 13309006776266266908,
+      "forcing_seed": 285099689706327843,
+      "replicate": 42
+    },
+    {
+      "actor_seed": 18182041795244987539,
+      "forcing_seed": 9923965943496627422,
+      "replicate": 43
+    },
+    {
+      "actor_seed": 16644971746061938168,
+      "forcing_seed": 12780973017348392300,
+      "replicate": 44
+    },
+    {
+      "actor_seed": 9700481783969526194,
+      "forcing_seed": 11865794836950057291,
+      "replicate": 45
+    },
+    {
+      "actor_seed": 5567823417446679331,
+      "forcing_seed": 16434179833940264568,
+      "replicate": 46
+    },
+    {
+      "actor_seed": 12728743217802090373,
+      "forcing_seed": 16528460605312946803,
+      "replicate": 47
+    },
+    {
+      "actor_seed": 17193973654245174562,
+      "forcing_seed": 9036224852003897965,
+      "replicate": 48
+    },
+    {
+      "actor_seed": 12852891338463947022,
+      "forcing_seed": 5274069514619370539,
+      "replicate": 49
+    },
+    {
+      "actor_seed": 12431981923362852760,
+      "forcing_seed": 16548440913156965096,
+      "replicate": 50
+    },
+    {
+      "actor_seed": 966421699253942576,
+      "forcing_seed": 6576111583574778525,
+      "replicate": 51
+    },
+    {
+      "actor_seed": 16610745985513178325,
+      "forcing_seed": 12584123956622659238,
+      "replicate": 52
+    },
+    {
+      "actor_seed": 16274973752133272352,
+      "forcing_seed": 11375634376829533143,
+      "replicate": 53
+    },
+    {
+      "actor_seed": 1914400256612647861,
+      "forcing_seed": 12961585324966716518,
+      "replicate": 54
+    },
+    {
+      "actor_seed": 6285618813635990474,
+      "forcing_seed": 4975599658542851494,
+      "replicate": 55
+    },
+    {
+      "actor_seed": 15673465547615730784,
+      "forcing_seed": 17022148164507004716,
+      "replicate": 56
+    },
+    {
+      "actor_seed": 8666228075649513107,
+      "forcing_seed": 9190508912019147714,
+      "replicate": 57
+    },
+    {
+      "actor_seed": 12555920131897962497,
+      "forcing_seed": 9352874144202132565,
+      "replicate": 58
+    },
+    {
+      "actor_seed": 16595521016830143216,
+      "forcing_seed": 12457198042318070118,
+      "replicate": 59
+    },
+    {
+      "actor_seed": 10578904669265900998,
+      "forcing_seed": 751015963434888815,
+      "replicate": 60
+    },
+    {
+      "actor_seed": 12819426003628311318,
+      "forcing_seed": 4461398813921202171,
+      "replicate": 61
+    },
+    {
+      "actor_seed": 9809587955049143779,
+      "forcing_seed": 4260987673002002834,
+      "replicate": 62
+    },
+    {
+      "actor_seed": 14036333552055379369,
+      "forcing_seed": 7445958696735716262,
+      "replicate": 63
+    }
+  ],
+  "v_max_exact": "300"
+}
