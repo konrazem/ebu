@@ -59,6 +59,7 @@ from homeostasis.policies import (
     POLICY_EBU_HOSTILE,
     POLICY_EBU_RANDOM,
 )
+from homeostasis.jobs import ExecutionEnvelope, JobIdentity, manifest, run_job
 from homeostasis.recovery import OUTCOME_RECOVERED, recovery_trial
 
 PASSED = 0
@@ -382,6 +383,59 @@ def test_shock_tick_invites_no_actor() -> None:
         check("a tick refuses both a load and a shock", True)
 
 
+def test_job_execution_is_reproducible_and_order_free() -> None:
+    """Mission sections 21, 22 and 27, proven on the local execution path."""
+    from homeostasis.harness import code_identity
+    def identity(policy: str, replicate: int) -> JobIdentity:
+        return JobIdentity(
+            preregistration_id="conformance-probe",
+            configuration_identity="cfgid-conformance",
+            code_identity=code_identity(),
+            load_id="p_force_1_2",
+            policy_id=policy,
+            menu_rule=MENU_WITH_NET_ZERO,
+            replicate=replicate,
+            horizon=48,
+            forcing_seed=4242 + replicate,
+            actor_seed=8484 + replicate,
+        )
+    world = ([10, 10, 10], [1, 1, 1], [1], STUDY, CONFIG)
+    order = [identity(POLICY_EBU_ALIGNED, 0), identity(POLICY_CONTROL_RANDOM, 1),
+             identity(POLICY_EBU_HOSTILE, 2), identity(POLICY_EBU_RANDOM, 3)]
+    first = [run_job(job, *world) for job in order]
+    global TICKS
+    TICKS += sum(job.horizon for job in order) * 2
+    # Same jobs, reversed order, different envelope, marked as a retry.
+    second = [
+        run_job(job, *world, envelope=ExecutionEnvelope("aws-batch-sim", 3,
+                                                        "2026-01-01T00:00:00Z", "worker-7"))
+        for job in reversed(order)
+    ]
+    by_id = {result.identity.job_id: result.payload_hash for result in first}
+    check("every job produced a distinct payload", len(set(by_id.values())) == 4)
+    same = all(by_id[result.identity.job_id] == result.payload_hash for result in second)
+    check("a retry in reversed order with a different envelope is bit-identical", same)
+    check("all residuals closed exactly",
+          all(result.payload["max_accounting_residual"] == "0/1" for result in first))
+    report = manifest(first + second)
+    check("the integrity manifest passes", report["integrity_passed"], str(report))
+    check("it counts four identities and eight observations",
+          (report["jobs_expected"], report["jobs_observed"]) == (4, 8))
+    wrong = JobIdentity(
+        preregistration_id="conformance-probe",
+        configuration_identity="cfgid-conformance",
+        code_identity="0" * 64,
+        load_id="p_force_1_2", policy_id=POLICY_EBU_RANDOM,
+        menu_rule=MENU_WITH_NET_ZERO, replicate=0, horizon=8,
+        forcing_seed=1, actor_seed=2,
+    )
+    try:
+        run_job(wrong, *world)
+        check("a code-identity mismatch is refused", False, "no refusal raised")
+    except Refusal as error:
+        check("a code-identity mismatch is refused", "CODE_IDENTITY_MISMATCH" in str(error))
+
+
 def test_budget_fails_closed() -> None:
     try:
         TickBudget.conformance(4096)
@@ -419,6 +473,8 @@ def main() -> int:
          test_null_forcing_is_recorded_not_resampled),
         ("recovery terminates at the first hit", test_recovery_terminates_at_the_first_hit),
         ("the shock tick invites no actor", test_shock_tick_invites_no_actor),
+        ("job execution is reproducible and order-free",
+         test_job_execution_is_reproducible_and_order_free),
         ("budget fails closed", test_budget_fails_closed),
     )
     for label, test in groups:

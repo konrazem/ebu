@@ -94,6 +94,27 @@ DRAW_FORCING_GATE = 2
 GATE_DENOMINATOR = 4
 
 
+REHEARSAL_AUTHORIZATION = "REHEARSAL-NON-CONFIRMATORY"
+
+
+def rehearsal_budget(limit: int) -> TickBudget:
+    """A declared third execution class, between conformance and a study.
+
+    The pinned budget has two constructors: a 64-tick conformance ceiling, and
+    a registered study that fails closed without a frozen preregistration
+    identifier. A rehearsal is neither. It is longer than conformance because
+    its purpose is to exercise artifacts, replay and runtime at realistic
+    length, and it has no preregistration because it produces no confirmatory
+    evidence and its outcomes must never select a policy or tune a parameter.
+
+    Naming it here keeps that third class explicit rather than smuggling a
+    long run through a fabricated preregistration identifier.
+    """
+    if limit < 1:
+        raise Refusal("a rehearsal budget must admit at least one tick")
+    return TickBudget(limit, REHEARSAL_AUTHORIZATION)
+
+
 def code_identity() -> str:
     digest = hashlib.sha256()
     for path in sorted(Path(__file__).parent.glob("*.py")):

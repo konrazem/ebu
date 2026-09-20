@@ -34,7 +34,8 @@ from gaussian_harness.potential import LocalGaussianPotential
 from gaussian_harness.rng import STREAM_ACTOR, Counter
 from gaussian_harness.valuation import value_group
 
-from homeostasis import metrics, policies, region
+from homeostasis import jobs, metrics, policies, region
+from homeostasis.jobs import ExecutionEnvelope, JobIdentity, JobResult, manifest
 from homeostasis.metrics import (
     exact_median,
     excursions,
@@ -451,6 +452,112 @@ def test_metrics_read_no_account_quantity() -> None:
 
 
 # --------------------------------------------------------------------------
+# Sections 21 and 22 -- deterministic job identity (pure parts)
+# --------------------------------------------------------------------------
+
+
+def _identity(**overrides) -> JobIdentity:
+    fields = dict(
+        preregistration_id="prereg-static",
+        configuration_identity="cfgid-static",
+        code_identity="codeid-static",
+        load_id="p_force_1_2",
+        policy_id=POLICY_EBU_RANDOM,
+        menu_rule="with_net_zero_groups",
+        replicate=3,
+        horizon=64,
+        forcing_seed=11,
+        actor_seed=22,
+    )
+    fields.update(overrides)
+    return JobIdentity(**fields)
+
+
+def test_job_identity_covers_every_scientific_input() -> None:
+    base = _identity()
+    check("job_id is a sha256 hex digest", len(base.job_id) == 64)
+    check("job_id is stable across constructions", base.job_id == _identity().job_id)
+    varied = {
+        "preregistration_id": "other", "configuration_identity": "other",
+        "code_identity": "other", "load_id": "p_force_1_4",
+        "policy_id": POLICY_EBU_ALIGNED, "menu_rule": "strict_physical_change",
+        "replicate": 4, "horizon": 65, "forcing_seed": 12, "actor_seed": 23,
+    }
+    for field, value in varied.items():
+        check(f"changing {field} changes the job id",
+              _identity(**{field: value}).job_id != base.job_id)
+    for bad, label in (
+        ({"preregistration_id": "  "}, "an empty preregistration id"),
+        ({"policy_id": "gradient_follower"}, "an undeclared policy"),
+        ({"menu_rule": "whatever"}, "an undeclared menu rule"),
+        ({"load_id": "p_force_2"}, "an undeclared load"),
+        ({"replicate": -1}, "a negative replicate"),
+        ({"horizon": 0}, "a zero horizon"),
+        ({"preregistration_id": "a|b"}, "a separator injected into a field"),
+    ):
+        try:
+            _identity(**bad)
+            check(f"{label} is refused", False, "no refusal raised")
+        except Refusal:
+            check(f"{label} is refused", True)
+
+
+def test_payload_hash_excludes_the_execution_envelope() -> None:
+    payload = {"columns": {"V": ["0/1", "2/1"]}, "job_id": _identity().job_id}
+    plain = JobResult(_identity(), payload)
+    cloudy = JobResult(_identity(), dict(payload),
+                       ExecutionEnvelope("aws-batch", 4, "2026-01-01T00:00:00Z", "ip-10-0-0-7"))
+    check("a different executor does not change the payload hash",
+          plain.payload_hash == cloudy.payload_hash)
+    document = cloudy.envelope_document()
+    check("the envelope is recorded beside the payload",
+          document["execution_envelope"]["executor"] == "aws-batch")
+    check("the envelope is not inside the payload",
+          "execution_envelope" not in document["payload"])
+    check("the recorded hash is the payload hash",
+          document["payload_sha256"] == cloudy.payload_hash)
+    check("the canonical payload is sorted and separator-free",
+          plain.canonical_payload == plain.canonical_payload.replace(", ", ","))
+
+
+def test_manifest_reports_conflicts_rather_than_merging() -> None:
+    identity = _identity()
+    good = JobResult(identity, {"columns": {"V": ["0/1"]}})
+    retry = JobResult(identity, {"columns": {"V": ["0/1"]}},
+                      ExecutionEnvelope("retry", 1))
+    clean = manifest([good, retry])
+    check("an idempotent retry is not a conflict", clean["integrity_passed"])
+    check("but the duplicate is counted", clean["duplicate_identities"] == 1)
+    check("and the expected job count stays one", clean["jobs_expected"] == 1)
+    divergent = JobResult(identity, {"columns": {"V": ["2/1"]}})
+    broken = manifest([good, divergent])
+    check("a divergent payload for one identity fails integrity",
+          not broken["integrity_passed"])
+    check("and the conflicting job is named",
+          broken["conflicting_payloads"] == [identity.job_id])
+
+
+def test_jobs_cannot_reach_a_clock_or_a_host() -> None:
+    """No worker may derive a scientific choice from time or placement."""
+    tree = ast.parse(inspect.getsource(jobs))
+    imported: set[str] = set()
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            imported |= {alias.name.split(".")[0] for alias in node.names}
+        elif isinstance(node, ast.ImportFrom) and node.module:
+            imported.add(node.module.split(".")[0])
+    banned = {"time", "datetime", "os", "socket", "random", "uuid", "platform",
+              "getpass", "secrets", "subprocess"}
+    leaked = imported & banned
+    check("the job module imports no clock, host or entropy source", not leaked, str(leaked))
+    names = {node.id for node in ast.walk(tree) if isinstance(node, ast.Name)}
+    names |= {node.attr for node in ast.walk(tree) if isinstance(node, ast.Attribute)}
+    forbidden = {"monotonic", "perf_counter", "getpid", "gethostname", "now", "utcnow"}
+    check("and calls no clock or host primitive", not (names & forbidden),
+          str(names & forbidden))
+
+
+# --------------------------------------------------------------------------
 # Structural guards
 # --------------------------------------------------------------------------
 
@@ -499,6 +606,13 @@ def main() -> int:
         ("capacity does not change valuation", test_capacity_does_not_change_valuation),
         ("metrics on hand-checkable sequences", test_metrics_on_hand_checkable_sequences),
         ("metrics read no account quantity", test_metrics_read_no_account_quantity),
+        ("job identity covers every scientific input",
+         test_job_identity_covers_every_scientific_input),
+        ("payload hash excludes the execution envelope",
+         test_payload_hash_excludes_the_execution_envelope),
+        ("manifest reports conflicts rather than merging",
+         test_manifest_reports_conflicts_rather_than_merging),
+        ("jobs cannot reach a clock or a host", test_jobs_cannot_reach_a_clock_or_a_host),
         ("registered package is untouched", test_registered_package_is_untouched),
         ("no transition is called", test_no_transition_is_called),
         ("no science adopted here", test_no_science_is_adopted_here),
