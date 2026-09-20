@@ -44,6 +44,10 @@ HORIZON = 256
 STUDY_ID = "ebu-stage-a-v1"
 CONFIGURATION_ID = "cfg-3cell-stage-a-v1"
 
+# The frozen preregistration commit is resolved by this tag, so the executor
+# never takes the preregistration SHA from a conversational string.
+PROTOCOL_ID_COMMIT_REF = "stage-a-preregistration"
+
 REGISTERED_CODE_IDENTITY = (
     "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55"
 )
