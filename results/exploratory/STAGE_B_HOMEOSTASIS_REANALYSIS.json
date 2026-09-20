@@ -1,0 +1,92 @@
+{
+  "analysis_class": "EXPLORATORY_POST_REGISTERED",
+  "arms": {
+    "ebu_affordability_random_actor": {
+      "block_median_O95": [
+        "19/512",
+        "55/2048",
+        "13/512"
+      ],
+      "block_median_O95_float": [
+        0.037109375,
+        0.02685546875,
+        0.025390625
+      ],
+      "block_median_R2": [
+        "96",
+        "98",
+        "98"
+      ],
+      "max_max_R2": "600",
+      "median_O95": "379/12288",
+      "median_O95_float": 0.030843098958333332,
+      "median_O99": "59/768",
+      "median_O99_float": 0.07682291666666667,
+      "median_excursion_duration_max": "551",
+      "median_excursions": "103.0",
+      "median_exits": "102.0",
+      "median_max_R2": "600",
+      "median_mean_V": "45875/768",
+      "median_mean_V_float": 59.733072916666664,
+      "median_median_R2": "98",
+      "median_p95_R2": "340",
+      "median_radius_mean": 9.88169845040154,
+      "median_time_outside_95": "5954.5",
+      "replicates": 64,
+      "replicates_never_in_H95": 0,
+      "replicates_never_in_H99": 0,
+      "replicates_with_falling_occupancy": 52,
+      "replicates_with_rising_median_R2": 45
+    },
+    "physical_feasibility_random_actor": {
+      "block_median_O95": [
+        "31/2048",
+        "57/4096",
+        "67/4096"
+      ],
+      "block_median_O95_float": [
+        0.01513671875,
+        0.013916015625,
+        0.016357421875
+      ],
+      "block_median_R2": [
+        "126",
+        "126",
+        "126"
+      ],
+      "max_max_R2": "600",
+      "median_O95": "95/6144",
+      "median_O95_float": 0.015462239583333334,
+      "median_O99": "43/1024",
+      "median_O99_float": 0.0419921875,
+      "median_excursion_duration_max": "813",
+      "median_excursions": "56.5",
+      "median_exits": "55.5",
+      "median_max_R2": "600",
+      "median_mean_V": "235135/3072",
+      "median_mean_V_float": 76.54134114583333,
+      "median_median_R2": "126",
+      "median_p95_R2": "392",
+      "median_radius_mean": 11.391648394536835,
+      "median_time_outside_95": "6049.0",
+      "replicates": 64,
+      "replicates_never_in_H95": 0,
+      "replicates_never_in_H99": 0,
+      "replicates_with_falling_occupancy": 24,
+      "replicates_with_rising_median_R2": 24
+    }
+  },
+  "block": 2048,
+  "blocks": 3,
+  "burn_in": 2048,
+  "h95_shells": "R^2 in {0, 2}",
+  "h99_shells": "R^2 in {0, 2, 6, 8}",
+  "non_claims": [
+    "post-registered and exploratory; not confirmatory evidence",
+    "does not modify, reinterpret or supersede the Stage-B registered report",
+    "no hypothesis test is performed and no p-value is reported"
+  ],
+  "region_rule": "EBU-GAUSSIAN-HOMEOSTATIC-REGION-v1",
+  "source": "results/stage_b/ticks",
+  "window": 6144
+}

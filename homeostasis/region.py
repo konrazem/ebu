@@ -57,6 +57,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from fractions import Fraction
+from functools import lru_cache
 from typing import Sequence
 
 from gaussian_harness.numerics import Refusal, Vector, exact, exact_vector
@@ -163,8 +164,14 @@ def _rank(rows: list[list[Fraction]]) -> int:
     return rank
 
 
+@lru_cache(maxsize=None)
 def _atanh_enclosure(y: Fraction, terms: int = _SERIES_TERMS) -> tuple[Fraction, Fraction]:
     """Rational bounds on atanh(y) for 0 < y < 1.
+
+    Memoised because the partial sums carry very large numerators: recomputing
+    the 64-term series on every membership test dominated the cost of a whole
+    trajectory analysis. The result is a pure function of its arguments, so the
+    cache changes performance and nothing else.
 
     Every term is positive, so the partial sum is a lower bound and the
     geometric majorant of the tail gives the upper bound:
@@ -197,16 +204,19 @@ def _sum_bounds(*parts: tuple[Fraction, Fraction]) -> tuple[Fraction, Fraction]:
     return low, high
 
 
+@lru_cache(maxsize=None)
 def ln2_enclosure(terms: int = _SERIES_TERMS) -> tuple[Fraction, Fraction]:
     """ln 2 = 2 atanh(1/3)."""
     return _scaled(_atanh_enclosure(Fraction(1, 3), terms), 2)
 
 
+@lru_cache(maxsize=None)
 def ln_five_quarters_enclosure(terms: int = _SERIES_TERMS) -> tuple[Fraction, Fraction]:
     """ln(5/4) = 2 atanh(1/9)."""
     return _scaled(_atanh_enclosure(Fraction(1, 9), terms), 2)
 
 
+@lru_cache(maxsize=None)
 def chi2_two_quantile_enclosure(
     numerator: int, denominator: int, terms: int = _SERIES_TERMS
 ) -> tuple[Fraction, Fraction]:
@@ -235,6 +245,7 @@ def chi2_two_quantile_enclosure(
     return _scaled(inner, 2)
 
 
+@lru_cache(maxsize=None)
 def threshold_enclosure(level: str, terms: int = _SERIES_TERMS) -> tuple[Fraction, Fraction]:
     if level == LEVEL_95:
         return chi2_two_quantile_enclosure(95, 100, terms)
