@@ -1,0 +1,328 @@
+{
+  "protocol_id": "EBU-HOMEOSTASIS-v1",
+  "preregistration_commit": "50a3265220e4f52280cdb3b13c3cbd056c5dee5f",
+  "load_in_preimage": false,
+  "preimage_rule": "EBU-HOMEOSTASIS-v1|<commit>|<replicate:03d>|<STREAM>",
+  "seeds": [
+    {
+      "replicate": 0,
+      "forcing_seed": 1681984384002979933,
+      "actor_seed": 1624025733483477443
+    },
+    {
+      "replicate": 1,
+      "forcing_seed": 11850927928772949389,
+      "actor_seed": 11498777804895375106
+    },
+    {
+      "replicate": 2,
+      "forcing_seed": 8907233720740091305,
+      "actor_seed": 11824601121779584532
+    },
+    {
+      "replicate": 3,
+      "forcing_seed": 9349404377359193255,
+      "actor_seed": 138513118595494107
+    },
+    {
+      "replicate": 4,
+      "forcing_seed": 5862594478878687739,
+      "actor_seed": 3105505989567809623
+    },
+    {
+      "replicate": 5,
+      "forcing_seed": 14904590550115636589,
+      "actor_seed": 8738981356090326250
+    },
+    {
+      "replicate": 6,
+      "forcing_seed": 9457791215001765277,
+      "actor_seed": 13153094264982966683
+    },
+    {
+      "replicate": 7,
+      "forcing_seed": 17191397247722074641,
+      "actor_seed": 13482081974592432918
+    },
+    {
+      "replicate": 8,
+      "forcing_seed": 2691589143433555502,
+      "actor_seed": 6209106550590042736
+    },
+    {
+      "replicate": 9,
+      "forcing_seed": 4619469077188101677,
+      "actor_seed": 11825955115405677290
+    },
+    {
+      "replicate": 10,
+      "forcing_seed": 12127303412905721686,
+      "actor_seed": 6438362122605654522
+    },
+    {
+      "replicate": 11,
+      "forcing_seed": 10413843501965628107,
+      "actor_seed": 15861649543079538954
+    },
+    {
+      "replicate": 12,
+      "forcing_seed": 4521889309128076131,
+      "actor_seed": 7756978328846971521
+    },
+    {
+      "replicate": 13,
+      "forcing_seed": 17420044150247214754,
+      "actor_seed": 12315857018074257381
+    },
+    {
+      "replicate": 14,
+      "forcing_seed": 16788258460144278089,
+      "actor_seed": 360675638460214113
+    },
+    {
+      "replicate": 15,
+      "forcing_seed": 7780382822840027697,
+      "actor_seed": 18098938675885961900
+    },
+    {
+      "replicate": 16,
+      "forcing_seed": 3661165499780802976,
+      "actor_seed": 6368599651145514445
+    },
+    {
+      "replicate": 17,
+      "forcing_seed": 12469678662255755264,
+      "actor_seed": 15998223003661558843
+    },
+    {
+      "replicate": 18,
+      "forcing_seed": 1973556757907524650,
+      "actor_seed": 12571510216259840648
+    },
+    {
+      "replicate": 19,
+      "forcing_seed": 6779017986645725698,
+      "actor_seed": 261855894599571472
+    },
+    {
+      "replicate": 20,
+      "forcing_seed": 17086255257657528170,
+      "actor_seed": 12726455655212484613
+    },
+    {
+      "replicate": 21,
+      "forcing_seed": 4613209960323312208,
+      "actor_seed": 11759120023336006448
+    },
+    {
+      "replicate": 22,
+      "forcing_seed": 3688657935992830765,
+      "actor_seed": 1066333393069977266
+    },
+    {
+      "replicate": 23,
+      "forcing_seed": 16022032225777226362,
+      "actor_seed": 15506255352281524167
+    },
+    {
+      "replicate": 24,
+      "forcing_seed": 1969377305264271673,
+      "actor_seed": 1955461819128033773
+    },
+    {
+      "replicate": 25,
+      "forcing_seed": 14562507450963611366,
+      "actor_seed": 553589967891653531
+    },
+    {
+      "replicate": 26,
+      "forcing_seed": 566243328388668820,
+      "actor_seed": 11621195342877843465
+    },
+    {
+      "replicate": 27,
+      "forcing_seed": 9115028688980108451,
+      "actor_seed": 11871760180971364507
+    },
+    {
+      "replicate": 28,
+      "forcing_seed": 3195603748859852100,
+      "actor_seed": 2495587285087341419
+    },
+    {
+      "replicate": 29,
+      "forcing_seed": 8074955752963937852,
+      "actor_seed": 2194085937841786210
+    },
+    {
+      "replicate": 30,
+      "forcing_seed": 12684652590159421661,
+      "actor_seed": 17981484754095278905
+    },
+    {
+      "replicate": 31,
+      "forcing_seed": 10176882404298379711,
+      "actor_seed": 7575856021109581803
+    },
+    {
+      "replicate": 32,
+      "forcing_seed": 3862349998450287382,
+      "actor_seed": 10667152117968573167
+    },
+    {
+      "replicate": 33,
+      "forcing_seed": 14045628353447285482,
+      "actor_seed": 6152727594697892722
+    },
+    {
+      "replicate": 34,
+      "forcing_seed": 9154721968042708147,
+      "actor_seed": 100127336886824612
+    },
+    {
+      "replicate": 35,
+      "forcing_seed": 14329989237032794147,
+      "actor_seed": 480401830030589561
+    },
+    {
+      "replicate": 36,
+      "forcing_seed": 8133742266221280769,
+      "actor_seed": 10012270169336182389
+    },
+    {
+      "replicate": 37,
+      "forcing_seed": 2459534124443218666,
+      "actor_seed": 1488308542787531723
+    },
+    {
+      "replicate": 38,
+      "forcing_seed": 15692279440390671375,
+      "actor_seed": 17886864587261321426
+    },
+    {
+      "replicate": 39,
+      "forcing_seed": 7539296953631477775,
+      "actor_seed": 17100609019682857300
+    },
+    {
+      "replicate": 40,
+      "forcing_seed": 17399594977941978967,
+      "actor_seed": 11068075306188943794
+    },
+    {
+      "replicate": 41,
+      "forcing_seed": 15285042674000936511,
+      "actor_seed": 17308432857208364974
+    },
+    {
+      "replicate": 42,
+      "forcing_seed": 10400454484906012238,
+      "actor_seed": 15650837258461737994
+    },
+    {
+      "replicate": 43,
+      "forcing_seed": 2341651132231581831,
+      "actor_seed": 8247601661073218022
+    },
+    {
+      "replicate": 44,
+      "forcing_seed": 12422672458549474023,
+      "actor_seed": 5005183168498842961
+    },
+    {
+      "replicate": 45,
+      "forcing_seed": 17343795226549797351,
+      "actor_seed": 16314862728152798487
+    },
+    {
+      "replicate": 46,
+      "forcing_seed": 9115610840850831336,
+      "actor_seed": 14381715302958273695
+    },
+    {
+      "replicate": 47,
+      "forcing_seed": 15539953745844599568,
+      "actor_seed": 6434055605981638618
+    },
+    {
+      "replicate": 48,
+      "forcing_seed": 11337331575250130465,
+      "actor_seed": 4536277171630575045
+    },
+    {
+      "replicate": 49,
+      "forcing_seed": 17054838736277603755,
+      "actor_seed": 1019397756914161161
+    },
+    {
+      "replicate": 50,
+      "forcing_seed": 189078399816404570,
+      "actor_seed": 11133545986379756710
+    },
+    {
+      "replicate": 51,
+      "forcing_seed": 16469708764342348666,
+      "actor_seed": 12270277112577158398
+    },
+    {
+      "replicate": 52,
+      "forcing_seed": 7616226790964792316,
+      "actor_seed": 7980699473466237612
+    },
+    {
+      "replicate": 53,
+      "forcing_seed": 9893034126788303030,
+      "actor_seed": 8634538657345314589
+    },
+    {
+      "replicate": 54,
+      "forcing_seed": 3032024676768581733,
+      "actor_seed": 11898654855087235864
+    },
+    {
+      "replicate": 55,
+      "forcing_seed": 4595973441242770914,
+      "actor_seed": 17434665601446036597
+    },
+    {
+      "replicate": 56,
+      "forcing_seed": 3894147787659767298,
+      "actor_seed": 11785374915122250291
+    },
+    {
+      "replicate": 57,
+      "forcing_seed": 12260427995775926918,
+      "actor_seed": 12515756954401585045
+    },
+    {
+      "replicate": 58,
+      "forcing_seed": 659648242644522556,
+      "actor_seed": 12967370557556010394
+    },
+    {
+      "replicate": 59,
+      "forcing_seed": 13019542541553583081,
+      "actor_seed": 10719008109855964513
+    },
+    {
+      "replicate": 60,
+      "forcing_seed": 5427116759618644698,
+      "actor_seed": 14455217034294158915
+    },
+    {
+      "replicate": 61,
+      "forcing_seed": 6544757938632176095,
+      "actor_seed": 13860681030094640250
+    },
+    {
+      "replicate": 62,
+      "forcing_seed": 5074603124887673965,
+      "actor_seed": 16246761504979068611
+    },
+    {
+      "replicate": 63,
+      "forcing_seed": 18163887996114089032,
+      "actor_seed": 7331791965364720078
+    }
+  ]
+}

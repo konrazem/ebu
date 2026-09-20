@@ -118,8 +118,8 @@ def collect() -> tuple[dict, dict]:
             "p95_R2": summary.p95_radial_square_exact,
             "max_R2": summary.max_radial_square_exact,
             "radius_mean": summary.radius_mean,
-            "exits": summary.exits_95,
-            "time_outside_95": summary.time_outside_95,
+            "exits": Fraction(summary.exits_95),
+            "time_outside_95": Fraction(summary.time_outside_95),
             "excursion_duration_max": summary.excursion_duration_max,
             "excursion_severity_max": summary.excursion_severity_max,
             "return_time_median": summary.return_time_median,
@@ -129,7 +129,8 @@ def collect() -> tuple[dict, dict]:
                 [b.occupancy_95 for b in summary.blocks],
                 [b.median_radial_square for b in summary.blocks]),
             "null_action_rate": Fraction(nulls, executed) if executed else Fraction(0),
-            "null_forcing": sum(1 for s in columns["forcing_status"] if s == "NULL_FORCING"),
+            "null_forcing": Fraction(
+                sum(1 for s in columns["forcing_status"] if s == "NULL_FORCING")),
             "mean_n_affordable": Fraction(sum(columns["n_affordable"]), len(columns["n_affordable"])),
         }
 

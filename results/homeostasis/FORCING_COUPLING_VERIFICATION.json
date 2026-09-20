@@ -1,0 +1,18 @@
+{
+  "cells_checked": 512,
+  "cells_compared_for_null_forcing": 384,
+  "cells_where_arms_differ_in_null_forcing": 384,
+  "edge_examples": [],
+  "horizon": 8192,
+  "mean_forced_ticks": {
+    "p_force_1": 8192.0,
+    "p_force_1_2": 4092.671875,
+    "p_force_1_4": 2051.421875
+  },
+  "nesting_examples": [],
+  "nesting_failures": 0,
+  "nesting_holds": true,
+  "shared_edges_identical": true,
+  "shared_tick_edge_mismatches": 0,
+  "verification_class": "IMPLEMENTATION_VERIFICATION_NOT_ANALYSIS"
+}
