@@ -1,0 +1,77 @@
+{
+  "analysis_class": "EXACT_FINITE_STATE_NOT_A_TRAJECTORY",
+  "cell_slots_total": 1488,
+  "cell_slots_where_v2_ceiling_reaches_threshold": 882,
+  "execution_class": "NON-MODEL-ADVANCING STATIC/PURE",
+  "regimes": {
+    "v1_saturated": {
+      "control_random": {
+        "fraction_states_restoring": 0.34475806451612906,
+        "mean_g_total_high_deviation": -3.384492785361462,
+        "states_with_gate_binding": 0
+      },
+      "ebu_aligned": {
+        "fraction_states_restoring": 0.9979838709677419,
+        "mean_g_total_high_deviation": -32.76051779935275,
+        "states_with_gate_binding": 0
+      },
+      "ebu_hostile": {
+        "fraction_states_restoring": 0.006048387096774193,
+        "mean_g_total_high_deviation": 28.627831715210355,
+        "states_with_gate_binding": 0
+      },
+      "ebu_random": {
+        "fraction_states_restoring": 0.34475806451612906,
+        "mean_g_total_high_deviation": -3.384492785361462,
+        "states_with_gate_binding": 0
+      }
+    },
+    "v1_zero": {
+      "control_random": {
+        "fraction_states_restoring": 0.34475806451612906,
+        "mean_g_total_high_deviation": -3.384492785361462,
+        "states_with_gate_binding": 0
+      },
+      "ebu_aligned": {
+        "fraction_states_restoring": 0.9979838709677419,
+        "mean_g_total_high_deviation": -32.76051779935275,
+        "states_with_gate_binding": 493
+      },
+      "ebu_hostile": {
+        "fraction_states_restoring": 0.7016129032258065,
+        "mean_g_total_high_deviation": -3.692556634304207,
+        "states_with_gate_binding": 493
+      },
+      "ebu_random": {
+        "fraction_states_restoring": 0.9979838709677419,
+        "mean_g_total_high_deviation": -18.424657112035753,
+        "states_with_gate_binding": 493
+      }
+    },
+    "v2_ceiling": {
+      "control_random": {
+        "fraction_states_restoring": 0.34475806451612906,
+        "mean_g_total_high_deviation": -3.384492785361462,
+        "states_with_gate_binding": 0
+      },
+      "ebu_aligned": {
+        "fraction_states_restoring": 0.9979838709677419,
+        "mean_g_total_high_deviation": -32.76051779935275,
+        "states_with_gate_binding": 418
+      },
+      "ebu_hostile": {
+        "fraction_states_restoring": 0.06653225806451613,
+        "mean_g_total_high_deviation": 17.49514563106796,
+        "states_with_gate_binding": 418
+      },
+      "ebu_random": {
+        "fraction_states_restoring": 0.8770161290322581,
+        "mean_g_total_high_deviation": -8.230706940677559,
+        "states_with_gate_binding": 418
+      }
+    }
+  },
+  "states": 496,
+  "states_where_v2_ceiling_can_fully_open_the_gate": 78,
+  "v2_model_identity": "EBU-CAPACITY-V2-DEVIATION-BOUNDED-LOCAL-v1"
+}
