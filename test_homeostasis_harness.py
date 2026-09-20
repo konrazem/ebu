@@ -383,6 +383,48 @@ def test_shock_tick_invites_no_actor() -> None:
         check("a tick refuses both a load and a shock", True)
 
 
+def test_aligned_occupancy_is_structural_not_empirical() -> None:
+    """Theorem A of ENDPOINT_SATURATION_FINDING.md, pinned as conformance.
+
+    With forcing amplitude equal to the action quantum and the actor moving
+    after forcing in the same tick, exact reversal is always available and
+    always affordable, so the aligned arm never leaves H95. This is recorded as
+    a check so that the degeneracy cannot silently disappear -- or silently
+    reappear -- if the world is later changed.
+    """
+    from gaussian_harness.valuation import value_group
+    world = _world(POLICY_EBU_ALIGNED)
+    # The single-tick algebra the proof turns on.
+    shocked = (Fraction(9), Fraction(11), Fraction(10))
+    reversal = next(
+        group for group in world.candidates()
+        if group.group_id == "g:[a:1->0:1/1]"
+    )
+    valuation = value_group(world.potential, shocked, reversal)
+    check("the exact reversal has E_G = 1", valuation.group_ebu == Fraction(1))
+    check("its owner is credited, so it is affordable from zero capacity",
+          valuation.owner_deltas == {1: Fraction(1)}, str(valuation.owner_deltas))
+    check("no candidate beats it",
+          max(value_group(world.potential, shocked, g).group_ebu
+              for g in world.candidates()) == Fraction(1))
+    worst = Fraction(0)
+    for menu_rule in (MENU_WITH_NET_ZERO, MENU_STRICT_PHYSICAL):
+        for load in DECLARED_LOADS:
+            arm = PolicyWorld.declare(STUDY, CONFIG, [10, 10, 10], [1, 1, 1], [1],
+                                      POLICY_EBU_ALIGNED, menu_rule=menu_rule)
+            run = run_trajectory(arm, 24601, 13513, 48, load)
+            _observe(run)
+            worst = max(worst, max(record.radial_square for record in run.records))
+            check(f"aligned holds O95 = 1 at {load.load_id} under {menu_rule}",
+                  all(record.in_h95 for record in run.records))
+    check(f"aligned never exceeded R^2 = 2 anywhere (saw {worst})", worst <= 2, str(worst))
+    # The contrast: EBU-random in the same world does leave the region.
+    loose = run_trajectory(_world(POLICY_EBU_RANDOM), 24601, 13513, 48, LOAD_CONTINUOUS)
+    _observe(loose)
+    check("EBU-random, by contrast, does leave H95",
+          any(not record.in_h95 for record in loose.records))
+
+
 def test_job_execution_is_reproducible_and_order_free() -> None:
     """Mission sections 21, 22 and 27, proven on the local execution path."""
     from homeostasis.harness import code_identity
@@ -473,6 +515,8 @@ def main() -> int:
          test_null_forcing_is_recorded_not_resampled),
         ("recovery terminates at the first hit", test_recovery_terminates_at_the_first_hit),
         ("the shock tick invites no actor", test_shock_tick_invites_no_actor),
+        ("aligned occupancy is structural, not empirical",
+         test_aligned_occupancy_is_structural_not_empirical),
         ("job execution is reproducible and order-free",
          test_job_execution_is_reproducible_and_order_free),
         ("budget fails closed", test_budget_fails_closed),

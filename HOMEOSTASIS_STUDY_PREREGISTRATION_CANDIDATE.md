@@ -2,10 +2,11 @@
 
 **Status: CANDIDATE. Not frozen, not registered, not executed.**
 
-One decision is open and it is the author's, not this task's: the menu-rule
-question of `NET_ZERO_GROUPS_FINDING.md` section 5. Everything that does not
-depend on that answer is specified below and implemented. When the answer is
-given, section 11 lists exactly what changes and the packet can be frozen.
+Two decisions are open and both are the author's, not this task's: the
+menu-rule question of `NET_ZERO_GROUPS_FINDING.md` section 5, and the endpoint
+question of `ENDPOINT_SATURATION_FINDING.md` section 6. Everything that does
+not depend on those answers is specified below and implemented. When they are
+answered, section 11 lists exactly what changes and the packet can be frozen.
 
 Local gates already passed: conformance (mission 18), rehearsal (19). AWS
 equivalence (21) is blocked and reported in `AWS_EXECUTION_DISPOSITION.md`;
@@ -106,7 +107,24 @@ the model to be modified** (mission section 14).
 ## 7. Primary endpoint and inferential plan, frozen
 
 **Primary endpoint:** `O95`, the 95% reference homeostatic occupancy over the
-analysis window, per replicate per arm.
+analysis window, per replicate per arm, as mission section 4 directs.
+
+> **Registered saturation finding.** `ENDPOINT_SATURATION_FINDING.md` proves
+> (Theorem A) that in this world the EBU-aligned arm has `O95 = 1` identically:
+> forcing amplitude equals the action quantum and the actor moves after forcing
+> within the tick, so the exact reversal is always available, always the unique
+> maximiser, and always affordable from zero capacity. The rehearsal also found
+> the hostile arm pinned at `O95 = 0.0000`. **`H1` is therefore true before any
+> tick runs, and the `A` versus `R` contrast is not empirical in this world.**
+> This is registered here, before execution, and must not be re-derived
+> afterwards as a post-hoc explanation.
+>
+> **Proposed co-primary, pending the author's decision (section 11):** median
+> `R^2` over the analysis window, already in the frozen metric battery, exact,
+> physical-state only, and monotonically separating all four arms in the
+> rehearsal. Under the same three contrasts and the same Holm-within-load rule
+> this adds no new machinery and no extra family — each load would carry three
+> contrasts on each of two endpoints, Holm applied within load and endpoint.
 
 **Effect size is reported first**, before any test: the median paired
 difference in `O95`, with a distribution-free sign-based confidence interval,
@@ -228,6 +246,8 @@ the reference, and a costless capacity-transfer channel away from it. Mission
 section 6 makes mandatory action *"central to the scientific interpretation"*,
 and a costless null action defeats it in substance while satisfying it in form.
 
+### 11a. The menu rule
+
 **Options, both implemented:**
 
 - **`MENU_WITH_NET_ZERO`** — 21 groups, exactly the registered Stage-A/B world.
@@ -240,6 +260,27 @@ and a costless null action defeats it in substance while satisfying it in form.
 **What changes on the answer:** section 2's menu row, section 9's arm count if
 both are run, and the seed preimage's coverage. Nothing else. `null_action` is
 recorded per tick under every option.
+
+### 11b. The endpoint
+
+`ENDPOINT_SATURATION_FINDING.md` establishes that `O95` saturates at the
+ceiling for the aligned arm (proved) and at the floor for the hostile arm
+(rehearsal evidence), leaving only the `R` versus `C` contrast with dynamic
+range.
+
+**Options:**
+
+- **`O95` alone** — follows mission section 4 literally; accepts that one
+  contrast is a theorem and another is floor-limited.
+- **`O95` plus median `R^2` as co-primary** *(recommended)* — keeps section 4's
+  metric as primary, adds an exact physical-state metric that has range at both
+  extremes, and lets Q3 measure *how much* protection remains rather than only
+  whether any does.
+- **Median `R^2` alone** — not recommended; it would drop the metric the
+  mission names.
+
+**What changes on the answer:** section 7's endpoint list and the Holm family
+definition. The metric itself is already frozen and tested.
 
 ## 12. Non-claims
 

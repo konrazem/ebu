@@ -141,11 +141,12 @@ that the medium-horizon study *"is not a compute problem and does not need
 AWS"*, and section 20 of the mission itself says AWS is for *"parallel
 registered replication"*, not for changing scientific semantics.
 
-Measured on this machine at 1.37 ms per tick, the full section 23 matrix — 4
-policies, 3 loads, 64 replicates, 8192 ticks, 6,291,456 arm-ticks — is roughly
-**2.4 hours of single-threaded CPU**, and trivially parallel across independent
-jobs. Adding the menu-rule factor of `NET_ZERO_GROUPS_FINDING.md` doubles it to
-about 5 hours. That is an overnight local run, not a cloud programme.
+Measured on this machine by the rehearsal itself — 393,216 ticks in 493
+seconds, **1.25 ms per tick** — the full section 23 matrix (4 policies, 3
+loads, 64 replicates, 8192 ticks, 6,291,456 arm-ticks) is roughly **2.2 hours
+of single-threaded CPU**, and trivially parallel across independent jobs.
+Adding the menu-rule factor of `NET_ZERO_GROUPS_FINDING.md` doubles it to about
+4.4 hours. That is an overnight local run, not a cloud programme.
 
 Building an AWS execution binding to save a few hours of laptop time would mean
 completing an eight-step authority programme, and would put the first-ever

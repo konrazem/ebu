@@ -160,6 +160,13 @@ def _encode(value):
 
 def execute() -> dict:
     commit = _commit()
+    # Pin the package identity for the whole run. The first rehearsal attempt
+    # recorded a false replay mismatch because an unrelated module was added to
+    # the package while it ran, changing code_identity() and therefore run_id
+    # mid-run. Every scientific column was identical; only the identity moved.
+    # Capturing it here and asserting it at the end turns that silent hazard
+    # into a loud failure.
+    pinned = code_identity()
     rows: list[dict] = []
     total = len(CORE_POLICIES) * len(DECLARED_LOADS) * len(DECLARED_MENU_RULES) * SEEDS
     done = 0
@@ -176,6 +183,11 @@ def execute() -> dict:
                     done += 1
             print(f"  {menu_rule} {load.load_id}: {done}/{total} runs", flush=True)
     wall = time.time() - started
+    if code_identity() != pinned:
+        raise RuntimeError(
+            f"CODE_IDENTITY_CHANGED_DURING_RUN: started {pinned}, ended {code_identity()}; "
+            "the rehearsal artifact is not valid and must be re-run on a stable tree"
+        )
 
     # Replay check: one configuration re-run must be bit-identical.
     probe = rows[0]
@@ -191,7 +203,7 @@ def execute() -> dict:
         "rehearsal_id": REHEARSAL_ID,
         "class": "REHEARSAL / NON-CONFIRMATORY",
         "commit": commit,
-        "code_identity": code_identity(),
+        "code_identity": pinned,
         "horizon": HORIZON,
         "burn_in": BURN_IN,
         "block": BLOCK,
