@@ -102,3 +102,56 @@ class CapacityLedger:
         for owner, balance in decision.projected:
             balances[owner] = balance
         return CapacityLedger(tuple(balances))
+
+
+@dataclass(frozen=True)
+class SignedShadowLedger:
+    """Signed accounting used by the physical-random control arm.
+
+    The control arm applies no affordability filter, so its owner accounts are
+    not a capacity constraint and may go negative. Recording them anyway keeps
+    the driven accounting identity auditable in both arms and shows what the
+    constraint would have bound, which is exactly what the comparison needs.
+
+    This is a scientific control's shadow ledger, not an inferior capacity
+    engine: nothing here refuses, and nothing here is spent.
+    """
+
+    balances: tuple[Fraction, ...]
+    constrained: bool = False
+
+    @classmethod
+    def zero(cls, cells: int) -> "SignedShadowLedger":
+        if cells <= 0:
+            raise Refusal("cell count must be positive")
+        return cls(tuple(Fraction(0) for _ in range(cells)))
+
+    @property
+    def total(self) -> Fraction:
+        result = Fraction(0)
+        for balance in self.balances:
+            result += balance
+        return result
+
+    def project(self, owner_deltas: Mapping[int, Fraction]) -> AffordabilityDecision:
+        projected: list[tuple[int, Fraction]] = []
+        deficient: list[int] = []
+        for owner in sorted(owner_deltas):
+            if not 0 <= owner < len(self.balances):
+                raise Refusal(f"owner {owner} is not a declared cell")
+            balance = self.balances[owner] + owner_deltas[owner]
+            projected.append((owner, balance))
+            if balance < 0:
+                deficient.append(owner)
+        # `affordable` is reported for comparison only; the control never filters on it.
+        return AffordabilityDecision(not deficient, tuple(projected), tuple(deficient))
+
+    def is_affordable(self, valuation: GroupValuation) -> AffordabilityDecision:
+        return self.project(valuation.owner_deltas)
+
+    def settle(self, owner_deltas: Mapping[int, Fraction]) -> "SignedShadowLedger":
+        """Settle unconditionally. No refusal, and balances may go negative."""
+        balances = list(self.balances)
+        for owner, balance in self.project(owner_deltas).projected:
+            balances[owner] = balance
+        return SignedShadowLedger(tuple(balances), self.constrained)
