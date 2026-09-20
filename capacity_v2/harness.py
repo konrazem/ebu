@@ -37,6 +37,7 @@ from gaussian_harness.valuation import GroupValuation, value_group
 from . import MODEL_IDENTITY
 from .ledger import (
     DeviationBoundedLedger,
+    SignedShadowLedgerV2,
     ceiling_violation,
     extended_accounting_residual,
 )
@@ -112,14 +113,20 @@ class V2Run:
     forcing_seed: int
     actor_seed: int
     state: Vector = field(init=False)
-    ledger: DeviationBoundedLedger = field(init=False)
+    ledger: object = field(init=False)
     audit: Fraction = field(init=False)
     tick: int = field(init=False, default=0)
     records: list[V2TickRecord] = field(init=False, default_factory=list)
 
     def __post_init__(self) -> None:
         self.state = self.configuration.initial_state
-        self.ledger = DeviationBoundedLedger.zero(self.configuration.rules.cells)
+        cells = self.configuration.rules.cells
+        # The control applies no gate, so it needs a ledger that never refuses.
+        self.ledger = (
+            DeviationBoundedLedger.zero(cells)
+            if self.configuration.arm == ARM_V2
+            else SignedShadowLedgerV2.zero(cells)
+        )
         self.audit = Fraction(0)
 
     def _counter(self, stream_id: str, event_index: int, draw_index: int) -> Counter:

@@ -134,3 +134,78 @@ def ceiling_violation(
         if excess > worst:
             worst = excess
     return worst
+
+
+@dataclass(frozen=True)
+class SignedShadowLedgerV2:
+    """Signed shadow accounting for the physical-random control arm.
+
+    The control applies no affordability gate, so its owner accounts are not a
+    capacity constraint and may go negative. Settlement therefore never refuses.
+
+    The deviation ceiling is still applied on the positive side, so the control
+    is measured under the same state law as the treatment and the extended
+    identity `V + sum(B) + C = J` closes in both arms. A negative balance is
+    below every ceiling and passes through untouched.
+
+    This is a scientific control's measurement ledger, not an inferior capacity
+    engine. Nothing here refuses and nothing here is spent.
+    """
+
+    balances: tuple[Fraction, ...]
+    retired: Fraction = Fraction(0)
+
+    @classmethod
+    def zero(cls, cells: int) -> "SignedShadowLedgerV2":
+        if cells <= 0:
+            raise Refusal("cell count must be positive")
+        return cls(tuple(Fraction(0) for _ in range(cells)), Fraction(0))
+
+    @property
+    def total(self) -> Fraction:
+        result = Fraction(0)
+        for balance in self.balances:
+            result += balance
+        return result
+
+    def project(self, owner_deltas: Mapping[int, Fraction]) -> AffordabilityDecision:
+        """Reported for comparison only; the control never filters on it."""
+        projected: list[tuple[int, Fraction]] = []
+        deficient: list[int] = []
+        for owner in sorted(owner_deltas):
+            if not 0 <= owner < len(self.balances):
+                raise Refusal(f"owner {owner} is not a declared cell")
+            balance = self.balances[owner] + owner_deltas[owner]
+            projected.append((owner, balance))
+            if balance < 0:
+                deficient.append(owner)
+        return AffordabilityDecision(not deficient, tuple(projected), tuple(deficient))
+
+    def ceiling(self, potential: LocalGaussianPotential, state: Vector, owner: int) -> Fraction:
+        return potential.factor_value(state, owner)
+
+    def reconcile(
+        self, potential: LocalGaussianPotential, state: Vector
+    ) -> "SignedShadowLedgerV2":
+        balances = list(self.balances)
+        retired = self.retired
+        for owner, balance in enumerate(balances):
+            limit = self.ceiling(potential, state, owner)
+            if balance > limit:
+                retired += balance - limit
+                balances[owner] = limit
+        return SignedShadowLedgerV2(tuple(balances), retired)
+
+    def settle(
+        self,
+        owner_deltas: Mapping[int, Fraction],
+        potential: LocalGaussianPotential,
+        state_after: Vector,
+    ) -> "SignedShadowLedgerV2":
+        """Settle unconditionally. No refusal; balances may go negative."""
+        balances = list(self.balances)
+        for owner, balance in self.project(owner_deltas).projected:
+            balances[owner] = balance
+        return SignedShadowLedgerV2(tuple(balances), self.retired).reconcile(
+            potential, state_after
+        )
