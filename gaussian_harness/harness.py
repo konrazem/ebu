@@ -48,6 +48,7 @@ DECLARED_ARMS = (ARM_EBU, ARM_CONTROL)
 STATUS_EXECUTED = "EXECUTED"
 STATUS_DEADLOCK = "DEADLOCK"
 STATUS_IDLE = "IDLE"
+STATUS_FORCING_ONLY = "FORCING_ONLY"
 
 _PHASE_ORDER = (
     "external_forcing",
@@ -228,8 +229,20 @@ class Run:
             draw_index,
         )
 
-    def run_tick(self, forcing: ForcingIncrement | None = None) -> TickRecord:
-        """Execute exactly one tick of the canonical event order."""
+    def run_tick(
+        self,
+        forcing: ForcingIncrement | None = None,
+        actor_enabled: bool = True,
+    ) -> TickRecord:
+        """Execute exactly one tick of the canonical event order.
+
+        With `actor_enabled=False` the tick carries external forcing and the
+        audit only: candidates are still enumerated and valued for the record,
+        but no action is chosen, executed or settled. This makes a pure shock
+        event expressible, so a registered horizon of H post-shock actor ticks
+        is exactly H and not H+1, and V immediately after the shock is the
+        declared disturbance D rather than a state an actor has already moved.
+        """
         if self.tick >= self.budget.limit:
             raise Refusal(
                 f"TICK_BUDGET_EXHAUSTED: {self.budget.authorization} admits "
@@ -284,7 +297,7 @@ class Run:
         # Phase 7: seeded random actor choice over opaque identities only.
         allowed_ids = tuple(valuation.group.group_id for valuation in allowed)
         actor_provenance = None
-        if allowed:
+        if allowed and actor_enabled:
             counter = self._counter(STREAM_ACTOR, 1, 0)
             actor_provenance = counter.provenance
             index, _ = uniform_index(counter, len(allowed_ids))
@@ -296,11 +309,16 @@ class Run:
         if chosen is None:
             chosen_group = EMPTY_GROUP
             receipts: tuple[tuple[str, Fraction], ...] = ()
-            status = (
-                STATUS_DEADLOCK
-                if potential.value_total(frozen) > 0
-                else STATUS_IDLE
-            )
+            if not actor_enabled:
+                # A forcing-only event. The actor was never invited to choose,
+                # so absence of execution here is not evidence of deadlock.
+                status = STATUS_FORCING_ONLY
+            else:
+                status = (
+                    STATUS_DEADLOCK
+                    if potential.value_total(frozen) > 0
+                    else STATUS_IDLE
+                )
         else:
             chosen_group = chosen.group
             receipts = tuple(

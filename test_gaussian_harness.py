@@ -37,6 +37,7 @@ from gaussian_harness.harness import (
     ARM_CONTROL,
     ARM_EBU,
     STATUS_DEADLOCK,
+    STATUS_FORCING_ONLY,
     Run,
     TickBudget,
     code_identity,
@@ -352,6 +353,33 @@ def test_chooser_receives_only_a_count() -> None:
     )
 
 
+def test_forcing_only_tick_is_not_deadlock() -> None:
+    """A pure shock event is distinguishable from an actor deadlock.
+
+    With `actor_enabled=False` the actor is never invited to choose, so the
+    absence of execution carries status FORCING_ONLY. Conflating it with
+    DEADLOCK would inflate the deadlock count of every registered replicate by
+    exactly one and would misreport V immediately after the shock.
+    """
+    from gaussian_harness.harness import Run, TickBudget
+
+    world = standard_world()
+    run = Run(world, 11, 29, TickBudget.conformance(3))
+    shock = draw_shock(world, STANDARD_SHOCKS, 11)
+    first = run.run_tick(forcing=shock, actor_enabled=False)
+    check("a forcing-only tick is labelled FORCING_ONLY", first.status == STATUS_FORCING_ONLY)
+    check("a forcing-only tick is not labelled DEADLOCK", first.status != STATUS_DEADLOCK)
+    check("V immediately after the shock equals the audit ledger", first.audit_potential == first.audit_ledger)
+    check("the shock issued no capacity", first.balance_total == 0)
+    check("no action was executed", first.chosen_id == "g:[]" and not first.receipts)
+    check("the actor stream was not consumed", first.actor_provenance is None)
+    check("the record is still complete", len(first.ebu_values) == len(first.feasible_ids))
+    second = run.run_tick()
+    check("the following tick invites the actor normally", second.actor_provenance is not None)
+    observe(run)
+    check("accounting still closes exactly", run.max_residuals()["accounting"] == 0)
+
+
 def test_deadlock_is_recorded_not_repaired() -> None:
     """A world with only oversized moves deadlocks and no fallback fires.
 
@@ -481,6 +509,7 @@ def main() -> int:
         ("control arm parity and pairing", test_control_arm_parity_and_pairing),
         ("EBU values do not influence choice", test_ebu_values_do_not_influence_choice),
         ("chooser receives only a count", test_chooser_receives_only_a_count),
+        ("forcing-only tick is not deadlock", test_forcing_only_tick_is_not_deadlock),
         ("deadlock is recorded not repaired", test_deadlock_is_recorded_not_repaired),
         ("cycling is logged not hidden", test_cycling_is_logged_not_hidden),
         ("tick budget fails closed", test_tick_budget_fails_closed),
