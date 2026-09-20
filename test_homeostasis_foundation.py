@@ -558,6 +558,80 @@ def test_jobs_cannot_reach_a_clock_or_a_host() -> None:
 
 
 # --------------------------------------------------------------------------
+# Section 25 -- the frozen analysis plan
+# --------------------------------------------------------------------------
+
+
+def test_analysis_reproduces_the_frozen_stage_b_definitions() -> None:
+    """The new module must not quietly redefine the registered statistics."""
+    import random
+    import homeostasis_analysis as new
+    import stage_b_analysis as frozen
+    check("alpha is unchanged from Stage B", new.ALPHA == frozen.ALPHA)
+    random.seed(20260920)
+    agree_p = agree_ci = True
+    for _ in range(300):
+        count = random.randint(1, 40)
+        sample = [
+            Fraction(random.randint(-5, 5), random.randint(1, 4)) for _ in range(count)
+        ]
+        if new.exact_sign_test(sample)["p_value"] != frozen.exact_sign_test(sample)["p_value"]:
+            agree_p = False
+        left = new.sign_confidence_interval(sample)
+        right = frozen.sign_confidence_interval(sample)
+        if (left["lower"], left["upper"]) != (right["lower"], right["upper"]):
+            agree_ci = False
+    check("the sign test agrees on 300 random samples", agree_p)
+    check("the median interval agrees on 300 random samples", agree_ci)
+
+
+def test_analysis_plan_is_compact_and_exact() -> None:
+    import homeostasis_analysis as analysis
+    check("exactly three contrasts are registered", len(analysis.CONTRASTS) == 3)
+    check("nine tests in total across three loads", 3 * len(analysis.CONTRASTS) == 9)
+    check("delta_meaningful is registered", analysis.DELTA_MEANINGFUL == Fraction(5, 100))
+    # An all-positive paired difference on 8 replicates is the exact extreme.
+    positive = [Fraction(1, 10)] * 8
+    result = analysis.exact_sign_test(positive)
+    check("the exact two-sided p-value for 8/8 is 2/256",
+          result["p_value"] == Fraction(2, 256), str(result["p_value"]))
+    check("ties are excluded from the trial count",
+          analysis.exact_sign_test([Fraction(0)] * 4 + positive)["trials"] == 8)
+    check("an all-tied sample returns p = 1",
+          analysis.exact_sign_test([Fraction(0)] * 6)["p_value"] == Fraction(1))
+    decisions = analysis.holm({
+        "a": Fraction(1, 1000), "b": Fraction(3, 100), "c": Fraction(4, 10)})
+    check("Holm rejects only below alpha/(m-i)", decisions == {"a": True, "b": False, "c": False},
+          str(decisions))
+    check("Holm is step-down: a later failure stops the chain",
+          analysis.holm({"a": Fraction(4, 10), "b": Fraction(1, 1000)})["b"] is True)
+    interval = analysis.sign_confidence_interval([Fraction(n) for n in range(1, 21)])
+    check("the median interval is a pair of order statistics",
+          interval["lower"] in [Fraction(n) for n in range(1, 21)]
+          and interval["upper"] in [Fraction(n) for n in range(1, 21)])
+    check("and it is ordered", interval["lower"] <= interval["upper"])
+
+
+def test_result_categories_are_registered_not_pass_fail() -> None:
+    import homeostasis_analysis as analysis
+    check("occupancy 0.6 is localized", analysis.band(Fraction(6, 10)) == "localized")
+    check("occupancy 0.3 is partially localized",
+          analysis.band(Fraction(3, 10)) == "partially_localized")
+    check("occupancy 0.03 is not localized", analysis.band(Fraction(3, 100)) == "not_localized")
+    check("occupancy 0.10 is neither extreme", analysis.band(Fraction(1, 10)) == "weakly_localized")
+    check("no pass threshold at 0.95 exists",
+          not hasattr(analysis, "PASS_THRESHOLD") and analysis.BAND_LOCALIZED != Fraction(95, 100))
+    falling = [Fraction(5, 10), Fraction(4, 10), Fraction(3, 10)]
+    rising = [Fraction(10), Fraction(20), Fraction(30)]
+    check("falling occupancy with rising radius is divergence",
+          analysis.divergence_flag(falling, rising))
+    check("falling occupancy alone is not divergence",
+          not analysis.divergence_flag(falling, [Fraction(30), Fraction(20), Fraction(10)]))
+    check("rising radius alone is not divergence",
+          not analysis.divergence_flag([Fraction(1, 10)] * 3, rising))
+
+
+# --------------------------------------------------------------------------
 # Structural guards
 # --------------------------------------------------------------------------
 
@@ -613,6 +687,11 @@ def main() -> int:
         ("manifest reports conflicts rather than merging",
          test_manifest_reports_conflicts_rather_than_merging),
         ("jobs cannot reach a clock or a host", test_jobs_cannot_reach_a_clock_or_a_host),
+        ("analysis reproduces the frozen Stage-B definitions",
+         test_analysis_reproduces_the_frozen_stage_b_definitions),
+        ("analysis plan is compact and exact", test_analysis_plan_is_compact_and_exact),
+        ("result categories are registered, not pass/fail",
+         test_result_categories_are_registered_not_pass_fail),
         ("registered package is untouched", test_registered_package_is_untouched),
         ("no transition is called", test_no_transition_is_called),
         ("no science adopted here", test_no_science_is_adopted_here),
