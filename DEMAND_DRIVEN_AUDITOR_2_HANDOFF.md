@@ -4,6 +4,14 @@
 and its proof, the plan-cap disposition, the decomposition oracle, and every
 test identity. Authorizes nothing. No registered experiment was run.
 
+> **Superseded in part.** A second pass by the same auditor found two further
+> defects at `cc66123`: search uncertainty was collapsed into impossibility by
+> coupling and admission, and the reach's blindness to unusable routes covered
+> capacity but not source funding, so routes out of empty stocks still
+> over-coupled. Both are corrected; see
+> `DEMAND_DRIVEN_AUDITOR_3_HANDOFF.md`. The readiness verdict in §10 below is
+> superseded by that document.
+
 | | |
 |---|---|
 | audited commit | `e37e8683d2d220a40bf6665c51cbc14be140d1f7` |
