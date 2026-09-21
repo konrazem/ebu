@@ -10,6 +10,8 @@ unchosen.
 | | |
 |---|---|
 | previous handoff commit | `66e8ea7704d0ff0cc51681185720170e494045f7` |
+| Study-1 freeze commit | `8b3657af8c90e0b9fe0642f6d454d732da697500` |
+| freeze tree | `24fc101843375745c5afbf9e9e7fa81e2a06ce25` |
 | branch | `gaussian/stage-a-environment` |
 | `demand_driven_ebu` code identity | `967a59f420aff524276a7c7f3dc5ea18aa07324ca512254b03341a52590fccff` |
 | `gaussian_harness` (pinned) | `a9158eef…fe55` — unchanged |
@@ -224,3 +226,5 @@ findings-forced reporting decisions. All listed in
 | `DEMAND_DRIVEN_MODEL_FINDINGS.md` | F-5 and F-6 |
 | `DEMAND_DRIVEN_EVIDENCE_STATUS.md` §4a | what is proved, and the scope of each result |
 | `DEMAND_DRIVEN_PLAN_CAP_DISPOSITION.md` §4b | why Study 1 takes the proved-cap branch |
+
+This coordinate block is completed by a later commit that changes no code.
