@@ -66,7 +66,7 @@ from .demand import (
 from .service import requirements, served_economic_ids
 from .disturbance import DisturbanceProcess, apply_disturbance
 from .physical import PlanGroup, can_happen_now
-from .plans import ServicePlan, enumerate_service_plans
+from .plans import ServicePlan, enumerate_service_plans, serviceability
 from .policies import POLICY_CONTROL, choose, specification
 from .rng import STREAM_ACTOR, Counter
 from .valuation import value_group
@@ -77,14 +77,28 @@ EVENT_ACTOR = 2
 
 STATUS_NO_ACTIVE_DEMAND = "NO_ACTIVE_DEMAND"
 STATUS_NO_COMPLETE_PLAN = "NO_COMPLETE_PHYSICAL_PLAN"
+STATUS_SEARCH_INCOMPLETE = "SEARCH_INCOMPLETE_AT_PLAN_CAP"
+STATUS_SEARCH_UNRESOLVED = "SEARCH_BUDGET_EXCEEDED"
 STATUS_ALL_UNAFFORDABLE = "ALL_PLANS_EBU_UNAFFORDABLE"
 STATUS_EXECUTED = "EXECUTED"
 DECLARED_STATUSES = (
     STATUS_NO_ACTIVE_DEMAND,
     STATUS_NO_COMPLETE_PLAN,
+    STATUS_SEARCH_INCOMPLETE,
+    STATUS_SEARCH_UNRESOLVED,
     STATUS_ALL_UNAFFORDABLE,
     STATUS_EXECUTED,
 )
+
+# An empty menu is reported as physical impossibility only when an uncapped
+# search establishes it. The plan-size cap is an enumeration limit and may not
+# decide physics on its own.
+_EMPTY_MENU_STATUS = {
+    "SERVICEABLE_WITHIN_CAP": STATUS_EXECUTED,
+    "SEARCH_INCOMPLETE_AT_PLAN_CAP": STATUS_SEARCH_INCOMPLETE,
+    "PHYSICALLY_IMPOSSIBLE": STATUS_NO_COMPLETE_PLAN,
+    "SEARCH_BUDGET_EXCEEDED": STATUS_SEARCH_UNRESOLVED,
+}
 
 GATE_CLOSED = "JOINT_CLOSURE_VERIFIED"
 GATE_DEFECT = "DEPENDENCY_GRAPH_INCOMPLETE"
@@ -277,7 +291,7 @@ class EconomyRun:
                 ComponentOutcome(
                     component.component_id,
                     component.demand_ids,
-                    STATUS_NO_COMPLETE_PLAN,
+                    _EMPTY_MENU_STATUS[serviceability(self.world, forced, component)],
                     0,
                     0,
                     None,
@@ -469,7 +483,11 @@ class EconomyRun:
         unresolved = tuple(
             demand_id
             for outcome in outcomes
-            if outcome.status == STATUS_NO_COMPLETE_PLAN
+            if outcome.status in (
+                STATUS_NO_COMPLETE_PLAN,
+                STATUS_SEARCH_INCOMPLETE,
+                STATUS_SEARCH_UNRESOLVED,
+            )
             for demand_id in outcome.demand_ids
             if demand_id.startswith("E:")
         )
@@ -512,6 +530,10 @@ class EconomyRun:
             epoch_status = STATUS_EXECUTED
         elif any(outcome.status == STATUS_ALL_UNAFFORDABLE for outcome in outcomes):
             epoch_status = STATUS_ALL_UNAFFORDABLE
+        elif any(outcome.status == STATUS_SEARCH_UNRESOLVED for outcome in outcomes):
+            epoch_status = STATUS_SEARCH_UNRESOLVED
+        elif any(outcome.status == STATUS_SEARCH_INCOMPLETE for outcome in outcomes):
+            epoch_status = STATUS_SEARCH_INCOMPLETE
         else:
             epoch_status = STATUS_NO_COMPLETE_PLAN
 

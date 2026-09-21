@@ -36,8 +36,12 @@ from gaussian_harness.numerics import Refusal, Vector
 
 from .coupling import DemandComponent
 from .enumeration import (
+    IMPOSSIBLE,
+    SERVICEABLE,
+    UNRESOLVED,
     has_serving_group,
     irredundant_serving_groups,
+    physically_serviceable,
     search_routes,
 )
 from .physical import PhysicalAction, PlanGroup, action_alphabet, can_happen_now
@@ -146,10 +150,38 @@ def enumerate_service_plans(
 def has_service_plan(
     world: DemandWorld, state: Vector, component: DemandComponent
 ) -> bool:
-    """Whether the component can be served completely at all, right now."""
+    """Whether a complete executable plan exists **within the menu cap**."""
     return has_serving_group(
         world, state, component.requirements, component_routes(world, component)
     )
+
+
+SERVICEABLE_WITHIN_CAP = "SERVICEABLE_WITHIN_CAP"
+BEYOND_CAP = "SEARCH_INCOMPLETE_AT_PLAN_CAP"
+PHYSICALLY_IMPOSSIBLE = "PHYSICALLY_IMPOSSIBLE"
+SEARCH_UNRESOLVED = "SEARCH_BUDGET_EXCEEDED"
+
+
+def serviceability(
+    world: DemandWorld, state: Vector, component: DemandComponent
+) -> str:
+    """Why a component has no menu, distinguishing search from physics.
+
+    The plan-size cap is a computational enumeration limit, not a physical
+    simultaneity constraint (`DEMAND_DRIVEN_PLAN_CAP_DISPOSITION.md`), so an
+    empty menu must never be reported as physical impossibility on its
+    authority. When the capped search finds nothing, an exact uncapped search
+    over the structural reach decides which of the three answers holds, and
+    refuses rather than guessing if its own budget is exceeded.
+    """
+    if has_service_plan(world, state, component):
+        return SERVICEABLE_WITHIN_CAP
+    verdict = physically_serviceable(world, state, component.requirements)
+    if verdict == SERVICEABLE:
+        return BEYOND_CAP
+    if verdict == IMPOSSIBLE:
+        return PHYSICALLY_IMPOSSIBLE
+    return SEARCH_UNRESOLVED
 
 
 def candidate_menu(

@@ -147,11 +147,20 @@ sizes first; do not create dozens of independent p-values; do not summarize
 everything as one "EBU score". The primary endpoint must be a physical-state
 quantity and must exclude every account quantity, as in the previous mission.
 
-The primary endpoint is **not yet chosen**. `O95` is unsuitable as-is: contract
-§3 permits overshoot and multi-action plans, so the endpoint-saturation
-theorem that made the aligned arm trivially perfect no longer applies, but
-whether `O95` retains useful resolution in this world is unknown and must be
-checked on rehearsal-scale runs before freezing — not after seeing outcomes.
+The primary endpoint is **not yet chosen**.
+
+One stale inference is corrected here. The endpoint-saturation theorem's
+hypothesis — forcing amplitude equal to the action quantum, so exact reversal
+is always uniquely maximal — does **not** hold in the corrected model, where
+plans are multi-action and overshoot is permitted. That means the theorem no
+longer applies, so the aligned arm is not trivially perfect by construction.
+It does **not** by itself make `O95` unsuitable: endpoint suitability depends
+on what the study intends to measure, not on whether some earlier theorem
+happens to apply.
+
+The endpoint must therefore be chosen from the scientific question before
+registered execution, and outcome-blind. It is deliberately not chosen in this
+packet.
 
 ## 6. Readiness
 

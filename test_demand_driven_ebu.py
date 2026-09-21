@@ -78,24 +78,41 @@ from demand_driven_ebu.fixtures import (
     quiet_disturbance,
     routeless_world,
     sandwater_world,
+    shared_source_world,
     scarcity_world,
     ScriptedArrivals,
     ScriptedDisturbance,
     seeded_ledger,
     surplus_world,
+    triple_delivery_state,
+    triple_delivery_world,
 )
 from demand_driven_ebu.harness import (
+    DECLARED_STATUSES,
     STATUS_ALL_UNAFFORDABLE,
     STATUS_EXECUTED,
     STATUS_NO_ACTIVE_DEMAND,
     STATUS_NO_COMPLETE_PLAN,
+    STATUS_SEARCH_INCOMPLETE,
+    STATUS_SEARCH_UNRESOLVED,
     EconomyRun,
     code_identity,
 )
-from demand_driven_ebu.physical import PhysicalAction, PlanGroup, can_happen_now
+from demand_driven_ebu.enumeration import usable_routes
+from demand_driven_ebu.oracle import agree, component_feasible, global_feasible
+from demand_driven_ebu.physical import (
+    PhysicalAction,
+    PlanGroup,
+    action_alphabet,
+    can_happen_now,
+)
 from demand_driven_ebu.plans import (
+    BEYOND_CAP,
+    PHYSICALLY_IMPOSSIBLE,
+    SERVICEABLE_WITHIN_CAP,
     enumerate_service_plans,
     has_service_plan,
+    serviceability,
     unrelated_transfers,
 )
 from demand_driven_ebu.policies import (
@@ -2016,6 +2033,38 @@ def main() -> int:
         ("hand-check D: economic and physical at one destination",
          test_admission_hand_check_d_economic_and_physical_at_one_destination),
         # --- isolation ---------------------------------------------------
+        # --- final demand-coupling correction (auditor 2) ----------------
+        ("auditor counterexample: three independent deliveries",
+         test_auditor_counterexample_three_independent_deliveries),
+        ("A: unusable routes cannot change serviceability",
+         test_unusable_routes_cannot_change_serviceability),
+        ("B: removing them is the exact inverse",
+         test_removing_unusable_routes_is_the_exact_inverse),
+        ("C: a binding shared route may couple, with its reason shown",
+         test_a_binding_shared_route_may_couple_and_the_reason_is_shown),
+        ("D: an irrelevant executable action creates no coupling",
+         test_an_irrelevant_executable_action_creates_no_coupling),
+        ("E: one action serving two demands stays coupled",
+         test_one_action_serving_two_demands_stays_coupled),
+        ("F: two demands sharing scarce stock stay coupled",
+         test_two_demands_sharing_scarce_stock_stay_coupled),
+        ("G: global and component feasible sets agree",
+         test_global_and_component_feasible_sets_agree),
+        ("H: an impossible component blocks nothing independent",
+         test_an_impossible_component_does_not_block_an_independent_one_triple),
+        ("coupling does not depend on the plan cap",
+         test_coupling_does_not_depend_on_the_plan_cap),
+        ("the cap never reports physical impossibility",
+         test_the_cap_never_reports_physical_impossibility),
+        ("genuine impossibility is still reported as impossibility",
+         test_genuine_impossibility_is_still_reported_as_impossibility),
+        ("admission uses uncapped physical serviceability",
+         test_admission_uses_uncapped_physical_serviceability),
+        ("the uncapped search fails closed",
+         test_the_uncapped_search_fails_closed_rather_than_guessing),
+        ("the structural reach ignores unusable routes",
+         test_structural_reach_ignores_unusable_routes_by_construction),
+        # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
          test_the_new_model_has_its_own_identity_and_no_forbidden_imports),
@@ -2328,7 +2377,6 @@ def _merged_component(world, state, demands):
         frozenset().union(*(r.routes for r in reaches)),
         frozenset().union(*(r.owners for r in reaches)),
         min(r.destination for r in reaches),
-        any(r.serviceable for r in reaches),
     )
     search = frozenset(
         route.route_id
@@ -2690,6 +2738,363 @@ def test_admission_hand_check_d_economic_and_physical_at_one_destination() -> No
         check("D: and the same two units resolve the physical shortfall",
               state[world.index_of("sand", "C")] + increment[world.index_of("sand", "C")]
               == F(10))
+
+
+# ==========================================================================
+# FINAL DEMAND-COUPLING CORRECTION -- auditor 2
+# ==========================================================================
+
+
+def _triple(**kwargs):
+    world = triple_delivery_world(**kwargs)
+    return world, triple_delivery_state(world)
+
+
+def _shape(world, state):
+    """(executable action ids, component demand ids, menu sizes)."""
+    physical = derive_physical_demands(world, state)
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
+    return (
+        tuple(sorted(a.action_id for a in action_alphabet(world))),
+        tuple(sorted(c.demand_ids for c in found)),
+        tuple(len(enumerate_service_plans(world, state, c)) for c in found),
+    )
+
+
+# --------------------------------------------------------------------------
+# The auditor's counterexample, kept permanently
+# --------------------------------------------------------------------------
+
+
+def test_auditor_counterexample_three_independent_deliveries() -> None:
+    """Three one-unit deliveries with distinct owners never interact."""
+    world, state = _triple()
+    actions, groups, menus = _shape(world, state)
+    check("the world offers exactly three executable actions", len(actions) == 3, str(actions))
+    check("the three deliveries are three independent components",
+          groups == (("P:r|B",), ("P:r|D",), ("P:r|F",)), str(groups))
+    check("each has exactly one complete plan", menus == (1, 1, 1), str(menus))
+    check("and their owners are distinct",
+          len({world.owner_of(a.route.source) for a in action_alphabet(world)}) == 3)
+
+
+def test_unusable_routes_cannot_change_serviceability() -> None:
+    """Metamorphic A: add routes that can carry no action; nothing may move.
+
+    The connecting routes have capacity 1/2 while the only permitted action
+    quantity is 1, so the executable action set is identical. Under the
+    superseded coupling rule these two routes merged all three demands and,
+    with three actions required against a cap of two, destroyed every plan.
+    """
+    plain, plain_state = _triple()
+    padded, padded_state = _triple(unusable=True)
+    check("the added routes exist", len(padded.routes) == len(plain.routes) + 2)
+    check("and none of them can carry any allowed quantum",
+          all(
+              not any(quantum <= route.capacity for quantum in padded.quanta)
+              for route in padded.routes
+              if route.route_id not in {r.route_id for r in plain.routes}
+          ))
+    before = _shape(plain, plain_state)
+    after = _shape(padded, padded_state)
+    check("A: the executable action set is unchanged", before[0] == after[0], str(after[0]))
+    check("A: coupling is unchanged", before[1] == after[1], str(after[1]))
+    check("A: serviceability is unchanged", before[2] == after[2], str(after[2]))
+    check("A: in particular no component was destroyed", after[2] == (1, 1, 1), str(after[2]))
+
+
+def test_removing_unusable_routes_is_the_exact_inverse() -> None:
+    """Metamorphic B."""
+    padded, padded_state = _triple(unusable=True)
+    plain, plain_state = _triple()
+    check("B: removing them returns exactly the same shape",
+          _shape(padded, padded_state) == _shape(plain, plain_state))
+
+
+def test_a_binding_shared_route_may_couple_and_the_reason_is_shown() -> None:
+    """Metamorphic C: a usable shared route creates genuine competition."""
+    world, state = _triple(binding_shared_route=True)
+    physical = derive_physical_demands(world, state)
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
+    groups = tuple(sorted(c.demand_ids for c in found))
+    check("C: adding a usable A -> D route couples B and D",
+          ("P:r|B", "P:r|D") in groups, str(groups))
+    check("C: F stays independent", ("P:r|F",) in groups, str(groups))
+
+    reach_b = service_reach(world, state, [d for d in physical if d.demand_id == "P:r|B"][0])
+    reach_d = service_reach(world, state, [d for d in physical if d.demand_id == "P:r|D"][0])
+    check("C: the reason is a shared supplier coordinate",
+          world.index_of("r", "A") in (reach_b.coordinates & reach_d.coordinates))
+    check("C: and the competition is real -- A holds one unit and both would draw on it",
+          state[world.index_of("r", "A")] == F(1)
+          and not can_happen_now(
+              world, state, _plan(world, (0, 1, 1), (0, 3, 1))
+          ).executable)
+
+
+def test_an_irrelevant_executable_action_creates_no_coupling() -> None:
+    """Metamorphic D: padding must not be coupling evidence."""
+    plain, plain_state = _triple()
+    padded, padded_state = _triple(irrelevant_route=True)
+    extra = set(a.action_id for a in action_alphabet(padded)) - set(
+        a.action_id for a in action_alphabet(plain)
+    )
+    check("D: the extra action is executable", len(extra) == 1 and all(
+        can_happen_now(padded, padded_state, PlanGroup.of(action)).executable
+        for action in action_alphabet(padded)
+        if action.action_id in extra
+    ), str(extra))
+    check("D: it serves no demand",
+          derive_physical_demands(padded, padded_state)
+          and all(d.demand_id in ("P:r|B", "P:r|D", "P:r|F")
+                  for d in derive_physical_demands(padded, padded_state)))
+    before = _shape(plain, plain_state)
+    after = _shape(padded, padded_state)
+    check("D: coupling is unchanged", before[1] == after[1], str(after[1]))
+    check("D: serviceability is unchanged", before[2] == after[2], str(after[2]))
+
+
+def test_one_action_serving_two_demands_stays_coupled() -> None:
+    """Metamorphic E."""
+    world = sandwater_world()
+    state = _state(14, 10, 8, 6, 6)
+    physical = derive_physical_demands(world, state)
+    order = _economic(world, "sand", 2, "C", 0, 0)
+    found = components(world, state, ActiveDemandSet.of(physical, (order,)))
+    check("E: an order and a shortfall at one coordinate are one component",
+          len(found) == 1 and set(found[0].demand_ids) == {"P:sand|C", order.demand_id},
+          str([c.demand_ids for c in found]))
+    plans = enumerate_service_plans(world, state, found[0])
+    single = [p for p in plans if p.group.size == 1]
+    check("E: a single action serves both", len(single) > 0)
+    if single:
+        check("E: and its provenance names both",
+              set(next(iter(single[0].provenance_map.values())))
+              == {"P:sand|C", order.demand_id})
+
+
+def test_two_demands_sharing_scarce_stock_stay_coupled() -> None:
+    """Metamorphic F."""
+    world = shared_source_world()
+    state = _state(1, 0, 0)
+    physical = derive_physical_demands(world, state)
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
+    check("F: two destinations fed only from one stock are one component",
+          len(found) == 1 and len(found[0].demands) == 2,
+          str([c.demand_ids for c in found]))
+    check("F: and they are jointly unserviceable, because the stock is one unit",
+          enumerate_service_plans(world, state, found[0]) == ())
+    check("F: which is physical, not a search limit",
+          serviceability(world, state, found[0]) == PHYSICALLY_IMPOSSIBLE,
+          serviceability(world, state, found[0]))
+
+
+def test_global_and_component_feasible_sets_agree() -> None:
+    """Metamorphic G: the decomposition-free oracle."""
+    cases = []
+    world = sandwater_world()
+    for values in ((8, 12, 10, 4, 8), (8, 8, 14, 6, 6), (9, 11, 10, 5, 7), (7, 12, 11, 4, 8)):
+        cases.append((world, _state(*values), derive_physical_demands(world, _state(*values))))
+    triple, triple_state = _triple()
+    cases.append((triple, triple_state, derive_physical_demands(triple, triple_state)))
+    padded, padded_state = _triple(unusable=True)
+    cases.append((padded, padded_state, derive_physical_demands(padded, padded_state)))
+
+    mismatches = []
+    checked = 0
+    for case_world, case_state, demands in cases:
+        for bound in (2, 3):
+            ok, detail = agree(case_world, case_state, demands, bound)
+            checked += 1
+            if not ok:
+                mismatches.append(f"{case_world.world_id}@{bound}: {detail}")
+    check("G: exhaustive cases were compared", checked >= 10, str(checked))
+    check("G: the global feasible set equals the decomposed one everywhere",
+          not mismatches, str(mismatches[:2]))
+
+    world = sandwater_world()
+    state = _state(14, 10, 8, 6, 6)
+    mixed = tuple(derive_physical_demands(world, state)) + (
+        _economic(world, "sand", 2, "C", 0, 0),
+    )
+    ok, detail = agree(world, state, mixed, 2)
+    check("G: and with a mixed economic/physical demand set", ok, str(detail))
+
+
+def test_an_impossible_component_does_not_block_an_independent_one_triple() -> None:
+    """Metamorphic H, in the counterexample world."""
+    world, state = _triple()
+    drained = list(state)
+    drained[world.index_of("r", "C")] = F(0)
+    drained = tuple(drained)
+    physical = derive_physical_demands(world, drained)
+    found = components(world, drained, ActiveDemandSet.of(physical, ()))
+    verdicts = {c.component_id: serviceability(world, drained, c) for c in found}
+    check("H: the starved delivery is physically impossible",
+          verdicts["c:[P:r|D]"] == PHYSICALLY_IMPOSSIBLE, str(verdicts))
+    check("H: the other two keep their plans",
+          all(len(enumerate_service_plans(world, drained, c)) == 1
+              for c in found if c.component_id != "c:[P:r|D]"))
+    check("H: and nothing merged", len(found) == 3, str(sorted(verdicts)))
+
+
+# --------------------------------------------------------------------------
+# Plan-cap disposition: a computational enumeration limit
+# --------------------------------------------------------------------------
+
+
+def test_coupling_does_not_depend_on_the_plan_cap() -> None:
+    shapes = {}
+    for cap in (1, 2, 3):
+        world = triple_delivery_world(max_plan_size=cap)
+        state = triple_delivery_state(world)
+        physical = derive_physical_demands(world, state)
+        found = components(world, state, ActiveDemandSet.of(physical, ()))
+        shapes[cap] = tuple(sorted(c.demand_ids for c in found))
+    check("coupling is identical at every plan cap",
+          len(set(shapes.values())) == 1, str(shapes))
+
+    import demand_driven_ebu.coupling as coupling_module
+
+    tree = ast.parse(inspect.getsource(coupling_module))
+    attributes = {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)}
+    check("and the coupling module never reads the cap",
+          "max_plan_size" not in attributes, str(sorted(attributes)))
+
+
+def test_the_cap_never_reports_physical_impossibility() -> None:
+    """A requirement needing three actions, with a cap of two."""
+    world = DemandWorld.declare(
+        "capfour-v1",
+        [
+            Coordinate.stock("r", "A", 0, 1),
+            Coordinate.stock("r", "B", 0, 1),
+            Coordinate.stock("r", "C", 0, 1),
+            Coordinate.stock("r", "T", 3, 1),
+        ],
+        [
+            Route.declare("r", 0, 3, 1),
+            Route.declare("r", 1, 3, 1),
+            Route.declare("r", 2, 3, 1),
+        ],
+        (1,),
+        2,
+    )
+    state = _state(1, 1, 1, 0)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    check("the shortfall needs three unit deliveries", physical[0].required == F(3))
+    check("no plan exists within the cap of two",
+          enumerate_service_plans(world, state, component) == ())
+    check("but the search, not physics, is what is short",
+          serviceability(world, state, component) == BEYOND_CAP,
+          serviceability(world, state, component))
+    check("raising the cap finds it",
+          len(enumerate_service_plans(
+              DemandWorld.declare(world.world_id, world.coordinates, world.routes,
+                                  world.quanta, 3),
+              state,
+              components(
+                  DemandWorld.declare(world.world_id, world.coordinates, world.routes,
+                                      world.quanta, 3),
+                  state,
+                  ActiveDemandSet.of(physical, ()),
+              )[0],
+          )) == 1)
+
+    run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
+                     1, 2, 3, 4, initial_state=state)
+    record = run.run_epoch()
+    check("and the harness reports it as a search limit, not impossibility",
+          record.epoch_status == STATUS_SEARCH_INCOMPLETE, record.epoch_status)
+    check("the two are distinct declared statuses",
+          STATUS_SEARCH_INCOMPLETE in DECLARED_STATUSES
+          and STATUS_NO_COMPLETE_PLAN in DECLARED_STATUSES
+          and STATUS_SEARCH_INCOMPLETE != STATUS_NO_COMPLETE_PLAN)
+
+
+def test_genuine_impossibility_is_still_reported_as_impossibility() -> None:
+    world = shared_source_world()
+    state = _state(1, 0, 0)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    check("one unit cannot serve two one-unit demands at any plan size",
+          serviceability(world, state, component) == PHYSICALLY_IMPOSSIBLE)
+    run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
+                     1, 2, 3, 4, initial_state=state)
+    check("and the harness says so",
+          run.run_epoch().epoch_status == STATUS_NO_COMPLETE_PLAN)
+
+
+def test_admission_uses_uncapped_physical_serviceability() -> None:
+    """Admission asks a physical question, so the enumeration limit is not its business."""
+    import demand_driven_ebu.admission as admission_module
+
+    tree = ast.parse(inspect.getsource(admission_module))
+    names = {getattr(n, "id", "") for n in ast.walk(tree) if isinstance(n, ast.Name)}
+    check("admission calls the uncapped serviceability test",
+          "physically_serviceable" in names and "has_service_plan" not in names,
+          str(sorted(names & {"physically_serviceable", "has_service_plan"})))
+
+    world = DemandWorld.declare(
+        "admitcap-v1",
+        [
+            Coordinate.stock("r", "A", 1, 1),
+            Coordinate.stock("r", "B", 1, 1),
+            Coordinate.stock("r", "C", 1, 1),
+            Coordinate.stock("r", "T", 0, 1),
+        ],
+        [
+            Route.declare("r", 0, 3, 1),
+            Route.declare("r", 1, 3, 1),
+            Route.declare("r", 2, 3, 1),
+        ],
+        (1,),
+        2,
+    )
+    state = _state(1, 1, 1, 0)
+    order = _economic(world, "r", 3, "T", 0, 0)
+    admitted, rejected, _ = admit(world, state, (), (), (order,), 3, 0)
+    check("an order serviceable only beyond the cap is still admitted",
+          len(admitted) == 1 and rejected == (), str(rejected))
+    component = components(world, state, ActiveDemandSet.of((), admitted))[0]
+    check("and is then reported as a search limit rather than scarcity",
+          serviceability(world, state, component) == BEYOND_CAP,
+          serviceability(world, state, component))
+
+
+def test_the_uncapped_search_fails_closed_rather_than_guessing() -> None:
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    source = inspect.getsource(enumeration_module.physically_serviceable)
+    check("the uncapped search has a declared budget",
+          "EXHAUSTIVE_BUDGET" in source)
+    check("and returns an explicit unresolved verdict rather than a negative",
+          "UNRESOLVED" in source and enumeration_module.UNRESOLVED
+          == "SEARCH_BUDGET_EXCEEDED")
+    check("which the harness carries as its own status",
+          STATUS_SEARCH_UNRESOLVED in DECLARED_STATUSES)
+
+
+def test_structural_reach_ignores_unusable_routes_by_construction() -> None:
+    plain, plain_state = _triple()
+    padded, padded_state = _triple(unusable=True)
+    physical = derive_physical_demands(padded, padded_state)
+    for demand in physical:
+        reach = service_reach(padded, padded_state, demand)
+        unusable_ids = {
+            route.route_id
+            for route in padded.routes
+            if not any(q <= route.capacity for q in padded.quanta)
+        }
+        if reach.routes & unusable_ids:
+            check("no unusable route enters a structural reach", False, str(reach.routes))
+            return
+    check("no unusable route enters a structural reach", True)
+    check("usable routes are exactly those that can carry a quantum",
+          {r.route_id for r in usable_routes(padded)}
+          == {r.route_id for r in plain.routes}, str(len(usable_routes(padded))))
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

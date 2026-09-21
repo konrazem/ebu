@@ -34,9 +34,17 @@ of which are semantics checks rather than observations:
 - the full arrival lifecycle over the common raw arrival set, so no comparison
   need ever be computed over admitted demands alone.
 
-The artifact from the superseded build at commit `22fd229` was **replaced**,
-not amended: that build mis-counted additive economic service, so none of its
-numbers is citable even as infrastructure observation.
+It also reports the two search statuses introduced with the plan-cap
+disposition, `SEARCH_INCOMPLETE_AT_PLAN_CAP` and `SEARCH_BUDGET_EXCEEDED`, and
+warns if the status counts fail to cover every epoch. The cap is a
+computational enumeration limit, so an empty menu attributable to it is
+reported as a search limitation and never as physical impossibility.
+
+Artifacts from the superseded builds at commits `22fd229` and `e37e868` were
+**replaced**, not amended. The first mis-counted additive economic service;
+the second derived coupling from padded plans, so physically unusable routes
+could destroy serviceability. No number from either is citable, even as an
+infrastructure observation.
 
 Registered artifacts live in `results/stage_a/`, `results/stage_b/` and
 `results/homeostasis/`. This directory is not one of them.

@@ -239,3 +239,68 @@ def routeless_world() -> DemandWorld:
         Coordinate.stock("sand", "B", 10, 1),
     ]
     return DemandWorld.declare("routeless-v1", coordinates, (), (1, 2), 1)
+
+
+def triple_delivery_world(
+    unusable: bool = False,
+    binding_shared_route: bool = False,
+    irrelevant_route: bool = False,
+    max_plan_size: int = 2,
+) -> DemandWorld:
+    """The independent auditor's counterexample world, and its variants.
+
+    Three independent one-unit deliveries `A -> B`, `C -> D`, `E -> F`. Each
+    source holds exactly one usable unit, each destination is one unit short,
+    and each delivery has a distinct owner, so nothing genuinely couples.
+
+    `unusable` adds two connecting routes of capacity `1/2` while the only
+    permitted action quantity is `1`. They can carry no action, so the
+    executable action set is unchanged and they must be behaviorally
+    invisible. Under the superseded coupling rule they merged all three
+    demands and, with a plan cap of two against three required actions,
+    destroyed every service plan.
+
+    `binding_shared_route` adds a usable `A -> D`, which makes `A` a possible
+    supplier for two demands that hold one unit between them: a genuine
+    competition for scarce stock, so coupling there is correct.
+
+    `irrelevant_route` adds a usable route between two coordinates carrying no
+    demand. It is executable and serves nothing, and must create no coupling.
+    """
+    names = (("A", 0), ("B", 1), ("C", 0), ("D", 1), ("E", 0), ("F", 1))
+    coordinates = [Coordinate.stock("r", node, reference, 1) for node, reference in names]
+    routes = [
+        Route.declare("r", 0, 1, 1),
+        Route.declare("r", 2, 3, 1),
+        Route.declare("r", 4, 5, 1),
+    ]
+    if unusable:
+        routes += [Route.declare("r", 1, 2, F(1, 2)), Route.declare("r", 3, 4, F(1, 2))]
+    if binding_shared_route:
+        routes += [Route.declare("r", 0, 3, 1)]
+    if irrelevant_route:
+        coordinates += [
+            Coordinate.stock("r", "G", 0, 1),
+            Coordinate.stock("r", "H", 0, 1),
+        ]
+        routes += [Route.declare("r", 6, 7, 1)]
+    return DemandWorld.declare("triple-delivery-v1", coordinates, routes, (1,), max_plan_size)
+
+
+def triple_delivery_state(world: DemandWorld):
+    """One unit at each odd-indexed source, nothing at the destinations."""
+    return tuple(
+        F(1) if coordinate.reference == 0 else F(0)
+        for coordinate in world.coordinates
+    )
+
+
+def shared_source_world() -> DemandWorld:
+    """Two destinations supplied only from one coordinate holding one unit."""
+    coordinates = [
+        Coordinate.stock("r", "A", 0, 1),
+        Coordinate.stock("r", "B", 1, 1),
+        Coordinate.stock("r", "D", 1, 1),
+    ]
+    routes = [Route.declare("r", 0, 1, 1), Route.declare("r", 0, 2, 1)]
+    return DemandWorld.declare("shared-source-v1", coordinates, routes, (1,), 2)

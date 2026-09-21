@@ -1,40 +1,61 @@
 """The demand-dependency graph, and the invariant it must respect.
 
-**Invariant.** Demand decomposition is an implementation factorization, not a
-restriction on the global feasible service set. Splitting demands into
-components, or evaluating them jointly, must produce the same set of globally
-executable outcomes. Over-coupling is therefore not a harmless conservatism:
-merging two demands that never interact makes an unserviceable one freeze a
-serviceable one, and that freeze is an artifact of the partition rather than a
-physical fact.
+**Invariant (unusable-infrastructure invariance).** If a world modification
+does not change the set of physically executable actions, nor any genuine
+binding physical or account constraint, it must not change demand coupling,
+complete-service possibilities, or admission. In particular, adding or
+removing a route that cannot carry any allowed action quantity must be
+behaviorally invisible.
 
-Coupling is consequently decided from **actual binding constraints**, not from
-membership of a shared transport component. Two demands are coupled when their
-service possibilities genuinely interact through one of:
+**Invariant (decomposition).** Demand decomposition is an implementation
+factorization, not a restriction on the global feasible service set. Splitting
+demands into components, or evaluating them jointly, must produce the same
+executable outcomes.
 
-* a shared service-delivery pool — the same destination coordinate, where
+Incorrect coupling is scientifically material, not merely a cost in
+parallelism. Wherever complete-service, search-size, simultaneity or other
+joint constraints exist, merging demands that do not interact can destroy
+serviceability outright: a component must be served in full or not at all, so
+one unserviceable member takes the rest down with it.
+
+## What coupling is derived from
+
+Not transport connectivity, and not enumerated plans. Two earlier bases both
+failed:
+
+* Membership of a shared transport component merged demands that never
+  compete.
+* Enumerated *serving* plans include padded ones -- plans carrying actions
+  unnecessary to the demand -- and those actions dragged unrelated coordinates
+  and owners into the reach. Combined with a generous search set, two
+  physically unusable routes were enough to merge three independent deliveries
+  and destroy all service, while leaving the executable action set identical.
+
+Coupling is therefore derived from the **structural reach**: the exact set of
+tokens any *minimal* plan serving a demand could bind, computed from the world
+in `enumeration.structural_reach`, which is proved there to be a sound
+superset of every minimal plan's support. It is free of the plan-size cap,
+free of padding, and blind to routes that can carry no action.
+
+Two demands are coupled when their service possibilities genuinely interact
+through:
+
+* a shared **service-delivery pool** -- the same destination coordinate, where
   economic quantities are additive;
-* competing stock — a source coordinate that plans for both could draw on;
-* a shared route, and therefore its hard capacity;
-* a shared potential-bearing coordinate, where valuation would not be additive;
-* a shared owner account, where joint affordability genuinely binds.
+* **competing stock** -- a coordinate that plans for both could draw on;
+* a **shared executable route**, and therefore its hard capacity;
+* a **shared hard physical constraint** or shared potential-bearing
+  coordinate, where valuation is not additive;
+* **one executable action serving several demands**, which shows up as a
+  shared route and destination;
+* a **shared owner account**, where joint settlement genuinely binds -- joint
+  affordability is checked jointly at execution, so decoupling such demands
+  would let the joint gate discover a conflict it should have prevented.
 
-The first four are all visible as an overlap of the **touched coordinates** of
-the two demands' individually-serving plans, since a plan touches its sources,
-its destination and its sinks. The fifth is separate, because accounts are held
-by nodes and a node may host several resources.
-
-A demand with no individually-serving plan has an empty reach and couples with
-nothing. That is correct rather than convenient: a demand that cannot be served
-alone cannot be served inside a larger plan either, because a joint plan has
-*fewer* actions available for it under the same plan-size cap, so it competes
-for nothing. It becomes a singleton component and is reported unserviceable
-without freezing anything.
-
-The one exception is a shared destination: economic orders at the same
-coordinate draw on the same pool and are coupled even when neither is
-individually serviceable, because their requirement is additive and only
-meaningful jointly.
+A demand whose structural reach contains no usable delivering route couples
+with nothing but demands at its own coordinate. That is sound: it has no
+minimal plan, and a joint plan cannot rescue it, since a joint plan has no
+more actions available to it under the same limit.
 """
 
 from __future__ import annotations
@@ -44,20 +65,24 @@ from dataclasses import dataclass
 from gaussian_harness.numerics import Refusal, Vector
 
 from .demand import ActiveDemandSet, Demand
-from .enumeration import search_routes, serving_groups
+from .enumeration import (
+    SERVICEABLE,
+    physically_serviceable,
+    search_routes,
+    structural_reach,
+)
 from .service import CoordinateRequirement, requirements
 from .world import DemandWorld
 
 
 @dataclass(frozen=True)
 class Reach:
-    """Tokens any plan serving one demand alone could actually bind."""
+    """Tokens any minimal plan serving one demand could bind."""
 
     coordinates: frozenset[int]
     routes: frozenset[str]
     owners: frozenset[str]
     destination: int
-    serviceable: bool
 
     def interacts_with(self, other: "Reach") -> bool:
         if self.destination == other.destination:
@@ -70,20 +95,39 @@ class Reach:
 
 
 def service_reach(world: DemandWorld, state: Vector, demand: Demand) -> Reach:
-    """What a plan serving this demand *on its own* could touch, exactly."""
-    reqs = requirements((demand,))
-    routes = search_routes(world, frozenset({demand.coordinate}))
-    groups = serving_groups(world, state, reqs, routes)
-    coordinates: set[int] = set()
-    used: set[str] = set()
-    owners: set[str] = set()
-    for group in groups:
-        coordinates |= group.support
-        used |= group.route_support
-        owners |= group.owner_support(world)
-    return Reach(
-        frozenset(coordinates), frozenset(used), frozenset(owners), demand.coordinate, bool(groups)
-    )
+    """The structural reach of one demand, gated on it being serviceable at all.
+
+    A demand with **no** physically realizable service possibility binds
+    nothing. There are no service possibilities for anything to interact with,
+    so it competes for no stock, no route and no account, and it is reduced to
+    its own destination coordinate.
+
+    That is sound rather than merely convenient. If no plan serves `d` alone,
+    no joint plan serves it either: the actions of a joint plan that raise the
+    increment at `d`'s coordinate would themselves serve `d`, and they are
+    drawn from the same structural reach, which already includes any
+    capacity-relief route. So an unserviceable demand cannot be rescued by
+    company, and coupling it to a serviceable neighbour would destroy that
+    neighbour's service for nothing -- the very artifact this module exists to
+    prevent.
+
+    Its destination is still recorded, so two economic orders at one
+    coordinate stay coupled by their additive requirement even when neither is
+    serviceable alone; but its *coordinate set* is empty, so a serviceable
+    neighbour that merely draws supply from the unserviceable demand's
+    destination is not dragged in. That asymmetry costs nothing: the
+    neighbour's plan can only make an already-impossible demand no more
+    impossible, and there is no state in which coupling them would have
+    rescued it.
+
+    The serviceability test is uncapped and reads only usable routes, so the
+    gate inherits both invariants: it cannot move with the plan-size cap, and
+    it cannot move when a route that carries no action is added or removed.
+    """
+    if physically_serviceable(world, state, requirements((demand,))) != SERVICEABLE:
+        return Reach(frozenset(), frozenset(), frozenset(), demand.coordinate)
+    reach = structural_reach(world, frozenset({demand.coordinate}))
+    return Reach(reach.coordinates, reach.routes, reach.owners, demand.coordinate)
 
 
 @dataclass(frozen=True)
@@ -158,7 +202,6 @@ def components(
             frozenset().union(*(reaches[i].routes for i in members)),
             frozenset().union(*(reaches[i].owners for i in members)),
             min(reaches[i].destination for i in members),
-            any(reaches[i].serviceable for i in members),
         )
         member_demands = tuple(
             sorted((demands[i] for i in members), key=lambda d: d.demand_id)

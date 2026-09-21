@@ -29,10 +29,13 @@ from demand_driven_ebu.arrivals import ArrivalProcess
 from demand_driven_ebu.disturbance import DisturbanceProcess
 from demand_driven_ebu.fixtures import sandwater_world
 from demand_driven_ebu.harness import (
+    DECLARED_STATUSES,
     STATUS_ALL_UNAFFORDABLE,
     STATUS_EXECUTED,
     STATUS_NO_ACTIVE_DEMAND,
     STATUS_NO_COMPLETE_PLAN,
+    STATUS_SEARCH_INCOMPLETE,
+    STATUS_SEARCH_UNRESOLVED,
     EconomyRun,
     code_identity,
     read_code_identity,
@@ -76,12 +79,7 @@ def exact_median(values: list[Fraction]) -> Fraction:
 def summarize(records) -> dict:
     statuses = {
         key: sum(1 for r in records if r.epoch_status == key)
-        for key in (
-            STATUS_EXECUTED,
-            STATUS_NO_ACTIVE_DEMAND,
-            STATUS_NO_COMPLETE_PLAN,
-            STATUS_ALL_UNAFFORDABLE,
-        )
+        for key in DECLARED_STATUSES
     }
     rejected: dict[str, int] = {}
     for record in records:
@@ -265,9 +263,9 @@ def main() -> int:
         print(f"    {name:16s} {value}")
 
     header = (
-        f"{'policy':24s}{'exec':>6s}{'idle':>6s}{'noplan':>8s}{'unaff':>7s}"
-        f"{'arriv':>7s}{'admit':>7s}{'serve':>7s}{'rejS':>6s}{'rejI':>6s}"
-        f"{'medMenu':>9s}{'medV':>8s}{'endB':>10s}"
+        f"{'policy':24s}{'exec':>6s}{'idle':>6s}{'noplan':>8s}{'srchInc':>9s}"
+        f"{'srchUnr':>9s}{'unaff':>7s}{'arriv':>7s}{'admit':>7s}{'serve':>7s}"
+        f"{'rejS':>6s}{'rejI':>6s}{'medMenu':>9s}{'medV':>8s}{'endB':>10s}"
     )
     print("\n" + header)
     for policy in POLICIES:
@@ -276,6 +274,8 @@ def main() -> int:
             "exec": sum(r["statuses"][STATUS_EXECUTED] for r in rows),
             "idle": sum(r["statuses"][STATUS_NO_ACTIVE_DEMAND] for r in rows),
             "noplan": sum(r["statuses"][STATUS_NO_COMPLETE_PLAN] for r in rows),
+            "srchInc": sum(r["statuses"][STATUS_SEARCH_INCOMPLETE] for r in rows),
+            "srchUnr": sum(r["statuses"][STATUS_SEARCH_UNRESOLVED] for r in rows),
             "unaff": sum(r["statuses"][STATUS_ALL_UNAFFORDABLE] for r in rows),
             "arriv": sum(r["arrivals"] for r in rows),
             "admit": sum(r["admitted"] for r in rows),
@@ -288,10 +288,17 @@ def main() -> int:
         end_b = sum((r["final_B_total"] for r in rows), Fraction(0)) / len(rows)
         print(
             f"{policy:24s}{totals['exec']:>6d}{totals['idle']:>6d}{totals['noplan']:>8d}"
-            f"{totals['unaff']:>7d}{totals['arriv']:>7d}{totals['admit']:>7d}"
+            f"{totals['srchInc']:>9d}{totals['srchUnr']:>9d}{totals['unaff']:>7d}"
+            f"{totals['arriv']:>7d}{totals['admit']:>7d}"
             f"{totals['serve']:>7d}{totals['rejS']:>6d}{totals['rejI']:>6d}"
             f"{str(med_menu):>9s}{str(med_v):>8s}{str(end_b):>10s}"
         )
+        covered = sum(
+            totals[k] for k in ("exec", "idle", "noplan", "srchInc", "srchUnr", "unaff")
+        )
+        if covered != EPOCHS * REPLICATES:
+            print(f"    WARNING: {policy} statuses cover {covered} of "
+                  f"{EPOCHS * REPLICATES} epochs")
 
     # ---- audit correction pass checks (infrastructure, not behaviour) ----
     raw_by_policy = {}

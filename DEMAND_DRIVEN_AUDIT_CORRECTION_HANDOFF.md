@@ -308,10 +308,16 @@ against.
 
 What it does **not** mean, and must not be read as: it is not permission to
 run one. The long-run arrival law and the restoring-tendency endpoint remain
-**unfrozen** by explicit instruction, and `O95` is still unsuitable as-is
-because the endpoint-saturation theorem's hypothesis fails in this
-environment. The gates in `DEMAND_DRIVEN_FIRST_STUDY_DECISION_PACKET.md` §3
-and §5 are still open, and no registered behavioural experiment was run.
+**unfrozen** by explicit instruction. The endpoint-saturation hypothesis does
+not apply to the corrected model, so the aligned arm is not trivially perfect;
+that fact does not by itself rule `O95` in or out, and endpoint suitability
+must be chosen from the scientific question before registered execution. The
+gates in `DEMAND_DRIVEN_FIRST_STUDY_DECISION_PACKET.md` §3 and §5 are still
+open, and no registered behavioural experiment was run.
+
+**Superseded in part.** A second independent audit found that coupling was
+still derived from padded serving plans, so physically unusable routes could
+change serviceability. See `DEMAND_DRIVEN_AUDITOR_2_HANDOFF.md`.
 
 ## 12. Files an auditor should read
 

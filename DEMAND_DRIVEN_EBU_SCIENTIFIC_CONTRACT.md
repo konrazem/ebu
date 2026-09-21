@@ -266,20 +266,73 @@ once. Neither class is processed before the other.
 
 ## 6. Coupling and components
 
-Two demands are connected when serving them could share or compete for the same
-physical stock, the same source, the same route, the same hard capacity, the
-same physical constraint, or **the same actor account**. Connected components
-are the units resolved jointly.
+Two invariants govern this section, and both are frozen.
 
-Accounts are held by **nodes**, not coordinates, so account sharing is a real
-coupling channel: a sand demand and a water demand both payable by node `A` are
-coupled through joint affordability even though no stock and no route is
-shared. Per-coordinate wallets would have removed that channel silently.
+**Unusable-infrastructure invariance.** If a world modification changes neither
+the set of physically executable actions nor any genuine binding physical or
+account constraint, it must not change demand coupling, complete-service
+possibilities, or admission. Adding or removing a route that can carry no
+allowed action quantity must be behaviorally invisible.
 
-Footprints are computed conservatively, as everything any plan serving the
-demand could possibly touch. Over-coupling costs parallelism; under-coupling
-costs correctness. One impossible sand demand must not block an unrelated
-water restoration, and it does not.
+**Decomposition invariance.** Demand decomposition is an implementation
+factorization, not a restriction on the global feasible service set.
+
+**Incorrect coupling is scientifically material.** It does not merely cost
+parallelism. Wherever complete-service, search-size, simultaneity or other
+joint constraints exist, merging demands that do not interact can destroy
+serviceability outright, because a component is served in full or not at all
+and one unserviceable member takes the rest down with it. Coupling must
+therefore preserve the global feasible-service set, and that is tested against
+a decomposition-free oracle rather than argued.
+
+An independent audit demonstrated the cost concretely. Three independent
+one-unit deliveries with distinct owners, plus two connecting routes of
+capacity `1/2` against a minimum action quantity of `1`: the executable action
+set was unchanged, yet the three demands merged into one component needing
+three actions where two were permitted, and **all service vanished**. Two
+routes that can carry nothing had changed serviceability.
+
+Coupling is consequently derived from the **structural reach** — the exact set
+of tokens any *minimal* plan serving a demand could bind, computed from the
+world in `enumeration.structural_reach` and proved there to be a sound
+superset of every minimal plan's support. It is free of the plan-size cap,
+free of padding, and blind to routes that carry no action. Neither raw
+transport connectivity nor enumerated serving plans are used: the first merges
+demands that never compete, and the second admits padded plans whose
+unnecessary actions drag unrelated coordinates and owners into the reach.
+
+Two demands are coupled when their service possibilities genuinely interact
+through a shared service-delivery pool (the same destination, where economic
+quantities are additive), competing stock, a shared executable route and its
+hard capacity, a shared hard physical constraint or potential-bearing
+coordinate, one executable action serving several demands, or a shared owner
+account where joint settlement genuinely binds.
+
+Accounts are held by **nodes**, not coordinates, and the owner of an action is
+its **source** node. So a sand demand and a water demand supplied from the same
+node are coupled through joint affordability even with no stock and no route in
+common. That coupling is required rather than conservative: joint affordability
+is checked jointly at execution, and decoupling such demands would let the
+joint gate discover a conflict it should have prevented.
+
+A demand with **no** physically realizable service possibility binds nothing
+and is coupled only to demands at its own destination. This is sound, not
+lenient: if no plan serves it alone, no joint plan serves it either, since the
+actions that would raise its increment come from the same structural reach and
+a joint plan has no more of them available. Coupling it to a serviceable
+neighbour would destroy that neighbour's service for nothing.
+
+**Where a component still freezes**, it is a declared restriction, not
+unavoidable scarcity. An order of 25 units at a coordinate that also carries a
+two-unit shortfall freezes both, because they share a pool and the combined
+requirement is `max(25, 2)`. The same order at a *different* coordinate freezes
+nothing. And where genuine competition makes a component jointly unserviceable
+while a sub-collection would be serviceable, it is the complete-service
+contract — not physics — that forbids serving the subset.
+
+**Enumeration stays generous.** The narrow reach decides coupling only; menus
+are built over every route touching the component's transport closure. Breadth
+in enumeration can only offer more valid plans, never delete one.
 
 ## 7. Service plans, and demand provenance
 

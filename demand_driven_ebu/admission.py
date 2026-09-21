@@ -46,7 +46,7 @@ from .demand import (
     EconomicDemand,
     PhysicalDemand,
 )
-from .plans import has_service_plan
+from .enumeration import SERVICEABLE, physically_serviceable
 from .rng import STREAM_ADMISSION, Counter, uniform_index
 from .world import DemandWorld
 
@@ -82,7 +82,12 @@ def unserviceable_ids(
         return frozenset()
     blocked: set[str] = set()
     for component in components(world, state, active):
-        if not has_service_plan(world, state, component):
+        # Physical serviceability, decided without the plan-size cap. The cap
+        # is an enumeration limit, so admission -- which asks a question about
+        # physics -- must not consult it. A component serviceable only beyond
+        # the cap is admitted and then reported SEARCH_INCOMPLETE, which makes
+        # the limitation visible instead of encoding it as impossibility.
+        if physically_serviceable(world, state, component.requirements) != SERVICEABLE:
             blocked.update(component.demand_ids)
     return frozenset(blocked)
 
