@@ -1,6 +1,6 @@
 # EBU restoring-tendency case library
 
-**Version 1.0. A versioned permanent benchmark suite, not a planning note.**
+**Version 1.1. A versioned permanent benchmark suite, not a planning note.**
 
 This library defines **questions and environments**. It never defines expected
 or favourable answers. A case is a disturbance and a measurement protocol; what
@@ -47,6 +47,16 @@ registered run. The existing registered homeostasis study partially covers
 `RT-C03`, `RT-C04`, `RT-C08`, `RT-C09` and `RT-C10`; those overlaps are noted
 per case and are **not** recorded as case-library runs, because the case
 protocols did not exist when that study was frozen.
+
+**Version 1.1 amendment.** Section 3A adds fourteen demand-driven cases,
+`RT-C13`–`RT-C26`, for the corrected economy in
+`DEMAND_DRIVEN_EBU_SCIENTIFIC_CONTRACT.md`. No existing case is altered,
+renumbered or retired: `RT-C01`–`RT-C12` keep their physical questions exactly,
+and any mechanism claiming homeostatic properties in the arbitrary-action
+environment is still measured against them. The demand-driven cases are
+*additional* questions about an environment the earlier cases do not describe,
+not replacements for them. As everywhere in this library, they define
+disturbances and measurements and never expected answers.
 
 ## 1. Shared synthetic world
 
@@ -256,6 +266,242 @@ exist so that policy results are recorded under stable identifiers.
 - **Must not be assumed.** That a hostile actor will restore, ever, or that
   constraining its menu constrains its damage.
 
+## 3A. Demand-driven cases (version 1.1)
+
+These cases apply to any mechanism running the corrected demand-driven economy,
+in which an actor chooses only among complete, executable, irredundant plans
+that serve a currently existing demand. They do **not** apply to the
+arbitrary-action environment of sections 2 and 3, and results from the two
+environments are never pooled.
+
+### Shared demand-driven world
+
+Unless a case says otherwise. **All dimensions are synthetic and carry no
+real-world calibration.**
+
+| item | value |
+|---|---|
+| resources | 2, on disjoint node sets, so independent components exist |
+| coordinates | one stock per (resource, node); references and scales declared per run |
+| accounts | held by **nodes**, so account sharing is a live coupling channel |
+| routes | declared per resource, with hard capacity and efficiency `eta` |
+| loss | `eta = 1` unless the case says otherwise; a lossy route must name its sink |
+| service contract | complete service only; overshoot permitted; no partial service |
+| admission | random compatible-subset, EBU-blind |
+| mandatory action | frozen; no voluntary no-op in any case |
+| capacity | V1 unless the case declares a variant; `B_i(0) = 0` |
+| demand set | unordered; no FIFO, deadline, priority or service order |
+
+Reported quantities are those of `EBU_RESTORING_TENDENCY_FOUNDATION.md`, plus
+four demand-driven ones that every case must report:
+
+- the epoch-status distribution over `NO_ACTIVE_DEMAND`,
+  `NO_COMPLETE_PHYSICAL_PLAN`, `ALL_PLANS_EBU_UNAFFORDABLE`, `EXECUTED`;
+- the economic-outcome distribution over `E_SERVED`,
+  `E_REJECTED_PHYSICAL_SCARCITY`, `E_REJECTED_INCOMPATIBLE`,
+  `E_ADMITTED_BUT_EBU_UNAFFORDABLE`;
+- the **stuck-component fraction**: epochs in which some component holds an
+  unserviceable member (finding F-1);
+- the per-owner capacity distribution, not only `B_total` (finding F-3).
+
+### RT-C13 — economic demand only
+
+- **Physical story.** The physical system starts at its reference and is never
+  disturbed. All obligations are external economic requests.
+- **Demand.** `E` arrivals under a declared law; no natural disturbance.
+- **Measured.** `D_A`, `D_T`; whether `V` departs from zero and whether it
+  returns; the economic-outcome distribution; per-owner capacity.
+- **Falsification question.** When the only reason to act is economic, does the
+  physical state stay near its reference, drift, or settle somewhere else?
+- **Regulatory failure.** OUTWARD DRIFT across late windows, or EXCURSION
+  NON-RETURN within the frozen horizon.
+- **Must not be assumed.** That economic service is physically neutral. Serving
+  a delivery moves stock, and at the reference every such move raises `V`.
+
+### RT-C14 — physical demand only, under a demand-conditioned menu
+
+- **Physical story.** Natural disturbance only; no economic demand ever
+  arrives.
+- **Demand.** `P` derived from the state each epoch.
+- **Measured.** `D_A`, `D_T`, the operating region, return times, occupancy
+  diagnostics; menu sizes.
+- **Falsification question.** Restricting the menu to demand-serving plans is a
+  restriction. Does a restoring tendency survive it?
+- **Regulatory failure.** LOSS OF RESTORING TENDENCY at large deviation, or
+  OUTWARD DRIFT.
+- **Must not be assumed.** That this reproduces `RT-C03`/`RT-C04`. The menus
+  differ; the environments are not comparable and results are not pooled.
+
+### RT-C15 — simultaneous economic and physical demand
+
+- **Physical story.** Both demand classes are continuously active.
+- **Demand.** Declared arrival law and declared disturbance law, independent.
+- **Measured.** All four required distributions; whether either class is
+  systematically served later than the other; component sizes.
+- **Falsification question.** With both classes live in one unordered
+  obligation set, does the system regulate, and is either class starved?
+- **Regulatory failure.** Any registered failure term; plus a declared
+  starvation flag if one class's completion rate is systematically lower.
+- **Must not be assumed.** That the two classes are independent in effect. They
+  compete through stocks, routes and accounts.
+
+### RT-C16 — economic scarcity
+
+- **Physical story.** Requests routinely exceed what physically exists.
+- **Demand.** An arrival law whose quantity alphabet includes values beyond
+  what the quanta and plan-size cap can deliver.
+- **Measured.** Scarcity-rejection rate; whether rejection is decided before
+  any EBU value exists; the physical trajectory alongside it.
+- **Falsification question.** Does the system distinguish physical
+  impossibility from economic unaffordability, and does scarcity perturb the
+  physical state at all?
+- **Regulatory failure.** Any scarcity outcome recorded as an EBU rejection, or
+  any truncation, regeneration or top-up of an oversized request.
+- **Must not be assumed.** That scarcity is rare, or that it is harmless.
+
+### RT-C17 — EBU unaffordability
+
+- **Physical story.** Physical plans exist and none is affordable.
+- **Demand.** Declared so that negative-EBU service is the only option for some
+  component, at low capacity.
+- **Measured.** `ALL_PLANS_EBU_UNAFFORDABLE` epoch fraction; how long a demand
+  stays admitted-unaffordable; per-owner capacity; whether it is ever served.
+- **Falsification question.** Does unaffordability act as a brake that protects
+  the physical state, a stall that freezes the economy, or neither?
+- **Regulatory failure.** The registered failure terms; plus a declared
+  permanent-stall flag.
+- **Must not be assumed.** That unaffordability is protective. It is a
+  constraint on actors, not a goal of the mechanism.
+
+### RT-C18 — economic action creating physical demand
+
+- **Physical story.** Serving an economic request depletes a source below its
+  reference, creating new physical demand — the wave.
+- **Demand.** An arrival law whose service necessarily draws a source below
+  reference.
+- **Measured.** Wave incidence per served economic demand; the induced `P`
+  series; whether induced demand is itself served; `D_T` along the induced path.
+- **Falsification question.** Does economic activity generate physical demand
+  that the same mechanism then resolves, or does it accumulate?
+- **Regulatory failure.** OUTWARD DRIFT driven by induced demand, or
+  EXCURSION NON-RETURN.
+- **Must not be assumed.** That every economic action creates a wave. Whether
+  it does depends on the plan chosen, and therefore on the policy.
+
+### RT-C19 — loss-generated physical demand
+
+- **Physical story.** A lossy route wastes part of what it carries; the waste
+  is represented explicitly.
+- **Demand.** As declared; at least one route with `eta < 1` and a named sink.
+- **Measured.** Cumulative loss; the reachable potential floor; the recurrent
+  level actually occupied; the gap between them.
+- **Falsification question.** With the reference unreachable by construction,
+  is there still a restoring tendency **toward the reachable floor**?
+- **Regulatory failure.** Movement away from the reachable floor across late
+  windows.
+- **Must not be assumed.** That restoring tendency can be measured against
+  `x*` here. It cannot. Finding F-2 shows mandatory complete service can hold
+  the system strictly above the floor, and a floor-relative definition must be
+  declared before this case is run.
+
+### RT-C20 — external natural shock plus economic demand
+
+- **Physical story.** A catastrophic natural impulse lands while economic
+  obligations are outstanding.
+- **Demand.** Declared disturbance impulse at a declared epoch, with an active
+  arrival law.
+- **Measured.** Peak `R^2`; return time; admission behaviour during the
+  excursion; whether outstanding economic demands become unserviceable.
+- **Falsification question.** Does an economic load change the system's
+  response to a shock?
+- **Regulatory failure.** EXCURSION NON-RETURN, or a stuck-component fraction
+  that does not recover after the impulse ends.
+- **Must not be assumed.** That the shock response is separable from the
+  economic load.
+
+### RT-C21 — hostile plan selection
+
+- **Physical story.** Actors answer every obligation by the most physically
+  damaging complete plan available.
+- **Policy.** `argmin E_G` over affordable complete plans.
+- **Measured.** All required distributions; reachable damage; comparison against
+  the no-EBU comparator on the **same** admitted components.
+- **Falsification question.** How far can an adversary push the system when it
+  must still serve every obligation completely?
+- **Regulatory failure.** Registered failure terms.
+- **Must not be assumed.** That the corrected hostile actor is safer than the
+  arbitrary-action one. Its menu is narrower and its every action is
+  demand-justified, but no direction may be presumed, and the earlier adverse
+  finding is not evidence here.
+
+### RT-C22 — aligned plan selection
+
+- **Policy.** `argmax E_G` over affordable complete plans.
+- **Measured.** As `RT-C21`.
+- **Falsification question.** Does maximizing EBU within a demand-serving menu
+  point toward the reference?
+- **Regulatory failure.** Registered failure terms.
+- **Must not be assumed.** That the aligned arm is trivially perfect. The
+  endpoint-saturation theorem's hypothesis is **not** satisfied in this
+  environment: plans are multi-action and overshoot is permitted, so exact
+  reversal need not be available or uniquely maximal.
+
+### RT-C23 — random plan selection
+
+- **Policy.** Uniform over affordable complete plans.
+- **Measured.** As `RT-C21`, plus the capacity-regime sweep of section 5.
+- **Falsification question.** Does the affordability gate alone produce a
+  restoring tendency when the menu is demand-conditioned?
+- **Regulatory failure.** Registered failure terms.
+- **Must not be assumed.** That the gate erodes with accumulated capacity here
+  as it provably does on the arbitrary-action menu. That is a theorem about a
+  different menu.
+
+### RT-C24 — closed-cycle no issuance
+
+- **Physical story.** An actor-only sequence that returns the represented state
+  exactly to its start.
+- **Demand.** Whatever drives the sequence; no external injection during the
+  window.
+- **Measured.** `sum_t E_t`; `delta B_total`; the per-owner distribution; the
+  capacity-source residual.
+- **Falsification question.** Does the mechanism issue net capacity over a
+  closed cycle?
+- **Regulatory failure.** Any nonzero `delta B_total` under the theorem's
+  hypotheses. This is a **conformance** case: a failure is an implementation
+  defect, not a scientific result.
+- **Must not be assumed.** That a path with loss is a closed cycle. It is not,
+  and must be classified separately.
+
+### RT-C25 — competing economic-demand admission
+
+- **Physical story.** Several requests arrive that cannot all be met together.
+- **Demand.** At least two arrival slots, with a quantity alphabet that makes
+  joint service impossible at realistic stock levels.
+- **Measured.** Distribution over admitted subsets; incompatible-rejection
+  rate; whether any destination or quantity is systematically favoured.
+- **Falsification question.** Is admission genuinely arbitrary, or does some
+  quantity, destination or count become privileged in practice?
+- **Regulatory failure.** Any detectable dependence of the admitted subset on
+  EBU, capacity or the potential; or a systematic preference over quantity or
+  customer count.
+- **Must not be assumed.** That uniform choice over inclusion-maximal subsets
+  is uniform over demands. It is not, and the induced per-demand rates must be
+  reported rather than assumed flat.
+
+### RT-C26 — joint multi-demand plan
+
+- **Physical story.** One action contributes to several obligations at once.
+- **Demand.** Declared so that a single action serves at least two demands.
+- **Measured.** Frequency of multi-demand actions; provenance breadth; explicit
+  check that no service credit is doubled; component sizes.
+- **Falsification question.** Does the mechanism handle overlapping obligations
+  without double-crediting service or EBU?
+- **Regulatory failure.** Any demand recorded as served by a plan whose net
+  increment does not meet its requirement; any receipt sum differing from
+  `E_G`. This is a **conformance** case.
+- **Must not be assumed.** That overlapping obligations are rare.
+
 ## 4. Applicability matrix
 
 `X` = applicable and should be run for any mechanism claiming homeostatic
@@ -271,6 +517,25 @@ layer.
 | RT-C12 | X | X | X | X |
 | RT-C08, RT-C09, RT-C10 | X | X | X | X |
 | capacity-regime sweep (§5) | o | o | o | o |
+
+Demand-driven cases apply only to mechanisms running the corrected economy.
+`—` means the case is not defined for that environment, which is a statement
+about applicability and not about quality.
+
+| case | demand-driven V1 | demand-driven V2 | arbitrary-action mechanisms |
+|---|---|---|---|
+| RT-C13, RT-C14, RT-C15 | X | X | — |
+| RT-C16, RT-C17 | X | X | — |
+| RT-C18 | X | X | — |
+| RT-C19 | X | X | — |
+| RT-C20 | X | X | — |
+| RT-C21, RT-C22, RT-C23 | X | X | — |
+| RT-C24, RT-C26 | X | X | — |
+| RT-C25 | X | X | — |
+| capacity-regime sweep (§5) | o | o | o |
+
+`RT-C19` additionally requires a declared floor-relative definition of
+restoring tendency before it may be run; see finding F-2.
 
 ## 5. Mandatory capacity-regime reporting
 
@@ -308,7 +573,15 @@ referencing the old one.
 
 ## 7. Current ledger status
 
-**Empty.** No case has a recorded run. The registered homeostasis study
-overlaps `RT-C03`, `RT-C04`, `RT-C08`, `RT-C09` and `RT-C10` descriptively, but
-the case protocols did not exist when it was frozen, so nothing from it is
-entered as a case-library result.
+**Empty.** No case has a recorded run under any mechanism, in either
+environment. The registered homeostasis study overlaps `RT-C03`, `RT-C04`,
+`RT-C08`, `RT-C09` and `RT-C10` descriptively, but the case protocols did not
+exist when it was frozen, so nothing from it is entered as a case-library
+result.
+
+The demand-driven conformance gate and rehearsal likewise enter **nothing**.
+Conformance establishes that the implementation obeys its contract; the
+rehearsal is explicitly non-confirmatory. Neither is a case run, and neither
+may be recorded as one. `RT-C24` and `RT-C26` are marked conformance cases
+because a failure of either is an implementation defect, but they still require
+a declared run under a declared mechanism version before a record exists.

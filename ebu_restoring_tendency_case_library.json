@@ -1,128 +1,263 @@
 {
-  "library": "EBU_RESTORING_TENDENCY_CASE_LIBRARY",
-  "version": "1.0",
-  "status": "DEFINED_NOT_EXECUTED",
-  "governance": {
-    "identifiers_are_permanent": true,
-    "identifiers_are_never_reused": true,
-    "cases_frozen_independently_of_mechanism": true,
-    "mechanism_variants_must_reuse_applicable_cases": true,
-    "changing_a_case_creates_a_new_identifier": true,
-    "cases_are_never_deleted": true,
-    "library_defines_questions_never_expected_answers": true,
-    "records_are_append_only": true
+ "library": "EBU_RESTORING_TENDENCY_CASE_LIBRARY",
+ "version": "1.1",
+ "status": "DEFINED_NOT_EXECUTED",
+ "governance": {
+  "identifiers_are_permanent": true,
+  "identifiers_are_never_reused": true,
+  "cases_frozen_independently_of_mechanism": true,
+  "mechanism_variants_must_reuse_applicable_cases": true,
+  "changing_a_case_creates_a_new_identifier": true,
+  "cases_are_never_deleted": true,
+  "library_defines_questions_never_expected_answers": true,
+  "records_are_append_only": true,
+  "results_are_never_pooled_across_environments": true
+ },
+ "cases": [
+  {
+   "case_id": "RT-C01",
+   "title": "small isolated shock",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
   },
-  "cases": [
-    {
-      "case_id": "RT-C01",
-      "title": "small isolated shock",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C02",
-      "title": "large isolated shock",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C03",
-      "title": "repeated low-level demand",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C04",
-      "title": "persistent medium demand",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C05",
-      "title": "rare catastrophic impulse",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C06",
-      "title": "multi-tick catastrophic forcing",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C07",
-      "title": "recovery after catastrophe ends",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C08",
-      "title": "random actors",
-      "axis": "policy",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C09",
-      "title": "aligned actors",
-      "axis": "policy",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C10",
-      "title": "hostile actors",
-      "axis": "policy",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C11",
-      "title": "topology damage / route removal",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    },
-    {
-      "case_id": "RT-C12",
-      "title": "resource scarcity preventing immediate restoration",
-      "axis": "environment",
-      "status": "DEFINED",
-      "superseded_by": null
-    }
-  ],
-  "record_schema": [
-    "case_id",
-    "case_library_version",
-    "mechanism",
-    "mechanism_version",
-    "code_identity",
-    "preregistration",
-    "evidence_class",
-    "capacity_regime",
-    "measurements",
-    "failure_flags",
-    "notes"
-  ],
-  "evidence_classes": [
-    "registered",
-    "exploratory",
-    "conformance",
-    "theorem"
-  ],
-  "failure_vocabulary": [
-    "LOSS_OF_RESTORING_TENDENCY",
-    "OUTWARD_DRIFT",
-    "HIGH_DEVIATION_CAPTURE",
-    "EXCURSION_NON_RETURN",
-    "PHYSICAL_BOUNDARY_FAILURE"
-  ],
-  "records": []
+  {
+   "case_id": "RT-C02",
+   "title": "large isolated shock",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C03",
+   "title": "repeated low-level demand",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C04",
+   "title": "persistent medium demand",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C05",
+   "title": "rare catastrophic impulse",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C06",
+   "title": "multi-tick catastrophic forcing",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C07",
+   "title": "recovery after catastrophe ends",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C08",
+   "title": "random actors",
+   "axis": "policy",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C09",
+   "title": "aligned actors",
+   "axis": "policy",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C10",
+   "title": "hostile actors",
+   "axis": "policy",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C11",
+   "title": "topology damage / route removal",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C12",
+   "title": "resource scarcity preventing immediate restoration",
+   "axis": "environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "arbitrary_action"
+  },
+  {
+   "case_id": "RT-C13",
+   "title": "economic demand only",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C14",
+   "title": "physical demand only, under a demand-conditioned menu",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C15",
+   "title": "simultaneous economic and physical demand",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C16",
+   "title": "economic scarcity",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C17",
+   "title": "EBU unaffordability",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C18",
+   "title": "economic action creating physical demand",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C19",
+   "title": "loss-generated physical demand",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C20",
+   "title": "external natural shock plus economic demand",
+   "axis": "demand-environment",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C21",
+   "title": "hostile plan selection",
+   "axis": "demand-policy",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C22",
+   "title": "aligned plan selection",
+   "axis": "demand-policy",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C23",
+   "title": "random plan selection",
+   "axis": "demand-policy",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C24",
+   "title": "closed-cycle no issuance",
+   "axis": "demand-conformance",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C25",
+   "title": "competing economic-demand admission",
+   "axis": "demand-admission",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  },
+  {
+   "case_id": "RT-C26",
+   "title": "joint multi-demand plan",
+   "axis": "demand-conformance",
+   "status": "DEFINED",
+   "superseded_by": null,
+   "environment": "demand_driven"
+  }
+ ],
+ "record_schema": [
+  "case_id",
+  "case_library_version",
+  "mechanism",
+  "mechanism_version",
+  "code_identity",
+  "preregistration",
+  "evidence_class",
+  "capacity_regime",
+  "measurements",
+  "failure_flags",
+  "notes"
+ ],
+ "evidence_classes": [
+  "registered",
+  "exploratory",
+  "conformance",
+  "theorem"
+ ],
+ "failure_vocabulary": [
+  "LOSS_OF_RESTORING_TENDENCY",
+  "OUTWARD_DRIFT",
+  "HIGH_DEVIATION_CAPTURE",
+  "EXCURSION_NON_RETURN",
+  "PHYSICAL_BOUNDARY_FAILURE"
+ ],
+ "records": [],
+ "environments": {
+  "arbitrary_action": "the historical stress environment; menus are physically feasible transfers",
+  "demand_driven": "EBU-DEMAND-DRIVEN-ECONOMY-v1; menus are complete irredundant demand-serving plans"
+ },
+ "required_reports_demand_driven": [
+  "epoch_status_distribution",
+  "economic_outcome_distribution",
+  "stuck_component_fraction",
+  "per_owner_capacity_distribution"
+ ]
 }
