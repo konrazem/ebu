@@ -135,16 +135,34 @@ def _build(
 def enumerate_service_plans(
     world: DemandWorld, state: Vector, component: DemandComponent
 ) -> tuple[ServicePlan, ...]:
-    """Every complete, executable, irredundant plan for this component."""
+    """Every complete, executable, irredundant plan for this component.
+
+    **One entry per canonical plan identity.** A plan's identity is its
+    physical action set; `PlanGroup` sorts its actions and refuses a repeated
+    route, so two encodings of one action set carry one identity. That matters
+    beyond tidiness: the random actor samples uniformly over this menu, so a
+    duplicated record would silently double an outcome's probability. The
+    duplicate check is enforced here rather than assumed.
+    """
     groups = irredundant_serving_groups(
         world, state, component.requirements, component_routes(world, component)
     )
-    return tuple(
+    unique: dict[str, object] = {}
+    for group in groups:
+        identity = group.group_id
+        if identity in unique:
+            continue
+        unique[identity] = group
+    built = tuple(
         sorted(
-            (_build(world, component, group) for group in groups),
+            (_build(world, component, group) for group in unique.values()),
             key=lambda plan: plan.plan_id,
         )
     )
+    identities = [plan.group.group_id for plan in built]
+    if len(set(identities)) != len(identities):
+        raise Refusal("a menu may not carry two records of one plan identity")
+    return built
 
 
 def has_service_plan(

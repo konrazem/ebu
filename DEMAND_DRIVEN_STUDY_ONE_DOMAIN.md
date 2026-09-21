@@ -234,26 +234,66 @@ point of the complete plan space, and returns `UNRESOLVED` only after
 exhausting the budget, so a space that fits inside the budget can never
 exhaust it. For `study_one_world` the space is 80 against a budget of 200,000.
 
-## 7. The global exact plan set is the authority
+## 7. Independent progress, plans, outcomes and sampling
 
-Define `F_global(x, D)` as the set of canonical outcomes of every executable,
-completely-serving, irredundant plan for the whole active demand set `D` at
-state `x`, enumerated over the whole world at once with no component ever
-formed. Each outcome is a pair: the exact physical increment, and the settled
-owner receipts.
+Four things were previously run together and are now kept apart by name. An
+independent audit found a defect in each conflation.
 
-`F_global` is the scientific authority. Demand-component decomposition is a
-computational optimization and **does not define feasibility**.
+### 7.1 Two different questions
 
-### Theorem D (decomposition equals global, Study-1 domain)
+**All-demands-complete solvability**, `oracle.all_complete_*`: *can every
+active demand be completely satisfied in one epoch?* Mathematically useful,
+and retained. It is **not** the runtime's execution semantics.
 
-*In a Study-1 world with a non-binding cap,
-`combine(F_components) == F_global`.*
+**Independent progress**, `oracle.global_progress`: what the epoch is actually
+allowed to do. This is the scientific authority.
 
-Write `K` for the components, `R_k` for component `k`'s requirement
-coordinates, and `reach_k` for its structural reach. Components are the
-connected classes of the reach-interaction graph, so distinct components have
-disjoint coordinate sets, disjoint route sets and disjoint owner sets.
+The distinction is not pedantic. The runtime deliberately lets an independent
+component progress while another is proved impossible, so the first question
+answers "no" and returns the empty set in exactly the situations the second
+question is most interesting. The component path returned empty there too, and
+the two agreed — **vacuously**. At `study_one_world`, state `(0, 6, 6)`:
+
+| | |
+|---|---|
+| physical demand at `A` | 4 units short; one route in, largest quantum 2 ⇒ **proved impossible** |
+| economic order at `C` | 1 unit, independent, **two complete plans** (`B->C` at 1 and at 2) |
+| old all-complete comparison | `0 == 0` — PASS, having seen nothing |
+| progress reference | `blocked = {P:r|A}`, `resolved = {E:…:r|C}`, **2 plans** |
+
+### 7.2 The progress-plan family
+
+Let the active demand parts be `C_1, ..., C_m` with complete-plan sets `P_k`.
+
+    G_progress = product over k of ( P_k         if P_k is nonempty
+                                   ; {BLOCKED_k} if impossibility is proved )
+
+`BLOCKED_k` contributes no physical action and leaves its demands unresolved.
+**Every part with a nonempty plan set contributes exactly one plan**: a
+serviceable part acts, and there is no voluntary no-action. A blocked part is
+not an actor choice — it is a physical fact about the state, and its demand
+persists into the next epoch because the deviation that created it is still
+there.
+
+`SEARCH_UNRESOLVED` is neither branch. It is a computational integrity failure
+and the job cannot proceed (§6).
+
+`oracle.global_progress` computes this without calling `coupling` or `plans`:
+it re-derives the partition from the frozen reach definition of §3 with
+brute-force serviceability, enumerates each part by brute force, and then
+enumerates the non-blocked demand set **with no partition at all** — that last
+set is the reference, and the partitioned product is checked against it.
+
+### Theorem D (decomposition equals the progress reference, Study-1 domain)
+
+*In a Study-1 world with a non-binding cap, the partitioned product equals the
+plan set enumerated with no partition, over the non-blocked demands.*
+
+Write `R_k` for part `k`'s requirement coordinates and `reach_k` for its
+structural reach. Parts are the connected classes of the reach-interaction
+graph, so distinct parts have disjoint coordinate, route and owner sets. A
+blocked part has an empty reach (§3), so removing blocked parts does not
+change the partition of the rest.
 
 *Subsets of executable plans are executable.* Removing actions only lowers
 every source's outflow, so source funding survives; nonnegativity survives
@@ -261,49 +301,104 @@ because `x[i] + delta_S[i] >= x[i] - outflow_G[i] >= 0`; per-action quantum
 and route-capacity checks are unaffected; condition 9 removes the storage
 clause; condition 5 keeps conservation closed.
 
-`(⊆)` Let `G_k` be an irredundant complete plan for each component and
+`(⊆)` Let `G_k` be an irredundant complete plan for each non-blocked part and
 `G = union_k G_k`. By Theorem P's soundness step and condition 9, every action
-of `G_k` delivers into a coordinate of `R_k`, so its route lies in `reach_k`
-and its source in `reach_k`. Reaches are disjoint, so the `G_k` use disjoint
-routes and disjoint source coordinates: the increments have disjoint supports,
-source funding does not interact, and `G` is executable and serves everything.
-If some proper `S ⊂ G` served everything and executed, then `S ∩ G_k` would
-serve component `k` (disjoint supports) and would execute (subset), so
-irredundancy of each `G_k` forces `S = G`. Hence `G ∈ F_global`.
+of `G_k` delivers into a coordinate of `R_k`, so its route and its source lie
+in `reach_k`. Reaches are disjoint, so the `G_k` use disjoint routes and
+disjoint source coordinates: the increments have disjoint supports, source
+funding does not interact, and `G` is executable and serves every non-blocked
+demand. If some proper `S ⊂ G` served them all and executed, then `S ∩ G_k`
+would serve part `k` (disjoint supports) and would execute (subset), so
+irredundancy of each `G_k` forces `S = G`.
 
-`(⊇)` Let `G ∈ F_global`. For `a ∈ G`, irredundancy means `G \ {a}` fails to
-serve or fails to execute; the second is impossible because subsets execute,
-so `a` delivers into some requirement coordinate `c(a)`, which belongs to
-exactly one component. Put `G_k = {a : c(a) ∈ R_k}`. An action of `G_j` has
-its source in `reach_j`, which is disjoint from `reach_k`, so no action
-outside `G_k` touches component `k`'s coordinates: `delta_{G_k}` agrees with
-`delta_G` on `R_k` and `G_k` serves component `k` completely. `G_k` executes
-as a subset. If some `S ⊂ G_k` served component `k` and executed, then
-`S ∪ (G \ G_k)` would serve everything and execute, contradicting `G`'s
-irredundancy. So each `G_k` is in component `k`'s menu and `G` is their union.
-**∎**
+`(⊇)` Let `G` be irredundant, executable and completely serving the
+non-blocked demands. For `a ∈ G`, irredundancy means `G \ {a}` fails to serve
+or fails to execute; the second is impossible because subsets execute, so `a`
+delivers into some requirement coordinate `c(a)`, which belongs to exactly one
+part. Put `G_k = {a : c(a) ∈ R_k}`. An action of `G_j` has its source in
+`reach_j`, disjoint from `reach_k`, so `delta_{G_k}` agrees with `delta_G` on
+`R_k` and `G_k` serves part `k` completely, and executes as a subset. If some
+`S ⊂ G_k` served part `k` and executed, then `S ∪ (G \ G_k)` would serve
+everything and execute, contradicting `G`'s irredundancy. **∎**
 
-Two consequences worth stating, because passing fixtures would not establish
-them:
+**Owner receipts agree**, not merely increments. Disjoint supports mean each
+part's receipts are computed from the same baseline and the same actions on
+either side, and the harness's joint closure gate independently checks that
+every receipt is unchanged when parts are combined.
 
-- **Owner receipts agree**, not merely increments. Disjoint supports mean each
-  component's receipts are computed from the same baseline and the same
-  actions on either side; the harness's joint closure gate additionally checks
-  every receipt is unchanged when components are combined, and refuses
-  otherwise.
-- **Sampling agrees.** A uniform draw over a Cartesian product is exactly
-  independent uniform draws over its factors, and Theorem D makes the map
-  `(G_1, ..., G_K) -> G` a bijection onto `F_global`. Per-component draws use
-  distinct RNG ordinals, so they are independent.
+Theorem D does **not** cover worlds outside the frozen domain: condition 9 is
+used twice and condition 5 once, and F-5 and F-6 show the partition itself can
+be wrong out there.
 
-What Theorem D does **not** cover: worlds outside the frozen domain. Condition
-9 is used twice (subsets execute; the relief limb is empty) and condition 5
-once. Outside the domain the equality is unproved, and F-5 and F-6 show the
-component structure itself can be wrong there.
+### 7.3 Plan identities and the outcome map
 
-`EconomyRun(decomposition_gate=True)` checks the equality epoch by epoch
-against `oracle.agree`, which enumerates both sides at a common action bound.
-A disagreement raises rather than being recorded.
+A **plan identity** is a canonical physical action set. `PlanGroup` sorts its
+actions and refuses a repeated route, so two encodings of one action set are
+one identity; `plans.enumerate_service_plans` refuses a menu carrying two
+records of one identity.
+
+Two genuinely different action sets are **two plans**, even when they produce
+the same post-state, the same aggregate increment and the same owner receipts.
+
+A **modeled outcome** is `Phi(plan)`: the exact physical increment together
+with the settled owner receipts.
+
+> **`Phi` is many-to-one.** An earlier version of this document claimed
+> Theorem D made `(G_1, ..., G_K) -> G` a bijection *onto outcomes* and drew a
+> sampling conclusion from it. **That claim was false and is withdrawn.** The
+> bijection is onto **plan identities**; the outcome map is not injective.
+
+`two_supplier_world` is the standing witness: suppliers `A` and `B` each hold
+two, destinations `C` and `D` each need one, either supplier can serve either.
+
+| | |
+|---|---|
+| distinct irredundant plan identities | **4** |
+| distinct modeled outcomes | **3** |
+| why | `{A->C, B->D}` and `{B->C, A->D}` differ as action sets but agree in increment, post-state and receipts — `C <-> D` is an automorphism |
+
+### 7.4 The corrected sampling statement
+
+**Frozen for Study 1: the random actor policy is uniform over distinct
+canonical complete service plan identities.** It is *not* uniform over unique
+aggregate outcomes.
+
+The Cartesian-product statement holds over plan identities: a uniform draw
+over a product of plan sets is exactly independent uniform draws over its
+factors, and per-part draws use distinct RNG ordinals. The outcome law is its
+pushforward, **with multiplicity**:
+
+    P(outcome = o) = |{ plans G : Phi(G) = o }| / |all eligible plans|
+
+In `two_supplier_world` that is `1/4, 1/2, 1/4` — never `1/3` each. Duplicate
+plan *records* would change nothing, because identities are what is counted.
+
+For `ALIGNED` and `HOSTILE`: first restrict to the plans attaining the
+required extremal group EBU, then apply the frozen uniform tie-break over
+those distinct plan identities, then derive outcome probabilities from that
+plan distribution. In `two_supplier_world` the aligned tie set is the two
+cross plans, which share one outcome, so its outcome law is a point mass; the
+hostile tie set is the two same-supplier plans, whose outcomes differ, giving
+`1/2, 1/2`. Same world, same mechanism, different induced laws — which is why
+the tie set has to be computed over plans and not over outcomes.
+
+### 7.5 Verification levels
+
+Kept separate because none implies the next.
+
+| level | what it compares |
+|---|---|
+| **A** plan-set equivalence | the same distinct plan identities, and the same blocked/resolved split |
+| **B** outcome support | the same `Phi` images |
+| **C** induced random law | the same outcome probabilities, multiplicity included |
+| **D** aligned/hostile | the same tie sets and the same induced outcomes |
+
+**B alone proves neither C nor D.** A flat law over the correct support is a
+different distribution from the correct one, and `two_supplier_world` is a
+world where they differ.
+
+`EconomyRun(decomposition_gate=True)` runs all four every epoch and refuses on
+any disagreement.
 
 ## 8. Unusable-infrastructure invariance
 

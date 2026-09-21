@@ -26,7 +26,9 @@ describes. Corrections are recorded in place, not erased.
 | 5 | An interval was classified actor-only when `sum dV_ext == 0` | Actor-only is decided from explicit **external-event provenance**. External events can cancel in the potential or permute stock at constant `V`. See the cycle theorem document. |
 | 6 | A sink could be exported from by an ordinary route | A sink is irreversible: a world declaring a route out of one is refused at construction. §13 |
 | 7 | The structural reach was described as *exact* in every world, which a later audit disproved with a destination-capacity/loss counterexample | Exactness is claimed **only** inside the frozen Study-1 domain. Elsewhere the reach is a sound superset that can over-couple; findings F-5 and F-6 record the two known cases. §6, §16 |
-| 8 | Feasibility was defined by whatever the component decomposition produced | `F_global` is the authority; decomposition is an optimization, proved equal inside the frozen domain and gated epoch by epoch. §6, §16 |
+| 8 | Feasibility was defined by whatever the component decomposition produced | The decomposition-free **progress reference** is the authority; decomposition is an optimization, proved equal inside the frozen domain and gated epoch by epoch. §6, §16 |
+| 9 | The global oracle asked "can every demand be served at once?", so when one component was blocked it compared empty against empty and passed vacuously | The authority is now the **progress** reference, which lets an independent part act while another is blocked. The narrow query survives as `F_all_complete` and is explicitly not runtime semantics. §6, §16 |
+| 10 | Sampling was claimed to follow from a bijection onto outcomes | **Withdrawn.** The bijection is onto **plan identities**; `Phi: plan -> outcome` is many-to-one. The random actor is uniform over canonical plan identities and outcome probability carries plan multiplicity. §16 |
 
 ## 0. The correction this model makes
 
@@ -366,16 +368,25 @@ contract — not physics — that forbids serving the subset.
 are built over every route touching the component's transport closure. Breadth
 in enumeration can only offer more valid plans, never delete one.
 
-**Decomposition does not define feasibility.** The authority is the globally
-enumerated feasible set `F_global(x, D)` — every executable, completely
-serving, irredundant plan for the whole active demand set, enumerated over the
-whole world with no component ever formed, compared as exact increment
-*and* settled owner receipts. Demand-component decomposition is a
-computational optimization, proved equal to `F_global` inside the frozen
-Study-1 domain (Theorem D) and checked epoch by epoch against a
-decomposition-free brute force by `EconomyRun(decomposition_gate=True)`. A
-disagreement refuses the run. Outside the frozen domain the equality is
-unproved, and the registered study must use global enumeration.
+**Decomposition does not define feasibility.** The authority is the
+decomposition-free **progress reference** `G_progress(x, D)`: the family of
+things one epoch is allowed to do, where a part proved impossible is
+`BLOCKED`, contributes no physical action and leaves its demands unresolved,
+and **every other part contributes exactly one complete plan**. There is no
+voluntary no-action.
+
+A narrower query — *can every active demand be completely satisfied at once?*
+— survives under the explicit name `F_all_complete`. It is mathematically
+useful and is **not** runtime semantics. Conflating the two hid a defect: when
+one component is blocked, `F_all_complete` is empty, the component path was
+also empty, and the comparison passed on `0 == 0` having seen nothing.
+
+Demand-component decomposition is a computational optimization, proved equal
+to the progress reference inside the frozen Study-1 domain (Theorem D) and
+checked epoch by epoch by `EconomyRun(decomposition_gate=True)` at four
+separate levels — plan identities, outcome support, the induced random law
+with plan multiplicity, and the aligned/hostile tie sets. A disagreement
+refuses the run. Outside the frozen domain the equality is unproved.
 
 ## 7. Service plans, and demand provenance
 
@@ -576,8 +587,23 @@ Three results hold inside the boundary and are claimed nowhere else.
   complete finite plan space. No scientific search truncation exists, and a
   computational cap can never turn a serviceable demand into an impossible
   one.
-- **Decomposition (D).** `combine(F_components) == F_global`, including owner
-  receipts and sampling probabilities.
+- **Decomposition (D).** The component product equals the decomposition-free
+  progress reference, including owner receipts.
+
+**Independent progress is authoritative.** A part proved impossible stays
+unresolved and contributes no action; every serviceable part executes one
+complete plan. The scientific reference is `G_progress`, not "one plan serving
+every active demand" — that narrower query lives on as `F_all_complete` and is
+explicitly not runtime semantics.
+
+**Sampling is over plan identities.** The random actor draws uniformly over
+distinct canonical complete service plan identities, never over unique
+aggregate outcomes. Two different action sets are two plans even when they
+produce the same post-state, increment and receipts, so `Phi: plan -> outcome`
+is many-to-one and outcome probability carries plan multiplicity. In
+`two_supplier_world` — four plan identities, three outcomes — the induced law
+is `1/4, 1/2, 1/4`, not `1/3` each. Aligned and hostile first restrict to the
+extremal-EBU plans, then tie-break uniformly over those plan identities.
 
 **Registered failure semantics.** In a registered Study-1 job
 `SEARCH_UNRESOLVED` is a computational integrity failure: the entire job is

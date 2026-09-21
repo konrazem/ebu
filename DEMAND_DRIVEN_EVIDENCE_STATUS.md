@@ -88,7 +88,7 @@ demand-conditioned menu:
 
 | item | status |
 |---|---|
-| The demand-driven conformance gate (592 assertions) | conformance. Establishes that the implementation obeys its contract. Says nothing about behaviour. |
+| The demand-driven conformance gate (692 assertions) | conformance. Establishes that the implementation obeys its contract. Says nothing about behaviour. |
 | The demand-driven rehearsal, general world (3,200 epochs) | **NON-CONFIRMATORY**. Infrastructure observation only. Not tuned to, not interpreted, not citable. |
 | The Study-1 frozen-domain rehearsal (3,200 epochs, registered semantics, decomposition gate on) | **NON-CONFIRMATORY**. Shows the searches are complete and the residuals close; shows nothing about the mechanism. |
 | `DEMAND_DRIVEN_MODEL_FINDINGS.md` F-1 to F-6 | structural consequences of the frozen contract, shown exactly on declared fixtures. Not behavioural findings, not generalizable from those fixtures. F-1 was revised after the independent audit: its stronger form was partly a coupling artifact. F-5 and F-6 are **outside the frozen Study-1 domain** and are retained unrepaired as permanent regressions. |
@@ -109,7 +109,8 @@ each is claimed for the frozen Study-1 domain and nowhere wider.
 | P — the pruned serviceability search equals complete enumeration of the finite plan space | Study-1 domain | cross-checked against a brute force that never consults `enumeration` |
 | `SEARCH_UNRESOLVED` is impossible | Study-1 domain | domain condition 17, not an observed rate |
 | `SEARCH_INCOMPLETE_AT_PLAN_CAP` is impossible | Study-1 domain | domain condition 16, not an observed rate |
-| D — `combine(F_components) == F_global`, receipts and sampling included | Study-1 domain | outside it, unproved; the registered study must then use global enumeration |
+| D — the component product equals the decomposition-free **progress** reference, owner receipts included | Study-1 domain | outside it, unproved. The authority is progress semantics, where a blocked part contributes nothing and every serviceable part acts — **not** "one plan serving every active demand", which is the narrower `F_all_complete` query |
+| the random actor's induced outcome law, including plan multiplicity | Study-1 domain | sampling is uniform over **canonical plan identities**; `Phi: plan -> outcome` is many-to-one, so outcome probability carries multiplicity. The earlier bijection-onto-outcomes claim is **withdrawn** |
 | unusable-infrastructure invariance across admission, serviceability, plan set, EBU values and affordability inputs | Study-1 domain | **fails** outside it — F-5 is a counterexample to the invariance itself |
 
 > **`STUDY-1 DOMAIN VERIFIED` is not `GENERAL DEMAND-DRIVEN FRAMEWORK PROVED

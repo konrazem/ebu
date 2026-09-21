@@ -71,11 +71,19 @@ joint plan that raise the increment at its coordinate are drawn from the same
 reach and would themselves serve it.
 
 **Decomposition is not what defines feasibility.** For Study 1 the authority
-is the globally enumerated feasible set `F_global` (`oracle.global_feasible`),
-and decomposition is a computational factorization that must reproduce it
-exactly. `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` proves
-`combine(F_components) == F_global` inside the frozen domain, and
-`harness.EconomyRun(decomposition_gate=True)` checks it epoch by epoch.
+is the decomposition-free progress reference `oracle.global_progress`: a part
+proved impossible is BLOCKED, contributes no physical action and leaves its
+demands unresolved, while every other part contributes exactly one complete
+plan. Decomposition is a computational factorization that must reproduce it
+exactly. `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` §7 proves the equality inside
+the frozen domain, and `harness.EconomyRun(decomposition_gate=True)` checks
+it epoch by epoch at four levels -- plan identities, outcome support, the
+induced random law with plan multiplicity, and the aligned/hostile tie sets.
+
+The narrower question *can every active demand be completely satisfied at
+once?* survives as `oracle.all_complete_*` and is **not** runtime semantics.
+Treating it as such made the comparison pass vacuously whenever a component
+was blocked: both sides returned empty and agreed on nothing.
 """
 
 from __future__ import annotations

@@ -47,15 +47,24 @@ It runs the frozen-domain world `study-one-v1`
 (`DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`) with **registered failure semantics on**
 — an undecided search would raise `JobInvalid` and stop the job rather than be
 recorded — and with the **decomposition gate on**, so every epoch
-independently verifies `combine(F_components) == F_global` against a
-brute-force enumeration that never forms a component.
+independently verifies the component path against the decomposition-free
+**progress** reference at four levels: plan identities, outcome support, the
+induced random law including plan multiplicity, and the aligned/hostile tie
+sets with their induced outcomes.
+
+The reference is progress semantics, not "one plan serving every active
+demand". A part proved impossible is `BLOCKED`, contributes no action and
+leaves its demands unresolved; every other part contributes exactly one
+complete plan. The narrower all-demands-complete query still exists under its
+own name and is explicitly not runtime semantics — conflating the two made
+the old comparison pass vacuously whenever any component was blocked.
 
 It establishes, and only establishes: 3,200 epochs complete, the replay is
 exact, every residual is exactly zero, `SEARCH_UNRESOLVED` occurred zero times
 and `SEARCH_INCOMPLETE_AT_PLAN_CAP` zero times — both of which the domain
-makes impossible by construction rather than merely rare — and decomposition
-matched the global feasible set in all 3,020 epochs that had anything to
-decompose.
+makes impossible by construction rather than merely rare — and the component
+path matched the progress reference at all four levels in every epoch that
+had anything to decompose.
 
 The general `sandwater-v1` block above is **not** a Study-1 world: its
 plan-size cap binds and it carries two resources. Its

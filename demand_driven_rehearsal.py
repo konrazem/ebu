@@ -239,8 +239,10 @@ def study_one_execute():
 
     `registered=True` means an undecided search would raise `JobInvalid` and
     stop the job rather than being recorded. `decomposition_gate=True` means
-    every epoch independently verifies `combine(F_components) == F_global`
-    against a brute-force enumeration that never forms a component.
+    every epoch independently verifies the component path against the
+    decomposition-free progress reference at four levels -- plan identities,
+    outcome support, the induced random law with plan multiplicity, and the
+    aligned/hostile tie sets.
     """
     world, disturbance, arrivals = study_one_build()
     table = {}

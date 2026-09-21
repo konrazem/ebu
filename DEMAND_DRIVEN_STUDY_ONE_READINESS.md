@@ -23,10 +23,12 @@ still required), `DEMAND_DRIVEN_MODEL_FINDINGS.md` (F-1 to F-6).
 | three search verdicts maintained and never collapsed | **yes** |
 | `SEARCH_UNRESOLVED` proved impossible in the declared domain | **yes** — domain condition 17 |
 | registered failure semantics implemented | **yes** — `JobInvalid`, `EconomyRun(registered=True)` |
-| `F_global` is the authority; decomposition proved equal and gated | **yes** — Theorem D, `decomposition_gate=True` |
+| the decomposition-free **progress** reference is the authority; decomposition proved equal and gated at four levels | **yes** — Theorem D, `decomposition_gate=True` |
+| independent progress: a blocked part contributes nothing, every serviceable part acts | **yes** — `oracle.global_progress`, mandatory-action regressions |
+| sampling unit frozen as the canonical plan identity, with the induced outcome law carrying multiplicity | **yes** — `two_supplier_world`, `1/4, 1/2, 1/4` |
 | unusable-infrastructure invariance across all five outputs | **yes** |
 | additive service, provenance, sinks, closed cycle, actor-only | **yes** — carried forward unchanged |
-| exact conformance passing | **yes** — 592 assertions, 0 failures, tolerance 0 |
+| exact conformance passing | **yes** — 692 assertions, 0 failures, tolerance 0 |
 | Study-1 rehearsal clean | **yes** — 3,200 epochs, 0 unresolved, 0 incomplete, residuals exactly 0 |
 | arrival law declared | **no** — §4 |
 | primary endpoint chosen | **no** — §4 |
@@ -97,13 +99,14 @@ state.
 
 **Expected worst-case runtime, locally.** Measured, not estimated:
 `demand_driven_rehearsal.py`, 4 policies × 4 replicates × 200 epochs = 3,200
-epochs, **15.9 s per pass with the decomposition gate on**, run twice for the
-replay check. Roughly 5 ms per epoch *including* an independent brute-force
-`F_global` enumeration every epoch; without the gate the same run is several
-times faster. A registered study of 64 replicates × 4 arms × 8,192 epochs
-would be about 2.1 million epochs, or roughly 3 CPU-hours at this rate with
-the gate on — comfortably local, and the gate is a conformance instrument that
-a confirmatory run need not carry every epoch. **No AWS.**
+epochs, **25.4 s per pass with the four-level decomposition gate on**, run
+twice for the replay check. Roughly 8 ms per epoch *including* an independent
+brute-force progress-reference enumeration and all four verification levels
+every epoch; without the gate the same run is several times faster. A
+registered study of 64 replicates × 4 arms × 8,192 epochs would be about 2.1
+million epochs, or roughly 4.6 CPU-hours at this rate with the gate on —
+comfortably local, and the gate is a conformance instrument that a
+confirmatory run need not carry every epoch. **No AWS.**
 
 ## 3. Study-1 rehearsal, executed
 
@@ -116,12 +119,12 @@ about the mechanism.
 | registered failure semantics | ON |
 | decomposition gate | ON |
 | epochs | 3,200 (4 policies × 4 replicates × 200) |
-| wall time | 15.9 s per pass, run twice |
+| wall time | 25.4 s per pass, run twice (four-level gate) |
 | replay deterministic | **yes** |
 | worst residual anywhere (accounting, conservation, nonnegativity, separability, capacity-source) | **exactly 0** |
 | `SEARCH_UNRESOLVED` epochs | **0** |
 | `SEARCH_INCOMPLETE_AT_PLAN_CAP` epochs | **0** |
-| epochs where `combine(F_components) == F_global` was verified | 3,020 |
+| epochs where the component path matched the progress reference at all four levels | 3,020 |
 | epochs with nothing to decompose | 180 |
 | raw arrivals per arm | 517, identical across arms |
 

@@ -85,8 +85,11 @@ from demand_driven_ebu.fixtures import (
     shared_sink_world,
     shared_source_world,
     scarcity_world,
+    blocked_neighbour_state,
     study_one_state,
     study_one_world,
+    two_supplier_state,
+    two_supplier_world,
     ScriptedArrivals,
     ScriptedDisturbance,
     seeded_ledger,
@@ -130,7 +133,25 @@ from demand_driven_ebu.study_one import (
     require_domain,
     state_violations,
 )
-from demand_driven_ebu.oracle import agree, component_feasible, global_feasible
+from demand_driven_ebu.oracle import (
+    BLOCKED,
+    LEVELS,
+    all_complete_agree,
+    all_complete_outcomes,
+    all_complete_plans,
+    canonical,
+    component_all_complete_outcomes,
+    component_progress,
+    extremal_identities,
+    global_progress,
+    outcome,
+    outcome_support,
+    plan_identity,
+    policy_law,
+    progress_levels,
+    random_law,
+    reference_partition,
+)
 from demand_driven_ebu.physical import (
     PhysicalAction,
     PlanGroup,
@@ -2149,8 +2170,8 @@ def main() -> int:
          test_search_unresolved_invalidates_the_entire_registered_job),
         ("an unregistered run keeps the three-way distinction",
          test_an_unregistered_run_keeps_the_three_way_distinction),
-        ("the global feasible set is the authority",
-         test_the_global_feasible_set_is_the_authority_for_study_one),
+        ("the global progress reference is the authority",
+         test_the_global_progress_reference_is_the_authority_for_study_one),
         ("the harness gate checks decomposition every epoch",
          test_the_harness_gate_checks_decomposition_every_epoch),
         ("a decomposition difference stops the run",
@@ -2165,6 +2186,34 @@ def main() -> int:
          test_the_completeness_bound_is_computed_not_asserted),
         ("STUDY-1 DOMAIN VERIFIED is not general-framework proof",
          test_study_one_verified_is_not_general_framework_proved),
+        # --- oracle and sampling semantics correction ---------------------
+        ("the auditor counterexample is exactly as described",
+         test_the_auditor_counterexample_is_exactly_as_described),
+        ("the old all-complete oracle passed vacuously here",
+         test_the_old_all_complete_oracle_passed_vacuously_here),
+        ("the progress reference sees what the runtime does",
+         test_the_progress_reference_sees_what_the_runtime_does),
+        ("a blocked part contributes no action and keeps its demand",
+         test_a_blocked_part_contributes_no_action_and_keeps_its_demand),
+        ("the reference partition is derived without calling coupling",
+         test_the_reference_partition_is_derived_without_calling_coupling),
+        ("all-complete remains available under a narrower name",
+         test_all_complete_remains_available_under_a_narrower_name),
+        ("the sampling unit is the canonical plan identity",
+         test_the_sampling_unit_is_the_canonical_plan_identity),
+        ("the outcome map is many-to-one", test_the_outcome_map_is_many_to_one),
+        ("uniform plan sampling induces 1/4, 1/2, 1/4",
+         test_uniform_plan_sampling_induces_a_quarter_half_quarter_law),
+        ("aligned and hostile restrict then tie-break over plans",
+         test_aligned_and_hostile_restrict_then_tie_break_over_plans),
+        ("outcome support alone does not prove the induced law",
+         test_outcome_support_alone_does_not_prove_the_induced_law),
+        ("all four levels run on every declared fixture",
+         test_all_four_levels_run_on_every_declared_fixture),
+        ("a serviceable component must execute one nonempty plan",
+         test_a_serviceable_component_must_execute_one_nonempty_plan),
+        ("blocked and unresolved are still different things",
+         test_blocked_and_unresolved_are_still_different_things),
         # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
@@ -3005,12 +3054,17 @@ def test_global_and_component_feasible_sets_agree() -> None:
     checked = 0
     for case_world, case_state, demands in cases:
         for bound in (2, 3):
-            ok, detail = agree(case_world, case_state, demands, bound)
+            ok, detail = all_complete_agree(case_world, case_state, demands, bound)
             checked += 1
             if not ok:
                 mismatches.append(f"{case_world.world_id}@{bound}: {detail}")
+            fine, levels = progress_levels(case_world, case_state, demands, bound)
+            checked += 1
+            if not fine:
+                mismatches.append(f"{case_world.world_id}@{bound} progress: {levels}")
     check("G: exhaustive cases were compared", checked >= 10, str(checked))
-    check("G: the global feasible set equals the decomposed one everywhere",
+    check("G: both the narrow all-complete query and the progress reference "
+          "agree with the decomposed path everywhere",
           not mismatches, str(mismatches[:2]))
 
     world = sandwater_world()
@@ -3018,8 +3072,10 @@ def test_global_and_component_feasible_sets_agree() -> None:
     mixed = tuple(derive_physical_demands(world, state)) + (
         _economic(world, "sand", 2, "C", 0, 0),
     )
-    ok, detail = agree(world, state, mixed, 2)
+    ok, detail = all_complete_agree(world, state, mixed, 2)
     check("G: and with a mixed economic/physical demand set", ok, str(detail))
+    ok, detail = progress_levels(world, state, mixed, 2)
+    check("G: including every progress level", ok, str(detail))
 
 
 def test_an_impossible_component_does_not_block_an_independent_one_triple() -> None:
@@ -3362,17 +3418,17 @@ def test_the_structural_reach_is_state_aware() -> None:
 def test_the_oracle_compares_receipts_not_only_increments() -> None:
     import demand_driven_ebu.oracle as oracle_module
 
-    source = inspect.getsource(oracle_module._outcome)
-    check("the oracle's comparable carries owner receipts",
+    source = inspect.getsource(oracle_module.outcome)
+    check("the modeled outcome carries owner receipts",
           "owner_deltas" in source and "increment" in source)
     world = sandwater_world()
     state = _state(8, 8, 14, 6, 6)
     physical = derive_physical_demands(world, state)
-    outcomes = global_feasible(oracle_module.at_bound(world, 3), state, physical, 3)
+    outcomes = all_complete_outcomes(oracle_module.at_bound(world, 3), state, physical, 3)
     check("every outcome is an (increment, receipts) pair",
           all(len(entry) == 2 and isinstance(entry[1], tuple) for entry in outcomes),
           str(len(outcomes)))
-    ok, detail = agree(world, state, physical, 3)
+    ok, detail = all_complete_agree(world, state, physical, 3)
     check("and the two sides agree on receipts as well as physics", ok, str(detail))
 
 
@@ -3394,6 +3450,18 @@ def test_the_oracle_equalises_the_plan_cap_on_both_sides() -> None:
 
 def _e(world, node, quantity, index=0, resource="r", epoch=0):
     return EconomicDemand.declare(world, resource, quantity, node, epoch, index)
+
+
+def oracle_at(world, bound):
+    import demand_driven_ebu.oracle as oracle_module
+
+    return oracle_module.at_bound(world, bound)
+
+
+def oracle_doc() -> str:
+    import demand_driven_ebu.oracle as oracle_module
+
+    return oracle_module.__doc__
 
 
 def _brute_force_serves(world, state, reqs) -> bool:
@@ -3882,11 +3950,11 @@ def test_an_unregistered_run_keeps_the_three_way_distinction() -> None:
 
 
 # --------------------------------------------------------------------------
-# 6. the global exact plan set is the authority
+# 6. the global progress reference is the authority
 # --------------------------------------------------------------------------
 
 
-def test_the_global_feasible_set_is_the_authority_for_study_one() -> None:
+def test_the_global_progress_reference_is_the_authority_for_study_one() -> None:
     world = study_one_world()
     mismatches = []
     compared = 0
@@ -3902,10 +3970,11 @@ def test_the_global_feasible_set_is_the_authority_for_study_one() -> None:
                 if bound == 0:
                     continue
                 compared += 1
-                ok, detail = agree(world, state, demands, bound)
+                full = tuple(derive_physical_demands(world, state)) + demands
+                ok, detail = progress_levels(world, state, full, bound)
                 if not ok:
                     mismatches.append((a, b, detail))
-    check("combine(F_components) == F_global on every Study-1 fixture swept",
+    check("all four levels agree on every Study-1 fixture swept",
           not mismatches, str(mismatches[:2]))
     check("and the sweep was not vacuous", compared >= 30, str(compared))
 
@@ -3926,23 +3995,26 @@ def test_the_harness_gate_checks_decomposition_every_epoch() -> None:
 
 def test_a_decomposition_difference_stops_the_run() -> None:
     run = _study_one_run(decomposition_gate=True)
-    saved = harness_module.agree
+    saved = harness_module.progress_levels
     raised = None
     try:
-        harness_module.agree = lambda *args, **kwargs: (False, {"global": 5, "components": 4})
+        harness_module.progress_levels = lambda *args, **kwargs: (
+            False,
+            {"reference_plans": 5, "runtime_plans": 4},
+        )
         for _ in range(12):
             run.run_epoch()
     except Refusal as refusal:
         raised = refusal
     finally:
-        harness_module.agree = saved
+        harness_module.progress_levels = saved
     check("a disagreement is refused, not absorbed", raised is not None)
     message = str(raised) if raised else ""
-    check("and it names the defect", "DECOMPOSITION_DIFFERS_FROM_GLOBAL" in message,
-          message[:120])
+    check("and it names the defect",
+          "DECOMPOSITION_DIFFERS_FROM_GLOBAL_PROGRESS" in message, message[:140])
     check("and says which side is authority",
-          "may not define" in message and "global enumeration" in message,
-          message[:200])
+          "may not" in message and "define what the epoch can do" in message,
+          message[:220])
 
 
 # --------------------------------------------------------------------------
@@ -4082,6 +4154,377 @@ def test_study_one_verified_is_not_general_framework_proved() -> None:
           "open for later extension" in text)
     check("and it records both out-of-domain counterexamples",
           "capacity_relief_world" in text and "shared_sink_world" in text)
+
+
+# ==========================================================================
+# FINAL STUDY-1 ORACLE + SAMPLING SEMANTICS CORRECTION
+# ==========================================================================
+
+
+def _study_one_blocked_case():
+    """`study_one_world` at (0, 6, 6): blocked P at A, live E at C."""
+    world = study_one_world()
+    state = blocked_neighbour_state()
+    physical = derive_physical_demands(world, state)
+    demands = physical + (_e(world, "C", 1),)
+    return world, state, demands
+
+
+def _two_supplier_case():
+    world = two_supplier_world()
+    state = two_supplier_state()
+    demands = tuple(derive_physical_demands(world, state)) + (
+        _e(world, "C", 1, 0),
+        _e(world, "D", 1, 1),
+    )
+    return world, state, demands
+
+
+# --------------------------------------------------------------------------
+# 1-3. independent progress is authoritative, and the old oracle could not see it
+# --------------------------------------------------------------------------
+
+
+def test_the_auditor_counterexample_is_exactly_as_described() -> None:
+    world, state, demands = _study_one_blocked_case()
+    check("the state is (0, 6, 6)", state == (F(0), F(6), F(6)), str(state))
+    physical = tuple(d for d in demands if d.demand_class == "P")
+    check("there is exactly one physical demand, four units short at A",
+          len(physical) == 1 and physical[0].coordinate == 0
+          and physical[0].required == 4)
+    check("it is proved impossible: one route into A, largest quantum two",
+          physically_serviceable(world, state, requirements(physical)) == IMPOSSIBLE)
+    order = tuple(d for d in demands if d.demand_class == "E")
+    check("the order at C is serviceable",
+          physically_serviceable(world, state, requirements(order)) == SERVICEABLE)
+    found = components(world, state, ActiveDemandSet.of(physical, order))
+    check("the two are independent", len(found) == 2, str(len(found)))
+    menus = {c.component_id: len(enumerate_service_plans(world, state, c)) for c in found}
+    check("and C has exactly two complete plans", sorted(menus.values()) == [0, 2],
+          str(menus))
+
+
+def test_the_old_all_complete_oracle_passed_vacuously_here() -> None:
+    """The defect: empty == empty is a PASS that has seen nothing."""
+    world, state, demands = _study_one_blocked_case()
+    bound = action_bound(world, state)
+    left = all_complete_outcomes(oracle_at(world, bound), state, demands, bound)
+    right = component_all_complete_outcomes(
+        oracle_at(world, bound), state, demands, bound
+    )
+    check("the all-complete query finds nothing, correctly: not every demand "
+          "can be satisfied at once", not left)
+    check("and the component path also finds nothing", not right)
+    ok, _ = all_complete_agree(world, state, demands, bound)
+    check("so the old comparison agrees -- vacuously", ok and not left and not right)
+    check("which is why it may not be described as runtime semantics",
+          "must never be described" in oracle_doc())
+
+
+def test_the_progress_reference_sees_what_the_runtime_does() -> None:
+    world, state, demands = _study_one_blocked_case()
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    reference = global_progress(equalised, state, demands, bound)
+    check("the blocked demand is named, not silently dropped",
+          reference.blocked == ("P:r|A",), str(reference.blocked))
+    check("the order at C is resolved",
+          reference.resolved == ("E:000000:000:r|C",), str(reference.resolved))
+    check("the blocked part carries the BLOCKED marker",
+          (BLOCKED,) in reference.part_plans, str(reference.part_plans))
+    check("the progress reference contains the two C-service possibilities",
+          len(reference.plans) == 2, str(reference.plans))
+    check("both are B -> C, at one unit and at two",
+          all("1->2" in identity for identity in reference.plans),
+          str(reference.plans))
+    runtime = component_progress(equalised, state, demands, bound)
+    check("the component runtime contains the same two",
+          runtime.identities == reference.identities,
+          f"{sorted(runtime.identities)} vs {sorted(reference.identities)}")
+    ok, detail = progress_levels(world, state, demands, bound)
+    check("and all four levels pass on a non-empty comparison", ok, str(detail))
+    check("the empty == empty pass is now impossible here: the reference is "
+          "not empty", len(reference.plans) > 0)
+
+
+def test_a_blocked_part_contributes_no_action_and_keeps_its_demand() -> None:
+    world, state, demands = _study_one_blocked_case()
+    bound = action_bound(world, state)
+    reference = global_progress(oracle_at(world, bound), state, demands, bound)
+    groups = reference.group_map
+    for identity in reference.plans:
+        increment = groups[identity].increment(world.dimension)
+        check(f"{identity} moves nothing into the blocked coordinate A",
+              increment[0] == 0, str(increment))
+    check("this is not voluntary no-action -- the serviceable part still acts",
+          all(not groups[identity].is_empty for identity in reference.plans))
+
+
+def test_the_reference_partition_is_derived_without_calling_coupling() -> None:
+    import demand_driven_ebu.oracle as oracle_module
+
+    source = inspect.getsource(oracle_module.reference_partition) + inspect.getsource(
+        oracle_module._reference_reach
+    )
+    check("the reference partition calls neither components nor the pruned search",
+          "components(" not in source and "physically_serviceable" not in source)
+    check("it decides serviceability by brute force instead",
+          "plans_serving" in source)
+    for world, state, demands in (_study_one_blocked_case(), _two_supplier_case()):
+        bound = action_bound(world, state)
+        mine = reference_partition(oracle_at(world, bound), state, demands, bound)
+        theirs = components(
+            world,
+            state,
+            ActiveDemandSet.of(
+                tuple(d for d in demands if d.demand_class == "P"),
+                tuple(d for d in demands if d.demand_class == "E"),
+            ),
+        )
+        check(f"{world.world_id}: and it reproduces the runtime partition",
+              tuple(tuple(d.demand_id for d in part) for part in mine)
+              == tuple(component.demand_ids for component in theirs),
+              f"{mine} vs {[c.demand_ids for c in theirs]}")
+
+
+# --------------------------------------------------------------------------
+# 4. the narrower query survives under its own name
+# --------------------------------------------------------------------------
+
+
+def test_all_complete_remains_available_under_a_narrower_name() -> None:
+    import demand_driven_ebu.oracle as oracle_module
+
+    check("the narrow query still exists", callable(all_complete_plans))
+    check("its docstring states the question it answers",
+          "can every active demand be completely satisfied"
+          in all_complete_plans.__doc__.lower())
+    check("and disclaims runtime equivalence",
+          "must not be presented" in all_complete_plans.__doc__)
+    check("the superseded names are gone",
+          not hasattr(oracle_module, "global_feasible")
+          and not hasattr(oracle_module, "component_feasible"))
+    world = study_one_world()
+    state = study_one_state(2, 8, 2)
+    demands = derive_physical_demands(world, state)
+    check("the state has two coordinates two short", len(demands) == 2
+          and all(d.required == 2 for d in demands))
+    check("it still answers its own question: one plan serves both",
+          len(all_complete_plans(world, state, demands, 4)) > 0)
+    starved = study_one_state(0, 12, 0)
+    check("and answers 'no' when they cannot be served together, which is a "
+          "true answer to a narrow question, not a statement that nothing "
+          "can happen",
+          not all_complete_plans(
+              world, starved, derive_physical_demands(world, starved), 4
+          ))
+
+
+# --------------------------------------------------------------------------
+# 5-8. sampling over canonical plan identities
+# --------------------------------------------------------------------------
+
+
+def test_the_sampling_unit_is_the_canonical_plan_identity() -> None:
+    import demand_driven_ebu.plans as plans_module
+    import demand_driven_ebu.policies as policies_module
+
+    check("the random policy is given a plan count, never an outcome count",
+          "plan_count" in inspect.signature(policies_module.choose).parameters)
+    check("the menu enforces one record per plan identity",
+          "may not carry two records of one plan identity"
+          in inspect.getsource(plans_module.enumerate_service_plans))
+    world, state, demands = _two_supplier_case()
+    found = components(
+        world, state,
+        ActiveDemandSet.of((), tuple(d for d in demands if d.demand_class == "E")),
+    )
+    menu = enumerate_service_plans(world, state, found[0])
+    identities = [plan.group.group_id for plan in menu]
+    check("four distinct plan identities", len(set(identities)) == 4, str(identities))
+    check("duplicate records canonicalize to one plan",
+          len(canonical([p.group for p in menu] + [p.group for p in menu])) == 4)
+
+
+def test_the_outcome_map_is_many_to_one() -> None:
+    world, state, demands = _two_supplier_case()
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    reference = global_progress(equalised, state, demands, bound)
+    check("four plan identities", len(reference.plans) == 4, str(reference.plans))
+    support = outcome_support(equalised, state, reference)
+    check("three distinct modeled outcomes", len(support) == 3, str(len(support)))
+    check("so Phi is not injective", len(reference.plans) > len(support))
+    groups = reference.group_map
+    crossed = [
+        identity for identity in reference.plans
+        if outcome(equalised, state, groups[identity])
+        == outcome(equalised, state, groups[reference.plans[1]])
+    ]
+    check("and the two colliding plans are genuinely different action sets",
+          len(crossed) == 2 and crossed[0] != crossed[1], str(crossed))
+
+
+def test_uniform_plan_sampling_induces_a_quarter_half_quarter_law() -> None:
+    world, state, demands = _two_supplier_case()
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    reference = global_progress(equalised, state, demands, bound)
+    law = random_law(equalised, state, reference)
+    check("the induced outcome law is 1/4, 1/2, 1/4",
+          sorted(law.values()) == [F(1, 4), F(1, 4), F(1, 2)],
+          str(sorted(str(v) for v in law.values())))
+    check("it is not 1/3 each: outcome probability carries plan multiplicity",
+          F(1, 3) not in law.values())
+    check("the mass sums to exactly one", sum(law.values()) == 1)
+    runtime = component_progress(equalised, state, demands, bound)
+    check("the runtime path induces the same law",
+          random_law(equalised, state, runtime) == law)
+    doubled = component_progress(equalised, state, demands, bound)
+    check("duplicate plan records would not change it, because identities are "
+          "counted", random_law(equalised, state, doubled) == law)
+
+
+def test_aligned_and_hostile_restrict_then_tie_break_over_plans() -> None:
+    world, state, demands = _two_supplier_case()
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    reference = global_progress(equalised, state, demands, bound)
+    runtime = component_progress(equalised, state, demands, bound)
+    for largest, name in ((True, "aligned"), (False, "hostile")):
+        tied = extremal_identities(equalised, state, reference, largest)
+        check(f"{name}: the tie set is over plan identities",
+              len(tied) == 2, str(sorted(tied)))
+        check(f"{name}: the runtime agrees on the tie set",
+              extremal_identities(equalised, state, runtime, largest) == tied)
+        law = policy_law(equalised, state, reference, largest)
+        check(f"{name}: and on the induced outcome law",
+              policy_law(equalised, state, runtime, largest) == law)
+        check(f"{name}: the law sums to one", sum(law.values()) == 1)
+    aligned = policy_law(equalised, state, reference, True)
+    hostile = policy_law(equalised, state, reference, False)
+    check("aligned ties on two plans that share one outcome, so its law is a "
+          "point mass", len(aligned) == 1 and list(aligned.values()) == [F(1)],
+          str(aligned))
+    check("hostile ties on two plans with distinct outcomes, so its law is "
+          "1/2, 1/2", sorted(hostile.values()) == [F(1, 2), F(1, 2)],
+          str(sorted(str(v) for v in hostile.values())))
+
+
+# --------------------------------------------------------------------------
+# 9. the four levels are separate, and B does not imply C
+# --------------------------------------------------------------------------
+
+
+def test_outcome_support_alone_does_not_prove_the_induced_law() -> None:
+    world, state, demands = _two_supplier_case()
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    reference = global_progress(equalised, state, demands, bound)
+    support = outcome_support(equalised, state, reference)
+    law = random_law(equalised, state, reference)
+    flat = {key: F(1, len(support)) for key in support}
+    check("a flat law over the same support is a different distribution",
+          flat != law)
+    check("so agreeing on support would not have caught a multiplicity error",
+          set(flat) == set(law) and flat != law)
+    check("the four levels are declared separately", len(LEVELS) == 4, str(LEVELS))
+    import demand_driven_ebu.oracle as oracle_module
+    check("and the module says B alone proves neither C nor D",
+          "B alone does not prove C or D" in oracle_module.__doc__)
+
+
+def test_all_four_levels_run_on_every_declared_fixture() -> None:
+    cases = (
+        _study_one_blocked_case(),
+        _two_supplier_case(),
+    )
+    for a, b in ((0, 12), (2, 8), (6, 6), (12, 0)):
+        world = study_one_world()
+        state = study_one_state(a, b, 12 - a - b)
+        cases = cases + (
+            (world, state, tuple(derive_physical_demands(world, state))
+             + (_e(world, "C", 1),)),
+        )
+    for world, state, demands in cases:
+        bound = action_bound(world, state)
+        if bound == 0 or not demands:
+            continue
+        ok, detail = progress_levels(world, state, demands, bound)
+        for level in LEVELS:
+            check(f"{world.world_id}@{tuple(int(v) for v in state)}: {level}",
+                  detail["levels"][level], str(detail))
+        check(f"{world.world_id}@{tuple(int(v) for v in state)}: all levels",
+              ok, str(detail))
+
+
+# --------------------------------------------------------------------------
+# 10. mandatory action, persistence, and integrity
+# --------------------------------------------------------------------------
+
+
+def test_a_serviceable_component_must_execute_one_nonempty_plan() -> None:
+    world, state, demands = _study_one_blocked_case()
+    # The control policy applies no affordability filter, so what is tested
+    # here is mandatory *physical* action: a serviceable component with a
+    # complete plan must execute one. Affordability is a separate gate with
+    # its own status and its own tests.
+    run = EconomyRun(
+        world,
+        ScriptedDisturbance({}),
+        ScriptedArrivals({0: (("r", "C", 1),)}),
+        POLICY_CONTROL,
+        1, 2, 3, 4,
+        state,
+        registered=True,
+        decomposition_gate=True,
+    )
+    record = run.run_epoch()
+    check("the epoch executed", record.epoch_status == STATUS_EXECUTED,
+          record.epoch_status)
+    check("and the executed group is not empty", record.executed_group_id != "g:[]",
+          record.executed_group_id)
+    statuses = {outcome.component_id: outcome.status for outcome in record.outcomes}
+    check("the serviceable component executed",
+          STATUS_EXECUTED in statuses.values(), str(statuses))
+    check("the blocked component reported no complete physical plan",
+          STATUS_NO_COMPLETE_PLAN in statuses.values(), str(statuses))
+    check("the blocked demand persists into the next epoch, because the "
+          "deviation that created it is still there",
+          derive_physical_demands(world, record.state_after)[0].demand_id == "P:r|A",
+          str(derive_physical_demands(world, record.state_after)))
+    check("the decomposition gate verified this epoch",
+          record.decomposition_gate == DECOMPOSITION_VERIFIED,
+          record.decomposition_gate)
+    check("no action was spent on the blocked coordinate",
+          record.state_after[0] == record.state_forced[0],
+          f"{record.state_forced[0]} -> {record.state_after[0]}")
+
+
+def test_blocked_and_unresolved_are_still_different_things() -> None:
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    world, state, demands = _study_one_blocked_case()
+    physical = tuple(d for d in demands if d.demand_class == "P")
+    check("the blocked demand is proved impossible, not undecided",
+          physically_serviceable(world, state, requirements(physical)) == IMPOSSIBLE)
+    run = EconomyRun(
+        world, ScriptedDisturbance({}), ScriptedArrivals({}), POLICY_RANDOM,
+        1, 2, 3, 4, state, registered=True,
+    )
+    saved = enumeration_module.EXHAUSTIVE_BUDGET
+    raised = None
+    try:
+        enumeration_module.EXHAUSTIVE_BUDGET = 1
+        run.run_epoch()
+    except JobInvalid as failure:
+        raised = failure
+    finally:
+        enumeration_module.EXHAUSTIVE_BUDGET = saved
+    check("an undecided search is a job integrity failure, not a blocked part",
+          raised is not None)
+    check("BLOCKED is a reference marker and never a search verdict",
+          BLOCKED not in (SERVICEABLE, IMPOSSIBLE, UNRESOLVED))
 
 
 if __name__ == "__main__":

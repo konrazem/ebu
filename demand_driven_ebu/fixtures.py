@@ -468,3 +468,57 @@ def shared_sink_world(lossy: bool = True) -> DemandWorld:
 def shared_sink_state():
     """Two units each at `A` and `B`; nothing anywhere else."""
     return (F(2), F(2), F(0), F(0), F(0))
+
+
+def two_supplier_world() -> DemandWorld:
+    """Two suppliers, two destinations, every supplier able to serve either.
+
+    The auditor's accepted-domain sampling fixture. With one unit needed at
+    each destination there are **four** distinct irredundant plan identities
+
+        {A->C, A->D}   {A->C, B->D}   {B->C, A->D}   {B->C, B->D}
+
+    but only **three** distinct modeled outcomes: the two cross plans move one
+    unit out of each supplier and are indistinguishable in increment, in
+    post-state and in owner receipts, because `C` and `D` are identical in
+    reference, scale and stock and the swap `C <-> D` is an automorphism.
+
+    So the outcome map is genuinely many-to-one here, and uniform sampling
+    over plan identities induces `1/4, 1/2, 1/4` over outcomes -- **not**
+    `1/3` each. This world exists to pin that down.
+
+    Indices: r|A 0, r|B 1, r|C 2, r|D 3.
+    """
+    coordinates = [
+        Coordinate.stock("r", node, reference, 1)
+        for node, reference in (("A", 2), ("B", 2), ("C", 0), ("D", 0))
+    ]
+    routes = [
+        Route.declare("r", 0, 2, 2),
+        Route.declare("r", 0, 3, 2),
+        Route.declare("r", 1, 2, 2),
+        Route.declare("r", 1, 3, 2),
+    ]
+    return DemandWorld.declare("two-supplier-v1", coordinates, routes, (1,), 4)
+
+
+def two_supplier_state():
+    """Two units at each supplier, nothing at either destination."""
+    return (F(2), F(2), F(0), F(0))
+
+
+def blocked_neighbour_state():
+    """`study_one_world` at (0, 6, 6): a blocked demand beside a live one.
+
+    The auditor's independent-progress counterexample. At this state the
+    physical demand at `A` is four units short and the only route into `A`
+    carries at most two, so it is **proved impossible**. An economic order of
+    one unit at `C` is independent of it and has exactly two complete plans,
+    `B->C` at one unit and at two.
+
+    The runtime serves `C` and leaves `A` unresolved. An oracle that asks
+    "is there one plan serving every active demand?" answers *no*, returns the
+    empty set, and agrees vacuously with a component path that also returns
+    empty -- which is why that oracle could not see this.
+    """
+    return study_one_state(0, 6, 6)

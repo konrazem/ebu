@@ -46,9 +46,12 @@ unreachable; it exists to make sure that if the construction is ever wrong,
 the run stops instead of quietly recording a computational limit as physics.
 
 `decomposition_gate=True` additionally verifies, every epoch, that the
-component decomposition reproduces the globally enumerated feasible set
-exactly. The global set is the scientific authority; decomposition is an
-optimization.
+component decomposition reproduces the decomposition-free **progress**
+reference exactly -- plan identities, outcome support, the induced random law
+with plan multiplicity, and the aligned/hostile tie sets. That reference, not
+the decomposition, is the scientific authority, and it lets an independent
+part progress while another is proved blocked, which is what the runtime
+does.
 
 This module advances model state. Running it is a transition, not a result.
 """
@@ -85,7 +88,7 @@ from .disturbance import DisturbanceProcess, apply_disturbance
 from .physical import PlanGroup, can_happen_now
 from .plans import ServicePlan, enumerate_service_plans, serviceability
 from .policies import POLICY_CONTROL, choose, specification
-from .oracle import agree
+from .oracle import progress_levels
 from .rng import STREAM_ACTOR, Counter
 from .study_one import JobInvalid, action_bound, require_domain
 from .valuation import value_group
@@ -123,8 +126,8 @@ GATE_CLOSED = "JOINT_CLOSURE_VERIFIED"
 GATE_DEFECT = "DEPENDENCY_GRAPH_INCOMPLETE"
 
 DECOMPOSITION_NOT_CHECKED = "DECOMPOSITION_NOT_CHECKED"
-DECOMPOSITION_VERIFIED = "DECOMPOSITION_EQUALS_GLOBAL"
-DECOMPOSITION_DEFECT = "DECOMPOSITION_DIFFERS_FROM_GLOBAL"
+DECOMPOSITION_VERIFIED = "DECOMPOSITION_EQUALS_GLOBAL_PROGRESS"
+DECOMPOSITION_DEFECT = "DECOMPOSITION_DIFFERS_FROM_GLOBAL_PROGRESS"
 
 _REJECTION_LIFECYCLE = {
     "E_REJECTED_PHYSICAL_SCARCITY": LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
@@ -419,30 +422,34 @@ class EconomyRun:
             )
 
     def _check_decomposition(self, state, active, found) -> str:
-        """Verify `combine(F_components) == F_global` for this exact epoch.
+        """Verify the epoch against the global **progress** reference.
 
-        The globally enumerated feasible set is the scientific authority
-        (contract section 6 of the Study-1 freeze). Decomposition into demand
-        components is a computational factorization and is proved equivalent
-        inside the frozen Study-1 domain; this gate is the epoch-by-epoch
-        check of that proof against an independent brute-force computation
-        that never forms a component at all.
+        The authority is `oracle.global_progress`: the family of things this
+        epoch is allowed to do under independent-progress semantics, where a
+        proved-blocked part contributes no action and every other part
+        contributes exactly one complete plan. Decomposition into demand
+        components is a computational factorization and may not define it.
 
-        Off by default because it is exponential in the number of live routes
-        and is a conformance instrument rather than part of the mechanism.
+        All four levels run -- plan identities, outcome support, the induced
+        random law including plan multiplicity, and the aligned/hostile tie
+        sets with their induced outcomes. Outcome support alone would not
+        catch a multiplicity error, so it is never checked alone.
+
+        Off by default: exponential in the number of live routes, and a
+        conformance instrument rather than part of the mechanism.
         """
         if not self.decomposition_gate or not found:
             return DECOMPOSITION_NOT_CHECKED
         bound = action_bound(self.world, state)
         if bound == 0:
             return DECOMPOSITION_VERIFIED
-        ok, detail = agree(self.world, state, active.all, bound)
+        ok, detail = progress_levels(self.world, state, active.all, bound)
         if not ok:
             raise Refusal(
                 f"{DECOMPOSITION_DEFECT} at epoch {self.epoch}: the component "
-                f"path and the global enumeration disagree ({detail}). "
-                "Decomposition is an optimization and may not define "
-                "feasibility; use global enumeration for the registered study."
+                f"path and the decomposition-free progress reference disagree "
+                f"({detail}). Decomposition is an optimization and may not "
+                "define what the epoch can do."
             )
         return DECOMPOSITION_VERIFIED
 
