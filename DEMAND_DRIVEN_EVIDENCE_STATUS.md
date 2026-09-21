@@ -33,7 +33,8 @@ Companions: `LEGACY_ARBITRARY_ACTION_STRESS_MODEL_RECLASSIFICATION.md`,
 | Valuation is independent of capacity | metamorphic conformance in both models | structurally enforced |
 | Replay determinism and counter-addressed RNG | both models | extended from two streams to four |
 | Locality of valuation | both models | |
-| Closed-cycle no issuance, and its simultaneous-group extension | `DEMAND_DRIVEN_CLOSED_CYCLE_THEOREM.md` §2 | proved for the corrected model and verified exactly |
+| Closed-cycle no issuance, and its simultaneous-group extension | `DEMAND_DRIVEN_CLOSED_CYCLE_THEOREM.md` §2 | proved for the corrected model and re-verified exactly after the additive-service correction |
+| Actor-only status is decided by external-event provenance, not by `sum dV_ext == 0` | same §1a | the potential-only test admits cancelling and constant-`V` external events |
 | Capacity-source identity `delta B = V(x_0) - V(x_T) + sum dV_ext` | same, §1 | residual 0 in all four arms |
 | An economic arrival issues no capacity | same, §5 | an arrival moves no stock |
 | Restoring-tendency definitions: `dV_actor = -E`, `dV_total`, `D_A`, `D_T` | `EBU_RESTORING_TENDENCY_FOUNDATION.md` | model-independent; carry forward |
@@ -87,9 +88,10 @@ demand-conditioned menu:
 
 | item | status |
 |---|---|
-| The demand-driven conformance gate (273 assertions) | conformance. Establishes that the implementation obeys its contract. Says nothing about behaviour. |
+| The demand-driven conformance gate (365 assertions) | conformance. Establishes that the implementation obeys its contract. Says nothing about behaviour. |
 | The demand-driven rehearsal (3,200 epochs) | **NON-CONFIRMATORY**. Infrastructure observation only. Not tuned to, not interpreted, not citable. |
-| `DEMAND_DRIVEN_MODEL_FINDINGS.md` F-1 to F-4 | structural consequences of the frozen contract, shown exactly on declared fixtures. Not behavioural findings, not generalizable from those fixtures. |
+| `DEMAND_DRIVEN_MODEL_FINDINGS.md` F-1 to F-4 | structural consequences of the frozen contract, shown exactly on declared fixtures. Not behavioural findings, not generalizable from those fixtures. F-1 was revised after the independent audit: its stronger form was partly a coupling artifact. |
+| Anything computed by the defective build at commit `22fd229` | **withdrawn.** That build reported two independent orders as served by half the quantity, and froze serviceable demands behind unserviceable ones. Its rehearsal artifact was replaced, and no number from it is citable. |
 | The `loss-v1` twelve-epoch policy paths | illustrative single deterministic paths on one fixture. Explicitly not evidence about hostile safety or comparator behaviour. |
 | The case library | defines questions and environments. Its ledger is **empty**; no case has a recorded run under any mechanism. |
 

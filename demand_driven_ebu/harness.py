@@ -51,14 +51,19 @@ from .arrivals import ArrivalProcess
 from .capacity import CapacityLedger
 from .coupling import DemandComponent, components
 from .demand import (
-    E_ADMITTED_BUT_EBU_UNAFFORDABLE,
-    E_SERVED,
+    LIFECYCLE_ADMITTED,
+    LIFECYCLE_ADMITTED_BUT_EBU_UNAFFORDABLE,
+    LIFECYCLE_ADMITTED_BUT_UNRESOLVED_PHYSICAL,
+    LIFECYCLE_ARRIVED,
+    LIFECYCLE_REJECTED_INCOMPATIBLE,
+    LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
+    LIFECYCLE_SERVED,
     ActiveDemandSet,
     EconomicDemand,
-    completely_serves,
     derive_physical_demands,
     state_identity,
 )
+from .service import requirements, served_economic_ids
 from .disturbance import DisturbanceProcess, apply_disturbance
 from .physical import PlanGroup, can_happen_now
 from .plans import ServicePlan, enumerate_service_plans
@@ -83,6 +88,43 @@ DECLARED_STATUSES = (
 
 GATE_CLOSED = "JOINT_CLOSURE_VERIFIED"
 GATE_DEFECT = "DEPENDENCY_GRAPH_INCOMPLETE"
+
+_REJECTION_LIFECYCLE = {
+    "E_REJECTED_PHYSICAL_SCARCITY": LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
+    "E_REJECTED_INCOMPATIBLE": LIFECYCLE_REJECTED_INCOMPATIBLE,
+}
+
+
+@dataclass(frozen=True)
+class ArrivalOutcome:
+    """One incoming economic demand, tracked over the common raw arrival set.
+
+    Arms share an exogenous arrival stream but reach different physical states,
+    so they legitimately admit different subsets. A service rate over admitted
+    demands alone is therefore not a whole-system measure: an arm that admits
+    little and serves all of it would score perfectly. Every arrival gets a row
+    here so comparisons can be reported over arrivals, which are identical
+    across arms by construction.
+    """
+
+    demand_id: str
+    resource: str
+    quantity: Fraction
+    destination: int
+    arrival_epoch: int
+    state: str
+    resolved_epoch: int | None = None
+
+    def at(self, state: str, epoch: int | None = None) -> "ArrivalOutcome":
+        return ArrivalOutcome(
+            self.demand_id,
+            self.resource,
+            self.quantity,
+            self.destination,
+            self.arrival_epoch,
+            state,
+            epoch if epoch is not None else self.resolved_epoch,
+        )
 
 
 def read_code_identity() -> str:
@@ -134,6 +176,7 @@ class EpochRecord:
     state_forced: Vector
     state_after: Vector
     disturbance_status: str
+    external_events: tuple[str, ...]
     external_deviation: Fraction
     potential_before: Fraction
     potential_forced: Fraction
@@ -146,6 +189,7 @@ class EpochRecord:
     active_economic: tuple[str, ...]
     outcomes: tuple[ComponentOutcome, ...]
     executed_group_id: str
+    executed_provenance: tuple[tuple[str, tuple[str, ...]], ...]
     epoch_ebu: Fraction
     receipts: tuple[tuple[str, Fraction], ...]
     owner_deltas: tuple[tuple[str, Fraction], ...]
@@ -153,6 +197,8 @@ class EpochRecord:
     balance_total: Fraction
     served_economic: tuple[str, ...]
     unaffordable_economic: tuple[str, ...]
+    unresolved_economic: tuple[str, ...]
+    arrival_states: tuple[tuple[str, str], ...]
     joint_gate: str
     accounting_residual: Fraction
     conservation_residual: Fraction
@@ -180,6 +226,8 @@ class EconomyRun:
     held: tuple[EconomicDemand, ...] = field(init=False, default=())
     epoch: int = field(init=False, default=0)
     external_total: Fraction = field(init=False, default=Fraction(0))
+    external_events: list[str] = field(init=False, default_factory=list)
+    arrival_ledger: dict[str, ArrivalOutcome] = field(init=False, default_factory=dict)
     initial_potential: Fraction = field(init=False)
     records: list[EpochRecord] = field(init=False, default_factory=list)
 
@@ -298,8 +346,29 @@ class EconomyRun:
         potential_forced = potential.value_total(forced)
         external = potential_forced - potential_before
 
+        # An external event is counted when nature actually moved stock, never
+        # inferred from the potential it happened to change. Two disturbances
+        # can cancel in `V`, or permute stock at constant `V`, and an interval
+        # containing either is not actor-only. See `cycles`.
+        epoch_events: tuple[str, ...] = ()
+        if forced != before:
+            epoch_events = (
+                f"ext:t={self.epoch}:{event.source}->{event.destination}"
+                f":q={event.quantity}",
+            )
+            self.external_events.extend(epoch_events)
+
         physical = derive_physical_demands(world, forced)
         incoming = self.arrivals.arrivals(world, self.arrival_seed, self.epoch)
+        for demand in incoming:
+            self.arrival_ledger[demand.demand_id] = ArrivalOutcome(
+                demand.demand_id,
+                demand.resource,
+                demand.quantity,
+                demand.destination,
+                self.epoch,
+                LIFECYCLE_ARRIVED,
+            )
 
         decision: AdmissionDecision | None = None
         admitted: tuple[EconomicDemand, ...] = ()
@@ -309,10 +378,18 @@ class EconomyRun:
                 world, forced, physical, self.held, incoming, self.admission_seed, self.epoch
             )
             rejected = tuple((demand.demand_id, demand.status) for demand in refused)
+            for demand in admitted:
+                self.arrival_ledger[demand.demand_id] = self.arrival_ledger[
+                    demand.demand_id
+                ].at(LIFECYCLE_ADMITTED)
+            for demand in refused:
+                self.arrival_ledger[demand.demand_id] = self.arrival_ledger[
+                    demand.demand_id
+                ].at(_REJECTION_LIFECYCLE[demand.status], self.epoch)
         self.held = tuple(sorted(self.held + admitted, key=lambda d: d.demand_id))
 
         active = ActiveDemandSet.of(physical, self.held)
-        found = components(world, active)
+        found = components(world, forced, active)
 
         outcomes: list[ComponentOutcome] = []
         selected: list[ServicePlan] = []
@@ -378,11 +455,10 @@ class EconomyRun:
         potential_after = potential.value_total(after)
         self.external_total += external
 
-        served = tuple(
-            demand.demand_id
-            for demand in self.held
-            if completely_serves(demand, increment)
-        )
+        # Service is decided over the whole requirement set, never one demand
+        # at a time: separate orders at one destination are additive, so a
+        # two-unit delivery does not serve two two-unit orders.
+        served = served_economic_ids(requirements(self.held), increment)
         unaffordable = tuple(
             demand_id
             for outcome in outcomes
@@ -390,7 +466,35 @@ class EconomyRun:
             for demand_id in outcome.demand_ids
             if demand_id.startswith("E:")
         )
+        unresolved = tuple(
+            demand_id
+            for outcome in outcomes
+            if outcome.status == STATUS_NO_COMPLETE_PLAN
+            for demand_id in outcome.demand_ids
+            if demand_id.startswith("E:")
+        )
+        for demand_id in served:
+            self.arrival_ledger[demand_id] = self.arrival_ledger[demand_id].at(
+                LIFECYCLE_SERVED, self.epoch
+            )
+        still_held = {d.demand_id for d in self.held} - set(served)
+        for demand_id in sorted(still_held):
+            if demand_id in unaffordable:
+                state = LIFECYCLE_ADMITTED_BUT_EBU_UNAFFORDABLE
+            elif demand_id in unresolved:
+                state = LIFECYCLE_ADMITTED_BUT_UNRESOLVED_PHYSICAL
+            else:
+                state = LIFECYCLE_ADMITTED
+            self.arrival_ledger[demand_id] = self.arrival_ledger[demand_id].at(state)
         self.held = tuple(demand for demand in self.held if demand.demand_id not in served)
+        arrival_states = tuple(
+            (demand_id, self.arrival_ledger[demand_id].state)
+            for demand_id in sorted(
+                {d.demand_id for d in incoming}
+                | set(served)
+                | still_held
+            )
+        )
 
         conservation = Fraction(0)
         for resource in world.resources:
@@ -420,6 +524,7 @@ class EconomyRun:
             forced,
             after,
             event.status,
+            epoch_events,
             external,
             potential_before,
             potential_forced,
@@ -432,6 +537,12 @@ class EconomyRun:
             tuple(demand.demand_id for demand in active.economic),
             tuple(outcomes),
             combined.group_id,
+            tuple(
+                sorted(
+                    (entry for plan in selected for entry in plan.provenance),
+                    key=lambda entry: entry[0],
+                )
+            ),
             epoch_ebu,
             receipts,
             owner_deltas,
@@ -439,6 +550,8 @@ class EconomyRun:
             self.ledger.total,
             served,
             unaffordable,
+            unresolved,
+            arrival_states,
             gate,
             accounting,
             conservation,

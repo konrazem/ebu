@@ -22,5 +22,21 @@ What it does establish, and all it establishes:
 - the economic arrival sequence is identical under all four policies, as the
   stream-separation contract requires.
 
+It additionally carries the checks required by the audit correction pass, all
+of which are semantics checks rather than observations:
+
+- zero economic double-service events — no coordinate ever had served orders
+  claiming more than the pool actually delivered;
+- zero economic demands served more than once;
+- zero executed actions without demand provenance;
+- identical raw arrival sequences across arms, with admitted counts differing
+  by arm, which is the endogenous-admission contract working;
+- the full arrival lifecycle over the common raw arrival set, so no comparison
+  need ever be computed over admitted demands alone.
+
+The artifact from the superseded build at commit `22fd229` was **replaced**,
+not amended: that build mis-counted additive economic service, so none of its
+numbers is citable even as infrastructure observation.
+
 Registered artifacts live in `results/stage_a/`, `results/stage_b/` and
 `results/homeostasis/`. This directory is not one of them.

@@ -52,6 +52,38 @@ E_ADMITTED_BUT_EBU_UNAFFORDABLE = "E_ADMITTED_BUT_EBU_UNAFFORDABLE"
 
 E_TERMINAL_STATUSES = (E_SERVED, E_REJECTED_PHYSICAL_SCARCITY, E_REJECTED_INCOMPATIBLE)
 
+# Per-incoming-demand lifecycle, tracked over the COMMON RAW ARRIVAL SET.
+#
+# Admission is endogenous: arms share an exogenous arrival stream but reach
+# different physical states, so they legitimately admit different subsets. A
+# service rate computed over admitted demands alone is therefore not a
+# whole-system comparison -- an arm that admits little and serves all of it
+# would score perfectly. Every comparison must be reported over the arrivals,
+# which are identical across arms by construction.
+LIFECYCLE_ARRIVED = "ARRIVED"
+LIFECYCLE_ADMITTED = "ADMITTED"
+LIFECYCLE_REJECTED_PHYSICAL_SCARCITY = "REJECTED_PHYSICAL_SCARCITY"
+LIFECYCLE_REJECTED_INCOMPATIBLE = "REJECTED_INCOMPATIBLE"
+LIFECYCLE_SERVED = "SERVED"
+LIFECYCLE_ADMITTED_BUT_UNRESOLVED_PHYSICAL = "ADMITTED_BUT_UNRESOLVED_PHYSICAL"
+LIFECYCLE_ADMITTED_BUT_EBU_UNAFFORDABLE = "ADMITTED_BUT_EBU_UNAFFORDABLE"
+
+DECLARED_LIFECYCLE = (
+    LIFECYCLE_ARRIVED,
+    LIFECYCLE_ADMITTED,
+    LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
+    LIFECYCLE_REJECTED_INCOMPATIBLE,
+    LIFECYCLE_SERVED,
+    LIFECYCLE_ADMITTED_BUT_UNRESOLVED_PHYSICAL,
+    LIFECYCLE_ADMITTED_BUT_EBU_UNAFFORDABLE,
+)
+
+LIFECYCLE_TERMINAL = (
+    LIFECYCLE_SERVED,
+    LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
+    LIFECYCLE_REJECTED_INCOMPATIBLE,
+)
+
 
 def state_identity(state: Vector) -> str:
     """A stable name for the physical state a P-demand was read from."""
@@ -182,14 +214,11 @@ def derive_physical_demands(world: DemandWorld, state: Vector) -> tuple[Physical
     return tuple(demands)
 
 
-def completely_serves(demand: Demand, increment: Vector) -> bool:
-    """delta_G[c] >= q. The whole service contract, for either demand class."""
-    return increment[demand.coordinate] >= demand.required_delta
-
-
-def coverage(demand: Demand, increment: Vector) -> tuple[Fraction, Fraction]:
-    """(required, delivered) at the demand's coordinate."""
-    return demand.required_delta, increment[demand.coordinate]
+# There is deliberately no per-demand `completely_serves` here. Testing each
+# demand on its own against a plan's increment is exactly the defect that let
+# one delivered unit satisfy two independent economic orders. Service is a
+# set-level property of the whole requirement collection and lives in
+# `service`, which is the only place that may decide it.
 
 
 @dataclass(frozen=True)

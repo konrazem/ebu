@@ -81,7 +81,7 @@ def unserviceable_ids(
     if active.is_empty:
         return frozenset()
     blocked: set[str] = set()
-    for component in components(world, active):
+    for component in components(world, state, active):
         if not has_service_plan(world, state, component):
             blocked.update(component.demand_ids)
     return frozenset(blocked)

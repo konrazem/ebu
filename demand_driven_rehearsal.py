@@ -43,6 +43,8 @@ from demand_driven_ebu.policies import (
     POLICY_HOSTILE,
     POLICY_RANDOM,
 )
+from demand_driven_ebu.demand import DECLARED_LIFECYCLE, LIFECYCLE_SERVED
+from demand_driven_ebu.service import pool
 
 EPOCHS = 200
 REPLICATES = 4
@@ -119,12 +121,77 @@ def columns(records) -> list[list[str]]:
             ",".join(r.arrivals),
             ",".join(r.admitted_now),
             ",".join(r.served_economic),
-            ";".join(f"{a}={v}" for a, v in r.state_after_pairs())
-            if hasattr(r, "state_after_pairs")
-            else ";".join(str(v) for v in r.state_after),
+            ",".join(r.external_events),
+            ";".join(f"{a}:{'|'.join(d)}" for a, d in r.executed_provenance),
+            ";".join(str(v) for v in r.state_after),
         ]
         for r in records
     ]
+
+
+def audit(world, run, records) -> dict:
+    """The seven checks the audit correction pass asks the rehearsal to make.
+
+    Every one of these is an infrastructure or semantics check. None of them
+    is a behavioural observation and none may be read as one.
+    """
+    quantities = {row.demand_id: row.quantity for row in run.arrival_ledger.values()}
+
+    double_service = []
+    unprovenanced = []
+    for record in records:
+        increment = tuple(
+            after - forced
+            for after, forced in zip(record.state_after, record.state_forced)
+        )
+        claimed: dict[int, Fraction] = {}
+        for demand_id in record.served_economic:
+            coordinate = run.arrival_ledger[demand_id].destination
+            claimed[coordinate] = claimed.get(coordinate, Fraction(0)) + quantities[demand_id]
+        for coordinate, total in claimed.items():
+            if total > pool(increment, coordinate):
+                double_service.append(
+                    f"t={record.epoch} c={coordinate} claimed={total} "
+                    f"pool={pool(increment, coordinate)}"
+                )
+        executed = {action_id for action_id, _ in record.executed_provenance}
+        for action_id, demand_ids in record.executed_provenance:
+            if not demand_ids:
+                unprovenanced.append(f"t={record.epoch} {action_id}")
+        if record.executed_group_id != "g:[]":
+            members = record.executed_group_id[3:-1].split(",")
+            if set(members) != executed:
+                unprovenanced.append(f"t={record.epoch} group/provenance mismatch")
+
+    served_twice = []
+    seen: dict[str, int] = {}
+    for record in records:
+        for demand_id in record.served_economic:
+            seen[demand_id] = seen.get(demand_id, 0) + 1
+    served_twice = sorted(k for k, v in seen.items() if v > 1)
+
+    frozen_but_others_ran = sum(
+        1
+        for record in records
+        if any(o.status == STATUS_NO_COMPLETE_PLAN for o in record.outcomes)
+        and any(o.status == STATUS_EXECUTED for o in record.outcomes)
+    )
+
+    lifecycle: dict[str, int] = {state: 0 for state in DECLARED_LIFECYCLE}
+    for row in run.arrival_ledger.values():
+        lifecycle[row.state] = lifecycle.get(row.state, 0) + 1
+
+    return {
+        "double_service": double_service,
+        "served_twice": served_twice,
+        "unprovenanced": unprovenanced,
+        "independent_progress_epochs": frozen_but_others_ran,
+        "lifecycle": lifecycle,
+        "arrivals_total": len(run.arrival_ledger),
+        "served_total": sum(
+            1 for row in run.arrival_ledger.values() if row.state == LIFECYCLE_SERVED
+        ),
+    }
 
 
 def execute():
@@ -145,7 +212,12 @@ def execute():
             )
             records = run.run(EPOCHS)
             key = f"{policy}#{replicate}"
-            table[key] = (summarize(records), run)
+            summary = summarize(records)
+            summary["audit"] = audit(world, run, records)
+            summary["raw_arrivals"] = tuple(
+                demand for record in records for demand in record.arrivals
+            )
+            table[key] = (summary, run)
             payload[key] = columns(records)
     return world, table, payload
 
@@ -221,6 +293,66 @@ def main() -> int:
             f"{str(med_menu):>9s}{str(med_v):>8s}{str(end_b):>10s}"
         )
 
+    # ---- audit correction pass checks (infrastructure, not behaviour) ----
+    raw_by_policy = {}
+    for policy in POLICIES:
+        for replicate in range(REPLICATES):
+            summary, _ = table[f"{policy}#{replicate}"]
+            raw_by_policy.setdefault(replicate, {})[policy] = summary["raw_arrivals"]
+    arrivals_identical = all(
+        len({tuple(v) for v in per_replicate.values()}) == 1
+        for per_replicate in raw_by_policy.values()
+    )
+    admitted_by_policy = {
+        policy: sum(
+            table[f"{policy}#{r}"][0]["audit"]["lifecycle"].get("ARRIVED", 0)
+            for r in range(REPLICATES)
+        )
+        for policy in POLICIES
+    }
+    never_admitted = {
+        policy: sum(
+            table[f"{policy}#{r}"][0]["admitted"] for r in range(REPLICATES)
+        )
+        for policy in POLICIES
+    }
+    double = [
+        entry
+        for key, (summary, _) in table.items()
+        for entry in summary["audit"]["double_service"]
+    ]
+    twice = [
+        f"{key}:{entry}"
+        for key, (summary, _) in table.items()
+        for entry in summary["audit"]["served_twice"]
+    ]
+    unprov = [
+        f"{key}:{entry}"
+        for key, (summary, _) in table.items()
+        for entry in summary["audit"]["unprovenanced"]
+    ]
+    independent_progress = sum(
+        summary["audit"]["independent_progress_epochs"] for summary, _ in table.values()
+    )
+
+    print("\naudit correction pass checks")
+    print(f"    E/E double service events                  {len(double)}")
+    print(f"    economic demands served more than once     {len(twice)}")
+    print(f"    executed actions without demand provenance {len(unprov)}")
+    print(f"    raw arrival sequences identical across arms {arrivals_identical}")
+    print(f"    admitted counts by arm                     "
+          f"{ {p: never_admitted[p] for p in POLICIES} }")
+    print(f"    epochs where an unserviceable component sat beside an executing one "
+          f"{independent_progress}")
+
+    lifecycle_total: dict[str, int] = {}
+    for summary, _ in table.values():
+        for state, count in summary["audit"]["lifecycle"].items():
+            lifecycle_total[state] = lifecycle_total.get(state, 0) + count
+    print("    arrival lifecycle over the common raw set:")
+    for state in DECLARED_LIFECYCLE:
+        print(f"        {state:38s} {lifecycle_total.get(state, 0)}")
+
     ARTIFACT.parent.mkdir(parents=True, exist_ok=True)
     document = {
         "class": "REHEARSAL / NON-CONFIRMATORY",
@@ -232,6 +364,22 @@ def main() -> int:
         "policies": list(POLICIES),
         "replay_deterministic": deterministic,
         "worst_residuals": {k: str(v) for k, v in worst.items()},
+        "audit": {
+            "double_service_events": len(double),
+            "served_more_than_once": len(twice),
+            "actions_without_provenance": len(unprov),
+            "raw_arrivals_identical_across_arms": arrivals_identical,
+            "admitted_by_arm": {p: never_admitted[p] for p in POLICIES},
+            "independent_progress_epochs": independent_progress,
+            "arrival_lifecycle": lifecycle_total,
+        },
+        "arrival_ledger": {
+            key: sorted(
+                (row.demand_id, str(row.quantity), row.state, row.arrival_epoch)
+                for row in run.arrival_ledger.values()
+            )
+            for key, (_, run) in table.items()
+        },
         "columns": payload,
     }
     with gzip.open(ARTIFACT, "wt", encoding="utf-8") as handle:
@@ -243,6 +391,10 @@ def main() -> int:
         deterministic
         and opening_identity == closing_identity
         and all(value == 0 for value in worst.values())
+        and not double
+        and not twice
+        and not unprov
+        and arrivals_identical
     )
     return 0 if healthy else 1
 

@@ -11,39 +11,63 @@ Nothing here is repaired. Repairing any of them would be a model redesign,
 which this task explicitly excludes. They are recorded so the first registered
 study is designed with them visible rather than discovered mid-run.
 
+**Revised after the independent audit of commit `22fd229`.** F-1 was partly an
+artifact of an over-broad coupling rule and is rewritten below; F-2, F-3 and
+F-4 are unchanged in substance. The audit's corrections are described in
+`DEMAND_DRIVEN_AUDIT_CORRECTION_HANDOFF.md`.
+
 ---
 
-## F-1 Complete service plus coupling means one stuck obligation freezes its component
+## F-1 A stuck obligation freezes only what it genuinely competes with
 
-A plan must serve **every** demand in its component completely. If any single
-demand in a component is unserviceable, the component's menu is empty, and the
-serviceable demands in it go unserved too.
+**Superseded in part by the audit correction pass.** As first written, this
+finding said that any unserviceable demand freezes its whole component. That
+was true of the code at commit `22fd229`, but it was largely an artifact of a
+coupling rule that merged every demand in a transport-connected component. The
+rule has been narrowed to actual binding constraints, and the artifact is gone.
+What remains is a smaller and genuinely structural restriction, stated below.
+The original text is not retained as a current finding because it would
+misdescribe the model; the defect and its correction are recorded in
+`DEMAND_DRIVEN_AUDIT_CORRECTION_HANDOFF.md`.
 
-**Exact demonstration.** In `sandwater-v1` at state `(8, 12, 10, 6, 6)` the
-physical shortfall `P:sand|A` has **5** complete executable plans on its own.
-Introduce one admitted economic demand for 25 units of sand — beyond what the
-quanta and plan-size cap can deliver — and the coupled component's menu drops
-to **0**. The physical need is now unserved, not because anything about it
-changed, but because it shares a resource with an obligation that cannot be met.
+**What was an artifact.** In `sandwater-v1` at state `(8, 12, 10, 6, 6)`, the
+shortfall `P:sand|A` has five complete executable plans. Add an unserviceable
+order for 25 units of sand at `C` and, under the old rule, the coupled
+component's menu dropped to zero: the shortfall was frozen by a demand it could
+not possibly compete with. Under the corrected rule the order is a singleton
+component with no plans, the shortfall keeps all five, and the two are resolved
+independently in the same epoch.
+
+**What is genuinely structural.** Demands that *do* share a binding constraint
+are still resolved together or not at all, and the complete-service contract
+then propagates one demand's impossibility to its partners. The sharpest case
+is a shared service-delivery pool. The same 25-unit order placed at `A` — the
+coordinate that carries the shortfall — freezes both, because the two claims
+draw on one pool and the combined requirement is `max(25, 2) = 25`, which no
+plan reaches.
+
+This freeze is **a declared complete-service and allocation restriction, not
+unavoidable physical scarcity.** The stock to close the two-unit shortfall
+exists and is reachable; what forbids using it is the contract's refusal of
+partial service, which requires the 25-unit order to be met in the same plan.
+Nothing physical prevents the restoration.
 
 **Why admission does not prevent it.** Admission refuses an arrival that is
-unserviceable *at the moment of admission*, and refuses one that would newly
+unserviceable at the moment of admission, and refuses one that would newly
 break an existing obligation. It cannot bind the future: a natural
-disturbance, an irreversible loss, or the actor's own previous choice can all
-make an already-admitted demand unserviceable afterwards. Contract section 9
-accepts blocking *within* a component — it only forbids blocking across
-independent ones — so this is faithful, not a bug.
+disturbance, an irreversible loss, or the actor's own previous choice can make
+an already-admitted demand unserviceable afterwards.
 
-**What it means for study design.** A long registered run can enter a state
-where a resource is permanently frozen by one stuck obligation. Whether that
-happens, how often, and under which arrival law is an empirical question the
-first study must be able to detect, which requires the stuck-component status
-to be a reported metric rather than an incident.
+**What it means for study design.** The stuck-component fraction must be a
+declared reported metric, and it must distinguish the two cases above, because
+only one of them is about physics. In the rehearsal, 959 of 3,200 epochs had an
+unserviceable component sitting beside an executing one — which is the
+corrected behaviour working, and under the old rule would have been 959 epochs
+of unnecessary freezing.
 
 **Candidate remedies, all out of scope here.** Demand expiry; partial service
-with backlog; splitting a component when a member is provably unserviceable;
-an admission rule with a serviceability horizon. Each changes the frozen
-service contract and needs its own authorization.
+with backlog; an admission rule with a serviceability horizon. Each changes the
+frozen service contract and needs its own authorization.
 
 ## F-2 Irreversible loss makes complete restoration permanently impossible
 
@@ -127,7 +151,15 @@ arrival sequence itself is untouched.
 
 ## What would change these
 
-F-1 and F-4 are consequences of complete-service semantics. F-2 is a
-consequence of conservation plus irreversibility. F-3 is a consequence of
-Capacity V1's no-pooling rule. Each would be altered only by changing the
-corresponding frozen rule, which is a redesign and is not authorized here.
+F-1 and F-4 are consequences of complete-service semantics — F-1 now in its
+narrowed form, after the coupling artifact was removed. F-2 is a consequence of
+conservation plus irreversibility. F-3 is a consequence of Capacity V1's
+no-pooling rule. Each would be altered only by changing the corresponding
+frozen rule, which is a redesign and is not authorized here.
+
+A fifth item that is *not* a finding but is worth recording beside them:
+economic quantities are additive across separate orders, so several
+individually serviceable requests at one destination can be jointly
+unserviceable. In the rehearsal this raised scarcity rejections sharply
+relative to the defective build, which is the corrected semantics working
+rather than a change in the world.

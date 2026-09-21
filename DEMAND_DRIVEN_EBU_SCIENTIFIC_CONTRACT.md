@@ -11,6 +11,21 @@ Implementation: `demand_driven_ebu/`. Conformance gate:
 
 ---
 
+## Correction log
+
+An independent read-only audit of commit `22fd229` found five defects. All
+five are corrected here, and the corrected semantics are what this document
+describes. Corrections are recorded in place, not erased.
+
+| # | defect at `22fd229` | correction |
+|---|---|---|
+| 1 | Economic service was tested per demand against the plan increment, so two independent orders of `q = 2` at one destination were both reported served by `2` delivered units | Economic quantities are **additive** across separate orders. Service is decided over the whole requirement set, in `service`. §3 |
+| 2 | — (confirmed correct) | E/P overlap remains legitimate: a physical shortfall is a post-state condition and draws nothing from the economic pool. The combined requirement is a **maximum**, not a sum. §3 |
+| 3 | Coupling merged every demand in a transport-connected component, so an unserviceable demand froze serviceable ones that it could not possibly compete with | Coupling is decided from **actual binding constraints**, computed from the plans that individually serve each demand. §6 |
+| 4 | The decision packet required admitted demand components to be identical across arms, which is impossible in a closed loop | Arms share an identical **raw arrival stream**; admission is endogenous and legitimately differs. Comparisons are reported over the common raw arrival set. §5a |
+| 5 | An interval was classified actor-only when `sum dV_ext == 0` | Actor-only is decided from explicit **external-event provenance**. External events can cancel in the potential or permute stock at constant `V`. See the cycle theorem document. |
+| 6 | A sink could be exported from by an ordinary route | A sink is irreversible: a world declaring a route out of one is refused at construction. §13 |
+
 ## 0. The correction this model makes
 
 Earlier behavioural studies let actors choose from broad sets of physically
@@ -102,27 +117,66 @@ separately and never merged:
 
 ## 3. The service contract
 
-Both classes reduce to one test, which is why they can share a single
-unordered obligation set without a scheduler:
+Service is decided over the **whole requirement set**, never one demand at a
+time. Testing each demand independently against the plan's increment was the
+audit's first defect: it let one delivered unit satisfy two separate orders.
 
-> demand `d` at coordinate `c` requiring `q` is **completely served** by plan
-> `G` exactly when `delta_G[c] >= q`.
+**Economic quantities are additive.** Separate demand ids are separate
+material obligations. For a plan `G` and destination `c` the **service pool**
+is what `G` actually put there,
 
-For `E`, `q` is the requested quantity. For `P`, `q` is the shortfall, so the
-test reads `x_c + delta_G[c] >= x*_c`.
+```
+pool(G, c) = max(0, delta_G[c])
+```
 
-Three consequences are deliberate.
+and an allocation assigns each order `s_d(G)` with
 
-1. **No double credit is possible.** Service is a property of the plan's *net*
-   increment, not a sum of per-action attributions, so there is no credit
-   ledger in which one action serving several demands could be counted twice.
-2. **No partial service.** Backlog, fractional fulfilment, deadlines and
-   service quality do not exist in this model. If complete service is
-   impossible the demand — and its whole component — remains unresolved.
-3. **Overshoot is permitted.** Delivering more than `q` still delivers `q`.
-   This is what leaves a hostile actor a real choice: it may answer the
-   obligation destructively. Forbidding overshoot would collapse the hostile
-   policy into one that cannot act.
+```
+0 <= s_d(G) <= q_d,        sum_d s_d(G) <= pool(G, c)
+```
+
+Order `d` is completely served exactly when `s_d(G) = q_d`. Two independent
+orders of two units therefore need four delivered units, never two.
+
+The pool is **net, not gross**, and that is deliberate: a unit that arrives at
+`c` and leaves again in the same plan is not present afterwards, so it is
+available to nobody. Counting gross inflow would reintroduce the same
+double-count one level down.
+
+**Physical demand is not an economic quantity claim.** A shortfall at `c` is a
+condition on the post-state, `x_c + delta_G[c] >= x*_c`. It draws nothing from
+the economic pool, and nothing is subtracted between the two: the same two
+delivered units may fulfil a two-unit order *and* close a two-unit deficit,
+because both conditions ask for the same units to be present afterwards. So
+the combined requirement at a coordinate is a **maximum**, not a sum:
+
+```
+delta_G[c]  >=  max( sum_d q_d ,  deficit_c )
+```
+
+Four consequences are deliberate.
+
+1. **No double credit is possible.** Economic service is measured against a
+   single shared pool per coordinate, so no delivered unit can be claimed by
+   two orders; and the pool itself is a property of the plan's net increment,
+   so there is no per-action credit ledger in which anything could be counted
+   twice.
+2. **E/P overlap stays legitimate.** The two claims are different kinds of
+   statement and are never netted against each other.
+3. **No partial service.** Backlog, fractional fulfilment, deadlines and
+   service quality do not exist. If complete service is impossible the demand
+   — and its component — remains unresolved. The allocator can report a
+   partial fill, but only as a diagnostic that explains a shortfall; no
+   completion predicate consults it.
+4. **Overshoot is permitted.** Delivering more than required still delivers
+   the requirement. This is what leaves a hostile actor a real choice: it may
+   answer the obligation destructively. Forbidding overshoot would collapse
+   the hostile policy into one that cannot act.
+
+These semantics govern **everywhere**: admission compatibility, joint
+serviceability, plan enumeration, plan validation, completion bookkeeping,
+the service audit and the saved artifacts. They are not a patched final
+predicate.
 
 ## 4. Admission — random compatible subset
 
@@ -147,10 +201,49 @@ otherwise one stuck demand would freeze admission permanently.
 The policy then enumerates the inclusion-maximal admissible subsets and picks
 one **uniformly** with its own independent random stream.
 
+**The sampling measure, stated rather than assumed.** The draw is uniform over
+inclusion-maximal admissible *subsets*. That is **not** uniform over demands
+and does not give every request the same marginal admission probability. With
+`k` pairwise-incompatible arrivals the maximal subsets are the `k` singletons
+and each request is admitted with probability `1/k`; a request compatible with
+everything appears in every maximal subset and is admitted with probability
+`1`. Marginal admission probability is a function of how a request sits in the
+compatibility structure. Any study reporting admission rates must report the
+induced per-demand marginals rather than assuming them flat. This is a
+property of the declared rule, not a defect: the rule is required to be
+arbitrary and EBU-blind, not fair.
+
+Serviceability is decided under the additive semantics of §3. Two orders of
+700 units against 1000 available stock are not jointly serviceable even though
+each is serviceable alone.
+
 **P-demand's priority is ontological, not social.** It cannot be rejected
 because it is literally encoded by physical state, while an E-demand is a new
 optional obligation being considered. This is model semantics. It is not a
 claim that physical need outranks economic need morally.
+
+## 5a. Comparison contract — identical raw arrivals, endogenous admission
+
+Arms share an **identical exogenous arrival stream**, because arrivals are a
+pure function of `(seed, epoch)`. Admission, by contrast, reads the physical
+state, and prior actor behaviour leaves different arms in different states, so
+**arms legitimately admit different subsets**. That is a closed-loop outcome,
+not a leak: admission still inspects no EBU value, no capacity balance and no
+future receipt.
+
+An earlier version of the decision packet required admitted demand components
+to be identical across arms. That requirement is withdrawn: it is unsatisfiable
+in a closed loop, and enforcing it would mean feeding one arm's admission
+decisions to another.
+
+The consequence for measurement is strict. **A service rate computed over
+admitted demands alone is never the primary whole-system comparison** — an arm
+that admits little and serves all of it would score perfectly. Every comparison
+is reported over the **common raw arrival set**, and each incoming demand
+carries a lifecycle state:
+
+`ARRIVED`, `ADMITTED`, `REJECTED_PHYSICAL_SCARCITY`, `REJECTED_INCOMPATIBLE`,
+`SERVED`, `ADMITTED_BUT_UNRESOLVED_PHYSICAL`, `ADMITTED_BUT_EBU_UNAFFORDABLE`.
 
 ## 5. Active demands — no queue, no scheduler
 
@@ -319,6 +412,11 @@ arrivals under all four policies.
 Loss-aware actions never make quantity disappear. A lossy route must name the
 sink that receives the difference, and every action's increment sums to exactly
 zero over all coordinates.
+
+A sink is **irreversible by declaration**: no ordinary route may deliver into
+one as its destination, and none may draw from one as its source. A world that
+declares either is refused at construction. A model that needs recoverable
+waste must represent it as a stock with its own type, not as a sink.
 
 A sink may be declared **inside `V`**, where the waste it accumulates is a real
 deviation that EBU charges for, or **audit-only outside `V`**, where it exists

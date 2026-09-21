@@ -39,6 +39,12 @@ the same telescoping. That form is recorded here as a conditional derivation
 with its hypothesis attached, and it is not implemented: no burden is charged
 anywhere in this package, and `C_a = 0` throughout.
 
+**Provenance, not potential.** Whether an interval is actor-only is decided
+from recorded external-event identities, never from `sum dV_ext == 0`. Nature
+can inject deviation and remove it again, or permute stock at constant `V`;
+both leave the potential term zero while the interval plainly contained
+external physical transitions. See `actor_only`.
+
 **Capacity sources.** Reading (*) as a table, aggregate capacity can increase
 in exactly two ways: nature injected deviation that actors were paid to remove,
 or the window ended closer to the reference than it started. Nothing else can
@@ -73,6 +79,7 @@ CAPACITY_SOURCE_TABLE = (
 @dataclass(frozen=True)
 class WindowAccounting:
     epochs: int
+    external_events: tuple[str, ...]
     potential_initial: Fraction
     potential_final: Fraction
     external_total: Fraction
@@ -99,6 +106,7 @@ def window(records: tuple[EpochRecord, ...]) -> WindowAccounting:
     balance = records[-1].balance_total - opening
     return WindowAccounting(
         len(records),
+        tuple(event for record in records for event in record.external_events),
         initial,
         final,
         external,
@@ -127,13 +135,32 @@ class CycleVerdict:
     ebu_total: Fraction
     balance_change: Fraction
     net_loss: Fraction
+    external_events: tuple[str, ...] = ()
+
+
+def actor_only(records: tuple[EpochRecord, ...]) -> bool:
+    """Whether literally no external physical state transition occurred.
+
+    Decided from recorded event provenance, never from `sum dV_ext == 0`.
+    Two external events can cancel in the potential, and an external
+    permutation of stock between symmetric coordinates changes the state at
+    constant `V`; an interval containing either is not actor-only, and a
+    classifier reading only the potential would call both actor-only and
+    certify a no-issuance result that the theorem does not cover.
+
+    An economic arrival is not an external physical event. It moves no stock,
+    so it cannot break actor-only status.
+    """
+    return not any(record.external_events for record in records)
 
 
 def closed_cycle(run: EconomyRun) -> CycleVerdict:
     """Classify a completed run against the closed-cycle hypotheses."""
     records = tuple(run.records)
     if not records:
-        return CycleVerdict(False, "NO_EPOCHS", False, Fraction(0), Fraction(0), Fraction(0), Fraction(0))
+        return CycleVerdict(
+            False, "NO_EPOCHS", False, Fraction(0), Fraction(0), Fraction(0), Fraction(0), ()
+        )
     accounting = window(records)
     returned = records[-1].state_after == records[0].state_before
     loss = net_loss(run.world, records[0].state_before, records[-1].state_after)
@@ -141,13 +168,20 @@ def closed_cycle(run: EconomyRun) -> CycleVerdict:
 
     if not returned:
         reason = "STATE_DID_NOT_RETURN"
-    elif accounting.external_total != 0:
-        reason = "EXTERNAL_INJECTION_PRESENT"
+    elif not actor_only(records):
+        reason = "EXTERNAL_PHYSICAL_EVENT_PRESENT"
     elif loss != 0:
         reason = "IRREVERSIBLE_LOSS_PRESENT"
     else:
         reason = "CLOSED_ACTOR_ONLY_CYCLE"
     closed = reason == "CLOSED_ACTOR_ONLY_CYCLE"
     return CycleVerdict(
-        closed, reason, returned, accounting.external_total, accounting.ebu_total, change, loss
+        closed,
+        reason,
+        returned,
+        accounting.external_total,
+        accounting.ebu_total,
+        change,
+        loss,
+        accounting.external_events,
     )

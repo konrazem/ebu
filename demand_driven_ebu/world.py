@@ -73,6 +73,9 @@ class Coordinate:
     def sink_audit_only(cls, resource: str, node: str) -> "Coordinate":
         """A boundary ledger entry that closes conservation and nothing else.
 
+        Irreversible, like every sink: no ordinary route may export from it,
+        and a world specification that tries is refused at construction.
+
         It is outside `V`, so it has no deviation to restore and generates no
         physical demand. Pretending otherwise is exactly what contract section
         23 forbids.
@@ -90,7 +93,13 @@ class Coordinate:
 
 @dataclass(frozen=True)
 class Route:
-    """A directed physical channel for one resource, with capacity and loss."""
+    """A directed physical channel for one resource, with capacity and loss.
+
+    A route may deposit loss into a sink but may neither deliver into one as
+    its destination nor draw from one as its source. Sinks are irreversible by
+    declaration, and a world that routes quantity back out of one is rejected
+    rather than silently modelled as recoverable waste.
+    """
 
     resource: str
     source: int
@@ -174,6 +183,12 @@ class DemandWorld:
                     raise Refusal(f"{route.route_id} crosses resources at coordinate {index}")
             if self.coordinates[route.destination].role == ROLE_SINK:
                 raise Refusal(f"{route.route_id} delivers into a sink; declare it as loss")
+            if self.coordinates[route.source].role == ROLE_SINK:
+                raise Refusal(
+                    f"{route.route_id} exports from a sink. A sink is irreversible: "
+                    "quantity that reaches it cannot come back. A model needing "
+                    "recoverable waste must declare it as a stock, not a sink."
+                )
             if route.sink is not None:
                 if not 0 <= route.sink < len(self.coordinates):
                     raise Refusal("route sink leaves the world")

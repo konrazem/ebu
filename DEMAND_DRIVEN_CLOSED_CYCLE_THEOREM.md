@@ -39,11 +39,36 @@ its own EBU, so `delta B_total = sum_t E_t` and
 Identity (*) is exact, not asymptotic, and it is checked with tolerance zero
 over driven runs in all four arms.
 
+## 1a. Actor-only is a provenance question, not a potential question
+
+The theorem's first hypothesis is that **no external physical transition
+occurred**, and that must be decided from recorded event identities. It cannot
+be inferred from `sum_t dV_ext,t == 0`.
+
+Two external events can cancel in the potential, and an external permutation
+of stock between symmetric coordinates changes the state at constant `V`. In
+either case the potential term is zero while the interval plainly contained
+external physical transitions, and a classifier reading only the potential
+would certify a no-issuance result the theorem does not cover.
+
+`cycles.actor_only` therefore reads `EpochRecord.external_events`, a list of
+identities recorded whenever nature actually moved stock, and nothing else.
+An economic demand arrival is **not** an external physical event: it moves no
+stock, so it cannot break actor-only status.
+
+The conformance gate pins all three cases. In a routeless world, where the
+actor can never act, two scripted external events that cancel leave the state
+returned, the potential term zero and no loss — the exact configuration the
+superseded test would have called a closed actor-only cycle — and the
+provenance classifier reports `EXTERNAL_PHYSICAL_EVENT_PRESENT`. A permutation
+at constant `V` is likewise rejected. A genuine actor-only window, economic
+arrivals included, is accepted and mints nothing.
+
 ## 2. Theorem (closed-cycle no issuance)
 
-**Hypotheses.** No external physical injection during the cycle; exact finite
-EBU; exact settlement; `C_a = 0`; and the complete represented potential state
-returns, `x_T = x_0`.
+**Hypotheses.** No external physical transition during the cycle, decided by
+provenance as in §1a; exact finite EBU; exact settlement; `C_a = 0`; and the
+complete represented potential state returns, `x_T = x_0`.
 
 **Conclusion.**
 
@@ -63,6 +88,13 @@ receipt closure, and is indifferent to how many actions ran in each epoch. The
 executed object per epoch is one group `G` with `sum_a R_a = E_G` exactly, so
 the proof goes through verbatim. This is verified separately with two-action
 out-and-back groups.
+
+**Verified after the additive-service correction.** The theorem and the
+identity were re-checked against the corrected service semantics: driven runs
+with up to three simultaneous economic orders per epoch, in all four arms,
+leave the capacity-source residual and both window residuals exactly zero. No
+action is credited twice within an epoch, receipts sum to the epoch EBU
+exactly, and no economic demand is ever served twice.
 
 **Verified instances.** A four-step single-action loop returns the state and
 leaves the opening total exactly unchanged; a two-step simultaneous

@@ -192,3 +192,50 @@ class ScriptedArrivals:
             EconomicDemand.declare(world, resource, quantity, node, epoch, index)
             for index, (resource, node, quantity) in enumerate(self.script.get(epoch, ()))
         )
+
+
+class ScriptedDisturbance:
+    """A deterministic external-disturbance schedule, for hand-worked fixtures.
+
+    Same interface as `DisturbanceProcess`, and like `ScriptedArrivals` it is a
+    degenerate instance of the same object: a law that is a function of the
+    epoch alone. It exists so that cycle-provenance fixtures can place external
+    physical events at exact epochs, including events that cancel in the
+    potential or permute stock at constant `V`.
+    """
+
+    def __init__(self, script: dict[int, tuple[int, int, object]]):
+        self.script = dict(script)
+
+    def draw(self, world: DemandWorld, state, seed: int, epoch: int):
+        from .disturbance import (
+            STATUS_APPLIED,
+            STATUS_NOT_SCHEDULED,
+            STATUS_NULL_UNAVAILABLE,
+            DisturbanceEvent,
+        )
+
+        entry = self.script.get(epoch)
+        if entry is None:
+            return DisturbanceEvent(STATUS_NOT_SCHEDULED, None, None, F(0))
+        source, destination, quantity = entry
+        amount = F(quantity)
+        if state[source] < amount:
+            return DisturbanceEvent(STATUS_NULL_UNAVAILABLE, source, destination, F(0))
+        return DisturbanceEvent(STATUS_APPLIED, source, destination, amount)
+
+
+def routeless_world() -> DemandWorld:
+    """Two stocks of one resource and no routes at all.
+
+    Nothing can ever be served here, so the actor never acts and an external
+    disturbance is the only thing that moves the state. That makes it the exact
+    setting for cycle-provenance fixtures: a pair of external events can be
+    made to cancel in the potential and return the state, with no actor
+    activity confounding the window.
+    """
+    coordinates = [
+        Coordinate.stock("sand", "A", 10, 1),
+        Coordinate.stock("sand", "B", 10, 1),
+    ]
+    return DemandWorld.declare("routeless-v1", coordinates, (), (1, 2), 1)

@@ -39,21 +39,34 @@ from demand_driven_ebu import MODEL_ID
 from demand_driven_ebu.admission import admit, unserviceable_ids
 from demand_driven_ebu.arrivals import ArrivalProcess
 from demand_driven_ebu.capacity import CapacityLedger
-from demand_driven_ebu.coupling import components, footprint
+from demand_driven_ebu.coupling import components, service_reach
 from demand_driven_ebu.cycles import (
     CAPACITY_SOURCE_TABLE,
+    actor_only,
     closed_cycle,
     net_loss,
     window,
 )
 from demand_driven_ebu.demand import (
+    DECLARED_LIFECYCLE,
     E_ADMITTED_PENDING,
     E_REJECTED_INCOMPATIBLE,
     E_REJECTED_PHYSICAL_SCARCITY,
+    LIFECYCLE_ADMITTED_BUT_EBU_UNAFFORDABLE,
+    LIFECYCLE_ARRIVED,
+    LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
+    LIFECYCLE_SERVED,
     ActiveDemandSet,
     EconomicDemand,
-    completely_serves,
     derive_physical_demands,
+)
+from demand_driven_ebu.service import (
+    allocate,
+    pool,
+    requirements,
+    served_economic_ids,
+    serves_all,
+    unmet,
 )
 from demand_driven_ebu.disturbance import DisturbanceProcess, apply_disturbance
 from demand_driven_ebu.fixtures import (
@@ -63,9 +76,11 @@ from demand_driven_ebu.fixtures import (
     loss_world,
     no_arrivals,
     quiet_disturbance,
+    routeless_world,
     sandwater_world,
     scarcity_world,
     ScriptedArrivals,
+    ScriptedDisturbance,
     seeded_ledger,
     surplus_world,
 )
@@ -261,7 +276,7 @@ def test_economic_demand_may_exceed_available_resource() -> None:
     blocked = unserviceable_ids(world, state, (), (asked,))
     check("the oversized demand is physically unserviceable",
           asked.demand_id in blocked)
-    for component in components(world, active):
+    for component in components(world, state, active):
         check("no complete plan exists for it",
               not has_service_plan(world, state, component))
         check("its menu is empty",
@@ -307,9 +322,9 @@ def test_random_admission_picks_a_maximal_compatible_subset() -> None:
     second = _economic(world, "sand", 3, "C", 0, 1)
 
     check("each demand alone is serviceable",
-          has_service_plan(world, state, components(world, ActiveDemandSet.of((), (first,)))[0])
-          and has_service_plan(world, state, components(world, ActiveDemandSet.of((), (second,)))[0]))
-    both = components(world, ActiveDemandSet.of((), (first, second)))
+          has_service_plan(world, state, components(world, state, ActiveDemandSet.of((), (first,)))[0])
+          and has_service_plan(world, state, components(world, state, ActiveDemandSet.of((), (second,)))[0]))
+    both = components(world, state, ActiveDemandSet.of((), (first, second)))
     check("together they are one coupled component", len(both) == 1)
     check("together they are unserviceable", not has_service_plan(world, state, both[0]))
 
@@ -444,14 +459,14 @@ def test_economic_and_physical_demands_coexist() -> None:
     physical = derive_physical_demands(world, state)
     economic = (_economic(world, "sand", 2, "A", 0, 0),)
     active = ActiveDemandSet.of(physical, economic)
-    found = components(world, active)
+    found = components(world, state, active)
     check("two P-demands and one E-demand form one coupled component",
           len(found) == 1 and len(found[0].demands) == 3, str([c.demand_ids for c in found]))
     plans = enumerate_service_plans(world, state, found[0])
     check("joint plans exist that satisfy all three at once", len(plans) > 0)
     for plan in plans:
         increment = plan.group.increment(world.dimension)
-        check_all = all(completely_serves(d, increment) for d in found[0].demands)
+        check_all = serves_all(found[0].requirements, increment)
         if not check_all:
             check("every plan serves every demand in the component", False, plan.plan_id)
             return
@@ -469,24 +484,26 @@ def test_independent_resources_form_independent_components() -> None:
     world = sandwater_world()
     state = _state(8, 12, 10, 4, 8)
     physical = derive_physical_demands(world, state)
-    found = components(world, ActiveDemandSet.of(physical, ()))
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
     check("a sand shortfall and a water shortfall do not couple", len(found) == 2,
           str([c.demand_ids for c in found]))
     sand, water = sorted(found, key=lambda c: c.component_id)
-    check("their coordinate footprints are disjoint",
-          not (sand.reach.coordinates & water.reach.coordinates))
-    check("their route footprints are disjoint",
-          not (sand.reach.routes & water.reach.routes))
-    check("their owner footprints are disjoint",
-          not (sand.reach.owners & water.reach.owners))
+    check("their coordinate reaches are disjoint",
+          not (sand.binding.coordinates & water.binding.coordinates))
+    check("their route reaches are disjoint",
+          not (sand.binding.routes & water.binding.routes))
+    check("their owner reaches are disjoint",
+          not (sand.binding.owners & water.binding.owners))
 
 
 def test_shared_stock_couples_two_demands() -> None:
     world = competing_world()
+    state = _state(3, 0, 0)
     first = _economic(world, "sand", 3, "B", 0, 0)
     second = _economic(world, "sand", 3, "C", 0, 1)
-    found = components(world, ActiveDemandSet.of((), (first, second)))
-    check("two demands drawing on the same stock are one component", len(found) == 1)
+    found = components(world, state, ActiveDemandSet.of((), (first, second)))
+    check("two demands drawing on the same stock are one component", len(found) == 1,
+          str([c.demand_ids for c in found]))
 
 
 def test_shared_account_couples_two_resources() -> None:
@@ -494,9 +511,9 @@ def test_shared_account_couples_two_resources() -> None:
     shared = DemandWorld.declare(
         "shared-account-v1",
         [
-            Coordinate.stock("sand", "A", 10, 1),
+            Coordinate.stock("sand", "A", 8, 1),
             Coordinate.stock("sand", "B", 10, 1),
-            Coordinate.stock("water", "A", 6, 1),
+            Coordinate.stock("water", "A", 4, 1),
             Coordinate.stock("water", "E", 6, 1),
         ],
         [
@@ -508,23 +525,24 @@ def test_shared_account_couples_two_resources() -> None:
         (1, 2),
         2,
     )
-    state = _state(8, 12, 4, 8)
+    # Both shortfalls are supplied from node A, so node A pays for both.
+    state = _state(12, 8, 8, 4)
     physical = derive_physical_demands(shared, state)
-    found = components(shared, ActiveDemandSet.of(physical, ()))
-    check("a sand demand and a water demand sharing node A are coupled",
+    found = components(shared, state, ActiveDemandSet.of(physical, ()))
+    check("a sand demand and a water demand both paid for by node A are coupled",
           len(found) == 1, str([c.demand_ids for c in found]))
-    sand_print = footprint(shared, physical[0])
-    water_print = footprint(shared, physical[1])
+    sand_reach = service_reach(shared, state, physical[0])
+    water_reach = service_reach(shared, state, physical[1])
     check("the coupling is through owners, not stocks",
-          not (sand_print.coordinates & water_print.coordinates)
-          and bool(sand_print.owners & water_print.owners))
+          not (sand_reach.coordinates & water_reach.coordinates)
+          and bool(sand_reach.owners & water_reach.owners))
 
 
 def test_an_impossible_component_does_not_block_an_independent_one() -> None:
     world = sandwater_world()
     state = _state(3, 10, 10, 4, 8)
     physical = derive_physical_demands(world, state)
-    found = components(world, ActiveDemandSet.of(physical, ()))
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
     verdicts = {c.component_id: has_service_plan(world, state, c) for c in found}
     check("the deep sand shortfall has no complete plan",
           verdicts["c:[P:sand|A]"] is False, str(verdicts))
@@ -541,15 +559,14 @@ def test_every_menu_plan_serves_completely() -> None:
     world = sandwater_world()
     state = _state(8, 8, 14, 6, 6)
     physical = derive_physical_demands(world, state)
-    component = components(world, ActiveDemandSet.of(physical, ()))[0]
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
     plans = enumerate_service_plans(world, state, component)
     check("the component has plans", len(plans) > 0)
     worst = None
     for plan in plans:
         increment = plan.group.increment(world.dimension)
-        for demand in component.demands:
-            if increment[demand.coordinate] < demand.required_delta:
-                worst = plan.plan_id
+        if not serves_all(component.requirements, increment):
+            worst = plan.plan_id
     check("no plan offers partial service", worst is None, str(worst))
     check("coverage is recorded for every demand",
           all(len(plan.coverage) == len(component.demands) for plan in plans))
@@ -561,7 +578,7 @@ def test_no_plan_exists_without_a_demand() -> None:
     state = world.reference_state()
     active = ActiveDemandSet.of(derive_physical_demands(world, state), ())
     check("the reference state carries no demand", active.is_empty)
-    found = components(world, active)
+    found = components(world, state, active)
     check("no demand means no components", found == ())
     offered = unrelated_transfers(world, state, found)
     executable = _executable_singletons(world, state)
@@ -574,7 +591,7 @@ def test_every_action_has_demand_provenance() -> None:
     world = sandwater_world()
     for state in (_state(8, 8, 14, 6, 6), _state(9, 9, 12, 5, 7), _state(7, 11, 12, 4, 8)):
         physical = derive_physical_demands(world, state)
-        for component in components(world, ActiveDemandSet.of(physical, ())):
+        for component in components(world, state, ActiveDemandSet.of(physical, ())):
             for plan in enumerate_service_plans(world, state, component):
                 for action_id, demand_ids in plan.provenance:
                     if not demand_ids:
@@ -591,7 +608,7 @@ def test_irredundancy_blocks_bolting_on_an_unrelated_transfer() -> None:
     world = sandwater_world()
     state = _state(8, 12, 10, 6, 6)
     physical = derive_physical_demands(world, state)
-    component = components(world, ActiveDemandSet.of(physical, ()))[0]
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
     plans = enumerate_service_plans(world, state, component)
     minimal = _plan(world, (1, 0, 2))
     check("the minimal restoring plan is in the menu",
@@ -608,7 +625,7 @@ def test_one_action_may_serve_several_demands_without_double_credit() -> None:
     state = _state(8, 8, 14, 6, 6)
     physical = derive_physical_demands(world, state)
     economic = (_economic(world, "sand", 2, "A", 0, 0),)
-    component = components(world, ActiveDemandSet.of(physical, economic))[0]
+    component = components(world, state, ActiveDemandSet.of(physical, economic))[0]
     plans = enumerate_service_plans(world, state, component)
     joint = _plan(world, (2, 0, 2), (2, 1, 2))
     chosen = [plan for plan in plans if plan.group == joint]
@@ -622,7 +639,7 @@ def test_one_action_may_serve_several_demands_without_double_credit() -> None:
         check("service is measured from the net increment, so no credit is doubled",
               increment[0] == F(2))
         check("and that one increment satisfies both tests",
-              all(completely_serves(d, increment) for d in component.demands))
+              serves_all(component.requirements, increment))
 
 
 # --------------------------------------------------------------------------
@@ -695,7 +712,7 @@ def test_impossible_plans_are_removed_before_valuation() -> None:
     world = sandwater_world()
     state = _state(1, 10, 19, 6, 6)
     physical = derive_physical_demands(world, state)
-    for component in components(world, ActiveDemandSet.of(physical, ())):
+    for component in components(world, state, ActiveDemandSet.of(physical, ())):
         for plan in enumerate_service_plans(world, state, component):
             if not can_happen_now(world, state, plan.group).executable:
                 check("no unexecutable plan reaches valuation", False, plan.plan_id)
@@ -871,7 +888,7 @@ def test_capacity_is_only_spendable_through_a_demand_serving_plan() -> None:
 def _menu(world, state, physical=(), economic=()):
     if not physical and not economic:
         physical = derive_physical_demands(world, state)
-    component = components(world, ActiveDemandSet.of(physical, economic))[0]
+    component = components(world, state, ActiveDemandSet.of(physical, economic))[0]
     plans = enumerate_service_plans(world, state, component)
     values = [value_group(world, state, plan.group) for plan in plans]
     return component, plans, values
@@ -912,7 +929,7 @@ def test_hostile_cannot_choose_unrelated_damage() -> None:
     check("and it is not in the hostile actor's menu",
           all(plan.group != damage for plan in plans))
     check("every hostile option still resolves the shortfall",
-          all(completely_serves(component.demands[0], plan.group.increment(world.dimension))
+          all(serves_all(component.requirements, plan.group.increment(world.dimension))
               for plan in plans))
 
 
@@ -1014,7 +1031,7 @@ def test_the_joint_gate_verifies_separability_exactly() -> None:
     world = sandwater_world()
     state = _state(8, 12, 10, 4, 8)
     physical = derive_physical_demands(world, state)
-    found = components(world, ActiveDemandSet.of(physical, ()))
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
     apart = F(0)
     picked = []
     for component in found:
@@ -1461,7 +1478,7 @@ def fixture_f3_restorative_economic_demand() -> None:
     check("F3  a world above its reference has no shortfall",
           derive_physical_demands(world, state) == ())
     demand = _economic(world, "sand", 3, "C")
-    component = components(world, ActiveDemandSet.of((), (demand,)))[0]
+    component = components(world, state, ActiveDemandSet.of((), (demand,)))[0]
     plans = enumerate_service_plans(world, state, component)
     best = max(value_group(world, state, plan.group).group_ebu for plan in plans)
     check("F3  yet serving the economic demand can reduce deviation",
@@ -1612,11 +1629,11 @@ def fixture_f13_one_plan_many_demands() -> None:
     state = _state(8, 8, 14, 6, 6)
     economic = (_economic(world, "sand", 2, "A", 0, 0),)
     physical = derive_physical_demands(world, state)
-    component = components(world, ActiveDemandSet.of(physical, economic))[0]
+    component = components(world, state, ActiveDemandSet.of(physical, economic))[0]
     joint = _plan(world, (2, 0, 2), (2, 1, 2))
     increment = joint.increment(world.dimension)
     check("F13 one plan serves three demands", len(component.demands) == 3
-          and all(completely_serves(d, increment) for d in component.demands))
+          and serves_all(component.requirements, increment))
     check("F13 the action into A is credited once, not twice", increment[0] == F(2))
     plans = [p for p in enumerate_service_plans(world, state, component) if p.group == joint]
     check("F13 and its provenance names both demands it answers",
@@ -1948,6 +1965,57 @@ def main() -> int:
         ("randomized receipt closure", test_randomized_receipt_closure),
         ("repeated oscillation mints nothing",
          test_repeated_two_state_oscillation_mints_nothing),
+        # --- audit correction pass -------------------------------------
+        ("separate orders are separate obligations",
+         test_separate_orders_are_separate_material_obligations),
+        ("the additive rule governs the menu",
+         test_the_additive_rule_governs_the_menu_not_only_the_predicate),
+        ("allocation respects pool and order size",
+         test_allocation_respects_the_pool_and_the_order_size),
+        ("the pool is net, not gross", test_the_pool_is_net_not_gross),
+        ("physical demand draws nothing from the economic pool",
+         test_physical_demand_draws_nothing_from_the_economic_pool),
+        ("every arrival is tracked over the common raw set",
+         test_every_arrival_is_tracked_over_the_common_raw_set),
+        ("admitted-only service rate is not the whole-system measure",
+         test_admitted_only_service_rate_is_not_the_whole_system_measure),
+        ("uniform over subsets is not uniform over demands",
+         test_uniform_over_subsets_is_not_uniform_over_demands),
+        ("an unserviceable demand freezes nothing",
+         test_an_unserviceable_demand_freezes_nothing),
+        ("impossible sand cannot freeze independent water",
+         test_impossible_sand_cannot_freeze_independent_water),
+        ("decomposition does not restrict the global feasible set",
+         test_decomposition_does_not_restrict_the_global_feasible_set),
+        ("component freezing is a declared restriction",
+         test_component_freezing_is_a_declared_restriction_not_scarcity),
+        ("cancelling external events are not actor-only",
+         test_cancelling_external_events_are_not_actor_only),
+        ("external permutation at constant V is not actor-only",
+         test_external_permutation_at_constant_potential_is_not_actor_only),
+        ("a genuine actor-only cycle mints nothing",
+         test_a_genuine_actor_only_cycle_is_classified_and_mints_nothing),
+        ("actor-only is not inferred from the potential",
+         test_actor_only_is_not_inferred_from_the_potential_term),
+        ("a route out of a sink is refused",
+         test_a_route_out_of_a_sink_is_refused_at_construction),
+        ("no declared world exports from a sink",
+         test_no_declared_world_exports_from_a_sink),
+        ("the capacity identity survives additive service",
+         test_capacity_identity_survives_additive_service),
+        ("no duplicate receipt or service credit",
+         test_no_duplicate_receipt_or_service_credit),
+        ("an arrival creates no capacity under additive orders",
+         test_an_arrival_still_creates_no_capacity_under_additive_orders),
+        ("hand-check A: two 700 orders against 1000",
+         test_admission_hand_check_a_two_700_orders_against_1000),
+        ("hand-check B: two 500 orders against 1000",
+         test_admission_hand_check_b_two_500_orders_against_1000),
+        ("hand-check C: 1000 against 560",
+         test_admission_hand_check_c_1000_against_560),
+        ("hand-check D: economic and physical at one destination",
+         test_admission_hand_check_d_economic_and_physical_at_one_destination),
+        # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
          test_the_new_model_has_its_own_identity_and_no_forbidden_imports),
@@ -1967,6 +2035,661 @@ def main() -> int:
     print(f"  demand_driven_ebu code identity: {code_identity()}")
     return 1 if FAILED else 0
 
+
+
+# ==========================================================================
+# AUDIT CORRECTION PASS -- the five defects found against commit 22fd229
+# ==========================================================================
+
+# --------------------------------------------------------------------------
+# Correction 1 and 3 -- economic demands are additive delivery obligations
+# --------------------------------------------------------------------------
+
+
+def test_separate_orders_are_separate_material_obligations() -> None:
+    """The observed regression: two q=2 orders are not served by q=2 delivered."""
+    world = sandwater_world()
+    state = _state(14, 10, 6, 6, 6)
+    first = _economic(world, "sand", 2, "C", 78, 0)
+    second = _economic(world, "sand", 2, "C", 78, 1)
+    reqs = requirements((first, second))
+    check("two independent orders of 2 require 4 at that coordinate",
+          len(reqs) == 1 and reqs[0].economic_total == F(4), str(reqs))
+
+    def delivered(quantity):
+        increment = [F(0)] * world.dimension
+        increment[world.index_of("sand", "C")] = F(quantity)
+        return tuple(increment)
+
+    check("a delivery of 2 serves neither order",
+          served_economic_ids(reqs, delivered(2)) == ())
+    check("a delivery of 3 still serves neither",
+          served_economic_ids(reqs, delivered(3)) == ())
+    check("a delivery of 4 serves both",
+          served_economic_ids(reqs, delivered(4))
+          == (first.demand_id, second.demand_id))
+    check("no delivered unit satisfies two orders at once",
+          not serves_all(reqs, delivered(3)) and serves_all(reqs, delivered(4)))
+
+
+def test_the_additive_rule_governs_the_menu_not_only_the_predicate() -> None:
+    """Correction 3: the same semantics in enumeration, not a patched endpoint."""
+    world = sandwater_world()
+    state = _state(14, 10, 6, 6, 6)
+    first = _economic(world, "sand", 2, "C", 78, 0)
+    second = _economic(world, "sand", 2, "C", 78, 1)
+    component = components(world, state, ActiveDemandSet.of((), (first, second)))[0]
+    plans = enumerate_service_plans(world, state, component)
+    check("the two orders form one component through their shared pool",
+          len(component.demands) == 2)
+    check("the menu is non-empty", len(plans) > 0)
+    short = [
+        plan.plan_id
+        for plan in plans
+        if plan.group.increment(world.dimension)[world.index_of("sand", "C")] < F(4)
+    ]
+    check("every plan in the menu delivers at least 4", not short, str(short))
+    check("and every plan allocates both orders in full",
+          all(entry.complete for plan in plans for entry in plan.allocation))
+
+
+def test_allocation_respects_the_pool_and_the_order_size() -> None:
+    world = sandwater_world()
+    first = _economic(world, "sand", 2, "C", 0, 0)
+    second = _economic(world, "sand", 3, "C", 0, 1)
+    reqs = requirements((first, second))
+    coordinate = world.index_of("sand", "C")
+
+    def delivered(quantity):
+        increment = [F(0)] * world.dimension
+        increment[coordinate] = F(quantity)
+        return tuple(increment)
+
+    full = allocate(reqs[0], delivered(5))
+    check("a sufficient pool allocates every order in full",
+          full.complete and full.allocation_map == {first.demand_id: F(2),
+                                                    second.demand_id: F(3)})
+    check("and the allocation never exceeds the pool",
+          sum(v for _, v in full.allocations) <= full.pool)
+
+    short = allocate(reqs[0], delivered(4))
+    check("an insufficient pool is incomplete, with the shortfall named",
+          not short.complete and short.shortfall == F(1))
+    check("the diagnostic fill still respects 0 <= s_d <= q_d",
+          all(F(0) <= v <= dict(reqs[0].economic_quantities)[k]
+              for k, v in short.allocations))
+    check("and still never exceeds the pool",
+          sum(v for _, v in short.allocations) <= short.pool)
+    check("an incomplete allocation can never reach a menu",
+          served_economic_ids(reqs, delivered(4)) == ())
+
+
+def test_the_pool_is_net_not_gross() -> None:
+    """A unit that arrives and leaves again is not present to serve an order."""
+    world = sandwater_world()
+    order = _economic(world, "sand", 2, "B", 0, 0)
+    reqs = requirements((order,))
+    group = _plan(world, (0, 1, 2), (1, 2, 2))
+    increment = group.increment(world.dimension)
+    check("gross inflow to B is 2 but net is 0",
+          increment[world.index_of("sand", "B")] == F(0))
+    check("so the pool is zero", pool(increment, world.index_of("sand", "B")) == F(0))
+    check("and the order is not served", not serves_all(reqs, increment))
+
+
+# --------------------------------------------------------------------------
+# Correction 2 -- E/P overlap remains legitimate
+# --------------------------------------------------------------------------
+
+
+def test_physical_demand_draws_nothing_from_the_economic_pool() -> None:
+    world = sandwater_world()
+    state = _state(14, 10, 8, 6, 6)
+    physical = derive_physical_demands(world, state)
+    order = _economic(world, "sand", 2, "C", 0, 0)
+    coordinate = world.index_of("sand", "C")
+    check("the state carries a two-unit shortfall at C",
+          [(d.demand_id, d.required) for d in physical] == [("P:sand|C", F(2))])
+
+    reqs = requirements(tuple(physical) + (order,))
+    entry = [r for r in reqs if r.coordinate == coordinate][0]
+    check("the economic claim is 2", entry.economic_total == F(2))
+    check("the physical condition is 2", entry.physical_deficit == F(2))
+    check("the combined requirement is the maximum, not the sum",
+          entry.required_delta == F(2), str(entry.required_delta))
+
+    increment = [F(0)] * world.dimension
+    increment[coordinate] = F(2)
+    increment[0] = F(-2)
+    increment = tuple(increment)
+    check("one two-unit delivery fulfils the order and closes the shortfall",
+          serves_all(reqs, increment) and unmet(reqs, increment) == ())
+    check("the post-state actually reaches the reference",
+          state[coordinate] + increment[coordinate] == F(10))
+
+    two_orders = requirements(tuple(physical) + (order, _economic(world, "sand", 2, "C", 0, 1)))
+    entry = [r for r in two_orders if r.coordinate == coordinate][0]
+    check("but two economic orders still add to each other",
+          entry.economic_total == F(4) and entry.required_delta == F(4))
+    check("so the same two-unit delivery no longer suffices",
+          not serves_all(two_orders, increment))
+
+
+# --------------------------------------------------------------------------
+# Correction 4 -- identical raw arrivals, endogenous admission
+# --------------------------------------------------------------------------
+
+
+def test_every_arrival_is_tracked_over_the_common_raw_set() -> None:
+    world = sandwater_world()
+    disturbance = DisturbanceProcess.declare(world, ((0, 1), (1, 2), (3, 4)), 2, 1, 2)
+    arrivals = ArrivalProcess.declare((("sand", "C", 2), ("water", "E", 1)), 1, 2, 2)
+    ledgers = {}
+    raw = {}
+    for policy in (POLICY_ALIGNED, POLICY_RANDOM, POLICY_HOSTILE, POLICY_CONTROL):
+        run = EconomyRun(world, disturbance, arrivals, policy, 11, 22, 33, 44)
+        records = run.run(25)
+        ledgers[policy] = run.arrival_ledger
+        raw[policy] = tuple(demand for record in records for demand in record.arrivals)
+
+    check("the raw arrival set is identical across all four arms",
+          len(set(raw.values())) == 1, str({k: len(v) for k, v in raw.items()}))
+    check("every arm's ledger holds exactly the raw arrivals",
+          all(set(ledger) == set(raw[policy]) for policy, ledger in ledgers.items()))
+    states = {
+        policy: sorted({row.state for row in ledger.values()})
+        for policy, ledger in ledgers.items()
+    }
+    check("every recorded state is a declared lifecycle state",
+          all(state in DECLARED_LIFECYCLE for entries in states.values() for state in entries),
+          str(states))
+    admitted = {
+        policy: sum(1 for row in ledger.values() if row.state != LIFECYCLE_ARRIVED
+                    and not row.state.startswith("REJECTED"))
+        for policy, ledger in ledgers.items()
+    }
+    check("admission legitimately differs across arms while arrivals do not",
+          len(set(admitted.values())) > 1, str(admitted))
+
+
+def test_admitted_only_service_rate_is_not_the_whole_system_measure() -> None:
+    """Why correction 4 matters: the two rates can rank arms differently."""
+    world = sandwater_world()
+    disturbance = DisturbanceProcess.declare(world, ((0, 1), (1, 2), (3, 4)), 2, 1, 2)
+    arrivals = ArrivalProcess.declare((("sand", "C", 2), ("water", "E", 1)), 1, 2, 2)
+    rates = {}
+    for policy in (POLICY_ALIGNED, POLICY_RANDOM, POLICY_HOSTILE, POLICY_CONTROL):
+        run = EconomyRun(world, disturbance, arrivals, policy, 11, 22, 33, 44)
+        run.run(25)
+        rows = list(run.arrival_ledger.values())
+        served = sum(1 for row in rows if row.state == LIFECYCLE_SERVED)
+        admitted = sum(1 for row in rows if not row.state.startswith("REJECTED"))
+        rates[policy] = (
+            F(served, len(rows)) if rows else F(0),
+            F(served, admitted) if admitted else F(0),
+        )
+    over_arrivals = {p: r[0] for p, r in rates.items()}
+    over_admitted = {p: r[1] for p, r in rates.items()}
+    check("both rates are computed", len(rates) == 4)
+    check("they are not the same numbers",
+          over_arrivals != over_admitted,
+          f"arrivals={ {k: str(v) for k, v in over_arrivals.items()} } "
+          f"admitted={ {k: str(v) for k, v in over_admitted.items()} }")
+    best_raw = max(over_arrivals, key=lambda p: over_arrivals[p])
+    best_admitted = max(over_admitted, key=lambda p: over_admitted[p])
+    check("the arm that looks best can differ between the two, which is why "
+          "the admitted-only rate is never the primary comparison",
+          True, f"raw={best_raw} admitted={best_admitted}")
+
+
+# --------------------------------------------------------------------------
+# Correction 5 -- the admission sampling measure, stated rather than assumed
+# --------------------------------------------------------------------------
+
+
+def test_uniform_over_subsets_is_not_uniform_over_demands() -> None:
+    world = competing_world()
+    state = _state(3, 0, 0)
+    first = _economic(world, "sand", 3, "B", 0, 0)
+    second = _economic(world, "sand", 3, "C", 0, 1)
+    counts = {first.demand_id: 0, second.demand_id: 0}
+    trials = 120
+    for seed in range(trials):
+        admitted, _, _ = admit(world, state, (), (), (first, second), seed, 0)
+        for demand in admitted:
+            counts[demand.demand_id] += 1
+    check("with two mutually incompatible arrivals each is admitted sometimes",
+          all(value > 0 for value in counts.values()), str(counts))
+    check("and exactly one is admitted every time",
+          sum(counts.values()) == trials, str(counts))
+
+    roomy = sandwater_world()
+    roomy_state = roomy.reference_state()
+    compatible = (
+        _economic(roomy, "sand", 1, "C", 0, 0),
+        _economic(roomy, "water", 1, "E", 0, 1),
+    )
+    marginals = {demand.demand_id: 0 for demand in compatible}
+    for seed in range(40):
+        admitted, _, _ = admit(roomy, roomy_state, (), (), compatible, seed, 0)
+        for demand in admitted:
+            marginals[demand.demand_id] += 1
+    check("a request compatible with everything is admitted every time, so the "
+          "marginal admission probability is structure-dependent, not flat",
+          all(value == 40 for value in marginals.values()), str(marginals))
+
+
+# --------------------------------------------------------------------------
+# Correction 6 -- coupling only through actual binding constraints
+# --------------------------------------------------------------------------
+
+
+def test_an_unserviceable_demand_freezes_nothing() -> None:
+    """The defect: broad transport coupling froze a serviceable demand."""
+    world = sandwater_world()
+    state = _state(8, 12, 10, 6, 6)
+    physical = derive_physical_demands(world, state)
+    alone = components(world, state, ActiveDemandSet.of(physical, ()))
+    baseline = len(enumerate_service_plans(world, state, alone[0]))
+    check("the sand shortfall has a menu on its own", baseline == 5, str(baseline))
+
+    stuck = _economic(world, "sand", 25, "C", 0, 0)
+    found = components(world, state, ActiveDemandSet.of(physical, (stuck,)))
+    sizes = {c.component_id: len(enumerate_service_plans(world, state, c)) for c in found}
+    check("the unserviceable order is its own component",
+          len(found) == 2, str(sorted(sizes)))
+    check("it has no plans", sizes["c:[E:000000:000:sand|C]"] == 0, str(sizes))
+    check("and the serviceable shortfall keeps every one of its plans",
+          sizes["c:[P:sand|A]"] == baseline, str(sizes))
+
+
+def test_impossible_sand_cannot_freeze_independent_water() -> None:
+    world = sandwater_world()
+    state = _state(3, 10, 10, 4, 8)
+    run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
+                     1, 2, 3, 4, initial_state=state)
+    record = run.run_epoch()
+    statuses = {o.component_id: o.status for o in record.outcomes}
+    check("the impossible sand component is reported unserviceable",
+          statuses["c:[P:sand|A]"] == STATUS_NO_COMPLETE_PLAN, str(statuses))
+    check("the water component executes in the same epoch",
+          statuses["c:[P:water|D]"] == STATUS_EXECUTED, str(statuses))
+    check("and the water shortfall is actually closed", record.state_after[3] == F(6))
+
+
+def _merged_component(world, state, demands):
+    """Deliberately over-couple: one component holding every demand."""
+    from demand_driven_ebu.coupling import DemandComponent, service_reach
+    from demand_driven_ebu.enumeration import search_routes
+
+    reaches = [service_reach(world, state, demand) for demand in demands]
+    merged = type(reaches[0])(
+        frozenset().union(*(r.coordinates for r in reaches)),
+        frozenset().union(*(r.routes for r in reaches)),
+        frozenset().union(*(r.owners for r in reaches)),
+        min(r.destination for r in reaches),
+        any(r.serviceable for r in reaches),
+    )
+    search = frozenset(
+        route.route_id
+        for route in search_routes(world, frozenset(d.coordinate for d in demands))
+    )
+    return DemandComponent(tuple(sorted(demands, key=lambda d: d.demand_id)), merged, search)
+
+
+def test_decomposition_does_not_restrict_the_global_feasible_set() -> None:
+    """Splitting or merging independent demands gives the same executions.
+
+    The plan-size cap is declared **per component plan**, so with a binding cap
+    the decomposed form admits strictly more total actions than a merged
+    evaluation would. The equivalence asserted here is therefore stated where
+    the cap does not bind, which is the case in which the two are comparable at
+    all; where it does bind, per-component is the declared semantics and it is
+    the *merged* view that would restrict.
+    """
+    world = sandwater_world()
+    state = _state(8, 12, 10, 4, 8)
+    physical = derive_physical_demands(world, state)
+    found = components(world, state, ActiveDemandSet.of(physical, ()))
+    check("the two shortfalls decompose into two components", len(found) == 2)
+
+    per_component = [
+        [plan.group for plan in enumerate_service_plans(world, state, component)]
+        for component in found
+    ]
+    check("both components have menus",
+          all(menu for menu in per_component), str([len(m) for m in per_component]))
+
+    product = {
+        tuple(PlanGroup.of(*(left.actions + right.actions)).increment(world.dimension))
+        for left in per_component[0]
+        for right in per_component[1]
+    }
+    within_cap = {
+        tuple(PlanGroup.of(*(left.actions + right.actions)).increment(world.dimension))
+        for left in per_component[0]
+        for right in per_component[1]
+        if left.size + right.size <= world.max_plan_size
+    }
+    merged = _merged_component(world, state, physical)
+    joint = {
+        tuple(plan.group.increment(world.dimension))
+        for plan in enumerate_service_plans(world, state, merged)
+    }
+    check("the merged menu is exactly the product restricted to the cap",
+          within_cap == joint, f"{len(within_cap)} vs {len(joint)}")
+    check("over-coupling deleted no valid service plan that fits the cap",
+          within_cap <= joint)
+    check("and merging invented none", joint <= within_cap)
+    check("the decomposed form admits strictly more, because the cap is "
+          "declared per component plan and here it binds",
+          within_cap < product, f"{len(within_cap)} vs {len(product)}")
+
+
+def test_component_freezing_is_a_declared_restriction_not_scarcity() -> None:
+    """Where a component does freeze, it is the complete-service contract."""
+    world = sandwater_world()
+    state = _state(8, 12, 10, 6, 6)
+    physical = derive_physical_demands(world, state)
+    big = _economic(world, "sand", 3, "A", 0, 0)
+    found = components(world, state, ActiveDemandSet.of(physical, (big,)))
+    check("an order at the same coordinate as a shortfall shares its pool, "
+          "so the two are genuinely coupled", len(found) == 1, str([c.demand_ids for c in found]))
+    entry = [r for r in found[0].requirements if r.coordinate == 0][0]
+    check("and the coupling is the declared max rule, not physical scarcity",
+          entry.economic_total == F(3) and entry.physical_deficit == F(2)
+          and entry.required_delta == F(3), str(entry))
+
+
+# --------------------------------------------------------------------------
+# Correction 7 -- actor-only cycle provenance
+# --------------------------------------------------------------------------
+
+
+def test_cancelling_external_events_are_not_actor_only() -> None:
+    """The exact case the old classifier got wrong.
+
+    In a world with no routes the actor can never act, so the window contains
+    nothing but two external events that cancel. The state returns, the
+    potential term sums to zero and there is no loss -- so the previous
+    `sum(dV_ext) == 0` test would have certified this interval as a closed
+    actor-only cycle, which it plainly is not.
+    """
+    world = routeless_world()
+    disturbance = ScriptedDisturbance({0: (0, 1, 2), 1: (1, 0, 2)})
+    run = EconomyRun(world, disturbance, no_arrivals(), POLICY_CONTROL, 1, 2, 3, 4)
+    records = run.run(2)
+    accounting = window(records)
+    check("the actor never acted", all(record.receipts == () for record in records))
+    check("the state returned exactly",
+          records[-1].state_after == records[0].state_before)
+    check("the two external events cancel in the potential",
+          accounting.external_total == 0, str(accounting.external_total))
+    check("the superseded potential-only test would have called this actor-only",
+          accounting.external_total == 0
+          and records[-1].state_after == records[0].state_before)
+    check("but two external physical events are recorded",
+          len(accounting.external_events) == 2, str(accounting.external_events))
+    check("so the interval is not actor-only", not actor_only(records))
+    check("and the classifier says so by provenance, not by potential",
+          closed_cycle(run).reason == "EXTERNAL_PHYSICAL_EVENT_PRESENT",
+          closed_cycle(run).reason)
+
+
+def test_external_permutation_at_constant_potential_is_not_actor_only() -> None:
+    world = sandwater_world()
+    start = _state(12, 8, 10, 6, 6)
+    disturbance = ScriptedDisturbance({0: (0, 1, 4)})
+    run = EconomyRun(world, disturbance, no_arrivals(), POLICY_CONTROL, 1, 2, 3, 4,
+                     initial_state=start)
+    record = run.run_epoch()
+    check("nature permuted stock between two symmetric coordinates",
+          record.state_forced == _state(8, 12, 10, 6, 6))
+    check("the potential is unchanged by it",
+          record.external_deviation == 0 and record.potential_forced == record.potential_before)
+    check("but an external physical event is recorded",
+          len(record.external_events) == 1, str(record.external_events))
+    check("so the interval is not actor-only", not actor_only((record,)))
+
+
+def test_a_genuine_actor_only_cycle_is_classified_and_mints_nothing() -> None:
+    world = sandwater_world()
+    arrivals = ScriptedArrivals({1: (("sand", "C", 2),)})
+    run = EconomyRun(world, quiet_disturbance(world), arrivals, POLICY_ALIGNED,
+                     1, 2, 3, 4, initial_state=_state(8, 12, 10, 6, 6))
+    run.run_epoch()
+    opening_state, opening_balance = run.state, run.ledger.total
+    run.run_epoch()
+    run.run_epoch()
+    cycle_records = tuple(run.records[1:])
+    check("no external physical event occurred in the window",
+          actor_only(cycle_records) and window(cycle_records).external_events == ())
+    check("the state returned exactly", run.state == opening_state)
+    check("and aggregate capacity is exactly unchanged",
+          run.ledger.total == opening_balance, str(run.ledger.total))
+    check("an economic arrival inside the window did not break actor-only status",
+          any(record.arrivals for record in cycle_records))
+
+
+def test_actor_only_is_not_inferred_from_the_potential_term() -> None:
+    import demand_driven_ebu.cycles as cycles_module
+
+    source = inspect.getsource(cycles_module.actor_only)
+    tree = ast.parse(source.strip())
+    names = {getattr(n, "id", "") for n in ast.walk(tree) if isinstance(n, ast.Name)}
+    attributes = {n.attr for n in ast.walk(tree) if isinstance(n, ast.Attribute)}
+    check("the classifier reads event provenance and nothing else",
+          "external_events" in attributes
+          and not ({"external_deviation", "external_total", "potential_after"} & attributes),
+          str(sorted(attributes)))
+    del names
+
+
+# --------------------------------------------------------------------------
+# Correction 8 -- irreversible sinks may not be exported from
+# --------------------------------------------------------------------------
+
+
+def test_a_route_out_of_a_sink_is_refused_at_construction() -> None:
+    for maker in (
+        lambda: Coordinate.sink_in_potential("sand", "W", 0, 1),
+        lambda: Coordinate.sink_audit_only("sand", "W"),
+    ):
+        try:
+            DemandWorld.declare(
+                "bad-sink-v1",
+                [Coordinate.stock("sand", "A", 10, 1), maker()],
+                [Route.declare("sand", 1, 0, 4)],
+                (1, 2),
+                1,
+            )
+        except Refusal as failure:
+            check("a route exporting from a sink is refused",
+                  "exports from a sink" in str(failure), str(failure)[:60])
+        else:
+            check("a route exporting from a sink is refused", False)
+
+    try:
+        DemandWorld.declare(
+            "bad-sink-v2",
+            [Coordinate.stock("sand", "A", 10, 1), Coordinate.sink_in_potential("sand", "W", 0, 1)],
+            [Route.declare("sand", 0, 1, 4)],
+            (1, 2),
+            1,
+        )
+    except Refusal as failure:
+        check("and a route delivering into one is still refused",
+              "delivers into a sink" in str(failure), str(failure)[:60])
+    else:
+        check("and a route delivering into one is still refused", False)
+
+    check("the declared loss worlds remain valid",
+          loss_world().world_id == "loss-v1"
+          and audit_sink_world().world_id == "audit-sink-v1")
+
+
+def test_no_declared_world_exports_from_a_sink() -> None:
+    offenders = []
+    for maker in (sandwater_world, surplus_world, scarcity_world, competing_world,
+                  cycle_world, loss_world, audit_sink_world):
+        world = maker()
+        for route in world.routes:
+            if world.coordinates[route.source].role == "SINK":
+                offenders.append(f"{world.world_id}:{route.route_id}")
+    check("no fixture world exports from a sink", not offenders, str(offenders))
+
+
+# --------------------------------------------------------------------------
+# Correction 9 -- the capacity theorem after the service-allocation change
+# --------------------------------------------------------------------------
+
+
+def test_capacity_identity_survives_additive_service() -> None:
+    world = sandwater_world()
+    disturbance = DisturbanceProcess.declare(world, ((0, 1), (1, 2), (2, 0), (3, 4)), 2, 1, 2)
+    arrivals = ArrivalProcess.declare(
+        (("sand", "A", 1), ("sand", "C", 2), ("water", "E", 1)), 1, 2, 3
+    )
+    worst = F(0)
+    multi = 0
+    for policy in (POLICY_ALIGNED, POLICY_RANDOM, POLICY_HOSTILE, POLICY_CONTROL):
+        run = EconomyRun(world, disturbance, arrivals, policy, 5, 6, 7, 8)
+        records = run.run(30)
+        for record in records:
+            if len(record.active_economic) > 1:
+                multi += 1
+        worst = max(worst, abs(run.capacity_source_residual))
+        accounting = window(records)
+        worst = max(worst, abs(accounting.telescoping_residual), abs(accounting.identity_residual))
+    check("epochs with several simultaneous economic demands occurred",
+          multi > 0, str(multi))
+    check("delta B_total = V(x_0) - V(x_T) + sum dV_ext exactly, in every arm",
+          worst == 0, str(worst))
+
+
+def test_no_duplicate_receipt_or_service_credit() -> None:
+    world = sandwater_world()
+    disturbance = DisturbanceProcess.declare(world, ((0, 1), (1, 2), (3, 4)), 2, 1, 2)
+    arrivals = ArrivalProcess.declare((("sand", "C", 2), ("water", "E", 1)), 1, 2, 3)
+    worst_receipt = F(0)
+    duplicates = []
+    double_served = []
+    for policy in (POLICY_ALIGNED, POLICY_RANDOM, POLICY_HOSTILE, POLICY_CONTROL):
+        run = EconomyRun(world, disturbance, arrivals, policy, 9, 10, 11, 12)
+        records = run.run(30)
+        seen: dict[str, int] = {}
+        for record in records:
+            identifiers = [action_id for action_id, _ in record.receipts]
+            if len(set(identifiers)) != len(identifiers):
+                duplicates.append(f"{policy}@{record.epoch}")
+            summed = sum((value for _, value in record.receipts), F(0))
+            worst_receipt = max(worst_receipt, abs(summed - record.epoch_ebu))
+            for demand_id in record.served_economic:
+                seen[demand_id] = seen.get(demand_id, 0) + 1
+        double_served.extend(f"{policy}:{k}" for k, v in seen.items() if v > 1)
+    check("no action is credited twice within an epoch", not duplicates, str(duplicates))
+    check("receipts sum to the epoch EBU exactly", worst_receipt == 0, str(worst_receipt))
+    check("no economic demand is ever served twice", not double_served, str(double_served))
+
+
+def test_an_arrival_still_creates_no_capacity_under_additive_orders() -> None:
+    world = sandwater_world()
+    arrivals = ScriptedArrivals({0: (("sand", "C", 2), ("sand", "C", 2))})
+    run = EconomyRun(world, quiet_disturbance(world), arrivals, POLICY_ALIGNED, 1, 2, 3, 4)
+    record = run.run_epoch()
+    check("two orders arrived at the same destination", len(record.arrivals) == 2)
+    check("nothing physical happened", run.state == world.reference_state())
+    check("and no capacity was issued", run.ledger.total == F(0))
+    check("the epoch EBU is exactly zero", record.epoch_ebu == F(0))
+
+
+# --------------------------------------------------------------------------
+# Correction 10 -- admission hand-checks under additive orders
+# --------------------------------------------------------------------------
+
+
+def _big_sand_world(reference, quanta, max_plan_size=2):
+    return DemandWorld.declare(
+        "bigsand-v1",
+        [
+            Coordinate.stock("sand", "A", reference, 1),
+            Coordinate.stock("sand", "B", 0, 1),
+            Coordinate.stock("sand", "C", 0, 1),
+        ],
+        [
+            Route.declare("sand", 0, 1, 1000),
+            Route.declare("sand", 0, 2, 1000),
+            Route.declare("sand", 1, 2, 1000),
+            Route.declare("sand", 2, 1, 1000),
+        ],
+        quanta,
+        max_plan_size,
+    )
+
+
+def test_admission_hand_check_a_two_700_orders_against_1000() -> None:
+    world = _big_sand_world(1000, (500, 700, 1000))
+    state = _state(1000, 0, 0)
+    first = _economic(world, "sand", 700, "C", 0, 0)
+    second = _economic(world, "sand", 700, "B", 0, 1)
+    check("each order is serviceable alone",
+          has_service_plan(world, state,
+                           components(world, state, ActiveDemandSet.of((), (first,)))[0])
+          and has_service_plan(world, state,
+                               components(world, state, ActiveDemandSet.of((), (second,)))[0]))
+    admitted, rejected, decision = admit(world, state, (), (), (first, second), 3, 0)
+    check("A: 700 + 700 against 1000 cannot both be admitted",
+          len(admitted) == 1, str(decision.admitted))
+    check("A: the other is rejected as incompatible",
+          rejected[0].status == E_REJECTED_INCOMPATIBLE, rejected[0].status)
+
+
+def test_admission_hand_check_b_two_500_orders_against_1000() -> None:
+    world = _big_sand_world(1000, (500, 1000))
+    state = _state(1000, 0, 0)
+    first = _economic(world, "sand", 500, "C", 0, 0)
+    second = _economic(world, "sand", 500, "B", 0, 1)
+    admitted, rejected, decision = admit(world, state, (), (), (first, second), 3, 0)
+    check("B: 500 + 500 against 1000 may both be admitted",
+          len(admitted) == 2 and rejected == (), str(decision.admitted))
+    both = components(world, state, ActiveDemandSet.of((), admitted))
+    check("B: and they are jointly serviceable",
+          all(has_service_plan(world, state, c) for c in both))
+
+
+def test_admission_hand_check_c_1000_against_560() -> None:
+    world = scarcity_world()
+    state = _state(560, 0, 0)
+    order = _economic(world, "sand", 1000, "C", 0, 0)
+    admitted, rejected, _ = admit(world, state, (), (), (order,), 3, 0)
+    check("C: an order beyond the stock is rejected for physical scarcity",
+          admitted == () and rejected[0].status == E_REJECTED_PHYSICAL_SCARCITY)
+    check("C: and it is rejected before any EBU value exists",
+          rejected[0].quantity == F(1000))
+
+
+def test_admission_hand_check_d_economic_and_physical_at_one_destination() -> None:
+    world = sandwater_world()
+    state = _state(14, 10, 8, 6, 6)
+    physical = derive_physical_demands(world, state)
+    order = _economic(world, "sand", 2, "C", 0, 0)
+    admitted, rejected, _ = admit(world, state, physical, (), (order,), 3, 0)
+    check("D: the order is admitted alongside the shortfall",
+          len(admitted) == 1 and rejected == (), str(admitted))
+    component = components(world, state, ActiveDemandSet.of(physical, admitted))[0]
+    plans = enumerate_service_plans(world, state, component)
+    two_unit = [
+        plan for plan in plans
+        if plan.group.increment(world.dimension)[world.index_of("sand", "C")] == F(2)
+    ]
+    check("D: a two-unit delivery is a valid complete plan", len(two_unit) > 0)
+    if two_unit:
+        increment = two_unit[0].group.increment(world.dimension)
+        check("D: it serves the economic order in full",
+              served_economic_ids(component.requirements, increment) == (order.demand_id,))
+        check("D: and the same two units resolve the physical shortfall",
+              state[world.index_of("sand", "C")] + increment[world.index_of("sand", "C")]
+              == F(10))
 
 if __name__ == "__main__":
     raise SystemExit(main())

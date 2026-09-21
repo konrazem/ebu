@@ -1,75 +1,98 @@
-"""The demand-dependency graph and its joint-resolution components.
+"""The demand-dependency graph, and the invariant it must respect.
 
-Not every demand interacts physically with every other one. Two demands are
-connected when serving them could compete for, or share, the same physical
-stock, the same route, the same hard capacity, or the same actor account. The
-connected components of that graph are the units that are resolved jointly, and
-independent components may resolve in the same epoch: one impossible sand
-demand must not block an unrelated water restoration.
+**Invariant.** Demand decomposition is an implementation factorization, not a
+restriction on the global feasible service set. Splitting demands into
+components, or evaluating them jointly, must produce the same set of globally
+executable outcomes. Over-coupling is therefore not a harmless conservatism:
+merging two demands that never interact makes an unserviceable one freeze a
+serviceable one, and that freeze is an artifact of the partition rather than a
+physical fact.
 
-The footprint of a demand is computed conservatively, as everything any plan
-serving it could possibly touch, rather than as the exact set some particular
-plan does touch. Over-coupling is the safe direction of error. It can only merge
-components that were in fact independent, which costs parallelism; under-coupling
-would let two "independent" plans collide at execution, which costs correctness.
-The final joint gate in `harness` re-checks the merged plan anyway and reports
-any surviving collision as an implementation defect rather than sequencing
-around it quietly.
+Coupling is consequently decided from **actual binding constraints**, not from
+membership of a shared transport component. Two demands are coupled when their
+service possibilities genuinely interact through one of:
 
-Account sharing is a real edge here, not a formality. Because accounts are held
-by nodes, a sand demand and a water demand whose plans would both be paid for
-by node `A` are coupled through joint affordability even though no stock and no
-route is shared.
+* a shared service-delivery pool — the same destination coordinate, where
+  economic quantities are additive;
+* competing stock — a source coordinate that plans for both could draw on;
+* a shared route, and therefore its hard capacity;
+* a shared potential-bearing coordinate, where valuation would not be additive;
+* a shared owner account, where joint affordability genuinely binds.
+
+The first four are all visible as an overlap of the **touched coordinates** of
+the two demands' individually-serving plans, since a plan touches its sources,
+its destination and its sinks. The fifth is separate, because accounts are held
+by nodes and a node may host several resources.
+
+A demand with no individually-serving plan has an empty reach and couples with
+nothing. That is correct rather than convenient: a demand that cannot be served
+alone cannot be served inside a larger plan either, because a joint plan has
+*fewer* actions available for it under the same plan-size cap, so it competes
+for nothing. It becomes a singleton component and is reported unserviceable
+without freezing anything.
+
+The one exception is a shared destination: economic orders at the same
+coordinate draw on the same pool and are coupled even when neither is
+individually serviceable, because their requirement is additive and only
+meaningful jointly.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass
 
-from gaussian_harness.numerics import Refusal
+from gaussian_harness.numerics import Refusal, Vector
 
 from .demand import ActiveDemandSet, Demand
+from .enumeration import search_routes, serving_groups
+from .service import CoordinateRequirement, requirements
 from .world import DemandWorld
 
 
 @dataclass(frozen=True)
-class Footprint:
-    """Everything a plan serving one demand could possibly touch."""
+class Reach:
+    """Tokens any plan serving one demand alone could actually bind."""
 
     coordinates: frozenset[int]
     routes: frozenset[str]
     owners: frozenset[str]
+    destination: int
+    serviceable: bool
 
-    def intersects(self, other: "Footprint") -> bool:
-        return bool(
-            self.coordinates & other.coordinates
-            or self.routes & other.routes
-            or self.owners & other.owners
-        )
+    def interacts_with(self, other: "Reach") -> bool:
+        if self.destination == other.destination:
+            return True
+        if self.coordinates & other.coordinates:
+            return True
+        if self.routes & other.routes:
+            return True
+        return bool(self.owners & other.owners)
 
 
-def footprint(world: DemandWorld, demand: Demand) -> Footprint:
-    reachable = world.transport_component(demand.coordinate)
-    routes = frozenset(
-        route.route_id
-        for route in world.routes
-        if route.source in reachable or route.destination in reachable
+def service_reach(world: DemandWorld, state: Vector, demand: Demand) -> Reach:
+    """What a plan serving this demand *on its own* could touch, exactly."""
+    reqs = requirements((demand,))
+    routes = search_routes(world, frozenset({demand.coordinate}))
+    groups = serving_groups(world, state, reqs, routes)
+    coordinates: set[int] = set()
+    used: set[str] = set()
+    owners: set[str] = set()
+    for group in groups:
+        coordinates |= group.support
+        used |= group.route_support
+        owners |= group.owner_support(world)
+    return Reach(
+        frozenset(coordinates), frozenset(used), frozenset(owners), demand.coordinate, bool(groups)
     )
-    owners = frozenset(
-        world.owner_of(route.source)
-        for route in world.routes
-        if route.route_id in routes
-    )
-    owners |= {world.coordinates[demand.coordinate].node}
-    return Footprint(reachable, routes, owners)
 
 
 @dataclass(frozen=True)
 class DemandComponent:
-    """A coupled set of active demands, resolved jointly or not at all."""
+    """A coupled set of demands, resolved jointly or not at all."""
 
     demands: tuple[Demand, ...]
-    reach: Footprint
+    binding: Reach
+    search: frozenset[str]
 
     def __post_init__(self) -> None:
         if not self.demands:
@@ -92,13 +115,19 @@ class DemandComponent:
             demand.demand_id for demand in self.demands if demand.demand_class == "E"
         )
 
+    @property
+    def requirements(self) -> tuple[CoordinateRequirement, ...]:
+        return requirements(self.demands)
 
-def components(world: DemandWorld, active: ActiveDemandSet) -> tuple[DemandComponent, ...]:
-    """Connected components of the demand-dependency graph, canonically ordered."""
+
+def components(
+    world: DemandWorld, state: Vector, active: ActiveDemandSet
+) -> tuple[DemandComponent, ...]:
+    """Connected components of the binding-constraint graph."""
     demands = active.all
     if not demands:
         return ()
-    prints = [footprint(world, demand) for demand in demands]
+    reaches = [service_reach(world, state, demand) for demand in demands]
 
     parent = list(range(len(demands)))
 
@@ -115,7 +144,7 @@ def components(world: DemandWorld, active: ActiveDemandSet) -> tuple[DemandCompo
 
     for i in range(len(demands)):
         for j in range(i + 1, len(demands)):
-            if prints[i].intersects(prints[j]):
+            if reaches[i].interacts_with(reaches[j]):
                 union(i, j)
 
     grouped: dict[int, list[int]] = {}
@@ -124,15 +153,21 @@ def components(world: DemandWorld, active: ActiveDemandSet) -> tuple[DemandCompo
 
     built = []
     for members in grouped.values():
-        merged = Footprint(
-            frozenset().union(*(prints[i].coordinates for i in members)),
-            frozenset().union(*(prints[i].routes for i in members)),
-            frozenset().union(*(prints[i].owners for i in members)),
+        merged = Reach(
+            frozenset().union(*(reaches[i].coordinates for i in members)),
+            frozenset().union(*(reaches[i].routes for i in members)),
+            frozenset().union(*(reaches[i].owners for i in members)),
+            min(reaches[i].destination for i in members),
+            any(reaches[i].serviceable for i in members),
         )
-        built.append(
-            DemandComponent(
-                tuple(sorted((demands[i] for i in members), key=lambda d: d.demand_id)),
-                merged,
+        member_demands = tuple(
+            sorted((demands[i] for i in members), key=lambda d: d.demand_id)
+        )
+        search = frozenset(
+            route.route_id
+            for route in search_routes(
+                world, frozenset(demand.coordinate for demand in member_demands)
             )
         )
+        built.append(DemandComponent(member_demands, merged, search))
     return tuple(sorted(built, key=lambda c: c.component_id))

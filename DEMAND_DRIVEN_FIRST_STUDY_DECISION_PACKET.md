@@ -54,7 +54,7 @@ freezing, and none may be inferred from a favourable local outcome.
 
 | parameter | why it is scientific | candidate range |
 |---|---|---|
-| **quantity distribution** | sets how often a request exceeds what exists, and therefore the scarcity-rejection rate | a finite declared alphabet; at least one quantum reachable by a single action and at least one beyond the plan-size cap |
+| **quantity distribution** | sets how often a request exceeds what exists, and therefore the scarcity-rejection rate. Economic quantities are **additive** across orders, so several small requests at one destination can be jointly unserviceable while each is serviceable alone | a finite declared alphabet; at least one quantum reachable by a single action and at least one beyond the plan-size cap |
 | **arrival frequency** | sets the ratio of economic to physical obligations, which is the central exposure of the study | per-epoch Bernoulli rate; suggested factor levels `1/8`, `1/4`, `1/2` |
 | **destination distribution** | see finding F-3: concentrating demand on nodes that never earn produces unaffordability that is an artefact of the distribution, not the mechanism | uniform over stock nodes, versus a declared skewed alternative; **at least one of each** |
 | **number of simultaneous arrivals** | the admission rule only does anything when arrivals can conflict; with one slot per epoch, admission is a formality | at least 2 slots, so inclusion-maximal subsets can be non-trivial |
@@ -89,6 +89,10 @@ These are not optional; a study frozen without them cannot be interpreted.
    mandatory rule: any mechanism with an account layer must report at at least
    two declared capacity regimes, because a single regime was provably
    insufficient to characterise V1 in the stress model.
+5. **Induced admission marginals (audit correction 5).** Uniform choice over
+   inclusion-maximal compatible subsets is not uniform over demands. The
+   per-demand marginal admission probability induced by the declared arrival
+   law must be reported, not assumed flat.
 
 ## 4. Proposed arm structure, for decision
 
@@ -105,9 +109,36 @@ subset of the dense one. This isolates the causal effect of arrival frequency
 and removes schedule mismatch from the comparison. Frequency must then be
 absent from the seed preimage.
 
-The comparator must see the **same admitted demand components** as the EBU
-arms, which means admission must be driven by its own stream and not
-re-derived per arm.
+### 4.1 Comparison contract — corrected
+
+An earlier version of this packet required the comparator to see the **same
+admitted demand components** as the EBU arms. **That requirement is
+withdrawn.** It is unsatisfiable in a closed loop: admission reads the physical
+state, and prior actor behaviour puts different arms in different states, so
+identical admitted sets could only be produced by feeding one arm's admission
+decisions to another.
+
+The registered study will instead use:
+
+> **identical exogenous E-demand arrival streams across arms, with endogenous
+> admission.**
+
+Arrivals are a pure function of `(seed, epoch)` and are therefore identical
+across arms by construction — the rehearsal confirms 404 identical arrivals in
+every arm. Admission may differ, and those differences are legitimate
+closed-loop outcomes, not confounds. Admission remains EBU-blind: it inspects
+no EBU value, no capacity balance and no future receipt.
+
+**Reporting requirement.** All comparisons are reported over the **common raw
+arrival set**, never over admitted demands alone. An arm that admits little and
+serves all of it would otherwise score perfectly. Each incoming demand carries
+a lifecycle state, and all of them must be reported:
+
+`ARRIVED`, `ADMITTED`, `REJECTED_PHYSICAL_SCARCITY`, `REJECTED_INCOMPATIBLE`,
+`SERVED`, `ADMITTED_BUT_UNRESOLVED_PHYSICAL`, `ADMITTED_BUT_EBU_UNAFFORDABLE`.
+
+The admitted-only service rate may be reported as a secondary diagnostic. It
+may never be the primary whole-system performance comparison.
 
 ## 5. Inferential plan — to be compact
 
@@ -127,7 +158,8 @@ checked on rehearsal-scale runs before freezing — not after seeing outcomes.
 | gate | state |
 |---|---|
 | corrected model implemented | **yes** — `demand_driven_ebu/`, identity recorded in the final report |
-| exact conformance passing | **yes** — 273 assertions, 0 failures, tolerance 0 |
+| independent audit defects corrected | **yes** — all five, see `DEMAND_DRIVEN_AUDIT_CORRECTION_HANDOFF.md` |
+| exact conformance passing | **yes** — 365 assertions, 0 failures, tolerance 0 |
 | closed-cycle theorem proved and verified | **yes** |
 | small local rehearsal run | **yes** — deterministic replay, all residuals 0 |
 | arrival law declared | **no** — §3.1 |
