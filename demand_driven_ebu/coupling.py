@@ -66,7 +66,9 @@ from gaussian_harness.numerics import Refusal, Vector
 
 from .demand import ActiveDemandSet, Demand
 from .enumeration import (
+    IMPOSSIBLE,
     SERVICEABLE,
+    UNRESOLVED,
     physically_serviceable,
     search_routes,
     structural_reach,
@@ -77,12 +79,19 @@ from .world import DemandWorld
 
 @dataclass(frozen=True)
 class Reach:
-    """Tokens any minimal plan serving one demand could bind."""
+    """Tokens any minimal plan serving one demand could bind.
+
+    `verdict` records which of the three serviceability answers produced this
+    reach, so an audit can tell a reach that is empty because the demand is
+    *proved* impossible from one that is full because the search could not
+    decide.
+    """
 
     coordinates: frozenset[int]
     routes: frozenset[str]
     owners: frozenset[str]
     destination: int
+    verdict: str = SERVICEABLE
 
     def interacts_with(self, other: "Reach") -> bool:
         if self.destination == other.destination:
@@ -97,10 +106,14 @@ class Reach:
 def service_reach(world: DemandWorld, state: Vector, demand: Demand) -> Reach:
     """The structural reach of one demand, gated on it being serviceable at all.
 
-    A demand with **no** physically realizable service possibility binds
-    nothing. There are no service possibilities for anything to interact with,
-    so it competes for no stock, no route and no account, and it is reduced to
-    its own destination coordinate.
+    A demand **proved** to have no physically realizable service possibility
+    binds nothing. There are no service possibilities for anything to interact
+    with, so it competes for no stock, no route and no account, and it is
+    reduced to its own destination coordinate.
+
+    A demand whose serviceability the search could not decide keeps its **full**
+    reach. Uncertainty is not evidence of impossibility, and decoupling on it
+    would delete real dependencies because a search ran out of budget.
 
     That is sound rather than merely convenient. If no plan serves `d` alone,
     no joint plan serves it either: the actions of a joint plan that raise the
@@ -124,10 +137,19 @@ def service_reach(world: DemandWorld, state: Vector, demand: Demand) -> Reach:
     gate inherits both invariants: it cannot move with the plan-size cap, and
     it cannot move when a route that carries no action is added or removed.
     """
-    if physically_serviceable(world, state, requirements((demand,))) != SERVICEABLE:
-        return Reach(frozenset(), frozenset(), frozenset(), demand.coordinate)
-    reach = structural_reach(world, frozenset({demand.coordinate}))
-    return Reach(reach.coordinates, reach.routes, reach.owners, demand.coordinate)
+    verdict = physically_serviceable(world, state, requirements((demand,)))
+    if verdict == IMPOSSIBLE:
+        return Reach(
+            frozenset(), frozenset(), frozenset(), demand.coordinate, IMPOSSIBLE
+        )
+    # SERVICEABLE and UNRESOLVED both take the full reach. Emptying it is an
+    # optimization licensed only by *proved* impossibility; doing it on an
+    # undecided search would silently delete real dependencies on the strength
+    # of a computational limit.
+    reach = structural_reach(world, state, frozenset({demand.coordinate}))
+    return Reach(
+        reach.coordinates, reach.routes, reach.owners, demand.coordinate, verdict
+    )
 
 
 @dataclass(frozen=True)
@@ -197,11 +219,14 @@ def components(
 
     built = []
     for members in grouped.values():
+        verdicts = {reaches[i].verdict for i in members}
         merged = Reach(
             frozenset().union(*(reaches[i].coordinates for i in members)),
             frozenset().union(*(reaches[i].routes for i in members)),
             frozenset().union(*(reaches[i].owners for i in members)),
             min(reaches[i].destination for i in members),
+            UNRESOLVED if UNRESOLVED in verdicts
+            else (SERVICEABLE if SERVICEABLE in verdicts else IMPOSSIBLE),
         )
         member_demands = tuple(
             sorted((demands[i] for i in members), key=lambda d: d.demand_id)

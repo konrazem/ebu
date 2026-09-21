@@ -18,6 +18,13 @@ different soundness requirements.
 * **Usable routes** are those that can carry at least one declared quantum. A
   route with capacity below every quantum carries no action and must be
   behaviorally invisible.
+* **Live routes** are usable routes whose source can actually fund their
+  smallest usable quantum at the frozen baseline. Source-funding forbids a
+  coordinate from paying for an outflow with quantity arriving in the same
+  instant, so a route out of an empty stock carries no action in any plan at
+  this state -- not even inside a simultaneous group -- and must likewise be
+  invisible. Capacity alone is not enough: a route can be usable in the world
+  and dead in the state.
 
 ## Why the structural reach is exact
 
@@ -66,10 +73,14 @@ from .physical import PhysicalAction, PlanGroup, action_alphabet, can_happen_now
 from .service import CoordinateRequirement, serves_all
 from .world import DemandWorld, Route
 
-# An exhaustive per-route search is bounded by the product over reach routes of
-# (1 + usable quanta). Beyond this many combinations the search refuses rather
-# than reporting a negative it did not establish.
-EXHAUSTIVE_BUDGET = 500_000
+# The uncapped search is bounded by the **work it actually does**, not by a
+# worst-case estimate of the space. A pre-check on the space size would refuse
+# before trying, turning trivially serviceable requirements into "unresolved"
+# whenever the world is wide: nineteen independent one-unit suppliers give a
+# space of 2^19 and a plan on the very first evaluation. Enumeration therefore
+# proceeds by increasing plan size, returns as soon as a plan is found, and
+# spends this budget only on requirements it cannot satisfy.
+EXHAUSTIVE_BUDGET = 200_000
 
 
 def usable_routes(world: DemandWorld) -> tuple[Route, ...]:
@@ -84,6 +95,25 @@ def usable_routes(world: DemandWorld) -> tuple[Route, ...]:
         for route in world.routes
         if any(quantum <= route.capacity for quantum in world.quanta)
     )
+
+
+def live_routes(world: DemandWorld, state: Vector) -> tuple[Route, ...]:
+    """Usable routes whose source can fund their smallest usable quantum now.
+
+    A necessary condition for a route to carry an action in **any** executable
+    plan at this baseline: source-funding requires the source to already hold
+    the total it sends, so it must hold at least the smallest quantum the route
+    can carry. Filtering on it therefore removes no route that could appear in
+    a plan, and removes every route that could not.
+    """
+    live = []
+    for route in usable_routes(world):
+        smallest = min(
+            quantum for quantum in world.quanta if quantum <= route.capacity
+        )
+        if state[route.source] >= smallest:
+            live.append(route)
+    return tuple(live)
 
 
 def search_routes(world: DemandWorld, coordinates: frozenset[int]) -> tuple[Route, ...]:
@@ -106,10 +136,15 @@ class StructuralReach:
 
 
 def structural_reach(
-    world: DemandWorld, requirement_coordinates: frozenset[int]
+    world: DemandWorld, state: Vector, requirement_coordinates: frozenset[int]
 ) -> StructuralReach:
-    """Tokens every minimal plan serving this requirement set could bind."""
-    usable = usable_routes(world)
+    """Tokens every minimal plan serving this requirement set could bind.
+
+    Built from **live** routes, so a route that can carry no action at this
+    baseline -- whether because its capacity is below every quantum or because
+    its source is empty -- contributes nothing to coupling.
+    """
+    usable = live_routes(world, state)
     inflow_targets = set(requirement_coordinates)
     selected: dict[str, Route] = {}
     while True:
@@ -161,29 +196,38 @@ def _capped_groups(world: DemandWorld, routes, limit: int):
 
 
 def exhaustive_space(world: DemandWorld, routes) -> int:
-    """Size of the uncapped per-route search over these routes."""
+    """Worst-case size of the uncapped per-route search. Reporting only.
+
+    Not used to refuse a search: the search is bounded by the work it does.
+    """
     total = 1
     for route in routes:
         total *= 1 + sum(1 for quantum in world.quanta if quantum <= route.capacity)
-        if total > EXHAUSTIVE_BUDGET:
+        if total > 1 << 40:
             return total
     return total
 
 
-def _uncapped_groups(world: DemandWorld, routes):
-    """Every plan using at most one action per route, at any size."""
-    choices = []
-    for route in routes:
-        options = [None] + [
+def _sized_groups(world: DemandWorld, routes):
+    """Every plan using at most one action per route, in increasing size.
+
+    Size order matters: it puts minimal plans first, so a requirement that has
+    any easy answer is answered immediately rather than after a walk through
+    the large end of the space.
+    """
+    per_route = [
+        [
             PhysicalAction(route, quantum)
             for quantum in world.quanta
             if quantum <= route.capacity
         ]
-        choices.append(options)
-    for combination in product(*choices):
-        chosen = tuple(action for action in combination if action is not None)
-        if chosen:
-            yield PlanGroup.of(*chosen)
+        for route in routes
+    ]
+    populated = [options for options in per_route if options]
+    for size in range(1, len(populated) + 1):
+        for chosen in combinations(populated, size):
+            for combination in product(*chosen):
+                yield PlanGroup.of(*combination)
 
 
 def serving_groups(
@@ -231,19 +275,30 @@ def physically_serviceable(
 ) -> str:
     """Whether the requirement set can be served at all, ignoring the cap.
 
-    Exact: minimal plans use only structural-reach routes and at most one
-    action per route, so choosing per route over that set is a complete search.
-    If the space exceeds the declared budget the answer is `UNRESOLVED` --
-    refusing to report a negative the search did not establish -- rather than
-    a silent `IMPOSSIBLE`.
+    Exact where it answers at all: minimal plans use only live structural-reach
+    routes and at most one action per route, so choosing per route over that
+    set is a complete search of the minimal plans.
+
+    Enumeration runs in increasing plan size and returns `SERVICEABLE` on the
+    first plan found, so a wide but easy requirement is answered in a handful
+    of evaluations rather than refused on the size of its search space. Only an
+    unsatisfiable requirement can consume the budget, and exhausting it yields
+    `UNRESOLVED` -- never `IMPOSSIBLE`. A negative is reported only when the
+    whole space has been enumerated.
+
+    Callers must preserve all three answers. Treating `UNRESOLVED` as
+    impossibility would turn a computational limit into a physical claim,
+    which is exactly what this three-way return exists to prevent.
     """
     if not reqs:
         return SERVICEABLE
-    reach = structural_reach(world, frozenset(req.coordinate for req in reqs))
+    reach = structural_reach(world, state, frozenset(req.coordinate for req in reqs))
     routes = tuple(route for route in world.routes if route.route_id in reach.routes)
-    if exhaustive_space(world, routes) > EXHAUSTIVE_BUDGET:
-        return UNRESOLVED
-    for group in _uncapped_groups(world, routes):
+    evaluations = 0
+    for group in _sized_groups(world, routes):
+        evaluations += 1
+        if evaluations > EXHAUSTIVE_BUDGET:
+            return UNRESOLVED
         if not serves_all(reqs, group.increment(world.dimension)):
             continue
         if can_happen_now(world, state, group).executable:

@@ -294,9 +294,21 @@ routes that can carry nothing had changed serviceability.
 
 Coupling is consequently derived from the **structural reach** — the exact set
 of tokens any *minimal* plan serving a demand could bind, computed from the
-world in `enumeration.structural_reach` and proved there to be a sound
-superset of every minimal plan's support. It is free of the plan-size cap,
-free of padding, and blind to routes that carry no action. Neither raw
+world and the frozen baseline in `enumeration.structural_reach` and proved
+there to be a sound superset of every minimal plan's support. It is free of
+the plan-size cap, free of padding, and blind to routes that carry no action.
+
+Blindness to unusable routes has **two** limbs, and a second audit showed that
+capacity alone is not enough. A route is invisible to the reach when it cannot
+carry any allowed quantum *or* when its source cannot fund the smallest
+quantum it could carry at the frozen baseline. Source-funding forbids a
+coordinate from paying for an outflow with quantity arriving in the same
+instant, so a route out of an empty stock carries no action in any plan at
+this state — not even inside a simultaneous group. Two such routes, of ample
+capacity but with empty sources, were enough to merge the three independent
+deliveries again and destroy all service while the executable action set stayed
+identical. The reach is therefore state-aware: a route can be usable in the
+world and dead in the state. Neither raw
 transport connectivity nor enumerated serving plans are used: the first merges
 demands that never compete, and the second admits padded plans whose
 unnecessary actions drag unrelated coordinates and owners into the reach.
@@ -315,12 +327,20 @@ common. That coupling is required rather than conservative: joint affordability
 is checked jointly at execution, and decoupling such demands would let the
 joint gate discover a conflict it should have prevented.
 
-A demand with **no** physically realizable service possibility binds nothing
-and is coupled only to demands at its own destination. This is sound, not
-lenient: if no plan serves it alone, no joint plan serves it either, since the
-actions that would raise its increment come from the same structural reach and
-a joint plan has no more of them available. Coupling it to a serviceable
+A demand **proved** to have no physically realizable service possibility binds
+nothing and is coupled only to demands at its own destination. This is sound,
+not lenient: if no plan serves it alone, no joint plan serves it either, since
+the actions that would raise its increment come from the same structural reach
+and a joint plan has no more of them available. Coupling it to a serviceable
 neighbour would destroy that neighbour's service for nothing.
+
+**Uncertainty is not impossibility.** The serviceability search returns three
+answers — serviceable, impossible, and undecided when it exhausts its budget —
+and all three are carried through coupling and admission. A demand whose
+search was undecided keeps its **full** reach and is **not** rejected for
+scarcity; the uncertainty is recorded instead. Emptying a reach or refusing a
+demand on an undecided search would convert a computational limit into a
+physical claim.
 
 **Where a component still freezes**, it is a declared restriction, not
 unavoidable scarcity. An order of 25 units at a coordinate that also carries a

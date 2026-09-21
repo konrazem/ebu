@@ -304,3 +304,54 @@ def shared_source_world() -> DemandWorld:
     ]
     routes = [Route.declare("r", 0, 1, 1), Route.declare("r", 0, 2, 1)]
     return DemandWorld.declare("shared-source-v1", coordinates, routes, (1,), 2)
+
+
+def wide_supply_world(sources: int = 19, requirement: int = 1) -> DemandWorld:
+    """Many independent one-unit suppliers feeding one destination.
+
+    The second auditor's uncertainty counterexample. With nineteen suppliers
+    the per-route search space is `2^19`, which a worst-case pre-check refuses
+    outright -- yet nineteen one-action plans serve the destination and the
+    menu is not empty. Raising `requirement` above the number of suppliers
+    makes the requirement genuinely unsatisfiable while keeping the space
+    large, which is what forces a real `SEARCH_BUDGET_EXCEEDED`.
+    """
+    coordinates = [
+        Coordinate.stock("r", f"S{index:02d}", 0, 1) for index in range(sources)
+    ]
+    coordinates.append(Coordinate.stock("r", "T", requirement, 1))
+    destination = len(coordinates) - 1
+    routes = [Route.declare("r", index, destination, 1) for index in range(sources)]
+    return DemandWorld.declare("wide-supply-v1", coordinates, routes, (1,), 2)
+
+
+def wide_supply_state(world: DemandWorld):
+    """One unit at every supplier, nothing at the destination."""
+    return tuple(
+        F(0) if coordinate.node == "T" else F(1) for coordinate in world.coordinates
+    )
+
+
+def empty_source_world(extra: bool = False) -> DemandWorld:
+    """The three deliveries, optionally plus routes whose sources are empty.
+
+    The added routes `B -> D` and `D -> F` have capacity one and can carry the
+    only permitted quantum, so a capacity-only usability test calls them
+    usable. But `B` and `D` hold nothing at this state, and source-funding
+    forbids a coordinate paying for an outflow with quantity arriving in the
+    same instant -- so neither route can carry an action in any plan here, not
+    even inside a simultaneous group. The executable action set is unchanged
+    and they must be behaviorally invisible.
+    """
+    coordinates = [
+        Coordinate.stock("r", node, reference, 1)
+        for node, reference in (("A", 0), ("B", 1), ("C", 0), ("D", 1), ("E", 0), ("F", 1))
+    ]
+    routes = [
+        Route.declare("r", 0, 1, 1),
+        Route.declare("r", 2, 3, 1),
+        Route.declare("r", 4, 5, 1),
+    ]
+    if extra:
+        routes += [Route.declare("r", 1, 3, 1), Route.declare("r", 3, 5, 1)]
+    return DemandWorld.declare("empty-source-v1", coordinates, routes, (1,), 2)

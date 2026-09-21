@@ -93,6 +93,19 @@ These are not optional; a study frozen without them cannot be interpreted.
    inclusion-maximal compatible subsets is not uniform over demands. The
    per-demand marginal admission probability induced by the declared arrival
    law must be reported, not assumed flat.
+6. **Search completeness rule (auditor 2, disposition 5).** The plan-size cap
+   is a computational enumeration limit, so the study must declare, before
+   execution and outcome-blind, either a cap proved sufficient for the
+   declared world and arrival law — with the registered run asserting a zero
+   `SEARCH_INCOMPLETE_AT_PLAN_CAP` rate and failing closed otherwise — or an
+   explicit computational-failure rule fixing a maximum rate and the
+   disposition of a run that exceeds it. **Raising the cap until an observed
+   rate looks negligible is not permitted.** The rate falsifies the search,
+   never the mechanism. See `DEMAND_DRIVEN_PLAN_CAP_DISPOSITION.md` §4a.
+7. **Undecided-search disposition.** `SEARCH_BUDGET_EXCEEDED` must be reported
+   separately from both service and scarcity, and its rate declared
+   acceptable in advance or the run treated as inconclusive for the affected
+   demands.
 
 ## 4. Proposed arm structure, for decision
 

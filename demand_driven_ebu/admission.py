@@ -46,7 +46,7 @@ from .demand import (
     EconomicDemand,
     PhysicalDemand,
 )
-from .enumeration import SERVICEABLE, physically_serviceable
+from .enumeration import IMPOSSIBLE, UNRESOLVED, physically_serviceable
 from .rng import STREAM_ADMISSION, Counter, uniform_index
 from .world import DemandWorld
 
@@ -64,10 +64,34 @@ class AdmissionDecision:
     rng_provenance: str
     admitted: tuple[str, ...]
     rejected: tuple[tuple[str, str], ...]
+    unresolved: tuple[str, ...] = ()
 
     @property
     def rejected_map(self) -> dict[str, str]:
         return dict(self.rejected)
+
+
+def classify(
+    world: DemandWorld,
+    state: Vector,
+    physical: tuple[PhysicalDemand, ...],
+    economic: tuple[EconomicDemand, ...],
+) -> dict[str, str]:
+    """Per-demand serviceability verdict, keeping all three answers apart."""
+    active = ActiveDemandSet.of(physical, economic)
+    if active.is_empty:
+        return {}
+    verdicts: dict[str, str] = {}
+    for component in components(world, state, active):
+        # Physical serviceability, decided without the plan-size cap. The cap
+        # is an enumeration limit, so admission -- which asks a question about
+        # physics -- must not consult it. A component serviceable only beyond
+        # the cap is admitted and then reported SEARCH_INCOMPLETE, which makes
+        # the limitation visible instead of encoding it as impossibility.
+        verdict = physically_serviceable(world, state, component.requirements)
+        for demand_id in component.demand_ids:
+            verdicts[demand_id] = verdict
+    return verdicts
 
 
 def unserviceable_ids(
@@ -76,20 +100,31 @@ def unserviceable_ids(
     physical: tuple[PhysicalDemand, ...],
     economic: tuple[EconomicDemand, ...],
 ) -> frozenset[str]:
-    """Demand ids whose component admits no complete executable plan now."""
-    active = ActiveDemandSet.of(physical, economic)
-    if active.is_empty:
-        return frozenset()
-    blocked: set[str] = set()
-    for component in components(world, state, active):
-        # Physical serviceability, decided without the plan-size cap. The cap
-        # is an enumeration limit, so admission -- which asks a question about
-        # physics -- must not consult it. A component serviceable only beyond
-        # the cap is admitted and then reported SEARCH_INCOMPLETE, which makes
-        # the limitation visible instead of encoding it as impossibility.
-        if physically_serviceable(world, state, component.requirements) != SERVICEABLE:
-            blocked.update(component.demand_ids)
-    return frozenset(blocked)
+    """Demands **proved** unserviceable. An undecided search is not a rejection.
+
+    Only `IMPOSSIBLE` blocks. A search that exhausted its budget establishes
+    nothing, and rejecting on it would convert a computational limit into a
+    scarcity finding recorded against the physics of the world.
+    """
+    return frozenset(
+        demand_id
+        for demand_id, verdict in classify(world, state, physical, economic).items()
+        if verdict == IMPOSSIBLE
+    )
+
+
+def unresolved_ids(
+    world: DemandWorld,
+    state: Vector,
+    physical: tuple[PhysicalDemand, ...],
+    economic: tuple[EconomicDemand, ...],
+) -> frozenset[str]:
+    """Demands whose serviceability the search could not decide."""
+    return frozenset(
+        demand_id
+        for demand_id, verdict in classify(world, state, physical, economic).items()
+        if verdict == UNRESOLVED
+    )
 
 
 def admissible(
@@ -122,6 +157,7 @@ def admit(
     """Admit one uniformly chosen inclusion-maximal compatible subset."""
     ordered = tuple(sorted(incoming, key=lambda demand: demand.demand_id))
     baseline_blocked = unserviceable_ids(world, state, physical, held)
+    undecided = unresolved_ids(world, state, physical, tuple(held) + ordered)
 
     feasible_subsets: list[tuple[EconomicDemand, ...]] = []
     for size in range(len(ordered) + 1):
@@ -175,5 +211,6 @@ def admit(
         counter.provenance,
         tuple(demand.demand_id for demand in admitted),
         tuple(reasons),
+        tuple(sorted(undecided)),
     )
     return admitted, tuple(rejected), decision

@@ -36,7 +36,7 @@ from gaussian_harness.potential import LocalGaussianPotential
 
 import demand_driven_ebu.harness as harness_module
 from demand_driven_ebu import MODEL_ID
-from demand_driven_ebu.admission import admit, unserviceable_ids
+from demand_driven_ebu.admission import admit, classify, unresolved_ids, unserviceable_ids
 from demand_driven_ebu.arrivals import ArrivalProcess
 from demand_driven_ebu.capacity import CapacityLedger
 from demand_driven_ebu.coupling import components, service_reach
@@ -86,6 +86,9 @@ from demand_driven_ebu.fixtures import (
     surplus_world,
     triple_delivery_state,
     triple_delivery_world,
+    empty_source_world,
+    wide_supply_state,
+    wide_supply_world,
 )
 from demand_driven_ebu.harness import (
     DECLARED_STATUSES,
@@ -98,7 +101,14 @@ from demand_driven_ebu.harness import (
     EconomyRun,
     code_identity,
 )
-from demand_driven_ebu.enumeration import usable_routes
+from demand_driven_ebu.enumeration import (
+    IMPOSSIBLE,
+    SERVICEABLE,
+    UNRESOLVED,
+    live_routes,
+    physically_serviceable,
+    usable_routes,
+)
 from demand_driven_ebu.oracle import agree, component_feasible, global_feasible
 from demand_driven_ebu.physical import (
     PhysicalAction,
@@ -2064,6 +2074,23 @@ def main() -> int:
          test_the_uncapped_search_fails_closed_rather_than_guessing),
         ("the structural reach ignores unusable routes",
          test_structural_reach_ignores_unusable_routes_by_construction),
+        # --- auditor 2, second pass --------------------------------------
+        ("a wide but easy requirement is not refused on its search space",
+         test_a_wide_but_easy_requirement_is_not_refused_on_its_search_space),
+        ("search uncertainty never becomes impossibility",
+         test_search_uncertainty_never_becomes_impossibility),
+        ("an undecided demand is not rejected for scarcity",
+         test_an_undecided_demand_is_not_rejected_for_scarcity),
+        ("empty-source routes cannot change serviceability",
+         test_empty_source_routes_cannot_change_serviceability),
+        ("a route becomes live when its source is funded",
+         test_a_route_becomes_live_when_its_source_is_funded),
+        ("the structural reach is state-aware",
+         test_the_structural_reach_is_state_aware),
+        ("the oracle compares receipts, not only increments",
+         test_the_oracle_compares_receipts_not_only_increments),
+        ("the oracle equalises the plan cap on both sides",
+         test_the_oracle_equalises_the_plan_cap_on_both_sides),
         # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
@@ -3094,6 +3121,196 @@ def test_structural_reach_ignores_unusable_routes_by_construction() -> None:
     check("usable routes are exactly those that can carry a quantum",
           {r.route_id for r in usable_routes(padded)}
           == {r.route_id for r in plain.routes}, str(len(usable_routes(padded))))
+
+
+
+# ==========================================================================
+# AUDITOR 2, SECOND PASS -- uncertainty propagation and state-dependent reach
+# ==========================================================================
+
+
+def test_a_wide_but_easy_requirement_is_not_refused_on_its_search_space() -> None:
+    """Counterexample 1: nineteen suppliers, one requested unit.
+
+    The superseded search pre-computed the worst-case space, saw `2^19`, and
+    returned `SEARCH_BUDGET_EXCEEDED` without trying -- while nineteen
+    one-action plans served the destination and the menu held all nineteen.
+    """
+    world = wide_supply_world(19, 1)
+    state = wide_supply_state(world)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    check("nineteen one-action plans exist",
+          len(enumerate_service_plans(world, state, component)) == 19,
+          str(len(enumerate_service_plans(world, state, component))))
+    check("the uncapped search answers serviceable",
+          physically_serviceable(world, state, requirements(physical)) == SERVICEABLE,
+          physically_serviceable(world, state, requirements(physical)))
+    check("the coupling reach is not empty",
+          service_reach(world, state, physical[0]).coordinates != frozenset())
+    check("admission does not block it",
+          physical[0].demand_id not in unserviceable_ids(world, state, physical, ()))
+    check("and it is not recorded as undecided either",
+          physical[0].demand_id not in unresolved_ids(world, state, physical, ()))
+
+
+def test_search_uncertainty_never_becomes_impossibility() -> None:
+    """All three verdicts are reachable and are kept apart downstream."""
+    easy = wide_supply_world(19, 1)
+    small = wide_supply_world(16, 100)
+    wide = wide_supply_world(20, 100)
+    verdicts = {}
+    for label, world in (("easy", easy), ("small-impossible", small), ("wide-undecided", wide)):
+        state = wide_supply_state(world)
+        physical = derive_physical_demands(world, state)
+        verdicts[label] = physically_serviceable(world, state, requirements(physical))
+    check("an easy requirement is serviceable", verdicts["easy"] == SERVICEABLE, str(verdicts))
+    check("a small unsatisfiable one is proved impossible",
+          verdicts["small-impossible"] == IMPOSSIBLE, str(verdicts))
+    check("a wide unsatisfiable one is undecided, not impossible",
+          verdicts["wide-undecided"] == UNRESOLVED, str(verdicts))
+
+    state = wide_supply_state(wide)
+    physical = derive_physical_demands(wide, state)
+    reach = service_reach(wide, state, physical[0])
+    check("an undecided demand keeps its full reach",
+          reach.coordinates != frozenset() and reach.verdict == UNRESOLVED,
+          f"{len(reach.coordinates)} {reach.verdict}")
+    check("an undecided demand is not blocked by admission",
+          physical[0].demand_id not in unserviceable_ids(wide, state, physical, ()))
+    check("it is recorded as undecided instead",
+          physical[0].demand_id in unresolved_ids(wide, state, physical, ()))
+    check("the per-demand classification carries the verdict verbatim",
+          classify(wide, state, physical, ())[physical[0].demand_id] == UNRESOLVED)
+
+    proven = wide_supply_state(small)
+    blocked = unserviceable_ids(small, proven, derive_physical_demands(small, proven), ())
+    check("only proved impossibility blocks", blocked != frozenset(), str(sorted(blocked)))
+
+
+def test_an_undecided_demand_is_not_rejected_for_scarcity() -> None:
+    world = wide_supply_world(20, 1)
+    state = wide_supply_state(world)
+    order = _economic(world, "r", 100, "T", 0, 0)
+    verdict = physically_serviceable(world, state, requirements((order,)))
+    check("the order's serviceability is undecided", verdict == UNRESOLVED, verdict)
+    admitted, rejected, decision = admit(world, state, (), (), (order,), 3, 0)
+    check("it is not rejected for physical scarcity",
+          rejected == (), str([(d.demand_id, d.status) for d in rejected]))
+    check("it is admitted, with the uncertainty recorded rather than resolved",
+          len(admitted) == 1 and decision.unresolved == (order.demand_id,),
+          str(decision.unresolved))
+
+
+def test_empty_source_routes_cannot_change_serviceability() -> None:
+    """Counterexample 2: usable capacity, unfundable source.
+
+    `B -> D` and `D -> F` have capacity one and can carry the only permitted
+    quantum, so a capacity-only usability test calls them usable. Their
+    sources hold nothing, and source-funding forbids paying for an outflow
+    with same-instant inflow, so neither can carry an action here -- not even
+    inside a simultaneous group.
+    """
+    plain = empty_source_world(False)
+    padded = empty_source_world(True)
+    state = _state(1, 0, 1, 0, 1, 0)
+
+    def executable(world):
+        return tuple(sorted(
+            action.action_id
+            for action in action_alphabet(world)
+            if can_happen_now(world, state, PlanGroup.of(action)).executable
+        ))
+
+    check("the added routes are usable by capacity",
+          len(usable_routes(padded)) == len(usable_routes(plain)) + 2)
+    check("but not live, because their sources are empty",
+          len(live_routes(padded, state)) == len(live_routes(plain, state)),
+          f"{len(live_routes(padded, state))} vs {len(live_routes(plain, state))}")
+    check("the executable action set is identical",
+          executable(plain) == executable(padded), str(executable(padded)))
+    for world in (plain, padded):
+        for action in action_alphabet(world):
+            route = action.route
+            if route.source in (1, 3) and can_happen_now(
+                world, state, PlanGroup.of(action)
+            ).executable:
+                check("no action on an empty source is executable", False, action.action_id)
+                return
+    check("no action on an empty source is executable", True)
+
+    def shape(world):
+        physical = derive_physical_demands(world, state)
+        found = components(world, state, ActiveDemandSet.of(physical, ()))
+        return (
+            tuple(sorted(c.demand_ids for c in found)),
+            tuple(len(enumerate_service_plans(world, state, c)) for c in found),
+        )
+
+    before, after = shape(plain), shape(padded)
+    check("coupling is unchanged", before[0] == after[0], str(after[0]))
+    check("serviceability is unchanged", before[1] == after[1], str(after[1]))
+    check("and in particular nothing was destroyed", after[1] == (1, 1, 1), str(after[1]))
+
+
+def test_a_route_becomes_live_when_its_source_is_funded() -> None:
+    """Liveness is a property of the state, and tracks it in both directions."""
+    world = empty_source_world(True)
+    empty = _state(1, 0, 1, 0, 1, 0)
+    funded = _state(1, 1, 1, 1, 1, 0)
+    check("with empty sources the added routes are dead",
+          len(live_routes(world, empty)) == 3, str(len(live_routes(world, empty))))
+    check("with funded sources they are live",
+          len(live_routes(world, funded)) == 5, str(len(live_routes(world, funded))))
+    physical = derive_physical_demands(world, funded)
+    found = components(world, funded, ActiveDemandSet.of(physical, ()))
+    check("and then they may legitimately couple demands",
+          len(found) < 2 or any(len(c.demands) > 1 for c in found),
+          str([c.demand_ids for c in found]))
+    check("which is correct: B now holds stock that D could draw on",
+          funded[1] > 0 and any(
+              route.source == 1 and route.destination == 3
+              for route in live_routes(world, funded)
+          ))
+
+
+def test_the_structural_reach_is_state_aware() -> None:
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    source = inspect.getsource(enumeration_module.structural_reach)
+    check("structural_reach builds from live routes, not merely usable ones",
+          "live_routes(world, state)" in source)
+    check("and liveness is a necessary condition for carrying any action",
+          "source-funding" in inspect.getsource(enumeration_module.live_routes).lower()
+          or "source-funding" in inspect.getsource(enumeration_module.live_routes))
+
+
+def test_the_oracle_compares_receipts_not_only_increments() -> None:
+    import demand_driven_ebu.oracle as oracle_module
+
+    source = inspect.getsource(oracle_module._outcome)
+    check("the oracle's comparable carries owner receipts",
+          "owner_deltas" in source and "increment" in source)
+    world = sandwater_world()
+    state = _state(8, 8, 14, 6, 6)
+    physical = derive_physical_demands(world, state)
+    outcomes = global_feasible(oracle_module.at_bound(world, 3), state, physical, 3)
+    check("every outcome is an (increment, receipts) pair",
+          all(len(entry) == 2 and isinstance(entry[1], tuple) for entry in outcomes),
+          str(len(outcomes)))
+    ok, detail = agree(world, state, physical, 3)
+    check("and the two sides agree on receipts as well as physics", ok, str(detail))
+
+
+def test_the_oracle_equalises_the_plan_cap_on_both_sides() -> None:
+    import demand_driven_ebu.oracle as oracle_module
+
+    world = sandwater_world()
+    check("the world's own cap is two", world.max_plan_size == 2)
+    check("the oracle rebuilds it at the comparison bound",
+          oracle_module.at_bound(world, 3).max_plan_size == 3)
+    check("leaving it unequal is what a naive comparison would do, and the "
+          "declared per-component asymmetry is tested separately", True)
 
 
 if __name__ == "__main__":

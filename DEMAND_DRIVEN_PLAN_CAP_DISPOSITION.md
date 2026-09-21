@@ -94,11 +94,45 @@ and then reported `SEARCH_INCOMPLETE_AT_PLAN_CAP`, which makes the search
 limitation visible in the record instead of silently encoding it as physical
 scarcity.
 
-This is deliberately the uncomfortable choice. It can leave an obligation the
-actor cannot discharge within the configured menu. That is the honest
-behaviour under (A): the remedy is to raise the cap for that study, and the
-status exists precisely so the need is visible before a study is frozen rather
-than inferred afterwards from a puzzling rejection rate.
+**This is a declared design choice, not a logical consequence.** What the
+authority in §2 settles is that the cap is a menu restriction rather than
+physics, and therefore that it must not be reported as impossibility. It does
+*not* by itself compel admitting beyond-cap obligations: refusing to admit
+them, with an explicit non-scarcity reason, would be an equally coherent
+policy under (A). Admission is chosen here because it keeps admission's
+question purely physical and surfaces the limitation in the record rather than
+folding it into a rejection rate. A study may adopt the alternative, provided
+it declares the distinct reason and does not record it as scarcity.
+
+It can leave an obligation the actor cannot discharge within the configured
+menu. The status exists precisely so that need is visible before a study is
+frozen rather than inferred afterwards from a puzzling rejection rate.
+
+### 3.4 Three verdicts, kept apart all the way down
+
+The uncapped search returns one of three answers, and **every caller must
+preserve all three**:
+
+| verdict | meaning | coupling | admission |
+|---|---|---|---|
+| `PHYSICALLY_SERVICEABLE` | a plan was found | full structural reach | not blocked |
+| `PHYSICALLY_IMPOSSIBLE` | the whole space was enumerated, nothing found | empty reach; coupled only by shared pool | blocked |
+| `SEARCH_BUDGET_EXCEEDED` | the search ran out of budget | **full** structural reach | **not** blocked; recorded as undecided |
+
+An independent audit found both downstream collapses: coupling emptied the
+reach for any non-serviceable verdict, and admission blocked on any
+non-serviceable verdict. Either turns a computational limit into a physical
+claim — the first deletes real dependencies, the second records a scarcity
+rejection the search never established.
+
+The search itself was also strengthened, because the old form manufactured
+uncertainty. It pre-computed the worst-case space and refused before trying,
+so nineteen independent one-unit suppliers against a one-unit request — with
+nineteen one-action plans available — returned `SEARCH_BUDGET_EXCEEDED`. The
+search now enumerates in increasing plan size and is bounded by the work it
+actually does, so it answers such a case on the first evaluation and spends
+budget only on requirements it cannot satisfy. `SEARCH_BUDGET_EXCEEDED` is
+therefore now rare and genuine.
 
 ## 4. What is *not* claimed
 
@@ -115,6 +149,27 @@ than inferred afterwards from a puzzling rejection rate.
   asymmetry — a decomposed epoch may execute more total actions than the cap —
   is stated, tested, and held constant on both sides of the decomposition
   oracle so it cannot contaminate that comparison.
+
+## 4a. Completeness requirement before confirmatory execution
+
+Raising the cap until an observed `SEARCH_INCOMPLETE_AT_PLAN_CAP` rate merely
+"looks negligible" is outcome-driven tuning and is **not** permitted. Before a
+confirmatory run, the preregistration must declare one of the following, in
+advance:
+
+1. **Completeness.** A cap proved sufficient for the declared world and
+   arrival law, so that `SEARCH_INCOMPLETE_AT_PLAN_CAP` cannot occur — for
+   example a cap at least as large as the largest requirement any declared
+   arrival can create, divided by the largest quantum. The registered run then
+   asserts a zero rate and fails closed otherwise.
+2. **An explicit computational-failure rule.** A declared maximum rate, fixed
+   before execution, together with the disposition of a run that exceeds it —
+   invalidated, or reported with the incomplete epochs excluded under a
+   pre-declared rule. The rate is a falsifier of the *search*, never of the
+   mechanism.
+
+Either way the rule is fixed outcome-blind. This is recorded as a required
+gate in `DEMAND_DRIVEN_FIRST_STUDY_DECISION_PACKET.md` §3.3.
 
 ## 5. If a later study wants (B)
 
