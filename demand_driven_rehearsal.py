@@ -27,8 +27,10 @@ from pathlib import Path
 
 from demand_driven_ebu.arrivals import ArrivalProcess
 from demand_driven_ebu.disturbance import DisturbanceProcess
-from demand_driven_ebu.fixtures import sandwater_world
+from demand_driven_ebu.fixtures import sandwater_world, study_one_state, study_one_world
 from demand_driven_ebu.harness import (
+    DECOMPOSITION_NOT_CHECKED,
+    DECOMPOSITION_VERIFIED,
     DECLARED_STATUSES,
     STATUS_ALL_UNAFFORDABLE,
     STATUS_EXECUTED,
@@ -48,8 +50,10 @@ from demand_driven_ebu.policies import (
 )
 from demand_driven_ebu.demand import DECLARED_LIFECYCLE, LIFECYCLE_SERVED
 from demand_driven_ebu.service import pool
+from demand_driven_ebu.study_one import completeness_bound, in_domain
 
 EPOCHS = 200
+STUDY_ONE_EPOCHS = 200
 REPLICATES = 4
 POLICIES = (POLICY_CONTROL, POLICY_HOSTILE, POLICY_RANDOM, POLICY_ALIGNED)
 ARTIFACT = Path("results/rehearsal_demand_driven/DEMAND_DRIVEN_REHEARSAL.json.gz")
@@ -220,6 +224,155 @@ def execute():
     return world, table, payload
 
 
+def study_one_build():
+    """The frozen-domain rehearsal world, run under registered semantics."""
+    world = study_one_world()
+    disturbance = DisturbanceProcess.declare(
+        world, ((0, 1), (1, 2), (2, 1), (1, 0)), 2, 1, 2
+    )
+    arrivals = ArrivalProcess.declare((("r", "A", 1), ("r", "C", 2)), 1, 3, 2)
+    return world, disturbance, arrivals
+
+
+def study_one_execute():
+    """Every arm of the Study-1 rehearsal, registered and decomposition-gated.
+
+    `registered=True` means an undecided search would raise `JobInvalid` and
+    stop the job rather than being recorded. `decomposition_gate=True` means
+    every epoch independently verifies `combine(F_components) == F_global`
+    against a brute-force enumeration that never forms a component.
+    """
+    world, disturbance, arrivals = study_one_build()
+    table = {}
+    payload = {}
+    for policy in POLICIES:
+        for replicate in range(REPLICATES):
+            run = EconomyRun(
+                world,
+                disturbance,
+                arrivals,
+                policy,
+                natural_seed=1000 + replicate,
+                arrival_seed=2000 + replicate,
+                admission_seed=3000 + replicate,
+                actor_seed=4000 + replicate,
+                initial_state=study_one_state(),
+                registered=True,
+                decomposition_gate=True,
+            )
+            records = run.run(STUDY_ONE_EPOCHS)
+            key = f"{policy}#{replicate}"
+            summary = summarize(records)
+            summary["gate"] = {
+                verdict: sum(1 for r in records if r.decomposition_gate == verdict)
+                for verdict in (DECOMPOSITION_VERIFIED, DECOMPOSITION_NOT_CHECKED)
+            }
+            summary["capacity_source"] = abs(run.capacity_source_residual)
+            table[key] = summary
+            payload[key] = columns(records)
+    return world, table, payload
+
+
+def report_study_one() -> tuple[bool, dict]:
+    world, _, _ = study_one_build()
+    bound = completeness_bound(world)
+    print("\n" + "=" * 78)
+    print("STUDY-1 FROZEN-DOMAIN REHEARSAL -- NON-CONFIRMATORY, NOT EVIDENCE")
+    print("=" * 78)
+    print(f"world: {world.world_id}   inside the frozen domain: {in_domain(world)}")
+    print(f"registered failure semantics: ON   decomposition gate: ON")
+    print(f"completeness: {bound.usable_routes} usable routes, "
+          f"{bound.atomic_actions} atomic actions, complete plan space "
+          f"{bound.plan_space} against a budget of {bound.exhaustive_budget}")
+    print(f"SEARCH_UNRESOLVED impossible by construction: "
+          f"{bound.unresolved_impossible}    plan cap binds: {bound.cap_binds}")
+
+    started = time.time()
+    _, table, payload = study_one_execute()
+    elapsed = time.time() - started
+    _, _, replay = study_one_execute()
+    deterministic = payload == replay
+    print(f"wall: {elapsed:.1f}s per pass of "
+          f"{len(POLICIES) * REPLICATES * STUDY_ONE_EPOCHS} epochs "
+          f"(decomposition gate on), run twice for replay")
+    print(f"replay deterministic: {deterministic}")
+
+    worst = Fraction(0)
+    for summary in table.values():
+        for key in ("worst_accounting", "worst_conservation", "worst_nonnegativity",
+                    "worst_separability"):
+            worst = max(worst, summary[key])
+        worst = max(worst, summary["capacity_source"])
+    unresolved = sum(
+        summary["statuses"][STATUS_SEARCH_UNRESOLVED] for summary in table.values()
+    )
+    incomplete = sum(
+        summary["statuses"][STATUS_SEARCH_INCOMPLETE] for summary in table.values()
+    )
+    verified = sum(summary["gate"][DECOMPOSITION_VERIFIED] for summary in table.values())
+    unchecked = sum(
+        summary["gate"][DECOMPOSITION_NOT_CHECKED] for summary in table.values()
+    )
+
+    header = (
+        f"{'policy':24s}{'exec':>6s}{'idle':>6s}{'noplan':>8s}{'srchInc':>9s}"
+        f"{'srchUnr':>9s}{'unaff':>7s}{'arriv':>7s}{'admit':>7s}{'serve':>7s}"
+        f"{'gateOK':>8s}"
+    )
+    print("\n" + header)
+    for policy in POLICIES:
+        rows = [s for key, s in table.items() if key.startswith(policy + "#")]
+        print(
+            f"{policy:24s}"
+            f"{sum(r['statuses'][STATUS_EXECUTED] for r in rows):>6d}"
+            f"{sum(r['statuses'][STATUS_NO_ACTIVE_DEMAND] for r in rows):>6d}"
+            f"{sum(r['statuses'][STATUS_NO_COMPLETE_PLAN] for r in rows):>8d}"
+            f"{sum(r['statuses'][STATUS_SEARCH_INCOMPLETE] for r in rows):>9d}"
+            f"{sum(r['statuses'][STATUS_SEARCH_UNRESOLVED] for r in rows):>9d}"
+            f"{sum(r['statuses'][STATUS_ALL_UNAFFORDABLE] for r in rows):>7d}"
+            f"{sum(r['arrivals'] for r in rows):>7d}"
+            f"{sum(r['admitted'] for r in rows):>7d}"
+            f"{sum(r['served'] for r in rows):>7d}"
+            f"{sum(r['gate'][DECOMPOSITION_VERIFIED] for r in rows):>8d}"
+        )
+    print(f"\n    worst residual anywhere                    {worst}")
+    print(f"    Study-1 SEARCH_UNRESOLVED epochs           {unresolved}")
+    print(f"    Study-1 SEARCH_INCOMPLETE_AT_PLAN_CAP      {incomplete}")
+    print(f"    epochs where decomposition == global       {verified}")
+    print(f"    epochs with nothing to decompose           {unchecked}")
+
+    healthy = (
+        deterministic
+        and worst == 0
+        and unresolved == 0
+        and incomplete == 0
+        and bound.unresolved_impossible
+        and not bound.cap_binds
+    )
+    return healthy, {
+        "world_id": world.world_id,
+        "epochs": STUDY_ONE_EPOCHS,
+        "registered": True,
+        "decomposition_gate": True,
+        "replay_deterministic": deterministic,
+        "worst_residual": str(worst),
+        "search_unresolved_epochs": unresolved,
+        "search_incomplete_epochs": incomplete,
+        "decomposition_verified_epochs": verified,
+        "decomposition_unchecked_epochs": unchecked,
+        "completeness_bound": {
+            "usable_routes": bound.usable_routes,
+            "atomic_actions": bound.atomic_actions,
+            "plan_space": bound.plan_space,
+            "exhaustive_budget": bound.exhaustive_budget,
+            "plan_cap": bound.plan_cap,
+            "cap_binds": bound.cap_binds,
+            "unresolved_impossible": bound.unresolved_impossible,
+        },
+        "healthy": healthy,
+    }
+
+
 def main() -> int:
     opening_identity = read_code_identity()
     started = time.time()
@@ -360,6 +513,8 @@ def main() -> int:
     for state in DECLARED_LIFECYCLE:
         print(f"        {state:38s} {lifecycle_total.get(state, 0)}")
 
+    study_one_healthy, study_one_summary = report_study_one()
+
     ARTIFACT.parent.mkdir(parents=True, exist_ok=True)
     document = {
         "class": "REHEARSAL / NON-CONFIRMATORY",
@@ -387,6 +542,7 @@ def main() -> int:
             )
             for key, (_, run) in table.items()
         },
+        "study_one": study_one_summary,
         "columns": payload,
     }
     with gzip.open(ARTIFACT, "wt", encoding="utf-8") as handle:
@@ -402,6 +558,7 @@ def main() -> int:
         and not twice
         and not unprov
         and arrivals_identical
+        and study_one_healthy
     )
     return 0 if healthy else 1
 

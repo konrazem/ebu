@@ -20,6 +20,13 @@ stateless mathematics from `gaussian_harness` (the exact rational numeric
 policy, and the Level-1 Gaussian potential as a cross-check oracle), which
 changes no byte of those packages.
 
+The first registered study runs in a narrower, frozen physical domain declared
+in `study_one`: one homogeneous scalar resource, lossless, no sinks, no
+storage capacities, a non-binding enumeration cap, and a plan space small
+enough that an undecided search is impossible. Everything the general package
+can express but that domain excludes is FUTURE UNSUPPORTED PHYSICS. Results
+proved for the domain are not claimed for the general framework.
+
 Nothing here is registered, preregistered or frozen. Building this model is not
 evidence about it.
 """
@@ -28,5 +35,6 @@ from __future__ import annotations
 
 MODEL_ID = "EBU-DEMAND-DRIVEN-ECONOMY-v1"
 CONTRACT_REF = "DEMAND_DRIVEN_EBU_SCIENTIFIC_CONTRACT.md"
+STUDY_ONE_DOMAIN_REF = "DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md"
 
-__all__ = ["MODEL_ID", "CONTRACT_REF"]
+__all__ = ["MODEL_ID", "CONTRACT_REF", "STUDY_ONE_DOMAIN_REF"]

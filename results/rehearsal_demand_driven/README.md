@@ -40,6 +40,28 @@ warns if the status counts fail to cover every epoch. The cap is a
 computational enumeration limit, so an empty menu attributable to it is
 reported as a search limitation and never as physical impossibility.
 
+## The Study-1 block
+
+The artifact carries a second, separate rehearsal under the key `study_one`.
+It runs the frozen-domain world `study-one-v1`
+(`DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`) with **registered failure semantics on**
+— an undecided search would raise `JobInvalid` and stop the job rather than be
+recorded — and with the **decomposition gate on**, so every epoch
+independently verifies `combine(F_components) == F_global` against a
+brute-force enumeration that never forms a component.
+
+It establishes, and only establishes: 3,200 epochs complete, the replay is
+exact, every residual is exactly zero, `SEARCH_UNRESOLVED` occurred zero times
+and `SEARCH_INCOMPLETE_AT_PLAN_CAP` zero times — both of which the domain
+makes impossible by construction rather than merely rare — and decomposition
+matched the global feasible set in all 3,020 epochs that had anything to
+decompose.
+
+The general `sandwater-v1` block above is **not** a Study-1 world: its
+plan-size cap binds and it carries two resources. Its
+`SEARCH_INCOMPLETE_AT_PLAN_CAP` counts are therefore expected and are a
+property of that exploratory world, not of the frozen domain.
+
 Artifacts from the superseded builds at commits `22fd229` and `e37e868` were
 **replaced**, not amended. The first mis-counted additive economic service;
 the second derived coupling from padded plans, so physically unusable routes

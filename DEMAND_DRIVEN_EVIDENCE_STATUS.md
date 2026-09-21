@@ -88,17 +88,38 @@ demand-conditioned menu:
 
 | item | status |
 |---|---|
-| The demand-driven conformance gate (365 assertions) | conformance. Establishes that the implementation obeys its contract. Says nothing about behaviour. |
-| The demand-driven rehearsal (3,200 epochs) | **NON-CONFIRMATORY**. Infrastructure observation only. Not tuned to, not interpreted, not citable. |
-| `DEMAND_DRIVEN_MODEL_FINDINGS.md` F-1 to F-4 | structural consequences of the frozen contract, shown exactly on declared fixtures. Not behavioural findings, not generalizable from those fixtures. F-1 was revised after the independent audit: its stronger form was partly a coupling artifact. |
+| The demand-driven conformance gate (592 assertions) | conformance. Establishes that the implementation obeys its contract. Says nothing about behaviour. |
+| The demand-driven rehearsal, general world (3,200 epochs) | **NON-CONFIRMATORY**. Infrastructure observation only. Not tuned to, not interpreted, not citable. |
+| The Study-1 frozen-domain rehearsal (3,200 epochs, registered semantics, decomposition gate on) | **NON-CONFIRMATORY**. Shows the searches are complete and the residuals close; shows nothing about the mechanism. |
+| `DEMAND_DRIVEN_MODEL_FINDINGS.md` F-1 to F-6 | structural consequences of the frozen contract, shown exactly on declared fixtures. Not behavioural findings, not generalizable from those fixtures. F-1 was revised after the independent audit: its stronger form was partly a coupling artifact. F-5 and F-6 are **outside the frozen Study-1 domain** and are retained unrepaired as permanent regressions. |
 | Anything computed by the defective build at commit `22fd229` | **withdrawn.** That build reported two independent orders as served by half the quantity, and froze serviceable demands behind unserviceable ones. Its rehearsal artifact was replaced, and no number from it is citable. |
 | The `loss-v1` twelve-epoch policy paths | illustrative single deterministic paths on one fixture. Explicitly not evidence about hostile safety or comparator behaviour. |
 | The case library | defines questions and environments. Its ledger is **empty**; no case has a recorded run under any mechanism. |
+
+## 4a. Proved, and only where it is proved
+
+These are mathematical results about the implementation, established in
+`DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`. They are not behavioural evidence, and
+each is claimed for the frozen Study-1 domain and nowhere wider.
+
+| result | scope | note |
+|---|---|---|
+| L1 — route liveness is necessary for a route to carry an action | **every domain** | this is what keeps the structural reach a sound superset everywhere |
+| L2 — route liveness is also sufficient | **Study-1 domain only** | outside it a live route may be unable to act; F-5 is the standing counterexample |
+| P — the pruned serviceability search equals complete enumeration of the finite plan space | Study-1 domain | cross-checked against a brute force that never consults `enumeration` |
+| `SEARCH_UNRESOLVED` is impossible | Study-1 domain | domain condition 17, not an observed rate |
+| `SEARCH_INCOMPLETE_AT_PLAN_CAP` is impossible | Study-1 domain | domain condition 16, not an observed rate |
+| D — `combine(F_components) == F_global`, receipts and sampling included | Study-1 domain | outside it, unproved; the registered study must then use global enumeration |
+| unusable-infrastructure invariance across admission, serviceability, plan set, EBU values and affordability inputs | Study-1 domain | **fails** outside it — F-5 is a counterexample to the invariance itself |
+
+> **`STUDY-1 DOMAIN VERIFIED` is not `GENERAL DEMAND-DRIVEN FRAMEWORK PROVED
+> FOR ALL LOSS/CAPACITY/TOPOLOGY MODELS`.** The general loss-aware framework
+> stays open for later extension.
 
 ## 5. Summary
 
 Every mathematical result survives the correction. Every behavioural result
 survives as a statement about the stress model and none survives as a statement
 about the demand-driven economy. The corrected model exists, is conformance-
-tested and is deterministic, and no study of it has been designed, frozen or
-run.
+tested and is deterministic, its searches are now proved complete inside a
+frozen physical domain, and no study of it has been designed, frozen or run.

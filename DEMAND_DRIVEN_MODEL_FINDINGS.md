@@ -149,7 +149,57 @@ arrival sequence itself is untouched.
 
 ---
 
+## F-5 A storage capacity that cannot bind still changes coupling
+
+**OUTSIDE THE STUDY-1 DOMAIN. Not repaired. Permanent regression.**
+
+`fixtures.capacity_relief_world`, reproduced by pure calculation on a fixed
+state. Two unrelated one-unit deliveries, `A -> C` and `V -> W`, with three
+units of resource in the entire world. Declaring an upper storage capacity of
+ten on `C` changes no executable action and no genuine binding constraint —
+the capacity cannot be reached by any trajectory. But a declared capacity
+activates the capacity-relief limb of `structural_reach`, which conservatively
+assumes a route out of a capacity-bearing requirement coordinate might be
+needed to make room. So `C -> Z` enters the reach of the demand at `C`, `Z`
+follows it, and `V -> Z` then drags in `V` and its owner account. **Two
+independent components become one.**
+
+This is a genuine violation of unusable-infrastructure invariance, and it is a
+*tightness* failure rather than a soundness failure: the reach remains a
+superset of every minimal plan's support, it is simply larger than it needs to
+be. Tightening it would require a third liveness limb — destination headroom —
+which is not attempted, because Study 1 declares no storage capacities and
+`study_one.require_domain` refuses this world. The regression asserts the
+defect *is present*, so any future repair has to update it deliberately.
+
+## F-6 Two lossy routes couple through a shared sink
+
+**OUTSIDE THE STUDY-1 DOMAIN. Not repaired. Permanent regression.**
+
+`fixtures.shared_sink_world`. Two unrelated deliveries `A -> C` and `B -> D`,
+each over a route wasting half of what it carries into the same audit sink
+`S`. The sink is a delivery target of both routes, so it enters each demand's
+reach; the closure then pulls in every route depositing into that sink, and
+the demand at `C` acquires `B`, `D` and owner `B`. The two merge, and the
+merged reach claims both owner accounts — so their affordability is settled
+jointly and their service becomes all-or-nothing together.
+
+The coupling is spurious on the model's own terms. A sink is irreversible, may
+not be the source of any route, and carries no capacity, so it can never
+compete for anything. Tightening this would require excluding sinks from the
+reach closure. Not attempted, same reason as F-5: Study 1 is lossless.
+
+---
+
 ## What would change these
+
+F-5 and F-6 are consequences of the structural reach being a sound *superset*
+rather than an exact set outside the frozen Study-1 domain. Both would be
+changed by extending the liveness rule — destination headroom for F-5, sink
+exclusion for F-6 — and both are the price of not doing that work inside a
+domain no study is declared in. Inside Study 1 the reach is exact: route
+liveness is necessary and sufficient there, and the relief limb is empty.
+See `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` sections 3 and 8.
 
 F-1 and F-4 are consequences of complete-service semantics — F-1 now in its
 narrowed form, after the coupling artifact was removed. F-2 is a consequence of

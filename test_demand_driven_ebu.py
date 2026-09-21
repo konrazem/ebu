@@ -30,6 +30,7 @@ import ast
 import inspect
 from fractions import Fraction as F
 from itertools import combinations
+from pathlib import Path
 
 from gaussian_harness.numerics import Refusal, add
 from gaussian_harness.potential import LocalGaussianPotential
@@ -71,6 +72,8 @@ from demand_driven_ebu.service import (
 from demand_driven_ebu.disturbance import DisturbanceProcess, apply_disturbance
 from demand_driven_ebu.fixtures import (
     audit_sink_world,
+    capacity_relief_state,
+    capacity_relief_world,
     competing_world,
     cycle_world,
     loss_world,
@@ -78,8 +81,12 @@ from demand_driven_ebu.fixtures import (
     quiet_disturbance,
     routeless_world,
     sandwater_world,
+    shared_sink_state,
+    shared_sink_world,
     shared_source_world,
     scarcity_world,
+    study_one_state,
+    study_one_world,
     ScriptedArrivals,
     ScriptedDisturbance,
     seeded_ledger,
@@ -91,6 +98,8 @@ from demand_driven_ebu.fixtures import (
     wide_supply_world,
 )
 from demand_driven_ebu.harness import (
+    DECOMPOSITION_NOT_CHECKED,
+    DECOMPOSITION_VERIFIED,
     DECLARED_STATUSES,
     STATUS_ALL_UNAFFORDABLE,
     STATUS_EXECUTED,
@@ -108,6 +117,18 @@ from demand_driven_ebu.enumeration import (
     live_routes,
     physically_serviceable,
     usable_routes,
+)
+from demand_driven_ebu.study_one import (
+    STUDY_ONE_DOMAIN_ID,
+    CompletenessBound,
+    JobInvalid,
+    action_bound,
+    completeness_bound,
+    domain_violations,
+    in_domain,
+    plan_space,
+    require_domain,
+    state_violations,
 )
 from demand_driven_ebu.oracle import agree, component_feasible, global_feasible
 from demand_driven_ebu.physical import (
@@ -2091,6 +2112,59 @@ def main() -> int:
          test_the_oracle_compares_receipts_not_only_increments),
         ("the oracle equalises the plan cap on both sides",
          test_the_oracle_equalises_the_plan_cap_on_both_sides),
+        # --- Study-1 domain freeze ---------------------------------------
+        ("the Study-1 domain is frozen and machine-checkable",
+         test_the_study_one_domain_is_frozen_and_machine_checkable),
+        ("every domain condition is enforced separately",
+         test_every_domain_condition_is_enforced_separately),
+        ("outside the domain is future physics, not a blocker",
+         test_outside_the_domain_is_future_physics_not_a_blocker),
+        ("no module claims general loss/capacity-aware exactness",
+         test_no_module_claims_general_loss_or_capacity_aware_exactness),
+        ("liveness is necessary in every domain",
+         test_liveness_is_necessary_in_every_domain),
+        ("liveness is sufficient inside Study 1",
+         test_liveness_is_sufficient_inside_the_study_one_domain),
+        ("action liveness is necessary and sufficient in Study 1",
+         test_action_liveness_is_necessary_and_sufficient_in_study_one),
+        ("liveness sufficiency is not claimed outside Study 1",
+         test_liveness_sufficiency_is_not_claimed_outside_the_domain),
+        ("OUTSIDE STUDY-1: the storage-capacity counterexample is retained",
+         test_storage_capacity_counterexample_outside_study_one_is_retained),
+        ("OUTSIDE STUDY-1: the shared-loss-sink counterexample is retained",
+         test_shared_loss_sink_counterexample_outside_study_one_is_retained),
+        ("the Study-1 cap cannot bind on anything",
+         test_the_study_one_cap_cannot_bind_on_anything),
+        ("the pruned search equals complete enumeration",
+         test_the_pruned_search_equals_complete_enumeration),
+        ("a computational cap never makes a serviceable demand impossible",
+         test_a_computational_cap_never_makes_a_serviceable_demand_impossible),
+        ("exactly three search verdicts exist and stay apart",
+         test_exactly_three_search_verdicts_exist_and_stay_apart),
+        ("UNRESOLVED is never converted into a rejection",
+         test_unresolved_is_never_converted_into_a_rejection),
+        ("a registered job refuses to start outside the domain",
+         test_a_registered_job_refuses_to_start_outside_the_domain),
+        ("SEARCH_UNRESOLVED invalidates the entire registered job",
+         test_search_unresolved_invalidates_the_entire_registered_job),
+        ("an unregistered run keeps the three-way distinction",
+         test_an_unregistered_run_keeps_the_three_way_distinction),
+        ("the global feasible set is the authority",
+         test_the_global_feasible_set_is_the_authority_for_study_one),
+        ("the harness gate checks decomposition every epoch",
+         test_the_harness_gate_checks_decomposition_every_epoch),
+        ("a decomposition difference stops the run",
+         test_a_decomposition_difference_stops_the_run),
+        ("unusable infrastructure changes none of the five outputs",
+         test_unusable_infrastructure_changes_none_of_the_five_outputs),
+        ("admission requires proved serviceability",
+         test_admission_requires_proved_serviceability_in_study_one),
+        ("additive orders survive the freeze",
+         test_additive_orders_survive_the_freeze),
+        ("the completeness bound is computed, not asserted",
+         test_the_completeness_bound_is_computed_not_asserted),
+        ("STUDY-1 DOMAIN VERIFIED is not general-framework proof",
+         test_study_one_verified_is_not_general_framework_proved),
         # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
@@ -3311,6 +3385,703 @@ def test_the_oracle_equalises_the_plan_cap_on_both_sides() -> None:
           oracle_module.at_bound(world, 3).max_plan_size == 3)
     check("leaving it unequal is what a naive comparison would do, and the "
           "declared per-component asymmetry is tested separately", True)
+
+
+# ==========================================================================
+# FIRST DEMAND-DRIVEN STUDY DOMAIN FREEZE
+# ==========================================================================
+
+
+def _e(world, node, quantity, index=0, resource="r", epoch=0):
+    return EconomicDemand.declare(world, resource, quantity, node, epoch, index)
+
+
+def _brute_force_serves(world, state, reqs) -> bool:
+    """Complete enumeration of the whole finite plan space. No pruning at all.
+
+    Independent of `enumeration`: it walks every route, offers every permitted
+    quantum or nothing, and tests the resulting plan directly. This is the
+    thing the pruned search has to be equivalent to.
+    """
+    from itertools import product as _product
+
+    options = []
+    for route in world.routes:
+        options.append(
+            [None]
+            + [
+                PhysicalAction(route, quantum)
+                for quantum in world.quanta
+                if quantum <= route.capacity
+            ]
+        )
+    for combination in _product(*options):
+        actions = tuple(action for action in combination if action is not None)
+        if not actions:
+            continue
+        group = PlanGroup.of(*actions)
+        if not serves_all(reqs, group.increment(world.dimension)):
+            continue
+        if can_happen_now(world, state, group).executable:
+            return True
+    return False
+
+
+# --------------------------------------------------------------------------
+# 1. the frozen Study-1 physical domain
+# --------------------------------------------------------------------------
+
+
+def test_the_study_one_domain_is_frozen_and_machine_checkable() -> None:
+    world = study_one_world()
+    check("the Study-1 rehearsal world is inside the frozen domain",
+          in_domain(world), str(domain_violations(world)))
+    check("the domain has a declared identity",
+          STUDY_ONE_DOMAIN_ID == "EBU-DEMAND-DRIVEN-STUDY-1-DOMAIN-v1")
+    check("it declares exactly one homogeneous scalar resource",
+          world.resources == ("r",))
+    check("every coordinate is a valued stock",
+          all(c.role == "STOCK" and c.carries_potential for c in world.coordinates))
+    check("no coordinate declares an upper storage capacity",
+          all(c.capacity is None for c in world.coordinates))
+    check("every route is lossless and declares no sink",
+          all(r.efficiency == 1 and r.sink is None for r in world.routes))
+    check("the declared action quantities are finite and positive",
+          world.quanta == (F(1), F(2)))
+    state = study_one_state()
+    check("the state is nonnegative and conserves its declared total",
+          state_violations(world, state, F(12)) == (), str(state_violations(world, state, F(12))))
+    check("a negative stock is reported, not tolerated",
+          state_violations(world, (F(-1), F(4), F(9)), F(12)) != ())
+    check("a state that does not conserve is reported",
+          state_violations(world, (F(4), F(4), F(5)), F(12)) != ())
+
+
+def test_every_domain_condition_is_enforced_separately() -> None:
+    cases = (
+        ("two resources", sandwater_world(max_plan_size=99), "one homogeneous"),
+        ("a loss sink", loss_world(), "lossless"),
+        ("an irreversible sink", audit_sink_world(), "irreversible sinks"),
+        ("a storage capacity", capacity_relief_world(True), "upper storage capacity"),
+        ("a binding plan cap", surplus_world(), "plan-size cap"),
+    )
+    for label, world, phrase in cases:
+        violations = domain_violations(world)
+        check(f"{label} puts a world outside the domain", bool(violations), label)
+        check(f"and the reason names it: {label}",
+              any(phrase in reason for reason in violations), str(violations))
+    for label, world, _ in cases:
+        try:
+            require_domain(world)
+            check(f"require_domain refuses {label}", False)
+        except Refusal as refusal:
+            check(f"require_domain refuses {label}", STUDY_ONE_DOMAIN_ID in str(refusal))
+
+
+def test_outside_the_domain_is_future_physics_not_a_blocker() -> None:
+    import demand_driven_ebu.study_one as study_one_module
+
+    check("the unsupported list is declared, not implied",
+          "lossy transfer" in study_one_module.FUTURE_UNSUPPORTED_PHYSICS
+          and "upper destination-storage capacity" in study_one_module.FUTURE_UNSUPPORTED_PHYSICS)
+    check("the module says so in words",
+          "FUTURE UNSUPPORTED PHYSICS" in study_one_module.__doc__)
+    check("and says Study-1 verification is not general-framework proof",
+          "GENERAL DEMAND-DRIVEN FRAMEWORK PROVED" in study_one_module.__doc__)
+
+
+def test_no_module_claims_general_loss_or_capacity_aware_exactness() -> None:
+    import demand_driven_ebu.coupling as coupling_module
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    reach_doc = enumeration_module.__doc__
+    check("the superseded 'exact set of tokens' claim is gone from enumeration",
+          "the exact set of tokens" not in reach_doc)
+    check("the superseded claim is gone from coupling",
+          "the exact set of\ntokens" not in coupling_module.__doc__
+          and "exact set of tokens" not in coupling_module.__doc__)
+    check("enumeration states necessity generally and sufficiency for Study 1 only",
+          "Necessity (all domains)" in reach_doc
+          and "Sufficiency (Study-1 domain only)" in reach_doc)
+    check("coupling says tightness depends on the domain",
+          "How tight it is depends on the domain" in coupling_module.__doc__)
+    check("and explicitly disclaims exact loss/capacity-aware coupling",
+          "Nothing here\nasserts exact loss-aware or capacity-aware coupling"
+          in coupling_module.__doc__)
+
+
+# --------------------------------------------------------------------------
+# 2. route liveness, proved where it is claimed
+# --------------------------------------------------------------------------
+
+
+def test_liveness_is_necessary_in_every_domain() -> None:
+    """No executable plan anywhere uses a route liveness excludes."""
+    cases = (
+        (study_one_world(), study_one_state()),
+        (study_one_world(), study_one_state(0, 12, 0)),
+        (triple_delivery_world(unusable=True), None),
+        (empty_source_world(extra=True), None),
+        (capacity_relief_world(True), capacity_relief_state()),
+        (shared_sink_world(True), shared_sink_state()),
+        (loss_world(), _state(4, 4, 4, 0)),
+        (competing_world(), _state(3, 0, 0)),
+    )
+    violations = 0
+    checked = 0
+    for world, state in cases:
+        if state is None:
+            state = triple_delivery_state(world)
+        allowed = {route.route_id for route in live_routes(world, state)}
+        for action in action_alphabet(world):
+            for other in action_alphabet(world):
+                if other.route.route_id == action.route.route_id:
+                    group = PlanGroup.of(action)
+                else:
+                    group = PlanGroup.of(action, other)
+                if not can_happen_now(world, state, group).executable:
+                    continue
+                checked += 1
+                for member in group.actions:
+                    if member.route.route_id not in allowed:
+                        violations += 1
+    check("every route carrying an action in an executable plan is live",
+          violations == 0, f"{violations} of {checked}")
+    check("and the sweep actually found executable plans", checked > 0, str(checked))
+
+
+def test_liveness_is_sufficient_inside_the_study_one_domain() -> None:
+    world = study_one_world()
+    for state in (study_one_state(), study_one_state(0, 12, 0), study_one_state(1, 0, 11)):
+        live = {route.route_id for route in live_routes(world, state)}
+        for route in world.routes:
+            smallest = min(q for q in world.quanta if q <= route.capacity)
+            singleton = PlanGroup.of(PhysicalAction(route, smallest))
+            runs = can_happen_now(world, state, singleton).executable
+            check(f"{route.route_id} at {tuple(int(v) for v in state)}: live iff it can act",
+                  (route.route_id in live) == runs)
+
+
+def test_action_liveness_is_necessary_and_sufficient_in_study_one() -> None:
+    """Corollary L3, the rule service enumeration actually relies on."""
+    world = study_one_world()
+    mismatches = []
+    checked = 0
+    for a in range(0, 13, 3):
+        for b in range(0, 13 - a, 3):
+            state = study_one_state(a, b, 12 - a - b)
+            for action in action_alphabet(world):
+                rule = (
+                    action.quantity <= action.route.capacity
+                    and state[action.route.source] >= action.quantity
+                )
+                runs = can_happen_now(world, state, PlanGroup.of(action)).executable
+                checked += 1
+                if rule != runs:
+                    mismatches.append((tuple(int(v) for v in state), action.action_id))
+    check("an action can act exactly when its quantum fits the route and its "
+          "source funds it", not mismatches, str(mismatches[:3]))
+    check("and the sweep was not vacuous", checked == 15 * 8, str(checked))
+    text = Path("DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md").read_text()
+    check("the corollary is written down, with why enumeration does not "
+          "pre-filter on it",
+          "Corollary L3 (action liveness, Study-1 domain only)" in text
+          and "would be sound but would gain nothing" in text)
+
+
+def test_liveness_sufficiency_is_not_claimed_outside_the_domain() -> None:
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    doc = enumeration_module.live_routes.__doc__
+    check("live_routes states necessity for every domain",
+          "Necessary in every domain" in doc)
+    check("and confines sufficiency to Study 1",
+          "Sufficient in the Study-1 domain only" in doc)
+    check("the module names the destination-headroom limb it does not have",
+          "A third limb -- destination headroom" in enumeration_module.__doc__)
+
+
+def test_storage_capacity_counterexample_outside_study_one_is_retained() -> None:
+    """OUTSIDE STUDY-1 DOMAIN. A capacity that cannot bind changes coupling."""
+    plain = capacity_relief_world(False)
+    declared = capacity_relief_world(True)
+    state = capacity_relief_state()
+    check("without the capacity the world is a Study-1 world", in_domain(plain))
+    check("with it, the world is outside the domain", not in_domain(declared))
+
+    total = sum(state)
+    check("only three units exist, against a declared capacity of ten",
+          total == 3 and declared.coordinates[1].capacity == 10)
+    same = 0
+    for action in action_alphabet(declared):
+        for state_variant in (state,):
+            group = PlanGroup.of(action)
+            if (can_happen_now(plain, state_variant, group).executable
+                    == can_happen_now(declared, state_variant, group).executable):
+                same += 1
+    check("the capacity changes no executable action",
+          same == len(action_alphabet(declared)), str(same))
+
+    def shape(world):
+        demands = (_e(world, "C", 1, 0), _e(world, "W", 1, 1))
+        found = components(world, state, ActiveDemandSet.of((), demands))
+        return len(found)
+
+    check("without it the two deliveries are independent", shape(plain) == 2)
+    check("with it they merge -- a genuine tightness failure of the reach",
+          shape(declared) == 1)
+    check("the counterexample is retained, not repaired, and Study 1 excludes it",
+          not in_domain(declared) and shape(declared) == 1)
+
+
+def test_shared_loss_sink_counterexample_outside_study_one_is_retained() -> None:
+    """OUTSIDE STUDY-1 DOMAIN. Two lossy routes couple through their sink."""
+    lossless = shared_sink_world(False)
+    lossy = shared_sink_world(True)
+    state = shared_sink_state()
+    check("both variants are outside the domain -- they declare a sink",
+          not in_domain(lossless) and not in_domain(lossy))
+
+    def shape(world):
+        demands = (_e(world, "C", 1, 0), _e(world, "D", 1, 1))
+        found = components(world, state, ActiveDemandSet.of((), demands))
+        return found
+
+    check("lossless, the two deliveries are independent", len(shape(lossless)) == 2)
+    merged = shape(lossy)
+    check("lossy, they merge through the shared sink", len(merged) == 1)
+    check("and the merged reach claims both owners",
+          merged[0].binding.owners == frozenset({"A", "B"}),
+          str(sorted(merged[0].binding.owners)))
+    check("though a sink can neither source a route nor hold a capacity, so it "
+          "cannot actually compete for anything",
+          all(route.source != 4 for route in lossy.routes)
+          and lossy.coordinates[4].capacity is None)
+
+
+# --------------------------------------------------------------------------
+# 3. no scientific plan-size cap
+# --------------------------------------------------------------------------
+
+
+def test_the_study_one_cap_cannot_bind_on_anything() -> None:
+    world = study_one_world()
+    check("the cap is at least the usable route count",
+          world.max_plan_size >= len(usable_routes(world)),
+          f"{world.max_plan_size} vs {len(usable_routes(world))}")
+    check("so no plan can reach it: a plan uses each route at most once",
+          world.max_plan_size >= action_bound(world, study_one_state()))
+    seen = set()
+    for a in range(0, 13, 2):
+        for b in range(0, 13 - a, 2):
+            state = study_one_state(a, b, 12 - a - b)
+            demands = derive_physical_demands(world, state)
+            if not demands:
+                continue
+            found = components(world, state, ActiveDemandSet.of(demands, ()))
+            for component in found:
+                seen.add(serviceability(world, state, component))
+    check("no Study-1 component is ever SEARCH_INCOMPLETE_AT_PLAN_CAP",
+          BEYOND_CAP not in seen, str(sorted(seen)))
+    check("no Study-1 component is ever SEARCH_BUDGET_EXCEEDED",
+          UNRESOLVED not in seen, str(sorted(seen)))
+
+
+def test_the_pruned_search_equals_complete_enumeration() -> None:
+    """The pruning is proved equivalent; here it is checked against brute force."""
+    world = study_one_world()
+    agreements = 0
+    disagreements = []
+    for a in range(0, 13):
+        for b in range(0, 13 - a):
+            state = study_one_state(a, b, 12 - a - b)
+            for target, quantity in (("A", 1), ("B", 2), ("C", 3), ("A", 9)):
+                demands = (_e(world, target, quantity),)
+                reqs = requirements(demands)
+                verdict = physically_serviceable(world, state, reqs)
+                brute = _brute_force_serves(world, state, reqs)
+                if (verdict == SERVICEABLE) == brute:
+                    agreements += 1
+                else:
+                    disagreements.append((a, b, target, quantity, verdict, brute))
+    check("the pruned search agrees with complete enumeration on every "
+          "Study-1 state and order tested",
+          not disagreements, str(disagreements[:3]))
+    check("and the sweep was not vacuous", agreements == 91 * 4, str(agreements))
+
+    others = (
+        (triple_delivery_world(unusable=True), None, ("B", 1, "r")),
+        (empty_source_world(extra=True), None, ("D", 1, "r")),
+        (shared_source_world(), _state(1, 0, 0), ("B", 1, "r")),
+        (competing_world(), _state(3, 0, 0), ("B", 3, "sand")),
+    )
+    for world, state, (node, quantity, resource) in others:
+        if state is None:
+            state = triple_delivery_state(world)
+        demands = (_e(world, node, quantity, 0, resource),)
+        reqs = requirements(demands)
+        check(f"{world.world_id}: pruned search matches brute force",
+              (physically_serviceable(world, state, reqs) == SERVICEABLE)
+              == _brute_force_serves(world, state, reqs))
+
+
+def test_a_computational_cap_never_makes_a_serviceable_demand_impossible() -> None:
+    world = study_one_world()
+    narrow = DemandWorld.declare(
+        world.world_id, world.coordinates, world.routes, world.quanta, 1
+    )
+    state = study_one_state(2, 8, 2)
+    demands = derive_physical_demands(world, state)
+    check("two coordinates are two short, so a one-action plan cannot serve both",
+          len(demands) == 2 and all(d.required == 2 for d in demands))
+    found = components(narrow, state, ActiveDemandSet.of(demands, ()))
+    verdicts = {serviceability(narrow, state, component) for component in found}
+    check("under a cap of one the menu is empty",
+          all(not enumerate_service_plans(narrow, state, c) for c in found))
+    check("but the report is a search limit, never impossibility",
+          verdicts == {BEYOND_CAP}, str(verdicts))
+    check("the uncapped search says it is serviceable",
+          physically_serviceable(narrow, state, requirements(demands)) == SERVICEABLE)
+    check("and the Study-1 cap has no such effect",
+          all(serviceability(world, state, c) == SERVICEABLE_WITHIN_CAP
+              for c in components(world, state, ActiveDemandSet.of(demands, ()))))
+
+
+# --------------------------------------------------------------------------
+# 4. exactly three search verdicts
+# --------------------------------------------------------------------------
+
+
+def test_exactly_three_search_verdicts_exist_and_stay_apart() -> None:
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    declared = {SERVICEABLE, IMPOSSIBLE, UNRESOLVED}
+    check("there are exactly three", len(declared) == 3, str(sorted(declared)))
+    world = study_one_world()
+    reached = {
+        physically_serviceable(world, study_one_state(), requirements((_e(world, "A", 1),))),
+        physically_serviceable(
+            world, study_one_state(0, 0, 12), requirements((_e(world, "A", 9),))
+        ),
+    }
+    check("SERVICEABLE and IMPOSSIBLE are both reachable in Study 1",
+          reached == {SERVICEABLE, IMPOSSIBLE}, str(sorted(reached)))
+    oversized = requirements((_e(world, "A", 9),))
+    check("an oversized order at a funded neighbour is genuinely impossible",
+          physically_serviceable(world, study_one_state(0, 12, 0), oversized)
+          == IMPOSSIBLE)
+    saved = enumeration_module.EXHAUSTIVE_BUDGET
+    try:
+        enumeration_module.EXHAUSTIVE_BUDGET = 1
+        forced = physically_serviceable(world, study_one_state(0, 12, 0), oversized)
+    finally:
+        enumeration_module.EXHAUSTIVE_BUDGET = saved
+    check("but with the budget cut to one, the same question returns UNRESOLVED "
+          "rather than inheriting the impossibility",
+          forced == UNRESOLVED, forced)
+    check("the budget is restored", enumeration_module.EXHAUSTIVE_BUDGET == saved)
+
+
+def test_unresolved_is_never_converted_into_a_rejection() -> None:
+    import demand_driven_ebu.admission as admission_module
+
+    source = inspect.getsource(admission_module.unserviceable_ids)
+    check("only a proved impossibility blocks admission",
+          "verdict == IMPOSSIBLE" in source and "UNRESOLVED" not in source.split('"""')[2])
+    source = inspect.getsource(admission_module.__dict__["unresolved_ids"])
+    check("an undecided search gets its own reported set", "UNRESOLVED" in source)
+
+
+# --------------------------------------------------------------------------
+# 5. registered failure semantics
+# --------------------------------------------------------------------------
+
+
+def _study_one_run(**kwargs):
+    world = study_one_world()
+    disturbance = DisturbanceProcess.declare(world, ((0, 1), (1, 2), (2, 1), (1, 0)), 2, 1, 2)
+    arrivals = ArrivalProcess.declare((("r", "A", 1), ("r", "C", 2)), 1, 3, 2)
+    return EconomyRun(
+        world, disturbance, arrivals, POLICY_RANDOM, 11, 22, 33, 44,
+        study_one_state(), **kwargs
+    )
+
+
+def test_a_registered_job_refuses_to_start_outside_the_domain() -> None:
+    world = sandwater_world()
+    try:
+        EconomyRun(
+            world,
+            quiet_disturbance(world),
+            no_arrivals(),
+            POLICY_RANDOM,
+            1, 2, 3, 4,
+            registered=True,
+        )
+        check("a registered run refuses an out-of-domain world", False)
+    except Refusal as refusal:
+        check("a registered run refuses an out-of-domain world",
+              STUDY_ONE_DOMAIN_ID in str(refusal))
+    run = _study_one_run(registered=True)
+    check("and accepts a Study-1 world", run.registered and in_domain(run.world))
+
+
+def test_search_unresolved_invalidates_the_entire_registered_job() -> None:
+    """Simulated by shrinking the budget the domain condition is sized against.
+
+    Inside the frozen domain this cannot happen: the complete plan space fits
+    inside the exhaustive budget, so the budget is never reached. Cutting the
+    budget without cutting the domain condition is exactly the implementation
+    error the failure semantics exist for, and the job must stop.
+    """
+    import demand_driven_ebu.enumeration as enumeration_module
+
+    run = _study_one_run(registered=True)
+    saved = enumeration_module.EXHAUSTIVE_BUDGET
+    raised = None
+    try:
+        enumeration_module.EXHAUSTIVE_BUDGET = 1
+        for _ in range(12):
+            run.run_epoch()
+    except JobInvalid as failure:
+        raised = failure
+    finally:
+        enumeration_module.EXHAUSTIVE_BUDGET = saved
+    check("an undecided search stops the job", raised is not None)
+    message = str(raised) if raised else ""
+    for phrase in (
+        "do not continue the trajectory",
+        "do not exclude the",
+        "do not resample",
+        "do not change the seed",
+        "rerun this job identically",
+    ):
+        check(f"and says so: '{phrase}'", phrase in message, message[:160])
+    check("JobInvalid is a refusal, so nothing can absorb it as a result",
+          issubclass(JobInvalid, Refusal))
+    check("the same run outside registered mode records it as a status instead",
+          STATUS_SEARCH_UNRESOLVED in DECLARED_STATUSES)
+
+
+def test_an_unregistered_run_keeps_the_three_way_distinction() -> None:
+    run = _study_one_run()
+    records = run.run(30)
+    statuses = {record.epoch_status for record in records}
+    check("every epoch status is declared", statuses <= set(DECLARED_STATUSES),
+          str(sorted(statuses)))
+    check("no Study-1 epoch hit an undecided search",
+          STATUS_SEARCH_UNRESOLVED not in statuses, str(sorted(statuses)))
+    check("nor a plan-cap truncation",
+          STATUS_SEARCH_INCOMPLETE not in statuses, str(sorted(statuses)))
+    check("all residuals are exactly zero",
+          all(r.accounting_residual == 0 and r.conservation_residual == 0
+              and r.nonnegativity_residual == 0 and r.separability_residual == 0
+              for r in records))
+    check("and the capacity-source identity closes exactly",
+          run.capacity_source_residual == 0)
+
+
+# --------------------------------------------------------------------------
+# 6. the global exact plan set is the authority
+# --------------------------------------------------------------------------
+
+
+def test_the_global_feasible_set_is_the_authority_for_study_one() -> None:
+    world = study_one_world()
+    mismatches = []
+    compared = 0
+    for a in (0, 2, 4, 6, 8):
+        for b in (0, 2, 4):
+            state = study_one_state(a, b, 12 - a - b)
+            for demands in (
+                (_e(world, "C", 1),),
+                (_e(world, "A", 1, 0), _e(world, "C", 1, 1)),
+                (_e(world, "A", 2, 0), _e(world, "C", 2, 1)),
+            ):
+                bound = action_bound(world, state)
+                if bound == 0:
+                    continue
+                compared += 1
+                ok, detail = agree(world, state, demands, bound)
+                if not ok:
+                    mismatches.append((a, b, detail))
+    check("combine(F_components) == F_global on every Study-1 fixture swept",
+          not mismatches, str(mismatches[:2]))
+    check("and the sweep was not vacuous", compared >= 30, str(compared))
+
+
+def test_the_harness_gate_checks_decomposition_every_epoch() -> None:
+    run = _study_one_run(decomposition_gate=True)
+    records = run.run(25)
+    verdicts = {record.decomposition_gate for record in records}
+    check("every epoch is either verified or had nothing to check",
+          verdicts <= {DECOMPOSITION_VERIFIED, DECOMPOSITION_NOT_CHECKED},
+          str(sorted(verdicts)))
+    check("and at least one epoch was genuinely verified",
+          DECOMPOSITION_VERIFIED in verdicts, str(sorted(verdicts)))
+    off = _study_one_run()
+    check("the gate is off by default -- it is an instrument, not the mechanism",
+          all(r.decomposition_gate == DECOMPOSITION_NOT_CHECKED for r in off.run(3)))
+
+
+def test_a_decomposition_difference_stops_the_run() -> None:
+    run = _study_one_run(decomposition_gate=True)
+    saved = harness_module.agree
+    raised = None
+    try:
+        harness_module.agree = lambda *args, **kwargs: (False, {"global": 5, "components": 4})
+        for _ in range(12):
+            run.run_epoch()
+    except Refusal as refusal:
+        raised = refusal
+    finally:
+        harness_module.agree = saved
+    check("a disagreement is refused, not absorbed", raised is not None)
+    message = str(raised) if raised else ""
+    check("and it names the defect", "DECOMPOSITION_DIFFERS_FROM_GLOBAL" in message,
+          message[:120])
+    check("and says which side is authority",
+          "may not define" in message and "global enumeration" in message,
+          message[:200])
+
+
+# --------------------------------------------------------------------------
+# 7. unusable-infrastructure invariance across all five outputs
+# --------------------------------------------------------------------------
+
+
+def _five_outputs(world, state, demands):
+    """Admission, serviceability, plan set, EBU values, affordability inputs."""
+    physical = derive_physical_demands(world, state)
+    found = components(world, state, ActiveDemandSet.of(physical, demands))
+    serviceabilities = []
+    plans = []
+    values = []
+    affordability = []
+    for component in found:
+        serviceabilities.append(serviceability(world, state, component))
+        for plan in enumerate_service_plans(world, state, component):
+            plans.append(plan.group.group_id)
+            valuation = value_group(world, state, plan.group)
+            values.append((plan.group.group_id, valuation.group_ebu))
+            affordability.append((plan.group.group_id, tuple(sorted(valuation.owner_deltas))))
+    _, _, decision = admit(world, state, physical, (), demands, 7, 0)
+    return (
+        (decision.admitted, decision.maximal_subsets, decision.rejected),
+        tuple(sorted(serviceabilities)),
+        tuple(sorted(plans)),
+        tuple(sorted(values)),
+        tuple(sorted(affordability)),
+    )
+
+
+def test_unusable_infrastructure_changes_none_of_the_five_outputs() -> None:
+    labels = ("admission", "serviceability", "complete plan set", "EBU plan values",
+              "affordability inputs")
+    cases = (
+        ("capacity-1/2 routes",
+         triple_delivery_world(), triple_delivery_world(unusable=True),
+         (("B", 1, 0), ("D", 1, 1), ("F", 1, 2))),
+        ("empty-source routes",
+         empty_source_world(), empty_source_world(extra=True),
+         (("B", 1, 0), ("D", 1, 1), ("F", 1, 2))),
+    )
+    for label, plain, modified, requests in cases:
+        state = triple_delivery_state(plain)
+        left = _five_outputs(plain, state, tuple(_e(plain, *r) for r in requests))
+        right = _five_outputs(modified, state, tuple(_e(modified, *r) for r in requests))
+        check(f"{label}: the executable action set is unchanged",
+              {a.action_id for a in action_alphabet(plain)
+               if can_happen_now(plain, state, PlanGroup.of(a)).executable}
+              == {a.action_id for a in action_alphabet(modified)
+                  if can_happen_now(modified, state, PlanGroup.of(a)).executable})
+        for name, before, after in zip(labels, left, right):
+            check(f"{label}: {name} is unchanged", before == after,
+                  f"{before} != {after}")
+    check("and the outputs are not all empty -- the invariance has content",
+          bool(_five_outputs(triple_delivery_world(), triple_delivery_state(
+              triple_delivery_world()), tuple(
+                  _e(triple_delivery_world(), *r)
+                  for r in (("B", 1, 0), ("D", 1, 1), ("F", 1, 2))))[2]))
+
+
+# --------------------------------------------------------------------------
+# 8, 9. admission and additive service under the freeze
+# --------------------------------------------------------------------------
+
+
+def test_admission_requires_proved_serviceability_in_study_one() -> None:
+    world = study_one_world()
+    state = study_one_state(0, 0, 12)
+    reachable = _e(world, "B", 2, 0)
+    impossible = _e(world, "A", 9, 1)
+    verdicts = classify(world, state, (), (reachable, impossible))
+    check("the reachable order is proved serviceable",
+          verdicts[reachable.demand_id] == SERVICEABLE, str(verdicts))
+    check("the oversized order is proved impossible",
+          verdicts[impossible.demand_id] == IMPOSSIBLE, str(verdicts))
+    admitted, refused, _ = admit(world, state, (), (), (reachable, impossible), 3, 0)
+    check("only the proved-serviceable order is admitted",
+          tuple(d.demand_id for d in admitted) == (reachable.demand_id,))
+    check("and the other is rejected for scarcity, on a proof",
+          refused[0].status == E_REJECTED_PHYSICAL_SCARCITY)
+
+
+def test_additive_orders_survive_the_freeze() -> None:
+    world = study_one_world()
+    state = study_one_state(0, 12, 0)
+    orders = (_e(world, "C", 2, 0), _e(world, "C", 2, 1))
+    reqs = requirements(orders)
+    check("two two-unit orders at one coordinate require four",
+          reqs[0].economic_total == 4 and reqs[0].required_delta == 4)
+    two = PlanGroup.of(PhysicalAction(world.routes[2], F(2)))
+    check("a two-unit delivery serves neither pair completely",
+          not serves_all(reqs, two.increment(world.dimension)))
+    check("a four-unit combined delivery is impossible here: one route, one "
+          "action, and the largest quantum is two",
+          physically_serviceable(world, state, reqs) == IMPOSSIBLE)
+
+
+# --------------------------------------------------------------------------
+# 10, 13. the finite completeness argument, and what it does not say
+# --------------------------------------------------------------------------
+
+
+def test_the_completeness_bound_is_computed_not_asserted() -> None:
+    world = study_one_world()
+    bound = completeness_bound(world)
+    check("the bound is a computed record", isinstance(bound, CompletenessBound))
+    check("four usable routes", bound.usable_routes == 4, str(bound.usable_routes))
+    check("eight atomic actions", bound.atomic_actions == 8, str(bound.atomic_actions))
+    check("the complete plan space is 3^4 - 1 = 80",
+          bound.plan_space == 80 == plan_space(world), str(bound.plan_space))
+    check("the plan cap does not bind", not bound.cap_binds)
+    check("the whole space fits inside the exhaustive budget",
+          bound.plan_space <= bound.exhaustive_budget)
+    check("so SEARCH_UNRESOLVED is impossible, not merely unobserved",
+          bound.unresolved_impossible)
+    check("the requirement set can never exceed the coordinate count, so the "
+          "search space does not grow with the demand count",
+          len(requirements((_e(world, "A", 1, 0), _e(world, "A", 1, 1),
+                            _e(world, "C", 1, 2)))) <= world.dimension)
+    big = DemandWorld.declare(
+        "wide", world.coordinates, world.routes, world.quanta, 4
+    )
+    check("the bound is a property of the world, not of a run",
+          completeness_bound(big).plan_space == bound.plan_space)
+
+
+def test_study_one_verified_is_not_general_framework_proved() -> None:
+    text = Path("DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md").read_text()
+    check("the domain document exists", bool(text))
+    check("it states the non-claim verbatim",
+          "STUDY-1 DOMAIN VERIFIED" in text
+          and "GENERAL DEMAND-DRIVEN FRAMEWORK PROVED FOR ALL "
+              "LOSS/CAPACITY/TOPOLOGY MODELS" in text)
+    check("it keeps the general loss-aware framework open",
+          "open for later extension" in text)
+    check("and it records both out-of-domain counterexamples",
+          "capacity_relief_world" in text and "shared_sink_world" in text)
 
 
 if __name__ == "__main__":

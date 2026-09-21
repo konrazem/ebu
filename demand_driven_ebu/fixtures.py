@@ -355,3 +355,116 @@ def empty_source_world(extra: bool = False) -> DemandWorld:
     if extra:
         routes += [Route.declare("r", 1, 3, 1), Route.declare("r", 3, 5, 1)]
     return DemandWorld.declare("empty-source-v1", coordinates, routes, (1,), 2)
+
+
+def study_one_world() -> DemandWorld:
+    """The frozen Study-1 shape: one resource, lossless, no storage capacity.
+
+    Three stocks in a line, `A <-> B <-> C`, two declared quanta and a
+    plan-size cap equal to the number of usable routes, so the cap cannot
+    decide anything. The complete plan space is `3^4 - 1 = 80`, far inside the
+    exhaustive budget, which is what makes `SEARCH_UNRESOLVED` impossible here
+    rather than merely unobserved. See `study_one.completeness_bound`.
+
+    Indices: r|A 0, r|B 1, r|C 2. Total resource 12, references (4, 4, 4).
+    """
+    coordinates = [Coordinate.stock("r", node, 4, 1) for node in ("A", "B", "C")]
+    routes = [
+        Route.declare("r", 0, 1, 6),
+        Route.declare("r", 1, 0, 6),
+        Route.declare("r", 1, 2, 6),
+        Route.declare("r", 2, 1, 6),
+    ]
+    return DemandWorld.declare("study-one-v1", coordinates, routes, (1, 2), 4)
+
+
+def study_one_state(*values):
+    """A Study-1 state, defaulting to the reference (4, 4, 4)."""
+    chosen = values if values else (4, 4, 4)
+    return tuple(F(value) for value in chosen)
+
+
+def capacity_relief_world(declare_capacity: bool = True) -> DemandWorld:
+    """OUTSIDE STUDY-1 DOMAIN. A non-binding storage capacity changes coupling.
+
+    Two unrelated one-unit deliveries: `A -> C` and `V -> W`. Nothing connects
+    them, and with `declare_capacity=False` the model correctly reports two
+    independent components.
+
+    With `declare_capacity=True` the coordinate `C` declares an upper storage
+    capacity of ten. Only three units of resource exist in the whole world, so
+    the capacity can never bind, no executable action changes, and no genuine
+    constraint changes. But the structural reach carries a *capacity-relief*
+    limb -- a route out of a capacity-bearing requirement coordinate might be
+    needed to make room -- so `C -> Z` enters the reach of the demand at `C`,
+    drags `Z` in behind it, and then `V -> Z` drags in `V` and its owner. The
+    two demands merge.
+
+    This is a genuine tightness failure of the reach in the storage-capacity
+    domain, and it is kept as a permanent regression rather than repaired:
+    Study 1 declares no storage capacities, and `study_one.require_domain`
+    refuses this world. Recorded as finding F-5.
+
+    Indices: r|A 0, r|C 1, r|V 2, r|W 3, r|Z 4.
+    """
+    coordinates = [
+        Coordinate.stock("r", "A", 1, 1),
+        Coordinate.stock("r", "C", 1, 1, 10 if declare_capacity else None),
+        Coordinate.stock("r", "V", 1, 1),
+        Coordinate.stock("r", "W", 0, 1),
+        Coordinate.stock("r", "Z", 0, 1),
+    ]
+    routes = [
+        Route.declare("r", 0, 1, 1),
+        Route.declare("r", 1, 4, 1),
+        Route.declare("r", 2, 3, 1),
+        Route.declare("r", 2, 4, 1),
+    ]
+    return DemandWorld.declare("capacity-relief-v1", coordinates, routes, (1,), 4)
+
+
+def capacity_relief_state():
+    """One unit each at `A`, `C` and `V`; nothing at `W` or `Z`."""
+    return (F(1), F(1), F(1), F(0), F(0))
+
+
+def shared_sink_world(lossy: bool = True) -> DemandWorld:
+    """OUTSIDE STUDY-1 DOMAIN. Two lossy routes couple through their sink.
+
+    Two unrelated deliveries, `A -> C` and `B -> D`. With `lossy=False` they
+    are independent, as they should be.
+
+    With `lossy=True` both routes waste half of what they carry into the same
+    audit sink `S`. The sink enters the reach of each demand as a delivery
+    target, and then every route depositing into that sink is pulled in behind
+    it -- so the demand at `C` acquires `B`, `D` and owner `B`, and the two
+    merge. A sink is irreversible, carries no capacity and may not be the
+    source of any route, so it cannot compete for anything: the coupling is
+    spurious.
+
+    Kept as a permanent regression, not repaired. Study 1 is lossless and
+    declares no sinks, and `study_one.require_domain` refuses this world.
+    Recorded as finding F-6.
+
+    Indices: r|A 0, r|B 1, r|C 2, r|D 3, r|S 4.
+    """
+    coordinates = [
+        Coordinate.stock("r", "A", 2, 1),
+        Coordinate.stock("r", "B", 2, 1),
+        Coordinate.stock("r", "C", 0, 1),
+        Coordinate.stock("r", "D", 0, 1),
+        Coordinate.sink_audit_only("r", "S"),
+    ]
+    if lossy:
+        routes = [
+            Route.declare("r", 0, 2, 2, F(1, 2), 4),
+            Route.declare("r", 1, 3, 2, F(1, 2), 4),
+        ]
+    else:
+        routes = [Route.declare("r", 0, 2, 2), Route.declare("r", 1, 3, 2)]
+    return DemandWorld.declare("shared-sink-v1", coordinates, routes, (2,), 2)
+
+
+def shared_sink_state():
+    """Two units each at `A` and `B`; nothing anywhere else."""
+    return (F(2), F(2), F(0), F(0), F(0))

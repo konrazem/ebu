@@ -33,6 +33,23 @@ harness refuses loudly rather than quietly sequencing them, because quiet
 sequencing would hide the defect and invent a service order this model does not
 have.
 
+## Registered Study-1 mode
+
+`registered=True` refuses to start outside the frozen Study-1 domain
+(`study_one`) and turns every undecided search into `JobInvalid`. That is the
+declared failure semantics: `SEARCH_UNRESOLVED` inside a registered job is a
+computational integrity failure, the whole job is invalid, and the correct
+response is to fix the implementation and rerun the identical job -- never to
+continue, exclude the epoch, resample, or change the seed. Inside the frozen
+domain the failure is impossible by construction, so `JobInvalid` should be
+unreachable; it exists to make sure that if the construction is ever wrong,
+the run stops instead of quietly recording a computational limit as physics.
+
+`decomposition_gate=True` additionally verifies, every epoch, that the
+component decomposition reproduces the globally enumerated feasible set
+exactly. The global set is the scientific authority; decomposition is an
+optimization.
+
 This module advances model state. Running it is a transition, not a result.
 """
 
@@ -46,7 +63,7 @@ from pathlib import Path
 
 from gaussian_harness.numerics import Refusal, Vector, add, exact
 
-from .admission import AdmissionDecision, admit
+from .admission import AdmissionDecision, admit, unresolved_ids
 from .arrivals import ArrivalProcess
 from .capacity import CapacityLedger
 from .coupling import DemandComponent, components
@@ -68,7 +85,9 @@ from .disturbance import DisturbanceProcess, apply_disturbance
 from .physical import PlanGroup, can_happen_now
 from .plans import ServicePlan, enumerate_service_plans, serviceability
 from .policies import POLICY_CONTROL, choose, specification
+from .oracle import agree
 from .rng import STREAM_ACTOR, Counter
+from .study_one import JobInvalid, action_bound, require_domain
 from .valuation import value_group
 from .world import DemandWorld
 
@@ -102,6 +121,10 @@ _EMPTY_MENU_STATUS = {
 
 GATE_CLOSED = "JOINT_CLOSURE_VERIFIED"
 GATE_DEFECT = "DEPENDENCY_GRAPH_INCOMPLETE"
+
+DECOMPOSITION_NOT_CHECKED = "DECOMPOSITION_NOT_CHECKED"
+DECOMPOSITION_VERIFIED = "DECOMPOSITION_EQUALS_GLOBAL"
+DECOMPOSITION_DEFECT = "DECOMPOSITION_DIFFERS_FROM_GLOBAL"
 
 _REJECTION_LIFECYCLE = {
     "E_REJECTED_PHYSICAL_SCARCITY": LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
@@ -219,6 +242,7 @@ class EpochRecord:
     nonnegativity_residual: Fraction
     separability_residual: Fraction
     epoch_status: str
+    decomposition_gate: str = DECOMPOSITION_NOT_CHECKED
 
 
 @dataclass
@@ -234,6 +258,8 @@ class EconomyRun:
     admission_seed: int
     actor_seed: int
     initial_state: Vector | None = None
+    registered: bool = False
+    decomposition_gate: bool = False
 
     state: Vector = field(init=False)
     ledger: CapacityLedger = field(init=False)
@@ -247,6 +273,13 @@ class EconomyRun:
 
     def __post_init__(self) -> None:
         specification(self.policy)
+        if self.registered:
+            # A registered Study-1 job may not be started outside the frozen
+            # domain. Everything the completeness argument rests on -- exact
+            # exhaustive search, a non-binding plan cap, impossible
+            # SEARCH_UNRESOLVED -- is a property of that domain and of
+            # nothing wider. See `study_one`.
+            require_domain(self.world)
         self.state = (
             self.world.reference_state() if self.initial_state is None else self.initial_state
         )
@@ -287,11 +320,24 @@ class EconomyRun:
         self, component: DemandComponent, plans: tuple[ServicePlan, ...], ordinal: int, forced: Vector
     ) -> tuple[ComponentOutcome, ServicePlan | None, Fraction | None]:
         if not plans:
+            status = _EMPTY_MENU_STATUS[serviceability(self.world, forced, component)]
+            if self.registered and status in (
+                STATUS_SEARCH_UNRESOLVED,
+                STATUS_SEARCH_INCOMPLETE,
+            ):
+                raise JobInvalid(
+                    f"{status} at epoch {self.epoch} for {component.component_id} "
+                    f"in registered job {self.run_id}. A registered Study-1 job "
+                    "may not record a search failure as a result: the whole job "
+                    "is invalid. Do not continue the trajectory, do not exclude "
+                    "the epoch, do not resample, do not change the seed. Correct "
+                    "the implementation and rerun this job identically."
+                )
             return (
                 ComponentOutcome(
                     component.component_id,
                     component.demand_ids,
-                    _EMPTY_MENU_STATUS[serviceability(self.world, forced, component)],
+                    status,
                     0,
                     0,
                     None,
@@ -349,6 +395,57 @@ class EconomyRun:
             valuation.group_ebu,
         )
 
+    def _require_resolved(self, state, physical, economic, stage: str) -> None:
+        """Registered Study-1 semantics: an undecided search invalidates the job.
+
+        `SEARCH_UNRESOLVED` is not scarcity, not incompatibility, not a
+        rejection and not a no-action. It is a statement that the computation
+        failed to establish something the registered design requires to be
+        established, so the job produced no valid data at all. The declared
+        Study-1 domain makes it impossible -- the complete plan space fits
+        inside the exhaustive budget -- so reaching here means the
+        implementation, not the physics, is wrong.
+        """
+        if not self.registered:
+            return
+        undecided = unresolved_ids(self.world, state, physical, tuple(economic))
+        if undecided:
+            raise JobInvalid(
+                f"SEARCH_UNRESOLVED at epoch {self.epoch} ({stage}) in registered "
+                f"job {self.run_id} for {sorted(undecided)}. The entire job is "
+                "invalid: do not continue the trajectory, do not exclude the "
+                "epoch, do not resample, do not change the seed. Correct the "
+                "implementation and rerun this job identically."
+            )
+
+    def _check_decomposition(self, state, active, found) -> str:
+        """Verify `combine(F_components) == F_global` for this exact epoch.
+
+        The globally enumerated feasible set is the scientific authority
+        (contract section 6 of the Study-1 freeze). Decomposition into demand
+        components is a computational factorization and is proved equivalent
+        inside the frozen Study-1 domain; this gate is the epoch-by-epoch
+        check of that proof against an independent brute-force computation
+        that never forms a component at all.
+
+        Off by default because it is exponential in the number of live routes
+        and is a conformance instrument rather than part of the mechanism.
+        """
+        if not self.decomposition_gate or not found:
+            return DECOMPOSITION_NOT_CHECKED
+        bound = action_bound(self.world, state)
+        if bound == 0:
+            return DECOMPOSITION_VERIFIED
+        ok, detail = agree(self.world, state, active.all, bound)
+        if not ok:
+            raise Refusal(
+                f"{DECOMPOSITION_DEFECT} at epoch {self.epoch}: the component "
+                f"path and the global enumeration disagree ({detail}). "
+                "Decomposition is an optimization and may not define "
+                "feasibility; use global enumeration for the registered study."
+            )
+        return DECOMPOSITION_VERIFIED
+
     def run_epoch(self) -> EpochRecord:
         world = self.world
         potential = world.potential
@@ -384,6 +481,14 @@ class EconomyRun:
                 LIFECYCLE_ARRIVED,
             )
 
+        # A registered Study-1 job requires every serviceability question it
+        # asks to be *decided*. Admission may admit only what is proved
+        # serviceable, and an undecided search is neither an admission nor a
+        # rejection -- it is a computational integrity failure that invalidates
+        # the job. Checked before admission, so the failure is reported at the
+        # question that could not be answered rather than at its consequence.
+        self._require_resolved(forced, physical, self.held + incoming, "admission")
+
         decision: AdmissionDecision | None = None
         admitted: tuple[EconomicDemand, ...] = ()
         rejected: tuple[tuple[str, str], ...] = ()
@@ -403,7 +508,9 @@ class EconomyRun:
         self.held = tuple(sorted(self.held + admitted, key=lambda d: d.demand_id))
 
         active = ActiveDemandSet.of(physical, self.held)
+        self._require_resolved(forced, physical, self.held, "service")
         found = components(world, forced, active)
+        decomposition = self._check_decomposition(forced, active, found)
 
         outcomes: list[ComponentOutcome] = []
         selected: list[ServicePlan] = []
@@ -580,6 +687,7 @@ class EconomyRun:
             nonnegativity,
             separability,
             epoch_status,
+            decomposition,
         )
         if record.accounting_residual != 0:
             raise Refusal(f"accounting residual {record.accounting_residual} is not zero")

@@ -31,11 +31,23 @@ failed:
   physically unusable routes were enough to merge three independent deliveries
   and destroy all service, while leaving the executable action set identical.
 
-Coupling is therefore derived from the **structural reach**: the exact set of
-tokens any *minimal* plan serving a demand could bind, computed from the world
-in `enumeration.structural_reach`, which is proved there to be a sound
-superset of every minimal plan's support. It is free of the plan-size cap,
-free of padding, and blind to routes that can carry no action.
+Coupling is therefore derived from the **structural reach**: a set of tokens
+proved in `enumeration` to contain the support of every *minimal* plan
+serving a demand, computed from the world and the frozen baseline rather than
+from enumerated plans. It is free of the plan-size cap, free of padding, and
+blind to routes that can carry no action at this state.
+
+**How tight it is depends on the domain.** In the frozen Study-1 domain -- one
+resource, lossless, no declared storage capacity -- route liveness is
+necessary *and* sufficient, the capacity-relief limb is empty, and the reach
+is exactly the requirement coordinates together with the sources of the live
+routes delivering into them. Outside that domain it remains a sound superset
+but is not tight, and two known artifacts follow: a non-binding declared
+storage capacity merges independent demands through the relief limb (finding
+F-5), and two lossy routes merge through a shared loss sink (finding F-6).
+Both are permanent regressions, both worlds are refused by
+`study_one.require_domain`, and neither is claimed to be fixed. Nothing here
+asserts exact loss-aware or capacity-aware coupling.
 
 Two demands are coupled when their service possibilities genuinely interact
 through:
@@ -52,10 +64,18 @@ through:
   affordability is checked jointly at execution, so decoupling such demands
   would let the joint gate discover a conflict it should have prevented.
 
-A demand whose structural reach contains no usable delivering route couples
+A demand whose structural reach contains no live delivering route couples
 with nothing but demands at its own coordinate. That is sound: it has no
-minimal plan, and a joint plan cannot rescue it, since a joint plan has no
-more actions available to it under the same limit.
+minimal plan, and a joint plan cannot rescue it, because the actions of a
+joint plan that raise the increment at its coordinate are drawn from the same
+reach and would themselves serve it.
+
+**Decomposition is not what defines feasibility.** For Study 1 the authority
+is the globally enumerated feasible set `F_global` (`oracle.global_feasible`),
+and decomposition is a computational factorization that must reproduce it
+exactly. `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` proves
+`combine(F_components) == F_global` inside the frozen domain, and
+`harness.EconomyRun(decomposition_gate=True)` checks it epoch by epoch.
 """
 
 from __future__ import annotations

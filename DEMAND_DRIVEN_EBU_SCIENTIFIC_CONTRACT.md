@@ -25,6 +25,8 @@ describes. Corrections are recorded in place, not erased.
 | 4 | The decision packet required admitted demand components to be identical across arms, which is impossible in a closed loop | Arms share an identical **raw arrival stream**; admission is endogenous and legitimately differs. Comparisons are reported over the common raw arrival set. §5a |
 | 5 | An interval was classified actor-only when `sum dV_ext == 0` | Actor-only is decided from explicit **external-event provenance**. External events can cancel in the potential or permute stock at constant `V`. See the cycle theorem document. |
 | 6 | A sink could be exported from by an ordinary route | A sink is irreversible: a world declaring a route out of one is refused at construction. §13 |
+| 7 | The structural reach was described as *exact* in every world, which a later audit disproved with a destination-capacity/loss counterexample | Exactness is claimed **only** inside the frozen Study-1 domain. Elsewhere the reach is a sound superset that can over-couple; findings F-5 and F-6 record the two known cases. §6, §16 |
+| 8 | Feasibility was defined by whatever the component decomposition produced | `F_global` is the authority; decomposition is an optimization, proved equal inside the frozen domain and gated epoch by epoch. §6, §16 |
 
 ## 0. The correction this model makes
 
@@ -292,11 +294,21 @@ set was unchanged, yet the three demands merged into one component needing
 three actions where two were permitted, and **all service vanished**. Two
 routes that can carry nothing had changed serviceability.
 
-Coupling is consequently derived from the **structural reach** — the exact set
-of tokens any *minimal* plan serving a demand could bind, computed from the
-world and the frozen baseline in `enumeration.structural_reach` and proved
-there to be a sound superset of every minimal plan's support. It is free of
-the plan-size cap, free of padding, and blind to routes that carry no action.
+Coupling is consequently derived from the **structural reach** — a set of
+tokens proved in `enumeration.structural_reach` to contain the support of
+every *minimal* plan serving a demand, computed from the world and the frozen
+baseline. It is free of the plan-size cap, free of padding, and blind to
+routes that carry no action.
+
+**It is a sound superset in every domain, and exact only inside the frozen
+Study-1 domain.** Route liveness is necessary everywhere and sufficient only
+there, so outside Study 1 the reach can over-couple. Two such artifacts are
+known, kept as permanent regressions, and not repaired: a declared storage
+capacity that cannot bind merges independent demands through the
+capacity-relief limb (finding F-5), and two lossy routes merge through a
+shared loss sink (finding F-6). Nothing in this contract claims exact
+loss-aware or capacity-aware coupling. See §16 and
+`DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`.
 
 Blindness to unusable routes has **two** limbs, and a second audit showed that
 capacity alone is not enough. A route is invisible to the reach when it cannot
@@ -353,6 +365,17 @@ contract — not physics — that forbids serving the subset.
 **Enumeration stays generous.** The narrow reach decides coupling only; menus
 are built over every route touching the component's transport closure. Breadth
 in enumeration can only offer more valid plans, never delete one.
+
+**Decomposition does not define feasibility.** The authority is the globally
+enumerated feasible set `F_global(x, D)` — every executable, completely
+serving, irredundant plan for the whole active demand set, enumerated over the
+whole world with no component ever formed, compared as exact increment
+*and* settled owner receipts. Demand-component decomposition is a
+computational optimization, proved equal to `F_global` inside the frozen
+Study-1 domain (Theorem D) and checked epoch by epoch against a
+decomposition-free brute force by `EconomyRun(decomposition_gate=True)`. A
+disagreement refuses the run. Outside the frozen domain the equality is
+unproved, and the registered study must use global enumeration.
 
 ## 7. Service plans, and demand provenance
 
@@ -513,7 +536,59 @@ epoch: not resampled, not clipped, not reversed, not reduced.
   as unresolved in `DEMAND_DRIVEN_FIRST_STUDY_DECISION_PACKET.md`.
 - Whether the demand-driven economy exhibits a persistent restoring tendency.
   That is the future primary dynamic test, and no registered study has run.
-- Whether complete-service semantics are the right long-run contract. Two
+- Whether complete-service semantics are the right long-run contract. Six
   structural consequences found during implementation are recorded in
-  `DEMAND_DRIVEN_MODEL_FINDINGS.md`; neither is repaired here, because
-  repairing them would be a model redesign.
+  `DEMAND_DRIVEN_MODEL_FINDINGS.md`; none is repaired here, because repairing
+  F-1 to F-4 would be a model redesign and F-5 and F-6 lie outside the frozen
+  Study-1 domain.
+- Exact coupling in loss-aware and destination-capacity worlds. The structural
+  reach is a sound superset there, not an exact set, and F-5 and F-6 are the
+  two known over-coupling artifacts. Tightening them needs a destination-
+  headroom liveness limb and sink exclusion from the reach closure. Neither is
+  attempted; both are outside §16.
+
+## 16. The frozen Study-1 domain
+
+The first registered demand-driven study runs in a deliberately narrow
+physical domain, frozen and machine-checked in `study_one` and set out in full
+in `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`: **one homogeneous scalar resource,
+`x >= 0`, exact conservation, lossless transfers, no loss sinks, no
+irreversible sinks, no recoverable waste, no upper destination-storage
+capacities, fixed topology, finitely many declared action quantities, exact
+rational arithmetic, complete service only, no partial service, no deadlines,
+no topology change.** Two computational conditions join them: the plan-size
+cap must be at least the usable route count, so it cannot bind; and the
+complete finite plan space must fit inside the exhaustive budget, so
+`SEARCH_UNRESOLVED` is impossible rather than merely unobserved.
+
+Everything outside is **FUTURE UNSUPPORTED PHYSICS**. That is a statement
+about what has been proved, not a defect and not a blocker to Study 1. The
+general loss-aware framework stays open for later extension.
+
+Three results hold inside the boundary and are claimed nowhere else.
+
+- **Liveness (L1, L2).** A route can carry an action only if it is live — true
+  in every domain, which is what keeps the reach sound. In Study 1 the
+  converse also holds, so the live set is exactly the set of routes that can
+  act.
+- **Pruning equivalence (P).** The uncapped serviceability search over the
+  live structural reach is equivalent to exhaustive enumeration of the
+  complete finite plan space. No scientific search truncation exists, and a
+  computational cap can never turn a serviceable demand into an impossible
+  one.
+- **Decomposition (D).** `combine(F_components) == F_global`, including owner
+  receipts and sampling probabilities.
+
+**Registered failure semantics.** In a registered Study-1 job
+`SEARCH_UNRESOLVED` is a computational integrity failure: the entire job is
+invalid, the trajectory does not continue, the epoch is not excluded, nothing
+is resampled and no seed changes. Fix the implementation and rerun the
+identical job. `EconomyRun(registered=True)` refuses to start outside the
+frozen domain and raises `JobInvalid` rather than recording the failure as a
+result.
+
+    STUDY-1 DOMAIN VERIFIED
+
+is **not**
+
+    GENERAL DEMAND-DRIVEN FRAMEWORK PROVED FOR ALL LOSS/CAPACITY/TOPOLOGY MODELS.

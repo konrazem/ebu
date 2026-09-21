@@ -6,11 +6,10 @@ different soundness requirements.
 
 ## Three route sets, deliberately different
 
-* The **structural reach** is what decides coupling. It is the exact set of
-  tokens any *minimal* plan serving a requirement could bind, derived from the
-  world rather than from enumerated plans. It is free of the plan-size cap and
-  free of padding, and a route that can carry no allowed action quantity is
-  invisible to it.
+* The **structural reach** is what decides coupling: a set of tokens large
+  enough to contain the support of every *minimal* plan serving a
+  requirement, derived from the world and the frozen baseline rather than
+  from enumerated plans. It is free of the plan-size cap and free of padding.
 * The **search routes** are generous: every route touching the transport
   closure of a component's coordinates. Breadth here is safe in the only
   direction that matters -- it can offer more valid plans, never delete one --
@@ -18,15 +17,47 @@ different soundness requirements.
 * **Usable routes** are those that can carry at least one declared quantum. A
   route with capacity below every quantum carries no action and must be
   behaviorally invisible.
-* **Live routes** are usable routes whose source can actually fund their
-  smallest usable quantum at the frozen baseline. Source-funding forbids a
-  coordinate from paying for an outflow with quantity arriving in the same
-  instant, so a route out of an empty stock carries no action in any plan at
-  this state -- not even inside a simultaneous group -- and must likewise be
-  invisible. Capacity alone is not enough: a route can be usable in the world
-  and dead in the state.
+* **Live routes** are usable routes whose source can fund their smallest
+  usable quantum at the frozen baseline.
 
-## Why the structural reach is exact
+## Route liveness
+
+**Necessity (all domains).** If a route `r` carries an action in any
+executable plan `G` at state `x`, then `r` is live. The action moves a
+declared quantum `q <= cap(r)`, so `r` is usable; and source-funding requires
+`x[source(r)] >= sum of everything source(r) sends in G >= q >= min{declared
+quanta that fit cap(r)}`. So filtering on liveness removes no route that any
+executable plan could use, and the structural reach remains a **sound
+superset** of every minimal plan's support in every domain.
+
+**Sufficiency (Study-1 domain only).** In the frozen Study-1 domain -- one
+resource, lossless routes, no declared storage capacity, `x >= 0` -- every
+live route carries an action in some executable plan, namely the singleton
+`{(r, q_min)}`. Its quantum is declared and fits the route capacity; source
+funding holds by liveness; the destination only gains, so nonnegativity holds;
+there is no storage capacity to exceed; and losslessness closes conservation
+exactly. So in Study 1 liveness is **necessary and sufficient**, and the live
+route set is exactly the set of routes that can act.
+
+**This sufficiency is claimed for Study 1 and nowhere else.** Outside it the
+rule is necessary but not tight, and the reach is a sound superset that can
+over-couple:
+
+* a **declared upper storage capacity** on a requirement coordinate activates
+  the capacity-relief limb below, so a route out of that coordinate enters the
+  reach even when the capacity has no chance of binding
+  (`fixtures.capacity_relief_world`, finding F-5);
+* a **loss sink** enters the reach as a delivery target, after which every
+  route depositing into that sink is pulled in behind it, merging demands that
+  share nothing but waste (`fixtures.shared_sink_world`, finding F-6).
+
+A third limb -- destination headroom -- would be needed to tighten the first,
+and sinks would need to be excluded from the reach to tighten the second.
+Neither is attempted here. Both worlds are refused by
+`study_one.require_domain`, both are permanent regressions, and neither is a
+blocker to Study 1.
+
+## Why the reach is a sound superset
 
 Let `G` be an irredundant executable plan serving requirement set `R`, and take
 `a` in `G`. Irredundancy says `G \\ {a}` either fails to serve `R` or cannot
@@ -47,19 +78,33 @@ coordinate *up*, so the sole exposure is a declared stock capacity there.
 
 So every action of every minimal plan either delivers into a requirement
 coordinate or drains a capacity-bearing coordinate that receives inflow inside
-the plan. `structural_reach` closes over exactly those two cases, which makes
-it a sound superset of every minimal plan's support and cheap to compute. In a
-world declaring no stock capacities the second case is empty and the reach is
-one pass.
+the plan. `structural_reach` closes over exactly those two cases. In the
+Study-1 domain no coordinate declares a capacity, so the second case is empty,
+the closure is one pass, and the reach is exactly `R` together with the
+sources of the live routes delivering into `R`.
+
+## Search completeness
+
+`physically_serviceable` enumerates plans over the live structural-reach
+routes, at most one action per route, in increasing size. That pruning is
+**equivalent to complete enumeration of the whole finite plan space** for the
+existence question it answers. One direction is inclusion. For the other: if
+any complete executable plan exists, some minimal such plan `G'` exists, `G'`
+is irredundant, so by the paragraph above every action of `G'` lies on a route
+of the structural reach, and that route is live because `G'` executes. A plan
+uses each route at most once by construction. So `G'` lies inside the pruned
+space and is found. The two searches therefore agree on
+`SERVICEABLE`/`IMPOSSIBLE` wherever both terminate, and the conformance suite
+checks the pruned search against brute force on every fixture.
 
 ## The plan-size cap
 
 `world.max_plan_size` is a **computational enumeration limit**, not a physical
 simultaneity constraint. See `DEMAND_DRIVEN_PLAN_CAP_DISPOSITION.md`. It
 therefore may not decide physical possibility, and nothing here uses it to:
-`physically_serviceable` searches without it, by choosing at most one action
-per usable reach route, which is exact because minimal plans use only those
-routes.
+`physically_serviceable` searches without it. A Study-1 world must declare a
+cap at least as large as its usable route count, so the cap cannot bind on
+anything at all.
 """
 
 from __future__ import annotations
@@ -100,11 +145,17 @@ def usable_routes(world: DemandWorld) -> tuple[Route, ...]:
 def live_routes(world: DemandWorld, state: Vector) -> tuple[Route, ...]:
     """Usable routes whose source can fund their smallest usable quantum now.
 
-    A necessary condition for a route to carry an action in **any** executable
-    plan at this baseline: source-funding requires the source to already hold
-    the total it sends, so it must hold at least the smallest quantum the route
-    can carry. Filtering on it therefore removes no route that could appear in
-    a plan, and removes every route that could not.
+    **Necessary in every domain**: source-funding requires the source to
+    already hold the total it sends, so it must hold at least the smallest
+    quantum the route can carry. Filtering on it removes no route that any
+    executable plan could use.
+
+    **Sufficient in the Study-1 domain only**, where the singleton plan
+    `{(r, q_min)}` is executable for every live `r`. Outside that domain a
+    live route may still be unable to act -- a full destination under a
+    declared storage capacity is the standing example -- and the reach is then
+    a sound superset rather than an exact set. See the module docstring, and
+    `study_one` for the boundary.
     """
     live = []
     for route in usable_routes(world):

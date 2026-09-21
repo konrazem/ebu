@@ -171,6 +171,32 @@ advance:
 Either way the rule is fixed outcome-blind. This is recorded as a required
 gate in `DEMAND_DRIVEN_FIRST_STUDY_DECISION_PACKET.md` §3.3.
 
+## 4b. Study 1 takes option 1, and it is proved rather than observed
+
+The frozen Study-1 domain (`DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`, condition 16)
+requires
+
+    max_plan_size >= len(usable_routes(world))
+
+A plan uses each route at most once, and only a usable route can carry an
+action, so no plan in any Study-1 world can contain more actions than there
+are usable routes. **The cap therefore cannot bind on anything**, and
+`SEARCH_INCOMPLETE_AT_PLAN_CAP` cannot occur — it is not a rate to be observed
+and judged negligible, it is zero by construction. `study_one.require_domain`
+refuses a world that does not satisfy the condition, and
+`EconomyRun(registered=True)` refuses to start on one.
+
+Scientific serviceability in Study 1 is decided by exhaustive enumeration of
+the complete finite plan space, or by a pruning proved equivalent to it
+(Theorem P). The cap is not consulted in that decision at all, and no
+computational limit can turn a serviceable demand into an impossible one.
+
+The second half of the gate is handled the same way. `SEARCH_UNRESOLVED` is
+bounded by domain condition 17 — the complete plan space must fit inside the
+exhaustive budget — so it too is impossible rather than rare, and in a
+registered job it is a computational integrity failure that invalidates the
+whole job rather than an outcome.
+
 ## 5. If a later study wants (B)
 
 It must declare the simultaneity limit as a physical constraint of the world,

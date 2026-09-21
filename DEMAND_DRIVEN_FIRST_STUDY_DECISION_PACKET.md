@@ -93,19 +93,30 @@ These are not optional; a study frozen without them cannot be interpreted.
    inclusion-maximal compatible subsets is not uniform over demands. The
    per-demand marginal admission probability induced by the declared arrival
    law must be reported, not assumed flat.
-6. **Search completeness rule (auditor 2, disposition 5).** The plan-size cap
-   is a computational enumeration limit, so the study must declare, before
-   execution and outcome-blind, either a cap proved sufficient for the
-   declared world and arrival law — with the registered run asserting a zero
-   `SEARCH_INCOMPLETE_AT_PLAN_CAP` rate and failing closed otherwise — or an
-   explicit computational-failure rule fixing a maximum rate and the
-   disposition of a run that exceeds it. **Raising the cap until an observed
-   rate looks negligible is not permitted.** The rate falsifies the search,
-   never the mechanism. See `DEMAND_DRIVEN_PLAN_CAP_DISPOSITION.md` §4a.
-7. **Undecided-search disposition.** `SEARCH_BUDGET_EXCEEDED` must be reported
-   separately from both service and scarcity, and its rate declared
-   acceptable in advance or the run treated as inconclusive for the affected
-   demands.
+6. **Search completeness rule (auditor 2, disposition 5) — RESOLVED by the
+   Study-1 freeze, option 1.** The requirement stands as written: the study
+   must declare, outcome-blind and before execution, either a cap proved
+   sufficient or an explicit computational-failure rule, and **raising the cap
+   until an observed rate looks negligible is not permitted.** Study 1 takes
+   the first branch and proves it rather than observing it: domain condition
+   16 requires `max_plan_size >= len(usable_routes)`, so
+   `SEARCH_INCOMPLETE_AT_PLAN_CAP` is zero by construction and
+   `study_one.require_domain` refuses any world where it is not. The decision
+   that remains is only *which world* Stage B uses; it must pass that check.
+   See `DEMAND_DRIVEN_PLAN_CAP_DISPOSITION.md` §4a and §4b.
+7. **Undecided-search disposition — RESOLVED by the Study-1 freeze.**
+   `SEARCH_UNRESOLVED` in a registered Study-1 job is a **computational
+   integrity failure**: the entire job is invalid, the trajectory does not
+   continue, the epoch is not excluded, nothing is resampled and no seed
+   changes; the implementation is corrected and the identical job is rerun.
+   Domain condition 17 makes it impossible in the first place, by requiring
+   the complete plan space to fit inside the exhaustive budget.
+   `EconomyRun(registered=True)` enforces both.
+8. **Study-1 domain conformance.** Every world used by a registered Stage-A or
+   Stage-B job must pass `study_one.require_domain`. `sandwater-v1` does not;
+   neither does any lossy or capacity-bearing fixture. Choosing the Stage-B
+   world is therefore also a domain decision. See
+   `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md`.
 
 ## 4. Proposed arm structure, for decision
 
@@ -181,17 +192,23 @@ packet.
 |---|---|
 | corrected model implemented | **yes** — `demand_driven_ebu/`, identity recorded in the final report |
 | independent audit defects corrected | **yes** — all five, see `DEMAND_DRIVEN_AUDIT_CORRECTION_HANDOFF.md` |
-| exact conformance passing | **yes** — 365 assertions, 0 failures, tolerance 0 |
+| exact conformance passing | **yes** — 592 assertions, 0 failures, tolerance 0 |
 | closed-cycle theorem proved and verified | **yes** |
 | small local rehearsal run | **yes** — deterministic replay, all residuals 0 |
+| Study-1 physical domain frozen and machine-checked | **yes** — `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` |
+| exhaustive search completeness proved for the domain | **yes** — Theorem P; `SEARCH_UNRESOLVED` impossible |
+| `F_global` established as the feasibility authority | **yes** — Theorem D, gated epoch by epoch |
+| Stage-A fixtures chosen | **no** — `DEMAND_DRIVEN_STUDY_ONE_READINESS.md` §4, A1–A4 |
 | arrival law declared | **no** — §3.1 |
 | findings-forced decisions taken | **no** — §3.3 |
 | primary endpoint chosen | **no** — §5 |
 | power argument | **no** |
 | preregistration frozen | **no** |
 
-> **Verdict: NOT READY for a demand-driven registered behavioural experiment.**
-> The machinery is ready; the science is not. What is missing is a set of
+> **Verdict: READY FOR DEMAND-DRIVEN STAGE-A/B PREREGISTRATION DESIGN, NOT
+> READY for a registered behavioural experiment.**
+> The machinery is ready and its search completeness is now proved rather than
+> observed; the science is not. What is missing is a set of
 > declared load parameters and one endpoint decision, none of which may be
 > chosen from observed outcomes.
 
@@ -202,5 +219,12 @@ packet.
 - No selection of the arrival law from rehearsal trajectories.
 - No reuse of the stress model's horizon, replicate count or endpoint by
   default merely because they exist.
-- No AWS. The corrected model runs locally at 3,200 epochs in ten seconds; a
-  first study of this shape has no infrastructure argument for the cloud.
+- No AWS. Measured locally: the Study-1 world runs 3,200 epochs in 15.9 s
+  *including* an independent brute-force `F_global` enumeration every epoch,
+  and the larger `sandwater-v1` rehearsal world runs 3,200 epochs in 180 s.
+  A first study of this shape has no infrastructure argument for the cloud.
+  (An earlier draft of this packet said "ten seconds"; that figure was wrong
+  and is corrected here.)
+- No registered Stage-A or Stage-B execution in the task that produced the
+  Study-1 freeze. The freeze closes generality questions and proves
+  completeness; it authorizes design work only.
