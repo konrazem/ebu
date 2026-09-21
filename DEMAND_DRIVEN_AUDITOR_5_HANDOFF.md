@@ -8,7 +8,9 @@ unfrozen, and the primary endpoint is unchosen.
 
 | | |
 |---|---|
-| previous handoff commit | `4fd8b6947a47e2e3f2d06d8dd2c3dbdf0ba55ef2` |
+| previous handoff commit | `4fd8b69` (Study-1 freeze coordinate) |
+| correction commit | `76953a624978536d7575c23536a3b658e0c9a8fd` |
+| correction tree | `bab38bb51f92a5285c3ca95612dd5370b2aef69f` |
 | branch | `gaussian/stage-a-environment` |
 | `demand_driven_ebu` code identity | `3c2bfbbdfca29d612132d8673dec085e772f2c6a2c9f93bd676980317fe64e61` |
 | `gaussian_harness` (pinned) | `a9158eef…fe55` — unchanged |
@@ -233,3 +235,5 @@ open, unrepaired and out of domain by declaration.
 | `test_demand_driven_ebu.py` | section *FINAL STUDY-1 ORACLE + SAMPLING SEMANTICS CORRECTION* |
 | `demand_driven_ebu/plans.py` | the canonical-identity refusal |
 | `demand_driven_ebu/harness.py` | the four-level decomposition gate |
+
+This coordinate block is completed by a later commit that changes no code.
