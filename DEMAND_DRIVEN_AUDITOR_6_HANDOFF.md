@@ -9,6 +9,8 @@ the arrival law is unfrozen, and the primary endpoint is unchosen.
 | | |
 |---|---|
 | previous handoff commit | `d99e36b` |
+| correction commit | `7749dc1af4645e3f2ddb8b125dc5287a6a6e7df3` |
+| correction tree | `2d1a614ef639bd56e9eabe09a6d335241383fe93` |
 | branch | `gaussian/stage-a-environment` |
 | `demand_driven_ebu` code identity | `999158b0ace4cbfa333943a7b7a119a1d3d247c410cafd87d6038cac4c46cbad` |
 | `gaussian_harness` (pinned) | `a9158eef…fe55` — unchanged |
@@ -205,3 +207,5 @@ remain open, unrepaired and out of domain by declaration.
 | `test_demand_driven_ebu.py` | section *FINAL STUDY-1 POLICY-CONDITIONED ORACLE CORRECTION* |
 | `demand_driven_ebu/harness.py` | the policy-conditioned gate |
 | `demand_driven_ebu/capacity.py` | Capacity V1, unchanged: per-owner projection |
+
+This coordinate block is completed by a later commit that changes no code.
