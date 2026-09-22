@@ -48,16 +48,21 @@ It runs the frozen-domain world `study-one-v1`
 — an undecided search would raise `JobInvalid` and stop the job rather than be
 recorded — and with the **decomposition gate on**, so every epoch
 independently verifies the component path against the decomposition-free
-**progress** reference at four levels: plan identities, outcome support, the
-induced random law including plan multiplicity, and the aligned/hostile tie
-sets with their induced outcomes.
+**policy-conditioned** reference at four levels: physical eligibility, the
+affordable set under that arm's own balances, the selection law the policy
+induces over canonical plan identities, and the modeled-outcome law it pushes
+forward.
 
 The reference is progress semantics, not "one plan serving every active
-demand". A part proved impossible is `BLOCKED`, contributes no action and
-leaves its demands unresolved; every other part contributes exactly one
-complete plan. The narrower all-demands-complete query still exists under its
-own name and is explicitly not runtime semantics — conflating the two made
-the old comparison pass vacuously whenever any component was blocked.
+demand". A part proved impossible is `BLOCKED`; a part whose every plan is
+EBU-unaffordable is `UNAFFORDABLE`; both contribute no action and leave their
+demands pending, and every other part contributes exactly one plan chosen by
+the policy. The narrower all-demands-complete query still exists under its own
+name and is explicitly not runtime semantics — conflating the two made the old
+comparison pass vacuously whenever any component was blocked.
+
+The physical layer alone is **not** a runtime verification: an EBU arm never
+samples from it, and the comparator deliberately does.
 
 It establishes, and only establishes: 3,200 epochs complete, the replay is
 exact, every residual is exactly zero, `SEARCH_UNRESOLVED` occurred zero times

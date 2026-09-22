@@ -382,23 +382,105 @@ hostile tie set is the two same-supplier plans, whose outcomes differ, giving
 `1/2, 1/2`. Same world, same mechanism, different induced laws — which is why
 the tie set has to be computed over plans and not over outcomes.
 
-### 7.5 Verification levels
+### 7.5 `G_physical` is pre-affordability
 
-Kept separate because none implies the next.
+Everything in 7.1 to 7.4 is computed **before any balance is consulted**.
+`G_physical(x, D)` answers exactly one question — *which complete
+demand-serving plans can physically execute now?* — and is blind to capacity
+balances, to actor policy and to aligned/random/hostile preference by
+construction: `plans_serving` and `global_progress` are never given a ledger
+or a policy.
+
+> **`G_physical` is not the runtime action distribution for an EBU arm.**
+> An EBU arm never samples from it. Describing it as the runtime distribution
+> was a verification defect: the comparison then checked a law the model does
+> not have.
+
+### 7.6 The policy-conditioned execution reference
+
+A second layer takes the physical state, the active demands, **the node
+balances and the policy identity**.
+
+    G_affordable = { G in G_physical :
+                     projected balance of every required owner stays >= 0 }
+
+Affordability is **per account**, never a pooled total (Capacity V1,
+`capacity.CapacityLedger.project`). A plan whose aggregate receipt is
+comfortable but which drives one owner negative is refused.
+
+| policy | eligible set | selection |
+|---|---|---|
+| `ebu_random` | `G_affordable` | uniform over canonical plan identities |
+| `ebu_aligned` | `G_affordable` | `argmax E_G` **within** it, then the frozen uniform tie-break over tied identities |
+| `ebu_hostile` | `G_affordable` | `argmin E_G` **within** it, same tie-break |
+| `control_random_no_ebu` | `G_physical` | uniform; affordability **intentionally bypassed** |
+
+Restricting before taking the extremum is not a detail. A hostile actor's
+globally worst plan is frequently the one it cannot pay for, so the two orders
+give different answers. In `three_supplier_world` at zero balances the three
+plans price at `0`, `+1` and `-1`; the `-1` plan is unaffordable, so hostile
+takes `0` — the globally worst plan is genuinely out of reach.
+
+### 7.7 Zero-affordable semantics
+
+If `G_physical` is nonempty but `G_affordable` is empty, the part is
+`ALL_PLANS_EBU_UNAFFORDABLE`. No physical action occurs for it and its demand
+**remains pending**. This is an intended EBU affordability outcome. It is
+**not**:
+
+- voluntary no-action — no policy may decline an eligible plan;
+- physical impossibility — `PHYSICALLY_IMPOSSIBLE` is a different status;
+- scarcity — that is an admission verdict about a different question;
+- computational failure — `SEARCH_UNRESOLVED` invalidates the job instead.
+
+All four are separately declared statuses and the suite asserts they are never
+collapsed.
+
+This is the ordinary case, not an edge case. At `study_one_world`, state
+`(4, 4, 4)`, zero balances, one unit wanted at `C`: both physical plans exist
+(`B->C` at one unit prices `E = -1`, at two units `E = -4`), every EBU arm has
+an empty affordable set, no-action probability is exactly one, and the order
+stays pending. The comparator executes normally with `1/2, 1/2`.
+
+### 7.8 Mandatory action, conditioned on the eligible set
+
+- for an EBU policy, if `G_affordable` is nonempty, **one nonempty plan must
+  execute**;
+- for the comparator, if `G_physical` is nonempty, one nonempty plan must
+  execute.
+
+There is no voluntary no-op anywhere. Inaction follows only from an empty
+eligible set, and which set that is depends on the arm.
+
+### 7.9 Verification levels
+
+Two hierarchies, and the first is not a runtime verification.
+
+**Physical, pre-affordability** (`oracle.progress_levels`): plan-set
+equivalence, outcome support, and the random and extremal laws that
+`G_physical` *would* induce. Useful for checking the physical layer; blind to
+every arm's actual behaviour.
+
+**Policy-conditioned** (`oracle.policy_levels`), which is what the harness
+gate runs:
 
 | level | what it compares |
 |---|---|
-| **A** plan-set equivalence | the same distinct plan identities, and the same blocked/resolved split |
-| **B** outcome support | the same `Phi` images |
-| **C** induced random law | the same outcome probabilities, multiplicity included |
-| **D** aligned/hostile | the same tie sets and the same induced outcomes |
+| **A** physical eligibility | the same `G_physical`, and the same blocked split |
+| **B** affordable plan set | the same `G_affordable` under these balances, and the same unaffordable/resolved split |
+| **C** policy plan distribution | the same selection law over canonical plan identities, for this policy |
+| **D** modeled outcome distribution | the same `Phi`-pushforward law, multiplicity preserved |
 
-**B alone proves neither C nor D.** A flat law over the correct support is a
-different distribution from the correct one, and `two_supplier_world` is a
-world where they differ.
+**Level A alone is not a runtime verification.** Two arms agree on `G_physical`
+by construction and can still execute completely different laws —
+`three_supplier_world` is a world where EBU-random and the comparator agree at
+level A and differ at level C. Likewise **B alone proves neither C nor D**: a
+flat law over the correct support is a different distribution from the correct
+one, and `two_supplier_world` is a world where they differ.
 
-`EconomyRun(decomposition_gate=True)` runs all four every epoch and refuses on
-any disagreement.
+`EconomyRun(decomposition_gate=True)` runs all four policy levels every epoch,
+conditioned on that run's own balances and policy, and refuses on any
+disagreement.
 
 ## 8. Unusable-infrastructure invariance
 

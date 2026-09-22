@@ -86,8 +86,13 @@ from demand_driven_ebu.fixtures import (
     shared_source_world,
     scarcity_world,
     blocked_neighbour_state,
+    ledger_of,
+    split_state,
+    split_world,
     study_one_state,
     study_one_world,
+    three_supplier_state,
+    three_supplier_world,
     two_supplier_state,
     two_supplier_world,
     ScriptedArrivals,
@@ -136,6 +141,14 @@ from demand_driven_ebu.study_one import (
 from demand_driven_ebu.oracle import (
     BLOCKED,
     LEVELS,
+    PART_UNAFFORDABLE,
+    POLICY_LEVELS,
+    affordable_subset,
+    component_policy_reference,
+    global_policy_reference,
+    induced_outcome_law,
+    plan_law,
+    policy_levels,
     all_complete_agree,
     all_complete_outcomes,
     all_complete_plans,
@@ -2214,6 +2227,35 @@ def main() -> int:
          test_a_serviceable_component_must_execute_one_nonempty_plan),
         ("blocked and unresolved are still different things",
          test_blocked_and_unresolved_are_still_different_things),
+        # --- policy-conditioned oracle ------------------------------------
+        ("the physical reference is blind to capacity and policy",
+         test_the_physical_reference_is_blind_to_capacity_and_policy),
+        ("level A alone is not a runtime verification",
+         test_level_a_alone_is_not_a_runtime_verification),
+        ("the ordinary starting state is exactly as described",
+         test_the_ordinary_starting_state_is_exactly_as_described),
+        ("at zero balances every EBU arm is unaffordable",
+         test_at_zero_balances_every_ebu_arm_is_unaffordable_and_acts_not_at_all),
+        ("an unaffordable demand stays pending in the runtime",
+         test_an_unaffordable_demand_stays_pending_in_the_runtime),
+        ("the four outcome statuses are never collapsed",
+         test_the_four_outcome_statuses_are_never_collapsed),
+        ("mandatory action is conditional on the eligible set",
+         test_mandatory_action_is_conditional_on_the_eligible_set),
+        ("partial affordability restricts every EBU arm",
+         test_partial_affordability_restricts_every_ebu_arm),
+        ("a nonbinding gate makes EBU-random match the comparator",
+         test_when_the_gate_is_nonbinding_ebu_random_matches_the_comparator),
+        ("affordability is per owner, not pooled",
+         test_affordability_is_per_owner_and_not_a_pooled_total),
+        ("an unaffordable component does not freeze an affordable one",
+         test_an_unaffordable_component_does_not_freeze_an_affordable_one),
+        ("the runtime shows the same independent progress",
+         test_the_runtime_shows_the_same_independent_progress),
+        ("every policy level runs on every declared fixture",
+         test_every_policy_level_runs_on_every_declared_fixture),
+        ("the affordable subset is exactly the runtime filter",
+         test_the_affordable_subset_is_exactly_the_runtime_filter),
         # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
@@ -3995,23 +4037,23 @@ def test_the_harness_gate_checks_decomposition_every_epoch() -> None:
 
 def test_a_decomposition_difference_stops_the_run() -> None:
     run = _study_one_run(decomposition_gate=True)
-    saved = harness_module.progress_levels
+    saved = harness_module.policy_levels
     raised = None
     try:
-        harness_module.progress_levels = lambda *args, **kwargs: (
+        harness_module.policy_levels = lambda *args, **kwargs: (
             False,
-            {"reference_plans": 5, "runtime_plans": 4},
+            {"physical": 5, "eligible": 4},
         )
         for _ in range(12):
             run.run_epoch()
     except Refusal as refusal:
         raised = refusal
     finally:
-        harness_module.progress_levels = saved
+        harness_module.policy_levels = saved
     check("a disagreement is refused, not absorbed", raised is not None)
     message = str(raised) if raised else ""
     check("and it names the defect",
-          "DECOMPOSITION_DIFFERS_FROM_GLOBAL_PROGRESS" in message, message[:140])
+          "POLICY_EXECUTION_DIFFERS_FROM_GLOBAL_REFERENCE" in message, message[:160])
     check("and says which side is authority",
           "may not" in message and "define what the epoch can do" in message,
           message[:220])
@@ -4525,6 +4567,466 @@ def test_blocked_and_unresolved_are_still_different_things() -> None:
           raised is not None)
     check("BLOCKED is a reference marker and never a search verdict",
           BLOCKED not in (SERVICEABLE, IMPOSSIBLE, UNRESOLVED))
+
+
+# ==========================================================================
+# FINAL STUDY-1 POLICY-CONDITIONED ORACLE CORRECTION
+# ==========================================================================
+
+
+def _policy_case(world, state, demands, balances=None, policy=POLICY_RANDOM):
+    ledger = ledger_of(world, balances or {}, constrained=(policy != POLICY_CONTROL))
+    bound = action_bound(world, state)
+    return ledger, bound, oracle_at(world, bound)
+
+
+def _reference(world, state, demands, balances=None, policy=POLICY_RANDOM):
+    ledger, bound, equalised = _policy_case(world, state, demands, balances, policy)
+    return global_policy_reference(equalised, state, demands, ledger, policy, bound)
+
+
+def _ordinary_case():
+    """The auditor's fixture: (4,4,4), zero balances, one unit wanted at C."""
+    world = study_one_world()
+    state = study_one_state()
+    demands = (_e(world, "C", 1),)
+    return world, state, demands
+
+
+def _three_supplier_case():
+    world = three_supplier_world()
+    state = three_supplier_state()
+    return world, state, (_e(world, "T", 1),)
+
+
+def _split_case():
+    world = split_world()
+    state = split_state()
+    return world, state, (_e(world, "B", 1, 0), _e(world, "D", 1, 1))
+
+
+# --------------------------------------------------------------------------
+# 1. the physical reference stays pre-affordability
+# --------------------------------------------------------------------------
+
+
+def test_the_physical_reference_is_blind_to_capacity_and_policy() -> None:
+    import demand_driven_ebu.oracle as oracle_module
+
+    source = inspect.getsource(oracle_module.global_progress) + inspect.getsource(
+        oracle_module.plans_serving
+    )
+    check("the physical reference is never given a ledger or a policy",
+          "ledger" not in source and "policy" not in source)
+    world, state, demands = _three_supplier_case()
+    bound = action_bound(world, state)
+    physical = {
+        policy: _reference(world, state, demands, {}, policy).physical
+        for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE, POLICY_CONTROL)
+    }
+    check("every policy sees the same physical plan set",
+          len({tuple(sorted(value)) for value in physical.values()}) == 1,
+          str(physical))
+    rich = _reference(world, state, demands, {"S0": 9, "S1": 9, "S2": 9}).physical
+    poor = _reference(world, state, demands, {}).physical
+    check("and it does not move when balances move",
+          frozenset(rich) == frozenset(poor), f"{sorted(rich)} vs {sorted(poor)}")
+    check("the module says it is not the runtime action distribution",
+          "not** the runtime action distribution" in oracle_module.__doc__
+          or "is **not** the runtime action distribution" in oracle_module.__doc__
+          or "not the runtime action distribution" in oracle_module.__doc__)
+
+
+def test_level_a_alone_is_not_a_runtime_verification() -> None:
+    world, state, demands = _three_supplier_case()
+    random_reference = _reference(world, state, demands, {}, POLICY_RANDOM)
+    control_reference = _reference(world, state, demands, {}, POLICY_CONTROL)
+    check("two arms agree on the physical set",
+          frozenset(random_reference.physical) == frozenset(control_reference.physical))
+    check("but their execution laws differ",
+          plan_law(random_reference) != plan_law(control_reference),
+          f"{plan_law(random_reference)} vs {plan_law(control_reference)}")
+    check("so a level-A-only comparison cannot tell the arms apart, and must "
+          "not be called a runtime verification",
+          len(POLICY_LEVELS) == 4 and POLICY_LEVELS[0] == "A_PHYSICAL_ELIGIBILITY")
+
+
+# --------------------------------------------------------------------------
+# 2, 5. the ordinary starting state
+# --------------------------------------------------------------------------
+
+
+def test_the_ordinary_starting_state_is_exactly_as_described() -> None:
+    world, state, demands = _ordinary_case()
+    check("the state is (4,4,4)", state == (F(4), F(4), F(4)), str(state))
+    check("no physical demand exists there",
+          derive_physical_demands(world, state) == ())
+    reference = _reference(world, state, demands, {}, POLICY_RANDOM)
+    check("two physical plans", len(reference.physical) == 2, str(reference.physical))
+    groups = reference.group_map
+    values = sorted(
+        (str(value_group(world, state, groups[identity]).group_ebu), identity)
+        for identity in reference.physical
+    )
+    check("B -> C at one unit prices at E = -1",
+          any(v == "-1" and "1->2@1/1" in i for v, i in values), str(values))
+    check("B -> C at two units prices at E = -4",
+          any(v == "-4" and "1->2@2/1" in i for v, i in values), str(values))
+
+
+def test_at_zero_balances_every_ebu_arm_is_unaffordable_and_acts_not_at_all() -> None:
+    world, state, demands = _ordinary_case()
+    for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE):
+        reference = _reference(world, state, demands, {}, policy)
+        check(f"{policy}: the physical set is still both plans",
+              len(reference.physical) == 2)
+        check(f"{policy}: the affordable set is empty",
+              reference.unaffordable == ("E:000000:000:r|C",),
+              str(reference.unaffordable))
+        check(f"{policy}: no action occurs", not reference.acts)
+        law = plan_law(reference)
+        check(f"{policy}: no-action probability is exactly one",
+              list(law.values()) == [F(1)] and list(law)[0] == "g:[]", str(law))
+    control = _reference(world, state, demands, {}, POLICY_CONTROL)
+    check("control keeps both plans, bypassing affordability",
+          len(control.eligible) == 2 and control.unaffordable == ())
+    check("and samples them uniformly by its frozen plan rule",
+          sorted(plan_law(control).values()) == [F(1, 2), F(1, 2)],
+          str(plan_law(control)))
+    for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE, POLICY_CONTROL):
+        ledger, bound, _ = _policy_case(world, state, demands, {}, policy)
+        ok, detail = policy_levels(world, state, demands, ledger, policy, bound)
+        check(f"{policy}: all four policy levels agree", ok, str(detail))
+
+
+def test_an_unaffordable_demand_stays_pending_in_the_runtime() -> None:
+    world, state, demands = _ordinary_case()
+    run = EconomyRun(
+        world,
+        ScriptedDisturbance({}),
+        ScriptedArrivals({0: (("r", "C", 1),)}),
+        POLICY_RANDOM,
+        1, 2, 3, 4,
+        state,
+        registered=True,
+        decomposition_gate=True,
+    )
+    record = run.run_epoch()
+    check("the epoch reports EBU unaffordability",
+          record.epoch_status == STATUS_ALL_UNAFFORDABLE, record.epoch_status)
+    check("nothing physical happened",
+          record.executed_group_id == "g:[]" and record.state_after == record.state_forced)
+    check("the demand is still held", len(run.held) == 1,
+          str([d.demand_id for d in run.held]))
+    check("and is reported as admitted-but-unaffordable",
+          run.arrival_ledger[run.held[0].demand_id].state
+          == LIFECYCLE_ADMITTED_BUT_EBU_UNAFFORDABLE,
+          run.arrival_ledger[run.held[0].demand_id].state)
+    check("the gate verified the epoch against the policy reference",
+          record.decomposition_gate == DECOMPOSITION_VERIFIED,
+          record.decomposition_gate)
+    check("residuals stay exactly zero",
+          record.accounting_residual == 0 and record.conservation_residual == 0)
+
+
+# --------------------------------------------------------------------------
+# 3, 11. status provenance
+# --------------------------------------------------------------------------
+
+
+def test_the_four_outcome_statuses_are_never_collapsed() -> None:
+    declared = {
+        STATUS_NO_COMPLETE_PLAN,
+        STATUS_SEARCH_UNRESOLVED,
+        STATUS_ALL_UNAFFORDABLE,
+        STATUS_EXECUTED,
+    }
+    check("all four are distinct declared statuses",
+          len(declared) == 4 and declared <= set(DECLARED_STATUSES), str(sorted(declared)))
+    check("EBU unaffordability is not physical impossibility",
+          STATUS_ALL_UNAFFORDABLE != STATUS_NO_COMPLETE_PLAN)
+    check("nor a computational failure",
+          STATUS_ALL_UNAFFORDABLE != STATUS_SEARCH_UNRESOLVED)
+    check("nor an admission rejection",
+          STATUS_ALL_UNAFFORDABLE not in (
+              E_REJECTED_PHYSICAL_SCARCITY, E_REJECTED_INCOMPATIBLE))
+    check("and the unaffordable part marker is distinct from BLOCKED",
+          PART_UNAFFORDABLE != BLOCKED)
+    world, state, demands = _ordinary_case()
+    reference = _reference(world, state, demands, {}, POLICY_RANDOM)
+    check("an unaffordable part is marked unaffordable, not blocked",
+          (PART_UNAFFORDABLE,) in reference.part_plans and reference.blocked == (),
+          str(reference.part_plans))
+
+
+# --------------------------------------------------------------------------
+# 4. mandatory action, conditioned on the eligible set
+# --------------------------------------------------------------------------
+
+
+def test_mandatory_action_is_conditional_on_the_eligible_set() -> None:
+    world, state, demands = _three_supplier_case()
+    for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE):
+        reference = _reference(world, state, demands, {}, policy)
+        check(f"{policy}: the affordable set is nonempty here",
+              reference.unaffordable == () and reference.eligible)
+        check(f"{policy}: so one nonempty plan must execute", reference.acts)
+        for identity in reference.selected:
+            check(f"{policy}: {identity} is nonempty",
+                  bool(reference.group_map[identity].actions))
+    control = _reference(world, state, demands, {}, POLICY_CONTROL)
+    check("control acts whenever the physical set is nonempty", control.acts)
+    poor_world, poor_state, poor_demands = _ordinary_case()
+    poor = _reference(poor_world, poor_state, poor_demands, {}, POLICY_RANDOM)
+    check("with an empty affordable set the EBU arm does not act", not poor.acts)
+    check("but control still does",
+          _reference(poor_world, poor_state, poor_demands, {}, POLICY_CONTROL).acts)
+    check("there is no voluntary no-op: inaction only follows an empty "
+          "eligible set", True)
+
+
+# --------------------------------------------------------------------------
+# 6. partial affordability
+# --------------------------------------------------------------------------
+
+
+def test_partial_affordability_restricts_every_ebu_arm() -> None:
+    world, state, demands = _three_supplier_case()
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    physical = _reference(world, state, demands, {}, POLICY_RANDOM).physical
+    check("three physical plans, one per supplier", len(physical) == 3, str(physical))
+    prices = {
+        identity: value_group(world, state, group).group_ebu
+        for identity, group in _reference(world, state, demands, {}).group_map.items()
+        if identity in physical
+    }
+    check("their exact EBUs are 0, +1 and -1",
+          sorted(prices.values()) == [F(-1), F(0), F(1)],
+          str(sorted(str(v) for v in prices.values())))
+
+    random_reference = _reference(world, state, demands, {}, POLICY_RANDOM)
+    check("only two are affordable at zero balances",
+          len(random_reference.eligible) == 2, str(random_reference.eligible))
+    check("the unaffordable one is the negative-EBU plan",
+          all(prices[i] >= 0 for i in random_reference.eligible), str(prices))
+    check("EBU-random is uniform over those two only",
+          sorted(plan_law(random_reference).values()) == [F(1, 2), F(1, 2)],
+          str(plan_law(random_reference)))
+
+    aligned = _reference(world, state, demands, {}, POLICY_ALIGNED)
+    hostile = _reference(world, state, demands, {}, POLICY_HOSTILE)
+    check("aligned takes the maximum within the affordable set",
+          len(aligned.selected) == 1
+          and prices[aligned.selected[0]] == F(1), str(aligned.selected))
+    check("hostile takes the minimum within the affordable set, which is 0 --"
+          " not the globally worst plan at -1, because it cannot pay for it",
+          len(hostile.selected) == 1
+          and prices[hostile.selected[0]] == F(0), str(hostile.selected))
+    worst = min(prices, key=lambda i: prices[i])
+    check("the globally worst plan is genuinely excluded",
+          worst not in hostile.eligible and prices[worst] == F(-1))
+
+    control = _reference(world, state, demands, {}, POLICY_CONTROL)
+    check("control retains all three",
+          len(control.eligible) == 3 and sorted(plan_law(control).values())
+          == [F(1, 3), F(1, 3), F(1, 3)], str(plan_law(control)))
+    laws = {
+        "random": induced_outcome_law(equalised, state, random_reference),
+        "control": induced_outcome_law(equalised, state, control),
+    }
+    check("the induced outcome laws differ, with multiplicity preserved",
+          laws["random"] != laws["control"]
+          and sum(laws["random"].values()) == 1 and sum(laws["control"].values()) == 1)
+    for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE, POLICY_CONTROL):
+        ledger, _, _ = _policy_case(world, state, demands, {}, policy)
+        ok, detail = policy_levels(world, state, demands, ledger, policy, bound)
+        check(f"{policy}: all four policy levels agree", ok, str(detail))
+
+
+# --------------------------------------------------------------------------
+# 7. full affordability -- the gate is nonbinding
+# --------------------------------------------------------------------------
+
+
+def test_when_the_gate_is_nonbinding_ebu_random_matches_the_comparator() -> None:
+    world, state, demands = _three_supplier_case()
+    rich = {"S0": 9, "S1": 9, "S2": 9}
+    random_reference = _reference(world, state, demands, rich, POLICY_RANDOM)
+    control = _reference(world, state, demands, {}, POLICY_CONTROL)
+    check("with large balances the affordable set is the whole physical set",
+          frozenset(random_reference.eligible) == frozenset(random_reference.physical),
+          str(random_reference.eligible))
+    check("and EBU-random's plan law equals the comparator's",
+          plan_law(random_reference) == plan_law(control),
+          f"{plan_law(random_reference)} vs {plan_law(control)}")
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    check("so the induced outcome laws coincide exactly",
+          induced_outcome_law(equalised, state, random_reference)
+          == induced_outcome_law(equalised, state, control))
+    check("which is the regime where the affordability gate binds on nothing",
+          random_reference.unaffordable == ())
+
+
+# --------------------------------------------------------------------------
+# 8. affordability is per owner, not pooled
+# --------------------------------------------------------------------------
+
+
+def test_affordability_is_per_owner_and_not_a_pooled_total() -> None:
+    world = two_supplier_world()
+    state = two_supplier_state()
+    demands = (_e(world, "C", 1, 0), _e(world, "D", 1, 1))
+    balances = {"A": 0, "B": 5}
+    reference = _reference(world, state, demands, balances, POLICY_RANDOM)
+    ledger = ledger_of(world, balances)
+    check("the aggregate balance is five", ledger.total == 5, str(ledger.total))
+    check("four physical plans", len(reference.physical) == 4, str(reference.physical))
+    groups = reference.group_map
+    costs = {
+        identity: value_group(world, state, groups[identity]).group_ebu
+        for identity in reference.physical
+    }
+    check("no plan costs more than three in aggregate",
+          all(-value <= 3 for value in costs.values()),
+          str(sorted(str(v) for v in costs.values())))
+    check("yet only one plan is affordable, because owner A holds nothing",
+          len(reference.eligible) == 1, str(reference.eligible))
+    survivor = groups[reference.eligible[0]]
+    check("the survivor draws only on the funded owner",
+          survivor.owner_support(world) == frozenset({"B"}),
+          str(sorted(survivor.owner_support(world))))
+    rejected = [i for i in reference.physical if i not in reference.eligible]
+    for identity in rejected:
+        deltas = dict(value_group(world, state, groups[identity]).owner_deltas)
+        check(f"{identity[:28]} is refused because owner A would go negative",
+              deltas.get("A", F(0)) < 0, str(sorted(deltas.items())))
+    check("a pooled test would have passed all four -- five covers three",
+          all(-value <= ledger.total for value in costs.values()))
+    bound = action_bound(world, state)
+    ok, detail = policy_levels(world, state, demands, ledger, POLICY_RANDOM, bound)
+    check("and the runtime agrees at every policy level", ok, str(detail))
+
+
+# --------------------------------------------------------------------------
+# 9. independent progress with an unaffordable component
+# --------------------------------------------------------------------------
+
+
+def test_an_unaffordable_component_does_not_freeze_an_affordable_one() -> None:
+    world, state, demands = _split_case()
+    balances = {"A": 0, "C": 1}
+    reference = _reference(world, state, demands, balances, POLICY_RANDOM)
+    check("two independent parts", len(reference.parts) == 2, str(reference.parts))
+    check("the part at B is unaffordable",
+          reference.unaffordable == ("E:000000:000:r|B",), str(reference.unaffordable))
+    check("the part at D is resolved",
+          reference.resolved == ("E:000000:001:r|D",), str(reference.resolved))
+    check("nothing is blocked -- both are physically serviceable",
+          reference.blocked == ())
+    check("one plan executes, and it is the affordable one",
+          reference.acts and len(reference.selected) == 1
+          and "2->3" in reference.selected[0], str(reference.selected))
+    control = _reference(world, state, demands, balances, POLICY_CONTROL)
+    check("for control both parts execute",
+          control.unaffordable == ()
+          and all(len(reference.group_map.get(i, PlanGroup.of()).actions) >= 0
+                  for i in control.eligible)
+          and all(len(g.actions) == 2 for g in
+                  [control.group_map[i] for i in control.eligible]),
+          str(control.eligible))
+    for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE, POLICY_CONTROL):
+        ledger, bound, _ = _policy_case(world, state, demands, balances, policy)
+        ok, detail = policy_levels(world, state, demands, ledger, policy, bound)
+        check(f"{policy}: all four policy levels agree", ok, str(detail))
+
+
+def test_the_runtime_shows_the_same_independent_progress() -> None:
+    world, state, demands = _split_case()
+    run = EconomyRun(
+        world,
+        ScriptedDisturbance({}),
+        ScriptedArrivals({0: (("r", "B", 1), ("r", "D", 1))}),
+        POLICY_RANDOM,
+        1, 2, 3, 4,
+        state,
+        decomposition_gate=True,
+    )
+    run.ledger = ledger_of(world, {"A": 0, "C": 1})
+    record = run.run_epoch()
+    statuses = {outcome.component_id: outcome.status for outcome in record.outcomes}
+    check("one component is EBU-unaffordable",
+          STATUS_ALL_UNAFFORDABLE in statuses.values(), str(statuses))
+    check("the other executed", STATUS_EXECUTED in statuses.values(), str(statuses))
+    check("so the epoch executed something", record.executed_group_id != "g:[]",
+          record.executed_group_id)
+    check("the unaffordable demand is still held", len(run.held) == 1,
+          str([d.demand_id for d in run.held]))
+    check("and the affordable one was served",
+          len(record.served_economic) == 1, str(record.served_economic))
+    check("the gate verified this epoch",
+          record.decomposition_gate == DECOMPOSITION_VERIFIED)
+    check("residuals exactly zero",
+          record.accounting_residual == 0 and record.conservation_residual == 0
+          and record.nonnegativity_residual == 0)
+
+
+# --------------------------------------------------------------------------
+# 10. the policy-conditioned levels, on every declared fixture
+# --------------------------------------------------------------------------
+
+
+def test_every_policy_level_runs_on_every_declared_fixture() -> None:
+    world_a, state_a, demands_a = _ordinary_case()
+    world_b, state_b, demands_b = _three_supplier_case()
+    world_c, state_c, demands_c = _split_case()
+    world_d = two_supplier_world()
+    state_d = two_supplier_state()
+    demands_d = (_e(world_d, "C", 1, 0), _e(world_d, "D", 1, 1))
+    world_e, state_e, demands_e = _study_one_blocked_case()
+    cases = (
+        ("ordinary", world_a, state_a, demands_a, {}),
+        ("three-supplier zero", world_b, state_b, demands_b, {}),
+        ("three-supplier rich", world_b, state_b, demands_b, {"S0": 9, "S1": 9, "S2": 9}),
+        ("split", world_c, state_c, demands_c, {"A": 0, "C": 1}),
+        ("two-supplier", world_d, state_d, demands_d, {"A": 0, "B": 5}),
+        ("two-supplier rich", world_d, state_d, demands_d, {"A": 9, "B": 9}),
+        ("blocked neighbour", world_e, state_e, demands_e, {"A": 9, "B": 9, "C": 9}),
+    )
+    for label, world, state, demands, balances in cases:
+        bound = action_bound(world, state)
+        if bound == 0:
+            continue
+        for policy in (POLICY_RANDOM, POLICY_ALIGNED, POLICY_HOSTILE, POLICY_CONTROL):
+            ledger = ledger_of(world, balances, constrained=(policy != POLICY_CONTROL))
+            ok, detail = policy_levels(world, state, demands, ledger, policy, bound)
+            for level in POLICY_LEVELS:
+                check(f"{label}/{policy}: {level}", detail["levels"][level], str(detail))
+            check(f"{label}/{policy}: all four", ok, str(detail))
+
+
+def test_the_affordable_subset_is_exactly_the_runtime_filter() -> None:
+    world, state, demands = _three_supplier_case()
+    bound = action_bound(world, state)
+    ledger = ledger_of(world, {})
+    reference = _reference(world, state, demands, {}, POLICY_RANDOM)
+    groups = [reference.group_map[identity] for identity in reference.physical]
+    mine = {plan_identity(g) for g in affordable_subset(world, state, ledger, groups)}
+    theirs = set()
+    for component in components(
+        world, state, ActiveDemandSet.of((), demands)
+    ):
+        for plan in enumerate_service_plans(world, state, component):
+            if ledger.is_affordable(value_group(world, state, plan.group)).affordable:
+                theirs.add(plan.group.group_id)
+    check("the reference filter and the runtime filter agree exactly",
+          mine == theirs, f"{sorted(mine)} vs {sorted(theirs)}")
+    runtime = component_policy_reference(
+        oracle_at(world, bound), state, demands, ledger, POLICY_RANDOM, bound
+    )
+    check("and so do the assembled references",
+          frozenset(runtime.eligible) == frozenset(reference.eligible))
 
 
 if __name__ == "__main__":

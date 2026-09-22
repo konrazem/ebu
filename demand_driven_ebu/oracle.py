@@ -73,18 +73,48 @@ For `ALIGNED` and `HOSTILE`: restrict to the plans attaining the extremal
 group EBU, apply the frozen uniform tie-break over those *plan identities*,
 and derive outcome probabilities from that plan distribution.
 
+## 4. Physical eligibility is not execution
+
+Everything above is **pre-affordability**. `G_physical` reads no balance and
+no policy, and it is **not the runtime action distribution** for an EBU arm:
+an EBU arm samples from the affordable subset, so comparing only `G_physical`
+checks a law the model does not have. That was a verification defect, and the
+policy-conditioned layer at the bottom of this module is what closes it.
+
+    G_affordable = { G in G_physical :
+                     projected balance of every required owner stays >= 0 }
+
+Affordability is per account, never a pooled total. `ebu_random` is uniform
+over `G_affordable`; `ebu_aligned` and `ebu_hostile` take their extremum
+**within** it and then tie-break uniformly over the tied plan identities;
+`control_random_no_ebu` intentionally bypasses it and samples over
+`G_physical`.
+
+Restricting before taking the extremum is the substantive part: a hostile
+actor's globally worst plan is frequently the one it cannot pay for.
+
+A part with physical plans but no affordable one is `UNAFFORDABLE`. No action
+occurs for it and its demand stays pending -- an intended EBU outcome, kept
+distinct from `BLOCKED`, from admission scarcity and from search failure.
+
 ## Verification levels
 
 Kept separate because none of them implies the next.
 
     A  plan-set equivalence      same distinct plan identities
     B  outcome support           same Phi images
-    C  induced random law        same outcome probabilities, multiplicity included
-    D  aligned/hostile           same tie sets and same induced outcomes
+    C  pre-affordability random  same outcome probabilities over G_physical
+    D  pre-affordability extrema same extremal sets over G_physical
 
 **B alone does not prove C or D.** Two plan sets can have identical outcome
 supports and different multiplicities, which is exactly what the
 `two_supplier_world` fixture exhibits.
+
+**And none of these four is a runtime verification.** All of them read
+`G_physical`, which is computed before any balance is consulted. An EBU arm
+never samples from `G_physical`; it samples from the affordable subset. The
+policy-conditioned levels at the bottom of this module are what close that
+gap, and `policy_levels` is what the harness gate runs.
 
 Exponential in the number of live routes. A conformance instrument, used by
 `EconomyRun(decomposition_gate=True)` and by the suite, never by the
@@ -114,8 +144,8 @@ BLOCKED = "BLOCKED"
 
 LEVEL_A = "A_PLAN_SET_EQUIVALENCE"
 LEVEL_B = "B_OUTCOME_SUPPORT"
-LEVEL_C = "C_INDUCED_RANDOM_LAW"
-LEVEL_D = "D_ALIGNED_HOSTILE"
+LEVEL_C = "C_PREAFFORDABILITY_RANDOM_LAW"
+LEVEL_D = "D_PREAFFORDABILITY_EXTREMAL_SETS"
 LEVELS = (LEVEL_A, LEVEL_B, LEVEL_C, LEVEL_D)
 
 
@@ -569,5 +599,249 @@ def progress_levels(world: DemandWorld, state: Vector, demands, bound: int):
         "only_reference": sorted(reference.identities - runtime.identities)[:3],
         "only_runtime": sorted(runtime.identities - reference.identities)[:3],
         "levels": {level: verdicts[level] for level in LEVELS},
+    }
+    return all(verdicts.values()), detail
+
+
+# ==========================================================================
+# POLICY-CONDITIONED EXECUTION REFERENCE
+# ==========================================================================
+#
+# Everything above is **pre-affordability**. `global_progress` answers only
+# "which complete demand-serving plans can physically execute now?", and it is
+# blind to capacity balances, to actor policy and to aligned/random/hostile
+# preference by construction. It is **not** the runtime action distribution
+# for an EBU arm, and describing it as one was a verification defect: the
+# comparison then checked a distribution the model never samples from.
+#
+# The layer below takes the physical state, the active demands, the node
+# balances and the policy identity, and reproduces what the runtime actually
+# does.
+#
+#     G_physical    every complete executable plan, no capacity read
+#     G_affordable  those whose projected owner balances all stay >= 0
+#     selected      G_affordable restricted by the policy's EBU rule
+#
+# A part with physical plans but no affordable one is `UNAFFORDABLE`: no
+# physical action occurs for it and its demand stays pending. That is an
+# intended EBU outcome -- not voluntary no-action, not physical impossibility,
+# not scarcity, and not computational failure. It is kept distinct from
+# `BLOCKED` throughout.
+#
+# The comparator `control_random_no_ebu` intentionally bypasses affordability
+# and samples over `G_physical`. That is the point of the arm, not an
+# oversight.
+
+from .policies import POLICY_ALIGNED, specification  # noqa: E402
+
+PART_UNAFFORDABLE = "UNAFFORDABLE"
+
+POLICY_LEVEL_A = "A_PHYSICAL_ELIGIBILITY"
+POLICY_LEVEL_B = "B_AFFORDABLE_PLAN_SET"
+POLICY_LEVEL_C = "C_POLICY_PLAN_DISTRIBUTION"
+POLICY_LEVEL_D = "D_MODELED_OUTCOME_DISTRIBUTION"
+POLICY_LEVELS = (POLICY_LEVEL_A, POLICY_LEVEL_B, POLICY_LEVEL_C, POLICY_LEVEL_D)
+
+
+@dataclass(frozen=True)
+class PolicyReference:
+    """What one epoch actually does, given balances and a policy."""
+
+    policy: str
+    parts: tuple[tuple[str, ...], ...]
+    part_plans: tuple[tuple[str, ...], ...]
+    blocked: tuple[str, ...]
+    unaffordable: tuple[str, ...]
+    resolved: tuple[str, ...]
+    physical: tuple[str, ...]
+    eligible: tuple[str, ...]
+    selected: tuple[str, ...]
+    groups: tuple[tuple[str, PlanGroup], ...]
+
+    @property
+    def group_map(self) -> dict[str, PlanGroup]:
+        return dict(self.groups)
+
+    @property
+    def acts(self) -> bool:
+        """Whether any physical action occurs at all this epoch."""
+        return any(self.group_map[identity].actions for identity in self.selected)
+
+
+def affordable_subset(world, state, ledger, groups) -> tuple[PlanGroup, ...]:
+    """Those plans whose projected balance stays non-negative for every owner.
+
+    Per account, never a pooled total: a plan whose aggregate receipt is
+    comfortable but which drives one owner negative is refused. That is
+    Capacity V1 as carried over, and `capacity.CapacityLedger.project` is what
+    decides it.
+    """
+    return tuple(
+        group
+        for group in groups
+        if ledger.is_affordable(value_group(world, state, group)).affordable
+    )
+
+
+def _bounded(groups, bound: int) -> tuple[PlanGroup, ...]:
+    return tuple(group for group in groups if len(group.actions) <= bound)
+
+
+def _restrict(world, state, eligible, policy: str) -> tuple[PlanGroup, ...]:
+    """Apply the policy's EBU rule to the affordable set, over plan identities.
+
+    Aligned and hostile take the extremum **within the affordable set**, never
+    over the physical set. That distinction is the whole point of this layer:
+    a hostile actor's globally worst plan is frequently the one it cannot
+    afford, so restricting first genuinely changes which plan it takes.
+    """
+    entry = specification(policy)
+    if not entry.reads_ebu_to_choose or not eligible:
+        return tuple(eligible)
+    values = {plan_identity(group): group_ebu(world, state, group) for group in eligible}
+    best = (
+        max(values.values()) if policy == POLICY_ALIGNED else min(values.values())
+    )
+    return tuple(group for group in eligible if values[plan_identity(group)] == best)
+
+
+def _assemble(world, state, ledger, policy, parts, bound) -> PolicyReference:
+    entry = specification(policy)
+    part_plans: list[tuple[str, ...]] = []
+    blocked: list[str] = []
+    unaffordable: list[str] = []
+    resolved: list[str] = []
+    physical_menus: list[list[PlanGroup]] = []
+    eligible_menus: list[list[PlanGroup]] = []
+    for members, groups in parts:
+        identifiers = [demand.demand_id for demand in members]
+        if not groups:
+            part_plans.append((BLOCKED,))
+            blocked.extend(identifiers)
+            continue
+        physical_menus.append(list(groups))
+        keep = (
+            affordable_subset(world, state, ledger, groups)
+            if entry.applies_affordability
+            else tuple(groups)
+        )
+        if not keep:
+            part_plans.append((PART_UNAFFORDABLE,))
+            unaffordable.extend(identifiers)
+            continue
+        part_plans.append(tuple(plan_identity(group) for group in keep))
+        eligible_menus.append(list(keep))
+        resolved.extend(identifiers)
+
+    physical = _bounded(_combine(physical_menus) if physical_menus else (PlanGroup.of(),), bound)
+    eligible = _bounded(_combine(eligible_menus) if eligible_menus else (PlanGroup.of(),), bound)
+    selected = _restrict(world, state, eligible, policy)
+    catalogue: dict[str, PlanGroup] = {}
+    for group in tuple(physical) + tuple(eligible) + tuple(selected):
+        catalogue.setdefault(plan_identity(group), group)
+    return PolicyReference(
+        policy,
+        tuple(tuple(d.demand_id for d in members) for members, _ in parts),
+        tuple(part_plans),
+        tuple(sorted(blocked)),
+        tuple(sorted(unaffordable)),
+        tuple(sorted(resolved)),
+        tuple(plan_identity(group) for group in physical),
+        tuple(plan_identity(group) for group in eligible),
+        tuple(plan_identity(group) for group in selected),
+        tuple(sorted(catalogue.items())),
+    )
+
+
+def global_policy_reference(
+    world: DemandWorld, state: Vector, demands, ledger, policy: str, bound: int
+) -> PolicyReference:
+    """The policy-conditioned reference, built without decomposition."""
+    parts = [
+        (part, plans_serving(world, state, requirements(part), bound))
+        for part in reference_partition(world, state, demands, bound)
+    ]
+    return _assemble(world, state, ledger, policy, parts, bound)
+
+
+def component_policy_reference(
+    world: DemandWorld, state: Vector, demands, ledger, policy: str, bound: int
+) -> PolicyReference:
+    """The same, built the way the runtime builds it."""
+    active = ActiveDemandSet.of(
+        tuple(d for d in demands if d.demand_class == "P"),
+        tuple(d for d in demands if d.demand_class == "E"),
+    )
+    parts = [
+        (
+            component.demands,
+            canonical(plan.group for plan in enumerate_service_plans(world, state, component)),
+        )
+        for component in components(world, state, active)
+    ]
+    return _assemble(world, state, ledger, policy, parts, bound)
+
+
+def plan_law(reference: PolicyReference) -> dict[str, Fraction]:
+    """Uniform over the selected canonical plan identities."""
+    if not reference.selected:
+        return {}
+    weight = Fraction(1, len(reference.selected))
+    return {identity: weight for identity in reference.selected}
+
+
+def induced_outcome_law(world, state, reference: PolicyReference):
+    """`Phi` applied to the selected-plan law. Multiplicity is preserved."""
+    groups = reference.group_map
+    law: dict = {}
+    for identity, mass in plan_law(reference).items():
+        key = outcome(world, state, groups[identity])
+        law[key] = law.get(key, Fraction(0)) + mass
+    return law
+
+
+def policy_levels(
+    world: DemandWorld, state: Vector, demands, ledger, policy: str, bound: int
+):
+    """The four policy-conditioned levels. Level A alone is not verification.
+
+    Level A compares the **pre-affordability** physical plan sets. It says
+    nothing about what an EBU arm executes, because the arm never samples from
+    that set. B, C and D are what close that gap.
+    """
+    equalised = at_bound(world, bound)
+    reference = global_policy_reference(equalised, state, demands, ledger, policy, bound)
+    runtime = component_policy_reference(equalised, state, demands, ledger, policy, bound)
+
+    verdicts = {
+        POLICY_LEVEL_A: (
+            frozenset(reference.physical) == frozenset(runtime.physical)
+            and reference.blocked == runtime.blocked
+        ),
+        POLICY_LEVEL_B: (
+            frozenset(reference.eligible) == frozenset(runtime.eligible)
+            and reference.unaffordable == runtime.unaffordable
+            and reference.resolved == runtime.resolved
+        ),
+        POLICY_LEVEL_C: plan_law(reference) == plan_law(runtime),
+        POLICY_LEVEL_D: induced_outcome_law(equalised, state, reference)
+        == induced_outcome_law(equalised, state, runtime),
+    }
+    detail = {
+        "policy": policy,
+        "blocked": reference.blocked,
+        "unaffordable": reference.unaffordable,
+        "resolved": reference.resolved,
+        "physical": len(reference.physical),
+        "eligible": len(reference.eligible),
+        "selected": len(reference.selected),
+        "acts": reference.acts,
+        "only_reference": sorted(
+            frozenset(reference.eligible) - frozenset(runtime.eligible)
+        )[:3],
+        "only_runtime": sorted(
+            frozenset(runtime.eligible) - frozenset(reference.eligible)
+        )[:3],
+        "levels": {level: verdicts[level] for level in POLICY_LEVELS},
     }
     return all(verdicts.values()), detail

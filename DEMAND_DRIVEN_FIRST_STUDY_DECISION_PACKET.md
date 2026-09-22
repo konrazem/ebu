@@ -192,7 +192,7 @@ packet.
 |---|---|
 | corrected model implemented | **yes** — `demand_driven_ebu/`, identity recorded in the final report |
 | independent audit defects corrected | **yes** — all five, see `DEMAND_DRIVEN_AUDIT_CORRECTION_HANDOFF.md` |
-| exact conformance passing | **yes** — 692 assertions, 0 failures, tolerance 0 |
+| exact conformance passing | **yes** — 935 assertions, 0 failures, tolerance 0 |
 | closed-cycle theorem proved and verified | **yes** |
 | small local rehearsal run | **yes** — deterministic replay, all residuals 0 |
 | Study-1 physical domain frozen and machine-checked | **yes** — `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` |
@@ -220,9 +220,9 @@ packet.
 - No selection of the arrival law from rehearsal trajectories.
 - No reuse of the stress model's horizon, replicate count or endpoint by
   default merely because they exist.
-- No AWS. Measured locally: the Study-1 world runs 3,200 epochs in 25.4 s
-  *including* an independent brute-force progress-reference enumeration and
-  all four verification levels every epoch,
+- No AWS. Measured locally: the Study-1 world runs 3,200 epochs in 22.5 s
+  *including* an independent brute-force reference enumeration, the
+  affordability filter and all four verification levels every epoch,
   and the larger `sandwater-v1` rehearsal world runs 3,200 epochs in 180 s.
   A first study of this shape has no infrastructure argument for the cloud.
   (An earlier draft of this packet said "ten seconds"; that figure was wrong

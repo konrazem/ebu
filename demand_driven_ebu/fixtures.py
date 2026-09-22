@@ -522,3 +522,65 @@ def blocked_neighbour_state():
     empty -- which is why that oracle could not see this.
     """
     return study_one_state(0, 6, 6)
+
+
+def three_supplier_world() -> DemandWorld:
+    """Three suppliers of one unit each, with three different EBU prices.
+
+    The partial-affordability fixture. Each supplier starts at a different
+    distance from its own reference, so the three single-action plans that
+    serve one unit at `T` have three distinct exact EBUs, and therefore three
+    distinct owner receipts.
+
+    Indices: r|S0 0, r|S1 1, r|S2 2, r|T 3.
+    """
+    coordinates = [
+        Coordinate.stock("r", node, reference, 1)
+        for node, reference in (("S0", 1), ("S1", 0), ("S2", 2), ("T", 0))
+    ]
+    routes = [
+        Route.declare("r", 0, 3, 1),
+        Route.declare("r", 1, 3, 1),
+        Route.declare("r", 2, 3, 1),
+    ]
+    return DemandWorld.declare("three-supplier-v1", coordinates, routes, (1,), 3)
+
+
+def three_supplier_state():
+    """Two units at every supplier, nothing at the destination."""
+    return (F(2), F(2), F(2), F(0))
+
+
+def split_world() -> DemandWorld:
+    """Two disconnected one-route deliveries of the same resource.
+
+    Nothing couples them: different coordinates, different routes, different
+    owner accounts. Used to show that a component whose every plan is
+    EBU-unaffordable does not freeze an independent component that can pay.
+
+    Indices: r|A 0, r|B 1, r|C 2, r|D 3.
+    """
+    coordinates = [
+        Coordinate.stock("r", node, reference, 1)
+        for node, reference in (("A", 2), ("B", 0), ("C", 2), ("D", 0))
+    ]
+    routes = [Route.declare("r", 0, 1, 1), Route.declare("r", 2, 3, 1)]
+    return DemandWorld.declare("split-v1", coordinates, routes, (1,), 2)
+
+
+def split_state():
+    """Two units at each supplier, nothing at either destination."""
+    return (F(2), F(0), F(2), F(0))
+
+
+def ledger_of(world: DemandWorld, balances: dict, constrained: bool = True) -> CapacityLedger:
+    """A declared opening balance vector, for affordability fixtures only.
+
+    Not the model's bootstrap: contract section 29 starts every run at
+    `B_i = 0` and the harness enforces that. Affordability fixtures need to
+    place the gate at a chosen point, which is what this is for.
+    """
+    return CapacityLedger(
+        tuple(sorted((node, F(balances.get(node, 0))) for node in world.nodes)),
+        constrained,
+    )

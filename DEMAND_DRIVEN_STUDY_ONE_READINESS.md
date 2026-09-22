@@ -26,9 +26,11 @@ still required), `DEMAND_DRIVEN_MODEL_FINDINGS.md` (F-1 to F-6).
 | the decomposition-free **progress** reference is the authority; decomposition proved equal and gated at four levels | **yes** — Theorem D, `decomposition_gate=True` |
 | independent progress: a blocked part contributes nothing, every serviceable part acts | **yes** — `oracle.global_progress`, mandatory-action regressions |
 | sampling unit frozen as the canonical plan identity, with the induced outcome law carrying multiplicity | **yes** — `two_supplier_world`, `1/4, 1/2, 1/4` |
+| the oracle is policy-conditioned: physical eligibility, affordability, mandatory inaction, and each arm's execution law | **yes** — `oracle.policy_levels`, run by the gate every epoch |
+| `ALL_PLANS_EBU_UNAFFORDABLE` kept distinct from impossibility, scarcity and computational failure | **yes** — four separate declared statuses |
 | unusable-infrastructure invariance across all five outputs | **yes** |
 | additive service, provenance, sinks, closed cycle, actor-only | **yes** — carried forward unchanged |
-| exact conformance passing | **yes** — 692 assertions, 0 failures, tolerance 0 |
+| exact conformance passing | **yes** — 935 assertions, 0 failures, tolerance 0 |
 | Study-1 rehearsal clean | **yes** — 3,200 epochs, 0 unresolved, 0 incomplete, residuals exactly 0 |
 | arrival law declared | **no** — §4 |
 | primary endpoint chosen | **no** — §4 |
@@ -99,14 +101,14 @@ state.
 
 **Expected worst-case runtime, locally.** Measured, not estimated:
 `demand_driven_rehearsal.py`, 4 policies × 4 replicates × 200 epochs = 3,200
-epochs, **25.4 s per pass with the four-level decomposition gate on**, run
-twice for the replay check. Roughly 8 ms per epoch *including* an independent
-brute-force progress-reference enumeration and all four verification levels
-every epoch; without the gate the same run is several times faster. A
-registered study of 64 replicates × 4 arms × 8,192 epochs would be about 2.1
-million epochs, or roughly 4.6 CPU-hours at this rate with the gate on —
-comfortably local, and the gate is a conformance instrument that a
-confirmatory run need not carry every epoch. **No AWS.**
+epochs, **22.5 s per pass with the four-level policy-conditioned gate on**,
+run twice for the replay check. Roughly 7 ms per epoch *including* an
+independent brute-force reference enumeration, the affordability filter and
+all four verification levels every epoch; without the gate the same run is
+several times faster. A registered study of 64 replicates × 4 arms × 8,192
+epochs would be about 2.1 million epochs, or roughly 4 CPU-hours at this rate
+with the gate on — comfortably local, and the gate is a conformance
+instrument that a confirmatory run need not carry every epoch. **No AWS.**
 
 ## 3. Study-1 rehearsal, executed
 
@@ -119,12 +121,12 @@ about the mechanism.
 | registered failure semantics | ON |
 | decomposition gate | ON |
 | epochs | 3,200 (4 policies × 4 replicates × 200) |
-| wall time | 25.4 s per pass, run twice (four-level gate) |
+| wall time | 22.5 s per pass, run twice (four-level policy-conditioned gate) |
 | replay deterministic | **yes** |
 | worst residual anywhere (accounting, conservation, nonnegativity, separability, capacity-source) | **exactly 0** |
 | `SEARCH_UNRESOLVED` epochs | **0** |
 | `SEARCH_INCOMPLETE_AT_PLAN_CAP` epochs | **0** |
-| epochs where the component path matched the progress reference at all four levels | 3,020 |
+| epochs where the component path matched the policy-conditioned reference at all four levels | 3,020 |
 | epochs with nothing to decompose | 180 |
 | raw arrivals per arm | 517, identical across arms |
 

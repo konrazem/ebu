@@ -29,6 +29,7 @@ describes. Corrections are recorded in place, not erased.
 | 8 | Feasibility was defined by whatever the component decomposition produced | The decomposition-free **progress reference** is the authority; decomposition is an optimization, proved equal inside the frozen domain and gated epoch by epoch. §6, §16 |
 | 9 | The global oracle asked "can every demand be served at once?", so when one component was blocked it compared empty against empty and passed vacuously | The authority is now the **progress** reference, which lets an independent part act while another is blocked. The narrow query survives as `F_all_complete` and is explicitly not runtime semantics. §6, §16 |
 | 10 | Sampling was claimed to follow from a bijection onto outcomes | **Withdrawn.** The bijection is onto **plan identities**; `Phi: plan -> outcome` is many-to-one. The random actor is uniform over canonical plan identities and outcome probability carries plan multiplicity. §16 |
+| 11 | The oracle compared pre-affordability physical plan sets as though they were runtime execution menus, so it checked a law no EBU arm samples from | The physical reference is kept and is explicitly pre-affordability. A **policy-conditioned** layer conditions on balances and policy: EBU arms select within `G_affordable`, the comparator bypasses it. Level A alone is declared not to be a runtime verification. §6, §16 |
 
 ## 0. The correction this model makes
 
@@ -381,12 +382,21 @@ useful and is **not** runtime semantics. Conflating the two hid a defect: when
 one component is blocked, `F_all_complete` is empty, the component path was
 also empty, and the comparison passed on `0 == 0` having seen nothing.
 
+That reference is **pre-affordability**: it reads no balance and no policy,
+and it is deliberately not the runtime action distribution for an EBU arm. A
+second layer conditions on the node balances and the policy identity —
+`G_affordable` is the subset whose projected owner balances all stay
+non-negative, the three EBU arms select within it, and the comparator
+intentionally bypasses it and samples over `G_physical`.
+
 Demand-component decomposition is a computational optimization, proved equal
 to the progress reference inside the frozen Study-1 domain (Theorem D) and
 checked epoch by epoch by `EconomyRun(decomposition_gate=True)` at four
-separate levels — plan identities, outcome support, the induced random law
-with plan multiplicity, and the aligned/hostile tie sets. A disagreement
-refuses the run. Outside the frozen domain the equality is unproved.
+**policy-conditioned** levels — physical eligibility, the affordable set under
+this run's balances, the selection law this policy induces over canonical plan
+identities, and the modeled-outcome law it pushes forward. Level A alone is
+not a runtime verification. A disagreement refuses the run. Outside the frozen
+domain the equality is unproved.
 
 ## 7. Service plans, and demand provenance
 
@@ -595,6 +605,20 @@ unresolved and contributes no action; every serviceable part executes one
 complete plan. The scientific reference is `G_progress`, not "one plan serving
 every active demand" — that narrower query lives on as `F_all_complete` and is
 explicitly not runtime semantics.
+
+**Physical eligibility and affordability are separate layers.** `G_physical`
+answers only *which complete demand-serving plans can physically execute now?*
+and never reads a balance or a policy. `G_affordable` is the subset whose
+projected owner balances all stay non-negative — per account, never a pooled
+total. EBU arms select **within** `G_affordable`; the comparator bypasses it
+by design. Restricting before taking the extremum matters: a hostile actor's
+globally worst plan is frequently the one it cannot pay for.
+
+A part with physical plans but no affordable one is
+`ALL_PLANS_EBU_UNAFFORDABLE` — no action, demand still pending. That is an
+intended EBU outcome, and it is kept distinct from physical impossibility,
+from admission scarcity and from computational failure. At the ordinary
+starting state `(4, 4, 4)` with zero balances it is what every EBU arm does.
 
 **Sampling is over plan identities.** The random actor draws uniformly over
 distinct canonical complete service plan identities, never over unique

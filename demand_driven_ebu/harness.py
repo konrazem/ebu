@@ -46,12 +46,15 @@ unreachable; it exists to make sure that if the construction is ever wrong,
 the run stops instead of quietly recording a computational limit as physics.
 
 `decomposition_gate=True` additionally verifies, every epoch, that the
-component decomposition reproduces the decomposition-free **progress**
-reference exactly -- plan identities, outcome support, the induced random law
-with plan multiplicity, and the aligned/hostile tie sets. That reference, not
-the decomposition, is the scientific authority, and it lets an independent
-part progress while another is proved blocked, which is what the runtime
-does.
+component decomposition reproduces the decomposition-free
+**policy-conditioned** reference exactly: the physical plan set, the
+affordable set under this run's balances, the selection law this policy
+induces over canonical plan identities, and the modeled-outcome law it pushes
+forward. That reference, not the decomposition, is the scientific authority.
+It lets an independent part progress while another is proved blocked or is
+EBU-unaffordable, which is what the runtime does, and it is conditioned on
+the arm's own balances, because an EBU arm never chooses from the
+pre-affordability set.
 
 This module advances model state. Running it is a transition, not a result.
 """
@@ -88,7 +91,7 @@ from .disturbance import DisturbanceProcess, apply_disturbance
 from .physical import PlanGroup, can_happen_now
 from .plans import ServicePlan, enumerate_service_plans, serviceability
 from .policies import POLICY_CONTROL, choose, specification
-from .oracle import progress_levels
+from .oracle import policy_levels
 from .rng import STREAM_ACTOR, Counter
 from .study_one import JobInvalid, action_bound, require_domain
 from .valuation import value_group
@@ -126,8 +129,8 @@ GATE_CLOSED = "JOINT_CLOSURE_VERIFIED"
 GATE_DEFECT = "DEPENDENCY_GRAPH_INCOMPLETE"
 
 DECOMPOSITION_NOT_CHECKED = "DECOMPOSITION_NOT_CHECKED"
-DECOMPOSITION_VERIFIED = "DECOMPOSITION_EQUALS_GLOBAL_PROGRESS"
-DECOMPOSITION_DEFECT = "DECOMPOSITION_DIFFERS_FROM_GLOBAL_PROGRESS"
+DECOMPOSITION_VERIFIED = "POLICY_EXECUTION_EQUALS_GLOBAL_REFERENCE"
+DECOMPOSITION_DEFECT = "POLICY_EXECUTION_DIFFERS_FROM_GLOBAL_REFERENCE"
 
 _REJECTION_LIFECYCLE = {
     "E_REJECTED_PHYSICAL_SCARCITY": LIFECYCLE_REJECTED_PHYSICAL_SCARCITY,
@@ -422,18 +425,23 @@ class EconomyRun:
             )
 
     def _check_decomposition(self, state, active, found) -> str:
-        """Verify the epoch against the global **progress** reference.
+        """Verify the epoch against the policy-conditioned global reference.
 
-        The authority is `oracle.global_progress`: the family of things this
-        epoch is allowed to do under independent-progress semantics, where a
-        proved-blocked part contributes no action and every other part
-        contributes exactly one complete plan. Decomposition into demand
-        components is a computational factorization and may not define it.
+        The authority is `oracle.global_policy_reference`, built from this
+        exact state, these active demands, **these balances and this policy**.
+        A proved-blocked part contributes no action; a part whose every plan
+        is EBU-unaffordable likewise contributes none and keeps its demand
+        pending; every remaining part contributes exactly one plan chosen by
+        the policy. Decomposition into demand components is a computational
+        factorization and may not define any of that.
 
-        All four levels run -- plan identities, outcome support, the induced
-        random law including plan multiplicity, and the aligned/hostile tie
-        sets with their induced outcomes. Outcome support alone would not
-        catch a multiplicity error, so it is never checked alone.
+        All four levels run, and they are **policy-conditioned**: the physical
+        plan set, then the affordable set under this run's balances, then the
+        selection law this policy induces over canonical plan identities, then
+        the modeled-outcome law that law pushes forward. Level A alone is not
+        a runtime verification -- an EBU arm never samples from the
+        pre-affordability set, so comparing only that would check a
+        distribution the model does not have.
 
         Off by default: exponential in the number of live routes, and a
         conformance instrument rather than part of the mechanism.
@@ -443,13 +451,15 @@ class EconomyRun:
         bound = action_bound(self.world, state)
         if bound == 0:
             return DECOMPOSITION_VERIFIED
-        ok, detail = progress_levels(self.world, state, active.all, bound)
+        ok, detail = policy_levels(
+            self.world, state, active.all, self.ledger, self.policy, bound
+        )
         if not ok:
             raise Refusal(
                 f"{DECOMPOSITION_DEFECT} at epoch {self.epoch}: the component "
-                f"path and the decomposition-free progress reference disagree "
-                f"({detail}). Decomposition is an optimization and may not "
-                "define what the epoch can do."
+                f"path and the decomposition-free policy-conditioned reference "
+                f"disagree ({detail}). Decomposition is an optimization and may "
+                "not define what the epoch can do."
             )
         return DECOMPOSITION_VERIFIED
 
