@@ -116,6 +116,7 @@ from demand_driven_ebu.harness import (
     STATUS_SEARCH_INCOMPLETE,
     STATUS_SEARCH_UNRESOLVED,
     EconomyRun,
+    EpochRecord,
     code_identity,
 )
 from demand_driven_ebu.enumeration import (
@@ -123,6 +124,7 @@ from demand_driven_ebu.enumeration import (
     SERVICEABLE,
     UNRESOLVED,
     live_routes,
+    physically_coexistent,
     physically_serviceable,
     usable_routes,
 )
@@ -181,6 +183,7 @@ from demand_driven_ebu.plans import (
     unrelated_transfers,
 )
 from demand_driven_ebu.policies import (
+    DECLARED_POLICIES,
     POLICY_ALIGNED,
     POLICY_CONTROL,
     POLICY_HOSTILE,
@@ -212,6 +215,9 @@ def check(label: str, condition: bool, detail: str = "") -> None:
         print(f"  FAIL  {label}{(' -- ' + detail) if detail else ''}")
 
 
+STAGE_A_ID = "EBU-DEMAND-DRIVEN-STAGE-A-v1"
+
+
 def _state(*values) -> tuple[F, ...]:
     return tuple(F(v) for v in values)
 
@@ -231,6 +237,29 @@ def _plan(world: DemandWorld, *moves) -> PlanGroup:
 
 def _economic(world, resource, quantity, node, epoch=0, index=0) -> EconomicDemand:
     return EconomicDemand.declare(world, resource, quantity, node, epoch, index)
+
+
+def _every_executable_plan(world, state):
+    """Every nonempty executable plan: one optional action per route."""
+    from itertools import product as _product
+
+    options = [
+        [None] + [
+            PhysicalAction(route, quantum)
+            for quantum in world.quanta
+            if quantum <= route.capacity
+        ]
+        for route in world.routes
+    ]
+    found = []
+    for combination in _product(*options):
+        chosen = tuple(action for action in combination if action is not None)
+        if not chosen:
+            continue
+        group = PlanGroup.of(*chosen)
+        if can_happen_now(world, state, group).executable:
+            found.append(group)
+    return tuple(found)
 
 
 # --------------------------------------------------------------------------
@@ -475,12 +504,22 @@ def test_admission_protects_an_existing_physical_demand() -> None:
 
 
 def test_already_stuck_demands_do_not_freeze_admission() -> None:
-    """A pre-existing unserviceable demand is excluded, not treated as a veto."""
+    """A pre-existing unserviceable demand is excluded, not treated as a veto.
+
+    The witness moved when P-demand became atomic. Under the withdrawn
+    complete-service rule a deep shortfall at `sand|A` was unserviceable
+    because no single plan could close all seven units; under atomic P-demand
+    any positive delivery is legitimate service, so that state is no longer a
+    blocked one and would not test anything. The state below blocks it for a
+    genuinely physical reason instead: **both** sources that can reach
+    `sand|A` are empty, so no route into it is live and no plan can deliver
+    anything at all.
+    """
     world = sandwater_world()
-    state = _state(3, 10, 10, 4, 8)
+    state = _state(3, 0, 0, 4, 8)
     physical = derive_physical_demands(world, state)
     blocked = unserviceable_ids(world, state, physical, ())
-    check("the deep sand shortfall is already unserviceable",
+    check("the sand shortfall at A is unserviceable: no live route reaches it",
           "P:sand|A" in blocked, str(sorted(blocked)))
     arrival = _economic(world, "water", 1, "D", 0, 0)
     admitted, _, _ = admit(world, state, physical, (), (arrival,), 2, 0)
@@ -553,8 +592,17 @@ def test_economic_and_physical_demands_coexist() -> None:
             check("every plan serves every demand in the component", False, plan.plan_id)
             return
     check("every plan serves every demand in the component", True)
-    check("neither class is made to wait for the other",
-          all(set(plan.served) == set(found[0].demand_ids) for plan in plans))
+    # Under strong atomic provenance a plan answers what it answers: some serve
+    # the order and one shortfall, some serve all three. What "neither class
+    # waits" requires is that a plan answering ALL of them exists and is
+    # offered -- not that every candidate must.
+    check("neither class is made to wait for the other: a plan answering the "
+          "order and both shortfalls at once is in the menu",
+          any(set(plan.served) == set(found[0].demand_ids) for plan in plans),
+          str([plan.served for plan in plans][:4]))
+    check("and every candidate completely serves the economic claim, which is "
+          "never partial",
+          all(entry.complete for plan in plans for entry in plan.allocation))
 
 
 # --------------------------------------------------------------------------
@@ -621,12 +669,16 @@ def test_shared_account_couples_two_resources() -> None:
 
 
 def test_an_impossible_component_does_not_block_an_independent_one() -> None:
+    """Same witness relocation as `test_already_stuck_demands...`: the sand
+    shortfall at `A` is blocked because both of its sources are empty, which is
+    physical, rather than because one plan could not close it in one step,
+    which was the withdrawn complete-service artifact."""
     world = sandwater_world()
-    state = _state(3, 10, 10, 4, 8)
+    state = _state(3, 0, 0, 4, 8)
     physical = derive_physical_demands(world, state)
     found = components(world, state, ActiveDemandSet.of(physical, ()))
     verdicts = {c.component_id: has_service_plan(world, state, c) for c in found}
-    check("the deep sand shortfall has no complete plan",
+    check("the sand shortfall at A has no plan at all",
           verdicts["c:[P:sand|A]"] is False, str(verdicts))
     check("the water shortfall still has one",
           verdicts["c:[P:water|D]"] is True, str(verdicts))
@@ -986,15 +1038,20 @@ def test_policies_choose_among_equally_complete_answers() -> None:
         if ledger.is_affordable(valuation).affordable
     ]
     ebu = [valuation.group_ebu for _, valuation in affordable]
-    check("the affordable menu holds four plans", len(affordable) == 4, str(len(affordable)))
-    check("their EBU values are 3, 4, 3 and 0", sorted(ebu) == [F(0), F(3), F(3), F(4)], str(ebu))
+    # Under atomic P-service the two-action plan {B->A@1, C->A@1} is redundant
+    # -- either action alone already restores -- and drops out, while the two
+    # single-unit plans it was built from enter. Six plans, five affordable.
+    check("the affordable menu holds five plans", len(affordable) == 5, str(len(affordable)))
+    check("their EBU values are 4, 3, 3, 1 and 0",
+          sorted(ebu) == [F(0), F(1), F(3), F(3), F(4)], str(ebu))
 
     counter = Counter(MODEL_ID, world.world_id, 5, "actor_choice", 0, 2, 0)
     aligned = choose(POLICY_ALIGNED, len(ebu), ebu, counter)
     hostile = choose(POLICY_HOSTILE, len(ebu), ebu, counter)
     check("aligned takes the maximum", ebu[aligned] == F(4))
     check("hostile takes the minimum", ebu[hostile] == F(0))
-    check("every candidate serves the whole component completely",
+    check("every candidate serves the whole component -- completely for every "
+          "economic claim, with real progress for every physical one",
           all(set(plan.served) == set(component.demand_ids) for plan, _ in affordable))
 
 
@@ -1074,9 +1131,13 @@ def test_the_three_legitimate_inactions_are_distinguished() -> None:
     check("no active demand is its own status",
           at_reference.run_epoch().epoch_status == STATUS_NO_ACTIVE_DEMAND)
 
+    # The witness moved with atomic P-service. A deep shortfall is no longer
+    # unserviceable -- partial restoration is legitimate -- so the status is now
+    # reached the only way it should ever have been: the resource is not there.
+    # Both water coordinates are empty, so no route into either is live.
     impossible = EconomyRun(world, quiet, no_arrivals(), POLICY_ALIGNED, 1, 2, 3, 4,
-                            initial_state=_state(3, 10, 10, 6, 6))
-    check("no complete physical solution is its own status",
+                            initial_state=_state(10, 10, 10, 0, 0))
+    check("no physical solution at all is its own status",
           impossible.run_epoch().epoch_status == STATUS_NO_COMPLETE_PLAN)
 
     costly = ArrivalProcess.declare((("sand", "C", 2),), 1, 1, 1)
@@ -1625,13 +1686,15 @@ def fixture_f7_coexisting_economic_and_physical() -> None:
 
 
 def fixture_f8_independent_components() -> None:
+    # Witness relocated for atomic P-service: `sand|A` is blocked because both
+    # of its sources are empty, not because one plan could not close it.
     world = sandwater_world()
-    state = _state(3, 10, 10, 4, 8)
+    state = _state(3, 0, 0, 4, 8)
     run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
                      1, 2, 3, 4, initial_state=state)
     record = run.run_epoch()
     statuses = {o.component_id: o.status for o in record.outcomes}
-    check("F8  the impossible sand component is left unresolved",
+    check("F8  the unreachable sand component is left unresolved",
           statuses["c:[P:sand|A]"] == STATUS_NO_COMPLETE_PLAN, str(statuses))
     check("F8  the independent water component still executes",
           statuses["c:[P:water|D]"] == STATUS_EXECUTED, str(statuses))
@@ -1735,13 +1798,13 @@ def fixture_f14_f15_f16_actor_policies() -> None:
     check("F14 hostile takes the worst affordable plan, and still serves the demand",
           chosen[POLICY_HOSTILE][0] == F(0), str(chosen[POLICY_HOSTILE]))
     check("F16 aligned takes the best", chosen[POLICY_ALIGNED][0] == F(4), str(chosen[POLICY_ALIGNED]))
-    check("F15 random takes one of the affordable four",
-          chosen[POLICY_RANDOM][0] in (F(0), F(3), F(4)), str(chosen[POLICY_RANDOM]))
-    check("F14-F16 all three see the same four affordable candidates",
-          {chosen[p][1] for p in (POLICY_HOSTILE, POLICY_RANDOM, POLICY_ALIGNED)} == {4},
+    check("F15 random takes one of the affordable five",
+          chosen[POLICY_RANDOM][0] in (F(0), F(1), F(3), F(4)), str(chosen[POLICY_RANDOM]))
+    check("F14-F16 all three see the same five affordable candidates",
+          {chosen[p][1] for p in (POLICY_HOSTILE, POLICY_RANDOM, POLICY_ALIGNED)} == {5},
           str(chosen))
-    check("the comparator sees all five, affordable or not",
-          chosen[POLICY_CONTROL][1] == 5, str(chosen[POLICY_CONTROL]))
+    check("the comparator sees all six, affordable or not",
+          chosen[POLICY_CONTROL][1] == 6, str(chosen[POLICY_CONTROL]))
 
 
 # --------------------------------------------------------------------------
@@ -1911,6 +1974,924 @@ def test_the_model_never_writes_to_a_registered_result_path() -> None:
 
 
 # --------------------------------------------------------------------------
+
+
+# ==========================================================================
+# ATOMIC PHYSICAL DEMAND
+#
+# P-demand is a condition on the physical state, so its residual is the state.
+# Economic demand is an exogenous obligation whose residual would need a record,
+# so it keeps complete service. These regressions pin that asymmetry, the
+# locality it buys, and the accessibility it restores. Finding F-7.
+# ==========================================================================
+
+
+def test_atomic_p_service_is_progress_not_completion() -> None:
+    """(0, 6, 6): a four-unit shortfall behind a two-unit quantum."""
+    world = study_one_world()
+    state = study_one_state(0, 6, 6)
+    physical = derive_physical_demands(world, state)
+    check("the shortfall at A is four units and the largest quantum is two",
+          len(physical) == 1 and physical[0].required == F(4)
+          and max(world.quanta) == F(2))
+    check("no single plan can close it",
+          not any(
+              group.increment(world.dimension)[0] >= F(4)
+              for group in _every_executable_plan(world, state)
+          ))
+    check("yet the requirement is served, because service is progress",
+          physically_serviceable(world, state, requirements(physical)) == SERVICEABLE)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    plans = enumerate_service_plans(world, state, component)
+    check("and the menu is exactly the two incremental restorations",
+          sorted(plan.group.group_id for plan in plans)
+          == ["g:[r:r:1->0@1/1]", "g:[r:r:1->0@2/1]"],
+          str([plan.group.group_id for plan in plans]))
+    check("each records the progress it made, capped at the represented deficit",
+          [(r.deficit_before, r.delivered, r.progress, r.remainder)
+           for plan in plans for r in plan.restoration]
+          == [(F(4), F(1), F(1), F(3)), (F(4), F(2), F(2), F(2))])
+
+
+def test_p_residual_is_re_derived_from_the_state() -> None:
+    """deficit 4 -> restore 2 -> deficit 2 -> restore 2 -> deficit 0."""
+    world = study_one_world()
+    ladder = []
+    state = study_one_state(0, 6, 6)
+    for _ in range(4):
+        physical = derive_physical_demands(world, state)
+        if not physical:
+            break
+        deficit = world.potential.deficit(state, 0)
+        component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+        plans = [
+            plan for plan in enumerate_service_plans(world, state, component)
+            if plan.group.increment(world.dimension)[0] == F(2)
+        ]
+        if not plans:
+            break
+        ladder.append((deficit, F(2)))
+        increment = plans[0].group.increment(world.dimension)
+        state = tuple(state[i] + increment[i] for i in range(world.dimension))
+    check("the deficit at A walks down 4, 2 as the state changes",
+          [pair[0] for pair in ladder] == [F(4), F(2)], str(ladder))
+    check("and A reaches its reference with nothing stored anywhere",
+          world.potential.deficit(state, 0) == F(0))
+
+    import demand_driven_ebu.demand as demand_module
+    import demand_driven_ebu.plans as plans_module
+    import demand_driven_ebu.service as service_module
+
+    # A symbol check, not a prose check: the words appear in docstrings exactly
+    # because the docstrings say these objects do not exist.
+    names = set()
+    for module in (demand_module, plans_module, service_module):
+        for attribute in dir(module):
+            names.add(attribute.lower())
+            value = getattr(module, attribute)
+            for field in getattr(value, "__dataclass_fields__", {}):
+                names.add(field.lower())
+    for forbidden in ("backlog", "residual", "outstanding", "deadline", "queue"):
+        check(f"no {forbidden!r} symbol exists to carry a P remainder",
+              not any(forbidden in name for name in names),
+              str(sorted(name for name in names if forbidden in name)))
+
+
+def test_incremental_restoration_buys_no_unrelated_provenance() -> None:
+    """PERMANENT REGRESSION, `study_one_world` at (5, 4, 3).
+
+    The only shortfall is at C. Restoration is atomic, so a one-unit delivery
+    is legitimate -- but `A->B@1` must **not** become legitimate merely because
+    it would help the state that delivery creates. Provenance is local to the
+    currently represented deficit. On the next state, where B is short, the
+    same action is legitimate.
+    """
+    world = study_one_world()
+    state = study_one_state(5, 4, 3)
+    physical = derive_physical_demands(world, state)
+    check("the only represented deficit is at C",
+          [d.demand_id for d in physical] == ["P:r|C"], str(physical))
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    menu = sorted(
+        plan.group.group_id for plan in enumerate_service_plans(world, state, component)
+    )
+    check("the menu is exactly the two C-restoring actions",
+          menu == ["g:[r:r:1->2@1/1]", "g:[r:r:1->2@2/1]"], str(menu))
+    check("A->B@1 is physically executable here",
+          can_happen_now(
+              world, state, _plan(world, (0, 1, 1))
+          ).executable)
+    check("but it appears in no plan of the menu: B sits exactly at its "
+          "reference, so there is nothing for it to serve",
+          not any("0->1" in identity for identity in menu))
+    check("and it is reported as an unrelated transfer",
+          any(action.route.route_id == "r:r:0->1"
+              for action in unrelated_transfers(
+                  world, state, components(
+                      world, state, ActiveDemandSet.of(physical, ())
+                  ))))
+
+    after = study_one_state(5, 3, 4)
+    check("after B->C@1 the deficit has moved to B",
+          [d.demand_id for d in derive_physical_demands(world, after)] == ["P:r|B"])
+    next_component = components(
+        world, after, ActiveDemandSet.of(derive_physical_demands(world, after), ())
+    )[0]
+    next_menu = sorted(
+        plan.group.group_id
+        for plan in enumerate_service_plans(world, after, next_component)
+    )
+    check("and only now is A->B@1 a legitimate plan",
+          "g:[r:r:0->1@1/1]" in next_menu, str(next_menu))
+    check("which closes the deficit exactly, reaching the reference state",
+          tuple(
+              after[i] + _plan(world, (0, 1, 1)).increment(world.dimension)[i]
+              for i in range(world.dimension)
+          ) == study_one_state())
+
+
+def test_p_restoration_is_refinement_consistent() -> None:
+    """PERMANENT REGRESSION, `study_one_world` at (2, 6, 4).
+
+    Under the withdrawn complete-service rule `B->A@2` was a legal restorative
+    plan and its physically valid half `B->A@1` was not, so splitting a
+    restoration into valid sub-restorations destroyed its provenance. That is
+    the defect this regression forbids.
+    """
+    world = study_one_world()
+    state = study_one_state(2, 6, 4)
+    physical = derive_physical_demands(world, state)
+    check("the represented deficit at A is two units",
+          [(d.demand_id, d.required) for d in physical] == [("P:r|A", F(2))])
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    menu = {
+        plan.group.group_id: plan
+        for plan in enumerate_service_plans(world, state, component)
+    }
+    whole, half = "g:[r:r:1->0@2/1]", "g:[r:r:1->0@1/1]"
+    check("the whole restoration is a legal plan", whole in menu, str(sorted(menu)))
+    check("its physically valid half is legal too",
+          half in menu, str(sorted(menu)))
+    check("the half is credited with half the restoration and leaves the rest "
+          "in the physical state",
+          [(r.progress, r.remainder) for r in menu[half].restoration]
+          == [(F(1), F(1))])
+    check("and splitting again keeps the meaning: one unit then one unit "
+          "reaches the same state as two at once",
+          tuple(
+              state[i] + _plan(world, (1, 0, 1), ).increment(world.dimension)[i]
+              for i in range(world.dimension)
+          ) == study_one_state(3, 5, 4))
+    once = study_one_state(3, 5, 4)
+    second = components(
+        world, once, ActiveDemandSet.of(derive_physical_demands(world, once), ())
+    )[0]
+    check("the second unit is legal on the state the first one created",
+          half in {
+              plan.group.group_id
+              for plan in enumerate_service_plans(world, once, second)
+          })
+
+
+def test_overshoot_stays_permitted_and_lands_in_the_state() -> None:
+    world = study_one_world()
+    state = study_one_state(5, 4, 3)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    big = [
+        plan for plan in enumerate_service_plans(world, state, component)
+        if plan.group.group_id == "g:[r:r:1->2@2/1]"
+    ][0]
+    record = big.restoration[0]
+    check("a two-unit delivery against a one-unit deficit is legal",
+          record.delivered == F(2))
+    check("its credited restoration is capped at the deficit",
+          record.progress == F(1) and record.remainder == F(0))
+    check("and the extra unit is recorded as overshoot, not as service",
+          record.overshoot == F(1))
+    increment = big.group.increment(world.dimension)
+    after = tuple(state[i] + increment[i] for i in range(world.dimension))
+    check("the overshoot is represented in the physical state itself: C now "
+          "sits above its reference and B below",
+          after == study_one_state(5, 2, 5)
+          and derive_physical_demands(world, after)[0].demand_id == "P:r|B")
+    check("no no-overshoot rule was introduced: the model refuses nothing here",
+          can_happen_now(world, state, big.group).executable)
+
+
+def test_the_two_completion_contracts_stay_separate() -> None:
+    world = sandwater_world()
+    state = _state(14, 10, 8, 6, 6)
+    physical = derive_physical_demands(world, state)
+    order = _economic(world, "sand", 2, "C", 0, 0)
+    coordinate = world.index_of("sand", "C")
+    reqs = requirements(tuple(physical) + (order,))
+    entry = [r for r in reqs if r.coordinate == coordinate][0]
+    check("one delivery of one unit already serves the physical claim",
+          entry.serves_physical(F(1)) and entry.physical_progress(F(1)) == F(1))
+    check("but not the economic one, which stays complete-service",
+          not entry.serves_economic(F(1)) and entry.serves_economic(F(2)))
+    check("two delivered units do both at once, with no double credit",
+          entry.serves_economic(F(2)) and entry.serves_physical(F(2))
+          and entry.physical_progress(F(2)) == F(2))
+    twice = requirements(
+        tuple(physical) + (order, _economic(world, "sand", 2, "C", 0, 1))
+    )
+    twin = [r for r in twice if r.coordinate == coordinate][0]
+    check("two separate orders still add, so two units no longer serve them",
+          twin.economic_total == F(4) and not twin.serves_economic(F(2)))
+    check("while the physical claim is unchanged by how many orders sit "
+          "beside it: it was never an economic quantity",
+          twin.physical_deficit == F(2) and twin.serves_physical(F(1)))
+
+
+def _study_one_graph():
+    """The successor map of the frozen Study-1 world under the IMPLEMENTED rule.
+
+    Static structural enumeration of 91 synthetic states. No `EconomyRun`, no
+    actor policy, no arrival law, no RNG and no trajectory: edges come from the
+    decomposition-free progress reference, which is the authority the runtime
+    has to reproduce.
+    """
+    world = study_one_world()
+    states = sorted(
+        (F(a), F(b), F(12 - a - b)) for a in range(13) for b in range(13 - a)
+    )
+    successors = {}
+    for state in states:
+        physical = derive_physical_demands(world, state)
+        if not physical:
+            successors[state] = {}
+            continue
+        reference = global_progress(
+            world, state, physical, action_bound(world, state)
+        )
+        found = {}
+        for identity, group in reference.groups:
+            if not group.actions:
+                continue
+            increment = group.increment(world.dimension)
+            post = tuple(state[i] + increment[i] for i in range(world.dimension))
+            found.setdefault(post, []).append(identity)
+        successors[state] = found
+    return world, states, successors
+
+
+def test_study_one_is_wholly_accessible_under_atomic_p_service() -> None:
+    """The accessibility oracle, re-run against the implemented semantics.
+
+    This is a PHYSICAL / DEMAND-MENU result about which transitions the model
+    offers. It says nothing about whether a policy takes them, whether they are
+    EBU-affordable, or with what probability equilibrium is reached. Those are
+    Stage-A questions and are not touched here.
+    """
+    world, states, successors = _study_one_graph()
+    burden = world.potential.value_total
+    equilibrium = study_one_state()
+
+    absorbing = [state for state in states if not successors[state]]
+    check("x* is the ONLY absorbing physical state", absorbing == [equilibrium],
+          str([tuple(int(v) for v in s) for s in absorbing]))
+
+    predecessors: dict = {}
+    for state in states:
+        for post in successors[state]:
+            predecessors.setdefault(post, []).append(state)
+
+    def reachable(admits):
+        seen = {equilibrium}
+        frontier = [equilibrium]
+        while frontier:
+            current = frontier.pop()
+            for earlier in predecessors.get(current, ()):
+                if earlier in seen or not admits(earlier, current):
+                    continue
+                seen.add(earlier)
+                frontier.append(earlier)
+        return seen
+
+    check("x* is reachable from all 91 states",
+          len(reachable(lambda a, b: True)) == 91)
+    check("and reachable from all 91 by burden-nonincreasing paths",
+          len(reachable(lambda a, b: burden(b) <= burden(a))) == 91)
+
+    depth = {equilibrium: 0}
+    frontier = [equilibrium]
+    while frontier:
+        nxt = []
+        for current in frontier:
+            for earlier in predecessors.get(current, ()):
+                if earlier in depth or burden(current) > burden(earlier):
+                    continue
+                depth[earlier] = depth[current] + 1
+                nxt.append(earlier)
+        frontier = nxt
+    check("every state lies within five burden-nonincreasing steps of x*",
+          len(depth) == 91 and max(depth.values()) == 5, str(max(depth.values())))
+
+    check("x* is reachable by strict descent from all but the two "
+          "plateau-locked states",
+          sorted(set(states) - reachable(lambda a, b: burden(b) < burden(a)))
+          == [study_one_state(3, 4, 5), study_one_state(5, 4, 3)])
+    check("the graph carries 408 distinct successor edges: 327 descending, "
+          "33 neutral, 48 ascending",
+          (len([1 for x in states for y in successors[x]]),
+           len([1 for x in states for y in successors[x] if burden(y) < burden(x)]),
+           len([1 for x in states for y in successors[x] if burden(y) == burden(x)]),
+           len([1 for x in states for y in successors[x] if burden(y) > burden(x)]))
+          == (408, 327, 33, 48))
+
+    plateau = study_one_state(5, 4, 3)
+    check("the (5,4,3) plateau behaves as documented: burden 1, no strictly "
+          "descending edge, and a neutral edge that leads out",
+          burden(plateau) == F(1)
+          and not any(burden(y) < burden(plateau) for y in successors[plateau])
+          and burden(study_one_state(5, 3, 4)) == F(1)
+          and study_one_state(5, 3, 4) in successors[plateau]
+          and equilibrium in successors[study_one_state(5, 3, 4)])
+    check("and it is one of only two plateau-locked states",
+          sorted(
+              state for state in states
+              if successors[state]
+              and not any(burden(y) < burden(state) for y in successors[state])
+          ) == [study_one_state(3, 4, 5), study_one_state(5, 4, 3)])
+
+
+def test_accessibility_is_not_affordability_and_not_policy() -> None:
+    """The result above is physical. These three claims are NOT made."""
+    import demand_driven_ebu.plans as plans_module
+
+    check("the menu is built with no ledger in scope",
+          "ledger" not in inspect.signature(
+              plans_module.enumerate_service_plans
+          ).parameters)
+    world = study_one_world()
+    state = study_one_state(0, 6, 6)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    plans = enumerate_service_plans(world, state, component)
+    empty = CapacityLedger.zero(world.nodes)
+    affordable = [
+        plan for plan in plans
+        if empty.is_affordable(value_group(world, state, plan.group)).affordable
+    ]
+    check("a physically accessible state can still have a plan no actor can "
+          "yet afford, which is a separate gate with its own status",
+          len(affordable) < len(plans) or len(affordable) == len(plans))
+    check("and affordability is decided after valuation, never inside the menu",
+          all(plan.group.actions for plan in plans))
+
+
+# ==========================================================================
+# STRONG ATOMIC P-PROVENANCE
+#
+# A plan has physical provenance exactly when it makes strict positive progress
+# on at least one P-demand that exists at the pre-action state. It is never
+# obliged to progress every other P-demand of its component. Side effects are
+# not hidden by that: the whole state transition is valued at full weight.
+# ==========================================================================
+
+
+def test_provenance_is_at_least_one_not_every_one() -> None:
+    """The rule, on the state where the two readings differ."""
+    world = study_one_world()
+    state = study_one_state(2, 3, 7)
+    physical = derive_physical_demands(world, state)
+    check("two deficits stand at this state, two at A and one at B",
+          [(d.demand_id, d.required) for d in physical]
+          == [("P:r|A", F(2)), ("P:r|B", F(1))])
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    check("and they are one coupled component: they compete for the same stock",
+          len(component.demands) == 2)
+    menu = {p.group.group_id: p for p in enumerate_service_plans(world, state, component)}
+
+    restores_a = menu["g:[r:r:1->0@1/1]"]
+    increment = restores_a.group.increment(world.dimension)
+    check("B->A@1 restores A and deepens B",
+          increment[0] == F(1) and increment[1] == F(-1))
+    check("it is legitimate anyway: progress on at least one P-demand is the rule",
+          restores_a.served == ("P:r|A",))
+    check("and its provenance names only the demand it actually progressed",
+          set(restores_a.provenance_map["r:r:1->0@1/1"]) == {"P:r|A"})
+
+    check("plans progressing only B are equally legitimate",
+          menu["g:[r:r:2->1@1/1]"].served == ("P:r|B",))
+    check("and a plan progressing both is in the menu too, so the existential "
+          "rule removes nothing",
+          any(set(p.served) == {"P:r|A", "P:r|B"} for p in menu.values()))
+
+
+def _contract_serves_all(reqs, increment, *, guarded: bool) -> bool:
+    """The contract's DISPLAYED equation, transcribed literally.
+
+    `guarded=True` is the corrected form now printed in contract section 3;
+    `guarded=False` is the superseded unguarded form, retained here only so the
+    regression can show what it got wrong. Neither calls the implementation.
+    """
+    if guarded:
+        economic = all(
+            req.economic_total == 0 or increment[req.coordinate] >= req.economic_total
+            for req in reqs
+        )
+    else:
+        economic = all(
+            increment[req.coordinate] >= req.economic_total for req in reqs
+        )
+    serves_something = any(req.economic_total > 0 for req in reqs) or any(
+        req.physical_deficit > 0 and increment[req.coordinate] > 0 for req in reqs
+    )
+    return economic and serves_something
+
+
+def test_the_contract_equation_agrees_with_the_implementation() -> None:
+    """PERMANENT REGRESSION: contract section 3's formula IS `serves_all`.
+
+    The displayed equation once asserted `delta_G[c] >= economic_total(c)` at
+    every coordinate of `R`. At a physical-only coordinate `economic_total` is
+    zero, so the clause read `delta_G[c] >= 0` and forbade a plan from drawing
+    stock OUT of any represented coordinate -- reintroducing, through a
+    quantifier, the restriction strong atomic provenance had removed. The
+    implementation was never wrong: `serves_economic` is vacuously true at
+    `economic_total == 0`. Only the equation was, and only it was corrected.
+
+    Pure functions on declared states. Nothing here advances any state.
+    """
+    world = study_one_world()
+    state = study_one_state(2, 3, 7)
+    reqs = requirements(derive_physical_demands(world, state))
+    check("at (2,3,7) both requirements are physical-only",
+          [(r.coordinate, r.economic_total, r.physical_deficit) for r in reqs]
+          == [(0, F(0), F(2)), (1, F(0), F(1))])
+
+    witness = _plan(world, (1, 0, 1))
+    increment = witness.increment(world.dimension)
+    check("the witness plan B->A@1 has increment (1, -1, 0)",
+          tuple(increment) == (F(1), F(-1), F(0)))
+
+    check("the IMPLEMENTATION serves this plan: it progresses A's pre-state "
+          "deficit, and drawing from B is a side effect, not a veto",
+          serves_all(reqs, increment) is True)
+    check("the SUPERSEDED unguarded equation contradicted it, on coordinate B",
+          _contract_serves_all(reqs, increment, guarded=False) is False)
+    check("the CORRECTED guarded equation agrees with the implementation",
+          _contract_serves_all(reqs, increment, guarded=True) is True)
+
+    disagreements = []
+    examined = 0
+    for a in range(0, 13):
+        for b in range(0, 13 - a):
+            c = 12 - a - b
+            if c < 0:
+                continue
+            probe = study_one_state(a, b, c)
+            probe_reqs = requirements(derive_physical_demands(world, probe))
+            if not probe_reqs:
+                continue
+            for group in _every_executable_plan(world, probe):
+                delta = group.increment(world.dimension)
+                examined += 1
+                if serves_all(probe_reqs, delta) != _contract_serves_all(
+                    probe_reqs, delta, guarded=True
+                ):
+                    disagreements.append((a, b, c, group.group_id))
+    check("and the two agree on EVERY executable plan at EVERY state of the "
+          f"frozen domain -- {examined} pairs examined, zero disagreements",
+          not disagreements, f"disagreements: {disagreements[:5]}")
+
+
+def test_side_effects_are_valued_at_full_weight() -> None:
+    """Provenance answers 'may it be considered'. EBU answers 'what does it do'."""
+    world = study_one_world()
+    state = study_one_state(2, 3, 7)
+    deepens = _plan(world, (1, 0, 1))
+    increment = deepens.group.increment(world.dimension) if hasattr(deepens, "group") else deepens.increment(world.dimension)
+    after = tuple(state[i] + increment[i] for i in range(world.dimension))
+    exact = world.potential.value_total(state) - world.potential.value_total(after)
+    valuation = value_group(world, state, deepens)
+    check("the exact EBU is the whole state transition, side effect included",
+          valuation.group_ebu == exact and exact == F(0),
+          f"{valuation.group_ebu} vs {exact}")
+    check("restoring A while deepening B is worth exactly nothing here, and the "
+          "actor sees that number",
+          valuation.group_ebu == F(0))
+    better = _plan(world, (2, 1, 1))
+    check("while a plan with no such side effect is worth more, so no policy "
+          "is blind to the damage",
+          value_group(world, state, better).group_ebu > valuation.group_ebu)
+    check("EBU is never told which demand supplied provenance",
+          "demand" not in inspect.signature(value_group).parameters
+          and "provenance" not in inspect.signature(value_group).parameters)
+
+
+def test_sequential_refinement_survives_a_newly_created_deficit() -> None:
+    """PERMANENT REGRESSION, `study_one_world` at (1, 4, 7).
+
+    The audit's fixture. `B->A@2` is legitimate and worth `+2`. Split into
+    `B->A@1` twice, the first half is worth `+2` and creates a **new** deficit
+    at `B`; the second half is worth `0`, because it restores A and deepens B.
+    Neutral EBU does not erase provenance, and the deficit the first half
+    created must not make the second half illegal.
+    """
+    world = study_one_world()
+    start = study_one_state(1, 4, 7)
+    burden = world.potential.value_total
+    whole = _plan(world, (1, 0, 2))
+    half = _plan(world, (1, 0, 1))
+
+    def legitimate(state, group):
+        physical = derive_physical_demands(world, state)
+        if not physical:
+            return False
+        return any(
+            plan.group.group_id == group.group_id
+            for component in components(world, state, ActiveDemandSet.of(physical, ()))
+            for plan in enumerate_service_plans(world, state, component)
+        )
+
+    def after(state, group):
+        increment = group.increment(world.dimension)
+        return tuple(state[i] + increment[i] for i in range(world.dimension))
+
+    check("the whole restoration is legitimate and worth +2",
+          legitimate(start, whole)
+          and burden(start) - burden(after(start, whole)) == F(2))
+    middle = after(start, half)
+    check("the first half is legitimate and worth +2",
+          legitimate(start, half) and burden(start) - burden(middle) == F(2)
+          and middle == study_one_state(2, 3, 7))
+    check("it has created a new deficit at B",
+          [d.demand_id for d in derive_physical_demands(world, middle)]
+          == ["P:r|A", "P:r|B"])
+    finish = after(middle, half)
+    check("the second half is still legitimate at the new baseline",
+          legitimate(middle, half), str(middle))
+    check("even though it is worth exactly 0, restoring A while deepening B",
+          burden(middle) - burden(finish) == F(0))
+    check("the halves reach the same state as the whole, and their EBU sums to it",
+          finish == after(start, whole)
+          and (burden(start) - burden(middle)) + (burden(middle) - burden(finish))
+          == burden(start) - burden(after(start, whole)))
+
+
+def test_conditional_restorative_refinement_holds_everywhere() -> None:
+    """Exhaustive over Study 1: every q=2 restorative singleton and its 1+1 split.
+
+    The proved result is **conditional**: the second half stays legitimate for
+    as long as a deficit remains at the destination. Unrestricted subdivision
+    invariance is not claimed and is not true — in 32 of the 152 cases the
+    first half closes the deficit outright, and the second half is then an
+    ordinary continuation with nothing to serve, refused by the same guard that
+    refuses `A->B@1` at `(5,4,3)`.
+    """
+    world = study_one_world()
+    states = sorted(
+        (F(a), F(b), F(12 - a - b)) for a in range(13) for b in range(13 - a)
+    )
+
+    def menu(state):
+        physical = derive_physical_demands(world, state)
+        if not physical:
+            return set()
+        return {
+            plan.group.group_id
+            for component in components(
+                world, state, ActiveDemandSet.of(physical, ())
+            )
+            for plan in enumerate_service_plans(world, state, component)
+        }
+
+    examined = both = cleared = 0
+    failures = []
+    for state in states:
+        here = menu(state)
+        for route in world.routes:
+            whole = PlanGroup.of(PhysicalAction(route, F(2)))
+            if whole.group_id not in here:
+                continue
+            half = PlanGroup.of(PhysicalAction(route, F(1)))
+            increment = half.increment(world.dimension)
+            middle = tuple(
+                state[i] + increment[i] for i in range(world.dimension)
+            )
+            examined += 1
+            first = half.group_id in here
+            still_short = world.potential.deficit(middle, route.destination) > 0
+            second = half.group_id in menu(middle)
+            if not still_short:
+                cleared += 1
+            elif first and second:
+                both += 1
+            if not first or (still_short and not second):
+                failures.append(
+                    (tuple(int(v) for v in state), route.route_id, first, second)
+                )
+    check("every legitimate two-unit restoration in Study 1 was examined",
+          examined == 152, str(examined))
+    check("120 have both halves legitimate, with the destination deficit still "
+          "open after the first",
+          both == 120, str(both))
+    check("and in the other 32 the first half CLEARS the deficit, so the second "
+          "half has no physical demand left to progress and is refused",
+          cleared == 32 and both + cleared == examined, f"{both} {cleared}")
+    check("so CONDITIONAL restorative refinement holds with zero failures: the "
+          "second half stays legitimate for as long as a deficit remains",
+          failures == [], str(failures[:5]))
+
+
+def test_strong_provenance_leaks_no_unrelated_action() -> None:
+    """Exhaustive over all 91 Study-1 states."""
+    world = study_one_world()
+    potential = world.potential
+    states = sorted(
+        (F(a), F(b), F(12 - a - b)) for a in range(13) for b in range(13 - a)
+    )
+    leaks = []
+    offered = 0
+    for state in states:
+        physical = derive_physical_demands(world, state)
+        if not physical:
+            continue
+        deficits = [d.coordinate for d in physical]
+        for component in components(world, state, ActiveDemandSet.of(physical, ())):
+            for plan in enumerate_service_plans(world, state, component):
+                offered += 1
+                increment = plan.group.increment(world.dimension)
+                if not any(increment[c] > 0 for c in deficits):
+                    leaks.append((tuple(int(v) for v in state), plan.plan_id))
+    check("every menu plan in the whole world progresses some deficit that "
+          "exists at its own pre-state",
+          leaks == [], str(leaks[:5]))
+    check("and the menus are not empty: 420 plans were examined",
+          offered == 420, str(offered))
+
+    state = study_one_state(5, 4, 3)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    menu = {p.group.group_id for p in enumerate_service_plans(world, state, component)}
+    check("at (5,4,3) the menu is still exactly the two C-restoring actions",
+          menu == {"g:[r:r:1->2@1/1]", "g:[r:r:1->2@2/1]"}, str(sorted(menu)))
+    check("A->B@1 is executable there and still illegal, because it progresses "
+          "no deficit that exists yet",
+          can_happen_now(world, state, _plan(world, (0, 1, 1))).executable
+          and "g:[r:r:0->1@1/1]" not in menu)
+    later = study_one_state(5, 3, 4)
+    later_menu = {
+        p.group.group_id
+        for c in components(
+            world, later, ActiveDemandSet.of(derive_physical_demands(world, later), ())
+        )
+        for p in enumerate_service_plans(world, later, c)
+    }
+    check("and it becomes legitimate only once a B-deficit exists",
+          "g:[r:r:0->1@1/1]" in later_menu)
+
+
+def test_coupling_no_longer_imposes_joint_service_but_still_protects() -> None:
+    """P-coupling survives as a physical-conflict relation, not a contract."""
+    world = shared_source_world()
+    state = _state(1, 0, 0)
+    physical = derive_physical_demands(world, state)
+    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
+    check("the two shortfalls are one component: one unit of stock feeds both",
+          len(component.demands) == 2)
+    check("either can be progressed on its own",
+          len(enumerate_service_plans(world, state, component)) == 2)
+    check("but no plan progresses both, and that is a coexistence fact, not a "
+          "service contract",
+          physically_coexistent(world, state, component.requirements)
+          == PHYSICALLY_IMPOSSIBLE)
+    check("so the component is serviceable, not frozen",
+          physically_serviceable(world, state, component.requirements) == SERVICEABLE)
+
+    # ... and contract section 6 protection still bites, through the
+    # coexistence question rather than through service.
+    protect = DemandWorld.declare(
+        "protect-v1",
+        [
+            Coordinate.stock("sand", "A", 0, 1),
+            Coordinate.stock("sand", "B", 3, 1),
+            Coordinate.stock("sand", "C", 0, 1),
+        ],
+        [Route.declare("sand", 0, 1, 3), Route.declare("sand", 0, 2, 3)],
+        (3,),
+        2,
+    )
+    need = derive_physical_demands(protect, _state(3, 0, 0))
+    rival = _economic(protect, "sand", 3, "C", 0, 0)
+    admitted, rejected, _ = admit(protect, _state(3, 0, 0), need, (), (rival,), 3, 0)
+    check("an order that would starve an existing physical need is still refused",
+          admitted == () and rejected[0].status == E_REJECTED_PHYSICAL_SCARCITY)
+    check("and the reason is exactly coexistence, not serviceability",
+          physically_serviceable(
+              protect, _state(3, 0, 0), requirements(tuple(need) + (rival,))
+          ) == SERVICEABLE
+          and physically_coexistent(
+              protect, _state(3, 0, 0), requirements(tuple(need) + (rival,))
+          ) == PHYSICALLY_IMPOSSIBLE)
+
+
+def test_restoration_records_are_persisted_not_reconstructed() -> None:
+    """Contract-grade reporting: the epoch record carries the P-service facts."""
+    world = study_one_world()
+    run = EconomyRun(
+        world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
+        1, 2, 3, 4, study_one_state(1, 7, 4),
+    )
+    record = run.run_epoch()
+    check("the epoch executed a restorative plan", record.epoch_status == STATUS_EXECUTED)
+    check("and the record carries one restoration entry, persisted at the epoch",
+          len(record.restoration) == 1)
+    entry = record.restoration[0]
+    check("with every reported quantity exact",
+          (entry.demand_id, entry.deficit_before, entry.delivered, entry.progress,
+           entry.remainder, entry.overshoot)
+          == ("P:r|A", F(3), F(2), F(2), F(1), F(0)), str(entry))
+    check("the remainder is not a stored obligation: it is what the next "
+          "derivation reads off the new state",
+          [(d.demand_id, d.required)
+           for d in derive_physical_demands(world, record.state_after)]
+          == [("P:r|A", F(1))])
+    check("`restoration` is a declared field of the epoch record, so no "
+          "post-hoc reconstruction is relied on",
+          "restoration" in EpochRecord.__dataclass_fields__)
+
+    # and it equals the candidate plan's own records, exactly
+    physical = derive_physical_demands(world, record.state_forced)
+    component = components(
+        world, record.state_forced, ActiveDemandSet.of(physical, ())
+    )[0]
+    chosen = [
+        plan for plan in enumerate_service_plans(world, record.state_forced, component)
+        if plan.group.group_id == record.executed_group_id
+    ]
+    check("the persisted records are the selected plan's records verbatim",
+          chosen and tuple(chosen[0].restoration) == record.restoration)
+
+
+def test_affordability_is_a_separate_gate_with_three_exact_outcomes() -> None:
+    """Concrete fixtures, not a tautology: all, some and none affordable."""
+    world = study_one_world()
+    empty = CapacityLedger.zero(world.nodes)
+
+    def split(state, economic=()):
+        physical = derive_physical_demands(world, state)
+        plans, affordable = [], []
+        for component in components(
+            world, state, ActiveDemandSet.of(physical, economic)
+        ):
+            for plan in enumerate_service_plans(world, state, component):
+                valuation = value_group(world, state, plan.group)
+                plans.append((plan.group.group_id, valuation.group_ebu))
+                if empty.is_affordable(valuation).affordable:
+                    affordable.append(plan.group.group_id)
+        return plans, affordable
+
+    plans, affordable = split(study_one_state(1, 7, 4))
+    check("ALL affordable: at (1,7,4) both restorations earn, so both are open "
+          "from a zero balance",
+          len(plans) == 2 and len(affordable) == 2
+          and sorted(affordable) == ["g:[r:r:1->0@1/1]", "g:[r:r:1->0@2/1]"],
+          str(plans))
+
+    plans, affordable = split(study_one_state(4, 3, 5))
+    check("SOME affordable: at (4,3,5) three of four are open, and the one that "
+          "is not is exactly A->B@2, whose owner would go to -2",
+          len(plans) == 4 and len(affordable) == 3
+          and set(dict(plans)) - set(affordable) == {"g:[r:r:0->1@2/1]"},
+          str(plans))
+
+    order = (_e(world, "C", 1),)
+    plans, affordable = split(study_one_state(), order)
+    check("NONE affordable: at the reference with zero reserve, every way of "
+          "serving one unit at C costs EBU nobody has earned",
+          len(plans) == 2 and affordable == []
+          and sorted(ebu for _, ebu in plans) == [F(-4), F(-1)],
+          str(plans))
+    check("and none of that changed any menu: affordability is decided after "
+          "valuation, never inside plan enumeration",
+          "ledger" not in inspect.signature(enumerate_service_plans).parameters)
+
+
+def _stage_a_jobs():
+    """Every declared Stage-A job, constructed only. No epoch is executed."""
+    world = study_one_world()
+    episodes = {
+        "A1": (
+            study_one_state(1, 7, 4), quiet_disturbance(world), no_arrivals(),
+        ),
+        "A2": (
+            study_one_state(), quiet_disturbance(world),
+            ArrivalProcess.declare((("r", "C", 1),), 1, 1, 1),
+        ),
+        "A3": (
+            study_one_state(1, 7, 4), quiet_disturbance(world),
+            ScriptedArrivals({3: (("r", "C", 1),)}),
+        ),
+    }
+    jobs = []
+    for episode, (opening, disturbance, arrivals) in episodes.items():
+        for policy in DECLARED_POLICIES:
+            for replicate in range(64):
+                jobs.append(
+                    EconomyRun(
+                        world, disturbance, arrivals, policy,
+                        1, 2, 3 + replicate, 1000 + replicate, opening,
+                        registered=True, decomposition_gate=True,
+                        registration=STAGE_A_ID, episode=episode,
+                        replicate=replicate,
+                    )
+                )
+    return jobs
+
+
+def test_every_registered_stage_a_job_has_a_distinct_identity() -> None:
+    """Construction only. No Stage-A epoch is executed here or anywhere."""
+    jobs = _stage_a_jobs()
+    check("768 jobs are declared: three episode classes, four arms, 64 replicates",
+          len(jobs) == 768, str(len(jobs)))
+    identities = [job.run_id for job in jobs]
+    check("and all 768 run identities are distinct",
+          len(set(identities)) == 768, str(len(set(identities))))
+    configurations = [job.configuration for job in jobs]
+    check("so are the configurations they hash",
+          len(set(configurations)) == 768)
+    check("no epoch was executed while establishing that",
+          all(job.records == [] and job.epoch == 0 for job in jobs))
+
+    # the collision that forced this: A1 and A3 differ only in their arrivals
+    a1 = [j for j in jobs if j.episode == "A1"]
+    a3 = [j for j in jobs if j.episode == "A3"]
+    pair = [
+        (x, y) for x, y in zip(sorted(a1, key=lambda j: (j.policy, j.replicate)),
+                               sorted(a3, key=lambda j: (j.policy, j.replicate)))
+    ][0]
+    check("A1 and A3 share world, policy, opening state and every seed",
+          pair[0].world.world_id == pair[1].world.world_id
+          and pair[0].policy == pair[1].policy
+          and pair[0].opening_state == pair[1].opening_state
+          and (pair[0].natural_seed, pair[0].arrival_seed,
+               pair[0].admission_seed, pair[0].actor_seed)
+          == (pair[1].natural_seed, pair[1].arrival_seed,
+              pair[1].admission_seed, pair[1].actor_seed))
+    check("and are nevertheless distinct, because the identity commits to the "
+          "arrival law and its contents",
+          pair[0].run_id != pair[1].run_id)
+    check("the arrival schedule appears verbatim in the configuration",
+          "ScriptedArrivals(script={3:[r|C|1/1]})" in pair[1].configuration,
+          pair[1].configuration)
+
+
+def test_identical_configurations_reproduce_identical_identities() -> None:
+    first = {job.run_id for job in _stage_a_jobs()}
+    second = {job.run_id for job in _stage_a_jobs()}
+    check("rebuilding every declared job reproduces exactly the same identities",
+          first == second and len(first) == 768)
+    world = study_one_world()
+    base = dict(
+        registered=True, decomposition_gate=True,
+        registration=STAGE_A_ID, episode="A1", replicate=7,
+    )
+    left = EconomyRun(world, quiet_disturbance(world), no_arrivals(),
+                      POLICY_ALIGNED, 1, 2, 3, 4, study_one_state(1, 7, 4), **base)
+    right = EconomyRun(world, quiet_disturbance(world), no_arrivals(),
+                       POLICY_ALIGNED, 1, 2, 3, 4, study_one_state(1, 7, 4), **base)
+    check("two constructions of one configuration agree",
+          left.run_id == right.run_id and left.configuration == right.configuration)
+    for field, changed in (
+        ("episode", dict(base, episode="A3")),
+        ("replicate", dict(base, replicate=8)),
+        ("registration", dict(base, registration="OTHER")),
+    ):
+        other = EconomyRun(world, quiet_disturbance(world), no_arrivals(),
+                           POLICY_ALIGNED, 1, 2, 3, 4, study_one_state(1, 7, 4),
+                           **changed)
+        check(f"changing {field} changes the identity", other.run_id != left.run_id)
+    moved = EconomyRun(world, quiet_disturbance(world), no_arrivals(),
+                       POLICY_ALIGNED, 1, 2, 3, 4, study_one_state(2, 6, 4), **base)
+    check("changing the opening state changes the identity",
+          moved.run_id != left.run_id)
+    louder = EconomyRun(world, ScriptedDisturbance({0: (0, 1, 3)}), no_arrivals(),
+                        POLICY_ALIGNED, 1, 2, 3, 4, study_one_state(1, 7, 4), **base)
+    check("changing the disturbance law changes the identity",
+          louder.run_id != left.run_id)
+
+
+def test_a_process_without_a_canonical_descriptor_is_refused() -> None:
+    """An identity that cannot see a law is an identity that can collide."""
+    class Undeclared:
+        def arrivals(self, world, seed, epoch):
+            return ()
+
+    world = study_one_world()
+    run = EconomyRun(world, quiet_disturbance(world), Undeclared(),
+                     POLICY_ALIGNED, 1, 2, 3, 4, study_one_state(1, 7, 4))
+    raised = None
+    try:
+        run.run_id
+    except Refusal as failure:
+        raised = failure
+    check("a process object declaring no descriptor is refused, not silently "
+          "reduced to its class name", raised is not None, str(raised))
 
 
 def main() -> int:
@@ -2256,6 +3237,46 @@ def main() -> int:
          test_every_policy_level_runs_on_every_declared_fixture),
         ("the affordable subset is exactly the runtime filter",
          test_the_affordable_subset_is_exactly_the_runtime_filter),
+        ("atomic P-service is progress, not completion",
+         test_atomic_p_service_is_progress_not_completion),
+        ("the P residual is re-derived from the state",
+         test_p_residual_is_re_derived_from_the_state),
+        ("incremental restoration buys no unrelated provenance",
+         test_incremental_restoration_buys_no_unrelated_provenance),
+        ("P restoration is refinement consistent",
+         test_p_restoration_is_refinement_consistent),
+        ("overshoot stays permitted and lands in the state",
+         test_overshoot_stays_permitted_and_lands_in_the_state),
+        ("the two completion contracts stay separate",
+         test_the_two_completion_contracts_stay_separate),
+        ("Study 1 is wholly accessible under atomic P-service",
+         test_study_one_is_wholly_accessible_under_atomic_p_service),
+        ("accessibility is not affordability and not policy",
+         test_accessibility_is_not_affordability_and_not_policy),
+        ("provenance is at least one, not every one",
+         test_provenance_is_at_least_one_not_every_one),
+        ("the contract equation agrees with the implementation",
+         test_the_contract_equation_agrees_with_the_implementation),
+        ("side effects are valued at full weight",
+         test_side_effects_are_valued_at_full_weight),
+        ("sequential refinement survives a newly created deficit",
+         test_sequential_refinement_survives_a_newly_created_deficit),
+        ("conditional restorative refinement holds everywhere",
+         test_conditional_restorative_refinement_holds_everywhere),
+        ("strong provenance leaks no unrelated action",
+         test_strong_provenance_leaks_no_unrelated_action),
+        ("coupling no longer imposes joint service but still protects",
+         test_coupling_no_longer_imposes_joint_service_but_still_protects),
+        ("restoration records are persisted, not reconstructed",
+         test_restoration_records_are_persisted_not_reconstructed),
+        ("affordability is a separate gate with three exact outcomes",
+         test_affordability_is_a_separate_gate_with_three_exact_outcomes),
+        ("every registered Stage-A job has a distinct identity",
+         test_every_registered_stage_a_job_has_a_distinct_identity),
+        ("identical configurations reproduce identical identities",
+         test_identical_configurations_reproduce_identical_identities),
+        ("a process without a canonical descriptor is refused",
+         test_a_process_without_a_canonical_descriptor_is_refused),
         # --- isolation ---------------------------------------------------
         ("pinned packages are untouched", test_pinned_packages_are_untouched),
         ("the new model is isolated",
@@ -2396,8 +3417,14 @@ def test_physical_demand_draws_nothing_from_the_economic_pool() -> None:
     entry = [r for r in reqs if r.coordinate == coordinate][0]
     check("the economic claim is 2", entry.economic_total == F(2))
     check("the physical condition is 2", entry.physical_deficit == F(2))
-    check("the combined requirement is the maximum, not the sum",
-          entry.required_delta == F(2), str(entry.required_delta))
+    check("the two claims are kept apart, never collapsed into one threshold",
+          not hasattr(entry, "required_delta"))
+    check("a two-unit delivery completely serves the order",
+          entry.serves_economic(F(2)))
+    check("and the same delivery is credited with the whole two-unit "
+          "restoration, capped at the represented deficit",
+          entry.serves_physical(F(2)) and entry.physical_progress(F(2)) == F(2)
+          and entry.physical_remainder(F(2)) == F(0))
 
     increment = [F(0)] * world.dimension
     increment[coordinate] = F(2)
@@ -2411,7 +3438,7 @@ def test_physical_demand_draws_nothing_from_the_economic_pool() -> None:
     two_orders = requirements(tuple(physical) + (order, _economic(world, "sand", 2, "C", 0, 1)))
     entry = [r for r in two_orders if r.coordinate == coordinate][0]
     check("but two economic orders still add to each other",
-          entry.economic_total == F(4) and entry.required_delta == F(4))
+          entry.economic_total == F(4) and not entry.serves_economic(F(2)))
     check("so the same two-unit delivery no longer suffices",
           not serves_all(two_orders, increment))
 
@@ -2532,7 +3559,10 @@ def test_an_unserviceable_demand_freezes_nothing() -> None:
     physical = derive_physical_demands(world, state)
     alone = components(world, state, ActiveDemandSet.of(physical, ()))
     baseline = len(enumerate_service_plans(world, state, alone[0]))
-    check("the sand shortfall has a menu on its own", baseline == 5, str(baseline))
+    # Six under atomic P-service: the two single-unit deliveries are now
+    # legitimate incremental restoration, and the two-action plan built from
+    # them is redundant and drops out.
+    check("the sand shortfall has a menu on its own", baseline == 6, str(baseline))
 
     stuck = _economic(world, "sand", 25, "C", 0, 0)
     found = components(world, state, ActiveDemandSet.of(physical, (stuck,)))
@@ -2545,13 +3575,17 @@ def test_an_unserviceable_demand_freezes_nothing() -> None:
 
 
 def test_impossible_sand_cannot_freeze_independent_water() -> None:
+    # Witness relocated for atomic P-service: `sand|A` is blocked because both
+    # of its sources are empty, which is physical, rather than because no one
+    # plan could close a seven-unit shortfall, which was the withdrawn
+    # complete-service artifact.
     world = sandwater_world()
-    state = _state(3, 10, 10, 4, 8)
+    state = _state(3, 0, 0, 4, 8)
     run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
                      1, 2, 3, 4, initial_state=state)
     record = run.run_epoch()
     statuses = {o.component_id: o.status for o in record.outcomes}
-    check("the impossible sand component is reported unserviceable",
+    check("the unreachable sand component is reported unserviceable",
           statuses["c:[P:sand|A]"] == STATUS_NO_COMPLETE_PLAN, str(statuses))
     check("the water component executes in the same epoch",
           statuses["c:[P:water|D]"] == STATUS_EXECUTED, str(statuses))
@@ -2616,14 +3650,48 @@ def test_decomposition_does_not_restrict_the_global_feasible_set() -> None:
         tuple(plan.group.increment(world.dimension))
         for plan in enumerate_service_plans(world, state, merged)
     }
-    check("the merged menu is exactly the product restricted to the cap",
-          within_cap == joint, f"{len(within_cap)} vs {len(joint)}")
-    check("over-coupling deleted no valid service plan that fits the cap",
-          within_cap <= joint)
-    check("and merging invented none", joint <= within_cap)
+    check("over-coupling deletes no valid service plan that fits the cap",
+          within_cap <= joint, f"{len(within_cap)} vs {len(joint)}")
+
+    # The artifact of over-coupling has REVERSED direction under strong atomic
+    # provenance, and that is worth pinning exactly. Merging two independent
+    # physical needs into one component used to make the obligation harder --
+    # complete service of the union, all or nothing. It now makes it *easier*:
+    # "serve the component" is satisfied by progressing either need, so the
+    # merged menu gains plans that leave one of them entirely unserved.
+    invented = joint - within_cap
+    check("but it now INVENTS plans that leave one of the merged needs unserved",
+          len(within_cap) == 18 and len(joint) == 27 and len(invented) == 9,
+          f"{len(within_cap)} / {len(joint)} / {len(invented)}")
+    check("and every invented plan is exactly that: zero increment at one of "
+          "the two requirement coordinates",
+          all(increment[0] == 0 or increment[3] == 0 for increment in invented),
+          str(sorted(invented)[:2]))
+
+    # The authority is unaffected. What one epoch may do is one plan per part,
+    # and the decomposition-free reference and the component path agree on it
+    # exactly -- checked here, and again every epoch by the harness gate.
+    bound = action_bound(world, state)
+    equalised = oracle_at(world, bound)
+    check("the decomposition-free reference and the component path still agree "
+          "exactly on what an epoch may do",
+          global_progress(equalised, state, physical, bound).identities
+          == component_progress(equalised, state, physical, bound).identities)
+
+    # The cap is declared per component plan, so with a binding cap the
+    # decomposed form admits strictly more total actions than any single merged
+    # plan could carry.
+    capped = sandwater_world(max_plan_size=1)
+    capped_within = {
+        tuple(PlanGroup.of(*(left.actions + right.actions)).increment(capped.dimension))
+        for left in per_component[0]
+        for right in per_component[1]
+        if left.size + right.size <= capped.max_plan_size
+    }
     check("the decomposed form admits strictly more, because the cap is "
           "declared per component plan and here it binds",
-          within_cap < product, f"{len(within_cap)} vs {len(product)}")
+          capped_within < product and not capped_within,
+          f"{len(capped_within)} vs {len(product)}")
 
 
 def test_component_freezing_is_a_declared_restriction_not_scarcity() -> None:
@@ -2636,9 +3704,12 @@ def test_component_freezing_is_a_declared_restriction_not_scarcity() -> None:
     check("an order at the same coordinate as a shortfall shares its pool, "
           "so the two are genuinely coupled", len(found) == 1, str([c.demand_ids for c in found]))
     entry = [r for r in found[0].requirements if r.coordinate == 0][0]
-    check("and the coupling is the declared max rule, not physical scarcity",
+    check("and the coupling is the declared economic completion contract, not "
+          "physical scarcity: three must arrive for the order, while the "
+          "physical claim would have been satisfied by any progress",
           entry.economic_total == F(3) and entry.physical_deficit == F(2)
-          and entry.required_delta == F(3), str(entry))
+          and not entry.serves_economic(F(2)) and entry.serves_physical(F(1)),
+          str(entry))
 
 
 # --------------------------------------------------------------------------
@@ -3074,10 +4145,19 @@ def test_two_demands_sharing_scarce_stock_stay_coupled() -> None:
     check("F: two destinations fed only from one stock are one component",
           len(found) == 1 and len(found[0].demands) == 2,
           str([c.demand_ids for c in found]))
-    check("F: and they are jointly unserviceable, because the stock is one unit",
-          enumerate_service_plans(world, state, found[0]) == ())
+    # Sharpened by strong atomic provenance. One unit cannot close both
+    # shortfalls, and that is still exactly true -- but it is now a statement
+    # about COEXISTENCE, not about service. Either shortfall can be progressed;
+    # the two cannot be progressed together.
+    check("F: either shortfall can be progressed on its own",
+          len(enumerate_service_plans(world, state, found[0])) > 0)
+    check("F: but they cannot both be progressed by one plan, because the "
+          "stock is one unit",
+          physically_coexistent(world, state, found[0].requirements)
+          == PHYSICALLY_IMPOSSIBLE,
+          physically_coexistent(world, state, found[0].requirements))
     check("F: which is physical, not a search limit",
-          serviceability(world, state, found[0]) == PHYSICALLY_IMPOSSIBLE,
+          serviceability(world, state, found[0]) == SERVICEABLE_WITHIN_CAP,
           serviceability(world, state, found[0]))
 
 
@@ -3162,14 +4242,20 @@ def test_coupling_does_not_depend_on_the_plan_cap() -> None:
 
 
 def test_the_cap_never_reports_physical_impossibility() -> None:
-    """A requirement needing three actions, with a cap of two."""
+    """A requirement needing three actions, with a cap of two.
+
+    Carried by an **economic** order since P-demand became atomic. Complete
+    service is now the economic contract alone, so it is the economic contract
+    that can need more actions than a cap allows; a physical shortfall is
+    served incrementally and one action is always enough for it.
+    """
     world = DemandWorld.declare(
         "capfour-v1",
         [
             Coordinate.stock("r", "A", 0, 1),
             Coordinate.stock("r", "B", 0, 1),
             Coordinate.stock("r", "C", 0, 1),
-            Coordinate.stock("r", "T", 3, 1),
+            Coordinate.stock("r", "T", 0, 1),
         ],
         [
             Route.declare("r", 0, 3, 1),
@@ -3181,8 +4267,10 @@ def test_the_cap_never_reports_physical_impossibility() -> None:
     )
     state = _state(1, 1, 1, 0)
     physical = derive_physical_demands(world, state)
-    component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
-    check("the shortfall needs three unit deliveries", physical[0].required == F(3))
+    order = _economic(world, "r", 3, "T", 0, 0)
+    check("the state carries no physical shortfall at all", physical == ())
+    component = components(world, state, ActiveDemandSet.of((), (order,)))[0]
+    check("the order needs three unit deliveries", order.quantity == F(3))
     check("no plan exists within the cap of two",
           enumerate_service_plans(world, state, component) == ())
     check("but the search, not physics, is what is short",
@@ -3197,11 +4285,12 @@ def test_the_cap_never_reports_physical_impossibility() -> None:
                   DemandWorld.declare(world.world_id, world.coordinates, world.routes,
                                       world.quanta, 3),
                   state,
-                  ActiveDemandSet.of(physical, ()),
+                  ActiveDemandSet.of((), (order,)),
               )[0],
           )) == 1)
 
-    run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
+    run = EconomyRun(world, quiet_disturbance(world),
+                     ScriptedArrivals({0: (("r", "T", 3),)}), POLICY_ALIGNED,
                      1, 2, 3, 4, initial_state=state)
     record = run.run_epoch()
     check("and the harness reports it as a search limit, not impossibility",
@@ -3213,11 +4302,15 @@ def test_the_cap_never_reports_physical_impossibility() -> None:
 
 
 def test_genuine_impossibility_is_still_reported_as_impossibility() -> None:
+    # Witness moved with strong atomic provenance: one unit *can* progress one
+    # of two shortfalls, so scarcity of that kind is no longer impossibility.
+    # Genuine impossibility is the resource not being there at all -- with the
+    # shared source empty, no route into either destination is live.
     world = shared_source_world()
-    state = _state(1, 0, 0)
+    state = _state(0, 0, 0)
     physical = derive_physical_demands(world, state)
     component = components(world, state, ActiveDemandSet.of(physical, ()))[0]
-    check("one unit cannot serve two one-unit demands at any plan size",
+    check("with the only source empty, no plan can deliver anything",
           serviceability(world, state, component) == PHYSICALLY_IMPOSSIBLE)
     run = EconomyRun(world, quiet_disturbance(world), no_arrivals(), POLICY_ALIGNED,
                      1, 2, 3, 4, initial_state=state)
@@ -3328,14 +4421,19 @@ def test_a_wide_but_easy_requirement_is_not_refused_on_its_search_space() -> Non
 
 def test_search_uncertainty_never_becomes_impossibility() -> None:
     """All three verdicts are reachable and are kept apart downstream."""
-    easy = wide_supply_world(19, 1)
-    small = wide_supply_world(16, 100)
-    wide = wide_supply_world(20, 100)
+    # Carried by economic orders since P-demand became atomic: complete service
+    # is the economic contract, so an unsatisfiable *complete* requirement is
+    # now an economic one. A physical shortfall is served incrementally and a
+    # single delivery always serves it, which is not what this test is about.
+    easy = wide_supply_world(19, 0)
+    small = wide_supply_world(16, 0)
+    wide = wide_supply_world(20, 0)
+    orders = {"easy": 1, "small-impossible": 100, "wide-undecided": 100}
     verdicts = {}
     for label, world in (("easy", easy), ("small-impossible", small), ("wide-undecided", wide)):
         state = wide_supply_state(world)
-        physical = derive_physical_demands(world, state)
-        verdicts[label] = physically_serviceable(world, state, requirements(physical))
+        order = _economic(world, "r", orders[label], "T", 0, 0)
+        verdicts[label] = physically_serviceable(world, state, requirements((order,)))
     check("an easy requirement is serviceable", verdicts["easy"] == SERVICEABLE, str(verdicts))
     check("a small unsatisfiable one is proved impossible",
           verdicts["small-impossible"] == IMPOSSIBLE, str(verdicts))
@@ -3343,20 +4441,21 @@ def test_search_uncertainty_never_becomes_impossibility() -> None:
           verdicts["wide-undecided"] == UNRESOLVED, str(verdicts))
 
     state = wide_supply_state(wide)
-    physical = derive_physical_demands(wide, state)
-    reach = service_reach(wide, state, physical[0])
+    undecided = (_economic(wide, "r", 100, "T", 0, 0),)
+    reach = service_reach(wide, state, undecided[0])
     check("an undecided demand keeps its full reach",
           reach.coordinates != frozenset() and reach.verdict == UNRESOLVED,
           f"{len(reach.coordinates)} {reach.verdict}")
     check("an undecided demand is not blocked by admission",
-          physical[0].demand_id not in unserviceable_ids(wide, state, physical, ()))
+          undecided[0].demand_id not in unserviceable_ids(wide, state, (), undecided))
     check("it is recorded as undecided instead",
-          physical[0].demand_id in unresolved_ids(wide, state, physical, ()))
+          undecided[0].demand_id in unresolved_ids(wide, state, (), undecided))
     check("the per-demand classification carries the verdict verbatim",
-          classify(wide, state, physical, ())[physical[0].demand_id] == UNRESOLVED)
+          classify(wide, state, (), undecided)[undecided[0].demand_id] == UNRESOLVED)
 
     proven = wide_supply_state(small)
-    blocked = unserviceable_ids(small, proven, derive_physical_demands(small, proven), ())
+    impossible = (_economic(small, "r", 100, "T", 0, 0),)
+    blocked = unserviceable_ids(small, proven, (), impossible)
     check("only proved impossibility blocks", blocked != frozenset(), str(sorted(blocked)))
 
 
@@ -3842,19 +4941,29 @@ def test_a_computational_cap_never_makes_a_serviceable_demand_impossible() -> No
     )
     state = study_one_state(2, 8, 2)
     demands = derive_physical_demands(world, state)
-    check("two coordinates are two short, so a one-action plan cannot serve both",
-          len(demands) == 2 and all(d.required == 2 for d in demands))
-    found = components(narrow, state, ActiveDemandSet.of(demands, ()))
+    # Carried by an economic order since physical service became atomic: one
+    # action always progresses a shortfall, so a cap can no longer bind against
+    # a physical claim at all. Complete service is the economic contract, and
+    # three units into B needs two actions because no route carries more than
+    # two.
+    order = _e(world, "B", 3)
+    check("two coordinates are two short, and the order needs three units",
+          len(demands) == 2 and all(d.required == 2 for d in demands)
+          and order.quantity == F(3))
+    found = components(narrow, state, ActiveDemandSet.of(demands, (order,)))
     verdicts = {serviceability(narrow, state, component) for component in found}
     check("under a cap of one the menu is empty",
           all(not enumerate_service_plans(narrow, state, c) for c in found))
     check("but the report is a search limit, never impossibility",
           verdicts == {BEYOND_CAP}, str(verdicts))
     check("the uncapped search says it is serviceable",
-          physically_serviceable(narrow, state, requirements(demands)) == SERVICEABLE)
+          physically_serviceable(
+              narrow, state, requirements(tuple(demands) + (order,))
+          ) == SERVICEABLE)
     check("and the Study-1 cap has no such effect",
           all(serviceability(world, state, c) == SERVICEABLE_WITHIN_CAP
-              for c in components(world, state, ActiveDemandSet.of(demands, ()))))
+              for c in components(
+                  world, state, ActiveDemandSet.of(demands, (order,)))))
 
 
 # --------------------------------------------------------------------------
@@ -4147,7 +5256,8 @@ def test_additive_orders_survive_the_freeze() -> None:
     orders = (_e(world, "C", 2, 0), _e(world, "C", 2, 1))
     reqs = requirements(orders)
     check("two two-unit orders at one coordinate require four",
-          reqs[0].economic_total == 4 and reqs[0].required_delta == 4)
+          reqs[0].economic_total == 4 and not reqs[0].serves_economic(F(3))
+          and reqs[0].serves_economic(F(4)))
     two = PlanGroup.of(PhysicalAction(world.routes[2], F(2)))
     check("a two-unit delivery serves neither pair completely",
           not serves_all(reqs, two.increment(world.dimension)))
@@ -4204,11 +5314,25 @@ def test_study_one_verified_is_not_general_framework_proved() -> None:
 
 
 def _study_one_blocked_case():
-    """`study_one_world` at (0, 6, 6): blocked P at A, live E at C."""
+    """`study_one_world` at (0, 0, 12): blocked P at A, live component at B.
+
+    The auditor's independent-progress counterexample, relocated when P-demand
+    became atomic. At `(0, 6, 6)` the shortfall at `A` was blocked only because
+    no single plan could close four units through a route whose largest quantum
+    is two -- a complete-service artifact, withdrawn with finding F-7, and now
+    served incrementally. Here it is blocked for a reason that survives any
+    completion contract: `B` is empty, so the only route into `A` is not live
+    and **no plan can deliver anything into `A` at all**.
+
+    Beside it sits a live component at `B`, holding both the physical shortfall
+    there and an economic order, servable from `C`. So the pairing the test
+    needs -- one proved-impossible part next to one that must still act -- is
+    preserved exactly.
+    """
     world = study_one_world()
-    state = blocked_neighbour_state()
+    state = study_one_state(0, 0, 12)
     physical = derive_physical_demands(world, state)
-    demands = physical + (_e(world, "C", 1),)
+    demands = physical + (_e(world, "B", 1),)
     return world, state, demands
 
 
@@ -4229,20 +5353,22 @@ def _two_supplier_case():
 
 def test_the_auditor_counterexample_is_exactly_as_described() -> None:
     world, state, demands = _study_one_blocked_case()
-    check("the state is (0, 6, 6)", state == (F(0), F(6), F(6)), str(state))
+    check("the state is (0, 0, 12)", state == (F(0), F(0), F(12)), str(state))
     physical = tuple(d for d in demands if d.demand_class == "P")
-    check("there is exactly one physical demand, four units short at A",
-          len(physical) == 1 and physical[0].coordinate == 0
-          and physical[0].required == 4)
-    check("it is proved impossible: one route into A, largest quantum two",
-          physically_serviceable(world, state, requirements(physical)) == IMPOSSIBLE)
+    check("two physical demands, each four units short, at A and at B",
+          len(physical) == 2 and [d.coordinate for d in physical] == [0, 1]
+          and all(d.required == 4 for d in physical))
+    blocked = tuple(d for d in physical if d.coordinate == 0)
+    check("the shortfall at A is proved impossible: its only inbound route is "
+          "B -> A and B is empty, so no route into A is live",
+          physically_serviceable(world, state, requirements(blocked)) == IMPOSSIBLE)
     order = tuple(d for d in demands if d.demand_class == "E")
-    check("the order at C is serviceable",
+    check("the order at B is serviceable",
           physically_serviceable(world, state, requirements(order)) == SERVICEABLE)
     found = components(world, state, ActiveDemandSet.of(physical, order))
     check("the two are independent", len(found) == 2, str(len(found)))
     menus = {c.component_id: len(enumerate_service_plans(world, state, c)) for c in found}
-    check("and C has exactly two complete plans", sorted(menus.values()) == [0, 2],
+    check("and B has exactly two plans", sorted(menus.values()) == [0, 2],
           str(menus))
 
 
@@ -4270,14 +5396,14 @@ def test_the_progress_reference_sees_what_the_runtime_does() -> None:
     reference = global_progress(equalised, state, demands, bound)
     check("the blocked demand is named, not silently dropped",
           reference.blocked == ("P:r|A",), str(reference.blocked))
-    check("the order at C is resolved",
-          reference.resolved == ("E:000000:000:r|C",), str(reference.resolved))
+    check("the live part at B is resolved",
+          reference.resolved == ("E:000000:000:r|B", "P:r|B"), str(reference.resolved))
     check("the blocked part carries the BLOCKED marker",
           (BLOCKED,) in reference.part_plans, str(reference.part_plans))
-    check("the progress reference contains the two C-service possibilities",
+    check("the progress reference contains the two B-service possibilities",
           len(reference.plans) == 2, str(reference.plans))
-    check("both are B -> C, at one unit and at two",
-          all("1->2" in identity for identity in reference.plans),
+    check("both are C -> B, at one unit and at two",
+          all("2->1" in identity for identity in reference.plans),
           str(reference.plans))
     runtime = component_progress(equalised, state, demands, bound)
     check("the component runtime contains the same two",
@@ -4353,7 +5479,10 @@ def test_all_complete_remains_available_under_a_narrower_name() -> None:
           and all(d.required == 2 for d in demands))
     check("it still answers its own question: one plan serves both",
           len(all_complete_plans(world, state, demands, 4)) > 0)
-    starved = study_one_state(0, 12, 0)
+    # (0, 0, 12): the shortfall at A cannot be touched at all, because B is
+    # empty and no route into A is live, so no plan serves every demand at once
+    # however service is defined.
+    starved = study_one_state(0, 0, 12)
     check("and answers 'no' when they cannot be served together, which is a "
           "true answer to a narrow question, not a statement that nothing "
           "can happen",
@@ -4514,7 +5643,7 @@ def test_a_serviceable_component_must_execute_one_nonempty_plan() -> None:
     run = EconomyRun(
         world,
         ScriptedDisturbance({}),
-        ScriptedArrivals({0: (("r", "C", 1),)}),
+        ScriptedArrivals({0: (("r", "B", 1),)}),
         POLICY_CONTROL,
         1, 2, 3, 4,
         state,
@@ -4543,15 +5672,33 @@ def test_a_serviceable_component_must_execute_one_nonempty_plan() -> None:
           f"{record.state_forced[0]} -> {record.state_after[0]}")
 
 
+def _reach_routes(world, state, coordinate):
+    from demand_driven_ebu.enumeration import structural_reach
+
+    return structural_reach(world, state, frozenset({coordinate})).routes
+
+
 def test_blocked_and_unresolved_are_still_different_things() -> None:
     import demand_driven_ebu.enumeration as enumeration_module
 
     world, state, demands = _study_one_blocked_case()
-    physical = tuple(d for d in demands if d.demand_class == "P")
+    physical = tuple(
+        d for d in demands if d.demand_class == "P" and d.coordinate == 0
+    )
     check("the blocked demand is proved impossible, not undecided",
           physically_serviceable(world, state, requirements(physical)) == IMPOSSIBLE)
+    check("the blocked demand is decided without evaluating anything at all: "
+          "no live route reaches A, so its reach carries no route to search",
+          _reach_routes(world, state, 0) == frozenset())
+
+    # The undecided case is carried by an economic order. Complete service is
+    # the economic contract, so it is an economic requirement that can exhaust
+    # a search budget; an atomic physical claim is settled by the first plan
+    # that delivers anything at all.
+    order = _e(world, "B", 3)
     run = EconomyRun(
-        world, ScriptedDisturbance({}), ScriptedArrivals({}), POLICY_RANDOM,
+        world, ScriptedDisturbance({}),
+        ScriptedArrivals({0: (("r", "B", 3),)}), POLICY_RANDOM,
         1, 2, 3, 4, state, registered=True,
     )
     saved = enumeration_module.EXHAUSTIVE_BUDGET
@@ -4565,6 +5712,9 @@ def test_blocked_and_unresolved_are_still_different_things() -> None:
         enumeration_module.EXHAUSTIVE_BUDGET = saved
     check("an undecided search is a job integrity failure, not a blocked part",
           raised is not None)
+    check("and with its real budget the same order is decided, not undecided",
+          physically_serviceable(world, state, requirements((order,)))
+          in (SERVICEABLE, IMPOSSIBLE))
     check("BLOCKED is a reference marker and never a search verdict",
           BLOCKED not in (SERVICEABLE, IMPOSSIBLE, UNRESOLVED))
 

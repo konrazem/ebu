@@ -1,0 +1,36 @@
+{
+  "registration": "EBU-DEMAND-DRIVEN-STAGE-A-v1",
+  "total_declared": 768,
+  "completed": 768,
+  "failed": 0,
+  "unstarted": 0,
+  "failed_jobs": [],
+  "unstarted_jobs": [],
+  "halted_on_integrity_failure": false,
+  "elapsed_seconds": 58.844,
+  "protected_packages_after_execution": {
+    "demand_driven_ebu": {
+      "expected": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+      "actual": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+      "unchanged": true
+    },
+    "gaussian_harness": {
+      "expected": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+      "actual": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+      "unchanged": true
+    },
+    "capacity_v2": {
+      "expected": "8976da3c44a121d1b9c058795a9ee38b05999e2cf674e70134d18222e70221c2",
+      "actual": "8976da3c44a121d1b9c058795a9ee38b05999e2cf674e70134d18222e70221c2",
+      "unchanged": true
+    },
+    "homeostasis": {
+      "expected": "8b462401a00ed8624fbd649e460b9e44e6adf8ba749ca1fa3872e9a6ddd4c3c6",
+      "actual": "8b462401a00ed8624fbd649e460b9e44e6adf8ba749ca1fa3872e9a6ddd4c3c6",
+      "unchanged": true
+    }
+  },
+  "protected_packages_unchanged_after": true,
+  "preregistration_identity": "a74d83802c900cc79ee308b876e409e1f94cf11d8fe3fe1bda5fdb764654bd17",
+  "source_manifest_digest": "939cc461946071aa85d727eb50c3a40246bdadc17c1c7152af3f01d122ef83d0"
+}

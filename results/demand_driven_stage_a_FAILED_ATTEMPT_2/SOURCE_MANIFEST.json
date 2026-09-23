@@ -1,0 +1,310 @@
+{
+  "git": {
+    "branch": "gaussian/stage-a-environment",
+    "head": "a6dbed5a4ea3d8e8be82e298e9a4a08979a37a48",
+    "tree_is_clean": false,
+    "note": "HEAD does NOT identify this working state: every source below is uncommitted or untracked. The per-file digests are authoritative."
+  },
+  "protected_packages": {
+    "demand_driven_ebu": {
+      "expected": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+      "actual": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+      "unchanged": true
+    },
+    "gaussian_harness": {
+      "expected": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+      "actual": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+      "unchanged": true
+    },
+    "capacity_v2": {
+      "expected": "8976da3c44a121d1b9c058795a9ee38b05999e2cf674e70134d18222e70221c2",
+      "actual": "8976da3c44a121d1b9c058795a9ee38b05999e2cf674e70134d18222e70221c2",
+      "unchanged": true
+    },
+    "homeostasis": {
+      "expected": "8b462401a00ed8624fbd649e460b9e44e6adf8ba749ca1fa3872e9a6ddd4c3c6",
+      "actual": "8b462401a00ed8624fbd649e460b9e44e6adf8ba749ca1fa3872e9a6ddd4c3c6",
+      "unchanged": true
+    }
+  },
+  "files": [
+    {
+      "path": "demand_driven_ebu/__init__.py",
+      "sha256": "ad60e3578fa851be28508f7d44f8d07124dfcc5b6bd7d6f0ea16cf52825a2e08",
+      "bytes": 2011,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/admission.py",
+      "sha256": "fd457869ba39a28b83d00c4531b523d159057c95ceac5ccc9ec683073de96de1",
+      "bytes": 9955,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/arrivals.py",
+      "sha256": "87278b18eb4a03a7e99b953801a1de73e7f16dd982bebbb77da65d8dbbb122fa",
+      "bytes": 4473,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/capacity.py",
+      "sha256": "b72b4ec973f9fdb61eb71a790e68176b8738a0fcb71c85f01c207d36ff156186",
+      "bytes": 5214,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/coupling.py",
+      "sha256": "0588c17df3b4a1199bd447be1410be7387a126011f194797f92e9cbc27bd382e",
+      "bytes": 11825,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/cycles.py",
+      "sha256": "de186f344608609d08791e1a9b4ac18f49b9296c926e4e48a02d81555f60d0bc",
+      "bytes": 7571,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/demand.py",
+      "sha256": "03d8c410f522c2245d109a8d22eb95b6c902becfba4e54d14e5c0bd96c848919",
+      "bytes": 9105,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/disturbance.py",
+      "sha256": "f79027132d0dacebf35f1baf53a26cb3cb0a402ed8f2331930d5fb811f36fe2a",
+      "bytes": 5068,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/enumeration.py",
+      "sha256": "899d9a2b90ea08d0a4cf7852ce61db505f89ab22dc567272ce7d496f1a2522c5",
+      "bytes": 18512,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/fixtures.py",
+      "sha256": "82f3d59477d45bcf5d07653a9353095250a2b7a87495b7f31412b61d72a908ff",
+      "bytes": 25273,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/harness.py",
+      "sha256": "2e5a8ae8ae5263679044cc166b12917653712fec81b550f9267676f72b24733c",
+      "bytes": 33392,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/oracle.py",
+      "sha256": "56a9ad158cfcdb86ce687aaf076d89bde122797a52e535744d3f566ba96a465f",
+      "bytes": 39025,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/physical.py",
+      "sha256": "a52d1c20bbdcb8f9237d24d773835da2f76674b662aaf4eb7db33d3bdd527818",
+      "bytes": 8735,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/plans.py",
+      "sha256": "84f0cc0cca2dbfa00d6baa75104c9bed44fba03c00eba676fd236d858a5b5727",
+      "bytes": 10218,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/policies.py",
+      "sha256": "6e666af114456142bf21a729d7dfcb1747d9dadb05ddab48ce68ee31c0ed2b30",
+      "bytes": 4692,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/potential.py",
+      "sha256": "f6fd77a64c52f538a4c4037038ea4da94ed76987e4aa0b486aaa6f96565e7d20",
+      "bytes": 5186,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/rng.py",
+      "sha256": "98257ba831fdce4ecd0d49b32702d782b8f0fc483c28c3ea398e94605f031361",
+      "bytes": 6111,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/service.py",
+      "sha256": "1695c7fbc85a0bdf549b7f9735b155e75261f7aaadb85942a64e268a4907d12c",
+      "bytes": 20719,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/study_one.py",
+      "sha256": "ea5aa532cf8ca29e504b066477120a8ddcc49102277ba9747c22d2ad9ae1c4d4",
+      "bytes": 10462,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/valuation.py",
+      "sha256": "60aa99ba5645045d795a6eee629d22fdc64fd0500ac2e701da709c00ed3813a3",
+      "bytes": 6779,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_ebu/world.py",
+      "sha256": "f5039126d141e427338e2b4f737ee4ddd408fb00ac49f2e1d2150b2be6235cc7",
+      "bytes": 12419,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/__init__.py",
+      "sha256": "0100f3987e2fd18ae86fda448a6542b0e7fad50097b6e7cc66cb948886bcb165",
+      "bytes": 269,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/actions.py",
+      "sha256": "18393c680db85b12eb9afcf4fd3fae6b8353c5bdc3a4dcd180490c3da17c771f",
+      "bytes": 3954,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/candidates.py",
+      "sha256": "1cededeef35cd3034abd56bd7e980bd76d67ede17775a584543f0a992ab55bde",
+      "bytes": 3010,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/capacity.py",
+      "sha256": "c9399a13520583f46136686762785f36ef2b7be1fa4eaa4a11b2216b88db795b",
+      "bytes": 6077,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/feasibility.py",
+      "sha256": "01fe4fd24330ce29a2f2587c5ead693ef2e1cc885d52e77716322143b6ae190f",
+      "bytes": 3818,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/fixtures.py",
+      "sha256": "107969a148f0c01213d10a6a97c819f3079768739ae4a623cbf1936790f358ce",
+      "bytes": 5407,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/forcing.py",
+      "sha256": "3e0374d1fd145b6d03fa6102608c76e1454028a26142763ff3619dd724b3a868",
+      "bytes": 3112,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/harness.py",
+      "sha256": "70231f25cf01364ab0f2342f288b470b50c39f13c201ea9ddf48b0d2de3d4884",
+      "bytes": 14651,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/numerics.py",
+      "sha256": "20822cdf4d38551a6c3137ceb458c2d421e16c54d514d1e41136219c7a9858bc",
+      "bytes": 3143,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/potential.py",
+      "sha256": "0bd78ec1cbc46b1934cd17f885f47dbb62bf0ec7d4a13f4f92b1f97b82fc1d31",
+      "bytes": 4052,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/rng.py",
+      "sha256": "cddb3f1790144a5e2baa5b11c0a952b6748f7059363a27caf0d5b36aa86c8607",
+      "bytes": 5350,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/stage_a.py",
+      "sha256": "f2ace9217230efc945241c006dd47c77bcbd40b5da418bc64e764f5c1148b3d4",
+      "bytes": 9397,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "gaussian_harness/valuation.py",
+      "sha256": "190ecefb2eff3ed43ca0e9955a70105472f2ae6f72d53e7fe60bdfb826a4aa7b",
+      "bytes": 9411,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_stage_a/__init__.py",
+      "sha256": "1a735bdb3dd3e30415dca04afe7314dad868da81fc7a4f9e28da04a5fcbbaea1",
+      "bytes": 689,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_stage_a/execute.py",
+      "sha256": "596cd8700ccdfa63dafa9766840c37196323b556881e02c3505a9864ac234ff7",
+      "bytes": 16532,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_stage_a/registry.py",
+      "sha256": "bccdd77c1e3b35833ec2cea96c178febf2ad05c50a6bb87165e7208ca245f4b4",
+      "bytes": 3965,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_stage_a/reporting.py",
+      "sha256": "8ade00855d0ea04d4a6926b03f1056960beefff29c2d57073f7e5ef6c57ecca0",
+      "bytes": 13688,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_stage_a/sources.py",
+      "sha256": "8eed3162d4fc9b94e2aed5177553e00740a84b6b161b055252a2b4c59bd69d88",
+      "bytes": 4761,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "demand_driven_stage_a/stopping.py",
+      "sha256": "804d8f62361d8efe48498cecc1602b69b5149144e8fcbea3acf49b01a27ca8b0",
+      "bytes": 2404,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "DEMAND_DRIVEN_STAGE_A_PREREGISTRATION.md",
+      "sha256": "b37f7075612f688e3780e103c8cf0a2de76338e98a882a063a4c8d62a8a44517",
+      "bytes": 43924,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "DEMAND_DRIVEN_STAGE_A_PREREGISTRATION_CORRECTION_1.md",
+      "sha256": "fe1d57320fcd62fd6dcef518af599761b7344c7944f314510259d5d5772b89f3",
+      "bytes": 8586,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "DEMAND_DRIVEN_STAGE_A_PREREGISTRATION_CORRECTION_2.md",
+      "sha256": "a93c25064d00d973ea8bbb6e12bdf57e4a6b3ba29c7155a5ca1f3388ce446bd7",
+      "bytes": 7228,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "DEMAND_DRIVEN_EBU_SCIENTIFIC_CONTRACT.md",
+      "sha256": "3fc466a103ffe0630f15a7a4d45cd0547393de58643621c26d276432096bc897",
+      "bytes": 45612,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md",
+      "sha256": "7b1ce8c749918d9e9b14c37931b0681ea25497545b02f772e593d50efaf4629f",
+      "bytes": 30750,
+      "tracked_state": "uncommitted-or-untracked"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "2538964de3ff0b328ce5b10efa4396a0f870f6f10b6d31b86d174cc607d8820e",
+      "bytes": 8383,
+      "tracked_state": "uncommitted-or-untracked"
+    }
+  ],
+  "file_count": 46,
+  "manifest_digest": "688f5df4fc7888d6abdf0b379471179c3137343e8decfcb8437829ca10ccb30d"
+}

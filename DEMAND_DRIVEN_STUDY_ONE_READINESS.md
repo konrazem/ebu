@@ -146,10 +146,52 @@ Deliberately not taken here. None may be chosen from observed outcomes.
 
 | # | decision | note |
 |---|---|---|
-| A1 | the isolated **P disturbance** fixture: which coordinate, what amplitude, how many epochs of recovery | must be inside the frozen domain; amplitude must not be set equal to the action quantum, or the endpoint-saturation theorem's hypothesis is recreated by accident |
+| A1 | the isolated **P disturbance** fixture: which coordinate, what amplitude, how many epochs of recovery | must be inside the frozen domain; amplitude must not be set equal to the action quantum, or the endpoint-saturation theorem's hypothesis is recreated by accident; and the **accessibility structure below** must be declared with whichever amplitude is chosen |
 | A2 | the isolated **E demand** fixture: destination, quantity, arrival epoch | one order, no physical shortfall, so E and P are cleanly separated |
 | A3 | the **E -> P -> restoration cycle** fixture: the order that creates a shortfall, and the recovery that closes it | the closed-cycle theorem already fixes what capacity may be issued; the fixture fixes what is observed |
 | A4 | what Stage A **reports** | Stage A is a mechanism demonstration, not a comparison; it must not carry hypotheses |
+
+#### Accessibility structure of the frozen Study-1 world
+
+Exhaustive static enumeration of the frozen `study-one-v1` graph — all 91
+integer states, no policy run, no trajectory — establishes the following. The
+derivation is in `EBU_DYNAMIC_FIELD_THEORY_SYNTHESIS.md` §10–§12 and the
+before/after record is finding F-7.
+
+**Under the withdrawn complete-service P-demand rule**, `x* = (4,4,4)` was
+reachable from only **31 of the 91 states** and **36** states were absorbing
+away from equilibrium — 28 because a deficit exceeded what one plan could
+deliver into its coordinate, 8 from joint complete-service conflicts. **None
+was physical scarcity**: every state holds exactly the 12 units `x*` requires.
+
+**Under the implemented strong atomic P-provenance rule** (contract §2.1):
+
+- `x*` is the **only** absorbing physical state;
+- `x*` is reachable from **all 91** states, and from all 91 by
+  burden-nonincreasing paths;
+- every state lies within **five** burden-nonincreasing steps of `x*`;
+- exactly two states, `(3,4,5)` and `(5,4,3)`, have no strictly descending edge
+  and must cross a `W`-neutral one first; both plateaus lead out, and **no**
+  plateau component anywhere lacks a lower exit;
+- the graph offers 420 menu plans over 408 distinct successor edges, of which
+  327 descend, 33 are neutral and 48 ascend. The ascending edges are the ones
+  strong provenance admits: a plan may legitimately restore one deficit while
+  deepening another, and its exact EBU carries that damage in full.
+
+This is a **physical / demand-menu accessibility** result. It does not say that
+every state is EBU-affordably recoverable, that any policy reaches equilibrium,
+or that recovery probability is 1. Those are Stage-A questions and are listed
+as such.
+
+Consequences for A1: a P-disturbance of any amplitude inside the domain now has
+a restoration path, so the fixture may be chosen on scientific grounds rather
+than around a menu artifact. The amplitude must still not equal the action
+quantum (the endpoint-saturation hypothesis), and the preregistration must
+record which of the two plateau-crossing states, if either, the episode starts
+from.
+
+This changes no frozen rule beyond the one F-7 withdrew, authorizes nothing,
+and is not evidence about the mechanism.
 
 ### Stage B — the registered behavioural comparison
 

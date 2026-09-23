@@ -1,0 +1,34 @@
+{
+  "passed": true,
+  "failures": [],
+  "protected_packages": {
+    "demand_driven_ebu": {
+      "expected": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+      "actual": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+      "unchanged": true
+    },
+    "gaussian_harness": {
+      "expected": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+      "actual": "a9158eefb4eaf7d2dd609f1292d97f245290d73ec4e0393288ce5fd47725fe55",
+      "unchanged": true
+    },
+    "capacity_v2": {
+      "expected": "8976da3c44a121d1b9c058795a9ee38b05999e2cf674e70134d18222e70221c2",
+      "actual": "8976da3c44a121d1b9c058795a9ee38b05999e2cf674e70134d18222e70221c2",
+      "unchanged": true
+    },
+    "homeostasis": {
+      "expected": "8b462401a00ed8624fbd649e460b9e44e6adf8ba749ca1fa3872e9a6ddd4c3c6",
+      "actual": "8b462401a00ed8624fbd649e460b9e44e6adf8ba749ca1fa3872e9a6ddd4c3c6",
+      "unchanged": true
+    }
+  },
+  "preregistration": {
+    "computed": "a74d83802c900cc79ee308b876e409e1f94cf11d8fe3fe1bda5fdb764654bd17",
+    "recorded": "a74d83802c900cc79ee308b876e409e1f94cf11d8fe3fe1bda5fdb764654bd17"
+  },
+  "job_count": 768,
+  "distinct_identities": 768,
+  "identities_reproducible": true,
+  "output": "/Users/konrad.grzyb/code/ebu/results/demand_driven_stage_a"
+}

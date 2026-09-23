@@ -16,6 +16,12 @@ artifact of an over-broad coupling rule and is rewritten below; F-2, F-3 and
 F-4 are unchanged in substance. The audit's corrections are described in
 `DEMAND_DRIVEN_AUDIT_CORRECTION_HANDOFF.md`.
 
+**F-7 is the one exception to "nothing here is repaired."** It was recorded and
+then acted on, because exhaustive enumeration showed the rule it describes was
+not a consequence of the physics at all. The finding is kept in full, with the
+evidence that produced it, and the superseding decision is stated inside it.
+Everything else in this ledger stands unrepaired.
+
 ---
 
 ## F-1 A stuck obligation freezes only what it genuinely competes with
@@ -191,6 +197,167 @@ reach closure. Not attempted, same reason as F-5: Study 1 is lossless.
 
 ---
 
+## F-7 Complete-service P-demand made 36 of 91 Study-1 states absorbing
+
+**SUPERSEDED FOR STUDY-1 PHYSICAL RESTORATION. The rule was withdrawn and
+replaced; the evidence below is retained in full and is not deleted.**
+
+### The old semantics, enumerated exactly
+
+`study_one_world` — three stocks in a line `A <-> B <-> C`, one resource,
+references `x* = (4,4,4)`, conserved total `M = 12`, declared quanta `{1, 2}`,
+one action per route per plan. **91 integer states.** Edges are the successor
+states of the decomposition-free progress reference, evaluated at every state.
+No policy ran, no trajectory was generated, and no arrival law was sampled.
+
+Under the withdrawn rule — *a plan serves a physical demand only if it closes
+the whole deficit in one step* — the exhaustive result was:
+
+| quantity | count |
+|---|---|
+| physical states | **91** |
+| equilibrium | **`(4,4,4)`** |
+| absorbing states (empty menu) | **37** |
+| — of which the equilibrium itself | **1** |
+| — **absorbing away from equilibrium** | **36** |
+| states from which `x*` is reachable at all | **31 / 91** |
+| states from which `x*` is reachable by burden-nonincreasing paths | **31 / 91** |
+| states from which `x*` is reachable by strict descent alone | **23 / 91** |
+| distinct successor edges | **99** (80 descending, 13 neutral, 6 ascending) |
+
+### None of the 36 was resource scarcity
+
+`sum_i x_i = 12 = sum_i x*_i` at **every** state, so the material needed to
+reach the reference always existed somewhere in the world. The two causes were:
+
+| cause | count |
+|---|---|
+| a deficit larger than any single plan could deliver into that coordinate — `A` and `C` have one inbound route each and the largest declared quantum is 2, so a shortfall of 3 or more there was `PHYSICALLY_IMPOSSIBLE` | **28** |
+| **joint complete-service conflict** — each deficit serviceable alone, the pair not: `(2,2,8)`, `(2,3,7)`, `(3,1,8)`, `(3,2,7)`, `(7,2,3)`, `(7,3,2)`, `(8,1,3)`, `(8,2,2)` | **8** |
+| genuine physical scarcity or topology | **0** |
+
+Canonical witness `(0,6,6)`: the shortfall at `A` is four units, the only route
+into `A` carries at most two, and the menu was empty for ever. Sharpest witness
+`(2,2,8)`: `A` can be served alone and `B` can be served alone, but `A` would
+have to both receive two units and fund `B`'s two from a stock of two.
+
+### Why it was a semantic error and not a physical one
+
+Three independent reasons, each sufficient:
+
+1. **The ontology does not ask for it.** Contract §2.1 declares P-demand
+   state-derived: the shortfall persists exactly as long as the deficit does,
+   and `derive_physical_demands` reads it off the state with no cache and no
+   queue. The residual of a partial restoration is therefore already recorded —
+   *in the state* — so nothing is lost by restoring incrementally and nothing
+   needs storing.
+2. **It was not refinement-consistent.** At `(2,6,4)` the plan `{B->A@2}` was
+   legal and its physically valid half `{B->A@1}` was not. Splitting a legal
+   restoration into legal sub-restorations destroyed its demand provenance,
+   which contradicts the project's own atomic-action principle.
+3. **It was the economic contract applied to a physical condition.** An
+   economic order has an identity and a lifecycle, so partial fulfilment would
+   need a backlog quantity against that id. A physical deficit has neither.
+   `service.CoordinateRequirement.required_delta` collapsed both into
+   `max(economic_total, physical_deficit)`; that collapse is what carried the
+   economic contract across, and it is now removed.
+
+This is the same family as F-1 — *a declared complete-service and allocation
+restriction, not unavoidable physical scarcity* — but for P-demand alone, and
+far more severe than F-1's statement suggested.
+
+### What replaced it
+
+    E-demand    complete service only, additive across separate orders,
+                no partial service and no backlog quantity. UNCHANGED.
+
+    P-demand    served by genuine positive progress on **at least one**
+                pre-state deficit; re-derived from the post-state; attribution
+                capped at the pre-action deficit; overshoot permitted and
+                represented in the state; irredundancy retained in
+                served-set-relative form, so no unrelated transfer becomes
+                legal.
+
+### The second correction: at least one, not every one
+
+The first implementation of the atomic rule required progress on **every**
+P-demand of a coupled component. An independent audit found that this still
+breaks sequential refinement, and it is right. At `(1,4,7)` the plan `B->A@2`
+is legal and worth `+2`. Split into `B->A@1` twice: the first half is worth
+`+2` and **creates a new deficit at `B`**; the "every one" rule then refuses
+the second half for not progressing the deficit the first half had just made.
+A restoration legal whole and illegal in halves is not atomic.
+
+So provenance is existential: **at least one** pre-state P-demand progressed.
+
+What this buys is **conditional** restorative refinement, and the finding is
+recorded at that strength and no higher. Of the **152** legal two-unit
+singleton restorations in the frozen world, **120** have both one-unit halves
+legitimate; in the other **32** the first half clears the destination deficit
+outright, so the second half has nothing left to progress and is correctly
+refused. There are **zero** failures of the conditional statement — *the second
+half stays legitimate for as long as a deficit remains at the destination*.
+Unrestricted subdivision invariance is **not** claimed, and no persistent
+demand, historical entitlement or overshoot exception was introduced to obtain
+it; whether it is wanted is an unresolved modeling decision.
+Coupling survives for genuine physical conflict, competing stock and joint
+executability; it no longer carries a contract that one plan must progress
+every P-demand it touches. Two consequences were followed through rather than
+absorbed:
+
+* **irredundancy became served-set relative.** A proper subset makes a plan
+  redundant only when it executes *and* answers everything the plan answers. A
+  plain "does some subset serve?" test would collapse every joint plan — an
+  economic order and a physical restoration answered in one epoch would reduce
+  to the economic action alone, making one class wait for the other.
+* **contract §6 protection moved to a coexistence question.** Serviceability
+  can no longer see that a new order would starve an existing need, because a
+  plan serving the order need not progress the need. `admission.starved_ids`
+  asks instead whether *some* plan completely serves the new orders and
+  progresses every existing need. It is the only place the conjunction is
+  asked.
+
+**Over-coupling now fails in the opposite direction.** Merging two independent
+needs used to make service harder — complete service of the union, all or
+nothing. It now makes it *easier*: "serve the component" is satisfied by
+progressing either one, so a merged menu gains plans that leave one need
+entirely unserved. On `sandwater-v1` at `(8,12,10,4,8)` the correctly
+decomposed form offers 18 outcomes and the over-coupled one offers 27, the 9
+extra being exactly those with zero increment at one of the two requirement
+coordinates. The runtime authority is unaffected: `global_progress` and
+`component_progress` agree exactly, checked every epoch.
+
+Re-enumerated against the implemented semantics, on the same 91 states:
+
+| quantity | withdrawn rule | implemented rule |
+|---|---|---|
+| menu plans offered | 99 | **420** |
+| distinct successor edges | 99 | **408** (327 down, 33 neutral, 48 up) |
+| absorbing states | 37 (36 non-equilibrium) | **1 — `x*` alone** |
+| `x*` reachable at all | 31 / 91 | **91 / 91** |
+| `x*` reachable by burden-nonincreasing paths | 31 / 91 | **91 / 91** |
+| `x*` reachable by strict descent alone | 23 / 91 | **89 / 91** |
+| longest burden-nonincreasing distance to `x*` | — | **5 steps** |
+| plateau-locked states | 4 | **2** — `(3,4,5)` and `(5,4,3)` |
+| plateau components with no lower exit | 36 | **0** |
+
+**This is a physical / demand-menu accessibility result.** It does not say that
+every state is EBU-affordably recoverable, that any policy reaches equilibrium,
+or that recovery probability is 1. Those are Stage-A questions.
+
+### Where the evidence lives
+
+The withdrawn rule is no longer implemented anywhere, so its enumeration is
+reproduced from first principles in `dynamic_ebu_theory_checks.py`
+(`section_study_one`, checks `S1-01` to `S1-25`), which also verifies that the
+package's successor map now equals the atomic enumeration on all 91 states. The
+derivation is in `EBU_DYNAMIC_FIELD_THEORY_SYNTHESIS.md` §10–§12. Permanent
+regressions live in `test_demand_driven_ebu.py`: `(5,4,3)` for locality of
+provenance, `(2,6,4)` for refinement consistency, `(0,6,6)` for incremental
+restoration, and the 91-state accessibility oracle.
+
+---
+
 ## What would change these
 
 F-5 and F-6 are consequences of the structural reach being a sound *superset*
@@ -202,7 +369,9 @@ liveness is necessary and sufficient there, and the relief limb is empty.
 See `DEMAND_DRIVEN_STUDY_ONE_DOMAIN.md` sections 3 and 8.
 
 F-1 and F-4 are consequences of complete-service semantics — F-1 now in its
-narrowed form, after the coupling artifact was removed. F-2 is a consequence of
+narrowed form, after the coupling artifact was removed, and both now scoped to
+**economic** complete service, which is the only place that contract survives
+(F-7). F-2 is a consequence of
 conservation plus irreversibility. F-3 is a consequence of Capacity V1's
 no-pooling rule. Each would be altered only by changing the corresponding
 frozen rule, which is a redesign and is not authorized here.
