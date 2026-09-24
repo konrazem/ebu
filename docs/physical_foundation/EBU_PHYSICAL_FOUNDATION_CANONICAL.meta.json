@@ -1,0 +1,123 @@
+{
+  "document_kind": "CANONICAL PHYSICAL EBU FOUNDATION - FROZEN",
+  "status": "frozen",
+  "frozen": true,
+  "committed": false,
+  "pushed": false,
+  "build_date": "2026-09-24",
+  "source_scientific_record": {
+    "branch": "origin/publication/scientific-record",
+    "commit": "481753895509524c9d2674d1880d87712bb0ec18",
+    "tree": "19e43ecb07608e76b6e95233a456fcadf8b8a9aa",
+    "parent_stage_a_publication_commit": "2c4b71d15fe8cb46592d9f2ead8f5f4e62fe9e32",
+    "parent_stage_a_publication_tree": "5afe39788ecc6bff675b0820eef1669fb8b78ebf",
+    "verified_independently": true
+  },
+  "package_identity": {
+    "package": "demand_driven_ebu",
+    "sha256": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+    "recipe": "sorted *.py; relative path bytes + file bytes; per demand_driven_stage_a/sources.py",
+    "recomputed_and_matched": true
+  },
+  "canonical_document": {
+    "path": "docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
+    "sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+    "byte_count": 49098,
+    "supersedes": {
+      "sha256": "aa664afdaece50d03eca26c2b5bc908bbedd6d1c4b7ebecd66f257cb9c778268",
+      "byte_count": 49003,
+      "reason": "final one-sentence presentation correction to the valued-sink explanation from the narrow independent recheck",
+      "supersedes": {
+        "sha256": "7d3a444c8ec50fbc4cac2fc7fc379ef6a01cb4680aef737b96d6057202e4f660",
+        "byte_count": 44590,
+        "reason": "six required corrections from the independent canonical file audit"
+      }
+    }
+  },
+  "evidence_paths_used": [
+    "docs/scientific_record/README.md",
+    "docs/scientific_record/EVIDENCE_MANIFEST.json",
+    "docs/scientific_record/CROSS_REPORT_NOTES.md",
+    "docs/scientific_record/STAGE_B_DESIGN_HISTORY_NOTE.md",
+    "docs/scientific_record/stage_a/STAGE_A_GATE_1_EXECUTION_INTEGRITY.md",
+    "docs/scientific_record/stage_a/STAGE_A_GATE_2_CONSTRUCT_VALIDITY.md",
+    "docs/scientific_record/stage_a/STAGE_A_GATE_3_RESULTS_EXTRACTION.md",
+    "docs/scientific_record/stage_a/STAGE_A_GATE_4_ADVERSARIAL_INTERPRETATION.md",
+    "docs/scientific_record/stage_a/STAGE_A_GATE_5_FINAL_DISPOSITION.md",
+    "docs/scientific_record/stage_a/STAGE_A_PUBLICATION_REMOTE_VERIFICATION.md",
+    "docs/scientific_record/physical_foundation/FOUNDATION_AUDIT_FACE_THE_DEVIL.md",
+    "docs/scientific_record/physical_foundation/FOUNDATION_INDEPENDENT_SKEPTIC_2.md",
+    "docs/scientific_record/physical_foundation/FOUNDATION_RECONCILIATION_GATE.md",
+    "docs/scientific_record/physical_foundation/FOUNDATION_INDEPENDENT_FREEZE_AUDIT.md",
+    "docs/scientific_record/physical_foundation/FOUNDATION_FINAL_FREEZE_CLOSURE_AUDIT.md"
+  ],
+  "evidence_manifest_verification": {
+    "entries_rehashed": 14,
+    "byte_failures": 0,
+    "note": "All EVIDENCE_MANIFEST.json entries and archival metadata re-hashed from the detached worktree; every sha256 and byte_count matched."
+  },
+  "freeze_audit_conditions_carried": [
+    "valued-loss sign wording scoped, with the exact loss_world E = 57/4 > 0 counterexample (document section 8)",
+    "demand_driven_ebu/valuation.py overbroad valued-sink wording recorded as a source divergence, NOT corrected in place, because the package identity is sealed (section 8)",
+    "strict negativity at mu = 0 scoped to positively valued coordinates, with the audit_sink_world E = 0 counterexample (section 5)",
+    "path-integral regularity stated as single-valued C1, not merely differentiable (section 3)",
+    "S_eq spatial constancy and kappa constancy stated explicitly as load-bearing (section 21)",
+    "explicit caution that f does not establish a law of motion (section 3)",
+    "both loss/sink branches recorded as conditional corollaries that pre-exist in the implementation, and as never exercised by any registered study (section 7)"
+  ],
+  "documentary_blockers_closed": {
+    "gates_1_to_5_absent": "CLOSED - all five Stage-A gate reports present and byte-verified at commit 481753895509524c9d2674d1880d87712bb0ec18",
+    "reconciliation_lacked_immutable_identity": "CLOSED - FOUNDATION_RECONCILIATION_GATE.md present and byte-verified at the same commit"
+  },
+  "provenance_limitations": {
+    "external_record_not_locally_authenticated": [
+      "docs/scientific_record/stage_a/STAGE_A_GATE_4_ADVERSARIAL_INTERPRETATION.md",
+      "docs/scientific_record/physical_foundation/FOUNDATION_INDEPENDENT_SKEPTIC_2.md",
+      "docs/scientific_record/physical_foundation/FOUNDATION_INDEPENDENT_FREEZE_AUDIT.md"
+    ],
+    "authorship_recovery_independence_limited": [
+      "docs/scientific_record/physical_foundation/FOUNDATION_FINAL_FREEZE_CLOSURE_AUDIT.md"
+    ],
+    "statement": "Provenance distinctions only. They imply nothing about the scientific content, rigour or standing of the reports concerned."
+  },
+  "scope": {
+    "stage_a_executed": false,
+    "stage_b_executed": false,
+    "stage_b_designed": false,
+    "source_code_modified": false,
+    "stage_a_record_modified": false,
+    "historical_audit_reports_modified": false,
+    "new_physical_coordinates_introduced": false
+  },
+  "next_step": "none - canonical physical foundation frozen and published",
+  "canonical_file_audit_corrections": {
+    "disposition_received": "INDEPENDENT CANONICAL FILE AUDIT CONDITIONAL PASS",
+    "scope": "presentation/documentation only; no equation, hierarchy, layer assignment or historical record changed",
+    "applied": [
+      "1. equilibrium curvature: exact criterion E<0 iff transpose(Delta) H Delta > 0, E=0 iff Delta lies entirely in the nullspace of H; mixed valued/unvalued displacement (-1, 1/2, 1/2) in audit_sink_world gives E = -5/8 < 0; the claim that any unvalued component destroys strict negativity is explicitly forbidden",
+      "2. Mobius order bound: the canonical equation table now requires BOTH quadratic V AND fixed additive increments, with the exact counterexample V(x)=x^3, baseline 0, three unit increments giving a nonzero third-order term I = -6",
+      "3. Gate 4 / Gate 5: recorded as a historical discrepancy, explicitly NOT a reconciled compatibility; both formulations preserved; neither historical report altered; the document flags rather than adjudicates",
+      "4. verification counts: '91 states x 3,662' multiplication removed in favour of '3,662 source-funded groups across 91 states'; the inferred nonnegativity-plus-capacity filtering explanation for 5,734 removed as not established by the authoritative record; incomplete scope documentation stated plainly",
+      "5. owner-account quantifier: 'each individual omega_i is not closed' replaced by 'need not be closed'; the proved result is the existence of a closed loop with zero aggregate change and nonzero owner redistribution; the universal non-exactness claim is explicitly forbidden",
+      "6. sink-term vanishing condition: stated as (1-eta) mu_sink = 0, satisfied independently by eta=1 (zero coefficient) or mu_sink=0 (unvalued coordinate); 'eta=1 implies mu_sink=0' explicitly forbidden; lossless Study-1, audit-only-sink and valued-sink cases kept distinct"
+    ],
+    "unchanged": "E = V_pre - V_post at the top of the hierarchy; mu, V, f definitions; path identity; Gaussian finite theorem; Study-1 specialization status; factor potentials; receipt closure; Shapley quadratic-only status; C+V accounting status; signed historical attribution; forbidden institutional backflow; entropy boundary; kappa status; P1-P5 roadmap",
+    "narrow_independent_recheck": {
+      "disposition_received": "NO FOUNDATIONAL BLOCKER; corrections 1-5 PASS; correction 6 mathematically correct but one sentence overstated the sink marginal",
+      "scope": "one explanatory sentence in section 7; no equation, hierarchy, layer assignment, source code, Stage-A record or historical report changed",
+      "applied": [
+        "section 7 three-case table, CASE B (lossy route, valued sink): the explanation 'both factors nonzero; the full three-term form is required' replaced by 'The sink marginal must be included in the general formula; its contribution may vanish at particular states, including when the sink is at its reference.'"
+      ],
+      "reason": "a valued sink does NOT imply mu_sink != 0. For Gaussian valuation mu_sink = (x_sink - x_sink*) / sigma_sink^2, so mu_sink = 0 at x_sink = x_sink* even when eta < 1. The requirement is that the sink marginal appear in the general formula, not that it be nonzero.",
+      "unchanged": "the valued-sink force law f_e = mu_s - eta mu_d - (1-eta) mu_sink; the exact sink contribution -(1-eta) mu_sink; the vanishing condition (1-eta) mu_sink = 0; the lossless Study-1, audit-only-sink and valued-sink cases, which remain distinct; every other equation and sentence"
+    }
+  },
+  "freeze": {
+    "freeze_basis": "FINAL NARROW AUDIT PASS",
+    "freeze_date": "2026-09-24",
+    "canonical_document_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+    "byte_count": 49098,
+    "scientific_content_changed_at_freeze": false,
+    "note": "Freeze records metadata only. The canonical markdown approved by the final narrow audit is committed byte-for-byte unaltered."
+  }
+}
