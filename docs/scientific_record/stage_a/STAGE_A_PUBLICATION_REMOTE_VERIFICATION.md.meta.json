@@ -1,0 +1,13 @@
+{
+  "source_role": "Stage-A publication remote verification (optional)",
+  "source_kind": "task_conversation_history",
+  "recovered_from_exact_history": true,
+  "historical_body_sha256": "3350c2dd9d090cabfc6db4dc236653848a5cf97077550d7fc887ec37e3691cca",
+  "byte_count": 2186,
+  "publication_commit": "2c4b71d15fe8cb46592d9f2ead8f5f4e62fe9e32",
+  "publication_tree": "5afe39788ecc6bff675b0820eef1669fb8b78ebf",
+  "package_identity": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+  "recovery_note": "Verbatim assistant output extracted from session transcript 2439348e-1200-4df3-8cbc-7e4fc7b2a2e2.jsonl, line index 18669, message uuid 122deca5-7e98-4d25-977a-d8b62cc86b48, authored 2026-09-23T20:33:34.853Z. Body copied byte-for-byte; no header, correction, summary or later amendment was inserted into the body.",
+  "local_transcript_authenticated": true,
+  "authentication_note": "Independently recoverable from the local Claude session transcript; the transcript coordinates in this note are reproducible in this environment."
+}

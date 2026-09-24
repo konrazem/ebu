@@ -1,0 +1,13 @@
+{
+  "source_role": "Final freeze-closure audit",
+  "source_kind": "task_conversation_history",
+  "recovered_from_exact_history": true,
+  "historical_body_sha256": "0fc4480ef54a5ebc23719bf43c050f03908980eaea3f8c62872ab54f5673f801",
+  "byte_count": 12346,
+  "publication_commit": "2c4b71d15fe8cb46592d9f2ead8f5f4e62fe9e32",
+  "publication_tree": "5afe39788ecc6bff675b0820eef1669fb8b78ebf",
+  "package_identity": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+  "recovery_note": "Verbatim assistant output extracted from session transcript 2439348e-1200-4df3-8cbc-7e4fc7b2a2e2.jsonl, line index 18728, message uuid 29380132-5fe9-4635-bf96-5e761888754e, authored 2026-09-24T08:15:15.834Z. Body copied byte-for-byte; no header, correction, summary or later amendment was inserted into the body.",
+  "local_transcript_authenticated": true,
+  "authentication_note": "Independently recoverable from the local Claude session transcript; the transcript coordinates in this note are reproducible in this environment."
+}

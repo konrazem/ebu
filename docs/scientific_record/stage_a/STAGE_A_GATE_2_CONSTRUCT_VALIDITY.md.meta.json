@@ -1,0 +1,13 @@
+{
+  "source_role": "Stage-A Gate 2 - construct validity",
+  "source_kind": "task_conversation_history",
+  "recovered_from_exact_history": true,
+  "historical_body_sha256": "c5b11feb62bf94e189e560814016480321f27d86809033cd635e26410870562e",
+  "byte_count": 7454,
+  "publication_commit": "2c4b71d15fe8cb46592d9f2ead8f5f4e62fe9e32",
+  "publication_tree": "5afe39788ecc6bff675b0820eef1669fb8b78ebf",
+  "package_identity": "f4e31a2a3f0fa0191532388484cb8e6bba95a1f937ce26ebfbdeb2fdd83eec48",
+  "recovery_note": "Verbatim assistant output extracted from session transcript 60441c31-5706-455b-98c3-bf25962bdc78.jsonl, line index 776, message uuid 2a94d199-c998-4d03-8e66-c2b1d243765e, authored 2026-09-23T21:02:31.625Z. Body copied byte-for-byte; no header, correction, summary or later amendment was inserted into the body.",
+  "local_transcript_authenticated": true,
+  "authentication_note": "Independently recoverable from the local Claude session transcript; the transcript coordinates in this note are reproducible in this environment."
+}
