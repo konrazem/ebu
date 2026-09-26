@@ -11,6 +11,20 @@ integrity take priority over speed.
 - Chat history and remembered summaries are not authoritative scientific
   records. Reconstruct each task's state from Git and committed documents.
 
+## EBU science authority
+
+- Before scientific, implementation, book, experiment, or mechanism work, read
+  in order:
+  1. `docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md`
+  2. `docs/theory/EBU_THEORY_BASELINE.md`
+  3. `docs/scientific_record/` for provenance as needed.
+- Authority: frozen foundation > working theory baseline > exploratory reports.
+- Never promote a CONDITIONAL, OPEN or EXPERIMENTAL result into the physical
+  core without an explicit scientific gate.
+- The working theory baseline records the current experimental frontier, the
+  superseded designs, and the standing do-not-drift list. Read it there rather
+  than restating that state here.
+
 ## Gate 1D-C authoritative operational sources
 
 - `V3.0_GATE1D_C_EXECUTION_FINALIZATION_ADDENDUM.md` and

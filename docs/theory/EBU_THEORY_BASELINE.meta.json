@@ -1,0 +1,81 @@
+{
+  "document_kind": "working_research_baseline",
+  "status": "active_working_baseline",
+  "path": "docs/theory/EBU_THEORY_BASELINE.md",
+  "sha256": "9b9f22d7b9c8a29725eb6a7abf4326fee68afaff503f23c2b5fbe1a6b21b732a",
+  "byte_count": 30878,
+  "build_date": "2026-09-25",
+  "authority_rank": 3,
+  "authority_hierarchy": [
+    "1. frozen physical foundation - docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
+    "2. scientific record - docs/scientific_record/ on publication/scientific-record, for historical provenance",
+    "3. this working theory baseline - current post-freeze research status",
+    "4. exploratory reports and AI task transcripts - candidate claims only"
+  ],
+  "conflict_rule": "If this baseline conflicts with the frozen physical foundation, the frozen foundation wins and this baseline is corrected.",
+  "promotion_rule": "No CONDITIONAL, OPEN or EXPERIMENTAL result may be promoted into the physical core without an explicit independent scientific gate.",
+  "frozen_foundation_branch": "origin/publication/physical-foundation",
+  "frozen_foundation_commit": "c63d6833da10a75ef66db11f99fb5b5c68d94c5e",
+  "frozen_foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+  "frozen_foundation_modified": false,
+  "scientific_record_branch": "origin/publication/scientific-record",
+  "scientific_record_commit": "481753895509524c9d2674d1880d87712bb0ec18",
+  "current_experiment": "E1a Canonical Einstein-EBU Benchmark Realisation",
+  "current_experiment_status": "design_complete_pending_corrected_synthetic_release_gate",
+  "next_gate": "rerun the E1a eight-case synthetic validation suite under the thermal normalisation (beta_true = 1, H_theta = H_U,theta / (k_B T_theta)), retaining the fourth-moment gate",
+  "stage_b_status": "not_resumed",
+  "superseded_experimental_design": {
+    "name": "fixed-B0 E1 temperature-arm formulation",
+    "defect": "V = delta U / B0 with a fixed arbitrary energy scale gives beta_theta = B0/(k_B T_theta) and kappa_theta = B0/T_theta, making kappa temperature-dependent and destroying cross-field commensurability of completed actor contributions",
+    "superseded_by": "E1a narrow design correction - thermal normalisation V_theta = [U_theta(x) - U_theta(x*)] / (k_B T_theta), giving beta = 1 and kappa = k_B at every theta",
+    "retained_as": "design history only; must not be used as the current experiment"
+  },
+  "retracted_claims": [
+    "1 BU = k_B T_ref as an operational Burden Unit definition",
+    "a complex spectrum implies no scalar potential exists",
+    "ambient K = diag(1/n_i) for a conserved chemical system",
+    "time shuffling of position records destroys K geometry",
+    "the action-increment test is mathematically independent of the pointwise bridge"
+  ],
+  "evidence_reports": [
+    "P0 topology / Moebius / recursion / dynamics / entropy synthesis validation",
+    "P1 entropy / rate-function theorem packet (original)",
+    "P1 independent audit and applied corrections (corrected P1 packet)",
+    "P2 identifiability, physical scale and natural-source analysis",
+    "P2.5 field geometry, normal modes, coarse-graining and Burden-Unit analysis",
+    "P2.6 natural-source anchoring, habitability and multiscale stability (original)",
+    "P2.6 correction and generalisation gate (potential, Onsager limit, rotational dynamics, quasipotential boundary, conserved chemical systems)",
+    "changing-field freedom and calibration studies",
+    "E1 Einstein-EBU changing-field bridge experimental design",
+    "E1a narrow design correction - thermal normalisation and true changing-field commensurability"
+  ],
+  "core_preserved_unchanged": [
+    "mu = grad V",
+    "E = V_pre - V_post",
+    "E = - integral grad V . dx",
+    "f = - grad V^T dx/dq",
+    "Gaussian Level 1 with H = diag(1/sigma_i^2)",
+    "E = - mu^T Delta - 1/2 Delta^T H Delta"
+  ],
+  "scope": {
+    "new_theory_derived": false,
+    "e1_executed": false,
+    "e1a_preregistered": false,
+    "stage_b_started": false,
+    "frozen_foundation_modified": false,
+    "scientific_record_modified": false,
+    "source_code_modified": false,
+    "real_data_collected": false,
+    "beta_or_kappa_fitted": false,
+    "bu_scale_assigned": false
+  },
+  "companion_changes": {
+    "AGENTS.md": "short authority pointer added; volatile experiment status deliberately NOT recorded there, per the existing Stability section of AGENTS.md which forbids one-time task state",
+    "SKILL.md": "none - no repository-specific SKILL.md exists"
+  },
+  "commit_status": {
+    "committed": false,
+    "pushed": false,
+    "note": "created in the working tree only; commit and push require separate authorisation"
+  }
+}
