@@ -251,26 +251,35 @@ initial distributions: each violates condition (2), (4) or (5).
 
 ### 9.1 Constrained-macrostate object, with its own derivation
 
-Bead held at `x`; reservoir holds `E_tot - U(x)`; the bead's configurational entropy at fixed `x`
-is a constant. With `dS_res/dE = 1/T` and `d2S_res/dE2 = -1/(T^2 C)`:
+**Ensemble and boundary assumptions.** Composite of bead + a single thermal reservoir with
+**total energy fixed** (microcanonical composite). The bead is **held at `x`** by an external
+constraint, so its configurational entropy at fixed `x` is an `x`-independent constant and drops
+out of the difference. The reservoir holds `E_tot - U(x)`. Its temperature is **defined** by
+`dS_res/dE|_V = 1/T`, and the second derivative is taken **at constant volume**,
+`d2S_res/dE2|_V = -1/(T^2 C_V)`. Large-reservoir regime: `C_V` finite but `C_V >> U/T`.
+
+**Both derivatives are constant-volume quantities, so `C_V` is the correct heat capacity.
+Substituting `C_P` is not licensed by the derivation.**
 
 ```
-Delta S_constr = k_B E_theta + remainder ,   remainder/leading = U / (2 T C)
+Delta S_constr = k_B E_theta + O( U^2 / (T^2 C_V) )
+
+epsilon_bath   ~  U / (2 T C_V)
 ```
 
-**Kept symbolic in `C`.** One sourced macroscopic value, for scale only: liquid water at
-298.15 K, `rho = 997.0 kg m^-3` and `c_p = 4.1816 J g^-1 K^-1` (CRC Handbook of Chemistry and
-Physics, 97th ed., thermophysical properties of water; equivalently NIST Chemistry WebBook,
-liquid water at 25 °C). For **1 mm^3 = 1 µL = 1e-9 m^3** — these are the **same volume** —
-`C/k_B = 3.019634e20` and the remainder ratio at `U = 5 k_B T` is **`8.2791e-21`**.
+**This result is authoritative in symbolic form only.** No numerical heat-capacity value is part
+of the E1a design, and **no E1a decision rule depends on one**. An order-of-magnitude
+illustration for one concrete reservoir, including a properly derived `C_V` and the quantified
+size of the `C_P`/`C_V` gap, is in the **non-normative** explanatory note
+`docs/e1a/finite_bath_remainder.py`.
 
 > **CORRECTION NOTICE.** `docs/e1a/E1A_V4_REPORT.md` at commit `8c48103` contains a units error:
 > it treated 1 mm³ and 1 µL as different volumes (the row labelled "1 µL" used `1e-9 * 1e3` m³,
 > which is 1 mL), and estimated the heat capacity of liquid water by a generic `3 N k_B`
-> Dulong–Petit expression that is not justified for a liquid. Corrected here. The conclusion is
-> unchanged in substance: the finite-bath correction is ~1e-20 for any macroscopic reservoir.
-> Reproduced by `docs/e1a/finite_bath_remainder.py`. **This quantity is not a statistical
-> endpoint.**
+> Dulong–Petit expression that is not justified for a liquid. A first correction pass then used
+> `c_P`, which is inconsistent with a derivation that calls for `C_V`. Both are corrected: the
+> authoritative statement here is symbolic in `C_V`, and the numerical illustration has been
+> moved to the non-normative note. **This quantity is not a statistical endpoint.**
 
 ---
 

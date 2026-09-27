@@ -143,12 +143,41 @@ chk("scenario labelled sufficient, not necessary",
     "SUFFICIENT" in c["hypothetical_uncertainty_scenario"]["sufficiency"].upper()
     and "NOT demonstrated necessary" in c["hypothetical_uncertainty_scenario"]["sufficiency"])
 
-print("\n10. FINITE-BATH UNITS CORRECTION APPLIED")
+print("\n10. FINITE-BATH RESULT IS SYMBOLIC IN C_V AND NON-NORMATIVE NUMERICALLY")
 fbr = c["entropy_semantics"]["finite_bath_remainder"]
-chk("1 mm^3 == 1 uL == 1e-9 m^3", fbr["volume_m3"] == 1e-9 and "EXACTLY" in fbr["volume_note"])
-chk("heat capacity is sourced, not 3 N k_B", "CRC" in fbr["source"] and fbr["water_c_p_J_per_g_K"] == 4.1816)
-chk("remainder is not a statistical endpoint", fbr["is_statistical_endpoint"] is False)
+chk("authoritative form is SYMBOLIC ONLY", fbr["authoritative_form"] == "SYMBOLIC ONLY")
+chk("no numerical value in the design", fbr["numerical_value_in_design"] is None)
+chk("no decision rule depends on it", fbr["any_decision_rule_depends_on_it"] is False)
+chk("not a statistical endpoint", fbr["is_statistical_endpoint"] is False)
+chk("heat capacity is C_V, constant volume", "C_V, at CONSTANT VOLUME" in fbr["heat_capacity"])
+chk("C_P substitution explicitly not licensed", "C_P may not be substituted" in fbr["heat_capacity"])
+chk("ensemble and boundary assumptions recorded", len(fbr["ensemble_and_boundary"]) == 4)
+chk("non-normative illustration declared", fbr["non_normative_illustration"] == "docs/e1a/finite_bath_remainder.py")
+chk("that note exists on disk", os.path.exists("docs/e1a/finite_bath_remainder.py"))
+note = open("docs/e1a/finite_bath_remainder.py", encoding="utf-8").read()
+chk("the note declares itself NOT NORMATIVE", "NOT NORMATIVE" in note)
+chk("the note derives C_V rather than substituting C_P", "c_P - c_V = T v alpha^2 / kappa_T" in note)
+chk("the note quantifies the C_P/C_V gap", "c_P exceeds c_V by" in note)
+chk("design markdown states the symbolic result",
+    "O( U^2 / (T^2 C_V) )" in md and "epsilon_bath   ~  U / (2 T C_V)" in md)
+chk("design markdown says C_P is not licensed", "Substituting `C_P` is not licensed" in md)
 chk("design markdown carries the correction notice", "CORRECTION NOTICE" in md and "1 mL" in md)
+for bad in ("3.019634e20", "8.2791e-21", "4.1816", "2.988113e+20", "8.3665e-21"):
+    chk(f"no numeric heat-capacity/remainder value '{bad}' in the design markdown", bad not in md)
+    chk(f"no numeric heat-capacity/remainder value '{bad}' in the baseline", bad not in bl)
+chk("baseline states the symbolic form", "O( U^2 / (T^2 C_V) )" in bl)
+chk("baseline forbids the C_P substitution", "C_P` may not be substituted" in bl)
+
+print("\n10b. HANDOFF-REPORT PROVENANCE POLICY IS DOCUMENTED")
+RPT = "docs/e1a/E1A_V4_ADOPTION_REPORT.md"
+chk("adoption report is tracked on disk", os.path.exists(RPT))
+rpt = open(RPT, encoding="utf-8").read()
+chk("report carries a provenance section", "## Report provenance" in rpt)
+chk("report states it was generated after the clean-status check",
+    "generated after" in rpt and "clean-status" in rpt)
+chk("report does not claim its own commit SHA",
+    "fea828e" not in rpt.split("## Report provenance")[0])
+chk("two-commit convention documented", "work commit" in rpt and "report commit" in rpt)
 
 print("\n11. AUTHORIZATION BOUNDARIES ARE CLOSED")
 ab = c["authorization_boundaries"]

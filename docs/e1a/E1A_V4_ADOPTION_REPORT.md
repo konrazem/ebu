@@ -323,6 +323,34 @@ not amended or rewritten. **Not pushed** — push requires separate authorisatio
 
 ---
 
+## Report provenance
+
+Determined, not guessed:
+
+| question | answer |
+|---|---|
+| is this file tracked? | **TRACKED AND COMMITTED**, in `fea828e` |
+| when was it generated? | **AFTER** the clean-status check it reports |
+| does it claim its own commit SHA? | **No.** Every SHA above is the *design-adoption* commit `c16eb6b`; this report was committed separately afterwards |
+
+The "working tree clean" line under **Git status** describes the tree **at commit `c16eb6b`**,
+which is what that section is about. This report file did not exist at that moment; it was
+written afterwards and committed on its own. Neither statement is self-referential, and no SHA
+in this document was asserted before it existed.
+
+**Convention adopted, and followed from here on:**
+
+```
+scientific / design work  ->  work commit
+handoff report            ->  generated after the work commit, then its own report commit
+```
+
+So an E1a task produces two commits: the work commit, then the report commit. Reports stay
+inside the repository as tracked artifacts at `docs/e1a/`, are marked task artifacts rather than
+authority tier, and are never written so as to assert a SHA that does not yet exist.
+
+---
+
 ## Execution boundary
 
 **No stochastic experiment and no synthetic campaign ran.** No random draws, no OU

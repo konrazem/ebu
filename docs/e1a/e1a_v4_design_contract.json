@@ -1,6 +1,6 @@
 {
   "contract_id": "e1a_v4_prospective_design",
-  "contract_version": "1.0.0",
+  "contract_version": "1.0.1",
   "created": "2026-09-28",
   "experiment": "E1a - canonical Einstein-EBU benchmark realisation",
   "status": "PROSPECTIVE DESIGN ONLY. Implementation, pre-execution validation, the synthetic validation campaign, preregistration and physical execution each require separate authorization. Adoption of these rules is not evidence that they perform as intended.",
@@ -18,12 +18,12 @@
       },
       "working_baseline": {
         "path": "docs/theory/EBU_THEORY_BASELINE.md",
-        "sha256": "089024de1aba9f224150dfa64dab82e4c0111e573d1f1b7831728533edc1d96c"
+        "sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa"
       },
       "design_document": {
         "path": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
-        "sha256": "a1e07232b75546c098403ec69213004599eb195d88fbf5eb3da92876aade1af9",
-        "byte_count": 26650
+        "sha256": "f20bc885bf400ce3429120e4a0e42915ba2fb15249d88914fd7e55eb1b373f68",
+        "byte_count": 27188
       }
     }
   },
@@ -161,7 +161,7 @@
     "delta_s_med": "+kB E_theta   (entropy delivered to the thermal reservoir; process quantity, no-work transitions only)",
     "delta_s_sys": "-kB E_theta   (stochastic system entropy; trajectory quantity)",
     "delta_s_tot": "0             (TOTAL stochastic entropy production)",
-    "delta_S_constr": "kB E_theta + remainder, remainder/leading = U/(2 T C)   (constrained-macrostate state function)",
+    "delta_S_constr": "k_B E_theta + O(U^2/(T^2 C_V)), epsilon_bath ~ U/(2 T C_V)   (constrained-macrostate state function; C_V at CONSTANT VOLUME)",
     "prohibited": "kB E is NOT total stochastic entropy production",
     "four_objects_never_equated": [
       "medium entropy",
@@ -182,15 +182,20 @@
       "nonequilibrium initial distributions"
     ],
     "finite_bath_remainder": {
-      "reference": "docs/e1a/finite_bath_remainder.py",
-      "volume_m3": 1e-09,
-      "volume_note": "1 mm^3 = 1 uL = 1e-9 m^3 EXACTLY",
-      "water_density_kg_per_m3": 997.0,
-      "water_c_p_J_per_g_K": 4.1816,
-      "source": "CRC Handbook of Chemistry and Physics, 97th ed., thermophysical properties of water; equivalently NIST Chemistry WebBook, liquid water at 25 C",
-      "C_over_kB": 3.019634e+20,
-      "remainder_ratio_at_E_5": 8.2791e-21,
-      "is_statistical_endpoint": false
+      "authoritative_form": "SYMBOLIC ONLY",
+      "result": "Delta S_constr = k_B E_theta + O(U^2/(T^2 C_V))",
+      "relative_leading_correction": "epsilon_bath ~ U/(2 T C_V)",
+      "heat_capacity": "C_V, at CONSTANT VOLUME. Both dS/dE and d2S/dE2 are constant-volume derivatives in the derivation, so C_P may not be substituted without deriving and quantifying the approximation.",
+      "ensemble_and_boundary": [
+        "bead + single thermal reservoir, total energy fixed (microcanonical composite)",
+        "bead held at x by an external constraint; its configurational entropy at fixed x is an x-independent constant",
+        "reservoir temperature defined by dS_res/dE|_V = 1/T",
+        "large-reservoir regime: C_V finite but C_V >> U/T"
+      ],
+      "numerical_value_in_design": null,
+      "non_normative_illustration": "docs/e1a/finite_bath_remainder.py",
+      "is_statistical_endpoint": false,
+      "any_decision_rule_depends_on_it": false
     }
   },
   "mode_resolution": {
@@ -330,7 +335,7 @@
     ],
     "supersession_notices": [
       "E1A_V4_REPORT.md Part II section 5.6 corner-frequency route - superseded for E1a",
-      "E1A_V4_REPORT.md finite-bath remainder - units error (1 mm^3 vs 1 uL) and unjustified 3 N kB heat capacity, corrected"
+      "E1A_V4_REPORT.md finite-bath remainder - units error (1 mm^3 vs 1 uL) and unjustified 3 N kB heat capacity; a first correction pass then used c_P, inconsistent with a derivation in C_V. Authoritative statement is now symbolic in C_V and the numerical illustration is non-normative."
     ]
   }
 }

@@ -533,15 +533,18 @@ Delta s_tot = 0                  TOTAL stochastic entropy production
 > nonequilibrium initial distributions: each violates one of the conditions.
 
 A **separately derived** constrained-macrostate reading also yields `k_B E`.
-With the bead held at `x` and a reservoir of heat capacity `C`:
+With the bead held at `x` and a reservoir of constant-volume heat
+capacity `C_V`:
 
 ```
-Delta S_constr = k_B E_theta + remainder ,   remainder / leading = U / (2 T C)
+Delta S_constr = k_B E_theta + O( U^2 / (T^2 C_V) ) ,   epsilon_bath ~ U / (2 T C_V)
 ```
 
-which is of order `1e-20` for any macroscopic bath, so `Delta S_constr = k_B E`
-holds to first order in `U/(T C)`. Derivation and one sourced value:
-`docs/e1a/finite_bath_remainder.py`.
+`C_V` is a **constant-volume** heat capacity: both `dS/dE` and `d2S/dE2` are
+taken at constant volume in the derivation, so `C_P` may not be substituted for
+it. The statement is authoritative **in symbolic form**; it holds to first order
+in `U/(T C_V)`, which is negligible for any macroscopic bath. A non-normative
+order-of-magnitude illustration is in `docs/e1a/finite_bath_remainder.py`.
 
 **Medium entropy, stochastic system entropy, total stochastic entropy
 production and the constrained-macrostate entropy deficit are four different
