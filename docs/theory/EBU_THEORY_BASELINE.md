@@ -149,7 +149,9 @@ survive up to that one common scale.
 proposal created an energy-valued unit and reintroduced a temperature-dependent
 `kappa`, which destroys the very commensurability the programme requires. It
 was withdrawn by the E1a correction. E1a keeps normalised EBU **dimensionless**
-and tests `E = Delta S_total / k_B` inside the canonical benchmark.
+and tests `E = Delta s_med / k_B` inside the canonical benchmark, where
+`Delta s_med` is the entropy delivered to the thermal reservoir. It is **NOT** total
+stochastic entropy production — see §14.3.
 
 ---
 
@@ -510,17 +512,45 @@ the analysis must recover `beta = 1/c`.
 ### 14.3 Action and entropy result
 
 For fixed `theta`, `E_theta = V_theta(x_pre) - V_theta(x_post)`. In the
-benchmark `J_prob = V`, so `Delta J_prob = E_theta`, and for the total
-bead-plus-bath entropy:
+benchmark `J_prob = V`, so `Delta J_prob = E_theta`.
+
+Under the declared static-equilibrium stochastic-thermodynamic conditions —
+conservative overdamped dynamics, fixed field, fixed temperature, a single
+reservoir, the stationary equilibrium distribution at both times, and no work
+input omitted from the accounting — the entropy bookkeeping is:
 
 ```
-Delta S_total = k_B E_theta
+Delta s_med = + k_B E_theta      entropy delivered to the thermal reservoir
+Delta s_sys = - k_B E_theta      stochastic system entropy
+Delta s_tot = 0                  TOTAL stochastic entropy production
 ```
 
-Therefore `+5 EBU` at `theta0` and `+5 EBU` at `theta1` both represent
-**`+5 k_B` of total entropy increase**, even when their mechanical energy
-changes differ. **This is the exact changing-field commensurability property the
-programme originally sought.**
+> **`k_B E` is NOT total stochastic entropy production.** The total **vanishes**
+> in equilibrium. The two lines above are trajectory identities under those
+> conditions, and are distinct from the ensemble-average entropy-production
+> rate, which is non-negative with equality exclusively in equilibrium. Nothing
+> here generalises to imposed actor actions, driven transitions or
+> nonequilibrium initial distributions: each violates one of the conditions.
+
+A **separately derived** constrained-macrostate reading also yields `k_B E`.
+With the bead held at `x` and a reservoir of heat capacity `C`:
+
+```
+Delta S_constr = k_B E_theta + remainder ,   remainder / leading = U / (2 T C)
+```
+
+which is of order `1e-20` for any macroscopic bath, so `Delta S_constr = k_B E`
+holds to first order in `U/(T C)`. Derivation and one sourced value:
+`docs/e1a/finite_bath_remainder.py`.
+
+**Medium entropy, stochastic system entropy, total stochastic entropy
+production and the constrained-macrostate entropy deficit are four different
+objects.** They are never equated.
+
+Therefore `+5 EBU` at `theta0` and `+5 EBU` at `theta1` both represent **`+5 k_B`
+delivered to the reservoir**, even when their mechanical energy changes differ.
+**This is the exact changing-field commensurability property the programme
+originally sought.**
 
 ### 14.4 Scope — stated plainly
 
@@ -538,11 +568,20 @@ planetary EBU, natural incentive, or economic optimality.
 
 ### 14.5 Status and outstanding item
 
-**E1a is DESIGN COMPLETE; PREREGISTRATION PENDING SYNTHETIC RE-RUN.**
+**E1a v4 DESIGN ADOPTED; IMPLEMENTATION / SYNTHETIC VALIDATION PENDING.**
 
-One outstanding item: re-run the full eight-case synthetic validation suite
-with `beta_true = 1` and `H_theta = H_U,theta / (k_B T_theta)`, as a release
-gate before preregistration. **No new design decision is required.**
+The v3 synthetic release gate **failed**, and the independent reviews that
+followed found defects in the decision rules themselves. The corrected
+prospective design is adopted in `docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md` with
+its machine-readable contract `docs/e1a/e1a_v4_design_contract.json`. Those two
+are the authoritative prospective sources for E1a decision rules.
+
+Outstanding, in order: **bounded implementation** of the v4 pipeline, then the
+**synthetic validation campaign** of design §15.
+
+> The design has **NOT** empirically passed validation, and E1a is **NOT**
+> preregistration-ready. The earlier statement that "no new design decision is
+> required" is **superseded**: the v4 review changed the procedure.
 
 The suite must retain the fourth-moment gate added after it was discovered that
 `theta` mixing across fields differing by a pure scalar is invisible to every
@@ -665,7 +704,7 @@ core.**
 | `beta` | `kappa / k_B` | **OPEN / conditional** | the bridge holds | baseline | dimensionless scale | universality |
 | `K = beta H` | central bridge | **CONDITIONAL / EXPERIMENTAL TARGET** | bridge + accessible directions | baseline | a falsifiable prediction | experimentally established |
 | changing-field one `beta` | case C of §13 | **OPEN** | one scale across `theta` | baseline | the commensurability requirement | that it holds anywhere yet |
-| **E1a** | canonical benchmark | **DESIGN COMPLETE, PREREG PENDING** | canonical equilibrium, thermal normalisation | baseline | benchmark realisation | discovery of statistical mechanics |
+| **E1a** | canonical benchmark | **v4 DESIGN ADOPTED; IMPL / VALIDATION PENDING** | canonical equilibrium, thermal normalisation | baseline + `docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md` | benchmark realisation | discovery of statistical mechanics; empirical validation |
 | **E1b** | independent challenge | **NAMED ONLY** | — | baseline | a future gate | any result |
 | actor `c_i` | signed historical attribution | **LAYER 3** | attribution convention | foundation | accumulated EBU attribution | entropy capacity without the bridge |
 | BU scaling | `V_phys = B0 V_norm` | **OPEN INTERPRETATION LAYER** | `B0` constant | baseline | consistent up to one scale | `1 BU = k_B T_ref` |
@@ -755,9 +794,14 @@ Historical provenance for the pre-freeze material is in
 
 ## 24. NEXT GATE
 
-**Re-run the E1a eight-case synthetic validation suite under the thermal
-normalisation** (`beta_true = 1`, `H_theta = H_U,theta / (k_B T_theta)`),
-retaining the fourth-moment gate, as the release gate before E1a
-preregistration.
+**E1a v4 bounded implementation**, against the adopted prospective design
+`docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md` and its contract
+`docs/e1a/e1a_v4_design_contract.json`. The synthetic validation campaign of
+design §15 follows implementation and is a **separate** authorization.
 
-Not started: E1a preregistration, E1a execution, E1b design, P2.7, Stage B.
+The superseded gate — "re-run the eight-case suite under thermal normalisation"
+— is retained as history only: the v3 attempt failed and the decision rules
+themselves were corrected afterwards.
+
+Not started: E1a v4 implementation, E1a synthetic validation, E1a
+preregistration, E1a execution, E1b design, P2.7, Stage B.

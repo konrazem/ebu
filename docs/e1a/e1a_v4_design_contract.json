@@ -1,0 +1,336 @@
+{
+  "contract_id": "e1a_v4_prospective_design",
+  "contract_version": "1.0.0",
+  "created": "2026-09-28",
+  "experiment": "E1a - canonical Einstein-EBU benchmark realisation",
+  "status": "PROSPECTIVE DESIGN ONLY. Implementation, pre-execution validation, the synthetic validation campaign, preregistration and physical execution each require separate authorization. Adoption of these rules is not evidence that they perform as intended.",
+  "authority": {
+    "rank": "below the frozen physical foundation and below the working theory baseline",
+    "normative_pair": {
+      "markdown": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
+      "json": "docs/e1a/e1a_v4_design_contract.json",
+      "rule": "The JSON is the mechanical schema and ordering source; the Markdown is its normative human rendering. Any mismatch is an integrity failure requiring fail-closed refusal, not permission to choose one selectively."
+    },
+    "binds": {
+      "frozen_foundation": {
+        "path": "docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
+        "sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507"
+      },
+      "working_baseline": {
+        "path": "docs/theory/EBU_THEORY_BASELINE.md",
+        "sha256": "089024de1aba9f224150dfa64dab82e4c0111e573d1f1b7831728533edc1d96c"
+      },
+      "design_document": {
+        "path": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
+        "sha256": "a1e07232b75546c098403ec69213004599eb195d88fbf5eb3da92876aade1af9",
+        "byte_count": 26650
+      }
+    }
+  },
+  "scientific_target": {
+    "central_endpoint": "K_theta = beta H_theta",
+    "beta": "one field-independent beta across the four declared fields",
+    "V_theta": "[U_theta(x) - U_theta(x_star_theta)] / (kB T_theta)",
+    "H_theta": "H_U_theta / (kB T_theta)",
+    "prediction": "beta = 1 and kappa = kB at every tested field; BENCHMARK-SPECIFIC, not a universal EBU theorem",
+    "estimator": "beta_hat = m / tr(H_A S)",
+    "estimator_constraint": "the reported estimate is NEVER constrained to equal the prediction"
+  },
+  "information_separation": {
+    "branch_A": "U_theta from mechanical force-displacement data; T_theta from independent calibrated thermometry; never uses the position histogram",
+    "branch_B": "P_theta from position observations; derives J_prob and K; never uses V or H",
+    "unblinding": "Branch-A output hashed and published BEFORE Branch B is unblinded",
+    "forbidden_branch_A_routes": [
+      "power_spectrum_stiffness_calibration",
+      "corner_frequency_fluctuation_spectrum_route_k_equals_2pi_fc_gamma",
+      "equipartition_k_equals_kBT_over_sigma_squared"
+    ],
+    "authorised_branch_A_routes": [
+      "force_displacement_with_stokes_drag",
+      "independent_calibrated_thermometry"
+    ],
+    "accessible_directions": "lateral x/y plane; axial z designed out and documented as discarded, never read as an observed zero-curvature mode"
+  },
+  "fields": [
+    {
+      "id": "theta0_circular",
+      "k_uN_per_m": [
+        100,
+        100
+      ],
+      "T_K": 298,
+      "rot_deg": 0,
+      "reference": true
+    },
+    {
+      "id": "theta1_power",
+      "k_uN_per_m": [
+        210,
+        210
+      ],
+      "T_K": 298,
+      "rot_deg": 0,
+      "reference": false
+    },
+    {
+      "id": "theta2_ellipse",
+      "k_uN_per_m": [
+        150,
+        60
+      ],
+      "T_K": 298,
+      "rot_deg": 30,
+      "reference": false
+    },
+    {
+      "id": "theta3_temperature",
+      "k_uN_per_m": [
+        100,
+        100
+      ],
+      "T_K": 318,
+      "rot_deg": 0,
+      "reference": false
+    }
+  ],
+  "relaxation_time_rule": "tau_r = gamma(T)/k_r with gamma = 6 pi eta(T) a; a single tau_c for all fields is WRONG and is not used",
+  "endpoints": {
+    "P1_geometry": {
+      "mandatory": true,
+      "type": "stochastic",
+      "gates": [
+        "G1_trace_normalised_shape",
+        "G2_whitened_spectral_spread",
+        "G3_principal_angles",
+        "G4_eigenvalue_ratios",
+        "G5_fourth_moment_max_abs_excess_kurtosis"
+      ],
+      "procedure": "two-block union-valid: reject iff p_min(G1..G4) < alpha_1 OR p(G5) < alpha_2",
+      "independence_between_blocks": "NOT ASSERTED - the union bound is valid under arbitrary dependence",
+      "alpha_geom": 0.005,
+      "alpha_1": 0.004,
+      "alpha_2": 0.001
+    },
+    "P2_cross_field": {
+      "mandatory": true,
+      "type": "stochastic",
+      "status": "PRIMARY CENTRAL",
+      "delta_cross": 0.02,
+      "z_cross": 1.959963985,
+      "comparisons": 3,
+      "multiplicity_correction": "NONE - intersection-union test",
+      "test_type": "intersection_union_equivalence",
+      "half_width": "h_j = z_cross * sqrt(2 sigma_fs^2 + sigma_stat_j^2 + sigma_stat_ref^2)",
+      "rule": "accept j iff r_j(1-h_j) >= 1-delta_cross AND r_j(1+h_j) <= 1+delta_cross; P2 passes iff all three accept",
+      "ratio": "r_j = beta_hat_j / beta_hat_ref",
+      "sigma_cm_treatment": "cancels EXACTLY in the ratio; absent from h_j",
+      "forbidden_reinterpretations": [
+        "pooled tolerance",
+        "all-pairs tolerance",
+        "absolute-beta tolerance"
+      ]
+    },
+    "P3_absolute": {
+      "mandatory": true,
+      "type": "stochastic",
+      "applies_to": "EVERY tested field",
+      "delta_abs": 0.05,
+      "z_abs": 1.959963985,
+      "test_type": "intersection_union_equivalence",
+      "multiplicity_correction": "NONE",
+      "half_width": "h_theta = z_abs * sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)",
+      "rule": "accept theta iff beta_hat_theta(1-h_theta) >= 1-delta_abs AND beta_hat_theta(1+h_theta) <= 1+delta_abs; P3 passes iff all four accept",
+      "non_estimated_field": "FAILS P3 - fail-closed, no conditioning on surviving fields",
+      "provenance": {
+        "adopted": "prospectively, for E1a v4, in this contract",
+        "historically_committed": false,
+        "adopted_before": "any stochastic validation and any physical execution",
+        "supersedes": "the earlier reference-field-only rule, which did not test the committed prediction of beta = 1 at every field"
+      }
+    },
+    "P4_entropy": {
+      "mandatory": true,
+      "classification": "DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK",
+      "reads_branch_B_data": false,
+      "stochastic_failure_probability_after_passing": 0.0,
+      "not_experimental_evidence": "its algebraic pass must never be reported as experimental evidence",
+      "checks": "Delta s_med = +kB E identical across tested temperatures though mechanical energies differ, and Delta s_tot = 0"
+    }
+  },
+  "entropy_semantics": {
+    "delta_s_med": "+kB E_theta   (entropy delivered to the thermal reservoir; process quantity, no-work transitions only)",
+    "delta_s_sys": "-kB E_theta   (stochastic system entropy; trajectory quantity)",
+    "delta_s_tot": "0             (TOTAL stochastic entropy production)",
+    "delta_S_constr": "kB E_theta + remainder, remainder/leading = U/(2 T C)   (constrained-macrostate state function)",
+    "prohibited": "kB E is NOT total stochastic entropy production",
+    "four_objects_never_equated": [
+      "medium entropy",
+      "stochastic system entropy",
+      "total stochastic entropy production",
+      "constrained-macrostate entropy deficit"
+    ],
+    "required_conditions": [
+      "conservative overdamped Langevin force F = -grad U",
+      "fixed field, static U",
+      "fixed temperature, single reservoir",
+      "stationary equilibrium distribution at both times",
+      "no additional work input omitted from the accounting"
+    ],
+    "no_generalisation_to": [
+      "imposed actor actions",
+      "driven transitions",
+      "nonequilibrium initial distributions"
+    ],
+    "finite_bath_remainder": {
+      "reference": "docs/e1a/finite_bath_remainder.py",
+      "volume_m3": 1e-09,
+      "volume_note": "1 mm^3 = 1 uL = 1e-9 m^3 EXACTLY",
+      "water_density_kg_per_m3": 997.0,
+      "water_c_p_J_per_g_K": 4.1816,
+      "source": "CRC Handbook of Chemistry and Physics, 97th ed., thermophysical properties of water; equivalently NIST Chemistry WebBook, liquid water at 25 C",
+      "C_over_kB": 3.019634e+20,
+      "remainder_ratio_at_E_5": 8.2791e-21,
+      "is_statistical_endpoint": false
+    }
+  },
+  "mode_resolution": {
+    "theta_cap_deg": 5.0,
+    "rule": "merge iff (rho-1)/sqrt(rho) < 1/(theta_cap_rad * sqrt(N_12))",
+    "basis": "Branch-A eigenvalue ratio and per-element effective size only",
+    "split_probability_truly_circular_at_sigma_k_0p34pct": {
+      "5_deg": 4.975e-07,
+      "10_deg": 0.01195,
+      "20_deg": 0.2088
+    },
+    "status": "PROSPECTIVE DESIGN SETTING - subject to future size/power validation at rho = boundary +/- 20%"
+  },
+  "hypothetical_uncertainty_scenario": {
+    "label": "HYPOTHETICAL INSTRUMENT SCENARIO - not a measured apparatus capability, not a necessary instrument limit",
+    "sigma_k": 0.0034,
+    "sigma_T_K": 0.1,
+    "sigma_fs_derived": 0.00242747,
+    "sigma_fs_formula": "sqrt(sigma_k^2/m + (sigma_T/T)^2)",
+    "sigma_cm": 0.0115,
+    "sigma_psi": "to be declared; gate-limiting, dominant for G3",
+    "T_total_s": 240.0,
+    "dt_s": 0.00012,
+    "sufficiency": "a SUFFICIENT candidate scenario for validation; NOT demonstrated necessary"
+  },
+  "complete_pipeline": {
+    "target_true_bridge_success": 0.9,
+    "complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",
+    "denominator": "every declared experiment; refusals counted as failures; no conditioning on survivors",
+    "union_inequality": "P(C) >= 1 - sum(failure-event probabilities)",
+    "union_inequality_label": "EXACT THEOREM, valid under arbitrary dependence",
+    "budget_terms": {
+      "4x_alpha_geom": 0.02,
+      "4x_eps_cal": 0.00013269,
+      "4x_rank_neff_refusal": 0.0,
+      "3x_mode_resolution_crossing_5deg": 1.49e-06,
+      "one_minus_pi_P2_and_P3": 0.07440485,
+      "P4_failure": 0.0
+    },
+    "raw_union_expression": 0.90546097,
+    "reported_lower_bound": 0.9055,
+    "supporting": {
+      "pi_P2": 0.9685,
+      "pi_P3_all_four_fields": 0.9544,
+      "pi_P2_and_P3": 0.9256,
+      "integration": "exact 2-D Simpson over the shared reference-field error, residual 1.83e-06"
+    },
+    "required_interpretation": "Under the declared Gaussian/log-linear uncertainty model, surrogate calibration model and stated approximations, the provisional analytical complete-pipeline budget is approximately 0.9055. This exceeds the prospective 0.90 design target, but does not certify achieved pipeline power. The full stochastic validation gate remains mandatory.",
+    "is_demonstrated_empirical_power": false,
+    "is_unconditional_lower_bound_on_implemented_pipeline": false,
+    "input_labels": {
+      "union_inequality": "EXACT THEOREM",
+      "pi_P2_and_P3": "APPROXIMATE PROBABILITY - log-linear multiplicative error model",
+      "alpha_geom": "NOMINAL DESIGN ALLOCATION - achieved size must be demonstrated",
+      "eps_cal": "APPROXIMATE - requires later validation",
+      "rank_neff_bound": "PROVED UPPER BOUND under an iid-Gaussian premise that is approximate for OU data",
+      "mode_resolution_crossing": "QUANTIFIED EVENT, UNESTABLISHED CONSEQUENCE - requires validation"
+    },
+    "standing_qualifications": [
+      "the surrogate calibration law is approximate for correlated observations",
+      "G5 uses a leading-order delta-method treatment, not an exact finite-sample distribution result",
+      "calibration conditions on measured H_A, not unknown H_true - a plug-in approximation",
+      "the achieved null size must be demonstrated in the future stochastic validation"
+    ]
+  },
+  "false_bridge_controls": {
+    "defined_separately_from_true_bridge_target": true,
+    "controls": [
+      "blinded scale control, Branch-A scale x hidden c, recovery target beta = 1/c",
+      "paired hidden-scale distortion c = 1.07 / 0.90 on a retained dataset",
+      "independent coordinate permutation",
+      "non-commensurable alternatives (1,1.06,1,1), (1,0.93,1.05,1), (1,1,1,1.10), and a hard 2.5% single-field case",
+      "time shuffle - AUTOCORRELATION control only, not a geometry control",
+      "forbidden H := K, recorded as vacuous, demonstration only"
+    ],
+    "alpha_geom_sensitivity": "tightening 1% -> 0.5% costs 6.8% in minimum detectable rotation and affects no other declared control",
+    "no_post_hoc_tuning": "these values must not be tuned after stochastic validation outcomes are inspected"
+  },
+  "refusal_semantics": {
+    "rank_tol": 1e-12,
+    "statuses": [
+      "OK",
+      "REFUSED_BRANCH_A_INVALID",
+      "REFUSED_ACCESSIBLE_SPACE",
+      "REFUSED_NEFF_UNSUPPORTED",
+      "REFUSED_UNSUPPORTED_GEOM",
+      "GEOMETRY_FAIL",
+      "BETA_NOT_ESTIMATED",
+      "COMPARISON_NOT_EVALUABLE",
+      "EXECUTION_ERROR"
+    ],
+    "reconciliation": "jobs declared = jobs completed + jobs refused, with a per-status count; the report must finish even when every job refuses"
+  },
+  "synthetic_validation_requirements": [
+    "procedure_sha256 over {config, per-file code hashes, decision rules, seed map} frozen before the first confirmatory run",
+    "development, calibration, validation and confirmatory seed families disjoint",
+    "achieved joint gate size: Clopper-Pearson one-sided 95% UPPER bound <= 3%, R = 400, at every declared geometry",
+    "joint equivalence power: one-sided 95% LOWER bound >= 0.90, R = 300, design target pi >= 0.95",
+    "surrogate calibration law validated at the operating quantile against directly generated trajectories",
+    "plug-in conditioning validated over sigma_k in {0, 0.5%, 1%} x sigma_psi in {0, 0.2, 0.5, 1.0} deg",
+    "theta_cap size AND power demonstrated at rho = boundary +/- 20%",
+    "G5 block delta-method error quantified",
+    "every declared job reconciled by status",
+    "complete-pipeline success reported UNCONDITIONALLY"
+  ],
+  "forbidden_mechanisms": [
+    "fixed_B0_normalisation_V_equals_deltaU_over_B0",
+    "affordability_requirement",
+    "nonnegative_account_requirement",
+    "repricing_of_completed_historical_contributions"
+  ],
+  "non_claims": [
+    "universal EBU or a universal beta",
+    "ecosystem, planetary or economic EBU",
+    "natural incentive, actor incentive or economic optimality",
+    "stability, habitability or any dynamic-field claim",
+    "ecological benefit",
+    "that the entropy candidate S_eq - S = kappa V is thereby established in general",
+    "preregistration readiness",
+    "discovery of statistical mechanics"
+  ],
+  "authorization_boundaries": {
+    "analytical_design": "ADOPTED",
+    "bounded_implementation": "NOT STARTED",
+    "pre_execution_validation": "NOT STARTED",
+    "synthetic_validation_campaign": "NOT STARTED",
+    "preregistration": "NOT AUTHORISED",
+    "physical_execution": "NOT AUTHORISED",
+    "E1b": "NOT STARTED",
+    "stage_B": "NOT RESUMED"
+  },
+  "provenance": {
+    "preserved_not_rewritten": [
+      "v1, v2 and v3 gate packages",
+      "v4 design derivations",
+      "docs/e1a/E1A_V4_REPORT.md at commit 8c48103"
+    ],
+    "supersession_notices": [
+      "E1A_V4_REPORT.md Part II section 5.6 corner-frequency route - superseded for E1a",
+      "E1A_V4_REPORT.md finite-bath remainder - units error (1 mm^3 vs 1 uL) and unjustified 3 N kB heat capacity, corrected"
+    ]
+  }
+}
