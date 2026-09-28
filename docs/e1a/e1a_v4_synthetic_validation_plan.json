@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.4.0",
+  "plan_version": "1.5.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -86,13 +86,45 @@
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. Branch-B trajectories from validation; Branch-A measurement error is REQUIRED because disposition G3 asserts the primary >= 0.90 claim at sigma_psi = 0.5 deg and sigma_psi reaches nothing except a realised rotation into G3",
+      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / Block-1 quantity and builds its own artifact per subcondition, replicate and field. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
       "calibration_scope": "REPLICATE_CONDITIONAL",
-      "calibration_artifact_count": 1200,
-      "calibration_artifact_basis": "300 replicates x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_artifact_count": 4800,
+      "calibration_artifact_basis": "300 replicates x 4 subconditions x 4 fields requiring calibration = 4,800",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "sigma_psi_0p0",
+          "sigma_psi_deg": 0.0,
+          "g3_role": "SECONDARY",
+          "feeds_primary_claim": false
+        },
+        {
+          "subcondition_id": "sigma_psi_0p2",
+          "sigma_psi_deg": 0.2,
+          "g3_role": "SECONDARY",
+          "feeds_primary_claim": false
+        },
+        {
+          "subcondition_id": "sigma_psi_0p5",
+          "sigma_psi_deg": 0.5,
+          "g3_role": "PRIMARY",
+          "feeds_primary_claim": true
+        },
+        {
+          "subcondition_id": "sigma_psi_1p0",
+          "sigma_psi_deg": 1.0,
+          "g3_role": "STRESS",
+          "feeds_primary_claim": false
+        }
+      ],
+      "subcondition_count": 4,
+      "uses_p1_block1": true,
+      "requires_block1_calibration": true,
+      "primary_release_endpoint": "COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4",
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "fields_requiring_calibration": 4
     },
     {
       "case_id": "C2_geometry_false_rejection",
@@ -121,13 +153,45 @@
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. Branch-B trajectories from validation; the declared frozen candidate scenario including sigma_psi is realised per replicate",
+      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / Block-1 quantity and builds its own artifact per subcondition, replicate and field. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
       "calibration_scope": "REPLICATE_CONDITIONAL",
-      "calibration_artifact_count": 1600,
-      "calibration_artifact_basis": "400 replicates x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_artifact_count": 6400,
+      "calibration_artifact_basis": "400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "sigma_psi_0p0",
+          "sigma_psi_deg": 0.0,
+          "g3_role": "SECONDARY",
+          "feeds_primary_claim": false
+        },
+        {
+          "subcondition_id": "sigma_psi_0p2",
+          "sigma_psi_deg": 0.2,
+          "g3_role": "SECONDARY",
+          "feeds_primary_claim": false
+        },
+        {
+          "subcondition_id": "sigma_psi_0p5",
+          "sigma_psi_deg": 0.5,
+          "g3_role": "PRIMARY",
+          "feeds_primary_claim": true
+        },
+        {
+          "subcondition_id": "sigma_psi_1p0",
+          "sigma_psi_deg": 1.0,
+          "g3_role": "STRESS",
+          "feeds_primary_claim": false
+        }
+      ],
+      "subcondition_count": 4,
+      "uses_p1_block1": true,
+      "requires_block1_calibration": true,
+      "primary_release_endpoint": "P1_FALSE_REJECTION_RATE_PER_FIELD",
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "fields_requiring_calibration": 4
     },
     {
       "case_id": "C3_g5_block",
@@ -156,13 +220,55 @@
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. Branch-B trajectories from validation; G5 is computed from those observations and the declared Branch-A scenario is realised",
+      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / Block-1 quantity and builds its own artifact per subcondition, replicate and field. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
       "calibration_scope": "REPLICATE_CONDITIONAL",
-      "calibration_artifact_count": 1600,
-      "calibration_artifact_basis": "400 replicates x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_artifact_count": 6400,
+      "calibration_artifact_basis": "400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "sigma_psi_0p0",
+          "sigma_psi_deg": 0.0,
+          "g3_role": "SECONDARY",
+          "feeds_primary_claim": false
+        },
+        {
+          "subcondition_id": "sigma_psi_0p2",
+          "sigma_psi_deg": 0.2,
+          "g3_role": "SECONDARY",
+          "feeds_primary_claim": false
+        },
+        {
+          "subcondition_id": "sigma_psi_0p5",
+          "sigma_psi_deg": 0.5,
+          "g3_role": "PRIMARY",
+          "feeds_primary_claim": true
+        },
+        {
+          "subcondition_id": "sigma_psi_1p0",
+          "sigma_psi_deg": 1.0,
+          "g3_role": "STRESS",
+          "feeds_primary_claim": false
+        }
+      ],
+      "subcondition_count": 4,
+      "uses_p1_block1": true,
+      "requires_block1_calibration": true,
+      "primary_release_endpoint": "G5_BLOCK_SIZE",
+      "block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+      "fields_requiring_calibration": 4,
+      "c3_semantics": {
+        "status": "AMBIGUITY RESOLVED PROSPECTIVELY, before any random outcome exists",
+        "primary_release_endpoint": "G5_BLOCK_SIZE",
+        "release_criterion": "UNCHANGED: R = 400, nominal alpha_2 = 0.001, CP_lower(G5 rejections, 400) > 0.001 detects inflation; 0-2 clean, 3+ STATISTICAL_SIZE_FAILURE",
+        "requires_block1_calibration": true,
+        "block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+        "joint_p1_result_changes_C3_release_verdict": false,
+        "why_calibration_is_retained": "the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input.",
+        "what_is_forbidden": "adding any new C3 release threshold based on Block 1 or on the joint P1 result. The release verdict depends only on the already-frozen Block-2 / G5 size criterion."
+      }
     },
     {
       "case_id": "C4_surrogate_validity",
@@ -191,13 +297,24 @@
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. calibration produces the surrogate null; validation produces the actual correlated observations; the declared Branch-A scenario is realised",
+      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / Block-1 quantity and builds its own artifact per subcondition, replicate and field. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
       "calibration_scope": "REPLICATE_CONDITIONAL",
       "calibration_artifact_count": 8000,
-      "calibration_artifact_basis": "2000 replicates x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_artifact_basis": "2000 replicates x 1 subconditions x 4 fields requiring calibration = 8,000",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "primary"
+        }
+      ],
+      "subcondition_count": 1,
+      "uses_p1_block1": true,
+      "requires_block1_calibration": true,
+      "primary_release_endpoint": "BLOCK1_ACHIEVED_SIZE",
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "fields_requiring_calibration": 4
     },
     {
       "case_id": "C5_plug_in_branch_a",
@@ -226,13 +343,81 @@
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. the sweep over sigma_k x sigma_psi IS a Branch-A measurement sweep; already declared",
+      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / Block-1 quantity and builds its own artifact per subcondition, replicate and field. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
       "calibration_scope": "REPLICATE_CONDITIONAL",
       "calibration_artifact_count": 19200,
-      "calibration_artifact_basis": "400 replicates x 12 declared cells x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_artifact_basis": "400 replicates x 12 subconditions x 4 fields requiring calibration = 19,200",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "sk0p00_sp0p0",
+          "sigma_k": 0.0,
+          "sigma_psi_deg": 0.0
+        },
+        {
+          "subcondition_id": "sk0p00_sp0p2",
+          "sigma_k": 0.0,
+          "sigma_psi_deg": 0.2
+        },
+        {
+          "subcondition_id": "sk0p00_sp0p5",
+          "sigma_k": 0.0,
+          "sigma_psi_deg": 0.5
+        },
+        {
+          "subcondition_id": "sk0p00_sp1p0",
+          "sigma_k": 0.0,
+          "sigma_psi_deg": 1.0
+        },
+        {
+          "subcondition_id": "sk0p50_sp0p0",
+          "sigma_k": 0.005,
+          "sigma_psi_deg": 0.0
+        },
+        {
+          "subcondition_id": "sk0p50_sp0p2",
+          "sigma_k": 0.005,
+          "sigma_psi_deg": 0.2
+        },
+        {
+          "subcondition_id": "sk0p50_sp0p5",
+          "sigma_k": 0.005,
+          "sigma_psi_deg": 0.5
+        },
+        {
+          "subcondition_id": "sk0p50_sp1p0",
+          "sigma_k": 0.005,
+          "sigma_psi_deg": 1.0
+        },
+        {
+          "subcondition_id": "sk1p00_sp0p0",
+          "sigma_k": 0.01,
+          "sigma_psi_deg": 0.0
+        },
+        {
+          "subcondition_id": "sk1p00_sp0p2",
+          "sigma_k": 0.01,
+          "sigma_psi_deg": 0.2
+        },
+        {
+          "subcondition_id": "sk1p00_sp0p5",
+          "sigma_k": 0.01,
+          "sigma_psi_deg": 0.5
+        },
+        {
+          "subcondition_id": "sk1p00_sp1p0",
+          "sigma_k": 0.01,
+          "sigma_psi_deg": 1.0
+        }
+      ],
+      "subcondition_count": 12,
+      "uses_p1_block1": true,
+      "requires_block1_calibration": true,
+      "primary_release_endpoint": "P1_REJECTION_RATE_PER_CELL",
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "fields_requiring_calibration": 4
     },
     {
       "case_id": "C6_mode_resolution_boundary",
@@ -258,13 +443,36 @@
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. Branch-B trajectories at the three declared rho; the declared Branch-A scenario is realised",
+      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / Block-1 quantity and builds its own artifact per subcondition, replicate and field. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
       "calibration_scope": "REPLICATE_CONDITIONAL",
       "calibration_artifact_count": 1200,
-      "calibration_artifact_basis": "400 replicates x 3 declared rho",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_artifact_basis": "400 replicates x 3 subconditions x 1 fields requiring calibration = 1,200",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "rho_1p019573",
+          "rho": 1.019573,
+          "role": "boundary -20%"
+        },
+        {
+          "subcondition_id": "rho_1p024467",
+          "rho": 1.024467,
+          "role": "boundary"
+        },
+        {
+          "subcondition_id": "rho_1p029360",
+          "rho": 1.02936,
+          "role": "boundary +20%"
+        }
+      ],
+      "subcondition_count": 3,
+      "uses_p1_block1": true,
+      "requires_block1_calibration": true,
+      "primary_release_endpoint": "P1_REJECTION_RATE_PER_RHO",
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "fields_requiring_calibration": 1
     },
     {
       "case_id": "C7_false_bridge",
@@ -289,17 +497,62 @@
       "role": "negative_control",
       "v4_classification_note": "evaluated against the all-field P3 and the IUT P2",
       "allowed_seed_families": [
-        "calibration",
         "validation",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. Branch-B trajectories under each alternative; the declared Branch-A scenario is realised",
+      "allowed_seed_families_rationale": "NO calibration family: this case evaluates no P1 / Block-1 quantity. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "calibration_artifact_count": 6400,
-      "calibration_artifact_basis": "400 replicates x 4 alternatives x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_scope": "NOT_APPLICABLE",
+      "calibration_artifact_count": 0,
+      "calibration_artifact_basis": "0 - this case evaluates no P1 / Block-1 quantity",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "alt_1_06",
+          "beta_true": [
+            1,
+            1.06,
+            1,
+            1
+          ]
+        },
+        {
+          "subcondition_id": "alt_0_93_1_05",
+          "beta_true": [
+            1,
+            0.93,
+            1.05,
+            1
+          ]
+        },
+        {
+          "subcondition_id": "alt_1_10",
+          "beta_true": [
+            1,
+            1,
+            1,
+            1.1
+          ]
+        },
+        {
+          "subcondition_id": "hard_1_025",
+          "beta_true": [
+            1,
+            1.025,
+            1,
+            1
+          ],
+          "role": "hard near-margin case"
+        }
+      ],
+      "subcondition_count": 4,
+      "uses_p1_block1": false,
+      "requires_block1_calibration": false,
+      "primary_release_endpoint": "P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE",
+      "block1_role": "NONE",
+      "fields_requiring_calibration": 0,
+      "calibration_not_required_reason": "its frozen endpoints do not evaluate any P1 / Block-1 quantity. p1_geometry is the ONLY consumer of a CalibrationArtifact in the package, and this case never reaches it. Generating one would add a calibration refusal path that cannot affect the science but CAN affect the outcome."
     },
     {
       "case_id": "C8_blinded_scale_control",
@@ -324,17 +577,33 @@
       "role": "positive_control",
       "v4_classification_note": "",
       "allowed_seed_families": [
-        "calibration",
         "blinded_scale_control",
         "branch_a_measurement"
       ],
-      "allowed_seed_families_rationale": "REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration family directly. the blinded control draws its own paired Branch-B replicates from its dedicated family; the declared Branch-A scenario is realised. The blinding factor c is applied deterministically by BranchAField.blinded and is not a draw",
+      "allowed_seed_families_rationale": "NO calibration family: this case evaluates no P1 / Block-1 quantity. Branch-A measurement is realised per replicate from its own family.",
       "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair",
       "branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "calibration_artifact_count": 800,
-      "calibration_artifact_basis": "200 paired replicates x 4 fields",
-      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them."
+      "calibration_scope": "NOT_APPLICABLE",
+      "calibration_artifact_count": 0,
+      "calibration_artifact_basis": "0 - this case evaluates no P1 / Block-1 quantity",
+      "calibration_scope_rationale": "the declared Branch-A uncertainty scenario is REALISED per replicate from the branch_a_measurement family, so H_A and therefore the Block-1 null law differ between replicates. One nominal per-field artifact would analyse independently realised conditions against a null that belongs to none of them.",
+      "subconditions": [
+        {
+          "subcondition_id": "paired_scale_control",
+          "scale_factors": [
+            1.07,
+            0.9
+          ],
+          "pairing": "INTENTIONAL: both factors act on the SAME underlying synthetic replicate by the frozen deterministic Branch-A scale transform. They are NOT independent random subconditions and must not be given separate streams."
+        }
+      ],
+      "subcondition_count": 1,
+      "uses_p1_block1": false,
+      "requires_block1_calibration": false,
+      "primary_release_endpoint": "P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY",
+      "block1_role": "NONE",
+      "fields_requiring_calibration": 0,
+      "calibration_not_required_reason": "its frozen endpoints do not evaluate any P1 / Block-1 quantity. p1_geometry is the ONLY consumer of a CalibrationArtifact in the package, and this case never reaches it. Generating one would add a calibration refusal path that cannot affect the science but CAN affect the outcome."
     }
   ],
   "case_count_justification": "Eight cases, one per scientifically required purpose traceable to committed or adopted authority. P2 (cross-field) and P3 (absolute) are NOT separate generating cases: they are endpoints evaluated on C1's data so the shared reference-field dependence and the common-mode calibration error are preserved. Simulating the three P2 ratios independently, or reverting P3 to reference-only, would destroy exactly the structure being validated. The count is eight because eight purposes are required, not to preserve a historical number.",
@@ -547,25 +816,21 @@
       },
       "campaign_projection": {
         "classification": "BENCHMARK-BASED PROJECTION built on the MEASURED per-unit costs above",
-        "call_graph_basis": "derived from the declared case structure, not assumed: field-replicates = C1 300x4 + C2 400x4 + C3 400x4 + C4 2000x4 + C5 400x12x4 + C6 400x3 + C7 400x4x4 + C8 200x4 = 40000",
-        "P1_evaluations": 40000,
+        "call_graph_basis": "derived from the corrected machine-readable plan: sum over cases of replicates x subconditions x fields_requiring_calibration; C7 and C8 contribute zero",
+        "P1_evaluations": "one per calibration-requiring field-replicate-subcondition = 46,000",
         "reuse_is_mechanical": "test_e1a_v4_repair.py proves one P1 evaluation touches the null exactly once per gate, four lookups, never a rebuild. Reuse is demonstrated, not assumed.",
-        "architecture_A_four_locked_artifacts": {
-          "artifact_builds": 4,
-          "threshold_machinery_seconds": 13.0,
-          "note": "4 x 3.008 s of artifact build plus 40000 x (1.94 + 22.99) us of P1 use"
-        },
         "architecture_B_one_artifact_per_field_replicate": {
-          "artifact_builds": 40000,
-          "repaired_core_seconds": 120320,
-          "repaired_core_hours": 33.4,
-          "at_14_way_parallelism_hours": 2.4,
-          "superseded_core_seconds": 16726800,
-          "superseded_core_days": 193.6,
-          "note": "the superseded figure uses the MEASURED 415.5725 s threshold cost"
+          "artifact_builds": 46000,
+          "measured_per_artifact_wall_seconds": 2.674,
+          "repaired_core_seconds": 123004,
+          "repaired_core_hours": 34.2,
+          "classification": "BENCHMARK-BASED PROJECTION from a MEASURED per-unit cost",
+          "note": "supersedes the 29.7 core-hour figure, which rested on the incorrect 40,000 count"
         },
         "parallelism_assumption": "14 workers, perfect scaling, no I/O and no scheduling overhead. ASSUMED, not measured. Every wall-clock-at-N-workers figure above rests on it.",
-        "not_measured_end_to_end": "no campaign, no calibration and no trajectory has been run. Branch-B trajectory generation is excluded from these figures entirely and is the larger term under either architecture."
+        "not_measured_end_to_end": "no campaign, no calibration and no trajectory has been run. Branch-B trajectory generation is excluded from these figures entirely and is the larger term under either architecture.",
+        "artifact_builds": 46000,
+        "feasibility_statement": "no resource ceiling is declared, so this study establishes neither feasibility nor infeasibility. It states only the projected cost."
       },
       "conclusion": "under the repaired implementation the Block-1 threshold is no longer the binding cost under either architecture. The earlier report's word 'infeasible' is withdrawn; the supported statement is 'very expensive under the previous implementation'.",
       "scope_decision_note": "computational cost is NOT the scientific decision rule. Replicate-conditional calibration is adopted because it matches the repeated-experiment model; the cost is recorded for planning only and was not allowed to weaken the architecture.",
@@ -602,6 +867,12 @@
           "compatibility_and_P1_seconds": 1.0,
           "classification": "BENCHMARK-BASED PROJECTION"
         }
+      },
+      "superseded_40000_count": {
+        "superseded_total": 40000,
+        "corrected_total": 46000,
+        "why_the_old_total_looked_consistent": "it was produced by two compensating errors: a 7,200 OVER-count (C7 and C8 were budgeted artifacts their endpoints never consume) and a 13,200 UNDER-count (the G3 sigma_psi subconditions of C1, C2 and C3 were budgeted for one scenario each instead of four). 40,000 - 7,200 + 13,200 = 46,000, so a check on the SUM alone passed while both components were wrong.",
+        "found_by": "independent pre-execution re-audit"
       }
     },
     "calibration_scope": "REPLICATE_CONDITIONAL",
@@ -614,7 +885,8 @@
       "adopted_because": "it matches the repeated-experiment scientific model, NOT because of cost",
       "superseded_alternative": "four globally locked per-field calibration artifacts",
       "implementation": "e1a_v4.validation.scope",
-      "total_artifacts": 40000
+      "total_artifacts": 46000,
+      "requirement_rule": "A case requires Block-1 calibration ONLY IF its frozen scientific analysis actually evaluates a P1 / Block-1 quantity whose result or predeclared diagnostic requires a CalibrationArtifact. 'Branch-A stochastic' and 'Block-1 calibration required' are DIFFERENT properties and are no longer equated."
     },
     "global_reuse_prohibition": {
       "prohibited": [
@@ -662,8 +934,8 @@
       ],
       "enforced_by": "e1a_v4.validation.scope.ReplicateCalibration.validation_seed, which refuses until that field's artifact is locked. The threshold is conditional on Branch A and BLIND to Branch B.",
       "campaign_level_implementation": "STREAMING_PER_REPLICATE",
-      "campaign_level_choice_reason": "the preferred PHASE A / PHASE B / PHASE C separation would materialise all 40000 artifacts before any Branch-B draw. Each artifact carries 4 gates x R_cal = 50000 float64 null draws = 1.6 MB raw, so full Phase-B materialisation is about 64 GB binary and several hundred GB as JSON, against 24 GB of RAM on the reference machine. Streaming is therefore adopted, and it is exactly equivalent because ReplicateCalibration mechanically guarantees that the artifact for replicate r is finalised and immutable BEFORE the first Branch-B validation draw for replicate r, and that no later validation result can alter it.",
-      "auditability_preserved": "the artifact MANIFEST is materialised in full for all 40000 artifacts, about 2.6 MB of digests, so threshold freezing remains auditable before any validation outcome exists even though the draws themselves are streamed."
+      "campaign_level_choice_reason": "the preferred PHASE A / PHASE B / PHASE C separation would materialise all 46,000 artifacts before any Branch-B draw. Each artifact carries 4 gates x R_cal = 50000 float64 null draws = 1.6 MB raw, so full Phase-B materialisation is about 74 GB binary and several hundred GB as JSON, against 24 GB of RAM on the reference machine. Streaming is therefore adopted, and it is exactly equivalent because ReplicateCalibration mechanically guarantees that the artifact for a given (case, subcondition, replicate, field) is finalised and immutable BEFORE the first Branch-B validation draw for it, and that no later validation result can alter it.",
+      "auditability_preserved": "the artifact MANIFEST is materialised in full for all 46,000 artifacts, about 3 MB of digests, so threshold freezing remains auditable before any validation outcome exists even though the draws themselves are streamed."
     },
     "artifact_identity_fields": [
       "case_id",
@@ -801,10 +1073,11 @@
   "classification_rule": "An inconvenient scientific result is NOT classified as a software bug unless an actual implementation defect is demonstrated. A demonstrated bug preserves the failed result and requires a separately versioned correction and revalidation stage.",
   "output_schema": {
     "directory": "results/e1a_v4_validation",
-    "record_schema": "e1a_v4_validation_result/1",
-    "manifest_schema": "e1a_v4_validation_manifest/1",
+    "record_schema": "e1a_v4_validation_result/2",
+    "manifest_schema": "e1a_v4_validation_manifest/2",
     "per_record_fields": [
       "case_id",
+      "subcondition_id",
       "replicate_id",
       "seed_family",
       "seed_identity",
@@ -842,7 +1115,8 @@
       "scale_control_recovery",
       "classification"
     ],
-    "reproduction": "seed family + master seed + case id + replicate index regenerate any record exactly"
+    "reproduction": "case_id + subcondition_id + replicate_id + field/stochastic scope + seed family + seed identity regenerate any record exactly",
+    "schema_version_note": "schema 2 adds subcondition_id. No official result data exists, so the break is made explicit now rather than leaving old records ambiguous."
   },
   "no_post_outcome_tuning": {
     "prohibited_after_execution": [
@@ -1139,5 +1413,83 @@
     "mechanism": "every calibration job is a pure function of (family, case, replicate, field)",
     "tested": "test_e1a_v4_calibration_scope.py exercises deterministic scheduling",
     "executed_now": false
+  },
+  "randomness_dependency": {
+    "status": "FROZEN PROSPECTIVELY",
+    "default_rule": "different declared synthetic subconditions use INDEPENDENT domain-separated random streams unless the frozen design explicitly declares them paired or shared",
+    "exception_rule": "the default applies BETWEEN declared subconditions. It must NOT destroy correlations deliberately built into a single synthetic experiment.",
+    "scopes": {
+      "experiment": "one draw per synthetic experiment, SHARED across all fields",
+      "<field_id>": "independent per field"
+    },
+    "table": [
+      {
+        "quantity": "Branch-A common-mode calibration error (sigma_cm)",
+        "seed_family": "branch_a_measurement",
+        "scope": "experiment",
+        "shared_with": "all four fields of the SAME (case, subcondition, replicate)",
+        "independent_from": "other replicates and other subconditions",
+        "why": "INTENTIONAL. It cancels in the P2 ratio and not in P3; redrawing it per field would destroy the dependence structure P2 exists to test.",
+        "authority": "generating_model.branch_a.common_mode; generate.BranchAErrorModel.measure takes common_mode as a parameter, it does not draw it"
+      },
+      {
+        "quantity": "Branch-A per-mode stiffness error (sigma_k)",
+        "seed_family": "branch_a_measurement",
+        "scope": "<field_id>",
+        "shared_with": "nothing",
+        "independent_from": "other fields, replicates, subconditions",
+        "why": "drawn inside measure() from that field's own generator",
+        "authority": "generate.BranchAErrorModel.measure draws m + 2 values per field"
+      },
+      {
+        "quantity": "Branch-A orientation error (sigma_psi)",
+        "seed_family": "branch_a_measurement",
+        "scope": "<field_id>",
+        "shared_with": "nothing",
+        "independent_from": "other fields, replicates, subconditions",
+        "why": "drawn inside measure() from that field's own generator",
+        "authority": "generate.BranchAErrorModel.measure, draw index m"
+      },
+      {
+        "quantity": "Branch-A thermometry error (sigma_T)",
+        "seed_family": "branch_a_measurement",
+        "scope": "<field_id>",
+        "shared_with": "nothing",
+        "independent_from": "other fields, replicates, subconditions",
+        "why": "drawn inside measure() from that field's own generator",
+        "authority": "generate.BranchAErrorModel.measure, draw index m + 1"
+      },
+      {
+        "quantity": "calibration surrogate draws",
+        "seed_family": "calibration",
+        "scope": "<field_id>",
+        "shared_with": "nothing",
+        "independent_from": "every other calibration job",
+        "why": "one artifact per (case, subcondition, replicate, field); independence is what makes scheduling order irrelevant",
+        "authority": "calibrate.surrogate_covariance_draw, called R_cal times per artifact"
+      },
+      {
+        "quantity": "Branch-B trajectory innovations",
+        "seed_family": "validation, or blinded_scale_control for C8",
+        "scope": "<field_id>",
+        "shared_with": "nothing",
+        "independent_from": "other fields, replicates, subconditions",
+        "why": "one OU record per field per replicate",
+        "authority": "generate.ou_observations(truth, rng)"
+      },
+      {
+        "quantity": "C8 blinded scale factors c = 1.07 and c = 0.90",
+        "seed_family": "NONE - not random",
+        "scope": "n/a",
+        "shared_with": "both factors act on the SAME underlying synthetic replicate",
+        "independent_from": "nothing; they are not independent subconditions",
+        "why": "INTENTIONAL PAIRING. The difference between the branches is the frozen DETERMINISTIC Branch-A scale transform BranchAField.blinded(c), not a draw. Creating independent base observations for the two factors would destroy the paired control.",
+        "authority": "disposition G1; branch_a.BranchAField.blinded"
+      }
+    ],
+    "distinction": {
+      "ACCIDENTAL cross-subcondition sharing": "a defect, closed by the subcondition seed level",
+      "INTENTIONAL within-experiment sharing": "part of the frozen model, preserved by the experiment scope"
+    }
   }
 }

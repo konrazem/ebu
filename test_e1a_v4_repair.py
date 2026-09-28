@@ -317,19 +317,18 @@ def test_b2_no_circularity() -> None:
 
 # ------------------------------------------------------------- B3 seed scope
 EXPECTED_FAMILIES = {
-    # Every case declares `calibration`: a DERIVED consequence of adopting
-    # replicate-conditional calibration, where each case builds its own artifact
-    # per replicate and field. Before that decision only C4 generated calibration
-    # data. `confirmatory` remains authorised for no case; `blinded_scale_control`
-    # for C8 alone.
+    # `calibration` is granted ONLY to cases whose frozen endpoints evaluate a
+    # P1 / Block-1 quantity. C7 (P2 + P3) and C8 (P3-equivalent) do not, so they
+    # no longer receive it: unused families are not granted. `confirmatory`
+    # reaches no case; `blinded_scale_control` reaches C8 alone.
     "C1_true_bridge_complete": {"calibration", "validation", "branch_a_measurement"},
     "C2_geometry_false_rejection": {"calibration", "validation", "branch_a_measurement"},
     "C3_g5_block": {"calibration", "validation", "branch_a_measurement"},
     "C4_surrogate_validity": {"calibration", "validation", "branch_a_measurement"},
     "C5_plug_in_branch_a": {"calibration", "validation", "branch_a_measurement"},
     "C6_mode_resolution_boundary": {"calibration", "validation", "branch_a_measurement"},
-    "C7_false_bridge": {"calibration", "validation", "branch_a_measurement"},
-    "C8_blinded_scale_control": {"calibration", "blinded_scale_control", "branch_a_measurement"},
+    "C7_false_bridge": {"validation", "branch_a_measurement"},
+    "C8_blinded_scale_control": {"blinded_scale_control", "branch_a_measurement"},
 }
 
 
@@ -358,41 +357,41 @@ def test_b3_enforcement() -> None:
     ex = bind_execution(root=ROOT)
     c1 = ex.case_access("C1_true_bridge_complete")
     check("C1 may obtain the Branch-B validation family",
-          isinstance(c1.stream(ValidationSeedFamily.VALIDATION), int))
+          isinstance(c1.family(ValidationSeedFamily.VALIDATION), int))
     check("C1 may obtain the INDEPENDENT Branch-A measurement family",
-          isinstance(c1.stream(ValidationSeedFamily.BRANCH_A_MEASUREMENT), int))
+          isinstance(c1.family(ValidationSeedFamily.BRANCH_A_MEASUREMENT), int))
     check("and the two are different streams",
-          c1.stream(ValidationSeedFamily.VALIDATION)
-          != c1.stream(ValidationSeedFamily.BRANCH_A_MEASUREMENT),
+          c1.family(ValidationSeedFamily.VALIDATION)
+          != c1.family(ValidationSeedFamily.BRANCH_A_MEASUREMENT),
           "Branch-A error never reuses the Branch-B trajectory stream")
     check("C1 may obtain the calibration family ONLY because it now declares it",
-          isinstance(c1.stream(ValidationSeedFamily.CALIBRATION), int)
+          isinstance(c1.family(ValidationSeedFamily.CALIBRATION), int)
           and "calibration" in PLAN["cases"][0][ALLOWED_FAMILIES_KEY],
           "replicate-conditional calibration; the declaration is what authorises it")
     check("C1 may NOT obtain the blinded-scale-control family",
-          refuses(c1.stream, ValidationSeedFamily.BLINDED_SCALE_CONTROL))
+          refuses(c1.family, ValidationSeedFamily.BLINDED_SCALE_CONTROL))
     check("C1 may NOT obtain the confirmatory family",
-          refuses(c1.stream, ValidationSeedFamily.CONFIRMATORY))
+          refuses(c1.family, ValidationSeedFamily.CONFIRMATORY))
     c4 = ex.case_access("C4_surrogate_validity")
     check("C4 receives exactly the calibration + validation families it needs",
-          isinstance(c4.stream(ValidationSeedFamily.CALIBRATION), int)
-          and isinstance(c4.stream(ValidationSeedFamily.VALIDATION), int)
-          and refuses(c4.stream, ValidationSeedFamily.BLINDED_SCALE_CONTROL))
+          isinstance(c4.family(ValidationSeedFamily.CALIBRATION), int)
+          and isinstance(c4.family(ValidationSeedFamily.VALIDATION), int)
+          and refuses(c4.family, ValidationSeedFamily.BLINDED_SCALE_CONTROL))
     check("no case reaches the confirmatory family",
-          all(refuses(ex.case_access(c["case_id"]).stream,
+          all(refuses(ex.case_access(c["case_id"]).family,
                       ValidationSeedFamily.CONFIRMATORY) for c in PLAN["cases"]))
     c5 = ex.case_access("C5_plug_in_branch_a")
     check("C5 receives exactly its required families",
-          isinstance(c5.stream(ValidationSeedFamily.BRANCH_A_MEASUREMENT), int)
-          and refuses(c5.stream, ValidationSeedFamily.BLINDED_SCALE_CONTROL))
+          isinstance(c5.family(ValidationSeedFamily.BRANCH_A_MEASUREMENT), int)
+          and refuses(c5.family, ValidationSeedFamily.BLINDED_SCALE_CONTROL))
     c8 = ex.case_access("C8_blinded_scale_control")
     check("only C8 may obtain the blinded-scale-control family",
-          isinstance(c8.stream(ValidationSeedFamily.BLINDED_SCALE_CONTROL), int)
-          and refuses(c8.stream, ValidationSeedFamily.VALIDATION))
+          isinstance(c8.family(ValidationSeedFamily.BLINDED_SCALE_CONTROL), int)
+          and refuses(c8.family, ValidationSeedFamily.VALIDATION))
     check("an unknown case ID refuses",
           refuses(ex.case_access, "C9_invented"))
     check("an unknown family object refuses",
-          refuses(c1.stream, "validation"),
+          refuses(c1.family, "validation"),
           "a bare string is not a declared family")
 
 
@@ -412,7 +411,7 @@ def test_b3_low_level_vs_official() -> None:
     ex = bind_execution(root=ROOT)
     c2 = ex.case_access("C2_geometry_false_rejection")
     check("the OFFICIAL case-scoped route refuses any undeclared family",
-          refuses(c2.stream, ValidationSeedFamily.CONFIRMATORY),
+          refuses(c2.family, ValidationSeedFamily.CONFIRMATORY),
           "enforcement lives at the boundary, not in the primitive")
     official = ex.case_access("C1_true_bridge_complete").replicate(
         ValidationSeedFamily.BRANCH_A_MEASUREMENT, 0)

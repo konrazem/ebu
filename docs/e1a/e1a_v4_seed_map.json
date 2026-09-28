@@ -1,5 +1,5 @@
 {
-  "schema": "e1a_v4_seed_map/2",
+  "schema": "e1a_v4_seed_map/3",
   "domain": "EBU-E1A-V4-SYNTHETIC-VALIDATION",
   "campaign": "v4.0",
   "contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
@@ -9,8 +9,14 @@
     "family": "DOMAIN|family|master_hex16|family_name",
     "replicate": "DOMAIN|replicate|family_hex16|case=<id>|rep=<index>",
     "hand_picked_values": false,
-    "job": "DOMAIN|job|replicate_hex16|field=<field_id>",
-    "job_note": "ADDED with replicate-conditional calibration. It is a fourth level and changes none of the three above: master_seed and every family seed below are bit-identical to schema/1. Required because one replicate needs one calibration artifact per field, and a single per-replicate stream consumed sequentially would make artifact contents depend on field processing ORDER, so a parallel execution could not reproduce a serial one."
+    "subcondition": "canon('subcondition', replicate_hex16, subcondition_id)",
+    "scope": "canon('scope', subcondition_hex16, scope)",
+    "canon": "DOMAIN + json.dumps(parts, separators=(',',':'), ensure_ascii=True) - a deterministic domain-separated SERIALISATION, not concatenation, so a separator inside an identifier cannot forge a different tuple",
+    "scope_values": {
+      "experiment": "one draw per synthetic experiment, SHARED across fields",
+      "<field_id>": "independent per field"
+    },
+    "extension_note": "The subcondition and scope levels supersede the schema/2 'job' level. They change none of master, family or replicate: master_seed and every family seed below are bit-identical to schema/1. The subcondition level is required because a case declares several distinct synthetic scenarios (4 sigma_psi scenarios for C1/C2/C3, 12 cells for C5, 3 rho for C6, 4 alternatives for C7) which would otherwise silently share random numbers. The scope level is required because randomness scope is a property of the quantity, not of the loop: the Branch-A common-mode error is drawn ONCE per experiment and SHARED across fields, which is what makes it cancel in the P2 ratio and not in P3."
   },
   "master_seed": 13785910525869478477,
   "families": {

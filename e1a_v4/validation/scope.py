@@ -49,12 +49,15 @@ from typing import Any, Mapping
 
 from ..calibration import CalibrationArtifact, CalibrationCondition
 from ..numerics import Refusal
-from .seeds import CaseSeedAccess, ValidationSeedFamily
+from .seeds import EXPERIMENT_SCOPE, CaseSeedAccess, ValidationSeedFamily
 
 #: Machine-readable plan keys. Never inferred from prose.
+REQUIRES_CALIBRATION_KEY = "requires_block1_calibration"
+SUBCONDITIONS_KEY = "subconditions"
 CALIBRATION_SCOPE_KEY = "calibration_scope"
 BRANCH_A_STATUS_KEY = "branch_a_uncertainty_status"
 SHARED_RATIONALE_KEY = "shared_calibration_rationale"
+SUBCONDITION_ID_KEY = "subcondition_id"
 
 #: Branch-A status of a case.
 BRANCH_A_STOCHASTIC = "STOCHASTIC_PER_REPLICATE"
@@ -64,7 +67,8 @@ BRANCH_A_STATUSES = (BRANCH_A_STOCHASTIC, BRANCH_A_FIXED)
 #: Calibration scope of a case.
 REPLICATE_CONDITIONAL = "REPLICATE_CONDITIONAL"
 CASE_FIXED = "CASE_FIXED"
-CALIBRATION_SCOPES = (REPLICATE_CONDITIONAL, CASE_FIXED)
+NOT_APPLICABLE = "NOT_APPLICABLE"
+CALIBRATION_SCOPES = (REPLICATE_CONDITIONAL, CASE_FIXED, NOT_APPLICABLE)
 
 #: The campaign-level value recorded in the frozen plan.
 CAMPAIGN_CALIBRATION_SCOPE = REPLICATE_CONDITIONAL
@@ -78,6 +82,8 @@ class CaseCalibrationScope:
     branch_a_status: str
     scope: str
     shared_calibration_rationale: str = ""
+    requires_calibration: bool = True
+    subconditions: tuple[str, ...] = ()
 
     def __post_init__(self) -> None:
         if self.branch_a_status not in BRANCH_A_STATUSES:
@@ -90,6 +96,13 @@ class CaseCalibrationScope:
                 f"case {self.case_id!r}: {CALIBRATION_SCOPE_KEY} must be one of "
                 f"{CALIBRATION_SCOPES}, got {self.scope!r}"
             )
+        if not self.requires_calibration:
+            if self.scope != NOT_APPLICABLE:
+                raise Refusal(
+                    f"case {self.case_id!r} evaluates no P1 / Block-1 quantity, so its "
+                    f"calibration scope must be {NOT_APPLICABLE!r}, not {self.scope!r}"
+                )
+            return
         if self.branch_a_status == BRANCH_A_STOCHASTIC and self.scope != REPLICATE_CONDITIONAL:
             raise Refusal(
                 f"case {self.case_id!r} realises Branch-A measurement per replicate, so its "
@@ -120,8 +133,18 @@ class CaseCalibrationScope:
                     f"case {case_id!r} does not declare {key!r}; calibration scope must be "
                     "machine-readable and explicit, never implicit"
                 )
+        if REQUIRES_CALIBRATION_KEY not in case:
+            raise Refusal(
+                f"case {case_id!r} does not declare {REQUIRES_CALIBRATION_KEY!r}. "
+                "'Branch-A stochastic' and 'Block-1 calibration required' are DIFFERENT "
+                "properties and may not be inferred from one another."
+            )
+        subs = tuple(s[SUBCONDITION_ID_KEY] for s in case.get(SUBCONDITIONS_KEY, []))
+        if not subs:
+            raise Refusal(f"case {case_id!r} declares no {SUBCONDITIONS_KEY!r}")
         return cls(case_id, case[BRANCH_A_STATUS_KEY], case[CALIBRATION_SCOPE_KEY],
-                   case.get(SHARED_RATIONALE_KEY, ""))
+                   case.get(SHARED_RATIONALE_KEY, ""),
+                   bool(case[REQUIRES_CALIBRATION_KEY]), subs)
 
 
 @dataclass
@@ -134,12 +157,12 @@ class CampaignCalibrationLedger:
     would have to be part of the case DESIGN to be legitimate.
     """
 
-    owners: dict[str, tuple[str, int, str]] = field(default_factory=dict)
-    digests: dict[tuple[str, int, str], str] = field(default_factory=dict)
+    owners: dict[str, tuple[str, str, int, str]] = field(default_factory=dict)
+    digests: dict[tuple[str, str, int, str], str] = field(default_factory=dict)
 
-    def register(self, scope: CaseCalibrationScope, replicate: int, field_id: str,
-                 artifact: CalibrationArtifact) -> str:
-        key = (scope.case_id, replicate, field_id)
+    def register(self, scope: CaseCalibrationScope, subcondition_id: str, replicate: int,
+                 field_id: str, artifact: CalibrationArtifact) -> str:
+        key = (scope.case_id, subcondition_id, replicate, field_id)
         if key in self.digests:
             raise Refusal(
                 f"calibration artifact for {key} is already locked and is immutable; "
@@ -158,8 +181,9 @@ class CampaignCalibrationLedger:
         self.digests[key] = digest
         return digest
 
-    def digest_for(self, case_id: str, replicate: int, field_id: str) -> str | None:
-        return self.digests.get((case_id, replicate, field_id))
+    def digest_for(self, case_id: str, subcondition_id: str, replicate: int,
+                   field_id: str) -> str | None:
+        return self.digests.get((case_id, subcondition_id, replicate, field_id))
 
     @property
     def artifact_count(self) -> int:
@@ -173,7 +197,8 @@ class ReplicateCalibration:
     """
 
     def __init__(self, scope: CaseCalibrationScope, access: CaseSeedAccess,
-                 replicate: int, ledger: CampaignCalibrationLedger) -> None:
+                 subcondition_id: str, replicate: int,
+                 ledger: CampaignCalibrationLedger) -> None:
         if access.case_id != scope.case_id:
             raise Refusal(
                 f"seed access is scoped to {access.case_id!r} but the calibration scope is "
@@ -181,34 +206,62 @@ class ReplicateCalibration:
             )
         if replicate < 0:
             raise Refusal("replicate index must be nonnegative")
+        if subcondition_id not in scope.subconditions:
+            raise Refusal(
+                f"case {scope.case_id!r} declares subconditions {list(scope.subconditions)} "
+                f"and was asked for {subcondition_id!r}"
+            )
         self.scope = scope
         self.access = access
+        self.subcondition_id = subcondition_id
         self.replicate = replicate
         self.ledger = ledger
         self._locked: dict[str, CalibrationArtifact] = {}
         self._released: set[str] = set()
 
+    # ------------------------------------------------------- experiment scope
+    def common_mode_seed(self) -> int:
+        """The Branch-A COMMON-MODE stream: ONE per experiment, SHARED across fields.
+
+        INTENTIONAL within-experiment sharing. It cancels in the P2 ratio and not
+        in P3, so it must not be redrawn per field.
+        """
+        return self.access.stream(ValidationSeedFamily.BRANCH_A_MEASUREMENT,
+                                  self.subcondition_id, self.replicate, EXPERIMENT_SCOPE)
+
     # ---------------------------------------------------------------- step 1-2
     def branch_a_seed(self, field_id: str) -> int:
-        """Branch-A measurement stream for this replicate and field."""
-        return self.access.job(ValidationSeedFamily.BRANCH_A_MEASUREMENT,
-                               self.replicate, field_id)
+        """Per-field Branch-A stream: stiffness, orientation and thermometry error."""
+        return self.access.stream(ValidationSeedFamily.BRANCH_A_MEASUREMENT,
+                                  self.subcondition_id, self.replicate, field_id)
 
     # ------------------------------------------------------------------ step 4
     def calibration_seed(self, field_id: str) -> int:
         """Calibration stream for this replicate and field. Distinct from both
         the Branch-A and the Branch-B streams by domain separation."""
+        if not self.scope.requires_calibration:
+            raise Refusal(
+                f"case {self.scope.case_id!r} evaluates no P1 / Block-1 quantity and has no "
+                "calibration stream. Requesting one would create a refusal path that cannot "
+                "affect the science but CAN affect the outcome."
+            )
         if field_id in self._released:
             raise Refusal(
                 f"ORDERING VIOLATION: Branch-B data for {field_id!r} has already been "
                 "released; its calibration may not be regenerated"
             )
-        return self.access.job(ValidationSeedFamily.CALIBRATION, self.replicate, field_id)
+        return self.access.stream(ValidationSeedFamily.CALIBRATION, self.subcondition_id,
+                                  self.replicate, field_id)
 
     # ------------------------------------------------------------------ step 5
     def lock(self, field_id: str, artifact: CalibrationArtifact,
              condition: CalibrationCondition | None = None) -> str:
         """Finalise and LOCK. Immutable afterwards; Branch B opens only after this."""
+        if not self.scope.requires_calibration:
+            raise Refusal(
+                f"case {self.scope.case_id!r} evaluates no P1 / Block-1 quantity; no "
+                "calibration artifact may be locked for it"
+            )
         if field_id in self._locked:
             raise Refusal(
                 f"calibration for {field_id!r} replicate {self.replicate} is already locked; "
@@ -225,13 +278,24 @@ class ReplicateCalibration:
         if condition is not None and artifact.condition.sha256 != condition.sha256:
             raise Refusal(
                 "artifact condition does not match the realised calibration condition")
-        digest = self.ledger.register(self.scope, self.replicate, field_id, artifact)
+        digest = self.ledger.register(self.scope, self.subcondition_id, self.replicate,
+                                      field_id, artifact)
         self._locked[field_id] = artifact
         return digest
 
     # ------------------------------------------------------------------ step 6
-    def validation_seed(self, field_id: str) -> int:
-        """Branch-B stream. REFUSES until the calibration for this field is locked."""
+    def validation_seed(self, field_id: str,
+                        family: ValidationSeedFamily = ValidationSeedFamily.VALIDATION) -> int:
+        """Branch-B stream.
+
+        For a calibration-requiring case this REFUSES until that field's artifact
+        is locked. For a case that evaluates no P1 / Block-1 quantity there is no
+        artifact to wait for, and gating on one would make a calibration refusal
+        able to change an outcome it has no scientific bearing on.
+        """
+        if not self.scope.requires_calibration:
+            self._released.add(field_id)
+            return self.access.stream(family, self.subcondition_id, self.replicate, field_id)
         if field_id not in self._locked:
             raise Refusal(
                 f"ORDERING VIOLATION: Branch-B validation data for {field_id!r} replicate "
@@ -240,7 +304,7 @@ class ReplicateCalibration:
                 "Branch B; the threshold is fixed first or it is not a threshold."
             )
         self._released.add(field_id)
-        return self.access.job(ValidationSeedFamily.VALIDATION, self.replicate, field_id)
+        return self.access.stream(family, self.subcondition_id, self.replicate, field_id)
 
     def artifact(self, field_id: str) -> CalibrationArtifact:
         if field_id not in self._locked:
@@ -256,11 +320,12 @@ class ReplicateCalibration:
         return tuple(sorted(self._released))
 
 
-def artifact_manifest_row(case_id: str, replicate: int, field_id: str,
+def artifact_manifest_row(case_id: str, subcondition_id: str, replicate: int, field_id: str,
                           artifact: CalibrationArtifact, calibration_seed: int) -> dict:
     """The frozen manifest row for one locked artifact. Recorded, never recomputed."""
     return {
         "case_id": case_id,
+        "subcondition_id": subcondition_id,
         "replicate_id": replicate,
         "field_id": field_id,
         "calibration_condition_sha256": artifact.condition.sha256,

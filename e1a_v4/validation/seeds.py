@@ -8,20 +8,37 @@ reproduce the committed seed map byte for byte.
     master        = H( DOMAIN | "master"    | contract_sha256 | campaign )
     family seed   = H( DOMAIN | "family"    | master_hex      | family    )
     replicate     = H( DOMAIN | "replicate" | family_hex      | case | rep )
-    job           = H( DOMAIN | "job"       | replicate_hex   | field     )
+    subcondition  = H( canon("subcondition", replicate_hex, subcondition_id) )
+    scope         = H( canon("scope",         subcondition_hex, scope)        )
 
-The JOB level is an EXTENSION added with replicate-conditional calibration. It
-adds a fourth level and changes none of the three above: every master, family
-and replicate value is bit-identical to the committed seed map.
+The last two levels are EXTENSIONS. They change none of the three above: every
+master, family and replicate value is bit-identical to the committed seed map.
 
-WHY IT IS REQUIRED, and not a convenience. Under replicate-conditional
-calibration one replicate needs one calibration artifact PER FIELD. A single
-per-replicate stream consumed sequentially across fields would make the artifact
-contents depend on the ORDER the fields were processed in, so a parallel
-execution could not reproduce a serial one. Domain-separating by field makes each
-calibration job a pure function of (family, case, replicate, field), which is what
-lets independent jobs be scheduled in any order and still produce identical
-artifacts.
+`canon` is a deterministic domain-separated SERIALISATION, not string
+concatenation: the parts are JSON-encoded with sorted separators and ASCII
+escaping, so a separator inside an identifier cannot forge a different tuple.
+
+WHY THE SUBCONDITION LEVEL IS REQUIRED. A case declares several distinct
+synthetic scenarios - four sigma_psi scenarios for C1/C2/C3, twelve uncertainty
+cells for C5, three rho conditions for C6, four false-bridge alternatives for
+C7. Without a subcondition level they all resolve to one stream, so different
+declared scenarios would silently share random numbers. They are separate
+declared scenarios and are independently random BY DEFAULT.
+
+WHY THE SCOPE LEVEL IS REQUIRED, and why it is NOT simply "per field". Randomness
+scope is a property of the quantity, not of the loop it happens to sit in:
+
+    experiment scope   the Branch-A COMMON-MODE calibration error. ONE draw per
+                       synthetic experiment, SHARED across all four fields. That
+                       sharing is what makes it cancel in the P2 ratio and not in
+                       P3, so redrawing it per field would destroy the dependence
+                       structure P2 exists to test.
+    field scope        per-mode stiffness, orientation and thermometry error;
+                       the calibration surrogate draws; the Branch-B trajectory
+                       innovations. Independent per field.
+
+ACCIDENTAL cross-subcondition sharing is a defect. INTENTIONAL within-experiment
+sharing is part of the frozen model. The two are distinguished here explicitly.
 
 H(x) = first 8 bytes of sha256(x), big-endian, as an unsigned 64-bit integer.
 
@@ -35,6 +52,7 @@ stream.
 from __future__ import annotations
 
 import hashlib
+import json
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any, Mapping
@@ -80,15 +98,34 @@ def replicate_seed(fam_seed: int, case_id: str, replicate: int) -> int:
     return _h64(f"{SEED_DOMAIN}|replicate|{fam_seed:016x}|case={case_id}|rep={replicate}")
 
 
-def job_seed(rep_seed: int, field_id: str) -> int:
-    """Per-field stream inside one replicate. DERIVATION, NOT A DRAW.
+#: The scope of a quantity drawn once per experiment and shared across fields.
+EXPERIMENT_SCOPE = "experiment"
 
-    Makes each calibration job a pure function of its identity, so scheduling
-    order cannot change an artifact. See the module docstring.
+
+def _canon(*parts: str) -> str:
+    """Deterministic, escaping-safe serialisation. NOT string concatenation."""
+    return SEED_DOMAIN + json.dumps(list(parts), separators=(",", ":"), ensure_ascii=True)
+
+
+def subcondition_seed(rep_seed: int, subcondition_id: str) -> int:
+    """Per-declared-scenario stream inside one replicate. DERIVATION, NOT A DRAW.
+
+    Different declared subconditions are independently random by default.
     """
-    if "|" in field_id or not field_id:
-        raise Refusal("invalid field id")
-    return _h64(f"{SEED_DOMAIN}|job|{rep_seed:016x}|field={field_id}")
+    if not subcondition_id:
+        raise Refusal("subcondition id must be non-empty")
+    return _h64(_canon("subcondition", f"{rep_seed:016x}", subcondition_id))
+
+
+def scope_seed(sub_seed: int, scope: str) -> int:
+    """Per-scope stream inside one subcondition replicate. DERIVATION, NOT A DRAW.
+
+    `scope` is EXPERIMENT_SCOPE for a quantity shared across the fields of one
+    synthetic experiment, or a field id for a per-field quantity.
+    """
+    if not scope:
+        raise Refusal("stochastic scope must be non-empty")
+    return _h64(_canon("scope", f"{sub_seed:016x}", scope))
 
 
 @dataclass(frozen=True)
@@ -164,6 +201,7 @@ class CaseSeedAccess:
     case_id: str
     allowed: tuple[str, ...]
     seed_map: FrozenSeedMap
+    subconditions: tuple[str, ...] = ()
 
     @classmethod
     def from_plan(cls, case_id: str, plan: Mapping[str, Any],
@@ -189,7 +227,15 @@ class CaseSeedAccess:
             raise Refusal(f"case {case_id!r} declares undeclared seed families {unknown}")
         if len(set(declared)) != len(declared):
             raise Refusal(f"case {case_id!r} repeats a seed family")
-        return cls(case_id, declared, seed_map)
+        subs = tuple(s["subcondition_id"] for s in case.get("subconditions", []))
+        if not subs:
+            raise Refusal(
+                f"case {case_id!r} declares no subconditions; every stochastic case must "
+                "carry an explicit machine-readable subcondition list"
+            )
+        if len(set(subs)) != len(subs):
+            raise Refusal(f"case {case_id!r} repeats a subcondition id")
+        return cls(case_id, declared, seed_map, subs)
 
     def _authorise(self, family: ValidationSeedFamily) -> ValidationSeedFamily:
         if not isinstance(family, ValidationSeedFamily):
@@ -202,7 +248,7 @@ class CaseSeedAccess:
             )
         return family
 
-    def stream(self, family: ValidationSeedFamily) -> int:
+    def family(self, family: ValidationSeedFamily) -> int:
         """The family seed, only if this case declares that family."""
         fam = self._authorise(family)
         return self.seed_map.stream(fam, fam)
@@ -214,12 +260,25 @@ class CaseSeedAccess:
         stages stay separately reported: seed derivation, RNG construction,
         random draw, trajectory generation.
         """
-        return replicate_seed(self.stream(family), self.case_id, replicate)
+        return replicate_seed(self.family(family), self.case_id, replicate)
 
-    def job(self, family: ValidationSeedFamily, replicate: int, field_id: str) -> int:
-        """A per-field stream inside an authorised family. DERIVATION, NOT A DRAW.
+    def subcondition(self, family: ValidationSeedFamily, subcondition_id: str,
+                     replicate: int) -> int:
+        """A declared scenario's stream. DERIVATION, NOT A DRAW."""
+        if subcondition_id not in self.subconditions:
+            raise Refusal(
+                f"SUBCONDITION REFUSED: case {self.case_id!r} declares "
+                f"{list(self.subconditions)} and was asked for {subcondition_id!r}. "
+                "Subcondition identities come from the frozen plan, not the caller."
+            )
+        return subcondition_seed(self.replicate(family, replicate), subcondition_id)
 
-        Distinct for every (family, case, replicate, field), so two calibration
-        jobs never share a stream and scheduling order cannot change an artifact.
+    def stream(self, family: ValidationSeedFamily, subcondition_id: str,
+               replicate: int, scope: str) -> int:
+        """The scientific stream identity. DERIVATION, NOT A DRAW.
+
+        Distinct for every (family, case, subcondition, replicate, scope), so two
+        declared scenarios never share randomness and scheduling order cannot
+        change a stream. `scope` is EXPERIMENT_SCOPE or a field id.
         """
-        return job_seed(self.replicate(family, replicate), field_id)
+        return scope_seed(self.subcondition(family, subcondition_id, replicate), scope)

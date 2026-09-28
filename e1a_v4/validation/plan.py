@@ -30,6 +30,7 @@ from ..numerics import Refusal
 from . import PLAN_JSON, SEED_MAP_JSON, VALIDATION_IDENTITY
 from .scope import (
     BRANCH_A_STATUS_KEY, CALIBRATION_SCOPE_KEY, CAMPAIGN_CALIBRATION_SCOPE,
+    REQUIRES_CALIBRATION_KEY, SUBCONDITION_ID_KEY, SUBCONDITIONS_KEY,
     CampaignCalibrationLedger, CaseCalibrationScope, ReplicateCalibration,
 )
 from .seeds import (
@@ -82,6 +83,22 @@ def load_plan(root: str = ".") -> dict[str, Any]:
         bad = [f for f in declared if f not in known]
         if bad:
             raise Refusal(f"case {cid!r} declares undeclared seed families {bad}")
+        subs = case.get(SUBCONDITIONS_KEY)
+        if not isinstance(subs, list) or not subs:
+            raise Refusal(
+                f"case {cid!r} declares no {SUBCONDITIONS_KEY!r}; every stochastic case must "
+                "carry an explicit machine-readable subcondition list"
+            )
+        ids = [x.get(SUBCONDITION_ID_KEY) for x in subs]
+        if any(not i for i in ids) or len(set(ids)) != len(ids):
+            raise Refusal(f"case {cid!r} has missing or duplicated subcondition ids")
+        if REQUIRES_CALIBRATION_KEY not in case:
+            raise Refusal(f"case {cid!r} does not declare {REQUIRES_CALIBRATION_KEY!r}")
+        if not case[REQUIRES_CALIBRATION_KEY] and "calibration" in declared:
+            raise Refusal(
+                f"case {cid!r} evaluates no P1 / Block-1 quantity but is granted the "
+                "calibration seed family; unused families are not granted"
+            )
         CaseCalibrationScope.from_plan(cid, plan)          # validates the pairing
     if plan.get("calibration", {}).get("calibration_scope") != CAMPAIGN_CALIBRATION_SCOPE:
         raise Refusal(
@@ -135,7 +152,7 @@ class ExecutionBinding:
         """The case's declared Branch-A status and calibration scope."""
         return CaseCalibrationScope.from_plan(case_id, self.plan)
 
-    def replicate_calibration(self, case_id: str, replicate: int,
+    def replicate_calibration(self, case_id: str, subcondition_id: str, replicate: int,
                               ledger: CampaignCalibrationLedger) -> ReplicateCalibration:
         """The per-replicate ordering boundary: Branch A, then LOCK, then Branch B.
 
@@ -143,7 +160,8 @@ class ExecutionBinding:
         stream, because it refuses one until that field's calibration is locked.
         """
         return ReplicateCalibration(self.calibration_scope(case_id),
-                                    self.case_access(case_id), replicate, ledger)
+                                    self.case_access(case_id), subcondition_id,
+                                    replicate, ledger)
 
     def case_access(self, case_id: str) -> CaseSeedAccess:
         """The ONLY seed route an official run may use. Authorised by the plan.

@@ -52,16 +52,21 @@ def case_seed_access(binding: ExecutionBinding, case_id: str) -> CaseSeedAccess:
     return binding.case_access(case_id)
 
 
-def replicate_calibration(binding: ExecutionBinding, case_id: str, replicate: int,
+def replicate_calibration(binding: ExecutionBinding, case_id: str, subcondition_id: str,
+                          replicate: int,
                           ledger: CampaignCalibrationLedger) -> ReplicateCalibration:
     """The official per-replicate calibration boundary.
 
     REPLICATE-CONDITIONAL CALIBRATION is the adopted architecture: each replicate
-    is calibrated at its own realised Branch-A condition, and its Branch-B stream
-    is not released until that artifact is locked. An official run reaches a
-    validation stream only through here.
+    of each declared SUBCONDITION is calibrated at its own realised Branch-A
+    condition, and its Branch-B stream is not released until that artifact is
+    locked. An official run reaches a validation stream only through here.
+
+    A case that evaluates no P1 / Block-1 quantity has no calibration step and is
+    not gated on one: gating it would let a calibration refusal change an outcome
+    it has no scientific bearing on.
     """
-    return binding.replicate_calibration(case_id, replicate, ledger)
+    return binding.replicate_calibration(case_id, subcondition_id, replicate, ledger)
 
 
 def run(root: str = ".", *, rng_factory: RNGFactory | None = None,

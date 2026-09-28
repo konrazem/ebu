@@ -6,12 +6,15 @@ import json
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
-RESULT_SCHEMA = "e1a_v4_validation_result/1"
-MANIFEST_SCHEMA = "e1a_v4_validation_manifest/1"
+RESULT_SCHEMA = "e1a_v4_validation_result/2"
+MANIFEST_SCHEMA = "e1a_v4_validation_manifest/2"
+#: Schema 2 adds `subcondition_id`. A record is reproducible from
+#: (case_id, subcondition_id, replicate_id, field/scope, seed family, seed identity).
+#: No official result data exists, so the break is free to make explicit now.
 
 #: Every field a scientific result record must carry. Frozen before execution.
 RESULT_FIELDS = (
-    "case_id", "replicate_id", "seed_family", "seed_identity", "field_id",
+    "case_id", "subcondition_id", "replicate_id", "seed_family", "seed_identity", "field_id",
     "truth_parameters", "branch_a_observed", "analysis_status",
     "G1", "G2", "G3", "G4", "G5", "P1", "beta_hat", "P2", "P3", "P4",
     "complete_pass", "refusal_reason", "procedure_identity", "contract_sha256",
@@ -36,6 +39,7 @@ FAILURE_CLASSIFICATIONS = (
 @dataclass
 class ResultRecord:
     case_id: str
+    subcondition_id: str
     replicate_id: int
     seed_family: str
     seed_identity: int
@@ -69,11 +73,12 @@ class ResultRecord:
         return d
 
 
-def aggregate_skeleton(case_id: str) -> dict[str, Any]:
+def aggregate_skeleton(case_id: str, subcondition_id: str | None = None) -> dict[str, Any]:
     """The frozen shape of an aggregate report. Counts filled at execution."""
     return {
         "schema": MANIFEST_SCHEMA,
         "case_id": case_id,
+        "subcondition_id": subcondition_id,
         "declared_replicates": None,
         "completed": None,
         "success_count": None,

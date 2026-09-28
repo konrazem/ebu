@@ -294,7 +294,8 @@ def test_plan() -> None:
 
 
 def test_output_schema() -> None:
-    check("result schema freezes all 24 fields", len(RESULT_FIELDS) == 24)
+    check("result schema freezes all 25 fields", len(RESULT_FIELDS) == 25,
+          "schema 2 adds subcondition_id")
     check("plan and code agree on the record fields",
           list(PLAN["output_schema"]["per_record_fields"]) == list(RESULT_FIELDS))
     check("11 failure classifications frozen", len(FAILURE_CLASSIFICATIONS) == 11)
