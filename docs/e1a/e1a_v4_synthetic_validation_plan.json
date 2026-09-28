@@ -1,0 +1,561 @@
+{
+  "plan_id": "e1a_v4_synthetic_validation",
+  "plan_version": "1.0.0",
+  "created": "2026-09-28",
+  "execution_stage": "synthetic_validation",
+  "execution_authorised": false,
+  "status": "PRE-EXECUTION FROZEN PACKAGE. Nothing in this plan has been executed. No random number has been drawn, no trajectory generated, no calibration sampled and no scientific outcome inspected. Execution is a separate authorisation.",
+  "normative_pair": {
+    "markdown": "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md",
+    "json": "docs/e1a/e1a_v4_synthetic_validation_plan.json",
+    "rule": "Any mismatch between the two is an integrity failure requiring fail-closed refusal."
+  },
+  "frozen_identities": {
+    "contract_sha256": "89a935dd98b08a13c9fca62ae6b8b12c8f76297df6d87a62877716bbed45600c",
+    "design_sha256": "f20bc885bf400ce3429120e4a0e42915ba2fb15249d88914fd7e55eb1b373f68",
+    "foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+    "baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
+    "implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
+    "implementation_file_hashes": {
+      "e1a_v4/__init__.py": "0b67a89c562d82eb1f4a03603e075d66e0f70826ab7a848e57f4518bd12bdca4",
+      "e1a_v4/branch_a.py": "748c2e86e59d3ed6638147aa322cdf113636e8aa5c9c2b93ec8d4b0a9ec0461f",
+      "e1a_v4/calibration.py": "b16453466e5ec6ef5351a55ecab25aed26482cf51d9bdd20728b88a56d9420e6",
+      "e1a_v4/contract.py": "e72970b542989bd75f5bd2a89003c87ff1b7821c2d19c43b20df33b30b06b4d6",
+      "e1a_v4/effective_size.py": "88030960ecc9260fb19a44afbbc8116c212bf35addb5ed0d036af751a079a164",
+      "e1a_v4/endpoints.py": "e09189527bfcf39cf165ce6fa5f06d56fc05cb308ba3e59cc3386e83203bc6aa",
+      "e1a_v4/geometry.py": "959b446b01d96a7c5243e65876970d78c57e1e8150298204a35429040f62967f",
+      "e1a_v4/identity.py": "72be9c291b91d3f0a3d8c150c6ef00f40bed8b35d8e12e94b4d762f91b36b015",
+      "e1a_v4/numerics.py": "bd514b73f66f0bc6887406797c107ddf5dce435834d7832a35771f72e3562a3a",
+      "e1a_v4/seeds.py": "c3cdd8801d4a3f872f16259f48f6d42eb81acd788538c9fad11cd9f767981f60",
+      "e1a_v4/status.py": "853a4cf9c602ee4fdc28391969eb7a7ea7157cc71316cf3c86e003d5777ecc8f",
+      "e1a_v4/world.py": "64a27ca9cb95b09333ca65aa0eecebeb80f9573d06cd8d08c188668eb7cbc033"
+    },
+    "analysis_procedure_identity": "1983ba3af64cd62480feb642ce83f38cf7d2e5f06bf9398b41b81fe1f864648c",
+    "execution_identity": "",
+    "execution_identity_note": "derived at preflight from the plan sha256, the seed-map sha256, the validation module hashes and the analysis identity. Left empty here because embedding it would be self-referential; it is recorded in docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md and recomputed by preflight.",
+    "analysis_procedure_identity_configuration": {},
+    "analysis_procedure_identity_note": "procedure_identity(binding, configuration={}, root). The configuration mapping is part of the identity, so a different configuration yields a different digest by design: the implementation report quoted the {'stage': 'bounded_implementation'} variant 8dd48f42f7ccd259a76e50ef4e1ee4c0a3c5b43986bc54d75438b1acdf15dbe0. The EMPTY configuration is the one frozen for official execution, and preflight recomputes exactly that."
+  },
+  "adopted_rules_unchanged": {
+    "delta_cross": 0.02,
+    "z_cross": 1.959963985,
+    "delta_abs": 0.05,
+    "z_abs": 1.959963985,
+    "alpha_geom": 0.005,
+    "alpha_1": 0.004,
+    "alpha_2": 0.001,
+    "theta_cap_deg": 5.0,
+    "rank_tol": 1e-12,
+    "pipeline_target": 0.9,
+    "P3_applies_to": "EVERY tested field",
+    "P4_classification": "DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK",
+    "multiplicity_correction": "NONE - intersection-union test",
+    "forbidden": [
+      "Bonferroni correction",
+      "fixed-B0 normalisation",
+      "power-spectrum / corner-frequency / equipartition Branch-A calibration"
+    ]
+  },
+  "cases": [
+    {
+      "case_id": "C1_true_bridge_complete",
+      "scientific_purpose": "Does the implemented COMPLETE pipeline (P1 AND P2 AND P3 AND P4) achieve the adopted >= 0.90 target?",
+      "v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+      "authority": "design section 15 items 4 and 10; contract complete_pipeline.target_true_bridge_success",
+      "truth_model": "K_theta = H_theta with beta_true = 1 at every field",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": 1.0,
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi from the design section 15 item 6 declared set",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "complete pass in the large majority of replicates",
+      "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% LOWER bound on the complete-pass rate >= 0.90; requires >= 279/300. An observed proportion above 0.90 is NOT sufficient by itself.",
+      "seed_family": "validation",
+      "replicate_count": 300,
+      "role": "primary",
+      "v4_classification_note": ""
+    },
+    {
+      "case_id": "C2_geometry_false_rejection",
+      "scientific_purpose": "Achieved P1 false-rejection rate per declared field, covering G1-G5, the two-block combination, mode resolution and structured refusals",
+      "v4_classification": "RETAINED BUT UPDATED FOR V4",
+      "authority": "design section 15 item 3",
+      "truth_model": "true null K_theta = H_theta",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": 1.0,
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "false rejection at or below alpha_geom = 0.5%",
+      "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% UPPER bound <= 3% at EVERY declared field, R = 400 each (max 6 rejections). An UPPER bound is required; a lower bound cannot demonstrate control.",
+      "seed_family": "validation",
+      "replicate_count": 400,
+      "role": "primary",
+      "v4_classification_note": "alpha_geom 1% -> 0.5%, two-block union rule"
+    },
+    {
+      "case_id": "C3_g5_block",
+      "scientific_purpose": "Validate the actual G5 block from full generated observations: sample-mean centring, A4-based leading-order variance, finite-sample behaviour, correlation, the two-mode max statistic and its interaction with the two-block gate",
+      "v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+      "authority": "design section 15 item 8",
+      "truth_model": "true null; G5 computed from generated trajectories, never as an independent companion variable",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": 1.0,
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "block-2 achieved size consistent with alpha_2 = 0.1%; delta-method error quantified",
+      "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% UPPER bound on the block-2 rejection rate <= 3%, R = 400; report the measured sd(g2) against the leading-order 24 A4 / n prediction.",
+      "seed_family": "validation",
+      "replicate_count": 400,
+      "role": "primary",
+      "v4_classification_note": ""
+    },
+    {
+      "case_id": "C4_surrogate_validity",
+      "scientific_purpose": "Achieved Block-1 size when calibration uses the covariance-matched surrogate but validation data come from the declared actual correlated process; measure the OPERATING-QUANTILE discrepancy, not covariance agreement",
+      "v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+      "authority": "design section 15 item 5; design Appendix classification of the surrogate as an APPROXIMATION",
+      "truth_model": "calibration from the surrogate, validation from the declared OU process",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": 1.0,
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "achieved Block-1 rejection rate close to alpha_1 = 0.4%",
+      "formal_pass_fail_criterion": "report the achieved Block-1 rate with a Clopper-Pearson 95% two-sided interval over R = 2000 validation draws against the nominal alpha_1; calibration uses R_cal = 50000 (realised size 0.4000% +/- 0.0282%). Discrepancy is REPORTED and classified, not tuned away.",
+      "seed_family": "calibration + validation",
+      "replicate_count": 2000,
+      "role": "primary",
+      "v4_classification_note": ""
+    },
+    {
+      "case_id": "C5_plug_in_branch_a",
+      "scientific_purpose": "Effect of analysing with measured/noisy H_A and tau_A while truth is generated from H_true and tau_true, including shape and orientation uncertainty",
+      "v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+      "authority": "design section 15 item 6",
+      "truth_model": "true null; analysis receives only the Branch-A measured field",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": 1.0,
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "swept: sigma_k in {0, 0.5%, 1%} x sigma_psi in {0, 0.2, 0.5, 1.0} degrees, 12 cells",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "achieved size degrades as sigma_psi grows; the magnitude is the result",
+      "formal_pass_fail_criterion": "report the Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate in EVERY one of the 12 declared cells, R = 400 each. No cell may be dropped after inspection.",
+      "seed_family": "validation + branch_a_measurement",
+      "replicate_count": 400,
+      "role": "primary",
+      "v4_classification_note": ""
+    },
+    {
+      "case_id": "C6_mode_resolution_boundary",
+      "scientific_purpose": "Size AND detection behaviour around theta_cap = 5 degrees at the predeclared boundary neighbourhood",
+      "v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+      "authority": "design section 15 item 7; design section 10",
+      "truth_model": "true null at rho = boundary, boundary -20%, boundary +20%",
+      "fields_affected": [
+        "synthetic two-mode field at the declared rho"
+      ],
+      "beta_truth": 1.0,
+      "geometry_truth": "rho in {1.019573, 1.024467, 1.029360} at N_12 = 224726",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "merge below the boundary, split above; size controlled on both sides",
+      "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate <= 3% at each of the three declared rho, R = 400 each; report the merge/split decision rate at each. theta_cap MUST NOT be changed after observing the result.",
+      "seed_family": "validation",
+      "replicate_count": 400,
+      "role": "primary",
+      "v4_classification_note": ""
+    },
+    {
+      "case_id": "C7_false_bridge",
+      "scientific_purpose": "Probability of incorrectly ACCEPTING a false bridge, for every declared non-commensurable alternative including the hard near-margin case",
+      "v4_classification": "RETAINED BUT UPDATED FOR V4",
+      "authority": "design section 13; contract false_bridge_controls",
+      "truth_model": "beta_theta = (1,1.06,1,1); (1,0.93,1.05,1); (1,1,1,1.10); hard (1,1.025,1,1)",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": "per alternative",
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "acceptance close to zero for the coarse alternatives; the hard 2.5% case is the informative one",
+      "formal_pass_fail_criterion": "report the Clopper-Pearson one-sided 95% UPPER bound on the acceptance rate for EVERY alternative, R = 400 each. NO adopted maximum acceptance rate exists -- see authority_gaps G2. The criterion must be declared BEFORE execution.",
+      "seed_family": "validation",
+      "replicate_count": 400,
+      "role": "negative_control",
+      "v4_classification_note": "evaluated against the all-field P3 and the IUT P2"
+    },
+    {
+      "case_id": "C8_blinded_scale_control",
+      "scientific_purpose": "Blinded duplicate-branch scale control: Branch-A declared scale multiplied by a hidden c, analysis must recover beta = 1/c",
+      "v4_classification": "RETAINED UNCHANGED",
+      "authority": "baseline section 14.2 (committed); design section 13",
+      "truth_model": "true null with the Branch-A scale multiplied by a hidden c on a DUPLICATE branch that never touches primary data",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "beta_truth": "1/c on the blinded branch",
+      "geometry_truth": "as declared per field",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "expected_qualitative_outcome": "beta_hat on the blinded branch concentrates on 1/c",
+      "formal_pass_fail_criterion": "report the distribution of beta_hat * c. NO quantitative recovery tolerance exists in adopted authority -- see authority_gaps G1. The criterion must be declared BEFORE execution.",
+      "seed_family": "blinded_scale_control",
+      "replicate_count": 200,
+      "role": "positive_control",
+      "v4_classification_note": ""
+    }
+  ],
+  "case_count_justification": "Eight cases, one per scientifically required purpose traceable to committed or adopted authority. P2 (cross-field) and P3 (absolute) are NOT separate generating cases: they are endpoints evaluated on C1's data so the shared reference-field dependence and the common-mode calibration error are preserved. Simulating the three P2 ratios independently, or reverting P3 to reference-only, would destroy exactly the structure being validated. The count is eight because eight purposes are required, not to preserve a historical number.",
+  "generating_model": {
+    "branch_b": {
+      "process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+      "transition": "x_{k+1} = phi_r x_k + sqrt(1 - phi_r^2) L z, per mode, EXACT",
+      "phi": "phi_r = exp(-dt / tau_r)",
+      "initialisation": "x_0 ~ N(x*, Sigma_theta); stationary at step 0; burn_in_steps = 0",
+      "superseded": "the v3 convention of starting at x = 0 is FORBIDDEN: it is not stationary",
+      "dt_s": 0.00012,
+      "T_total_s": 240.0,
+      "n_samples": 2000000
+    },
+    "branch_a": {
+      "model": "H_A = decorated H_true; its OWN seed family branch_a_measurement",
+      "common_mode": "ONE draw per experiment, shared across every field, so it cancels in the P2 ratio and not in P3",
+      "per_mode_stiffness": "independent per mode",
+      "orientation": "trap-axis psi",
+      "thermometry": "T measured with sigma_T",
+      "independence": "Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory"
+    },
+    "truth_visibility": "H_true and tau_true are known to the SCORING layer only. The analysis pipeline receives only the Branch-A measured field, exactly as in the real experiment.",
+    "per_field": [
+      {
+        "id": "theta0_circular",
+        "k_uN_per_m": [
+          100,
+          100
+        ],
+        "T_K": 298,
+        "rot_deg": 0,
+        "reference": true,
+        "beta_true": 1.0,
+        "tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"
+      },
+      {
+        "id": "theta1_power",
+        "k_uN_per_m": [
+          210,
+          210
+        ],
+        "T_K": 298,
+        "rot_deg": 0,
+        "reference": false,
+        "beta_true": 1.0,
+        "tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"
+      },
+      {
+        "id": "theta2_ellipse",
+        "k_uN_per_m": [
+          150,
+          60
+        ],
+        "T_K": 298,
+        "rot_deg": 30,
+        "reference": false,
+        "beta_true": 1.0,
+        "tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"
+      },
+      {
+        "id": "theta3_temperature",
+        "k_uN_per_m": [
+          100,
+          100
+        ],
+        "T_K": 318,
+        "rot_deg": 0,
+        "reference": false,
+        "beta_true": 1.0,
+        "tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"
+      }
+    ]
+  },
+  "calibration": {
+    "generator": "e1a_v4.validation.calibrate.generate_block1_artifact",
+    "generator_identity": "EBU-E1A-V4-BLOCK1-SURROGATE-CALIBRATOR-v1",
+    "seed_family": "calibration",
+    "replicates": 50000,
+    "realised_size": "0.4000% +/- 0.0282% at alpha_1 = 0.004 (Beta(k, R+1-k), k = ceil(alpha_1 R) = 200)",
+    "gates": [
+      "G1",
+      "G2",
+      "G3",
+      "G4"
+    ],
+    "g5_excluded": "G5 is NOT generated here. It is not a function of the covariance, so producing it as an independent companion would destroy its real dependence on the trajectory statistics. G5 is validated in the validation layer from full observations.",
+    "binds_to": [
+      "analysis_procedure_identity",
+      "branch_a_geometry_signature",
+      "contract_sha256",
+      "plan_sha256"
+    ],
+    "workflow": [
+      "CALIBRATION DATA",
+      "fix calibration artifacts and thresholds",
+      "lock artifact identities",
+      "VALIDATION DATA",
+      "evaluate predeclared operating characteristics",
+      "CONFIRMATORY DATA only if the adopted protocol requires it"
+    ],
+    "invariant": [
+      "no validation result may change a calibration threshold",
+      "no confirmatory result may change calibration or validation design"
+    ],
+    "artifact_filenames": {
+      "theta0_circular": "calibration/block1_theta0_circular.json",
+      "theta1_power": "calibration/block1_theta1_power.json",
+      "theta2_ellipse": "calibration/block1_theta2_ellipse.json",
+      "theta3_temperature": "calibration/block1_theta3_temperature.json"
+    }
+  },
+  "assurance": [
+    {
+      "quantity": "complete true-bridge pipeline success",
+      "target": ">= 0.90",
+      "confidence_level": 0.95,
+      "estimator": "complete-pass proportion over declared replicates",
+      "bound": "Clopper-Pearson one-sided LOWER",
+      "replicates": 300,
+      "acceptance_rule": ">= 279 / 300 complete passes",
+      "assurance_at_design_target": "0.951 if the true rate is 0.95"
+    },
+    {
+      "quantity": "P1 false-rejection rate, per field",
+      "target": "alpha_geom = 0.005",
+      "confidence_level": 0.95,
+      "estimator": "rejection proportion",
+      "bound": "Clopper-Pearson one-sided UPPER",
+      "replicates": 400,
+      "acceptance_rule": "upper bound <= 0.03, i.e. <= 6 rejections of 400",
+      "assurance_at_design_target": "0.996 if the true rate is 0.005"
+    },
+    {
+      "quantity": "block-2 (G5) rejection rate",
+      "target": "alpha_2 = 0.001",
+      "confidence_level": 0.95,
+      "estimator": "rejection proportion",
+      "bound": "Clopper-Pearson one-sided UPPER",
+      "replicates": 400,
+      "acceptance_rule": "upper bound <= 0.03"
+    },
+    {
+      "quantity": "Block-1 achieved size under the surrogate",
+      "target": "alpha_1 = 0.004",
+      "confidence_level": 0.95,
+      "estimator": "rejection proportion",
+      "bound": "Clopper-Pearson two-sided",
+      "replicates": 2000,
+      "acceptance_rule": "REPORTED and classified; the discrepancy is the result"
+    },
+    {
+      "quantity": "false-bridge acceptance, per alternative",
+      "target": "AUTHORITY GAP G2",
+      "confidence_level": 0.95,
+      "estimator": "acceptance proportion",
+      "bound": "Clopper-Pearson one-sided UPPER",
+      "replicates": 400,
+      "acceptance_rule": "NOT DECLARED IN ADOPTED AUTHORITY - must be declared before execution"
+    },
+    {
+      "quantity": "blinded scale recovery beta_hat * c",
+      "target": "AUTHORITY GAP G1",
+      "confidence_level": 0.95,
+      "estimator": "distribution of beta_hat * c",
+      "bound": "reported",
+      "replicates": 200,
+      "acceptance_rule": "NOT DECLARED IN ADOPTED AUTHORITY - must be declared before execution"
+    }
+  ],
+  "complete_pass_denominator": {
+    "rule": "every declared validation replicate",
+    "refusals": "structured refusals COUNT AS FAILURES for complete-pipeline success",
+    "conditional_diagnostics": "permitted only when explicitly labelled SECONDARY, reported beside the unconditional figure",
+    "reporting": "refusal counts AND reasons are reported"
+  },
+  "controls": [
+    {
+      "control": "blinded scale distortion",
+      "purpose": "scale-detection sensitivity",
+      "case": "C8"
+    },
+    {
+      "control": "geometry / coordinate permutation",
+      "purpose": "destroys the correlation structure; the geometry control",
+      "case": "C7"
+    },
+    {
+      "control": "false-beta alternatives",
+      "purpose": "false-bridge discrimination",
+      "case": "C7"
+    },
+    {
+      "control": "time shuffle",
+      "purpose": "AUTOCORRELATION control only, not a geometry control; leaves S identical to 1e-30",
+      "case": "C7"
+    },
+    {
+      "control": "paired hidden-scale distortion c = 1.07 / 0.90",
+      "purpose": "acts through P3/beta; gates are scale-invariant",
+      "case": "C8"
+    },
+    {
+      "control": "forbidden H := K",
+      "purpose": "recorded as vacuous; demonstration only",
+      "case": "C7"
+    }
+  ],
+  "failure_classifications": [
+    "SOFTWARE_OR_INVARIANT_FAILURE",
+    "CALIBRATION_FAILURE",
+    "STATISTICAL_SIZE_FAILURE",
+    "TRUE_BRIDGE_POWER_FAILURE",
+    "FALSE_BRIDGE_DISCRIMINATION_FAILURE",
+    "STRUCTURED_REFUSAL_EXCESS",
+    "MODE_RESOLUTION_FAILURE",
+    "BLINDED_SCALE_CONTROL_FAILURE",
+    "NUMERICAL_OR_PRECISION_FAILURE",
+    "VALIDATION_INCONCLUSIVE",
+    "VALIDATION_PASS"
+  ],
+  "classification_rule": "An inconvenient scientific result is NOT classified as a software bug unless an actual implementation defect is demonstrated. A demonstrated bug preserves the failed result and requires a separately versioned correction and revalidation stage.",
+  "output_schema": {
+    "directory": "results/e1a_v4_validation",
+    "record_schema": "e1a_v4_validation_result/1",
+    "manifest_schema": "e1a_v4_validation_manifest/1",
+    "per_record_fields": [
+      "case_id",
+      "replicate_id",
+      "seed_family",
+      "seed_identity",
+      "field_id",
+      "truth_parameters",
+      "branch_a_observed",
+      "analysis_status",
+      "G1",
+      "G2",
+      "G3",
+      "G4",
+      "G5",
+      "P1",
+      "beta_hat",
+      "P2",
+      "P3",
+      "P4",
+      "complete_pass",
+      "refusal_reason",
+      "procedure_identity",
+      "contract_sha256",
+      "plan_sha256",
+      "implementation_commit"
+    ],
+    "aggregate_fields": [
+      "success_count",
+      "failure_count",
+      "refusal_count",
+      "refusals_by_reason",
+      "confidence_bound",
+      "false_bridge_acceptance",
+      "per_field_geometry_rates",
+      "mode_resolution_behaviour",
+      "g5_diagnostics",
+      "scale_control_recovery",
+      "classification"
+    ],
+    "reproduction": "seed family + master seed + case id + replicate index regenerate any record exactly"
+  },
+  "no_post_outcome_tuning": {
+    "prohibited_after_execution": [
+      "margins",
+      "alpha allocations",
+      "theta_cap",
+      "replicate definitions",
+      "case definitions",
+      "uncertainty scenarios",
+      "field parameters",
+      "acceptance rules",
+      "seed values",
+      "false-bridge alternatives",
+      "complete-pass denominator"
+    ],
+    "on_scientific_failure": "report failure",
+    "on_demonstrated_software_defect": "preserve the failed result; require a separately versioned correction and revalidation stage"
+  },
+  "authority_gaps": [
+    {
+      "id": "G1",
+      "gap": "blinded scale control has no quantitative recovery criterion beyond beta = 1/c",
+      "source": "baseline section 14.2 and design section 13 state the target but no tolerance or coverage rule",
+      "affects": "C8",
+      "resolution": "AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION. Not chosen here, and must not be chosen after execution."
+    },
+    {
+      "id": "G2",
+      "gap": "false-bridge alternatives have no maximum acceptable acceptance rate",
+      "source": "design section 13 states 'acceptance = failure to detect' but sets no numeric criterion",
+      "affects": "C7",
+      "resolution": "AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION."
+    },
+    {
+      "id": "G3",
+      "gap": "sigma_psi is recorded in the contract as 'to be declared'",
+      "source": "contract hypothetical_uncertainty_scenario.sigma_psi",
+      "affects": "C1, C2, C3",
+      "resolution": "The plan evaluates these cases at EVERY sigma_psi in the design section 15 item 6 declared set {0, 0.2, 0.5, 1.0} degrees rather than inventing one value. The author must fix which sigma_psi the >= 0.90 target is asserted at."
+    }
+  ],
+  "execution_command": "python3 -m e1a_v4.validation.runner --execute --i-have-execution-authorisation",
+  "preflight_command": "python3 -m e1a_v4.validation.runner --preflight-only",
+  "preflight_checks_before_rng": [
+    "working scientific contract identity equals the frozen contract sha256",
+    "prospective design, foundation and baseline identities",
+    "analysis procedure identity",
+    "every implementation file hash",
+    "validation plan identity",
+    "seed map identity and its rederivation from the declared algorithm",
+    "execution identity",
+    "no output collision",
+    "expected execution stage",
+    "execution_authorised flag"
+  ]
+}

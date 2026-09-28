@@ -1,0 +1,28 @@
+{
+  "schema": "e1a_v4_seed_map/1",
+  "domain": "EBU-E1A-V4-SYNTHETIC-VALIDATION",
+  "campaign": "v4.0",
+  "contract_sha256": "89a935dd98b08a13c9fca62ae6b8b12c8f76297df6d87a62877716bbed45600c",
+  "derivation": {
+    "hash": "first 8 bytes of sha256(text), big-endian unsigned",
+    "master": "DOMAIN|master|contract_sha256|campaign",
+    "family": "DOMAIN|family|master_hex16|family_name",
+    "replicate": "DOMAIN|replicate|family_hex16|case=<id>|rep=<index>",
+    "hand_picked_values": false
+  },
+  "master_seed": 12737552942663785904,
+  "families": {
+    "blinded_scale_control": 9479310386300230328,
+    "branch_a_measurement": 11004995623645776693,
+    "calibration": 15379082101033647447,
+    "confirmatory": 9585841150145721670,
+    "validation": 11476631527835384658
+  },
+  "analysis_layer_families": [
+    "calibration",
+    "validation",
+    "confirmatory",
+    "blinded_scale_control"
+  ],
+  "drawn_in_this_stage": false
+}
