@@ -358,6 +358,28 @@ Still true, and it is the dominant open item. With it:
 
 ---
 
+## Post-adoption follow-up: the new invariant caught a latent mispairing
+
+Running the complete package after adoption, `docs/e1a/e1a_v4_execution_feasibility_probe.py`
+**failed**:
+
+```
+Refusal: calibration tau_modes are not paired with ascending H_A eigenmodes
+```
+
+This is the newly adopted invariant working, not a regression. The probe built its
+`CalibrationRequest` with `tau_modes` in **declared stiffness order**
+(`theta2_ellipse`: `k = (150, 60)`) while `jacobi` returns eigenvalues **ascending**
+(`60` first) — the exact mispairing correction A exists to prevent, latent in a committed
+artifact of the package and invisible until the invariant existed.
+
+The probe now orders `tau` with ascending eigenvalues, the same one-line rule
+`truth_from_field` uses. Isotropic fields were unaffected, which is why it had passed.
+
+Fixed in a follow-up commit; the adoption itself is unchanged.
+
+---
+
 ## Git identity
 
 | | |

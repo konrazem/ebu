@@ -109,7 +109,11 @@ dt = float(plan["generating_model"]["branch_b"]["dt_s"])
 
 def request_for(field, *, H=None, field_id=None, taus=None, R=200):
     H = field.H if H is None else H
-    taus = tuple(field.tau_modes) if taus is None else tuple(taus)
+    # tau must be ordered WITH ascending H eigenvalues, not in declared k order.
+    # The adopted modal-pairing invariant refuses the declared order for an
+    # anisotropic field, which is exactly the mispairing it exists to catch.
+    taus = (tuple(t for _, t in sorted(zip(field.k_modes, field.tau_modes)))
+            if taus is None else tuple(taus))
     return CalibrationRequest(
         field_id or field.field_id, H, n_samples,
         tuple(phi_of(dt, t) for t in taus), R, binding.binding.alpha_1,
