@@ -29,19 +29,27 @@ from e1a_v4.identity import procedure_identity
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.coherence import (
-    AUTHORITY_BLOCK_SCHEMA, BLOCK_BEGIN, BLOCK_END, CASE_SURFACE, COHERENCE_SURFACE,
-    IDENTITY_ROW_LABELS, authority_from_markdown, authority_from_plan,
-    markdown_rendering, render_authority_block, require_plan_authority_coherence,
+    AUTHORITY_BLOCK_SCHEMA, BLOCK_BEGIN, BLOCK_END, CASE_SPEC, IDENTITY_ROW_LABELS,
+    REGION_ANCHORS, SUBCONDITION_SPEC, TOP_LEVEL_SPEC, authority_block_fields,
+    normative_json_view, normative_markdown_view, render_authority_block,
+    render_region, require_plan_authority_coherence, specification_counts,
 )
+from e1a_v4.validation.strict_json import strict_load_file
 from e1a_v4.validation.plan import (
     VALIDATION_MODULES, bind_execution, execution_identity, load_plan,
 )
 from e1a_v4.validation.runner import main, preflight, run
+from e1a_v4.validation.refusals import (
+    CampaignDriverAbsent, DriverAbsent, ExecutionAuthorisationMissing,
+    ExecutionIdentityUnsealed, ExecutionNotAuthorised, ExecutionSealNotFrozen,
+)
 from e1a_v4.validation.seal import (
-    SEAL_JSON, SEAL_SCHEMA, STATE_FROZEN, STATE_PRE_DRIVER, CampaignDriverAbsent,
-    ExecutionAuthorisationMissing, ExecutionIdentityUnsealed, ExecutionNotAuthorised,
-    ExecutionSealNotFrozen, driver_present, load_seal, require_execution_gate,
-    require_seal_plan_agreement,
+    SEAL_JSON, SEAL_SCHEMA, STATE_FROZEN, STATE_PRE_DRIVER, driver_present, load_seal,
+    require_execution_gate, require_seal_plan_agreement,
+)
+from e1a_v4.validation.driver import (
+    OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT, OFFICIAL_CAMPAIGN_DRIVER_PATH, driver_exists,
+    driver_identity_component, driver_state,
 )
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -119,8 +127,7 @@ def sandbox() -> str:
 
 
 def read_json(tmp: str, rel: str):
-    with open(os.path.join(tmp, rel), encoding="utf-8") as handle:
-        return json.load(handle)
+    return strict_load_file(os.path.join(tmp, rel), rel)
 
 
 def write_json(tmp: str, rel: str, obj) -> None:
@@ -140,12 +147,30 @@ def write_md(tmp: str, text: str) -> None:
 
 
 def regenerate_block(tmp: str) -> None:
-    """Re-emit the generated block from the sandbox's JSON. The maintenance path."""
+    """Re-emit EVERY generated region plus the block. The maintenance path."""
     plan = read_json(tmp, PLAN_JSON)
     text = read_md(tmp)
-    start = text.index(BLOCK_BEGIN)
-    end = text.index(BLOCK_END) + len(BLOCK_END)
-    write_md(tmp, text[:start] + render_authority_block(plan, tmp) + text[end:])
+    for name, (begin, end) in REGION_ANCHORS.items():
+        a = text.index(begin)
+        z = text.index(end) + len(end)
+        text = text[:a] + f"{begin}\n\n{render_region(name, plan).rstrip()}\n\n{end}" + text[z:]
+    a = text.index(BLOCK_BEGIN)
+    z = text.index(BLOCK_END) + len(BLOCK_END)
+    write_md(tmp, text[:a] + render_authority_block(plan, tmp) + text[z:])
+
+
+
+def set_md_seal_state(tmp: str, state: str) -> None:
+    """Keep the RENDERED seal state in step with the JSON.
+
+    The rendered state is a checked normative field, so a fixture that changes the
+    JSON alone refuses on coherence before it reaches the seal path under test.
+    """
+    text = read_md(tmp)
+    new = re.sub(r"^execution seal state\s+= \S+$",
+                 f"execution seal state           = {state}", text, count=1, flags=re.M)
+    assert new != text or f"= {state}" in text, "seal-state line not found"
+    write_md(tmp, new)
 
 
 # ------------------------------------------------- 1. the live package is coherent
@@ -153,32 +178,55 @@ def test_live_package_is_coherent() -> None:
     plan = load_plan(ROOT)
     require_plan_authority_coherence(ROOT, plan)
     check("the committed package passes authority coherence", True)
-    derived = authority_from_plan(plan, ROOT)
-    embedded = authority_from_markdown(ROOT)
-    check("the embedded block equals the block derived from the JSON",
-          json.dumps(embedded, sort_keys=True) == json.dumps(derived, sort_keys=True))
-    check("the block declares the expected schema",
-          embedded["schema"] == AUTHORITY_BLOCK_SCHEMA, AUTHORITY_BLOCK_SCHEMA)
-    check("every declared surface key is present in the block",
-          all(k in embedded for k in COHERENCE_SURFACE),
-          f"{len(COHERENCE_SURFACE)} keys")
-    check("the block carries all eight cases", len(embedded["cases"]) == 8)
-    check("every per-case surface field is present",
-          all(all(f in c for f in CASE_SURFACE) for c in embedded["cases"]),
-          f"{len(CASE_SURFACE)} fields x 8 cases")
+    derived = normative_json_view(plan, ROOT)
+    embedded = authority_block_fields(ROOT)
+    check("the embedded block equals the view derived from the JSON",
+          json.dumps(embedded, sort_keys=True) == json.dumps(derived, sort_keys=True),
+          f"{len(derived)} normative keys")
 
-    rendering = markdown_rendering(ROOT)
+    counts = specification_counts(plan, ROOT)
+    check("the specification classifies every top-level key",
+          counts["top_level_both"] + counts["top_level_json_only"] == len(TOP_LEVEL_SPEC),
+          f"{counts['top_level_both']} BOTH / {counts['top_level_json_only']} JSON_ONLY")
+    check("the specification classifies every case key",
+          counts["case_both"] + counts["case_json_only"] == len(CASE_SPEC),
+          f"{counts['case_both']} BOTH / {counts['case_json_only']} JSON_ONLY")
+    check("the specification classifies every subcondition key",
+          counts["subcondition_both"] + counts["subcondition_json_only"]
+          == len(SUBCONDITION_SPEC),
+          f"{counts['subcondition_both']} BOTH / "
+          f"{counts['subcondition_json_only']} JSON_ONLY")
+    check("no key is MARKDOWN_ONLY", counts["markdown_only_keys"] == 0)
+    check("the surface count is machine-derived, not hand-quoted",
+          counts["duplicated_normative_keys"] == len(derived),
+          f"{counts['duplicated_normative_keys']} duplicated normative keys")
+
+    # the fields the audit showed were previously invisible or unchecked
+    for key in ("cases.C1_true_bridge_complete.fields_affected",
+                "cases.C1_true_bridge_complete.branch_a_uncertainty",
+                "cases.C1_true_bridge_complete.formal_pass_fail_criterion",
+                "cases.C7_false_bridge.formal_pass_fail_criterion",
+                "cases.C8_blinded_scale_control.formal_pass_fail_criterion",
+                "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p5.g3_role",
+                "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p5.feeds_primary_claim",
+                "cases.C7_false_bridge.subconditions.hard_1_025.beta_true",
+                "cases.C8_blinded_scale_control.subconditions.paired_scale_control.scale_factors",
+                "adopted_rules.alpha_1", "assurance.0.acceptance_rule",
+                "final_campaign.requirements.0", "driver.path"):
+        check(f"the surface now covers {key}", key in derived)
+
+    rendering = normative_markdown_view(ROOT)
     check("the human version line equals the authority",
           rendering["plan_version"] == derived["plan_version"], derived["plan_version"])
     check("the human identity table equals the authority",
-          all(rendering["frozen_identities"][k] == derived["frozen_identities"][k]
+          all(rendering[f"frozen_identities.{k}"] == derived[f"frozen_identities.{k}"]
               for _, k in IDENTITY_ROW_LABELS))
-    check("the human case tables equal the authority",
-          {c["case_id"] for c in rendering["cases"]}
-          == {c["case_id"] for c in derived["cases"]})
+    check("every generated region is a byte-exact re-render",
+          all(render_region(name, plan) is not None for name in REGION_ANCHORS),
+          f"{len(REGION_ANCHORS)} regions")
     live = procedure_identity(load_contract(ROOT), {}, ROOT)
     check("the rendered analysis identity is the LIVE recomputation",
-          rendering["frozen_identities"]["analysis_procedure_identity"] == live,
+          rendering["frozen_identities.analysis_procedure_identity"] == live,
           live[:16] + "...")
     check("the superseded Markdown identity is gone from the plan",
           "bc1c0fce3b9004aed5f6b4be2162bc876697536ee614b2e57f680f3a65dc283e"
@@ -191,7 +239,7 @@ def test_disagreement_fixtures_refuse() -> None:
     # (a) Markdown VERSION changed only -----------------------------------------
     tmp = sandbox()
     text = read_md(tmp)
-    write_md(tmp, text.replace("Plan version **1.7.0**.", "Plan version **9.9.9**.", 1))
+    write_md(tmp, text.replace("Plan version **1.8.0**.", "Plan version **9.9.9**.", 1))
     refuses_without_rng("Markdown version changed only -> REFUSE",
                         require_plan_authority_coherence, tmp, read_json(tmp, PLAN_JSON))
     refuses_without_rng("  ... and preflight refuses too", preflight, tmp)
@@ -308,7 +356,7 @@ def test_human_rendering_cannot_drift() -> None:
     write_json(tmp, PLAN_JSON, plan)
     regenerate_block(tmp)          # JSON and BLOCK now agree; the PROSE does not
     check("the regenerated block agrees with the changed JSON",
-          authority_from_markdown(tmp)["plan_version"] == "2.0.0")
+          authority_block_fields(tmp)["plan_version"] == "2.0.0")
     refuses_without_rng("a stale HUMAN version line still REFUSES",
                         require_plan_authority_coherence, tmp, plan)
     shutil.rmtree(tmp)
@@ -323,12 +371,23 @@ def test_human_rendering_cannot_drift() -> None:
                         require_plan_authority_coherence, tmp, plan)
     shutil.rmtree(tmp)
 
+    # With the case tables GENERATED, "block right / human table stale" can only be
+    # produced by editing the rendered region directly -- which is exactly the
+    # tampering the byte-exactness check exists to catch.
     tmp = sandbox()
     plan = read_json(tmp, PLAN_JSON)
-    plan["cases"][0]["replicate_count"] = 12345
-    write_json(tmp, PLAN_JSON, plan)
     regenerate_block(tmp)
-    refuses_without_rng("a stale HUMAN case table still REFUSES",
+    write_md(tmp, read_md(tmp).replace("| replicate count | `300` |",
+                                       "| replicate count | `12345` |", 1))
+    refuses_without_rng("a hand-edited HUMAN case table REFUSES",
+                        require_plan_authority_coherence, tmp, plan)
+    shutil.rmtree(tmp)
+
+    tmp = sandbox()
+    plan = read_json(tmp, PLAN_JSON)
+    regenerate_block(tmp)
+    write_md(tmp, read_md(tmp).replace("requires >= 279/300", "requires >= 240/300", 1))
+    refuses_without_rng("a hand-edited HUMAN release threshold REFUSES",
                         require_plan_authority_coherence, tmp, plan)
     shutil.rmtree(tmp)
 
@@ -338,7 +397,7 @@ def test_human_rendering_cannot_drift() -> None:
     plan["plan_version"] = "2.0.0"
     write_json(tmp, PLAN_JSON, plan)
     regenerate_block(tmp)
-    write_md(tmp, read_md(tmp).replace("Plan version **1.7.0**.",
+    write_md(tmp, read_md(tmp).replace("Plan version **1.8.0**.",
                                        "Plan version **2.0.0**.", 1))
     ok = True
     try:
@@ -376,7 +435,7 @@ def test_block_structure_is_fail_closed() -> None:
     shutil.rmtree(tmp)
 
     tmp = sandbox()
-    block = authority_from_markdown(tmp)
+    block = authority_block_fields(tmp)
     block["schema"] = "e1a_v4_plan_authority/999"
     text = read_md(tmp)
     start, end = text.index(BLOCK_BEGIN), text.index(BLOCK_END) + len(BLOCK_END)
@@ -388,7 +447,7 @@ def test_block_structure_is_fail_closed() -> None:
     shutil.rmtree(tmp)
 
     tmp = sandbox()
-    block = authority_from_markdown(tmp)
+    block = authority_block_fields(tmp)
     block["invented_key"] = "smuggled authority"
     text = read_md(tmp)
     start, end = text.index(BLOCK_BEGIN), text.index(BLOCK_END) + len(BLOCK_END)
@@ -400,8 +459,8 @@ def test_block_structure_is_fail_closed() -> None:
     shutil.rmtree(tmp)
 
     tmp = sandbox()
-    block = authority_from_markdown(tmp)
-    del block["cases"]
+    block = authority_block_fields(tmp)
+    del block["cases.order"]
     text = read_md(tmp)
     start, end = text.index(BLOCK_BEGIN), text.index(BLOCK_END) + len(BLOCK_END)
     write_md(tmp, text[:start] + BLOCK_BEGIN + "\n\n```json\n"
@@ -414,8 +473,8 @@ def test_block_structure_is_fail_closed() -> None:
     # an ambiguous human rendering is a refusal, never a silent skip -------------
     tmp = sandbox()
     text = read_md(tmp)
-    write_md(tmp, text.replace("Plan version **1.7.0**.",
-                               "Plan version **1.7.0**. Plan version **1.7.0**.", 1))
+    write_md(tmp, text.replace("Plan version **1.8.0**.",
+                               "Plan version **1.8.0**. Plan version **1.8.0**.", 1))
     refuses_without_rng("a DUPLICATED human version line -> REFUSE (never a silent skip)",
                         require_plan_authority_coherence, tmp, read_json(tmp, PLAN_JSON))
     shutil.rmtree(tmp)
@@ -503,6 +562,7 @@ def test_seal_distinguishes_forgotten_from_not_frozen() -> None:
     plan = read_json(tmp, PLAN_JSON)
     plan["execution_seal"]["state"] = STATE_FROZEN
     write_json(tmp, PLAN_JSON, plan)
+    set_md_seal_state(tmp, STATE_FROZEN)
     regenerate_block(tmp)
     refuses_without_rng("plan/seal STATE disagreement -> REFUSE",
                         require_seal_plan_agreement, plan, load_seal(tmp))
@@ -527,14 +587,20 @@ def freeze_sandbox(authorised: bool) -> tuple[str, str]:
     Returns (root, expected_identity). No RNG is created anywhere in here.
     """
     tmp = sandbox()
-    # the official campaign driver now exists (a stub: presence is what is gated)
+    # A throwaway SANDBOX fixture standing in for the future driver, so the
+    # lifecycle beyond "absent" can be exercised. The repository itself keeps no
+    # such file: the canonical driver stays ABSENT, and a placeholder there would
+    # defeat the very gate under test.
     with open(os.path.join(tmp, "e1a_v4/validation/campaign_driver.py"), "w",
               encoding="utf-8") as handle:
-        handle.write('"""Stub standing in for the official campaign driver."""\n')
+        handle.write('"""SANDBOX FIXTURE ONLY. Never committed."""\n\n\n'
+                     f"def {OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT}():\n"
+                     '    raise NotImplementedError("fixture")\n')
     plan = read_json(tmp, PLAN_JSON)
     plan["execution_seal"]["state"] = STATE_FROZEN
     plan["execution_authorised"] = authorised
     write_json(tmp, PLAN_JSON, plan)
+    set_md_seal_state(tmp, STATE_FROZEN)
     regenerate_block(tmp)
     if authorised:
         write_md(tmp, read_md(tmp).replace("`execution_authorised` is `false`",
@@ -593,6 +659,7 @@ def test_execution_identity_lifecycle() -> None:
     p = read_json(tmp, PLAN_JSON)
     p["execution_seal"]["state"] = STATE_PRE_DRIVER
     write_json(tmp, PLAN_JSON, p)
+    set_md_seal_state(tmp, STATE_PRE_DRIVER)
     regenerate_block(tmp)
     raises_without_rng("driver PRESENT, seal NOT FROZEN: execution REFUSES on the SEAL",
                        ExecutionSealNotFrozen, run, tmp, rng_factory=rng_factory,

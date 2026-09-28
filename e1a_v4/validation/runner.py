@@ -35,10 +35,14 @@ from typing import Callable
 from ..numerics import Refusal
 from .plan import ExecutionBinding, bind_execution
 from .scope import CampaignCalibrationLedger, ReplicateCalibration
-from .seal import (
-    CampaignDriverAbsent, ExecutionAuthorisationMissing, ExecutionIdentityUnsealed,
-    ExecutionNotAuthorised, ExecutionSealNotFrozen, load_seal, require_execution_gate,
+from .driver import (
+    OFFICIAL_CAMPAIGN_DRIVER_PATH, driver_exists, driver_state,
 )
+from .refusals import (
+    CampaignDriverAbsent, DriverAbsent, ExecutionAuthorisationMissing,
+    ExecutionIdentityUnsealed, ExecutionNotAuthorised, ExecutionSealNotFrozen,
+)
+from .seal import load_seal, require_execution_gate
 from .seeds import CaseSeedAccess, ValidationSeedFamily
 
 RNGFactory = Callable[[int], object]
@@ -47,8 +51,9 @@ RNGFactory = Callable[[int], object]
 #: keeps working. The class now lives with the seal lifecycle it belongs to, and
 #: its subclasses name WHICH precondition is missing.
 __all__ = [
-    "ExecutionNotAuthorised", "CampaignDriverAbsent", "ExecutionSealNotFrozen",
-    "ExecutionIdentityUnsealed", "ExecutionAuthorisationMissing",
+    "ExecutionNotAuthorised", "CampaignDriverAbsent", "DriverAbsent",
+    "ExecutionSealNotFrozen", "ExecutionIdentityUnsealed",
+    "ExecutionAuthorisationMissing",
     "preflight", "run", "main", "case_seed_access", "replicate_calibration",
 ]
 
@@ -138,8 +143,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"      {binding.execution_identity}")
     print(f"  execution seal state       : {seal.state}")
     print(f"  expected execution identity: {seal.expected_execution_identity}")
-    print(f"  official campaign driver   : {seal.driver_module} "
-          f"({'PRESENT' if os.path.exists(os.path.join(args.root, seal.driver_module)) else 'ABSENT'})")
+    print(f"  official campaign driver   : {OFFICIAL_CAMPAIGN_DRIVER_PATH} "
+          f"({driver_state(args.root)})   [canonical, identity-bound]")
     print(f"  execution_authorised       : {binding.plan.get('execution_authorised', False)}")
     if args.preflight_only or not args.execute:
         print("  RANDOM DRAWS: 0   TRAJECTORIES: 0   (preflight only)")

@@ -77,6 +77,27 @@ def refuses_without_rng(label: str, fn, *args, **kwargs) -> None:
     check(label, refused and after == before, f"RNG_CALL_COUNT delta = {after - before}")
 
 
+def refuses_with_code(label: str, expected_code: str, fn, *args, **kwargs) -> None:
+    """Assert a refusal for the EXACT intended reason, and no RNG.
+
+    Asserting only "a Refusal was raised" is not enough, and that is not
+    hypothetical: when the coherence and seal checks were added earlier in
+    `bind_execution`, every one of the fixtures below began refusing before it
+    reached the path it was written to exercise, and all of them still passed.
+    The code is a stable handle, so the message stays free to improve.
+    """
+    before = SentinelRNG.CALLS
+    got = None
+    try:
+        fn(*args, **kwargs)
+    except Refusal as exc:
+        got = getattr(type(exc), "code", "UNCODED")
+    after = SentinelRNG.CALLS
+    check(f"{label} -> {expected_code}",
+          got == expected_code and after == before,
+          f"got {got!r}, RNG delta {after - before}")
+
+
 PLAN = load_plan(ROOT)
 SEEDMAP = load_seed_map(ROOT)
 BINDING = load_contract(ROOT)
@@ -146,7 +167,8 @@ def test_preflight_refuses_before_rng() -> None:
     c = json.load(open(os.path.join(tmp, "docs/e1a/e1a_v4_design_contract.json")))
     c["endpoints"]["P2_cross_field"]["delta_cross"] = 0.05
     write(tmp, "docs/e1a/e1a_v4_design_contract.json", c)
-    refuses_without_rng("FROZEN contract mismatch refuses before RNG", preflight, tmp)
+    refuses_with_code("FROZEN contract mismatch refuses before RNG",
+                      "CONTRACT_IDENTITY_MISMATCH", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
@@ -157,8 +179,8 @@ def test_preflight_refuses_before_rng() -> None:
     p["frozen_identities"]["final_expected_execution_identity"] = "f" * 64
     write(tmp, PLAN_JSON, p)
     regenerate_block(tmp)
-    refuses_without_rng("frozen execution-identity mismatch refuses before RNG",
-                        preflight, tmp)
+    refuses_with_code("frozen execution-identity mismatch refuses before RNG",
+                      "EXECUTION_IDENTITY_MISMATCH", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
@@ -168,7 +190,8 @@ def test_preflight_refuses_before_rng() -> None:
     write(tmp, PLAN_JSON, p)
     regenerate_block(tmp)
     set_md_identity(tmp, real, "a" * 64)   # keep the rendering coherent on purpose
-    refuses_without_rng("analysis procedure mismatch refuses before RNG", preflight, tmp)
+    refuses_with_code("analysis procedure mismatch refuses before RNG",
+                      "PLAN_ANALYSIS_IDENTITY_MISMATCH", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
@@ -177,7 +200,8 @@ def test_preflight_refuses_before_rng() -> None:
     p["frozen_identities"]["implementation_file_hashes"][key] = "b" * 64
     write(tmp, PLAN_JSON, p)
     regenerate_block(tmp)
-    refuses_without_rng("implementation file hash mismatch refuses before RNG", preflight, tmp)
+    refuses_with_code("implementation file hash mismatch refuses before RNG",
+                      "IMPLEMENTATION_HASH_MISMATCH", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
@@ -185,7 +209,8 @@ def test_preflight_refuses_before_rng() -> None:
     s["families"]["validation"] = 123456789
     write(tmp, SEED_MAP_JSON, s)
     regenerate_block(tmp)
-    refuses_without_rng("hand-edited seed map refuses before RNG", preflight, tmp)
+    refuses_with_code("hand-edited seed map refuses before RNG",
+                      "SEED_MAP_NOT_REPRODUCIBLE", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
@@ -193,14 +218,16 @@ def test_preflight_refuses_before_rng() -> None:
     s["master_seed"] = s["master_seed"] + 1
     write(tmp, SEED_MAP_JSON, s)
     regenerate_block(tmp)
-    refuses_without_rng("master seed mismatch refuses before RNG", preflight, tmp)
+    refuses_with_code("master seed mismatch refuses before RNG",
+                      "SEED_MAP_NOT_REPRODUCIBLE", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
     out = os.path.join(tmp, PLAN["output_schema"]["directory"])
     os.makedirs(out, exist_ok=True)
     open(os.path.join(out, "existing_result.json"), "w").write("{}")
-    refuses_without_rng("output collision refuses before RNG", preflight, tmp)
+    refuses_with_code("output collision refuses before RNG",
+                      "OUTPUT_COLLISION", preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
@@ -208,7 +235,8 @@ def test_preflight_refuses_before_rng() -> None:
     p["execution_stage"] = "something_else"
     write(tmp, PLAN_JSON, p)
     regenerate_block(tmp)
-    refuses_without_rng("unexpected execution stage refuses before RNG", preflight, tmp)
+    refuses_with_code("unexpected execution stage refuses before RNG",
+                      "UNEXPECTED_EXECUTION_STAGE", preflight, tmp)
     shutil.rmtree(tmp)
 
     check("no RNG was created by ANY failed preflight",
@@ -294,10 +322,12 @@ def test_plan() -> None:
           "; ".join(f"{c['case_id'].split('_')[0]}={c['v4_classification'][:12]}" for c in PLAN["cases"]))
     check("explanatory detail lives in a separate note field, not in the enum",
           all("v4_classification_note" in c for c in PLAN["cases"]))
+    _md = open(os.path.join(ROOT, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md"),
+               encoding="utf-8").read()
     check("markdown renders the enum and the note separately",
-          all(f"| v4 classification | **{c['v4_classification']}** |" in
-              open(os.path.join(ROOT, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md"),
-                   encoding="utf-8").read() for c in PLAN["cases"]))
+          all(f"| v4 classification | {c['v4_classification']} |" in _md
+              and f"| v4 classification note | {c['v4_classification_note']} |" in _md
+              for c in PLAN["cases"]))
     check("case plan deterministic: loading twice gives identical content",
           load_plan(ROOT) == PLAN)
     check("adopted rules in the plan match the contract exactly",
@@ -389,7 +419,10 @@ def test_identities() -> None:
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
     check("every validation module enters the execution identity",
-          len(VALIDATION_MODULES) == 12
+          len(VALIDATION_MODULES) == 15
+          and "e1a_v4/validation/driver.py" in VALIDATION_MODULES
+          and "e1a_v4/validation/refusals.py" in VALIDATION_MODULES
+          and "e1a_v4/validation/strict_json.py" in VALIDATION_MODULES
           and "e1a_v4/validation/dispositions.py" in VALIDATION_MODULES
           and "e1a_v4/validation/classification.py" in VALIDATION_MODULES
           and "e1a_v4/validation/scope.py" in VALIDATION_MODULES

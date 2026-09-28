@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.7.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.8.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -100,250 +100,597 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
 
 ```json
 {
-  "calibration_scope": "REPLICATE_CONDITIONAL",
-  "cases": [
-    {
-      "allowed_seed_families": [
-        "calibration",
-        "validation",
-        "branch_a_measurement"
-      ],
-      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "case_id": "C1_true_bridge_complete",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
-      "primary_release_endpoint": "COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4",
-      "replicate_count": 300,
-      "requires_block1_calibration": true,
-      "role": "primary",
-      "subcondition_count": 4,
-      "subconditions": [
-        "sigma_psi_0p0",
-        "sigma_psi_0p2",
-        "sigma_psi_0p5",
-        "sigma_psi_1p0"
-      ]
-    },
-    {
-      "allowed_seed_families": [
-        "calibration",
-        "validation",
-        "branch_a_measurement"
-      ],
-      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "case_id": "C2_geometry_false_rejection",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
-      "primary_release_endpoint": "P1_FALSE_REJECTION_RATE_PER_FIELD",
-      "replicate_count": 400,
-      "requires_block1_calibration": true,
-      "role": "primary",
-      "subcondition_count": 4,
-      "subconditions": [
-        "sigma_psi_0p0",
-        "sigma_psi_0p2",
-        "sigma_psi_0p5",
-        "sigma_psi_1p0"
-      ]
-    },
-    {
-      "allowed_seed_families": [
-        "calibration",
-        "validation",
-        "branch_a_measurement"
-      ],
+  "field_count": 431,
+  "fields": {
+    "adopted_rules.P3_applies_to": "EVERY tested field",
+    "adopted_rules.P4_classification": "DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK",
+    "adopted_rules.alpha_1": 0.004,
+    "adopted_rules.alpha_2": 0.001,
+    "adopted_rules.alpha_geom": 0.005,
+    "adopted_rules.delta_abs": 0.05,
+    "adopted_rules.delta_cross": 0.02,
+    "adopted_rules.forbidden": [
+      "Bonferroni correction",
+      "fixed-B0 normalisation",
+      "power-spectrum / corner-frequency / equipartition Branch-A calibration"
+    ],
+    "adopted_rules.multiplicity_correction": "NONE - intersection-union test",
+    "adopted_rules.pipeline_target": 0.9,
+    "adopted_rules.rank_tol": 1e-12,
+    "adopted_rules.theta_cap_deg": 5.0,
+    "adopted_rules.z_abs": 1.959963985,
+    "adopted_rules.z_cross": 1.959963985,
+    "assurance.0.acceptance_rule": ">= 279 / 300 complete passes",
+    "assurance.0.bound": "Clopper-Pearson one-sided LOWER",
+    "assurance.0.confidence_level": 0.95,
+    "assurance.0.estimator": "complete-pass proportion over declared replicates",
+    "assurance.0.quantity": "complete true-bridge pipeline success",
+    "assurance.0.replicates": 300,
+    "assurance.0.target": ">= 0.90",
+    "assurance.1.acceptance_rule": "no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field",
+    "assurance.1.bound": "Clopper-Pearson one-sided LOWER (inflation test)",
+    "assurance.1.confidence_level": 0.95,
+    "assurance.1.estimator": "rejection proportion",
+    "assurance.1.quantity": "P1 false-rejection rate, per field",
+    "assurance.1.replicates": 400,
+    "assurance.1.target": "alpha_geom = 0.005",
+    "assurance.2.acceptance_rule": "no inflation detected: CP_lower <= 0.001, i.e. <= 2/400",
+    "assurance.2.bound": "Clopper-Pearson one-sided LOWER (inflation test)",
+    "assurance.2.confidence_level": 0.95,
+    "assurance.2.estimator": "rejection proportion",
+    "assurance.2.quantity": "block-2 (G5) rejection rate",
+    "assurance.2.replicates": 400,
+    "assurance.2.target": "alpha_2 = 0.001",
+    "assurance.3.acceptance_rule": "discrepancy REPORTED and classified; additionally no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000",
+    "assurance.3.bound": "Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test)",
+    "assurance.3.confidence_level": 0.95,
+    "assurance.3.estimator": "rejection proportion",
+    "assurance.3.quantity": "Block-1 achieved size under the surrogate",
+    "assurance.3.replicates": 2000,
+    "assurance.3.target": "alpha_1 = 0.004",
+    "assurance.4.acceptance_rule": "upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently",
+    "assurance.4.bound": "Clopper-Pearson one-sided UPPER",
+    "assurance.4.confidence_level": 0.95,
+    "assurance.4.estimator": "acceptance proportion",
+    "assurance.4.quantity": "false-bridge acceptance, per alternative",
+    "assurance.4.replicates": 400,
+    "assurance.4.target": "<= 0.025 per alternative",
+    "assurance.5.acceptance_rule": ">= 188 / 200 paired-control successes",
+    "assurance.5.bound": "Clopper-Pearson one-sided LOWER",
+    "assurance.5.confidence_level": 0.95,
+    "assurance.5.estimator": "distribution of beta_hat * c",
+    "assurance.5.quantity": "blinded scale recovery beta_hat * c",
+    "assurance.5.replicates": 200,
+    "assurance.5.target": ">= 0.90 paired-control success",
+    "authority_gaps.G1.affects": "C8",
+    "authority_gaps.G1.gap": "blinded scale control had no quantitative recovery criterion beyond beta = 1/c",
+    "authority_gaps.G1.resolution": "beta_tilde = c * beta_hat must satisfy the SAME P3 absolute-equivalence construction (delta_abs = 0.05, z_abs = 1.959963985) at EVERY tested field for BOTH c = 1.07 and c = 0.90; a replicate succeeds only if both branches pass. Campaign: one-sided 95% CP LOWER bound >= 0.90 over R = 200, i.e. >= 188/200.",
+    "authority_gaps.G1.status": "CLOSED PROSPECTIVELY",
+    "authority_gaps.G2.affects": "C7",
+    "authority_gaps.G2.gap": "false-bridge alternatives had no maximum acceptable acceptance rate",
+    "authority_gaps.G2.resolution": "maximum false-acceptance probability 0.025, tied to the equivalence test's one-sided nominal level at z = 1.959963985 and NOT derived from any observed outcome. Per alternative INDEPENDENTLY: one-sided 95% CP UPPER bound <= 0.025 over R = 400, i.e. <= 4/400. Counts are never pooled.",
+    "authority_gaps.G2.status": "CLOSED PROSPECTIVELY",
+    "authority_gaps.G3.affects": "C1, C2, C3",
+    "authority_gaps.G3.gap": "sigma_psi was recorded in the contract as 'to be declared'",
+    "authority_gaps.G3.resolution": "PRIMARY RELEASE SCENARIO sigma_psi = 0.5 degrees; the complete true-bridge >= 0.90 claim is asserted there. 0.0 and 0.2 degrees are secondary lower-uncertainty sensitivity cases; 1.0 degree is a stress/robustness case. All are reported, none is pooled into the primary result, and the stress case neither redefines the primary criterion nor is removed if it performs poorly.",
+    "authority_gaps.G3.status": "CLOSED PROSPECTIVELY",
+    "calibration.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C1_true_bridge_complete.allowed_seed_families": [
+      "calibration",
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C1_true_bridge_complete.authority": "design section 15 items 4 and 10; contract complete_pipeline.target_true_bridge_success",
+    "cases.C1_true_bridge_complete.beta_truth": 1.0,
+    "cases.C1_true_bridge_complete.block1_role": "PRIMARY_RELEASE_ENDPOINT",
+    "cases.C1_true_bridge_complete.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3]",
+    "cases.C1_true_bridge_complete.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C1_true_bridge_complete.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C1_true_bridge_complete.calibration_artifact_basis": "300 replicates x 4 subconditions x 4 fields requiring calibration = 4,800",
+    "cases.C1_true_bridge_complete.calibration_artifact_count": 4800,
+    "cases.C1_true_bridge_complete.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C1_true_bridge_complete.expected_qualitative_outcome": "complete pass in the large majority of replicates",
+    "cases.C1_true_bridge_complete.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C1_true_bridge_complete.fields_requiring_calibration": 4,
+    "cases.C1_true_bridge_complete.formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% LOWER bound on the complete-pass rate >= 0.90; requires >= 279/300. An observed proportion above 0.90 is NOT sufficient by itself.",
+    "cases.C1_true_bridge_complete.geometry_truth": "as declared per field",
+    "cases.C1_true_bridge_complete.primary_release_endpoint": "COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4",
+    "cases.C1_true_bridge_complete.replicate_count": 300,
+    "cases.C1_true_bridge_complete.requires_block1_calibration": true,
+    "cases.C1_true_bridge_complete.role": "primary",
+    "cases.C1_true_bridge_complete.scientific_purpose": "Does the implemented COMPLETE pipeline (P1 AND P2 AND P3 AND P4) achieve the adopted >= 0.90 target?",
+    "cases.C1_true_bridge_complete.seed_family": "validation",
+    "cases.C1_true_bridge_complete.subcondition_count": 4,
+    "cases.C1_true_bridge_complete.subconditions.order": [
+      "sigma_psi_0p0",
+      "sigma_psi_0p2",
+      "sigma_psi_0p5",
+      "sigma_psi_1p0"
+    ],
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p0.feeds_primary_claim": false,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p0.g3_role": "SECONDARY",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p0.sigma_psi_deg": 0.0,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p0.subcondition_id": "sigma_psi_0p0",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p2.feeds_primary_claim": false,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p2.g3_role": "SECONDARY",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p2.sigma_psi_deg": 0.2,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p2.subcondition_id": "sigma_psi_0p2",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p5.feeds_primary_claim": true,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p5.g3_role": "PRIMARY",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p5.sigma_psi_deg": 0.5,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_0p5.subcondition_id": "sigma_psi_0p5",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_1p0.feeds_primary_claim": false,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_1p0.g3_role": "STRESS",
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_1p0.sigma_psi_deg": 1.0,
+    "cases.C1_true_bridge_complete.subconditions.sigma_psi_1p0.subcondition_id": "sigma_psi_1p0",
+    "cases.C1_true_bridge_complete.truth_model": "K_theta = H_theta with beta_true = 1 at every field",
+    "cases.C1_true_bridge_complete.uses_p1_block1": true,
+    "cases.C1_true_bridge_complete.v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+    "cases.C1_true_bridge_complete.v4_classification_note": "",
+    "cases.C2_geometry_false_rejection.allowed_seed_families": [
+      "calibration",
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C2_geometry_false_rejection.authority": "design section 15 item 3",
+    "cases.C2_geometry_false_rejection.beta_truth": 1.0,
+    "cases.C2_geometry_false_rejection.block1_role": "PRIMARY_RELEASE_ENDPOINT",
+    "cases.C2_geometry_false_rejection.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3]",
+    "cases.C2_geometry_false_rejection.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C2_geometry_false_rejection.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C2_geometry_false_rejection.calibration_artifact_basis": "400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400",
+    "cases.C2_geometry_false_rejection.calibration_artifact_count": 6400,
+    "cases.C2_geometry_false_rejection.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C2_geometry_false_rejection.expected_qualitative_outcome": "false rejection at or below alpha_geom = 0.5%",
+    "cases.C2_geometry_false_rejection.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C2_geometry_false_rejection.fields_requiring_calibration": 4,
+    "cases.C2_geometry_false_rejection.formal_pass_fail_criterion": "PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. Secondary gross-inflation diagnostic (CP upper <= 0.03) may be reported but is not validation of alpha_geom.",
+    "cases.C2_geometry_false_rejection.geometry_truth": "as declared per field",
+    "cases.C2_geometry_false_rejection.primary_release_endpoint": "P1_FALSE_REJECTION_RATE_PER_FIELD",
+    "cases.C2_geometry_false_rejection.replicate_count": 400,
+    "cases.C2_geometry_false_rejection.requires_block1_calibration": true,
+    "cases.C2_geometry_false_rejection.role": "primary",
+    "cases.C2_geometry_false_rejection.scientific_purpose": "Achieved P1 false-rejection rate per declared field, covering G1-G5, the two-block combination, mode resolution and structured refusals",
+    "cases.C2_geometry_false_rejection.seed_family": "validation",
+    "cases.C2_geometry_false_rejection.subcondition_count": 4,
+    "cases.C2_geometry_false_rejection.subconditions.order": [
+      "sigma_psi_0p0",
+      "sigma_psi_0p2",
+      "sigma_psi_0p5",
+      "sigma_psi_1p0"
+    ],
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p0.feeds_primary_claim": false,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p0.g3_role": "SECONDARY",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p0.sigma_psi_deg": 0.0,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p0.subcondition_id": "sigma_psi_0p0",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p2.feeds_primary_claim": false,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p2.g3_role": "SECONDARY",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p2.sigma_psi_deg": 0.2,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p2.subcondition_id": "sigma_psi_0p2",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p5.feeds_primary_claim": true,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p5.g3_role": "PRIMARY",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p5.sigma_psi_deg": 0.5,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_0p5.subcondition_id": "sigma_psi_0p5",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_1p0.feeds_primary_claim": false,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_1p0.g3_role": "STRESS",
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_1p0.sigma_psi_deg": 1.0,
+    "cases.C2_geometry_false_rejection.subconditions.sigma_psi_1p0.subcondition_id": "sigma_psi_1p0",
+    "cases.C2_geometry_false_rejection.truth_model": "true null K_theta = H_theta",
+    "cases.C2_geometry_false_rejection.uses_p1_block1": true,
+    "cases.C2_geometry_false_rejection.v4_classification": "RETAINED BUT UPDATED FOR V4",
+    "cases.C2_geometry_false_rejection.v4_classification_note": "alpha_geom 1% -> 0.5%, two-block union rule",
+    "cases.C3_g5_block.allowed_seed_families": [
+      "calibration",
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C3_g5_block.authority": "design section 15 item 8",
+    "cases.C3_g5_block.beta_truth": 1.0,
+    "cases.C3_g5_block.block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+    "cases.C3_g5_block.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3]",
+    "cases.C3_g5_block.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C3_g5_block.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C3_g5_block.c3_semantics": {
       "block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "case_id": "C3_g5_block",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
+      "joint_p1_result_changes_C3_release_verdict": false,
       "primary_release_endpoint": "G5_BLOCK_SIZE",
-      "replicate_count": 400,
+      "release_criterion": "UNCHANGED: R = 400, nominal alpha_2 = 0.001, CP_lower(G5 rejections, 400) > 0.001 detects inflation; 0-2 clean, 3+ STATISTICAL_SIZE_FAILURE",
       "requires_block1_calibration": true,
-      "role": "primary",
-      "subcondition_count": 4,
-      "subconditions": [
-        "sigma_psi_0p0",
-        "sigma_psi_0p2",
-        "sigma_psi_0p5",
-        "sigma_psi_1p0"
-      ]
+      "status": "AMBIGUITY RESOLVED PROSPECTIVELY, before any random outcome exists",
+      "what_is_forbidden": "adding any new C3 release threshold based on Block 1 or on the joint P1 result. The release verdict depends only on the already-frozen Block-2 / G5 size criterion.",
+      "why_calibration_is_retained": "the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input."
     },
-    {
-      "allowed_seed_families": [
-        "calibration",
-        "validation",
-        "branch_a_measurement"
-      ],
-      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "case_id": "C4_surrogate_validity",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
-      "primary_release_endpoint": "BLOCK1_ACHIEVED_SIZE",
-      "replicate_count": 2000,
-      "requires_block1_calibration": true,
-      "role": "primary",
-      "subcondition_count": 1,
-      "subconditions": [
-        "primary"
-      ]
-    },
-    {
-      "allowed_seed_families": [
-        "calibration",
-        "validation",
-        "branch_a_measurement"
-      ],
-      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "case_id": "C5_plug_in_branch_a",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
-      "primary_release_endpoint": "P1_REJECTION_RATE_PER_CELL",
-      "replicate_count": 400,
-      "requires_block1_calibration": true,
-      "role": "primary",
-      "subcondition_count": 12,
-      "subconditions": [
-        "sk0p00_sp0p0",
-        "sk0p00_sp0p2",
-        "sk0p00_sp0p5",
-        "sk0p00_sp1p0",
-        "sk0p50_sp0p0",
-        "sk0p50_sp0p2",
-        "sk0p50_sp0p5",
-        "sk0p50_sp1p0",
-        "sk1p00_sp0p0",
-        "sk1p00_sp0p2",
-        "sk1p00_sp0p5",
-        "sk1p00_sp1p0"
-      ]
-    },
-    {
-      "allowed_seed_families": [
-        "calibration",
-        "validation",
-        "branch_a_measurement"
-      ],
-      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
-      "calibration_scope": "REPLICATE_CONDITIONAL",
-      "case_id": "C6_mode_resolution_boundary",
-      "fields_affected": [
-        "synthetic two-mode field at the declared rho"
-      ],
-      "primary_release_endpoint": "P1_REJECTION_RATE_PER_RHO",
-      "replicate_count": 400,
-      "requires_block1_calibration": true,
-      "role": "primary",
-      "subcondition_count": 3,
-      "subconditions": [
-        "rho_1p019573",
-        "rho_1p024467",
-        "rho_1p029360"
-      ]
-    },
-    {
-      "allowed_seed_families": [
-        "validation",
-        "branch_a_measurement"
-      ],
-      "block1_role": "NONE",
-      "calibration_scope": "NOT_APPLICABLE",
-      "case_id": "C7_false_bridge",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
-      "primary_release_endpoint": "P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE",
-      "replicate_count": 400,
-      "requires_block1_calibration": false,
-      "role": "negative_control",
-      "subcondition_count": 4,
-      "subconditions": [
-        "alt_1_06",
-        "alt_0_93_1_05",
-        "alt_1_10",
-        "hard_1_025"
-      ]
-    },
-    {
-      "allowed_seed_families": [
-        "blinded_scale_control",
-        "branch_a_measurement"
-      ],
-      "block1_role": "NONE",
-      "calibration_scope": "NOT_APPLICABLE",
-      "case_id": "C8_blinded_scale_control",
-      "fields_affected": [
-        "theta0_circular",
-        "theta1_power",
-        "theta2_ellipse",
-        "theta3_temperature"
-      ],
-      "primary_release_endpoint": "P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY",
-      "replicate_count": 200,
-      "requires_block1_calibration": false,
-      "role": "positive_control",
-      "subcondition_count": 1,
-      "subconditions": [
-        "paired_scale_control"
-      ]
-    }
-  ],
-  "execution_authorised": false,
-  "execution_seal_state": "PRE_DRIVER",
-  "execution_stage": "synthetic_validation",
-  "failure_classifications": [
-    "SOFTWARE_OR_INVARIANT_FAILURE",
-    "CALIBRATION_FAILURE",
-    "STATISTICAL_SIZE_FAILURE",
-    "TRUE_BRIDGE_POWER_FAILURE",
-    "FALSE_BRIDGE_DISCRIMINATION_FAILURE",
-    "STRUCTURED_REFUSAL_EXCESS",
-    "MODE_RESOLUTION_FAILURE",
-    "BLINDED_SCALE_CONTROL_FAILURE",
-    "NUMERICAL_OR_PRECISION_FAILURE",
-    "VALIDATION_INCONCLUSIVE",
-    "VALIDATION_PASS"
-  ],
-  "frozen_identities": {
-    "analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
-    "baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
-    "calibration_artifact_schema": "e1a_v4_block1_calibration/2",
-    "contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
-    "contract_version": "1.1.0",
-    "design_sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
-    "foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
-    "implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874"
-  },
-  "implementation_file_hashes_digest": "787b8f5cef19a3eb7aa328282c421970cabbf9aae1060c4927bbdbd4476a6c5b",
-  "output_schema": {
-    "aggregate_fields": [
+    "cases.C3_g5_block.calibration_artifact_basis": "400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400",
+    "cases.C3_g5_block.calibration_artifact_count": 6400,
+    "cases.C3_g5_block.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C3_g5_block.expected_qualitative_outcome": "block-2 achieved size consistent with alpha_2 = 0.1%; delta-method error quantified",
+    "cases.C3_g5_block.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C3_g5_block.fields_requiring_calibration": 4,
+    "cases.C3_g5_block.formal_pass_fail_criterion": "R = 400, nominal alpha_2 = 0.001. Inflation is detected iff CP_lower(G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE. 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.",
+    "cases.C3_g5_block.geometry_truth": "as declared per field",
+    "cases.C3_g5_block.primary_release_endpoint": "G5_BLOCK_SIZE",
+    "cases.C3_g5_block.replicate_count": 400,
+    "cases.C3_g5_block.requires_block1_calibration": true,
+    "cases.C3_g5_block.role": "primary",
+    "cases.C3_g5_block.scientific_purpose": "Validate the actual G5 block from full generated observations: sample-mean centring, A4-based leading-order variance, finite-sample behaviour, correlation, the two-mode max statistic and its interaction with the two-block gate",
+    "cases.C3_g5_block.seed_family": "validation",
+    "cases.C3_g5_block.subcondition_count": 4,
+    "cases.C3_g5_block.subconditions.order": [
+      "sigma_psi_0p0",
+      "sigma_psi_0p2",
+      "sigma_psi_0p5",
+      "sigma_psi_1p0"
+    ],
+    "cases.C3_g5_block.subconditions.sigma_psi_0p0.feeds_primary_claim": false,
+    "cases.C3_g5_block.subconditions.sigma_psi_0p0.g3_role": "SECONDARY",
+    "cases.C3_g5_block.subconditions.sigma_psi_0p0.sigma_psi_deg": 0.0,
+    "cases.C3_g5_block.subconditions.sigma_psi_0p0.subcondition_id": "sigma_psi_0p0",
+    "cases.C3_g5_block.subconditions.sigma_psi_0p2.feeds_primary_claim": false,
+    "cases.C3_g5_block.subconditions.sigma_psi_0p2.g3_role": "SECONDARY",
+    "cases.C3_g5_block.subconditions.sigma_psi_0p2.sigma_psi_deg": 0.2,
+    "cases.C3_g5_block.subconditions.sigma_psi_0p2.subcondition_id": "sigma_psi_0p2",
+    "cases.C3_g5_block.subconditions.sigma_psi_0p5.feeds_primary_claim": true,
+    "cases.C3_g5_block.subconditions.sigma_psi_0p5.g3_role": "PRIMARY",
+    "cases.C3_g5_block.subconditions.sigma_psi_0p5.sigma_psi_deg": 0.5,
+    "cases.C3_g5_block.subconditions.sigma_psi_0p5.subcondition_id": "sigma_psi_0p5",
+    "cases.C3_g5_block.subconditions.sigma_psi_1p0.feeds_primary_claim": false,
+    "cases.C3_g5_block.subconditions.sigma_psi_1p0.g3_role": "STRESS",
+    "cases.C3_g5_block.subconditions.sigma_psi_1p0.sigma_psi_deg": 1.0,
+    "cases.C3_g5_block.subconditions.sigma_psi_1p0.subcondition_id": "sigma_psi_1p0",
+    "cases.C3_g5_block.truth_model": "true null; G5 computed from generated trajectories, never as an independent companion variable",
+    "cases.C3_g5_block.uses_p1_block1": true,
+    "cases.C3_g5_block.v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+    "cases.C3_g5_block.v4_classification_note": "",
+    "cases.C4_surrogate_validity.allowed_seed_families": [
+      "calibration",
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C4_surrogate_validity.authority": "design section 15 item 5; design Appendix classification of the surrogate as an APPROXIMATION",
+    "cases.C4_surrogate_validity.beta_truth": 1.0,
+    "cases.C4_surrogate_validity.block1_role": "PRIMARY_RELEASE_ENDPOINT",
+    "cases.C4_surrogate_validity.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+    "cases.C4_surrogate_validity.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C4_surrogate_validity.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C4_surrogate_validity.calibration_artifact_basis": "2000 replicates x 1 subconditions x 4 fields requiring calibration = 8,000",
+    "cases.C4_surrogate_validity.calibration_artifact_count": 8000,
+    "cases.C4_surrogate_validity.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C4_surrogate_validity.expected_qualitative_outcome": "achieved Block-1 rejection rate close to alpha_1 = 0.4%",
+    "cases.C4_surrogate_validity.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C4_surrogate_validity.fields_requiring_calibration": 4,
+    "cases.C4_surrogate_validity.formal_pass_fail_criterion": "R = 2000, nominal alpha_1 = 0.004. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation: detected iff CP_lower(rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. The binary diagnostic does not replace the discrepancy report.",
+    "cases.C4_surrogate_validity.geometry_truth": "as declared per field",
+    "cases.C4_surrogate_validity.primary_release_endpoint": "BLOCK1_ACHIEVED_SIZE",
+    "cases.C4_surrogate_validity.replicate_count": 2000,
+    "cases.C4_surrogate_validity.requires_block1_calibration": true,
+    "cases.C4_surrogate_validity.role": "primary",
+    "cases.C4_surrogate_validity.scientific_purpose": "Achieved Block-1 size when calibration uses the covariance-matched surrogate but validation data come from the declared actual correlated process; measure the OPERATING-QUANTILE discrepancy, not covariance agreement",
+    "cases.C4_surrogate_validity.seed_family": "calibration + validation",
+    "cases.C4_surrogate_validity.subcondition_count": 1,
+    "cases.C4_surrogate_validity.subconditions.order": [
+      "primary"
+    ],
+    "cases.C4_surrogate_validity.subconditions.primary.subcondition_id": "primary",
+    "cases.C4_surrogate_validity.truth_model": "calibration from the surrogate, validation from the declared OU process",
+    "cases.C4_surrogate_validity.uses_p1_block1": true,
+    "cases.C4_surrogate_validity.v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+    "cases.C4_surrogate_validity.v4_classification_note": "",
+    "cases.C5_plug_in_branch_a.allowed_seed_families": [
+      "calibration",
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C5_plug_in_branch_a.authority": "design section 15 item 6",
+    "cases.C5_plug_in_branch_a.beta_truth": 1.0,
+    "cases.C5_plug_in_branch_a.block1_role": "PRIMARY_RELEASE_ENDPOINT",
+    "cases.C5_plug_in_branch_a.branch_a_uncertainty": "swept: sigma_k in {0, 0.5%, 1%} x sigma_psi in {0, 0.2, 0.5, 1.0} degrees, 12 cells",
+    "cases.C5_plug_in_branch_a.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C5_plug_in_branch_a.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C5_plug_in_branch_a.calibration_artifact_basis": "400 replicates x 12 subconditions x 4 fields requiring calibration = 19,200",
+    "cases.C5_plug_in_branch_a.calibration_artifact_count": 19200,
+    "cases.C5_plug_in_branch_a.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C5_plug_in_branch_a.expected_qualitative_outcome": "achieved size degrades as sigma_psi grows; the magnitude is the result",
+    "cases.C5_plug_in_branch_a.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C5_plug_in_branch_a.fields_requiring_calibration": 4,
+    "cases.C5_plug_in_branch_a.formal_pass_fail_criterion": "report the Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate in EVERY one of the 12 declared cells, R = 400 each. No cell may be dropped after inspection.",
+    "cases.C5_plug_in_branch_a.geometry_truth": "as declared per field",
+    "cases.C5_plug_in_branch_a.primary_release_endpoint": "P1_REJECTION_RATE_PER_CELL",
+    "cases.C5_plug_in_branch_a.replicate_count": 400,
+    "cases.C5_plug_in_branch_a.requires_block1_calibration": true,
+    "cases.C5_plug_in_branch_a.role": "primary",
+    "cases.C5_plug_in_branch_a.scientific_purpose": "Effect of analysing with measured/noisy H_A and tau_A while truth is generated from H_true and tau_true, including shape and orientation uncertainty",
+    "cases.C5_plug_in_branch_a.seed_family": "validation + branch_a_measurement",
+    "cases.C5_plug_in_branch_a.subcondition_count": 12,
+    "cases.C5_plug_in_branch_a.subconditions.order": [
+      "sk0p00_sp0p0",
+      "sk0p00_sp0p2",
+      "sk0p00_sp0p5",
+      "sk0p00_sp1p0",
+      "sk0p50_sp0p0",
+      "sk0p50_sp0p2",
+      "sk0p50_sp0p5",
+      "sk0p50_sp1p0",
+      "sk1p00_sp0p0",
+      "sk1p00_sp0p2",
+      "sk1p00_sp0p5",
+      "sk1p00_sp1p0"
+    ],
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p0.sigma_k": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p0.sigma_psi_deg": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p0.subcondition_id": "sk0p00_sp0p0",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p2.sigma_k": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p2.sigma_psi_deg": 0.2,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p2.subcondition_id": "sk0p00_sp0p2",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p5.sigma_k": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p5.sigma_psi_deg": 0.5,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp0p5.subcondition_id": "sk0p00_sp0p5",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp1p0.sigma_k": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp1p0.sigma_psi_deg": 1.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p00_sp1p0.subcondition_id": "sk0p00_sp1p0",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p0.sigma_k": 0.005,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p0.sigma_psi_deg": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p0.subcondition_id": "sk0p50_sp0p0",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p2.sigma_k": 0.005,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p2.sigma_psi_deg": 0.2,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p2.subcondition_id": "sk0p50_sp0p2",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p5.sigma_k": 0.005,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p5.sigma_psi_deg": 0.5,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp0p5.subcondition_id": "sk0p50_sp0p5",
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp1p0.sigma_k": 0.005,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp1p0.sigma_psi_deg": 1.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk0p50_sp1p0.subcondition_id": "sk0p50_sp1p0",
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p0.sigma_k": 0.01,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p0.sigma_psi_deg": 0.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p0.subcondition_id": "sk1p00_sp0p0",
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p2.sigma_k": 0.01,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p2.sigma_psi_deg": 0.2,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p2.subcondition_id": "sk1p00_sp0p2",
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p5.sigma_k": 0.01,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p5.sigma_psi_deg": 0.5,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp0p5.subcondition_id": "sk1p00_sp0p5",
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp1p0.sigma_k": 0.01,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp1p0.sigma_psi_deg": 1.0,
+    "cases.C5_plug_in_branch_a.subconditions.sk1p00_sp1p0.subcondition_id": "sk1p00_sp1p0",
+    "cases.C5_plug_in_branch_a.truth_model": "true null; analysis receives only the Branch-A measured field",
+    "cases.C5_plug_in_branch_a.uses_p1_block1": true,
+    "cases.C5_plug_in_branch_a.v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+    "cases.C5_plug_in_branch_a.v4_classification_note": "",
+    "cases.C6_mode_resolution_boundary.allowed_seed_families": [
+      "calibration",
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C6_mode_resolution_boundary.authority": "design section 15 item 7; design section 10",
+    "cases.C6_mode_resolution_boundary.beta_truth": 1.0,
+    "cases.C6_mode_resolution_boundary.block1_role": "PRIMARY_RELEASE_ENDPOINT",
+    "cases.C6_mode_resolution_boundary.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+    "cases.C6_mode_resolution_boundary.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C6_mode_resolution_boundary.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C6_mode_resolution_boundary.calibration_artifact_basis": "400 replicates x 3 subconditions x 1 fields requiring calibration = 1,200",
+    "cases.C6_mode_resolution_boundary.calibration_artifact_count": 1200,
+    "cases.C6_mode_resolution_boundary.calibration_scope": "REPLICATE_CONDITIONAL",
+    "cases.C6_mode_resolution_boundary.expected_qualitative_outcome": "merge below the boundary, split above; size controlled on both sides",
+    "cases.C6_mode_resolution_boundary.fields_affected": [
+      "synthetic two-mode field at the declared rho"
+    ],
+    "cases.C6_mode_resolution_boundary.fields_requiring_calibration": 1,
+    "cases.C6_mode_resolution_boundary.formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate <= 3% at each of the three declared rho, R = 400 each; report the merge/split decision rate at each. theta_cap MUST NOT be changed after observing the result.",
+    "cases.C6_mode_resolution_boundary.geometry_truth": "rho in {1.019573, 1.024467, 1.029360} at N_12 = 224726",
+    "cases.C6_mode_resolution_boundary.primary_release_endpoint": "P1_REJECTION_RATE_PER_RHO",
+    "cases.C6_mode_resolution_boundary.replicate_count": 400,
+    "cases.C6_mode_resolution_boundary.requires_block1_calibration": true,
+    "cases.C6_mode_resolution_boundary.role": "primary",
+    "cases.C6_mode_resolution_boundary.scientific_purpose": "Size AND detection behaviour around theta_cap = 5 degrees at the predeclared boundary neighbourhood",
+    "cases.C6_mode_resolution_boundary.seed_family": "validation",
+    "cases.C6_mode_resolution_boundary.subcondition_count": 3,
+    "cases.C6_mode_resolution_boundary.subconditions.order": [
+      "rho_1p019573",
+      "rho_1p024467",
+      "rho_1p029360"
+    ],
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p019573.rho": 1.019573,
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p019573.role": "boundary -20%",
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p019573.subcondition_id": "rho_1p019573",
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p024467.rho": 1.024467,
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p024467.role": "boundary",
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p024467.subcondition_id": "rho_1p024467",
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p029360.rho": 1.02936,
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p029360.role": "boundary +20%",
+    "cases.C6_mode_resolution_boundary.subconditions.rho_1p029360.subcondition_id": "rho_1p029360",
+    "cases.C6_mode_resolution_boundary.truth_model": "true null at rho = boundary, boundary -20%, boundary +20%",
+    "cases.C6_mode_resolution_boundary.uses_p1_block1": true,
+    "cases.C6_mode_resolution_boundary.v4_classification": "NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION",
+    "cases.C6_mode_resolution_boundary.v4_classification_note": "",
+    "cases.C7_false_bridge.allowed_seed_families": [
+      "validation",
+      "branch_a_measurement"
+    ],
+    "cases.C7_false_bridge.authority": "design section 13; contract false_bridge_controls",
+    "cases.C7_false_bridge.beta_truth": "per alternative",
+    "cases.C7_false_bridge.block1_role": "NONE",
+    "cases.C7_false_bridge.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+    "cases.C7_false_bridge.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C7_false_bridge.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C7_false_bridge.calibration_artifact_basis": "0 - this case evaluates no P1 / Block-1 quantity",
+    "cases.C7_false_bridge.calibration_artifact_count": 0,
+    "cases.C7_false_bridge.calibration_not_required_reason": "its frozen endpoints do not evaluate any P1 / Block-1 quantity. p1_geometry is the ONLY consumer of a CalibrationArtifact in the package, and this case never reaches it. Generating one would add a calibration refusal path that cannot affect the science but CAN affect the outcome.",
+    "cases.C7_false_bridge.calibration_scope": "NOT_APPLICABLE",
+    "cases.C7_false_bridge.expected_qualitative_outcome": "acceptance close to zero for the coarse alternatives; the hard 2.5% case is the informative one",
+    "cases.C7_false_bridge.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C7_false_bridge.fields_requiring_calibration": 0,
+    "cases.C7_false_bridge.formal_pass_fail_criterion": "For EACH declared alternative INDEPENDENTLY: one-sided 95% Clopper-Pearson UPPER bound on the false-acceptance rate <= 0.025 over R = 400, i.e. <= 4/400; 5 or more fails. Counts are never pooled and easy and hard alternatives are never averaged. [disposition G2, closed prospectively]",
+    "cases.C7_false_bridge.geometry_truth": "as declared per field",
+    "cases.C7_false_bridge.primary_release_endpoint": "P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE",
+    "cases.C7_false_bridge.replicate_count": 400,
+    "cases.C7_false_bridge.requires_block1_calibration": false,
+    "cases.C7_false_bridge.role": "negative_control",
+    "cases.C7_false_bridge.scientific_purpose": "Probability of incorrectly ACCEPTING a false bridge, for every declared non-commensurable alternative including the hard near-margin case",
+    "cases.C7_false_bridge.seed_family": "validation",
+    "cases.C7_false_bridge.subcondition_count": 4,
+    "cases.C7_false_bridge.subconditions.alt_0_93_1_05.beta_true": [
+      1,
+      0.93,
+      1.05,
+      1
+    ],
+    "cases.C7_false_bridge.subconditions.alt_0_93_1_05.subcondition_id": "alt_0_93_1_05",
+    "cases.C7_false_bridge.subconditions.alt_1_06.beta_true": [
+      1,
+      1.06,
+      1,
+      1
+    ],
+    "cases.C7_false_bridge.subconditions.alt_1_06.subcondition_id": "alt_1_06",
+    "cases.C7_false_bridge.subconditions.alt_1_10.beta_true": [
+      1,
+      1,
+      1,
+      1.1
+    ],
+    "cases.C7_false_bridge.subconditions.alt_1_10.subcondition_id": "alt_1_10",
+    "cases.C7_false_bridge.subconditions.hard_1_025.beta_true": [
+      1,
+      1.025,
+      1,
+      1
+    ],
+    "cases.C7_false_bridge.subconditions.hard_1_025.role": "hard near-margin case",
+    "cases.C7_false_bridge.subconditions.hard_1_025.subcondition_id": "hard_1_025",
+    "cases.C7_false_bridge.subconditions.order": [
+      "alt_1_06",
+      "alt_0_93_1_05",
+      "alt_1_10",
+      "hard_1_025"
+    ],
+    "cases.C7_false_bridge.truth_model": "beta_theta = (1,1.06,1,1); (1,0.93,1.05,1); (1,1,1,1.10); hard (1,1.025,1,1)",
+    "cases.C7_false_bridge.uses_p1_block1": false,
+    "cases.C7_false_bridge.v4_classification": "RETAINED BUT UPDATED FOR V4",
+    "cases.C7_false_bridge.v4_classification_note": "evaluated against the all-field P3 and the IUT P2",
+    "cases.C8_blinded_scale_control.allowed_seed_families": [
+      "blinded_scale_control",
+      "branch_a_measurement"
+    ],
+    "cases.C8_blinded_scale_control.authority": "baseline section 14.2 (committed); design section 13",
+    "cases.C8_blinded_scale_control.beta_truth": "1/c on the blinded branch",
+    "cases.C8_blinded_scale_control.block1_role": "NONE",
+    "cases.C8_blinded_scale_control.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+    "cases.C8_blinded_scale_control.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
+    "cases.C8_blinded_scale_control.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C8_blinded_scale_control.calibration_artifact_basis": "0 - this case evaluates no P1 / Block-1 quantity",
+    "cases.C8_blinded_scale_control.calibration_artifact_count": 0,
+    "cases.C8_blinded_scale_control.calibration_not_required_reason": "its frozen endpoints do not evaluate any P1 / Block-1 quantity. p1_geometry is the ONLY consumer of a CalibrationArtifact in the package, and this case never reaches it. Generating one would add a calibration refusal path that cannot affect the science but CAN affect the outcome.",
+    "cases.C8_blinded_scale_control.calibration_scope": "NOT_APPLICABLE",
+    "cases.C8_blinded_scale_control.expected_qualitative_outcome": "beta_hat on the blinded branch concentrates on 1/c",
+    "cases.C8_blinded_scale_control.fields_affected": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "cases.C8_blinded_scale_control.fields_requiring_calibration": 0,
+    "cases.C8_blinded_scale_control.formal_pass_fail_criterion": "beta_tilde_theta = c * beta_hat_theta must satisfy the SAME P3 absolute-equivalence rule (delta_abs = 0.05, z_abs = 1.959963985, h_theta = z sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)) at EVERY tested field, for BOTH c = 1.07 and c = 0.90; any non-ESTIMATED field fails that branch. One replicate succeeds only if both branches pass. Campaign: one-sided 95% Clopper-Pearson LOWER bound on paired-control success >= 0.90 over R = 200, i.e. >= 188/200. [disposition G1, closed prospectively]",
+    "cases.C8_blinded_scale_control.geometry_truth": "as declared per field",
+    "cases.C8_blinded_scale_control.primary_release_endpoint": "P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY",
+    "cases.C8_blinded_scale_control.replicate_count": 200,
+    "cases.C8_blinded_scale_control.requires_block1_calibration": false,
+    "cases.C8_blinded_scale_control.role": "positive_control",
+    "cases.C8_blinded_scale_control.scientific_purpose": "Blinded duplicate-branch scale control: Branch-A declared scale multiplied by a hidden c, analysis must recover beta = 1/c",
+    "cases.C8_blinded_scale_control.seed_family": "blinded_scale_control",
+    "cases.C8_blinded_scale_control.subcondition_count": 1,
+    "cases.C8_blinded_scale_control.subconditions.order": [
+      "paired_scale_control"
+    ],
+    "cases.C8_blinded_scale_control.subconditions.paired_scale_control.pairing": "INTENTIONAL: both factors act on the SAME underlying synthetic replicate by the frozen deterministic Branch-A scale transform. They are NOT independent random subconditions and must not be given separate streams.",
+    "cases.C8_blinded_scale_control.subconditions.paired_scale_control.scale_factors": [
+      1.07,
+      0.9
+    ],
+    "cases.C8_blinded_scale_control.subconditions.paired_scale_control.subcondition_id": "paired_scale_control",
+    "cases.C8_blinded_scale_control.truth_model": "true null with the Branch-A scale multiplied by a hidden c on a DUPLICATE branch that never touches primary data",
+    "cases.C8_blinded_scale_control.uses_p1_block1": false,
+    "cases.C8_blinded_scale_control.v4_classification": "RETAINED UNCHANGED",
+    "cases.C8_blinded_scale_control.v4_classification_note": "",
+    "cases.order": [
+      "C1_true_bridge_complete",
+      "C2_geometry_false_rejection",
+      "C3_g5_block",
+      "C4_surrogate_validity",
+      "C5_plug_in_branch_a",
+      "C6_mode_resolution_boundary",
+      "C7_false_bridge",
+      "C8_blinded_scale_control"
+    ],
+    "driver.entry_point": "run_campaign",
+    "driver.module": "e1a_v4.validation.campaign_driver",
+    "driver.path": "e1a_v4/validation/campaign_driver.py",
+    "execution_authorised": false,
+    "execution_seal.state": "PRE_DRIVER",
+    "execution_stage": "synthetic_validation",
+    "failure_classifications": [
+      "SOFTWARE_OR_INVARIANT_FAILURE",
+      "CALIBRATION_FAILURE",
+      "STATISTICAL_SIZE_FAILURE",
+      "TRUE_BRIDGE_POWER_FAILURE",
+      "FALSE_BRIDGE_DISCRIMINATION_FAILURE",
+      "STRUCTURED_REFUSAL_EXCESS",
+      "MODE_RESOLUTION_FAILURE",
+      "BLINDED_SCALE_CONTROL_FAILURE",
+      "NUMERICAL_OR_PRECISION_FAILURE",
+      "VALIDATION_INCONCLUSIVE",
+      "VALIDATION_PASS"
+    ],
+    "final_campaign.requirements.0": "1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)",
+    "final_campaign.requirements.1": "2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field",
+    "final_campaign.requirements.2": "3. C3 produces no STATISTICAL_SIZE_FAILURE",
+    "final_campaign.requirements.3": "4. C4 produces no STATISTICAL_SIZE_FAILURE",
+    "final_campaign.requirements.4": "5. C5 satisfies its already-frozen plug-in Branch-A criterion",
+    "final_campaign.requirements.5": "6. C6 satisfies its already-frozen mode-resolution criterion",
+    "final_campaign.requirements.6": "7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)",
+    "final_campaign.requirements.7": "8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)",
+    "final_campaign.requirements.8": "9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs",
+    "final_campaign.requirements.9": "10. structured refusals counted exactly per the already-frozen unconditional denominator rule",
+    "final_campaign.rule": "CONJUNCTIVE. Every required case must pass on its own terms.",
+    "final_campaign.verdict_on_success": "VALIDATION_PASS",
+    "frozen_identities.analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
+    "frozen_identities.baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
+    "frozen_identities.calibration_artifact_schema": "e1a_v4_block1_calibration/2",
+    "frozen_identities.contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
+    "frozen_identities.contract_version": "1.1.0",
+    "frozen_identities.design_sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
+    "frozen_identities.foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+    "frozen_identities.implementation_file_hashes_digest": "787b8f5cef19a3eb7aa328282c421970cabbf9aae1060c4927bbdbd4476a6c5b",
+    "frozen_identities.implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
+    "output_schema.aggregate_fields": [
       "success_count",
       "failure_count",
       "refusal_count",
@@ -356,9 +703,9 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "scale_control_recovery",
       "classification"
     ],
-    "directory": "results/e1a_v4_validation",
-    "manifest_schema": "e1a_v4_validation_manifest/2",
-    "per_record_fields": [
+    "output_schema.directory": "results/e1a_v4_validation",
+    "output_schema.manifest_schema": "e1a_v4_validation_manifest/2",
+    "output_schema.per_record_fields": [
       "case_id",
       "subcondition_id",
       "replicate_id",
@@ -385,72 +732,12 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "plan_sha256",
       "implementation_commit"
     ],
-    "record_schema": "e1a_v4_validation_result/2"
+    "output_schema.record_schema": "e1a_v4_validation_result/2",
+    "plan_id": "e1a_v4_synthetic_validation",
+    "plan_version": "1.8.0",
+    "seed_map_sha256": "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce"
   },
-  "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.7.0",
-  "release_criteria": {
-    "assurance": [
-      {
-        "bound": "Clopper-Pearson one-sided LOWER",
-        "confidence_level": 0.95,
-        "quantity": "complete true-bridge pipeline success",
-        "replicates": 300,
-        "target": ">= 0.90"
-      },
-      {
-        "bound": "Clopper-Pearson one-sided LOWER (inflation test)",
-        "confidence_level": 0.95,
-        "quantity": "P1 false-rejection rate, per field",
-        "replicates": 400,
-        "target": "alpha_geom = 0.005"
-      },
-      {
-        "bound": "Clopper-Pearson one-sided LOWER (inflation test)",
-        "confidence_level": 0.95,
-        "quantity": "block-2 (G5) rejection rate",
-        "replicates": 400,
-        "target": "alpha_2 = 0.001"
-      },
-      {
-        "bound": "Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test)",
-        "confidence_level": 0.95,
-        "quantity": "Block-1 achieved size under the surrogate",
-        "replicates": 2000,
-        "target": "alpha_1 = 0.004"
-      },
-      {
-        "bound": "Clopper-Pearson one-sided UPPER",
-        "confidence_level": 0.95,
-        "quantity": "false-bridge acceptance, per alternative",
-        "replicates": 400,
-        "target": "<= 0.025 per alternative"
-      },
-      {
-        "bound": "Clopper-Pearson one-sided LOWER",
-        "confidence_level": 0.95,
-        "quantity": "blinded scale recovery beta_hat * c",
-        "replicates": 200,
-        "target": ">= 0.90 paired-control success"
-      }
-    ],
-    "final_campaign_requirements": [
-      "1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)",
-      "2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field",
-      "3. C3 produces no STATISTICAL_SIZE_FAILURE",
-      "4. C4 produces no STATISTICAL_SIZE_FAILURE",
-      "5. C5 satisfies its already-frozen plug-in Branch-A criterion",
-      "6. C6 satisfies its already-frozen mode-resolution criterion",
-      "7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)",
-      "8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)",
-      "9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs",
-      "10. structured refusals counted exactly per the already-frozen unconditional denominator rule"
-    ],
-    "final_campaign_rule": "CONJUNCTIVE. Every required case must pass on its own terms.",
-    "final_campaign_verdict_on_success": "VALIDATION_PASS"
-  },
-  "schema": "e1a_v4_plan_authority/1",
-  "seed_map_sha256": "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce"
+  "schema": "e1a_v4_plan_authority/2"
 }
 ```
 
@@ -459,6 +746,11 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
 ---
 
 ## 2. Adopted rules, unchanged
+
+These are the frozen scientific decision rules. The table and the forbidden list below are
+**generated** from the JSON plan and verified byte-for-byte at every preflight.
+
+<!-- BEGIN GENERATED ADOPTED RULES -- do not hand-edit -->
 
 | rule | value |
 |---|---|
@@ -472,11 +764,13 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
 | `theta_cap_deg` | `5.0` |
 | `rank_tol` | `1e-12` |
 | `pipeline_target` | `0.9` |
-| `P3_applies_to` | `EVERY tested field` |
-| `P4_classification` | `DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK` |
-| `multiplicity_correction` | `NONE - intersection-union test` |
+| `P3_applies_to` | `"EVERY tested field"` |
+| `P4_classification` | `"DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK"` |
+| `multiplicity_correction` | `"NONE - intersection-union test"` |
 
 Forbidden and unchanged: **Bonferroni correction**; **fixed-B0 normalisation**; **power-spectrum / corner-frequency / equipartition Branch-A calibration**.
+
+<!-- END GENERATED ADOPTED RULES -->
 
 ---
 
@@ -484,31 +778,51 @@ Forbidden and unchanged: **Bonferroni correction**; **fixed-B0 normalisation**; 
 
 Eight cases, one per scientifically required purpose traceable to committed or adopted authority. P2 (cross-field) and P3 (absolute) are NOT separate generating cases: they are endpoints evaluated on C1's data so the shared reference-field dependence and the common-mode calibration error are preserved. Simulating the three P2 ratios independently, or reverting P3 to reference-only, would destroy exactly the structure being validated. The count is eight because eight purposes are required, not to preserve a historical number.
 
+Every case section below is **generated** from the JSON plan, including each
+subcondition's complete declared parameters. A subcondition parameter that is not
+rendered here is not declared: `feeds_primary_claim`, `beta_true` and `scale_factors`
+used to exist only in the JSON, so a reader could not see them drift.
+
+<!-- BEGIN GENERATED CASES -- do not hand-edit -->
+
 ### `C1_true_bridge_complete` — primary
 
 **Purpose.** Does the implemented COMPLETE pipeline (P1 AND P2 AND P3 AND P4) achieve the adopted >= 0.90 target?
 
 | | |
 |---|---|
-| v4 classification | **NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION** |
+| v4 classification | NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION |
+| v4 classification note |  |
 | authority | design section 15 items 4 and 10; contract complete_pipeline.target_true_bridge_success |
 | truth model | K_theta = H_theta with beta_true = 1 at every field |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | complete pass in the large majority of replicates |
-| seed family | `validation` |
-| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **YES** |
-| requires Block-1 calibration | **YES** |
-| primary release endpoint | `COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4` |
-| calibration scope | **REPLICATE_CONDITIONAL** |
-| subconditions (4) | `sigma_psi_0p0`, `sigma_psi_0p2`, `sigma_psi_0p5`, `sigma_psi_1p0` |
-| calibration artifacts | **4,800** — 300 replicates x 4 subconditions x 4 fields requiring calibration = 4,800 |
-| replicate count | **300** |
+| seed family | validation |
+| allowed seed families | `"calibration"` `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `true` |
+| requires Block-1 calibration | `true` |
+| primary release endpoint | COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4 |
+| Block-1 role | PRIMARY_RELEASE_ENDPOINT |
+| calibration scope | REPLICATE_CONDITIONAL |
+| fields requiring calibration | `4` |
+| calibration artifacts | `4800` |
+| calibration artifact basis | 300 replicates x 4 subconditions x 4 fields requiring calibration = 4,800 |
+| subcondition count | `4` |
+| replicate count | `300` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `sigma_psi_0p0` | `{"feeds_primary_claim":false,"g3_role":"SECONDARY","sigma_psi_deg":0.0}` |
+| `sigma_psi_0p2` | `{"feeds_primary_claim":false,"g3_role":"SECONDARY","sigma_psi_deg":0.2}` |
+| `sigma_psi_0p5` | `{"feeds_primary_claim":true,"g3_role":"PRIMARY","sigma_psi_deg":0.5}` |
+| `sigma_psi_1p0` | `{"feeds_primary_claim":false,"g3_role":"STRESS","sigma_psi_deg":1.0}` |
 
 **Pass / fail criterion.** Clopper-Pearson one-sided 95% LOWER bound on the complete-pass rate >= 0.90; requires >= 279/300. An observed proportion above 0.90 is NOT sufficient by itself.
 
@@ -518,26 +832,38 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 
 | | |
 |---|---|
-| v4 classification | **RETAINED BUT UPDATED FOR V4** |
-| classification note | alpha_geom 1% -> 0.5%, two-block union rule |
+| v4 classification | RETAINED BUT UPDATED FOR V4 |
+| v4 classification note | alpha_geom 1% -> 0.5%, two-block union rule |
 | authority | design section 15 item 3 |
 | truth model | true null K_theta = H_theta |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | false rejection at or below alpha_geom = 0.5% |
-| seed family | `validation` |
-| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **YES** |
-| requires Block-1 calibration | **YES** |
-| primary release endpoint | `P1_FALSE_REJECTION_RATE_PER_FIELD` |
-| calibration scope | **REPLICATE_CONDITIONAL** |
-| subconditions (4) | `sigma_psi_0p0`, `sigma_psi_0p2`, `sigma_psi_0p5`, `sigma_psi_1p0` |
-| calibration artifacts | **6,400** — 400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400 |
-| replicate count | **400** |
+| seed family | validation |
+| allowed seed families | `"calibration"` `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `true` |
+| requires Block-1 calibration | `true` |
+| primary release endpoint | P1_FALSE_REJECTION_RATE_PER_FIELD |
+| Block-1 role | PRIMARY_RELEASE_ENDPOINT |
+| calibration scope | REPLICATE_CONDITIONAL |
+| fields requiring calibration | `4` |
+| calibration artifacts | `6400` |
+| calibration artifact basis | 400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400 |
+| subcondition count | `4` |
+| replicate count | `400` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `sigma_psi_0p0` | `{"feeds_primary_claim":false,"g3_role":"SECONDARY","sigma_psi_deg":0.0}` |
+| `sigma_psi_0p2` | `{"feeds_primary_claim":false,"g3_role":"SECONDARY","sigma_psi_deg":0.2}` |
+| `sigma_psi_0p5` | `{"feeds_primary_claim":true,"g3_role":"PRIMARY","sigma_psi_deg":0.5}` |
+| `sigma_psi_1p0` | `{"feeds_primary_claim":false,"g3_role":"STRESS","sigma_psi_deg":1.0}` |
 
 **Pass / fail criterion.** PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. Secondary gross-inflation diagnostic (CP upper <= 0.03) may be reported but is not validation of alpha_geom.
 
@@ -547,41 +873,53 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 
 | | |
 |---|---|
-| v4 classification | **NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION** |
+| v4 classification | NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION |
+| v4 classification note |  |
 | authority | design section 15 item 8 |
 | truth model | true null; G5 computed from generated trajectories, never as an independent companion variable |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | block-2 achieved size consistent with alpha_2 = 0.1%; delta-method error quantified |
-| seed family | `validation` |
-| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **YES** |
-| requires Block-1 calibration | **YES** |
-| primary release endpoint | `G5_BLOCK_SIZE` |
-| calibration scope | **REPLICATE_CONDITIONAL** |
-| subconditions (4) | `sigma_psi_0p0`, `sigma_psi_0p2`, `sigma_psi_0p5`, `sigma_psi_1p0` |
-| calibration artifacts | **6,400** — 400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400 |
-| replicate count | **400** |
+| seed family | validation |
+| allowed seed families | `"calibration"` `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `true` |
+| requires Block-1 calibration | `true` |
+| primary release endpoint | G5_BLOCK_SIZE |
+| Block-1 role | SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC |
+| calibration scope | REPLICATE_CONDITIONAL |
+| fields requiring calibration | `4` |
+| calibration artifacts | `6400` |
+| calibration artifact basis | 400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400 |
+| subcondition count | `4` |
+| replicate count | `400` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `sigma_psi_0p0` | `{"feeds_primary_claim":false,"g3_role":"SECONDARY","sigma_psi_deg":0.0}` |
+| `sigma_psi_0p2` | `{"feeds_primary_claim":false,"g3_role":"SECONDARY","sigma_psi_deg":0.2}` |
+| `sigma_psi_0p5` | `{"feeds_primary_claim":true,"g3_role":"PRIMARY","sigma_psi_deg":0.5}` |
+| `sigma_psi_1p0` | `{"feeds_primary_claim":false,"g3_role":"STRESS","sigma_psi_deg":1.0}` |
 
 **Pass / fail criterion.** R = 400, nominal alpha_2 = 0.001. Inflation is detected iff CP_lower(G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE. 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.
 
-### C3 semantics — resolved prospectively
+#### `C3_g5_block` semantics — resolved prospectively
 
 | | |
 |---|---|
-| primary release endpoint | **`G5_BLOCK_SIZE`** |
+| status | AMBIGUITY RESOLVED PROSPECTIVELY, before any random outcome exists |
+| primary release endpoint | G5_BLOCK_SIZE |
 | release criterion | UNCHANGED: R = 400, nominal alpha_2 = 0.001, CP_lower(G5 rejections, 400) > 0.001 detects inflation; 0-2 clean, 3+ STATISTICAL_SIZE_FAILURE |
-| requires Block-1 calibration | **True** |
-| Block-1 role | **`SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC`** |
-| joint P1 result changes the C3 release verdict | **False** |
-
-**Why calibration is retained.** the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input.
-
-**Forbidden.** adding any new C3 release threshold based on Block 1 or on the joint P1 result. The release verdict depends only on the already-frozen Block-2 / G5 size criterion.
+| requires Block-1 calibration | `true` |
+| Block-1 role | SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC |
+| joint P1 result changes the C3 release verdict | `false` |
+| why calibration is retained | the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input. |
+| what is forbidden | adding any new C3 release threshold based on Block 1 or on the joint P1 result. The release verdict depends only on the already-frozen Block-2 / G5 size criterion. |
 
 ### `C4_surrogate_validity` — primary
 
@@ -589,25 +927,35 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 
 | | |
 |---|---|
-| v4 classification | **NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION** |
+| v4 classification | NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION |
+| v4 classification note |  |
 | authority | design section 15 item 5; design Appendix classification of the surrogate as an APPROXIMATION |
 | truth model | calibration from the surrogate, validation from the declared OU process |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | achieved Block-1 rejection rate close to alpha_1 = 0.4% |
-| seed family | `calibration + validation` |
-| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **YES** |
-| requires Block-1 calibration | **YES** |
-| primary release endpoint | `BLOCK1_ACHIEVED_SIZE` |
-| calibration scope | **REPLICATE_CONDITIONAL** |
-| subconditions (1) | `primary` |
-| calibration artifacts | **8,000** — 2000 replicates x 1 subconditions x 4 fields requiring calibration = 8,000 |
-| replicate count | **2000** |
+| seed family | calibration + validation |
+| allowed seed families | `"calibration"` `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `true` |
+| requires Block-1 calibration | `true` |
+| primary release endpoint | BLOCK1_ACHIEVED_SIZE |
+| Block-1 role | PRIMARY_RELEASE_ENDPOINT |
+| calibration scope | REPLICATE_CONDITIONAL |
+| fields requiring calibration | `4` |
+| calibration artifacts | `8000` |
+| calibration artifact basis | 2000 replicates x 1 subconditions x 4 fields requiring calibration = 8,000 |
+| subcondition count | `1` |
+| replicate count | `2000` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `primary` | `{}` |
 
 **Pass / fail criterion.** R = 2000, nominal alpha_1 = 0.004. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation: detected iff CP_lower(rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. The binary diagnostic does not replace the discrepancy report.
 
@@ -617,25 +965,46 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 
 | | |
 |---|---|
-| v4 classification | **NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION** |
+| v4 classification | NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION |
+| v4 classification note |  |
 | authority | design section 15 item 6 |
 | truth model | true null; analysis receives only the Branch-A measured field |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | swept: sigma_k in {0, 0.5%, 1%} x sigma_psi in {0, 0.2, 0.5, 1.0} degrees, 12 cells |
+| Branch-A uncertainty scenario | swept: sigma_k in {0, 0.5%, 1%} x sigma_psi in {0, 0.2, 0.5, 1.0} degrees, 12 cells |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | achieved size degrades as sigma_psi grows; the magnitude is the result |
-| seed family | `validation + branch_a_measurement` |
-| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **YES** |
-| requires Block-1 calibration | **YES** |
-| primary release endpoint | `P1_REJECTION_RATE_PER_CELL` |
-| calibration scope | **REPLICATE_CONDITIONAL** |
-| subconditions (12) | `sk0p00_sp0p0`, `sk0p00_sp0p2`, `sk0p00_sp0p5`, `sk0p00_sp1p0`, `sk0p50_sp0p0`, `sk0p50_sp0p2`, `sk0p50_sp0p5`, `sk0p50_sp1p0`, `sk1p00_sp0p0`, `sk1p00_sp0p2`, `sk1p00_sp0p5`, `sk1p00_sp1p0` |
-| calibration artifacts | **19,200** — 400 replicates x 12 subconditions x 4 fields requiring calibration = 19,200 |
-| replicate count | **400** |
+| seed family | validation + branch_a_measurement |
+| allowed seed families | `"calibration"` `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `true` |
+| requires Block-1 calibration | `true` |
+| primary release endpoint | P1_REJECTION_RATE_PER_CELL |
+| Block-1 role | PRIMARY_RELEASE_ENDPOINT |
+| calibration scope | REPLICATE_CONDITIONAL |
+| fields requiring calibration | `4` |
+| calibration artifacts | `19200` |
+| calibration artifact basis | 400 replicates x 12 subconditions x 4 fields requiring calibration = 19,200 |
+| subcondition count | `12` |
+| replicate count | `400` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `sk0p00_sp0p0` | `{"sigma_k":0.0,"sigma_psi_deg":0.0}` |
+| `sk0p00_sp0p2` | `{"sigma_k":0.0,"sigma_psi_deg":0.2}` |
+| `sk0p00_sp0p5` | `{"sigma_k":0.0,"sigma_psi_deg":0.5}` |
+| `sk0p00_sp1p0` | `{"sigma_k":0.0,"sigma_psi_deg":1.0}` |
+| `sk0p50_sp0p0` | `{"sigma_k":0.005,"sigma_psi_deg":0.0}` |
+| `sk0p50_sp0p2` | `{"sigma_k":0.005,"sigma_psi_deg":0.2}` |
+| `sk0p50_sp0p5` | `{"sigma_k":0.005,"sigma_psi_deg":0.5}` |
+| `sk0p50_sp1p0` | `{"sigma_k":0.005,"sigma_psi_deg":1.0}` |
+| `sk1p00_sp0p0` | `{"sigma_k":0.01,"sigma_psi_deg":0.0}` |
+| `sk1p00_sp0p2` | `{"sigma_k":0.01,"sigma_psi_deg":0.2}` |
+| `sk1p00_sp0p5` | `{"sigma_k":0.01,"sigma_psi_deg":0.5}` |
+| `sk1p00_sp1p0` | `{"sigma_k":0.01,"sigma_psi_deg":1.0}` |
 
 **Pass / fail criterion.** report the Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate in EVERY one of the 12 declared cells, R = 400 each. No cell may be dropped after inspection.
 
@@ -645,84 +1014,122 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 
 | | |
 |---|---|
-| v4 classification | **NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION** |
+| v4 classification | NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION |
+| v4 classification note |  |
 | authority | design section 15 item 7; design section 10 |
 | truth model | true null at rho = boundary, boundary -20%, boundary +20% |
-| fields affected | synthetic two-mode field at the declared rho |
+| fields affected | `"synthetic two-mode field at the declared rho"` |
 | beta truth | `1.0` |
 | geometry truth | rho in {1.019573, 1.024467, 1.029360} at N_12 = 224726 |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | merge below the boundary, split above; size controlled on both sides |
-| seed family | `validation` |
-| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **YES** |
-| requires Block-1 calibration | **YES** |
-| primary release endpoint | `P1_REJECTION_RATE_PER_RHO` |
-| calibration scope | **REPLICATE_CONDITIONAL** |
-| subconditions (3) | `rho_1p019573`, `rho_1p024467`, `rho_1p029360` |
-| calibration artifacts | **1,200** — 400 replicates x 3 subconditions x 1 fields requiring calibration = 1,200 |
-| replicate count | **400** |
+| seed family | validation |
+| allowed seed families | `"calibration"` `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `true` |
+| requires Block-1 calibration | `true` |
+| primary release endpoint | P1_REJECTION_RATE_PER_RHO |
+| Block-1 role | PRIMARY_RELEASE_ENDPOINT |
+| calibration scope | REPLICATE_CONDITIONAL |
+| fields requiring calibration | `1` |
+| calibration artifacts | `1200` |
+| calibration artifact basis | 400 replicates x 3 subconditions x 1 fields requiring calibration = 1,200 |
+| subcondition count | `3` |
+| replicate count | `400` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `rho_1p019573` | `{"rho":1.019573,"role":"boundary -20%"}` |
+| `rho_1p024467` | `{"rho":1.024467,"role":"boundary"}` |
+| `rho_1p029360` | `{"rho":1.02936,"role":"boundary +20%"}` |
 
 **Pass / fail criterion.** Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate <= 3% at each of the three declared rho, R = 400 each; report the merge/split decision rate at each. theta_cap MUST NOT be changed after observing the result.
 
-### `C7_false_bridge` — negative control
+### `C7_false_bridge` — negative_control
 
 **Purpose.** Probability of incorrectly ACCEPTING a false bridge, for every declared non-commensurable alternative including the hard near-margin case
 
 | | |
 |---|---|
-| v4 classification | **RETAINED BUT UPDATED FOR V4** |
-| classification note | evaluated against the all-field P3 and the IUT P2 |
+| v4 classification | RETAINED BUT UPDATED FOR V4 |
+| v4 classification note | evaluated against the all-field P3 and the IUT P2 |
 | authority | design section 13; contract false_bridge_controls |
 | truth model | beta_theta = (1,1.06,1,1); (1,0.93,1.05,1); (1,1,1,1.10); hard (1,1.025,1,1) |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
-| beta truth | `per alternative` |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
+| beta truth | per alternative |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | acceptance close to zero for the coarse alternatives; the hard 2.5% case is the informative one |
-| seed family | `validation` |
-| allowed seed families | `validation`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **NO** |
-| requires Block-1 calibration | **NO** |
-| primary release endpoint | `P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE` |
-| calibration scope | **NOT_APPLICABLE** |
-| subconditions (4) | `alt_1_06`, `alt_0_93_1_05`, `alt_1_10`, `hard_1_025` |
-| calibration artifacts | **0** — 0 - this case evaluates no P1 / Block-1 quantity |
-| replicate count | **400** |
+| seed family | validation |
+| allowed seed families | `"validation"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `false` |
+| requires Block-1 calibration | `false` |
+| calibration not required because | its frozen endpoints do not evaluate any P1 / Block-1 quantity. p1_geometry is the ONLY consumer of a CalibrationArtifact in the package, and this case never reaches it. Generating one would add a calibration refusal path that cannot affect the science but CAN affect the outcome. |
+| primary release endpoint | P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE |
+| Block-1 role | NONE |
+| calibration scope | NOT_APPLICABLE |
+| fields requiring calibration | `0` |
+| calibration artifacts | `0` |
+| calibration artifact basis | 0 - this case evaluates no P1 / Block-1 quantity |
+| subcondition count | `4` |
+| replicate count | `400` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `alt_1_06` | `{"beta_true":[1,1.06,1,1]}` |
+| `alt_0_93_1_05` | `{"beta_true":[1,0.93,1.05,1]}` |
+| `alt_1_10` | `{"beta_true":[1,1,1,1.1]}` |
+| `hard_1_025` | `{"beta_true":[1,1.025,1,1],"role":"hard near-margin case"}` |
 
 **Pass / fail criterion.** For EACH declared alternative INDEPENDENTLY: one-sided 95% Clopper-Pearson UPPER bound on the false-acceptance rate <= 0.025 over R = 400, i.e. <= 4/400; 5 or more fails. Counts are never pooled and easy and hard alternatives are never averaged. [disposition G2, closed prospectively]
 
-### `C8_blinded_scale_control` — positive control
+### `C8_blinded_scale_control` — positive_control
 
 **Purpose.** Blinded duplicate-branch scale control: Branch-A declared scale multiplied by a hidden c, analysis must recover beta = 1/c
 
 | | |
 |---|---|
-| v4 classification | **RETAINED UNCHANGED** |
+| v4 classification | RETAINED UNCHANGED |
+| v4 classification note |  |
 | authority | baseline section 14.2 (committed); design section 13 |
 | truth model | true null with the Branch-A scale multiplied by a hidden c on a DUPLICATE branch that never touches primary data |
-| fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
-| beta truth | `1/c on the blinded branch` |
+| fields affected | `"theta0_circular"` `"theta1_power"` `"theta2_ellipse"` `"theta3_temperature"` |
+| beta truth | 1/c on the blinded branch |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty scenario | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty status | STOCHASTIC_PER_REPLICATE |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | beta_hat on the blinded branch concentrates on 1/c |
-| seed family | `blinded_scale_control` |
-| allowed seed families | `blinded_scale_control`, `branch_a_measurement` |
-| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
-| uses P1 / Block 1 | **NO** |
-| requires Block-1 calibration | **NO** |
-| primary release endpoint | `P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY` |
-| calibration scope | **NOT_APPLICABLE** |
-| subconditions (1) | `paired_scale_control` |
-| calibration artifacts | **0** — 0 - this case evaluates no P1 / Block-1 quantity |
-| replicate count | **200** |
+| seed family | blinded_scale_control |
+| allowed seed families | `"blinded_scale_control"` `"branch_a_measurement"` |
+| uses P1 / Block 1 | `false` |
+| requires Block-1 calibration | `false` |
+| calibration not required because | its frozen endpoints do not evaluate any P1 / Block-1 quantity. p1_geometry is the ONLY consumer of a CalibrationArtifact in the package, and this case never reaches it. Generating one would add a calibration refusal path that cannot affect the science but CAN affect the outcome. |
+| primary release endpoint | P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY |
+| Block-1 role | NONE |
+| calibration scope | NOT_APPLICABLE |
+| fields requiring calibration | `0` |
+| calibration artifacts | `0` |
+| calibration artifact basis | 0 - this case evaluates no P1 / Block-1 quantity |
+| subcondition count | `1` |
+| replicate count | `200` |
+
+**Declared subconditions.** Every parameter is shown; a subcondition parameter that is not rendered here is not declared.
+
+| subcondition | declared parameters |
+|---|---|
+| `paired_scale_control` | `{"pairing":"INTENTIONAL: both factors act on the SAME underlying synthetic replicate by the frozen deterministic Branch-A scale transform. They are NOT independent random subconditions and must not be given separate streams.","scale_factors":[1.07,0.9]}` |
 
 **Pass / fail criterion.** beta_tilde_theta = c * beta_hat_theta must satisfy the SAME P3 absolute-equivalence rule (delta_abs = 0.05, z_abs = 1.959963985, h_theta = z sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)) at EVERY tested field, for BOTH c = 1.07 and c = 0.90; any non-ESTIMATED field fails that branch. One replicate succeeds only if both branches pass. Campaign: one-sided 95% Clopper-Pearson LOWER bound on paired-control success >= 0.90 over R = 200, i.e. >= 188/200. [disposition G1, closed prospectively]
+
+<!-- END GENERATED CASES -->
 
 
 ## 4. Generating model
@@ -952,14 +1359,20 @@ artifact reuse is **forbidden**, and canonical numerical equivalence is not rede
 
 ## 6. Statistical assurance
 
-| quantity | target | estimator | bound | R | acceptance rule |
-|---|---|---|---|---:|---|
-| complete true-bridge pipeline success | `>= 0.90` | complete-pass proportion over declared replicates | Clopper-Pearson one-sided LOWER | 300 | >= 279 / 300 complete passes |
-| P1 false-rejection rate, per field | `alpha_geom = 0.005` | Clopper-Pearson one-sided LOWER (inflation test) | 400 | no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field |
-| block-2 (G5) rejection rate | `alpha_2 = 0.001` | Clopper-Pearson one-sided LOWER (inflation test) | 400 | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400 |
-| Block-1 achieved size under the surrogate | `alpha_1 = 0.004` | Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test) | 2000 | discrepancy REPORTED and classified; additionally no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000 |
-| false-bridge acceptance, per alternative | `<= 0.025 per alternative` | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
-| blinded scale recovery beta_hat * c | `>= 0.90 paired-control success` | Clopper-Pearson one-sided LOWER | 200 | >= 188 / 200 paired-control successes |
+The release criteria. **Generated** from the JSON plan and verified at every preflight.
+
+<!-- BEGIN GENERATED ASSURANCE -- do not hand-edit -->
+
+| quantity | target | confidence | estimator | bound | R | acceptance rule |
+|---|---|---:|---|---|---:|---|
+| complete true-bridge pipeline success | `>= 0.90` | `0.95` | complete-pass proportion over declared replicates | Clopper-Pearson one-sided LOWER | `300` | >= 279 / 300 complete passes |
+| P1 false-rejection rate, per field | `alpha_geom = 0.005` | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field |
+| block-2 (G5) rejection rate | `alpha_2 = 0.001` | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400 |
+| Block-1 achieved size under the surrogate | `alpha_1 = 0.004` | `0.95` | rejection proportion | Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test) | `2000` | discrepancy REPORTED and classified; additionally no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000 |
+| false-bridge acceptance, per alternative | `<= 0.025 per alternative` | `0.95` | acceptance proportion | Clopper-Pearson one-sided UPPER | `400` | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
+| blinded scale recovery beta_hat * c | `>= 0.90 paired-control success` | `0.95` | distribution of beta_hat * c | Clopper-Pearson one-sided LOWER | `200` | >= 188 / 200 paired-control successes |
+
+<!-- END GENERATED ASSURANCE -->
 
 **Complete-pass denominator:** every declared validation replicate. structured refusals COUNT AS FAILURES for complete-pipeline success permitted only when explicitly labelled SECONDARY, reported beside the unconditional figure refusal counts AND reasons are reported.
 
@@ -1143,23 +1556,44 @@ All three gaps identified in the previous frozen package are now closed **before
 before any outcome was observed**. They complete missing *validation* rules; they do **not**
 redesign the E1a bridge.
 
-### G1 — affects `C8` — **CLOSED PROSPECTIVELY**
+<!-- BEGIN GENERATED RELEASE RULES -- do not hand-edit -->
+
+#### G1 — affects `C8` — **CLOSED PROSPECTIVELY**
 
 **Gap.** blinded scale control had no quantitative recovery criterion beyond beta = 1/c
 
 **Resolution.** beta_tilde = c * beta_hat must satisfy the SAME P3 absolute-equivalence construction (delta_abs = 0.05, z_abs = 1.959963985) at EVERY tested field for BOTH c = 1.07 and c = 0.90; a replicate succeeds only if both branches pass. Campaign: one-sided 95% CP LOWER bound >= 0.90 over R = 200, i.e. >= 188/200.
 
-### G2 — affects `C7` — **CLOSED PROSPECTIVELY**
+#### G2 — affects `C7` — **CLOSED PROSPECTIVELY**
 
 **Gap.** false-bridge alternatives had no maximum acceptable acceptance rate
 
 **Resolution.** maximum false-acceptance probability 0.025, tied to the equivalence test's one-sided nominal level at z = 1.959963985 and NOT derived from any observed outcome. Per alternative INDEPENDENTLY: one-sided 95% CP UPPER bound <= 0.025 over R = 400, i.e. <= 4/400. Counts are never pooled.
 
-### G3 — affects `C1, C2, C3` — **CLOSED PROSPECTIVELY**
+#### G3 — affects `C1, C2, C3` — **CLOSED PROSPECTIVELY**
 
 **Gap.** sigma_psi was recorded in the contract as 'to be declared'
 
 **Resolution.** PRIMARY RELEASE SCENARIO sigma_psi = 0.5 degrees; the complete true-bridge >= 0.90 claim is asserted there. 0.0 and 0.2 degrees are secondary lower-uncertainty sensitivity cases; 1.0 degree is a stress/robustness case. All are reported, none is pooled into the primary result, and the stress case neither redefines the primary criterion nor is removed if it performs poorly.
+
+#### Final campaign classification
+
+**Verdict on success.** `VALIDATION_PASS`
+
+**Rule.** CONJUNCTIVE. Every required case must pass on its own terms.
+
+1. 1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)
+2. 2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field
+3. 3. C3 produces no STATISTICAL_SIZE_FAILURE
+4. 4. C4 produces no STATISTICAL_SIZE_FAILURE
+5. 5. C5 satisfies its already-frozen plug-in Branch-A criterion
+6. 6. C6 satisfies its already-frozen mode-resolution criterion
+7. 7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)
+8. 8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)
+9. 9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs
+10. 10. structured refusals counted exactly per the already-frozen unconditional denominator rule
+
+<!-- END GENERATED RELEASE RULES -->
 
 ### Superseded package
 
@@ -1223,27 +1657,14 @@ operating-quantile discrepancy report; the binary diagnostic does not replace th
 
 ## 12b. Final campaign classification — FROZEN PROSPECTIVELY
 
-A final **`VALIDATION_PASS`** requires **all** of the following. CONJUNCTIVE. Every required case must pass on its own terms. There is **no weighted score** and **no compensation** between cases.
+A final **`VALIDATION_PASS`** requires **all** of the declared requirements. CONJUNCTIVE.
+Every required case must pass on its own terms. There is **no weighted score** and **no
+compensation** between cases.
 
-1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)
-
-2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field
-
-3. C3 produces no STATISTICAL_SIZE_FAILURE
-
-4. C4 produces no STATISTICAL_SIZE_FAILURE
-
-5. C5 satisfies its already-frozen plug-in Branch-A criterion
-
-6. C6 satisfies its already-frozen mode-resolution criterion
-
-7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)
-
-8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)
-
-9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs
-
-10. structured refusals counted exactly per the already-frozen unconditional denominator rule
+> The verdict, the rule and the numbered requirements are rendered **once**, in the
+> generated release-rules region in section 12. They were previously restated here as
+> well, unchecked; a second hand-maintained copy of a release rule is exactly the drift
+> this package now refuses, so this section points at the generated one instead.
 
 > complete-pipeline achievement and component size cleanliness are REPORTED SEPARATELY and never collapsed. A campaign may fail because complete-pipeline success < target even with no significant size-inflation diagnostic: a valid scientific failure. Conversely C1 may reach >= 0.90 while a component case detects significant size inflation: also a validation failure, because the implemented calibration is not behaving according to its declared nominal structure. Both facts are reported.
 
@@ -1344,7 +1765,8 @@ touched.
 ```
 execution seal state            = PRE_DRIVER
 expected execution identity     = null   (deliberately NOT YET FROZEN)
-official campaign driver        = e1a_v4/validation/campaign_driver.py  (ABSENT)
+official campaign driver        = e1a_v4/validation/campaign_driver.py (canonical, identity-bound)
+official campaign driver state  = ABSENT   (a runtime fact, checked by the execution gate)
 execution_authorised            = false
 ```
 

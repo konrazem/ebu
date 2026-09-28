@@ -138,10 +138,13 @@ def test_case_declarations() -> None:
         nxt = md.find("\n### ", start + 5)
         nxt2 = md.find("\n## ", start + 5)
         block = md[start:min(x for x in (nxt, nxt2, len(md)) if x != -1)]
-        ok = (f"**{case['calibration_artifact_count']:,}**" in block
-              and f"**{case['calibration_scope']}**" in block
-              and f"| subconditions ({case['subcondition_count']}) |" in block
-              and all(f"`{sub['subcondition_id']}`" in block
+        # section 3 is now GENERATED from the JSON, so the rendering changed:
+        # scalars render as `value` and every subcondition gets its own row with
+        # its COMPLETE declared parameters. The substance checked is unchanged.
+        ok = (f"| calibration artifacts | `{case['calibration_artifact_count']}` |" in block
+              and f"| calibration scope | {case['calibration_scope']} |" in block
+              and f"| subcondition count | `{case['subcondition_count']}` |" in block
+              and all(f"| `{sub['subcondition_id']}` | `" in block
                       for sub in case["subconditions"]))
         check(f"markdown and JSON agree on {case['case_id']} scope", ok)
 

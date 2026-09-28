@@ -30,7 +30,14 @@ from ..identity import SCIENTIFIC_MODULES, procedure_identity
 from ..numerics import Refusal
 from . import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON, VALIDATION_IDENTITY
 from .coherence import require_plan_authority_coherence
+from .driver import driver_identity_component
+from .refusals import (
+    ContractIdentityMismatch, ExecutionIdentityMismatch, FrozenSourceMismatch,
+    ImplementationHashMismatch, OutputCollision, PlanAnalysisIdentityMismatch,
+    PlanStructureInvalid, SeedMapNotReproducible, UnexpectedExecutionStage,
+)
 from .seal import load_seal, require_seal_plan_agreement
+from .strict_json import strict_load_file
 from .scope import (
     BRANCH_A_STATUS_KEY, CALIBRATION_SCOPE_KEY, CAMPAIGN_CALIBRATION_SCOPE,
     REQUIRES_CALIBRATION_KEY, SUBCONDITION_ID_KEY, SUBCONDITIONS_KEY,
@@ -48,13 +55,16 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/classification.py",
     "e1a_v4/validation/coherence.py",
     "e1a_v4/validation/dispositions.py",
+    "e1a_v4/validation/driver.py",
     "e1a_v4/validation/generate.py",
     "e1a_v4/validation/plan.py",
+    "e1a_v4/validation/refusals.py",
     "e1a_v4/validation/results.py",
     "e1a_v4/validation/runner.py",
     "e1a_v4/validation/scope.py",
     "e1a_v4/validation/seal.py",
     "e1a_v4/validation/seeds.py",
+    "e1a_v4/validation/strict_json.py",
 )
 
 REQUIRED_PLAN_KEYS = (
@@ -89,16 +99,16 @@ def require_output_schema_agreement(root: str, plan: dict[str, Any]) -> None:
 
 
 def load_plan(root: str = ".") -> dict[str, Any]:
-    path = os.path.join(root, PLAN_JSON)
-    if not os.path.exists(path):
-        raise Refusal(f"validation plan absent: {path}")
-    with open(path, encoding="utf-8") as handle:
-        plan = json.load(handle)
+    # STRICT: duplicate object keys at any depth refuse. `json.load` keeps the LAST
+    # duplicate while a human reads the FIRST, so an ambiguous authority document
+    # would parse cleanly and mislead every reader.
+    plan = strict_load_file(os.path.join(root, PLAN_JSON), "the validation plan")
     for key in REQUIRED_PLAN_KEYS:
         if key not in plan:
-            raise Refusal(f"validation plan missing required section {key!r}")
+            raise PlanStructureInvalid(
+                f"validation plan missing required section {key!r}")
     if plan["plan_id"] != "e1a_v4_synthetic_validation":
-        raise Refusal(f"unexpected plan_id {plan['plan_id']!r}")
+        raise PlanStructureInvalid(f"unexpected plan_id {plan['plan_id']!r}")
     known = {f.value for f in ValidationSeedFamily}
     for case in plan["cases"]:
         cid = case.get("case_id", "<unnamed>")
@@ -139,11 +149,7 @@ def load_plan(root: str = ".") -> dict[str, Any]:
 
 
 def load_seed_map(root: str = ".") -> dict[str, Any]:
-    path = os.path.join(root, SEED_MAP_JSON)
-    if not os.path.exists(path):
-        raise Refusal(f"seed map absent: {path}")
-    with open(path, encoding="utf-8") as handle:
-        return json.load(handle)
+    return strict_load_file(os.path.join(root, SEED_MAP_JSON), "the seed map")
 
 
 def execution_identity(
@@ -167,6 +173,11 @@ def execution_identity(
         "plan_sha256": plan_sha256,
         "plan_markdown_sha256": sha256_file(os.path.join(root, PLAN_MARKDOWN)),
         "seed_map_sha256": seed_map_sha256,
+        # The CANONICAL campaign driver's own file hash, or the sentinel "ABSENT".
+        # Always in the preimage, so the identity is defined at every lifecycle
+        # stage AND moves the moment a real driver appears. That is precisely why
+        # today's value is a PRE-DRIVER diagnostic and not a seal.
+        "official_campaign_driver_sha256": driver_identity_component(root),
     }
     text = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
@@ -233,7 +244,7 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     # --- the frozen-execution rule: the EXACT adopted contract, nothing else ----
     actual_contract = sha256_file(os.path.join(root, DESIGN_CONTRACT))
     if actual_contract != frozen["contract_sha256"]:
-        raise Refusal(
+        raise ContractIdentityMismatch(
             "FROZEN EXECUTION REFUSED: contract identity is "
             f"{actual_contract} but the validation plan is frozen against "
             f"{frozen['contract_sha256']}. A general analysis may read a modified "
@@ -244,27 +255,30 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
                       ("baseline_sha256", "docs/theory/EBU_THEORY_BASELINE.md")):
         actual = sha256_file(os.path.join(root, path))
         if actual != frozen[key]:
-            raise Refusal(f"FROZEN EXECUTION REFUSED: {path} is {actual}, frozen {frozen[key]}")
+            raise FrozenSourceMismatch(
+                f"FROZEN EXECUTION REFUSED: {path} is {actual}, frozen {frozen[key]}")
 
     analysis = procedure_identity(binding, {}, root)
     if analysis != frozen["analysis_procedure_identity"]:
-        raise Refusal(
+        raise PlanAnalysisIdentityMismatch(
             f"FROZEN EXECUTION REFUSED: analysis procedure identity is {analysis}, "
             f"frozen {frozen['analysis_procedure_identity']}"
         )
     for path in SCIENTIFIC_MODULES:
         actual = sha256_file(os.path.join(root, path))
         if actual != frozen["implementation_file_hashes"][path]:
-            raise Refusal(f"FROZEN EXECUTION REFUSED: {path} changed since the freeze")
+            raise ImplementationHashMismatch(
+                f"FROZEN EXECUTION REFUSED: {path} changed since the freeze")
     if frozen["implementation_work_commit"] != plan["frozen_identities"]["implementation_work_commit"]:
-        raise Refusal("plan is internally inconsistent about the implementation commit")
+        raise PlanStructureInvalid(
+            "plan is internally inconsistent about the implementation commit")
 
     plan_sha = sha256_file(os.path.join(root, PLAN_JSON))
     seed_sha = sha256_file(os.path.join(root, SEED_MAP_JSON))
     raw_map = load_seed_map(root)
     derived = FrozenSeedMap.derive(actual_contract, raw_map["campaign"])
     if derived.as_json()["families"] != raw_map["families"] or derived.master != raw_map["master_seed"]:
-        raise Refusal(
+        raise SeedMapNotReproducible(
             "FROZEN EXECUTION REFUSED: the committed seed map does not reproduce from its "
             "own declared derivation. Seeds must be mechanical, never hand-edited."
         )
@@ -276,7 +290,7 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     # campaign driver does not exist. The authoritative expectation, once frozen,
     # lives in the EXTERNAL seal, because the plan itself is inside the preimage.
     if "final_expected_execution_identity" not in frozen:
-        raise Refusal(
+        raise PlanStructureInvalid(
             "FROZEN EXECUTION REFUSED: the plan omits the "
             "final_expected_execution_identity slot. An absent slot is "
             "indistinguishable from a forgotten freeze; declare it explicitly as "
@@ -285,12 +299,12 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     expected = frozen["final_expected_execution_identity"]
     if expected is not None:
         if not (isinstance(expected, str) and re.fullmatch(r"[0-9a-f]{64}", expected)):
-            raise Refusal(
+            raise PlanStructureInvalid(
                 "FROZEN EXECUTION REFUSED: final_expected_execution_identity must be "
                 f"null or a 64-character lowercase hex digest; found {expected!r}"
             )
         if exec_id != expected:
-            raise Refusal(
+            raise ExecutionIdentityMismatch(
                 f"FROZEN EXECUTION REFUSED: execution identity is {exec_id}, "
                 f"frozen {expected}"
             )
@@ -298,11 +312,12 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     out = output_dir or plan["output_schema"]["directory"]
     out_abs = os.path.join(root, out)
     if os.path.exists(out_abs) and os.listdir(out_abs):
-        raise Refusal(
+        raise OutputCollision(
             f"FROZEN EXECUTION REFUSED: output collision, {out} already contains results. "
             "A failed or superseded campaign is preserved, never overwritten."
         )
     if plan["execution_stage"] != "synthetic_validation":
-        raise Refusal(f"unexpected execution stage {plan['execution_stage']!r}")
+        raise UnexpectedExecutionStage(
+            f"unexpected execution stage {plan['execution_stage']!r}")
 
     return ExecutionBinding(binding, plan, derived, plan_sha, seed_sha, analysis, exec_id, out)
