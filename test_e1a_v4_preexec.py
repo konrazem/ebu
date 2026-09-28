@@ -266,11 +266,18 @@ def test_plan() -> None:
     check("no Bonferroni and no fixed-B0 may return",
           "Bonferroni correction" in PLAN["adopted_rules_unchanged"]["forbidden"]
           and "fixed-B0 normalisation" in PLAN["adopted_rules_unchanged"]["forbidden"])
-    check("three authority gaps are recorded, none invented away",
+    check("three author dispositions are recorded",
           [g["id"] for g in PLAN["authority_gaps"]] == ["G1", "G2", "G3"])
-    check("gap cases carry no invented criterion",
-          all("NOT DECLARED IN ADOPTED AUTHORITY" in a["acceptance_rule"]
-              for a in PLAN["assurance"] if "AUTHORITY GAP" in str(a["target"])))
+    check("all three are CLOSED PROSPECTIVELY",
+          all(g["status"] == "CLOSED PROSPECTIVELY" for g in PLAN["authority_gaps"]))
+    check("no assurance row still says the criterion is undeclared",
+          not any("NOT DECLARED IN ADOPTED AUTHORITY" in a["acceptance_rule"]
+                  for a in PLAN["assurance"]))
+    check("the superseded package is recorded, not erased",
+          PLAN["superseded_package"]["work_commit"].startswith("475633c")
+          and "preserved" in PLAN["superseded_package"])
+    check("execution_authorised is still false after the dispositions",
+          PLAN["execution_authorised"] is False)
     md = open(os.path.join(ROOT, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md"),
               encoding="utf-8").read()
     for c in PLAN["cases"]:
@@ -319,8 +326,13 @@ def test_identities() -> None:
     check("execution identity differs from the analysis identity", e1 != a)
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
-    check("all 7 validation modules enter the execution identity",
-          len(VALIDATION_MODULES) == 7)
+    check("every validation module enters the execution identity",
+          len(VALIDATION_MODULES) == 8
+          and "e1a_v4/validation/dispositions.py" in VALIDATION_MODULES,
+          f"{len(VALIDATION_MODULES)} modules")
+    for p in VALIDATION_MODULES:
+        check(f"validation module present on disk: {p}",
+              os.path.exists(os.path.join(ROOT, p)))
     for p in SCIENTIFIC_MODULES:
         check(f"frozen hash matches on disk: {p}",
               PLAN["frozen_identities"]["implementation_file_hashes"][p]

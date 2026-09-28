@@ -21,7 +21,10 @@ from . import DESIGN_CONTRACT, DESIGN_DOCUMENT, FROZEN_FOUNDATION, WORKING_BASEL
 from .numerics import Refusal
 
 SUPPORTED_CONTRACT_IDS = ("e1a_v4_prospective_design",)
-SUPPORTED_MAJOR_MINOR = ("1.0",)
+SUPPORTED_MAJOR_MINOR = ("1.0", "1.1")
+#: 1.1 adds the synthetic-validation release criteria (dispositions G1/G2) and a numeric
+#: sigma_psi (disposition G3). It changes NO analysis decision rule; the coherence checks
+#: below are unchanged and still enforced.
 
 #: Keys whose absence makes the contract unusable. Fail closed, never default.
 REQUIRED_TOP_LEVEL = (

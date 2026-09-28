@@ -1,6 +1,6 @@
 {
   "contract_id": "e1a_v4_prospective_design",
-  "contract_version": "1.0.1",
+  "contract_version": "1.1.0",
   "created": "2026-09-28",
   "experiment": "E1a - canonical Einstein-EBU benchmark realisation",
   "status": "PROSPECTIVE DESIGN ONLY. Implementation, pre-execution validation, the synthetic validation campaign, preregistration and physical execution each require separate authorization. Adoption of these rules is not evidence that they perform as intended.",
@@ -22,8 +22,8 @@
       },
       "design_document": {
         "path": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
-        "sha256": "f20bc885bf400ce3429120e4a0e42915ba2fb15249d88914fd7e55eb1b373f68",
-        "byte_count": 27188
+        "sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
+        "byte_count": 29330
       }
     }
   },
@@ -216,10 +216,25 @@
     "sigma_fs_derived": 0.00242747,
     "sigma_fs_formula": "sqrt(sigma_k^2/m + (sigma_T/T)^2)",
     "sigma_cm": 0.0115,
-    "sigma_psi": "to be declared; gate-limiting, dominant for G3",
     "T_total_s": 240.0,
     "dt_s": 0.00012,
-    "sufficiency": "a SUFFICIENT candidate scenario for validation; NOT demonstrated necessary"
+    "sufficiency": "a SUFFICIENT candidate scenario for validation; NOT demonstrated necessary",
+    "sigma_psi_deg": 0.5,
+    "sigma_psi_deg_classification": {
+      "primary_release_scenario": 0.5,
+      "secondary_lower_uncertainty_sensitivity": [
+        0.0,
+        0.2
+      ],
+      "stress_robustness": [
+        1.0
+      ],
+      "grid_source": "design section 15 item 6 declared set {0.0, 0.2, 0.5, 1.0} degrees",
+      "primary_claim": "the complete true-bridge >= 0.90 validation claim is asserted at sigma_psi = 0.5 degrees",
+      "reporting_rule": "results at 0.0, 0.2 and 1.0 degrees MUST be reported and MUST NOT be pooled into the primary >= 0.90 result; the 1.0 degree stress case does not redefine the primary release criterion and is not removed if it performs poorly",
+      "status": "HYPOTHETICAL SYNTHETIC UNCERTAINTY SCENARIO. Not a claim that any real apparatus has demonstrated 0.5 degree orientation uncertainty.",
+      "disposition": "G3, closed prospectively before execution"
+    }
   },
   "complete_pipeline": {
     "target_true_bridge_success": 0.9,
@@ -337,5 +352,49 @@
       "E1A_V4_REPORT.md Part II section 5.6 corner-frequency route - superseded for E1a",
       "E1A_V4_REPORT.md finite-bath remainder - units error (1 mm^3 vs 1 uL) and unjustified 3 N kB heat capacity; a first correction pass then used c_P, inconsistent with a derivation in C_V. Authoritative statement is now symbolic in C_V and the numerical illustration is non-normative."
     ]
+  },
+  "synthetic_validation_release_criteria": {
+    "note": "G1 and G2 close two pre-execution authority gaps. They are SYNTHETIC-VALIDATION release criteria only: they do not change P1, P2, P3, P4 or any primary-data analysis rule.",
+    "G1_blinded_scale_control": {
+      "disposition": "G1, closed prospectively before execution",
+      "scientific_target": "beta_blinded = 1/c (committed, baseline section 14.2)",
+      "scale_factors": [
+        1.07,
+        0.9
+      ],
+      "transform": "beta_tilde_theta = c * beta_hat_theta_blinded ; should equal 1",
+      "equivalence_construction": "the SAME absolute-equivalence construction already adopted for P3; no new tolerance is introduced",
+      "delta": 0.05,
+      "z": 1.959963985,
+      "half_width": "h_theta = z * sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)",
+      "branch_rule": "branch for factor c passes iff, for EVERY tested field, beta_tilde(1-h) >= 1-delta AND beta_tilde(1+h) <= 1+delta",
+      "non_estimated_field": "fails that blinded branch",
+      "replicate_rule": "one C8 replicate succeeds iff the c=1.07 branch AND the c=0.90 branch both pass at all four fields",
+      "primary_data": "the underlying primary synthetic observations are NOT altered to create the control",
+      "campaign_criterion": {
+        "replicates": 200,
+        "bound": "one-sided 95% Clopper-Pearson LOWER",
+        "target": 0.9,
+        "integer_threshold": 188,
+        "threshold_derivation": "smallest k with cp_lower(k,200) >= 0.90; verified, not copied"
+      },
+      "scope": "tests recovery of a deliberately changed Branch-A scale. Does not change P3, does not change the primary-data analysis, and is not part of the primary E1a evidence."
+    },
+    "G2_false_bridge_discrimination": {
+      "disposition": "G2, closed prospectively before execution",
+      "alternatives_unchanged": true,
+      "definition": "false acceptance = the equivalence pipeline accepts the alternative as compatible",
+      "max_false_acceptance_probability": 0.025,
+      "tie": "tied prospectively to the existing equivalence-test one-sided nominal level associated with z = 1.959963985; NOT derived from observed validation outcomes",
+      "campaign_criterion": {
+        "replicates_per_alternative": 400,
+        "bound": "one-sided 95% Clopper-Pearson UPPER",
+        "target": 0.025,
+        "integer_threshold": 4,
+        "threshold_derivation": "largest k with cp_upper(k,400) <= 0.025; verified, not copied",
+        "five_or_more_fails": true
+      },
+      "independence": "each declared alternative must INDEPENDENTLY satisfy the rule; counts are never pooled and easy and hard alternatives are never averaged"
+    }
   }
 }

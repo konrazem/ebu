@@ -21,11 +21,11 @@ The official runner refuses to execute if any of these differs.
 
 | item | sha256 / value |
 |---|---|
-| design contract | `89a935dd98b08a13c9fca62ae6b8b12c8f76297df6d87a62877716bbed45600c` |
-| prospective design | `f20bc885bf400ce3429120e4a0e42915ba2fb15249d88914fd7e55eb1b373f68` |
+| design contract | `91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b` |
+| prospective design | `e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495` |
 | frozen foundation | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
 | working baseline | `0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa` |
-| analysis procedure identity | `1983ba3af64cd62480feb642ce83f38cf7d2e5f06bf9398b41b81fe1f864648c` |
+| analysis procedure identity | `af1177a9d3220f60f78ef738bbee6c925da3ed632b68a9f51830fffe5e985eb4` |
 | implementation work commit | `e4b73d7fbd84d329f4326af443fd1918bc44a874` |
 
 Implementation file hashes are frozen for all 12 analysis modules; see the JSON.
@@ -92,7 +92,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi from the design section 15 item 6 declared set |
+| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | complete pass in the large majority of replicates |
 | seed family | `validation` |
@@ -113,7 +113,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | false rejection at or below alpha_geom = 0.5% |
 | seed family | `validation` |
@@ -133,7 +133,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | fields affected | theta0_circular, theta1_power, theta2_ellipse, theta3_temperature |
 | beta truth | `1.0` |
 | geometry truth | as declared per field |
-| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K |
+| Branch-A uncertainty | frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3] |
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | block-2 achieved size consistent with alpha_2 = 0.1%; delta-method error quantified |
 | seed family | `validation` |
@@ -220,7 +220,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | seed family | `validation` |
 | replicate count | **400** |
 
-**Pass / fail criterion.** report the Clopper-Pearson one-sided 95% UPPER bound on the acceptance rate for EVERY alternative, R = 400 each. NO adopted maximum acceptance rate exists -- see authority_gaps G2. The criterion must be declared BEFORE execution.
+**Pass / fail criterion.** For EACH declared alternative INDEPENDENTLY: one-sided 95% Clopper-Pearson UPPER bound on the false-acceptance rate <= 0.025 over R = 400, i.e. <= 4/400; 5 or more fails. Counts are never pooled and easy and hard alternatives are never averaged. [disposition G2, closed prospectively]
 
 ### `C8_blinded_scale_control` — positive control
 
@@ -240,9 +240,8 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | seed family | `blinded_scale_control` |
 | replicate count | **200** |
 
-**Pass / fail criterion.** report the distribution of beta_hat * c. NO quantitative recovery tolerance exists in adopted authority -- see authority_gaps G1. The criterion must be declared BEFORE execution.
+**Pass / fail criterion.** beta_tilde_theta = c * beta_hat_theta must satisfy the SAME P3 absolute-equivalence rule (delta_abs = 0.05, z_abs = 1.959963985, h_theta = z sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)) at EVERY tested field, for BOTH c = 1.07 and c = 0.90; any non-ESTIMATED field fails that branch. One replicate succeeds only if both branches pass. Campaign: one-sided 95% Clopper-Pearson LOWER bound on paired-control success >= 0.90 over R = 200, i.e. >= 188/200. [disposition G1, closed prospectively]
 
----
 
 ## 4. Generating model
 
@@ -316,8 +315,8 @@ Artifact filenames: `calibration/block1_theta0_circular.json`, `calibration/bloc
 | P1 false-rejection rate, per field | `alpha_geom = 0.005` | rejection proportion | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.03, i.e. <= 6 rejections of 400 |
 | block-2 (G5) rejection rate | `alpha_2 = 0.001` | rejection proportion | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.03 |
 | Block-1 achieved size under the surrogate | `alpha_1 = 0.004` | rejection proportion | Clopper-Pearson two-sided | 2000 | REPORTED and classified; the discrepancy is the result |
-| false-bridge acceptance, per alternative | `AUTHORITY GAP G2` | acceptance proportion | Clopper-Pearson one-sided UPPER | 400 | NOT DECLARED IN ADOPTED AUTHORITY - must be declared before execution |
-| blinded scale recovery beta_hat * c | `AUTHORITY GAP G1` | distribution of beta_hat * c | reported | 200 | NOT DECLARED IN ADOPTED AUTHORITY - must be declared before execution |
+| false-bridge acceptance, per alternative | `<= 0.025 per alternative` | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
+| blinded scale recovery beta_hat * c | `>= 0.90 paired-control success` | Clopper-Pearson one-sided LOWER | 200 | >= 188 / 200 paired-control successes |
 
 **Complete-pass denominator:** every declared validation replicate. structured refusals COUNT AS FAILURES for complete-pipeline success permitted only when explicitly labelled SECONDARY, reported beside the unconditional figure refusal counts AND reasons are reported.
 
@@ -338,12 +337,12 @@ hand_picked_values     False
 
 | family | seed |
 |---|---:|
-| master | `12737552942663785904` |
-| `blinded_scale_control` | `9479310386300230328` |
-| `branch_a_measurement` | `11004995623645776693` |
-| `calibration` | `15379082101033647447` |
-| `confirmatory` | `9585841150145721670` |
-| `validation` | `11476631527835384658` |
+| master | `13785910525869478477` |
+| `blinded_scale_control` | `11987123625083329897` |
+| `branch_a_measurement` | `62746336670861162` |
+| `calibration` | `6644164099584621674` |
+| `confirmatory` | `9827224290341944517` |
+| `validation` | `5088042359768187837` |
 
 `branch_a_measurement` is its **own** family: Branch-A measurement error is exogenous
 randomness the analysis never sees, so it never reuses the Branch-B trajectory stream. The
@@ -405,37 +404,37 @@ Reproduction: seed family + master seed + case id + replicate index regenerate a
 
 ---
 
-## 12. Authority gaps — AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION
+## 12. Author dispositions — CLOSED PROSPECTIVELY
 
-These are identified **now**, before execution, precisely so that no criterion is chosen after
-results are seen. **None is invented here.**
+All three gaps identified in the previous frozen package are now closed **before execution and
+before any outcome was observed**. They complete missing *validation* rules; they do **not**
+redesign the E1a bridge.
 
-### G1 — affects `C8`
+### G1 — affects `C8` — **CLOSED PROSPECTIVELY**
 
-**Gap.** blinded scale control has no quantitative recovery criterion beyond beta = 1/c
+**Gap.** blinded scale control had no quantitative recovery criterion beyond beta = 1/c
 
-**Source.** baseline section 14.2 and design section 13 state the target but no tolerance or coverage rule
+**Resolution.** beta_tilde = c * beta_hat must satisfy the SAME P3 absolute-equivalence construction (delta_abs = 0.05, z_abs = 1.959963985) at EVERY tested field for BOTH c = 1.07 and c = 0.90; a replicate succeeds only if both branches pass. Campaign: one-sided 95% CP LOWER bound >= 0.90 over R = 200, i.e. >= 188/200.
 
-**Resolution.** AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION. Not chosen here, and must not be chosen after execution.
+### G2 — affects `C7` — **CLOSED PROSPECTIVELY**
 
-### G2 — affects `C7`
+**Gap.** false-bridge alternatives had no maximum acceptable acceptance rate
 
-**Gap.** false-bridge alternatives have no maximum acceptable acceptance rate
+**Resolution.** maximum false-acceptance probability 0.025, tied to the equivalence test's one-sided nominal level at z = 1.959963985 and NOT derived from any observed outcome. Per alternative INDEPENDENTLY: one-sided 95% CP UPPER bound <= 0.025 over R = 400, i.e. <= 4/400. Counts are never pooled.
 
-**Source.** design section 13 states 'acceptance = failure to detect' but sets no numeric criterion
+### G3 — affects `C1, C2, C3` — **CLOSED PROSPECTIVELY**
 
-**Resolution.** AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION.
+**Gap.** sigma_psi was recorded in the contract as 'to be declared'
 
-### G3 — affects `C1, C2, C3`
+**Resolution.** PRIMARY RELEASE SCENARIO sigma_psi = 0.5 degrees; the complete true-bridge >= 0.90 claim is asserted there. 0.0 and 0.2 degrees are secondary lower-uncertainty sensitivity cases; 1.0 degree is a stress/robustness case. All are reported, none is pooled into the primary result, and the stress case neither redefines the primary criterion nor is removed if it performs poorly.
 
-**Gap.** sigma_psi is recorded in the contract as 'to be declared'
+### Superseded package
 
-**Source.** contract hypothetical_uncertainty_scenario.sigma_psi
-
-**Resolution.** The plan evaluates these cases at EVERY sigma_psi in the design section 15 item 6 declared set {0, 0.2, 0.5, 1.0} degrees rather than inventing one value. The author must fix which sigma_psi the >= 0.90 target is asserted at.
+The previous frozen pre-execution package — work commit `475633c`, report commit
+`b4b2575` — was **execution-blocked** by G1–G3 and is superseded
+**prospectively** by this closure. neither commit is rewritten, amended or deleted; the historical report is retained as provenance.
 
 ---
-
 ## 13. Execution
 
 Preflight, which runs today and draws nothing:

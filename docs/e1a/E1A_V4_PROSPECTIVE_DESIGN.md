@@ -316,7 +316,7 @@ None is a measured apparatus capability. None is a necessary instrument limit.**
 | `sigma_T` | thermometry | 0.1 K |
 | `sigma_fs` | field-specific, **derived** `sqrt(sigma_k^2/m + (sigma_T/T)^2)` | 0.242747% |
 | `sigma_cm` | common-mode calibration, one draw per experiment | 1.15% |
-| `sigma_psi` | Branch-A trap-axis orientation | to be declared; gate-limiting |
+| `sigma_psi` | Branch-A trap-axis orientation | **0.5°** primary; grid {0.0, 0.2, 0.5, 1.0}° |
 | `T_total` | record length per field | 240 s |
 | `dt` | sampling interval | 1.2e-4 s |
 
@@ -333,6 +333,20 @@ Which term limits what:
 > `sigma_k <= 0.34%` and `sigma_cm <= 1.15%` are a **sufficient hypothetical candidate scenario
 > for validation**. They are **not** demonstrated necessary instrument limits: no search over the
 > parameter space was performed and the budget bound is conservative.
+
+### 11.1 Orientation uncertainty — primary, secondary and stress (disposition G3)
+
+`sigma_psi` was previously recorded as "to be declared". It is now fixed **prospectively, before
+execution**:
+
+| role | `sigma_psi` | treatment |
+|---|---:|---|
+| **PRIMARY RELEASE SCENARIO** | **0.5°** | the complete true-bridge **≥ 0.90** validation claim is asserted here |
+| secondary, lower-uncertainty sensitivity | 0.0°, 0.2° | reported, never pooled into the primary result |
+| stress / robustness | 1.0° | reported; does **not** redefine the primary release criterion, and is **not** removed if it performs poorly |
+
+This remains a **hypothetical synthetic uncertainty scenario**. It is **not** a claim that any real
+apparatus has demonstrated 0.5° orientation uncertainty.
 
 ---
 
@@ -468,6 +482,16 @@ Mandatory before preregistration. **Not started.**
 | 8 | G5 block delta-method error quantified |
 | 9 | every declared job reconciled by status |
 | 10 | complete-pipeline success reported **unconditionally** |
+| 11 | **blinded scale control (disposition G1)**: with `beta_tilde = c·beta_hat_blinded`, the **same** P3 absolute-equivalence construction (`delta_abs = 5%`, `z_abs = 1.959963985`) must accept at **every** tested field for **both** `c = 1.07` and `c = 0.90`; a replicate succeeds only if both branches pass. Campaign criterion: one-sided 95% Clopper–Pearson **lower** bound ≥ 0.90 over R = 200, i.e. **≥ 188/200** |
+| 12 | **false-bridge discrimination (disposition G2)**: for **each declared alternative independently**, the one-sided 95% Clopper–Pearson **upper** bound on false acceptance must be ≤ **0.025** over R = 400, i.e. **≤ 4/400**. Counts are never pooled and easy and hard alternatives are never averaged |
+
+Items 11 and 12 are **synthetic-validation release criteria only**. They close two pre-execution
+authority gaps and change **no** primary-data analysis rule: P1, P2, P3 and P4, the margins, the
+coverage factors, the alpha allocations, `theta_cap`, `rank_tol`, the four physical fields, the
+complete-pipeline target and the anti-circularity rules are all unchanged. The 0.025 ceiling in item
+12 is tied prospectively to the equivalence test's one-sided nominal level at `z = 1.959963985`; it
+is **not** derived from any observed outcome. Item 11 reuses the P3 construction rather than
+introducing a new tolerance.
 
 Knowing the synthetic generating model is **software validation**. It is not physical
 verification of that model, and no synthetic result may be reported as evidence about the

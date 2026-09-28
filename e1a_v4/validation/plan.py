@@ -34,6 +34,7 @@ from .seeds import FrozenSeedMap, ValidationSeedFamily
 VALIDATION_MODULES = (
     "e1a_v4/validation/__init__.py",
     "e1a_v4/validation/calibrate.py",
+    "e1a_v4/validation/dispositions.py",
     "e1a_v4/validation/generate.py",
     "e1a_v4/validation/plan.py",
     "e1a_v4/validation/results.py",

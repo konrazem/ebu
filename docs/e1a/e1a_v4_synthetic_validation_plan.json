@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.0.0",
+  "plan_version": "1.1.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -11,8 +11,8 @@
     "rule": "Any mismatch between the two is an integrity failure requiring fail-closed refusal."
   },
   "frozen_identities": {
-    "contract_sha256": "89a935dd98b08a13c9fca62ae6b8b12c8f76297df6d87a62877716bbed45600c",
-    "design_sha256": "f20bc885bf400ce3429120e4a0e42915ba2fb15249d88914fd7e55eb1b373f68",
+    "contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
+    "design_sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
     "foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
     "baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
     "implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
@@ -20,7 +20,7 @@
       "e1a_v4/__init__.py": "0b67a89c562d82eb1f4a03603e075d66e0f70826ab7a848e57f4518bd12bdca4",
       "e1a_v4/branch_a.py": "748c2e86e59d3ed6638147aa322cdf113636e8aa5c9c2b93ec8d4b0a9ec0461f",
       "e1a_v4/calibration.py": "b16453466e5ec6ef5351a55ecab25aed26482cf51d9bdd20728b88a56d9420e6",
-      "e1a_v4/contract.py": "e72970b542989bd75f5bd2a89003c87ff1b7821c2d19c43b20df33b30b06b4d6",
+      "e1a_v4/contract.py": "4e1b595ebaf73bd8d1e723201d05c10ad23b4ab8a6faf02b7d89842e682d0465",
       "e1a_v4/effective_size.py": "88030960ecc9260fb19a44afbbc8116c212bf35addb5ed0d036af751a079a164",
       "e1a_v4/endpoints.py": "e09189527bfcf39cf165ce6fa5f06d56fc05cb308ba3e59cc3386e83203bc6aa",
       "e1a_v4/geometry.py": "959b446b01d96a7c5243e65876970d78c57e1e8150298204a35429040f62967f",
@@ -30,11 +30,12 @@
       "e1a_v4/status.py": "853a4cf9c602ee4fdc28391969eb7a7ea7157cc71316cf3c86e003d5777ecc8f",
       "e1a_v4/world.py": "64a27ca9cb95b09333ca65aa0eecebeb80f9573d06cd8d08c188668eb7cbc033"
     },
-    "analysis_procedure_identity": "1983ba3af64cd62480feb642ce83f38cf7d2e5f06bf9398b41b81fe1f864648c",
+    "analysis_procedure_identity": "af1177a9d3220f60f78ef738bbee6c925da3ed632b68a9f51830fffe5e985eb4",
     "execution_identity": "",
     "execution_identity_note": "derived at preflight from the plan sha256, the seed-map sha256, the validation module hashes and the analysis identity. Left empty here because embedding it would be self-referential; it is recorded in docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md and recomputed by preflight.",
     "analysis_procedure_identity_configuration": {},
-    "analysis_procedure_identity_note": "procedure_identity(binding, configuration={}, root). The configuration mapping is part of the identity, so a different configuration yields a different digest by design: the implementation report quoted the {'stage': 'bounded_implementation'} variant 8dd48f42f7ccd259a76e50ef4e1ee4c0a3c5b43986bc54d75438b1acdf15dbe0. The EMPTY configuration is the one frozen for official execution, and preflight recomputes exactly that."
+    "analysis_procedure_identity_note": "procedure_identity(binding, configuration={}, root). The configuration mapping is part of the identity, so a different configuration yields a different digest by design: the implementation report quoted the {'stage': 'bounded_implementation'} variant 8dd48f42f7ccd259a76e50ef4e1ee4c0a3c5b43986bc54d75438b1acdf15dbe0. The EMPTY configuration is the one frozen for official execution, and preflight recomputes exactly that.",
+    "contract_version": "1.1.0"
   },
   "adopted_rules_unchanged": {
     "delta_cross": 0.02,
@@ -71,7 +72,7 @@
       ],
       "beta_truth": 1.0,
       "geometry_truth": "as declared per field",
-      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi from the design section 15 item 6 declared set",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3]",
       "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
       "expected_qualitative_outcome": "complete pass in the large majority of replicates",
       "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% LOWER bound on the complete-pass rate >= 0.90; requires >= 279/300. An observed proportion above 0.90 is NOT sufficient by itself.",
@@ -94,7 +95,7 @@
       ],
       "beta_truth": 1.0,
       "geometry_truth": "as declared per field",
-      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3]",
       "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
       "expected_qualitative_outcome": "false rejection at or below alpha_geom = 0.5%",
       "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% UPPER bound <= 3% at EVERY declared field, R = 400 each (max 6 rejections). An UPPER bound is required; a lower bound cannot demonstrate control.",
@@ -117,7 +118,7 @@
       ],
       "beta_truth": 1.0,
       "geometry_truth": "as declared per field",
-      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
+      "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg secondary and 1.0 deg stress, reported separately and never pooled [disposition G3]",
       "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
       "expected_qualitative_outcome": "block-2 achieved size consistent with alpha_2 = 0.1%; delta-method error quantified",
       "formal_pass_fail_criterion": "Clopper-Pearson one-sided 95% UPPER bound on the block-2 rejection rate <= 3%, R = 400; report the measured sd(g2) against the leading-order 24 A4 / n prediction.",
@@ -209,7 +210,7 @@
       "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
       "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
       "expected_qualitative_outcome": "acceptance close to zero for the coarse alternatives; the hard 2.5% case is the informative one",
-      "formal_pass_fail_criterion": "report the Clopper-Pearson one-sided 95% UPPER bound on the acceptance rate for EVERY alternative, R = 400 each. NO adopted maximum acceptance rate exists -- see authority_gaps G2. The criterion must be declared BEFORE execution.",
+      "formal_pass_fail_criterion": "For EACH declared alternative INDEPENDENTLY: one-sided 95% Clopper-Pearson UPPER bound on the false-acceptance rate <= 0.025 over R = 400, i.e. <= 4/400; 5 or more fails. Counts are never pooled and easy and hard alternatives are never averaged. [disposition G2, closed prospectively]",
       "seed_family": "validation",
       "replicate_count": 400,
       "role": "negative_control",
@@ -232,7 +233,7 @@
       "branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
       "branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
       "expected_qualitative_outcome": "beta_hat on the blinded branch concentrates on 1/c",
-      "formal_pass_fail_criterion": "report the distribution of beta_hat * c. NO quantitative recovery tolerance exists in adopted authority -- see authority_gaps G1. The criterion must be declared BEFORE execution.",
+      "formal_pass_fail_criterion": "beta_tilde_theta = c * beta_hat_theta must satisfy the SAME P3 absolute-equivalence rule (delta_abs = 0.05, z_abs = 1.959963985, h_theta = z sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)) at EVERY tested field, for BOTH c = 1.07 and c = 0.90; any non-ESTIMATED field fails that branch. One replicate succeeds only if both branches pass. Campaign: one-sided 95% Clopper-Pearson LOWER bound on paired-control success >= 0.90 over R = 200, i.e. >= 188/200. [disposition G1, closed prospectively]",
       "seed_family": "blinded_scale_control",
       "replicate_count": 200,
       "role": "positive_control",
@@ -390,21 +391,21 @@
     },
     {
       "quantity": "false-bridge acceptance, per alternative",
-      "target": "AUTHORITY GAP G2",
+      "target": "<= 0.025 per alternative",
       "confidence_level": 0.95,
       "estimator": "acceptance proportion",
       "bound": "Clopper-Pearson one-sided UPPER",
       "replicates": 400,
-      "acceptance_rule": "NOT DECLARED IN ADOPTED AUTHORITY - must be declared before execution"
+      "acceptance_rule": "upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently"
     },
     {
       "quantity": "blinded scale recovery beta_hat * c",
-      "target": "AUTHORITY GAP G1",
+      "target": ">= 0.90 paired-control success",
       "confidence_level": 0.95,
       "estimator": "distribution of beta_hat * c",
-      "bound": "reported",
+      "bound": "Clopper-Pearson one-sided LOWER",
       "replicates": 200,
-      "acceptance_rule": "NOT DECLARED IN ADOPTED AUTHORITY - must be declared before execution"
+      "acceptance_rule": ">= 188 / 200 paired-control successes"
     }
   ],
   "complete_pass_denominator": {
@@ -524,24 +525,24 @@
   "authority_gaps": [
     {
       "id": "G1",
-      "gap": "blinded scale control has no quantitative recovery criterion beyond beta = 1/c",
-      "source": "baseline section 14.2 and design section 13 state the target but no tolerance or coverage rule",
+      "gap": "blinded scale control had no quantitative recovery criterion beyond beta = 1/c",
       "affects": "C8",
-      "resolution": "AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION. Not chosen here, and must not be chosen after execution."
+      "status": "CLOSED PROSPECTIVELY",
+      "resolution": "beta_tilde = c * beta_hat must satisfy the SAME P3 absolute-equivalence construction (delta_abs = 0.05, z_abs = 1.959963985) at EVERY tested field for BOTH c = 1.07 and c = 0.90; a replicate succeeds only if both branches pass. Campaign: one-sided 95% CP LOWER bound >= 0.90 over R = 200, i.e. >= 188/200."
     },
     {
       "id": "G2",
-      "gap": "false-bridge alternatives have no maximum acceptable acceptance rate",
-      "source": "design section 13 states 'acceptance = failure to detect' but sets no numeric criterion",
+      "gap": "false-bridge alternatives had no maximum acceptable acceptance rate",
       "affects": "C7",
-      "resolution": "AUTHOR DISPOSITION REQUIRED BEFORE EXECUTION."
+      "status": "CLOSED PROSPECTIVELY",
+      "resolution": "maximum false-acceptance probability 0.025, tied to the equivalence test's one-sided nominal level at z = 1.959963985 and NOT derived from any observed outcome. Per alternative INDEPENDENTLY: one-sided 95% CP UPPER bound <= 0.025 over R = 400, i.e. <= 4/400. Counts are never pooled."
     },
     {
       "id": "G3",
-      "gap": "sigma_psi is recorded in the contract as 'to be declared'",
-      "source": "contract hypothetical_uncertainty_scenario.sigma_psi",
+      "gap": "sigma_psi was recorded in the contract as 'to be declared'",
       "affects": "C1, C2, C3",
-      "resolution": "The plan evaluates these cases at EVERY sigma_psi in the design section 15 item 6 declared set {0, 0.2, 0.5, 1.0} degrees rather than inventing one value. The author must fix which sigma_psi the >= 0.90 target is asserted at."
+      "status": "CLOSED PROSPECTIVELY",
+      "resolution": "PRIMARY RELEASE SCENARIO sigma_psi = 0.5 degrees; the complete true-bridge >= 0.90 claim is asserted there. 0.0 and 0.2 degrees are secondary lower-uncertainty sensitivity cases; 1.0 degree is a stress/robustness case. All are reported, none is pooled into the primary result, and the stress case neither redefines the primary criterion nor is removed if it performs poorly."
     }
   ],
   "execution_command": "python3 -m e1a_v4.validation.runner --execute --i-have-execution-authorisation",
@@ -557,5 +558,88 @@
     "no output collision",
     "expected execution stage",
     "execution_authorised flag"
-  ]
+  ],
+  "author_dispositions": {
+    "status": "G1, G2 and G3 closed PROSPECTIVELY, before execution and before any outcome was observed",
+    "scope": "these complete missing VALIDATION rules; they do not redesign the E1a bridge. P1, P2, P3, P4, delta_cross, delta_abs, the z factors, alpha allocations, theta_cap, rank_tol, the four physical fields, the complete-pipeline target and the anti-circularity rules are all unchanged.",
+    "G1": {
+      "disposition": "G1, closed prospectively before execution",
+      "scientific_target": "beta_blinded = 1/c (committed, baseline section 14.2)",
+      "scale_factors": [
+        1.07,
+        0.9
+      ],
+      "transform": "beta_tilde_theta = c * beta_hat_theta_blinded ; should equal 1",
+      "equivalence_construction": "the SAME absolute-equivalence construction already adopted for P3; no new tolerance is introduced",
+      "delta": 0.05,
+      "z": 1.959963985,
+      "half_width": "h_theta = z * sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)",
+      "branch_rule": "branch for factor c passes iff, for EVERY tested field, beta_tilde(1-h) >= 1-delta AND beta_tilde(1+h) <= 1+delta",
+      "non_estimated_field": "fails that blinded branch",
+      "replicate_rule": "one C8 replicate succeeds iff the c=1.07 branch AND the c=0.90 branch both pass at all four fields",
+      "primary_data": "the underlying primary synthetic observations are NOT altered to create the control",
+      "campaign_criterion": {
+        "replicates": 200,
+        "bound": "one-sided 95% Clopper-Pearson LOWER",
+        "target": 0.9,
+        "integer_threshold": 188,
+        "threshold_derivation": "smallest k with cp_lower(k,200) >= 0.90; verified, not copied"
+      },
+      "scope": "tests recovery of a deliberately changed Branch-A scale. Does not change P3, does not change the primary-data analysis, and is not part of the primary E1a evidence."
+    },
+    "G2": {
+      "disposition": "G2, closed prospectively before execution",
+      "alternatives_unchanged": true,
+      "definition": "false acceptance = the equivalence pipeline accepts the alternative as compatible",
+      "max_false_acceptance_probability": 0.025,
+      "tie": "tied prospectively to the existing equivalence-test one-sided nominal level associated with z = 1.959963985; NOT derived from observed validation outcomes",
+      "campaign_criterion": {
+        "replicates_per_alternative": 400,
+        "bound": "one-sided 95% Clopper-Pearson UPPER",
+        "target": 0.025,
+        "integer_threshold": 4,
+        "threshold_derivation": "largest k with cp_upper(k,400) <= 0.025; verified, not copied",
+        "five_or_more_fails": true
+      },
+      "independence": "each declared alternative must INDEPENDENTLY satisfy the rule; counts are never pooled and easy and hard alternatives are never averaged"
+    },
+    "G3": {
+      "primary_release_scenario": 0.5,
+      "secondary_lower_uncertainty_sensitivity": [
+        0.0,
+        0.2
+      ],
+      "stress_robustness": [
+        1.0
+      ],
+      "grid_source": "design section 15 item 6 declared set {0.0, 0.2, 0.5, 1.0} degrees",
+      "primary_claim": "the complete true-bridge >= 0.90 validation claim is asserted at sigma_psi = 0.5 degrees",
+      "reporting_rule": "results at 0.0, 0.2 and 1.0 degrees MUST be reported and MUST NOT be pooled into the primary >= 0.90 result; the 1.0 degree stress case does not redefine the primary release criterion and is not removed if it performs poorly",
+      "status": "HYPOTHETICAL SYNTHETIC UNCERTAINTY SCENARIO. Not a claim that any real apparatus has demonstrated 0.5 degree orientation uncertainty.",
+      "disposition": "G3, closed prospectively before execution"
+    }
+  },
+  "superseded_package": {
+    "work_commit": "475633ced7ae7192849e9bbf0116dc9ef99e86c1",
+    "report_commit": "b4b25754b919d2583b0942115ba630d67535a50d",
+    "status": "EXECUTION-BLOCKED by authority gaps G1-G3; superseded PROSPECTIVELY by this disposition closure",
+    "preserved": "neither commit is rewritten, amended or deleted; the historical report is retained as provenance",
+    "old_identities": {
+      "contract": "89a935dd98b08a13c9fca62ae6b8b12c8f76297df6d87a62877716bbed45600c",
+      "design": "f20bc885bf400ce3429120e4a0e42915ba2fb15249d88914fd7e55eb1b373f68",
+      "plan_json": "142e9a8f424d970e063eaca8a0a209da365ad1408b80d9b5b7c67b763ca6c894",
+      "plan_md": "ee0c8779176473899f32da9e3ece5f4291d537a07230079f1fa237de2eee6eaf",
+      "seed_map": "bb21dd6cc9959c1b61812d54925b56d64f7ecf8a8c36c68c03605af69802979d",
+      "analysis_identity": "1983ba3af64cd62480feb642ce83f38cf7d2e5f06bf9398b41b81fe1f864648c",
+      "execution_identity": "2f4902a17c3ce0d187e308bb061cf239ee328639d313f428e22a7af175384d71",
+      "master_seed": 12737552942663785904,
+      "families": {
+        "blinded_scale_control": 9479310386300230328,
+        "branch_a_measurement": 11004995623645776693,
+        "calibration": 15379082101033647447,
+        "confirmatory": 9585841150145721670,
+        "validation": 11476631527835384658
+      }
+    }
+  }
 }
