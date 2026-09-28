@@ -8,10 +8,17 @@ The ordering this module exists to guarantee:
     1. bind_execution(...)   complete preflight, no RNG in scope
     2. only then             rng_factory(seed) is called for the first time
 
-`--execute` additionally refuses unless the plan's `execution_authorised` flag is
-true. In the frozen package that flag is FALSE, so the official command runs the
-preflight and stops. The authorised execution stage flips it in a separate,
-reviewed commit.
+`--execute` additionally passes THE EXECUTION GATE, in this order:
+
+    1. the official campaign driver exists on disk
+    2. the external execution seal is FROZEN
+    3. the recomputed execution identity equals the independently frozen seal
+    4. the plan's `execution_authorised` flag is true
+
+In the current package the driver is ABSENT and the seal is PRE_DRIVER, so the
+official command runs the preflight and stops at step 1. Ordering matters: a
+refusal must never read as "just flip the authorisation flag" when the driver
+that would do the work does not exist.
 
 The preflight never constructs a generator. `run` takes an `rng_factory` so a
 sentinel provider can prove, in a deterministic test, that a failed preflight
@@ -21,19 +28,29 @@ leaves RNG_CALL_COUNT at exactly 0.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 from typing import Callable
 
 from ..numerics import Refusal
 from .plan import ExecutionBinding, bind_execution
 from .scope import CampaignCalibrationLedger, ReplicateCalibration
+from .seal import (
+    CampaignDriverAbsent, ExecutionAuthorisationMissing, ExecutionIdentityUnsealed,
+    ExecutionNotAuthorised, ExecutionSealNotFrozen, load_seal, require_execution_gate,
+)
 from .seeds import CaseSeedAccess, ValidationSeedFamily
 
 RNGFactory = Callable[[int], object]
 
-
-class ExecutionNotAuthorised(Refusal):
-    """Raised when the frozen plan has not been given execution authorisation."""
+#: Re-exported so `from e1a_v4.validation.runner import ExecutionNotAuthorised`
+#: keeps working. The class now lives with the seal lifecycle it belongs to, and
+#: its subclasses name WHICH precondition is missing.
+__all__ = [
+    "ExecutionNotAuthorised", "CampaignDriverAbsent", "ExecutionSealNotFrozen",
+    "ExecutionIdentityUnsealed", "ExecutionAuthorisationMissing",
+    "preflight", "run", "main", "case_seed_access", "replicate_calibration",
+]
 
 
 def preflight(root: str = ".", output_dir: str | None = None) -> ExecutionBinding:
@@ -79,12 +96,10 @@ def run(root: str = ".", *, rng_factory: RNGFactory | None = None,
     binding = preflight(root=root, output_dir=output_dir)
     if not execute:
         return binding
-    if not binding.plan.get("execution_authorised", False):
-        raise ExecutionNotAuthorised(
-            "EXECUTION REFUSED: the frozen validation plan has "
-            "execution_authorised = false. The synthetic-validation campaign is a "
-            "separate authorised stage. No random number has been drawn."
-        )
+    # THE EXECUTION GATE. Driver, then seal, then identity, then authorisation --
+    # most fundamental missing precondition first, so a refusal is never mistaken
+    # for "just flip the flag". Every branch refuses before `rng_factory` is touched.
+    require_execution_gate(root, binding.plan, binding.execution_identity)
     if rng_factory is None:
         raise Refusal("an authorised execution must supply an RNG factory")
     # --- the authorised stage continues from here; nothing below runs today ----
@@ -114,9 +129,17 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  plan sha256                : {binding.plan_sha256}")
     print(f"  seed map sha256            : {binding.seed_map_sha256}")
     print(f"  analysis procedure identity: {binding.analysis_identity}")
-    print(f"  execution identity         : {binding.execution_identity}")
     print(f"  output directory           : {binding.output_dir}")
     print(f"  declared cases             : {len(binding.plan['cases'])}")
+    seal = load_seal(args.root)
+    label = ("PRE-DRIVER PACKAGE EXECUTION IDENTITY (NOT the final seal)"
+             if not seal.is_frozen else "execution identity")
+    print(f"  {label}:")
+    print(f"      {binding.execution_identity}")
+    print(f"  execution seal state       : {seal.state}")
+    print(f"  expected execution identity: {seal.expected_execution_identity}")
+    print(f"  official campaign driver   : {seal.driver_module} "
+          f"({'PRESENT' if os.path.exists(os.path.join(args.root, seal.driver_module)) else 'ABSENT'})")
     print(f"  execution_authorised       : {binding.plan.get('execution_authorised', False)}")
     if args.preflight_only or not args.execute:
         print("  RANDOM DRAWS: 0   TRAJECTORIES: 0   (preflight only)")
@@ -127,7 +150,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         run(root=args.root, output_dir=args.output_dir, execute=True)
     except Refusal as exc:
-        print(f"EXECUTION REFUSED: {exc}")
+        text = str(exc)
+        print(text if text.startswith("EXECUTION REFUSED") else f"EXECUTION REFUSED: {text}")
         print("  RANDOM DRAWS: 0   TRAJECTORIES: 0")
         return 2
     return 0

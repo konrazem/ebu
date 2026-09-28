@@ -1,0 +1,42 @@
+{
+  "schema": "e1a_v4_execution_seal/1",
+  "state": "PRE_DRIVER",
+  "NOT_EXECUTION_AUTHORISATION": true,
+  "banner": "PRE_DRIVER / NOT EXECUTION AUTHORISATION. This file installs the sealing MECHANISM. It freezes nothing and authorises nothing.",
+  "expected_execution_identity": null,
+  "expected_execution_identity_semantics": "null means DELIBERATELY NOT YET FROZEN. It is frozen only after the official campaign driver is implemented and independently audited. An ABSENT file, an ABSENT state or an ABSENT expected_execution_identity key is treated as FORGOTTEN and refuses; only this explicit null means not-yet-frozen.",
+  "official_campaign_driver_module": "e1a_v4/validation/campaign_driver.py",
+  "official_campaign_driver_status": "ABSENT, NOT IMPLEMENTED, NOT AUDITED",
+  "why_this_file_is_external": "The execution identity is the hash of the frozen package inputs, which include the validation plan JSON and its normative Markdown. Writing the expected identity into any of those inputs would change the input and therefore change the value it records: an impossible fixed point. This file is deliberately EXCLUDED from the execution-identity preimage, so it can assert the expected value without being part of it.",
+  "preimage_exclusion": {
+    "excluded_from_execution_identity": "docs/e1a/e1a_v4_execution_seal.json",
+    "included_in_execution_identity": [
+      "e1a_v4/validation/*.py (VALIDATION_MODULES)",
+      "the analysis procedure identity",
+      "docs/e1a/e1a_v4_synthetic_validation_plan.json",
+      "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md",
+      "docs/e1a/e1a_v4_seed_map.json"
+    ]
+  },
+  "lifecycle": {
+    "PRE_DRIVER": "official campaign driver absent; expected_execution_identity MUST be null; preflight may pass; EXECUTION REFUSES.",
+    "FROZEN": "driver implemented and independently audited; expected_execution_identity MUST be a 64-hex digest; execution eligible only if the recomputation matches AND execution_authorised is true.",
+    "authorisation": "execution_authorised = true is set by a SEPARATE final authorisation task. A FROZEN seal is not an authorisation, and an authorisation without a FROZEN seal is refused."
+  },
+  "pre_driver_package_execution_identity": {
+    "value": null,
+    "status": "NOT RECORDED HERE BY DESIGN",
+    "why": "The current pre-driver identity is a diagnostic, not a seal. Recording it in this file would invite it being mistaken for the frozen expectation. It is reported by preflight and in docs/e1a/E1A_V4_PLAN_COHERENCE_REPORT.md, both labelled PRE-DRIVER PACKAGE IDENTITY."
+  },
+  "required_before_freezing": [
+    "1. the official campaign driver is implemented",
+    "2. the driver is independently audited",
+    "3. the driver module is included in the execution-identity preimage",
+    "4. Markdown and JSON authority representations agree",
+    "5. contract, analysis, seed-map and validation-plan identities all match",
+    "6. the recomputed execution identity is written here by a reviewer and state becomes FROZEN"
+  ],
+  "execution_authorised": false,
+  "random_draws": 0,
+  "trajectories": 0
+}

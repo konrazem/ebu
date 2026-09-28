@@ -1,9 +1,56 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.6.0",
+  "plan_version": "1.7.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
+  "execution_seal": {
+    "state": "PRE_DRIVER",
+    "states": {
+      "PRE_DRIVER": "official campaign driver absent; expected_execution_identity MUST be null; preflight may pass; EXECUTION REFUSES.",
+      "FROZEN": "driver implemented and independently audited; expected_execution_identity MUST be a 64-hex digest; execution eligible only if the recomputation matches AND execution_authorised is true."
+    },
+    "authorisation_is_separate": "execution_authorised = true is set by a SEPARATE final authorisation task. A FROZEN seal is not an authorisation, and an authorisation without a FROZEN seal is refused.",
+    "seal_file": "docs/e1a/e1a_v4_execution_seal.json",
+    "seal_excluded_from_execution_identity_preimage": true,
+    "why_external": "The execution identity hashes the frozen package inputs, which include this plan and its normative Markdown. An expected identity stored inside one of its own inputs is an impossible fixed point, so the assertion lives outside the preimage.",
+    "current_pre_driver_identity_is_not_a_seal": "The identity preflight reports today is a PRE-DRIVER PACKAGE EXECUTION IDENTITY: a diagnostic, not the final expected value. It will legitimately change when the official campaign driver enters the preimage."
+  },
+  "plan_authority_coherence": {
+    "rule": "The JSON is the mechanical schema and ordering source; docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md is its normative human rendering. Any mismatch is an integrity failure requiring fail-closed refusal (AGENTS.md).",
+    "mechanism": "A single generated, anchor-delimited ```json AUTHORITY BLOCK in the Markdown, rebuilt from this JSON by e1a_v4.validation.coherence.render_authority_block and compared key by key at preflight. A second, narrower check verifies that the HUMAN-visible renderings -- the version line, the section-1 identity table, the execution-authorisation sentence and every case table -- agree with that block, because a generated block alone would not have caught the defect it exists for.",
+    "block_schema": "e1a_v4_plan_authority/1",
+    "surface": [
+      "plan_id",
+      "plan_version",
+      "execution_stage",
+      "execution_authorised",
+      "execution_seal_state",
+      "calibration_scope",
+      "frozen_identities",
+      "implementation_file_hashes_digest",
+      "seed_map_sha256",
+      "output_schema",
+      "failure_classifications",
+      "cases",
+      "release_criteria"
+    ],
+    "case_surface": [
+      "case_id",
+      "role",
+      "replicate_count",
+      "subcondition_count",
+      "subconditions",
+      "requires_block1_calibration",
+      "calibration_scope",
+      "allowed_seed_families",
+      "primary_release_endpoint",
+      "fields_affected",
+      "block1_role"
+    ],
+    "not_compared": "Free prose. The surface is the duplicated MACHINE-RELEVANT authority, never arbitrary English paragraphs.",
+    "superseded_defect": "Preflight previously compared only the section-9 output schema. The Markdown therefore carried, for four commits, an analysis procedure identity (bc1c0fce3b9004aed5f6b4be2162bc876697536ee614b2e57f680f3a65dc283e) that the package has never computed at any commit, and a plan version one release behind, while preflight reported PASS. See docs/e1a/E1A_V4_PLAN_COHERENCE_REPORT.md."
+  },
   "status": "PRE-EXECUTION FROZEN PACKAGE, REPAIRED. Nothing in this plan has been executed. No random number has been drawn, no trajectory generated, no calibration sampled and no scientific outcome inspected. Execution is a separate authorisation.",
   "normative_pair": {
     "markdown": "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md",
@@ -31,8 +78,18 @@
       "e1a_v4/world.py": "64a27ca9cb95b09333ca65aa0eecebeb80f9573d06cd8d08c188668eb7cbc033"
     },
     "analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
-    "execution_identity": "",
-    "execution_identity_note": "derived at preflight from the plan sha256, the seed-map sha256, the validation module hashes and the analysis procedure identity. Deliberately NOT stored: storing it would change the plan file and therefore change the value it records.",
+    "final_expected_execution_identity": null,
+    "final_expected_execution_identity_state": "NOT_FROZEN_PRE_DRIVER",
+    "final_expected_execution_identity_semantics": "null means DELIBERATELY NOT YET FROZEN, which is correct while the official campaign driver is absent. An ABSENT key is treated as FORGOTTEN and refuses: the superseded slot held the empty string \"\", which could not distinguish the two and which preflight silently skipped.",
+    "final_expected_execution_identity_location": "docs/e1a/e1a_v4_execution_seal.json -- EXTERNAL by necessity. The plan JSON and its normative Markdown are both inside the execution-identity preimage, so storing the expected value in either would change the input and therefore change the value it records: an impossible fixed point.",
+    "execution_identity_preimage": [
+      "e1a_v4/validation/*.py (VALIDATION_MODULES, 12 modules)",
+      "the analysis procedure identity",
+      "docs/e1a/e1a_v4_synthetic_validation_plan.json",
+      "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md",
+      "docs/e1a/e1a_v4_seed_map.json"
+    ],
+    "execution_identity_preimage_note": "Derived at preflight, never stored in the plan. The normative Markdown joined the preimage in plan version 1.7.0: it is normative authority, not commentary, so a stale Markdown must move the identity rather than sit outside the seal. docs/e1a/e1a_v4_execution_seal.json is deliberately EXCLUDED.",
     "analysis_procedure_identity_configuration": {},
     "analysis_procedure_identity_note": "procedure_identity(binding, configuration={}, root). The configuration mapping is part of the identity, so a different configuration yields a different digest by design: the implementation report quoted the {'stage': 'bounded_implementation'} variant 8dd48f42f7ccd259a76e50ef4e1ee4c0a3c5b43986bc54d75438b1acdf15dbe0. The EMPTY configuration is the one frozen for official execution, and preflight recomputes exactly that.",
     "contract_version": "1.1.0",
@@ -1161,13 +1218,16 @@
   "execution_command": "python3 -m e1a_v4.validation.runner --execute --i-have-execution-authorisation",
   "preflight_command": "python3 -m e1a_v4.validation.runner --preflight-only",
   "preflight_checks_before_rng": [
+    "Markdown/JSON authority coherence: the generated authority block equals the block derived from this JSON, and the human-visible renderings equal the block",
+    "execution-seal state declared here equals the state in docs/e1a/e1a_v4_execution_seal.json",
     "working scientific contract identity equals the frozen contract sha256",
     "prospective design, foundation and baseline identities",
     "analysis procedure identity",
     "every implementation file hash",
     "validation plan identity",
     "seed map identity and its rederivation from the declared algorithm",
-    "execution identity",
+    "execution identity (recomputed; compared to final_expected_execution_identity only when that slot is non-null)",
+    "final_expected_execution_identity slot is PRESENT: an absent slot is a forgotten freeze and refuses",
     "no output collision",
     "expected execution stage",
     "execution_authorised flag"
@@ -1539,6 +1599,16 @@
       "why": "matching a separately supplied condition is not, by itself, proof that the condition came from that replicate's actual Branch-A measurement. A caller passing a copy of the artifact's own condition still satisfies the check.",
       "requirement": "the official campaign driver MUST construct the realised CalibrationCondition mechanically from its OWN Branch-A measurement result, and that construction must itself be audited. Until then this is enforcement of consistency, not of provenance."
     },
-    "official_campaign_driver": "NOT YET IMPLEMENTED OR AUDITED; a passing static preflight is not an execution clearance"
+    "official_campaign_driver": "NOT YET IMPLEMENTED OR AUDITED; a passing static preflight is not an execution clearance",
+    "official_campaign_driver_module": "e1a_v4/validation/campaign_driver.py",
+    "official_campaign_driver_present": false,
+    "execution_gate_order": [
+      "1. official campaign driver exists on disk",
+      "2. external execution seal is FROZEN",
+      "3. recomputed execution identity equals the independently frozen seal",
+      "4. execution_authorised is true"
+    ],
+    "execution_gate_order_rationale": "Most fundamental missing precondition first. A refusal must never read as 'just flip the authorisation flag' when the driver that would do the work does not exist.",
+    "must_enter_execution_identity_preimage": "The official campaign driver module MUST be added to VALIDATION_MODULES when it is implemented, so that it enters the execution-identity preimage before the seal is frozen."
   }
 }

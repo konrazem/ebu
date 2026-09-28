@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.5.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.7.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -32,7 +32,7 @@ The official runner refuses to execute if any of these differs.
 | prospective design | `e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495` |
 | frozen foundation | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
 | working baseline | `0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa` |
-| analysis procedure identity | `bc1c0fce3b9004aed5f6b4be2162bc876697536ee614b2e57f680f3a65dc283e` |
+| analysis procedure identity | `dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f` |
 | calibration artifact schema | `e1a_v4_block1_calibration/2` |
 | implementation work commit | `e4b73d7fbd84d329f4326af443fd1918bc44a874` |
 
@@ -54,10 +54,16 @@ Implementation file hashes are frozen for all 12 analysis modules; see the JSON.
 **Two identities, deliberately separate.** The **analysis procedure identity** binds the 12
 analysis modules, the contract and the adopted rules — calibration artifacts bind to *this*, as
 the bounded implementation requires, and adding the validation package does **not** change it.
-The **execution procedure identity** binds the analysis identity plus the validation module
-hashes, this plan and the seed map. It is derived at preflight rather than embedded here,
-because embedding it in the file whose hash it covers would be self-referential; it is recorded
-in the pre-execution report and recomputed by every preflight.
+The **execution procedure identity** binds the analysis identity plus the 12 validation module
+hashes, this plan's JSON, **this Markdown** and the seed map. It is derived at preflight rather
+than embedded here, because embedding it in a file whose hash it covers would be
+self-referential; the expected value is asserted **externally** by
+`docs/e1a/e1a_v4_execution_seal.json`, which is excluded from the preimage. See section 13a.
+
+> **The normative Markdown joined the preimage in version 1.7.0.** This document is normative
+> authority, not commentary. Leaving it outside the sealed package meant a stale Markdown moved
+> nothing and preflight reported PASS — which is exactly what happened, for four commits. It is
+> now hashed into the execution identity **and** checked field-by-field against the JSON.
 
 ### Frozen execution versus general implementation
 
@@ -65,6 +71,390 @@ A **general** analysis reads whatever valid contract it is given — that is cor
 and prevents magic numbers in code. An **official validation run** may not: `bind_execution`
 requires the exact adopted contract identity and refuses anything else **before an RNG can be
 created**. Both behaviours are tested.
+
+---
+
+## 1a. Machine-readable authority block
+
+`AGENTS.md` fixes the rule for every normative Markdown/JSON pair in this repository: **the
+JSON is the mechanical schema and ordering source, this Markdown is its normative human
+rendering, and any mismatch is an integrity failure, not permission to choose one
+selectively.**
+
+The superseded preflight compared only the section-9 output schema, so everything else a
+reader relies on was unchecked. The block below closes that. It is **generated** from
+`docs/e1a/e1a_v4_synthetic_validation_plan.json` by
+`e1a_v4.validation.coherence.render_authority_block` and rebuilt and compared key-by-key at
+every preflight, **before any RNG object can exist**. Do not hand-edit it; regenerate it.
+
+A generated block alone would not have caught the defect it exists for — the *human* tables
+could still drift from the block. So preflight additionally verifies that the human-visible
+renderings agree with it: the version line above, every row of the section-1 identity table,
+the execution-authorisation sentence in section 13, and the `role`, `replicate count`,
+`subconditions (n)`, `requires Block-1 calibration`, `calibration scope`,
+`allowed seed families` and `primary release endpoint` rows of **every** case table in
+section 3. Extraction is anchored on exact row labels inside named sections; an absent or
+ambiguous match is a **refusal**, never a silent skip. Free prose is never compared.
+
+<!-- BEGIN GENERATED AUTHORITY BLOCK -- do not hand-edit -->
+
+```json
+{
+  "calibration_scope": "REPLICATE_CONDITIONAL",
+  "cases": [
+    {
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "calibration_scope": "REPLICATE_CONDITIONAL",
+      "case_id": "C1_true_bridge_complete",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4",
+      "replicate_count": 300,
+      "requires_block1_calibration": true,
+      "role": "primary",
+      "subcondition_count": 4,
+      "subconditions": [
+        "sigma_psi_0p0",
+        "sigma_psi_0p2",
+        "sigma_psi_0p5",
+        "sigma_psi_1p0"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "calibration_scope": "REPLICATE_CONDITIONAL",
+      "case_id": "C2_geometry_false_rejection",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "P1_FALSE_REJECTION_RATE_PER_FIELD",
+      "replicate_count": 400,
+      "requires_block1_calibration": true,
+      "role": "primary",
+      "subcondition_count": 4,
+      "subconditions": [
+        "sigma_psi_0p0",
+        "sigma_psi_0p2",
+        "sigma_psi_0p5",
+        "sigma_psi_1p0"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+      "calibration_scope": "REPLICATE_CONDITIONAL",
+      "case_id": "C3_g5_block",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "G5_BLOCK_SIZE",
+      "replicate_count": 400,
+      "requires_block1_calibration": true,
+      "role": "primary",
+      "subcondition_count": 4,
+      "subconditions": [
+        "sigma_psi_0p0",
+        "sigma_psi_0p2",
+        "sigma_psi_0p5",
+        "sigma_psi_1p0"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "calibration_scope": "REPLICATE_CONDITIONAL",
+      "case_id": "C4_surrogate_validity",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "BLOCK1_ACHIEVED_SIZE",
+      "replicate_count": 2000,
+      "requires_block1_calibration": true,
+      "role": "primary",
+      "subcondition_count": 1,
+      "subconditions": [
+        "primary"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "calibration_scope": "REPLICATE_CONDITIONAL",
+      "case_id": "C5_plug_in_branch_a",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "P1_REJECTION_RATE_PER_CELL",
+      "replicate_count": 400,
+      "requires_block1_calibration": true,
+      "role": "primary",
+      "subcondition_count": 12,
+      "subconditions": [
+        "sk0p00_sp0p0",
+        "sk0p00_sp0p2",
+        "sk0p00_sp0p5",
+        "sk0p00_sp1p0",
+        "sk0p50_sp0p0",
+        "sk0p50_sp0p2",
+        "sk0p50_sp0p5",
+        "sk0p50_sp1p0",
+        "sk1p00_sp0p0",
+        "sk1p00_sp0p2",
+        "sk1p00_sp0p5",
+        "sk1p00_sp1p0"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "PRIMARY_RELEASE_ENDPOINT",
+      "calibration_scope": "REPLICATE_CONDITIONAL",
+      "case_id": "C6_mode_resolution_boundary",
+      "fields_affected": [
+        "synthetic two-mode field at the declared rho"
+      ],
+      "primary_release_endpoint": "P1_REJECTION_RATE_PER_RHO",
+      "replicate_count": 400,
+      "requires_block1_calibration": true,
+      "role": "primary",
+      "subcondition_count": 3,
+      "subconditions": [
+        "rho_1p019573",
+        "rho_1p024467",
+        "rho_1p029360"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "block1_role": "NONE",
+      "calibration_scope": "NOT_APPLICABLE",
+      "case_id": "C7_false_bridge",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE",
+      "replicate_count": 400,
+      "requires_block1_calibration": false,
+      "role": "negative_control",
+      "subcondition_count": 4,
+      "subconditions": [
+        "alt_1_06",
+        "alt_0_93_1_05",
+        "alt_1_10",
+        "hard_1_025"
+      ]
+    },
+    {
+      "allowed_seed_families": [
+        "blinded_scale_control",
+        "branch_a_measurement"
+      ],
+      "block1_role": "NONE",
+      "calibration_scope": "NOT_APPLICABLE",
+      "case_id": "C8_blinded_scale_control",
+      "fields_affected": [
+        "theta0_circular",
+        "theta1_power",
+        "theta2_ellipse",
+        "theta3_temperature"
+      ],
+      "primary_release_endpoint": "P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY",
+      "replicate_count": 200,
+      "requires_block1_calibration": false,
+      "role": "positive_control",
+      "subcondition_count": 1,
+      "subconditions": [
+        "paired_scale_control"
+      ]
+    }
+  ],
+  "execution_authorised": false,
+  "execution_seal_state": "PRE_DRIVER",
+  "execution_stage": "synthetic_validation",
+  "failure_classifications": [
+    "SOFTWARE_OR_INVARIANT_FAILURE",
+    "CALIBRATION_FAILURE",
+    "STATISTICAL_SIZE_FAILURE",
+    "TRUE_BRIDGE_POWER_FAILURE",
+    "FALSE_BRIDGE_DISCRIMINATION_FAILURE",
+    "STRUCTURED_REFUSAL_EXCESS",
+    "MODE_RESOLUTION_FAILURE",
+    "BLINDED_SCALE_CONTROL_FAILURE",
+    "NUMERICAL_OR_PRECISION_FAILURE",
+    "VALIDATION_INCONCLUSIVE",
+    "VALIDATION_PASS"
+  ],
+  "frozen_identities": {
+    "analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
+    "baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
+    "calibration_artifact_schema": "e1a_v4_block1_calibration/2",
+    "contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
+    "contract_version": "1.1.0",
+    "design_sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
+    "foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+    "implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874"
+  },
+  "implementation_file_hashes_digest": "787b8f5cef19a3eb7aa328282c421970cabbf9aae1060c4927bbdbd4476a6c5b",
+  "output_schema": {
+    "aggregate_fields": [
+      "success_count",
+      "failure_count",
+      "refusal_count",
+      "refusals_by_reason",
+      "confidence_bound",
+      "false_bridge_acceptance",
+      "per_field_geometry_rates",
+      "mode_resolution_behaviour",
+      "g5_diagnostics",
+      "scale_control_recovery",
+      "classification"
+    ],
+    "directory": "results/e1a_v4_validation",
+    "manifest_schema": "e1a_v4_validation_manifest/2",
+    "per_record_fields": [
+      "case_id",
+      "subcondition_id",
+      "replicate_id",
+      "seed_family",
+      "seed_identity",
+      "field_id",
+      "truth_parameters",
+      "branch_a_observed",
+      "analysis_status",
+      "G1",
+      "G2",
+      "G3",
+      "G4",
+      "G5",
+      "P1",
+      "beta_hat",
+      "P2",
+      "P3",
+      "P4",
+      "complete_pass",
+      "refusal_reason",
+      "procedure_identity",
+      "contract_sha256",
+      "plan_sha256",
+      "implementation_commit"
+    ],
+    "record_schema": "e1a_v4_validation_result/2"
+  },
+  "plan_id": "e1a_v4_synthetic_validation",
+  "plan_version": "1.7.0",
+  "release_criteria": {
+    "assurance": [
+      {
+        "bound": "Clopper-Pearson one-sided LOWER",
+        "confidence_level": 0.95,
+        "quantity": "complete true-bridge pipeline success",
+        "replicates": 300,
+        "target": ">= 0.90"
+      },
+      {
+        "bound": "Clopper-Pearson one-sided LOWER (inflation test)",
+        "confidence_level": 0.95,
+        "quantity": "P1 false-rejection rate, per field",
+        "replicates": 400,
+        "target": "alpha_geom = 0.005"
+      },
+      {
+        "bound": "Clopper-Pearson one-sided LOWER (inflation test)",
+        "confidence_level": 0.95,
+        "quantity": "block-2 (G5) rejection rate",
+        "replicates": 400,
+        "target": "alpha_2 = 0.001"
+      },
+      {
+        "bound": "Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test)",
+        "confidence_level": 0.95,
+        "quantity": "Block-1 achieved size under the surrogate",
+        "replicates": 2000,
+        "target": "alpha_1 = 0.004"
+      },
+      {
+        "bound": "Clopper-Pearson one-sided UPPER",
+        "confidence_level": 0.95,
+        "quantity": "false-bridge acceptance, per alternative",
+        "replicates": 400,
+        "target": "<= 0.025 per alternative"
+      },
+      {
+        "bound": "Clopper-Pearson one-sided LOWER",
+        "confidence_level": 0.95,
+        "quantity": "blinded scale recovery beta_hat * c",
+        "replicates": 200,
+        "target": ">= 0.90 paired-control success"
+      }
+    ],
+    "final_campaign_requirements": [
+      "1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)",
+      "2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field",
+      "3. C3 produces no STATISTICAL_SIZE_FAILURE",
+      "4. C4 produces no STATISTICAL_SIZE_FAILURE",
+      "5. C5 satisfies its already-frozen plug-in Branch-A criterion",
+      "6. C6 satisfies its already-frozen mode-resolution criterion",
+      "7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)",
+      "8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)",
+      "9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs",
+      "10. structured refusals counted exactly per the already-frozen unconditional denominator rule"
+    ],
+    "final_campaign_rule": "CONJUNCTIVE. Every required case must pass on its own terms.",
+    "final_campaign_verdict_on_success": "VALIDATION_PASS"
+  },
+  "schema": "e1a_v4_plan_authority/1",
+  "seed_map_sha256": "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce"
+}
+```
+
+<!-- END GENERATED AUTHORITY BLOCK -->
 
 ---
 
@@ -874,23 +1264,94 @@ python3 -m e1a_v4.validation.runner --preflight-only
 python3 -m e1a_v4.validation.runner --execute --i-have-execution-authorisation
 ```
 
-**OFFICIAL EXECUTION COMMAND NOT RUN.** `execution_authorised` is `false` in the frozen plan,
-so the command refuses before drawing anything. The authorised execution stage flips that flag
-in a separate reviewed commit.
+**OFFICIAL EXECUTION COMMAND NOT RUN.** `execution_authorised` is `false` in the frozen plan.
+The command refuses before drawing anything — and it refuses **first** because the official
+campaign driver is ABSENT, not because of the flag. That ordering is deliberate: a refusal must
+never read as *"just flip the authorisation flag"* when the driver that would do the work does
+not exist. See section 13a.
 
 Preflight checks, all completed **before any RNG is created**:
 
+1. **Markdown/JSON authority coherence** — the generated authority block equals the block
+   derived from the JSON plan, and the human-visible renderings equal that block
+1. **execution-seal state** declared in the plan equals the state in the external seal file
 1. working scientific contract identity equals the frozen contract sha256
 1. prospective design, foundation and baseline identities
 1. analysis procedure identity
 1. every implementation file hash
 1. validation plan identity
 1. seed map identity and its rederivation from the declared algorithm
-1. execution identity
+1. execution identity, recomputed — compared to `final_expected_execution_identity` only when
+   that slot is non-null
+1. the `final_expected_execution_identity` slot is **present**: an absent slot is a forgotten
+   freeze and refuses
 1. no output collision
 1. expected execution stage
 1. execution_authorised flag
 
+
+---
+
+## 13a. Execution-seal architecture — FROZEN PROSPECTIVELY
+
+A package that recomputes its own execution identity and compares it to *nothing* has not been
+sealed: any change to the package changes the identity, and the check still passes. A seal is
+only a seal if the expected value was frozen **independently, in advance, by a reviewer**.
+
+### Avoiding the self-reference
+
+| | |
+|---|---|
+| **execution identity** | `H(`validation module hashes, analysis identity, plan JSON sha256, **plan Markdown sha256**, seed-map sha256`)` |
+| **execution seal** | an **external** assertion of the expected execution identity |
+| seal file | `docs/e1a/e1a_v4_execution_seal.json` |
+| seal in the preimage? | **NO — deliberately excluded** |
+
+The expected value cannot live in any preimage input: writing it into the plan would change the
+plan's sha256 and therefore change the very value it records, an impossible fixed point. So the
+assertion lives outside the package it describes.
+
+### The state machine
+
+| state | meaning | `expected_execution_identity` | preflight | execution |
+|---|---|---|---|---|
+| **`PRE_DRIVER`** | official campaign driver absent | **MUST be `null`** | may pass | **REFUSES** |
+| **`FROZEN`** | driver implemented and independently audited; reviewer has frozen the expected identity | **MUST be a 64-hex digest** | may pass | eligible **only** if the recomputation matches **and** `execution_authorised` is true |
+
+`execution_authorised = true` is set by a **separate** final authorisation task. A `FROZEN`
+seal is not an authorisation, and an authorisation without a `FROZEN` seal is refused.
+
+### Not-yet-frozen versus forgotten
+
+These must never look alike. An **absent** seal file, an **absent** state, or an **absent**
+`expected_execution_identity` key is treated as **FORGOTTEN** and refuses. Only the explicit
+pair (`state = PRE_DRIVER`, `expected_execution_identity = null`) means *deliberately not yet
+frozen*. The superseded plan slot held the empty string `""`, which could express neither, and
+which preflight silently skipped.
+
+### The execution gate, in order
+
+1. the official campaign driver exists on disk
+1. the external execution seal is `FROZEN`
+1. the recomputed execution identity equals the independently frozen seal
+1. `execution_authorised` is true
+
+Most fundamental missing precondition first. Every branch refuses **before** the RNG factory is
+touched.
+
+### Current state
+
+```
+execution seal state            = PRE_DRIVER
+expected execution identity     = null   (deliberately NOT YET FROZEN)
+official campaign driver        = e1a_v4/validation/campaign_driver.py  (ABSENT)
+execution_authorised            = false
+```
+
+The identity preflight reports today is a **PRE-DRIVER PACKAGE EXECUTION IDENTITY**: a
+diagnostic, not the final expected value. It **will** legitimately change when the official
+campaign driver is implemented and enters the preimage — which is precisely why it is not
+frozen now.
 
 ---
 
@@ -1075,6 +1536,66 @@ infeasibility** — only the projected cost.
 
 ```
 execution_authorised = false
+RNG OBJECTS = 0   RANDOM DRAWS = 0   TRAJECTORIES = 0
+CALIBRATION EXECUTION = NOT RUN   VALIDATION CAMPAIGN = NOT RUN
+```
+
+---
+
+## 18. Plan-coherence and execution-seal repair — SUPERSESSION RECORD
+
+**Status.** PRE-EXECUTION AUTHORITY-INTEGRITY REPAIR. No stochastic evidence exists, so nothing
+scientific is retracted. **No E1a scientific decision rule changed.**
+
+**Trigger.** independent audit finding that this Markdown and the JSON plan disagreed on their
+frozen metadata while preflight still reported PASS.
+
+### What was wrong
+
+| field | superseded value here | adopted value | verdict |
+|---|---|---|---|
+| plan version | `1.5.0` | `1.7.0` | **stale by two releases** |
+| analysis procedure identity | `bc1c0fce3b9004aed5f6b4be2162bc876697536ee614b2e57f680f3a65dc283e` | `dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f` | **never true at any commit** |
+
+The identity is the more serious of the two. A stale value would at least have been correct
+once; `bc1c0fce…` was recomputed at every commit in this package's history and **matches none
+of them**, nor any tested configuration variant. It entered this document at
+`5727e10` — the same commit that wrote the correct `dd2ed732…` into the JSON plan and into
+`E1A_V4_PREEXEC_REPAIR_REPORT.md` — and appeared nowhere else in the repository. The version
+drift entered separately, at `8ea81ea`, which bumped the JSON to `1.6.0` and edited this
+document without touching its version line.
+
+Both survived because preflight compared **only** the section-9 output schema. Neither the
+identity table nor the version line was checked against anything.
+
+### Why the JSON won
+
+Not because it is JSON. `dd2ed732…` is the value `procedure_identity(binding, {}, root)`
+actually produces, verified by recomputation at every commit from `5727e10` to HEAD, and it is
+the value carried independently by the JSON plan and by four committed reports. The Markdown
+cell was the sole dissenter and was demonstrably wrong. **Nothing was reconciled by preference.**
+
+### Scope, verified
+
+All **79** duplicated normative fields were compared before any edit: 77 agreed, and the only
+two that disagreed are the two above. Every case identifier, role, replicate count,
+subcondition list, calibration flag, calibration scope, seed-family grant, release endpoint,
+output-schema field and failure classification **already agreed**. No scientific rule, threshold,
+seed, case semantic or generator behaviour was touched by this repair.
+
+### What is now enforced
+
+- a generated, anchor-delimited authority block in this document — section 1a
+- a human-rendering check covering the version line, the identity table, the authorisation
+  sentence and every case table — section 1a
+- this Markdown hashed into the execution-identity preimage — section 1
+- an external, non-self-referential execution seal with an explicit lifecycle — section 13a
+- an execution gate that refuses on driver absence **before** it reaches the authorisation flag
+
+```
+execution_authorised = false
+official campaign driver = ABSENT
+final execution seal = NOT FROZEN
 RNG OBJECTS = 0   RANDOM DRAWS = 0   TRAJECTORIES = 0
 CALIBRATION EXECUTION = NOT RUN   VALIDATION CAMPAIGN = NOT RUN
 ```

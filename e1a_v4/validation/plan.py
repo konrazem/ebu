@@ -28,7 +28,9 @@ from .. import DESIGN_CONTRACT
 from ..contract import ContractBinding, load_contract, sha256_file
 from ..identity import SCIENTIFIC_MODULES, procedure_identity
 from ..numerics import Refusal
-from . import PLAN_JSON, SEED_MAP_JSON, VALIDATION_IDENTITY
+from . import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON, VALIDATION_IDENTITY
+from .coherence import require_plan_authority_coherence
+from .seal import load_seal, require_seal_plan_agreement
 from .scope import (
     BRANCH_A_STATUS_KEY, CALIBRATION_SCOPE_KEY, CAMPAIGN_CALIBRATION_SCOPE,
     REQUIRES_CALIBRATION_KEY, SUBCONDITION_ID_KEY, SUBCONDITIONS_KEY,
@@ -44,12 +46,14 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/__init__.py",
     "e1a_v4/validation/calibrate.py",
     "e1a_v4/validation/classification.py",
+    "e1a_v4/validation/coherence.py",
     "e1a_v4/validation/dispositions.py",
     "e1a_v4/validation/generate.py",
     "e1a_v4/validation/plan.py",
     "e1a_v4/validation/results.py",
     "e1a_v4/validation/runner.py",
     "e1a_v4/validation/scope.py",
+    "e1a_v4/validation/seal.py",
     "e1a_v4/validation/seeds.py",
 )
 
@@ -62,7 +66,7 @@ REQUIRED_PLAN_KEYS = (
 
 def require_output_schema_agreement(root: str, plan: dict[str, Any]) -> None:
     """Refuse a human/mechanical output-schema mismatch before any RNG exists."""
-    path = os.path.join(root, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md")
+    path = os.path.join(root, PLAN_MARKDOWN)
     if not os.path.exists(path):
         raise Refusal("normative Markdown validation plan is absent")
     with open(path, encoding="utf-8") as handle:
@@ -148,13 +152,20 @@ def execution_identity(
     seed_map_sha256: str,
     root: str = ".",
 ) -> str:
-    """Binds the ANALYSIS identity plus the validation layer. Separate by design."""
+    """Binds the ANALYSIS identity plus the validation layer. Separate by design.
+
+    The normative Markdown plan is part of the preimage. It is NORMATIVE authority,
+    not commentary, so a stale Markdown must move the identity rather than sit
+    outside the seal. The external execution seal is deliberately EXCLUDED: it
+    asserts the expected value of this hash and so can never be one of its inputs.
+    """
     code = {p: sha256_file(os.path.join(root, p)) for p in sorted(VALIDATION_MODULES)}
     payload = {
         "validation_identity": VALIDATION_IDENTITY,
         "analysis_procedure_identity": procedure_identity(binding, {}, root),
         "validation_code": code,
         "plan_sha256": plan_sha256,
+        "plan_markdown_sha256": sha256_file(os.path.join(root, PLAN_MARKDOWN)),
         "seed_map_sha256": seed_map_sha256,
     }
     text = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
@@ -205,7 +216,11 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     """
     binding = load_contract(root)
     plan = load_plan(root)
+    # AUTHORITY COHERENCE FIRST. Neither representation may be trusted until the
+    # two agree: a stale identity in either one misidentifies the whole package.
     require_output_schema_agreement(root, plan)
+    require_plan_authority_coherence(root, plan)
+    require_seal_plan_agreement(plan, load_seal(root))
     cases = {case["case_id"]: case for case in plan["cases"]}
     if (set(cases["C2_geometry_false_rejection"]["fields_affected"]) != REQUIRED_C2_FIELDS
             or {s["subcondition_id"] for s in cases["C7_false_bridge"]["subconditions"]}
@@ -254,11 +269,30 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
             "own declared derivation. Seeds must be mechanical, never hand-edited."
         )
     exec_id = execution_identity(binding, plan_sha, seed_sha, root)
-    if "execution_identity" in frozen and frozen["execution_identity"] not in ("", None):
-        if exec_id != frozen["execution_identity"]:
+
+    # --- the final expected execution identity: NOT-YET-FROZEN vs FORGOTTEN -----
+    # The slot must exist. An ABSENT key is forgotten and refuses; only an explicit
+    # null means "deliberately not yet frozen", which is correct while the official
+    # campaign driver does not exist. The authoritative expectation, once frozen,
+    # lives in the EXTERNAL seal, because the plan itself is inside the preimage.
+    if "final_expected_execution_identity" not in frozen:
+        raise Refusal(
+            "FROZEN EXECUTION REFUSED: the plan omits the "
+            "final_expected_execution_identity slot. An absent slot is "
+            "indistinguishable from a forgotten freeze; declare it explicitly as "
+            "null while the official campaign driver is absent."
+        )
+    expected = frozen["final_expected_execution_identity"]
+    if expected is not None:
+        if not (isinstance(expected, str) and re.fullmatch(r"[0-9a-f]{64}", expected)):
+            raise Refusal(
+                "FROZEN EXECUTION REFUSED: final_expected_execution_identity must be "
+                f"null or a 64-character lowercase hex digest; found {expected!r}"
+            )
+        if exec_id != expected:
             raise Refusal(
                 f"FROZEN EXECUTION REFUSED: execution identity is {exec_id}, "
-                f"frozen {frozen['execution_identity']}"
+                f"frozen {expected}"
             )
 
     out = output_dir or plan["output_schema"]["directory"]

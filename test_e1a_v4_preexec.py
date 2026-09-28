@@ -21,6 +21,7 @@ from e1a_v4.contract import load_contract, sha256_file
 from e1a_v4.identity import SCIENTIFIC_MODULES, procedure_identity
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, SEED_MAP_JSON
+from e1a_v4.validation.seal import SEAL_JSON
 from e1a_v4.validation.calibrate import GENERATOR_IDENTITY
 from e1a_v4.validation.plan import (
     VALIDATION_MODULES, bind_execution, execution_identity, load_plan, load_seed_map,
@@ -87,7 +88,7 @@ def sandbox() -> str:
                 "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
                 "docs/theory/EBU_THEORY_BASELINE.md",
                 "docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
-                PLAN_JSON, SEED_MAP_JSON,
+                PLAN_JSON, SEED_MAP_JSON, SEAL_JSON,
                 "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md"):
         dst = os.path.join(tmp, rel)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -101,6 +102,39 @@ def write(tmp: str, rel: str, obj) -> None:
     with open(os.path.join(tmp, rel), "w", encoding="utf-8") as handle:
         json.dump(obj, handle, indent=2)
         handle.write("\n")
+
+
+
+def regenerate_block(tmp: str) -> None:
+    """Re-emit the Markdown authority block from the sandbox's JSON.
+
+    Without this, a fixture that edits the JSON plan refuses at the COHERENCE
+    check and never reaches the path it was written to exercise.
+    """
+    from e1a_v4.validation.coherence import BLOCK_BEGIN, BLOCK_END, render_authority_block
+    plan = json.load(open(os.path.join(tmp, PLAN_JSON), encoding="utf-8"))
+    md = os.path.join(tmp, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md")
+    with open(md, encoding="utf-8") as handle:
+        text = handle.read()
+    start = text.index(BLOCK_BEGIN)
+    end = text.index(BLOCK_END) + len(BLOCK_END)
+    with open(md, "w", encoding="utf-8") as handle:
+        handle.write(text[:start] + render_authority_block(plan, tmp) + text[end:])
+
+
+
+def set_md_identity(tmp: str, old: str, new: str) -> None:
+    """Update the HUMAN section-1 identity row too.
+
+    A fixture that changes only the JSON would refuse at the rendering check and
+    never reach the identity comparison it was written to exercise.
+    """
+    md = os.path.join(tmp, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md")
+    with open(md, encoding="utf-8") as handle:
+        text = handle.read()
+    with open(md, "w", encoding="utf-8") as handle:
+        handle.write(text.replace(f"| analysis procedure identity | `{old}` |",
+                                  f"| analysis procedure identity | `{new}` |", 1))
 
 
 # ------------------------------------------------------- preflight refuses first
@@ -117,16 +151,23 @@ def test_preflight_refuses_before_rng() -> None:
 
     tmp = sandbox()
     p = json.load(open(os.path.join(tmp, PLAN_JSON)))
-    p["cases"][0]["replicate_count"] = 7
-    p["frozen_identities"]["execution_identity"] = "f" * 64
+    # A non-null frozen expectation that the recomputation cannot match. Nothing
+    # else is perturbed, so this reaches the IDENTITY comparison rather than
+    # short-circuiting on a stale human table.
+    p["frozen_identities"]["final_expected_execution_identity"] = "f" * 64
     write(tmp, PLAN_JSON, p)
-    refuses_without_rng("plan hash mismatch refuses before RNG", preflight, tmp)
+    regenerate_block(tmp)
+    refuses_without_rng("frozen execution-identity mismatch refuses before RNG",
+                        preflight, tmp)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
     p = json.load(open(os.path.join(tmp, PLAN_JSON)))
+    real = p["frozen_identities"]["analysis_procedure_identity"]
     p["frozen_identities"]["analysis_procedure_identity"] = "a" * 64
     write(tmp, PLAN_JSON, p)
+    regenerate_block(tmp)
+    set_md_identity(tmp, real, "a" * 64)   # keep the rendering coherent on purpose
     refuses_without_rng("analysis procedure mismatch refuses before RNG", preflight, tmp)
     shutil.rmtree(tmp)
 
@@ -135,6 +176,7 @@ def test_preflight_refuses_before_rng() -> None:
     key = sorted(p["frozen_identities"]["implementation_file_hashes"])[0]
     p["frozen_identities"]["implementation_file_hashes"][key] = "b" * 64
     write(tmp, PLAN_JSON, p)
+    regenerate_block(tmp)
     refuses_without_rng("implementation file hash mismatch refuses before RNG", preflight, tmp)
     shutil.rmtree(tmp)
 
@@ -142,6 +184,7 @@ def test_preflight_refuses_before_rng() -> None:
     s = json.load(open(os.path.join(tmp, SEED_MAP_JSON)))
     s["families"]["validation"] = 123456789
     write(tmp, SEED_MAP_JSON, s)
+    regenerate_block(tmp)
     refuses_without_rng("hand-edited seed map refuses before RNG", preflight, tmp)
     shutil.rmtree(tmp)
 
@@ -149,6 +192,7 @@ def test_preflight_refuses_before_rng() -> None:
     s = json.load(open(os.path.join(tmp, SEED_MAP_JSON)))
     s["master_seed"] = s["master_seed"] + 1
     write(tmp, SEED_MAP_JSON, s)
+    regenerate_block(tmp)
     refuses_without_rng("master seed mismatch refuses before RNG", preflight, tmp)
     shutil.rmtree(tmp)
 
@@ -163,6 +207,7 @@ def test_preflight_refuses_before_rng() -> None:
     p = json.load(open(os.path.join(tmp, PLAN_JSON)))
     p["execution_stage"] = "something_else"
     write(tmp, PLAN_JSON, p)
+    regenerate_block(tmp)
     refuses_without_rng("unexpected execution stage refuses before RNG", preflight, tmp)
     shutil.rmtree(tmp)
 
@@ -316,6 +361,21 @@ def test_output_schema() -> None:
           "not a function of the covariance" in PLAN["calibration"]["g5_excluded"])
 
 
+
+def _identity_without_markdown(plan_sha: str, seed_sha: str) -> str:
+    """The identity the SUPERSEDED preimage would have produced (no Markdown)."""
+    import hashlib
+    from e1a_v4.identity import procedure_identity as _pi
+    from e1a_v4.validation import VALIDATION_IDENTITY
+    code = {m: sha256_file(os.path.join(ROOT, m)) for m in sorted(VALIDATION_MODULES)}
+    payload = {"validation_identity": VALIDATION_IDENTITY,
+               "analysis_procedure_identity": _pi(BINDING, {}, ROOT),
+               "validation_code": code, "plan_sha256": plan_sha,
+               "seed_map_sha256": seed_sha}
+    text = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
 def test_identities() -> None:
     a = procedure_identity(BINDING, {}, ROOT)
     check("adding the validation package did NOT move the analysis identity",
@@ -329,11 +389,17 @@ def test_identities() -> None:
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
     check("every validation module enters the execution identity",
-          len(VALIDATION_MODULES) == 10
+          len(VALIDATION_MODULES) == 12
           and "e1a_v4/validation/dispositions.py" in VALIDATION_MODULES
           and "e1a_v4/validation/classification.py" in VALIDATION_MODULES
-          and "e1a_v4/validation/scope.py" in VALIDATION_MODULES,
+          and "e1a_v4/validation/scope.py" in VALIDATION_MODULES
+          and "e1a_v4/validation/coherence.py" in VALIDATION_MODULES
+          and "e1a_v4/validation/seal.py" in VALIDATION_MODULES,
           f"{len(VALIDATION_MODULES)} modules")
+    check("the normative Markdown plan entered the execution-identity preimage",
+          execution_identity(BINDING, plan_sha, seed_sha, ROOT)
+          != _identity_without_markdown(plan_sha, seed_sha),
+          "a stale Markdown now moves the identity")
     for p in VALIDATION_MODULES:
         check(f"validation module present on disk: {p}",
               os.path.exists(os.path.join(ROOT, p)))
