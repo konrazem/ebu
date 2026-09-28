@@ -29,7 +29,8 @@ from e1a_v4.identity import procedure_identity
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.coherence import (
-    AUTHORITY_BLOCK_SCHEMA, BLOCK_BEGIN, BLOCK_END, CASE_SPEC, IDENTITY_ROW_LABELS,
+    AUTHORITY_BLOCK_SCHEMA, BLOCK_BEGIN, BLOCK_END, CASE_SPEC, DERIVED,
+    IDENTITY_ROW_LABELS,
     REGION_ANCHORS, SUBCONDITION_SPEC, TOP_LEVEL_SPEC, authority_block_fields,
     normative_json_view, normative_markdown_view, render_authority_block,
     render_region, require_plan_authority_coherence, specification_counts,
@@ -186,8 +187,10 @@ def test_live_package_is_coherent() -> None:
 
     counts = specification_counts(plan, ROOT)
     check("the specification classifies every top-level key",
-          counts["top_level_both"] + counts["top_level_json_only"] == len(TOP_LEVEL_SPEC),
-          f"{counts['top_level_both']} BOTH / {counts['top_level_json_only']} JSON_ONLY")
+          counts["top_level_both"] + counts["top_level_json_only"]
+          + sum(1 for o, _ in TOP_LEVEL_SPEC.values() if o == DERIVED) == len(TOP_LEVEL_SPEC),
+          f"{counts['top_level_both']} BOTH / {counts['top_level_json_only']} JSON_ONLY / "
+          f"{sum(1 for o, _ in TOP_LEVEL_SPEC.values() if o == DERIVED)} DERIVED")
     check("the specification classifies every case key",
           counts["case_both"] + counts["case_json_only"] == len(CASE_SPEC),
           f"{counts['case_both']} BOTH / {counts['case_json_only']} JSON_ONLY")
@@ -239,7 +242,7 @@ def test_disagreement_fixtures_refuse() -> None:
     # (a) Markdown VERSION changed only -----------------------------------------
     tmp = sandbox()
     text = read_md(tmp)
-    write_md(tmp, text.replace("Plan version **1.8.0**.", "Plan version **9.9.9**.", 1))
+    write_md(tmp, text.replace("Plan version **1.9.0**.", "Plan version **9.9.9**.", 1))
     refuses_without_rng("Markdown version changed only -> REFUSE",
                         require_plan_authority_coherence, tmp, read_json(tmp, PLAN_JSON))
     refuses_without_rng("  ... and preflight refuses too", preflight, tmp)
@@ -397,7 +400,7 @@ def test_human_rendering_cannot_drift() -> None:
     plan["plan_version"] = "2.0.0"
     write_json(tmp, PLAN_JSON, plan)
     regenerate_block(tmp)
-    write_md(tmp, read_md(tmp).replace("Plan version **1.8.0**.",
+    write_md(tmp, read_md(tmp).replace("Plan version **1.9.0**.",
                                        "Plan version **2.0.0**.", 1))
     ok = True
     try:
@@ -473,8 +476,8 @@ def test_block_structure_is_fail_closed() -> None:
     # an ambiguous human rendering is a refusal, never a silent skip -------------
     tmp = sandbox()
     text = read_md(tmp)
-    write_md(tmp, text.replace("Plan version **1.8.0**.",
-                               "Plan version **1.8.0**. Plan version **1.8.0**.", 1))
+    write_md(tmp, text.replace("Plan version **1.9.0**.",
+                               "Plan version **1.9.0**. Plan version **1.9.0**.", 1))
     refuses_without_rng("a DUPLICATED human version line -> REFUSE (never a silent skip)",
                         require_plan_authority_coherence, tmp, read_json(tmp, PLAN_JSON))
     shutil.rmtree(tmp)

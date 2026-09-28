@@ -74,7 +74,9 @@ import os
 import re
 from typing import Any
 
+from .. import DESIGN_CONTRACT
 from ..contract import sha256_file
+from ..numerics import Refusal
 from . import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from .driver import (
     OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT, OFFICIAL_CAMPAIGN_DRIVER_MODULE,
@@ -82,8 +84,9 @@ from .driver import (
 )
 from .refusals import (
     DriverIdentityMismatch, PlanAdoptedRuleMismatch, PlanAmbiguousBlock,
-    PlanAnalysisIdentityMismatch, PlanCaseMismatch, PlanDuplicateKey,
-    PlanIdentityMismatch, PlanReleaseRuleMismatch, PlanStructureInvalid,
+    PlanAnalysisIdentityMismatch, PlanCaseMismatch, PlanDerivedValueMismatch,
+    PlanDuplicateKey, PlanGeneratingModelMismatch, PlanIdentityMismatch,
+    PlanReleaseRuleMismatch, PlanSectionUnregistered, PlanStructureInvalid,
     PlanSubconditionMismatch, PlanSurfaceMismatch, PlanSurfaceUndeclared,
     PlanVersionMismatch,
 )
@@ -105,10 +108,18 @@ REGION_ANCHORS = {
                   "<!-- END GENERATED ASSURANCE -->"),
     "release_rules": ("<!-- BEGIN GENERATED RELEASE RULES -- do not hand-edit -->",
                       "<!-- END GENERATED RELEASE RULES -->"),
+    "generating_model": ("<!-- BEGIN GENERATED GENERATING MODEL -- do not hand-edit -->",
+                         "<!-- END GENERATED GENERATING MODEL -->"),
+    "controls": ("<!-- BEGIN GENERATED CONTROLS -- do not hand-edit -->",
+                 "<!-- END GENERATED CONTROLS -->"),
 }
 
 BOTH = "BOTH"
 JSON_ONLY = "JSON_ONLY"
+#: Rendered in the Markdown but NOT an independent source of truth: mechanically
+#: derived from JSON primitives and checked by RECOMPUTATION, so it can never
+#: become a second authority that silently disagrees with the primitives.
+DERIVED = "DERIVED_RENDERING"
 
 #: Frozen identity scalars duplicated in the section-1 table. Note strings are prose.
 IDENTITY_SURFACE = (
@@ -167,13 +178,16 @@ TOP_LEVEL_SPEC = {
     "normative_pair": (JSON_ONLY, "file-path metadata naming the pair itself"),
     "case_count_justification": (JSON_ONLY, "editorial justification for the case count; "
                                             "the case set itself is BOTH"),
-    "generating_model": (JSON_ONLY, "generator narrative; the executable generator is "
-                                    "bound by the analysis and validation module hashes, "
-                                    "not by prose"),
+    "generating_model": (BOTH, "section 4 visibly renders its scientific settings -- dt, "
+                               "T_total, n_samples and every field's stiffness, temperature, "
+                               "orientation, reference flag and beta_true. Every descendant "
+                               "primitive is classified individually in "
+                               "GENERATING_MODEL_SPEC; no subtree shortcut may hide a "
+                               "duplicated descendant"),
     "complete_pass_denominator": (JSON_ONLY, "denominator narrative; the operative rule "
                                              "is carried by the assurance rows"),
-    "controls": (JSON_ONLY, "descriptive control inventory; each control's operative "
-                            "parameters live in the case and subcondition records"),
+    "controls": (BOTH, "section 8 renders the control-to-case mapping as a table; which "
+                       "control belongs to which case is execution authority, not decoration"),
     "classification_rule": (JSON_ONLY, "prose restatement of final_campaign_classification"),
     "no_post_outcome_tuning": (JSON_ONLY, "prohibition narrative; changes nothing executable"),
     "execution_command": (JSON_ONLY, "operational command string, not a scientific rule"),
@@ -183,9 +197,12 @@ TOP_LEVEL_SPEC = {
     "author_dispositions": (JSON_ONLY, "disposition narrative; the operative content is "
                                        "authority_gaps and the assurance rows"),
     "superseded_package": (JSON_ONLY, "supersession record; historical, not executable"),
-    "size_validation_semantics": (JSON_ONLY, "interpretation narrative for the size "
-                                             "boundaries, which are themselves carried by "
-                                             "the assurance rows and case criteria"),
+    "size_validation_semantics": (DERIVED, "section 12a renders the derived size "
+                                           "boundaries. They are recomputed by "
+                                           "`size_boundary(R, nominal)` from primitives the "
+                                           "plan already carries, so they are checked by "
+                                           "RECOMPUTATION rather than trusted as a second "
+                                           "independent source of truth"),
     "seed_family_enforcement": (JSON_ONLY, "narrative; enforcement is code, and the "
                                            "per-case grants are BOTH"),
     "preexecution_repair": (JSON_ONLY, "supersession record; historical, not executable"),
@@ -198,6 +215,42 @@ TOP_LEVEL_SPEC = {
                                        "is identity-bound in e1a_v4/validation/driver.py "
                                        "and is checked separately as driver.*"),
 }
+
+#: Classification of EVERY primitive beneath `generating_model`. No subtree-level
+#: shortcut is permitted: an auditor found that classifying the whole object
+#: JSON_ONLY hid dt, n_samples and every field's stiffness, temperature,
+#: orientation, reference flag and beta_true, all of which section 4 renders.
+GENERATING_MODEL_SPEC = {
+    "branch_b.process": (BOTH, "the declared observation process"),
+    "branch_b.transition": (BOTH, "the exact modal transition law"),
+    "branch_b.phi": (BOTH, "the modal decay definition"),
+    "branch_b.initialisation": (BOTH, "stationary initialisation and burn-in"),
+    "branch_b.superseded": (BOTH, "the FORBIDDEN v3 convention, rendered as a warning"),
+    "branch_b.dt_s": (BOTH, "the sampling interval, seconds -- PRIMITIVE"),
+    "branch_b.T_total_s": (BOTH, "the record length, seconds -- PRIMITIVE"),
+    "branch_b.n_samples": (DERIVED, "DERIVED: e1a_v4.world.World.n_samples is "
+                                    "int(round(T_total / dt)). Checked by recomputation "
+                                    "from the two primitives, never trusted as a third "
+                                    "independent authority"),
+    "branch_a.model": (BOTH, "the Branch-A measurement model"),
+    "branch_a.common_mode": (BOTH, "one draw per experiment, shared across fields"),
+    "branch_a.per_mode_stiffness": (BOTH, "independent per mode"),
+    "branch_a.orientation": (BOTH, "trap-axis psi"),
+    "branch_a.thermometry": (BOTH, "temperature measurement"),
+    "branch_a.independence": (BOTH, "Branch-A randomness is exogenous"),
+    "truth_visibility": (BOTH, "what the analysis layer may see"),
+    "per_field.id": (BOTH, "field identifier"),
+    "per_field.k_uN_per_m": (BOTH, "modal stiffnesses, micronewton per metre -- defines H"),
+    "per_field.T_K": (BOTH, "temperature, kelvin -- defines the stationary covariance"),
+    "per_field.rot_deg": (BOTH, "trap-axis orientation, degrees -- defines the rotation"),
+    "per_field.reference": (BOTH, "whether this is the P2 reference field"),
+    "per_field.beta_true": (BOTH, "the generating beta for this field"),
+    "per_field.tau_rule": (BOTH, "the relaxation-time rule"),
+}
+
+#: Descendants of `generating_model` that are UPSTREAM contract authority. The
+#: plan restates them; it may not contradict the frozen design contract.
+CONTRACT_MIRRORED_FIELD_KEYS = ("id", "k_uN_per_m", "T_K", "rot_deg", "reference")
 
 #: Classification of EVERY per-case key.
 CASE_SPEC = {
@@ -293,9 +346,27 @@ def require_specification_totality(plan: dict[str, Any]) -> None:
 
 
 def specification_counts(plan: dict[str, Any], root: str = ".") -> dict[str, int]:
-    """Machine-derived counts. Never hand-quoted."""
+    """Machine-derived counts. Never hand-quoted, and never asserted.
+
+    `markdown_only_keys` and `unclassified_normative_candidates` are MEASURED, not
+    declared: claiming "0 Markdown-only keys" without measuring is precisely the
+    kind of unearned completeness claim that let the generating model sit outside
+    the surface while the package reported full coherence.
+    """
     view = normative_json_view(plan, root)
     human = _human_rendered_keys(plan)
+    try:
+        rendered = set(normative_markdown_view(root))
+    except Refusal:
+        rendered = set()
+    markdown_only = sorted(rendered - set(view))
+    present = markdown_sections(markdown_text(root))
+    unregistered = [h for h in present if h not in SECTION_REGISTRY]
+    unclassified = (len(unregistered)
+                    + len(set(plan) - set(TOP_LEVEL_SPEC))
+                    + sum(len(set(c) - set(CASE_SPEC)) for c in plan["cases"])
+                    + sum(len(set(x) - set(SUBCONDITION_SPEC))
+                          for c in plan["cases"] for x in c["subconditions"]))
     return {
         "duplicated_normative_keys": len(view),
         "human_rendered_keys": len(human),
@@ -307,7 +378,24 @@ def specification_counts(plan: dict[str, Any], root: str = ".") -> dict[str, int
         "subcondition_both": sum(1 for o, _ in SUBCONDITION_SPEC.values() if o == BOTH),
         "subcondition_json_only": sum(1 for o, _ in SUBCONDITION_SPEC.values()
                                       if o == JSON_ONLY),
-        "markdown_only_keys": 0,
+        "markdown_only_keys": len(markdown_only),
+        "generating_model_primitives": len(GENERATING_MODEL_SPEC),
+        "generating_model_both": sum(1 for o, _ in GENERATING_MODEL_SPEC.values()
+                                     if o == BOTH),
+        "derived_rendering_keys": sum(1 for o, _ in GENERATING_MODEL_SPEC.values()
+                                      if o == DERIVED)
+                                 + sum(1 for o, _ in TOP_LEVEL_SPEC.values()
+                                       if o == DERIVED),
+        "registered_normative_sections": len(SECTION_REGISTRY),
+        "generated_sections": sum(1 for o, _ in SECTION_REGISTRY.values()
+                                  if o == GENERATED),
+        "parsed_sections": sum(1 for o, _ in SECTION_REGISTRY.values() if o == PARSED),
+        "derived_sections": sum(1 for o, _ in SECTION_REGISTRY.values()
+                                if o == DERIVED_SECTION),
+        "non_normative_sections": sum(1 for o, _ in SECTION_REGISTRY.values()
+                                      if o == NON_NORMATIVE),
+        "unregistered_sections": len(unregistered),
+        "unclassified_normative_candidates": unclassified,
     }
 
 
@@ -392,6 +480,12 @@ def normative_json_view(plan: dict[str, Any], root: str = ".") -> dict[str, Any]
     view["final_campaign.rule"] = final["rule"]
     for index, requirement in enumerate(final["requirements"]):
         view[f"final_campaign.requirements.{index}"] = requirement
+
+    for key, value in canonical_generating_model(plan).items():
+        view[f"generating_model.{key}"] = value
+    for index, row in enumerate(plan["controls"]):
+        for key in ("control", "purpose", "case"):
+            view[f"controls.{index}.{key}"] = row[key]
 
     # The CANONICAL driver DECLARATION, identity-bound in driver.py and never in a
     # seal. Only the declaration belongs here: whether the file currently exists is
@@ -575,6 +669,216 @@ def parse_cases_region(text: str, plan: dict[str, Any]) -> dict[str, Any]:
     return view
 
 
+# ------------------------------------------ generated region: generating model
+#: Rendered Branch-B row label -> JSON key, plus the unit column. The unit is a
+#: separate cell and the VALUE is rendered as exact JSON, so "0.00012 s",
+#: "1.2e-4 s" and "0.12 ms" can never be confused: one canonical representation
+#: is rendered and parsed, and equality is exact. No tolerance is applied, so
+#: 0.00012 -> 0.00013 always refuses.
+BRANCH_B_ROWS = (
+    ("process", "process", ""),
+    ("transition", "transition", ""),
+    ("phi", "phi", ""),
+    ("initialisation", "initialisation", ""),
+    ("superseded convention", "superseded", ""),
+    ("dt", "dt_s", "s"),
+    ("T_total", "T_total_s", "s"),
+)
+
+BRANCH_A_ROWS = (
+    ("model", "model"),
+    ("common mode", "common_mode"),
+    ("per mode stiffness", "per_mode_stiffness"),
+    ("orientation", "orientation"),
+    ("thermometry", "thermometry"),
+    ("independence", "independence"),
+)
+
+FIELD_ROWS = (
+    ("k (uN/m)", "k_uN_per_m"),
+    ("T (K)", "T_K"),
+    ("rotation (deg)", "rot_deg"),
+    ("reference", "reference"),
+    ("beta_true", "beta_true"),
+)
+
+
+def derived_n_samples(branch_b: dict[str, Any]) -> int:
+    """n_samples is DERIVED, exactly as `e1a_v4.world.World.n_samples` derives it."""
+    return int(round(branch_b["T_total_s"] / branch_b["dt_s"]))
+
+
+def canonical_generating_model(plan: dict[str, Any]) -> dict[str, Any]:
+    """The canonical generating-model tree, from the JSON plan."""
+    gm = plan.get("generating_model")
+    if not isinstance(gm, dict):
+        raise PlanStructureInvalid("the plan omits generating_model")
+    unknown = sorted(set(gm) - {"branch_b", "branch_a", "truth_visibility", "per_field"})
+    if unknown:
+        raise PlanSurfaceUndeclared(
+            f"generating_model carries unclassified sections {unknown}")
+    out: dict[str, Any] = {}
+    for section, rows in (("branch_b", [k for _, k, _ in BRANCH_B_ROWS]),
+                          ("branch_a", [k for _, k in BRANCH_A_ROWS])):
+        body = gm.get(section)
+        if not isinstance(body, dict):
+            raise PlanStructureInvalid(f"generating_model.{section} is missing")
+        declared = set(rows) | ({"n_samples"} if section == "branch_b" else set())
+        missing = sorted(declared - set(body))
+        extra = sorted(set(body) - declared)
+        if missing or extra:
+            raise PlanSurfaceUndeclared(
+                f"generating_model.{section}: unclassified {extra}, missing {missing}")
+        for key in rows:
+            out[f"{section}.{key}"] = body[key]
+    out["branch_b.n_samples"] = gm["branch_b"]["n_samples"]
+    out["truth_visibility"] = gm["truth_visibility"]
+    fields = gm.get("per_field")
+    if not isinstance(fields, list) or not fields:
+        raise PlanStructureInvalid("generating_model.per_field is missing or empty")
+    declared_field_keys = {k.split(".", 1)[1] for k in GENERATING_MODEL_SPEC
+                           if k.startswith("per_field.")}
+    out["per_field.order"] = [f["id"] for f in fields]
+    for field in fields:
+        extra = sorted(set(field) - declared_field_keys)
+        if extra:
+            raise PlanSurfaceUndeclared(
+                f"field {field.get('id')!r} carries unclassified generating keys {extra}")
+        for key in sorted(declared_field_keys - {"id"}):
+            if key not in field:
+                raise PlanStructureInvalid(
+                    f"field {field.get('id')!r} omits generating key {key!r}")
+            out[f"per_field.{field['id']}.{key}"] = field[key]
+    return out
+
+
+def render_generating_model_region(plan: dict[str, Any]) -> str:
+    """Section 4's NORMATIVE tables, rendered from the canonical view.
+
+    Explanatory prose stays OUTSIDE this region: only declared values participate
+    in equality checking, and every value that defines the synthetic experiment is
+    inside it.
+    """
+    gm = plan["generating_model"]
+    view = canonical_generating_model(plan)
+    out = ["**Branch B — the declared observation process.**", "",
+           "| setting | value | unit |", "|---|---|---|"]
+    for label, key, unit in BRANCH_B_ROWS:
+        out.append(f"| {label} | `{json.dumps(view[f'branch_b.{key}'])}` | {unit} |")
+    out.append(f"| n_samples *(derived: T_total / dt)* | "
+               f"`{json.dumps(view['branch_b.n_samples'])}` | samples |")
+    out += ["", "**Branch A — the measurement-error model.**", "",
+            "| setting | value |", "|---|---|"]
+    for label, key in BRANCH_A_ROWS:
+        out.append(f"| {label} | `{json.dumps(view[f'branch_a.{key}'])}` |")
+    out += ["", f"**Truth visibility.** `{json.dumps(view['truth_visibility'])}`", "",
+            "**Per-field generating parameters.** Every declared parameter is shown; a "
+            "parameter not rendered here is not declared.", "",
+            "| field | " + " | ".join(label for label, _ in FIELD_ROWS) + " | tau rule |",
+            "|---|" + "---|" * (len(FIELD_ROWS) + 1)]
+    for field in gm["per_field"]:
+        cells = " | ".join(f"`{json.dumps(field[key])}`" for _, key in FIELD_ROWS)
+        out.append(f"| `{field['id']}` | {cells} | `{json.dumps(field['tau_rule'])}` |")
+    return "\n".join(out) + "\n"
+
+
+def canonical_generating_model_from_markdown(text: str,
+                                             plan: dict[str, Any]) -> dict[str, Any]:
+    """The same canonical tree, recovered from the RENDERED section-4 region."""
+    out: dict[str, Any] = {}
+    for label, key, _ in BRANCH_B_ROWS:
+        found = re.findall(r"^\| " + re.escape(label) + r" \| `(.*?)` \| .*\|$", text, re.M)
+        if len(found) != 1:
+            raise PlanGeneratingModelMismatch(
+                f"section 4 must render exactly one {label!r} row; found {len(found)}")
+        out[f"branch_b.{key}"] = json.loads(found[0])
+    found = re.findall(r"^\| n_samples \*\(derived: T_total / dt\)\* \| `(.*?)` \| .*\|$",
+                       text, re.M)
+    if len(found) != 1:
+        raise PlanGeneratingModelMismatch("section 4 must render exactly one n_samples row")
+    out["branch_b.n_samples"] = json.loads(found[0])
+    for label, key in BRANCH_A_ROWS:
+        found = re.findall(r"^\| " + re.escape(label) + r" \| `(.*?)` \|$", text, re.M)
+        if len(found) != 1:
+            raise PlanGeneratingModelMismatch(
+                f"section 4 must render exactly one Branch-A {label!r} row")
+        out[f"branch_a.{key}"] = json.loads(found[0])
+    found = re.findall(r"^\*\*Truth visibility\.\*\* `(.*?)`$", text, re.M)
+    if len(found) != 1:
+        raise PlanGeneratingModelMismatch("section 4 must render one truth-visibility line")
+    out["truth_visibility"] = json.loads(found[0])
+    rows = re.findall(r"^\| `([A-Za-z0-9_]+)` \| (`.*`) \|$", text, re.M)
+    if not rows:
+        raise PlanGeneratingModelMismatch("section 4 renders no per-field rows")
+    out["per_field.order"] = [fid for fid, _ in rows]
+    for fid, cells in rows:
+        values = re.findall(r"`([^`]*)`", cells)
+        if len(values) != len(FIELD_ROWS) + 1:
+            raise PlanGeneratingModelMismatch(
+                f"field {fid!r} renders {len(values)} cells, expected {len(FIELD_ROWS) + 1}")
+        for (_, key), raw in zip(FIELD_ROWS, values):
+            out[f"per_field.{fid}.{key}"] = json.loads(raw)
+        out[f"per_field.{fid}.tau_rule"] = json.loads(values[-1])
+    return out
+
+
+def require_generating_model_coherence(root: str, plan: dict[str, Any],
+                                       text: str) -> None:
+    """Markdown section 4 must equal the JSON generating model, path by path.
+
+    Also checks the DERIVED n_samples by recomputation, and refuses a plan that
+    contradicts the FROZEN DESIGN CONTRACT about any field's physical parameters.
+    """
+    expected = canonical_generating_model(plan)
+    actual = canonical_generating_model_from_markdown(_region(text, "generating_model"),
+                                                      plan)
+    for key in sorted(expected):
+        if key not in actual:
+            raise PlanGeneratingModelMismatch(
+                f"section 4 omits the generating-model path {key!r}")
+        if _canonical(actual[key]) != _canonical(expected[key]):
+            raise PlanGeneratingModelMismatch(
+                f"GENERATING-MODEL DISAGREEMENT at {key!r}: section 4 renders "
+                f"{_canonical(actual[key])[:120]} but the JSON plan declares "
+                f"{_canonical(expected[key])[:120]}")
+    extra = sorted(set(actual) - set(expected))
+    if extra:
+        raise PlanSurfaceUndeclared(f"section 4 renders undeclared paths {extra}")
+
+    # DERIVED, not a third authority: recomputed from the two primitives
+    derived = derived_n_samples(plan["generating_model"]["branch_b"])
+    if expected["branch_b.n_samples"] != derived:
+        raise PlanDerivedValueMismatch(
+            f"n_samples is DERIVED as int(round(T_total / dt)) = {derived}, but the "
+            f"plan declares {expected['branch_b.n_samples']}. It is not an "
+            "independent input and may not disagree with its primitives.")
+
+    # the plan RESTATES contract authority; it may not contradict it
+    contract = strict_load_file(os.path.join(root, DESIGN_CONTRACT),
+                                "the frozen design contract")
+    by_id = {f["id"]: f for f in contract["fields"]}
+    for field in plan["generating_model"]["per_field"]:
+        upstream = by_id.get(field["id"])
+        if upstream is None:
+            raise PlanGeneratingModelMismatch(
+                f"the plan declares field {field['id']!r}, which the frozen design "
+                "contract does not")
+        for key in CONTRACT_MIRRORED_FIELD_KEYS:
+            if _canonical(field[key]) != _canonical(upstream[key]):
+                raise PlanGeneratingModelMismatch(
+                    f"the plan's generating model contradicts the FROZEN DESIGN "
+                    f"CONTRACT at field {field['id']!r} {key!r}: plan "
+                    f"{_canonical(field[key])} vs contract {_canonical(upstream[key])}")
+    scenario = contract["hypothetical_uncertainty_scenario"]
+    for plan_key, contract_key in (("dt_s", "dt_s"), ("T_total_s", "T_total_s")):
+        if plan["generating_model"]["branch_b"][plan_key] != scenario[contract_key]:
+            raise PlanGeneratingModelMismatch(
+                f"the plan's generating model contradicts the FROZEN DESIGN CONTRACT "
+                f"at {plan_key!r}: plan "
+                f"{plan['generating_model']['branch_b'][plan_key]} vs contract "
+                f"{scenario[contract_key]}")
+
+
 # ---------------------------------------------- generated region: adopted rules
 def render_adopted_rules_region(plan: dict[str, Any]) -> str:
     rules = plan["adopted_rules_unchanged"]
@@ -636,6 +940,68 @@ def parse_assurance_region(text: str, plan: dict[str, Any]) -> dict[str, Any]:
         view[f"assurance.{index}.replicates"] = json.loads(replicates.strip("`"))
         view[f"assurance.{index}.acceptance_rule"] = acceptance
     return view
+
+
+# ------------------------------------------------- generated region: controls
+def render_controls_region(plan: dict[str, Any]) -> str:
+    out = ["| control | purpose | case |", "|---|---|---|"]
+    for row in plan["controls"]:
+        out.append(f"| {row['control']} | {row['purpose']} | `{row['case']}` |")
+    return "\n".join(out) + "\n"
+
+
+def parse_controls_region(text: str, plan: dict[str, Any]) -> dict[str, Any]:
+    rows = [line for line in text.splitlines()
+            if line.startswith("| ") and not line.startswith("| control")
+            and not line.startswith("|---")]
+    if len(rows) != len(plan["controls"]):
+        raise PlanSurfaceMismatch(
+            f"the controls region renders {len(rows)} rows; the plan declares "
+            f"{len(plan['controls'])}")
+    view: dict[str, Any] = {}
+    for index, line in enumerate(rows):
+        cells = [c.strip() for c in line.strip().strip("|").split(" | ")]
+        if len(cells) != 3:
+            raise PlanSurfaceMismatch(
+                f"controls row {index} renders {len(cells)} cells, expected 3")
+        view[f"controls.{index}.control"] = cells[0]
+        view[f"controls.{index}.purpose"] = cells[1]
+        view[f"controls.{index}.case"] = cells[2].strip("`")
+    return view
+
+
+# ------------------------------------------- DERIVED: the size boundaries
+def require_derived_boundaries(plan: dict[str, Any], text: str) -> None:
+    """Section 12a renders boundaries that are RECOMPUTED, never copied.
+
+    They are `DERIVED_RENDERING`: the plan's own primitives (R, nominal alpha)
+    determine them through `size_boundary`, so a displayed boundary that differs
+    from its recomputation is a defect rather than a second opinion.
+    """
+    from .classification import size_boundary
+    from .dispositions import cp_lower
+    declared = plan["size_validation_semantics"]["derived_boundaries"]
+    for case_id, row in declared.items():
+        recomputed = size_boundary(row["replicates"], row["nominal_alpha"])
+        if row["boundary"] != recomputed:
+            raise PlanDerivedValueMismatch(
+                f"{case_id} boundary is DERIVED as size_boundary("
+                f"{row['replicates']}, {row['nominal_alpha']}) = {recomputed}, but the "
+                f"plan declares {row['boundary']}")
+        for key, count in (("cp_lower_at_boundary", row["boundary"]),
+                           ("cp_lower_at_boundary_plus_1", row["boundary"] + 1)):
+            bound = cp_lower(count, row["replicates"])
+            if abs(row[key] - bound) > 1e-12:
+                raise PlanDerivedValueMismatch(
+                    f"{case_id} {key} is DERIVED as cp_lower({count}, "
+                    f"{row['replicates']}) = {bound!r}, but the plan declares "
+                    f"{row[key]!r}")
+        shown = (f"| **{case_id}** | {row['replicates']} | `{row['nominal_alpha']}` | "
+                 f"0\u2013{row['boundary']} | {row['boundary'] + 1}+ |")
+        if shown not in text:
+            raise PlanDerivedValueMismatch(
+                f"section 12a does not render the derived {case_id} boundary row "
+                f"exactly as recomputed; expected to find {shown!r}")
 
 
 # --------------------------------------------- generated region: release rules
@@ -723,6 +1089,11 @@ def _human_rendered_keys(plan: dict[str, Any]) -> tuple[str, ...]:
             sid = sub["subcondition_id"]
             for key in sub:
                 keys.add(f"cases.{cid}.subconditions.{sid}.{key}")
+    for key in canonical_generating_model(plan):
+        keys.add(f"generating_model.{key}")
+    for index in range(len(plan["controls"])):
+        for key in ("control", "purpose", "case"):
+            keys.add(f"controls.{index}.{key}")
     for index, row in enumerate(plan["assurance"]):
         for key in ("quantity", "target", "confidence_level", "estimator", "bound",
                     "replicates", "acceptance_rule"):
@@ -735,6 +1106,96 @@ def _human_rendered_keys(plan: dict[str, Any]) -> tuple[str, ...]:
     for index in range(len(plan["final_campaign_classification"]["requirements"])):
         keys.add(f"final_campaign.requirements.{index}")
     return tuple(sorted(keys))
+
+
+# ------------------------------------------------- normative-section registry
+GENERATED = "GENERATED"          # covered by an anchor-delimited generated region
+PARSED = "PARSED"                # normative values extracted and compared
+DERIVED_SECTION = "DERIVED"      # displays values recomputed from JSON primitives
+NON_NORMATIVE = "NON_NORMATIVE"  # explanatory, historical or operational only
+
+#: EVERY `## ` section of the normative Markdown plan, with how its normative
+#: content is covered. An auditor has now twice found duplicated normative
+#: material outside the registered surface -- first the identity table, then the
+#: generating model -- so the registry is checked for TOTALITY: a section the
+#: document carries and the registry does not classify is a conformance failure.
+SECTION_REGISTRY = {
+    "1. Frozen identities": (PARSED, "the seven identity rows are parsed and compared"),
+    "1a. Machine-readable authority block": (
+        GENERATED, "the authority block itself"),
+    "2. Adopted rules, unchanged": (GENERATED, "adopted_rules region"),
+    "3. The eight cases": (GENERATED, "cases region, including subcondition payloads"),
+    "4. Generating model": (GENERATED, "generating_model region"),
+    "5. Calibration": (
+        NON_NORMATIVE, "derivation narrative for the adopted calibration architecture. "
+                       "Its operative values -- calibration_scope, per-case artifact "
+                       "counts and the per-case calibration flags -- are carried by the "
+                       "cases region and the authority block, not by this prose"),
+    "6. Statistical assurance": (GENERATED, "assurance region"),
+    "7. Seed separation": (
+        NON_NORMATIVE, "narrative. The operative seed authority is each case's "
+                       "allowed_seed_families and fields_affected, both in the cases "
+                       "region, and the derivation itself is code bound by module hashes"),
+    "8. Controls": (GENERATED, "controls region"),
+    "9. Output schema": (PARSED, "schema versions and both field lists are parsed"),
+    "10. Failure classifications": (PARSED, "the eleven classifications are parsed"),
+    "11. No post-outcome tuning": (
+        NON_NORMATIVE, "prohibition narrative; changes nothing executable"),
+    "12. Author dispositions — CLOSED PROSPECTIVELY": (
+        GENERATED, "release_rules region"),
+    "12a. Size-validation semantics — FROZEN PROSPECTIVELY": (
+        DERIVED_SECTION, "the derived boundaries are recomputed by size_boundary and "
+                         "cp_lower and compared to the rendered table"),
+    "12b. Final campaign classification — FROZEN PROSPECTIVELY": (
+        NON_NORMATIVE, "points at the generated release-rules region; it no longer "
+                       "restates the requirements"),
+    "13. Execution": (PARSED, "the execution_authorised sentence is parsed"),
+    "13a. Execution-seal architecture — FROZEN PROSPECTIVELY": (
+        PARSED, "the seal state and the canonical driver path are parsed"),
+    "14. Pre-execution repair — SUPERSESSION RECORD": (
+        NON_NORMATIVE, "historical supersession record; preserved, not executable"),
+    "15. Parallelism policy": (
+        NON_NORMATIVE, "operational policy; changes no scientific rule"),
+    "16. What the cost figures actually contain": (
+        NON_NORMATIVE, "benchmark provenance and projections; measurements about the "
+                       "package, not parameters of the experiment"),
+    "17. Correction — the superseded 40,000 artifact count": (
+        NON_NORMATIVE, "historical correction record"),
+    "18. Plan-coherence and execution-seal repair — SUPERSESSION RECORD": (
+        NON_NORMATIVE, "historical supersession record"),
+    "19. Generating-model coherence — SUPERSESSION RECORD": (
+        NON_NORMATIVE, "historical supersession record"),
+}
+
+
+def markdown_sections(text: str) -> list[str]:
+    """Every `## ` heading, in document order."""
+    return [m.group(1).strip() for m in re.finditer(r"^## (.+)$", text, re.M)]
+
+
+def require_section_registry_totality(text: str) -> None:
+    """Refuse a normative Markdown section the registry does not classify.
+
+    This is the whole-document guard: a future section added without a registry
+    entry fails here rather than quietly becoming unchecked authority.
+    """
+    present = markdown_sections(text)
+    duplicated = sorted({h for h in present if present.count(h) > 1})
+    if duplicated:
+        raise PlanAmbiguousBlock(
+            f"the Markdown plan carries duplicated section headings {duplicated}")
+    unregistered = [h for h in present if h not in SECTION_REGISTRY]
+    if unregistered:
+        raise PlanSectionUnregistered(
+            f"the Markdown plan carries sections the normative-section registry does "
+            f"not classify: {unregistered}. Every section must be registered as "
+            f"{GENERATED}, {PARSED}, {DERIVED_SECTION} or {NON_NORMATIVE} with a "
+            "reason, so its normative status is decided rather than assumed.")
+    absent = [h for h in SECTION_REGISTRY if h not in present]
+    if absent:
+        raise PlanSectionUnregistered(
+            f"the registry classifies sections the Markdown plan no longer carries: "
+            f"{absent}")
 
 
 # ------------------------------------------------------------- Markdown sources
@@ -765,6 +1226,8 @@ def render_region(name: str, plan: dict[str, Any]) -> str:
         "adopted_rules": render_adopted_rules_region,
         "assurance": render_assurance_region,
         "release_rules": render_release_rules_region,
+        "generating_model": render_generating_model_region,
+        "controls": render_controls_region,
     }[name](plan)
 
 
@@ -887,6 +1350,10 @@ def normative_markdown_view(root: str = ".") -> dict[str, Any]:
     view.update(parse_cases_region(_region(text, "cases"), plan))
     view.update(parse_assurance_region(_region(text, "assurance"), plan))
     view.update(parse_release_rules_region(_region(text, "release_rules"), plan))
+    view.update(parse_controls_region(_region(text, "controls"), plan))
+    for key, value in canonical_generating_model_from_markdown(
+            _region(text, "generating_model"), plan).items():
+        view[f"generating_model.{key}"] = value
     return view
 
 
@@ -908,6 +1375,8 @@ def _code_for(key: str):
     if (key.startswith("assurance.") or key.startswith("authority_gaps.")
             or key.startswith("final_campaign.")):
         return PlanReleaseRuleMismatch
+    if key.startswith("generating_model."):
+        return PlanGeneratingModelMismatch
     if key.startswith("driver."):
         return DriverIdentityMismatch
     return PlanSurfaceMismatch
@@ -941,6 +1410,11 @@ def require_plan_authority_coherence(root: str, plan: dict[str, Any]) -> None:
     """
     expected = normative_json_view(plan, root)
     text = markdown_text(root)
+
+    # whole-document guard FIRST: an unregistered section is unchecked authority
+    require_section_registry_totality(text)
+    require_generating_model_coherence(root, plan, text)
+    require_derived_boundaries(plan, text)
 
     for name in REGION_ANCHORS:
         actual_region = _region(text, name)

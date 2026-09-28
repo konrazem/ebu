@@ -78,6 +78,27 @@ class PlanSurfaceMismatch(CodedRefusal):
     code = "PLAN_SURFACE_MISMATCH"
 
 
+class PlanGeneratingModelMismatch(CodedRefusal):
+    """Markdown section 4 and the JSON generating model disagree, or the plan's
+    restatement contradicts the frozen design contract."""
+
+    code = "PLAN_GENERATING_MODEL_MISMATCH"
+
+
+class PlanDerivedValueMismatch(CodedRefusal):
+    """A value the Markdown displays as derived does not equal its recomputation
+    from the JSON primitives it is derived from."""
+
+    code = "PLAN_DERIVED_VALUE_MISMATCH"
+
+
+class PlanSectionUnregistered(CodedRefusal):
+    """The Markdown carries a section the normative-section registry does not
+    classify, so its normative status was never decided."""
+
+    code = "PLAN_SECTION_UNREGISTERED"
+
+
 class PlanSurfaceUndeclared(CodedRefusal):
     """The plan carries authority the coherence specification does not classify."""
 
@@ -207,6 +228,7 @@ ALL_REFUSAL_CLASSES = (
     PlanCaseMismatch, PlanSubconditionMismatch, PlanReleaseRuleMismatch,
     PlanAdoptedRuleMismatch, PlanSurfaceMismatch, PlanSurfaceUndeclared,
     PlanDuplicateKey, PlanAmbiguousBlock, PlanStructureInvalid,
+    PlanGeneratingModelMismatch, PlanDerivedValueMismatch, PlanSectionUnregistered,
     ContractIdentityMismatch, FrozenSourceMismatch, ImplementationHashMismatch,
     SeedMapNotReproducible, UnexpectedExecutionStage, OutputCollision,
     ExecutionIdentityMismatch, ExecutionNotAuthorised, DriverAbsent,

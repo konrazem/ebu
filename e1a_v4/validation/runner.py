@@ -37,6 +37,7 @@ from .plan import ExecutionBinding, bind_execution
 from .scope import CampaignCalibrationLedger, ReplicateCalibration
 from .driver import (
     OFFICIAL_CAMPAIGN_DRIVER_PATH, driver_exists, driver_state,
+    require_canonical_driver,
 )
 from .refusals import (
     CampaignDriverAbsent, DriverAbsent, ExecutionAuthorisationMissing,
@@ -98,12 +99,21 @@ def run(root: str = ".", *, rng_factory: RNGFactory | None = None,
     `rng_factory` is NOT called during preflight. It is not called at all while
     `execution_authorised` is false in the frozen plan.
     """
+    if execute:
+        # THE DRIVER IS CHECKED BEFORE PREFLIGHT, deliberately. Preflight validates
+        # the external seal as part of package coherence, so a package with no seal
+        # would otherwise report a seal problem while the real missing precondition
+        # is that the campaign driver does not exist. The declared lifecycle order is
+        # driver -> seal -> identity -> authorisation, and it must hold whatever
+        # state the seal is in -- including absent.
+        #
+        # This does not hide integrity defects: `main` runs the complete preflight
+        # first and prints its result, and `--preflight-only` is unaffected.
+        require_canonical_driver(root)
     binding = preflight(root=root, output_dir=output_dir)
     if not execute:
         return binding
-    # THE EXECUTION GATE. Driver, then seal, then identity, then authorisation --
-    # most fundamental missing precondition first, so a refusal is never mistaken
-    # for "just flip the flag". Every branch refuses before `rng_factory` is touched.
+    # the remainder of the gate: seal, then identity, then authorisation
     require_execution_gate(root, binding.plan, binding.execution_identity)
     if rng_factory is None:
         raise Refusal("an authorised execution must supply an RNG factory")

@@ -17,7 +17,7 @@ WHAT THIS SUITE EXISTS FOR
 
     B  duplicate JSON keys were accepted. `json.loads` keeps the LAST duplicate
        while a human reads the FIRST, so a block reading
-       {"plan_version": "0.0.1-TAMPERED", "plan_version": "1.8.0"} parsed to the
+       {"plan_version": "0.0.1-TAMPERED", "plan_version": "1.9.0"} parsed to the
        correct value while every reader saw the tampered one. ACCEPTED, in the
        authority block, inside a nested record, and in the plan JSON itself.
 
@@ -45,7 +45,7 @@ from e1a_v4.contract import load_contract, sha256_file
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.coherence import (
-    BLOCK_BEGIN, BLOCK_END, BOTH, CASE_SPEC, JSON_ONLY, REGION_ANCHORS,
+    BLOCK_BEGIN, BLOCK_END, BOTH, CASE_SPEC, DERIVED, JSON_ONLY, REGION_ANCHORS,
     SUBCONDITION_SPEC, TOP_LEVEL_SPEC, authority_block_fields, normative_json_view,
     normative_markdown_view, render_authority_block, render_region,
     require_plan_authority_coherence, require_specification_totality,
@@ -189,8 +189,8 @@ def test_specification_is_total_and_enumerable() -> None:
     counts = specification_counts(plan, ROOT)
     for key, value in counts.items():
         check(f"machine-derived count: {key}", isinstance(value, int), str(value))
-    check("every top-level key is classified BOTH or JSON_ONLY",
-          all(o in (BOTH, JSON_ONLY) for o, _ in TOP_LEVEL_SPEC.values()),
+    check("every top-level key is classified BOTH, JSON_ONLY or DERIVED",
+          all(o in (BOTH, JSON_ONLY, DERIVED) for o, _ in TOP_LEVEL_SPEC.values()),
           f"{len(TOP_LEVEL_SPEC)} keys")
     check("every case key is classified",
           all(o in (BOTH, JSON_ONLY) for o, _ in CASE_SPEC.values()),
@@ -324,7 +324,7 @@ def test_blocker_b_duplicate_keys_refuse() -> None:
           json.loads('{"a": 1, "a": 2}') == {"a": 2},
           "which is why ordinary parsing is not used for authoritative documents")
     for label, text in (
-            ("a top-level duplicate", '{"plan_version": "1.8.0", "plan_version": "9.9.9"}'),
+            ("a top-level duplicate", '{"plan_version": "1.9.0", "plan_version": "9.9.9"}'),
             ("a nested duplicate", '{"frozen": {"id": "aaa", "id": "bbb"}}'),
             ("a duplicate inside a case record",
              '{"cases": [{"case_id": "C1", "case_id": "C9"}]}'),
@@ -343,8 +343,8 @@ def test_blocker_b_duplicate_keys_refuse() -> None:
     a = text.index(BLOCK_BEGIN)
     z = text.index(BLOCK_END) + len(BLOCK_END)
     body = text[a:z].split("```json\n", 1)[1].rsplit("\n```", 1)[0]
-    tampered = body.replace('"plan_version": "1.8.0"',
-                            '"plan_version": "0.0.1-TAMPERED",\n    "plan_version": "1.8.0"', 1)
+    tampered = body.replace('"plan_version": "1.9.0"',
+                            '"plan_version": "0.0.1-TAMPERED",\n    "plan_version": "1.9.0"', 1)
     wmd(tmp, text[:a] + BLOCK_BEGIN + "\n\n```json\n" + tampered + "\n```\n\n"
         + BLOCK_END + text[z:])
     refuses_with_code("a duplicate in the BLOCK, hostile first / correct last",
@@ -353,11 +353,11 @@ def test_blocker_b_duplicate_keys_refuse() -> None:
 
     tmp = sandbox()
     raw = open(os.path.join(tmp, PLAN_JSON), encoding="utf-8").read()
-    marker = '"plan_version": "1.8.0",'
+    marker = '"plan_version": "1.9.0",'
     assert raw.count(marker) == 1
     with open(os.path.join(tmp, PLAN_JSON), "w", encoding="utf-8") as handle:
         handle.write(raw.replace(
-            marker, '"plan_version": "0.0.1-TAMPERED",\n  "plan_version": "1.8.0",', 1))
+            marker, '"plan_version": "0.0.1-TAMPERED",\n  "plan_version": "1.9.0",', 1))
     refuses_with_code("a duplicate in the AUTHORITATIVE plan JSON",
                       "PLAN_DUPLICATE_KEY", preflight, tmp)
     shutil.rmtree(tmp)
@@ -429,7 +429,16 @@ def test_blocker_c_driver_cannot_be_substituted() -> None:
     raw["expected_execution_identity"] = ident
     raw["restates_canonical_campaign_driver"] = "e1a_v4/validation/plan.py"
     wj(tmp, SEAL_JSON, raw)
+    # THE AUDIT SCENARIO. Once the driver is checked FIRST, a seal nominating an
+    # unrelated file cannot even reach the question: the canonical driver is
+    # absent, so that is what is reported. The seal's nomination is irrelevant,
+    # which is a stronger outcome than refusing it on the seal's own terms.
     refuses_with_code("the AUDIT SCENARIO: FROZEN seal naming plan.py as the driver",
+                      "DRIVER_ABSENT", run, tmp, rng_factory=rng_factory,
+                      execute=True)
+    # and with a driver actually present, the substitution is still refused
+    install_driver_fixture(tmp, entry_point=True)
+    refuses_with_code("...and with a driver PRESENT, the substitution is still refused",
                       "DRIVER_IDENTITY_MISMATCH", run, tmp, rng_factory=rng_factory,
                       execute=True)
     shutil.rmtree(tmp)
@@ -527,7 +536,26 @@ def test_seal_lifecycle() -> None:
 
     tmp, ident = frozen_sandbox(authorised=True)
     os.remove(os.path.join(tmp, SEAL_JSON))
+    # ABSENT and MALFORMED are different outcomes: a seal nobody wrote has not been
+    # frozen, and reporting "malformed" would name the wrong missing precondition.
     refuses_with_code("driver PRESENT and identity-bound but seal MISSING",
+                      "EXECUTION_SEAL_NOT_FROZEN", run, tmp, rng_factory=rng_factory,
+                      execute=True)
+    shutil.rmtree(tmp)
+
+    tmp, ident = frozen_sandbox(authorised=True)
+    with open(os.path.join(tmp, SEAL_JSON), "w", encoding="utf-8") as handle:
+        handle.write("{ this is not json ")
+    refuses_with_code("driver PRESENT but seal exists and is UNPARSEABLE",
+                      "EXECUTION_SEAL_MALFORMED", run, tmp, rng_factory=rng_factory,
+                      execute=True)
+    shutil.rmtree(tmp)
+
+    tmp, ident = frozen_sandbox(authorised=True)
+    raw = rj(tmp, SEAL_JSON)
+    raw["schema"] = "e1a_v4_execution_seal/999"
+    wj(tmp, SEAL_JSON, raw)
+    refuses_with_code("driver PRESENT but seal schema is unknown",
                       "EXECUTION_SEAL_MALFORMED", run, tmp, rng_factory=rng_factory,
                       execute=True)
     shutil.rmtree(tmp)

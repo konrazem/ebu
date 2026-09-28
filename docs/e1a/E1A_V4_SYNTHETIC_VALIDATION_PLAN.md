@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.8.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.9.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -100,7 +100,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
 
 ```json
 {
-  "field_count": 431,
+  "field_count": 489,
   "fields": {
     "adopted_rules.P3_applies_to": "EVERY tested field",
     "adopted_rules.P4_classification": "DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK",
@@ -650,6 +650,24 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "C7_false_bridge",
       "C8_blinded_scale_control"
     ],
+    "controls.0.case": "C8",
+    "controls.0.control": "blinded scale distortion",
+    "controls.0.purpose": "scale-detection sensitivity",
+    "controls.1.case": "C7",
+    "controls.1.control": "geometry / coordinate permutation",
+    "controls.1.purpose": "destroys the correlation structure; the geometry control",
+    "controls.2.case": "C7",
+    "controls.2.control": "false-beta alternatives",
+    "controls.2.purpose": "false-bridge discrimination",
+    "controls.3.case": "C7",
+    "controls.3.control": "time shuffle",
+    "controls.3.purpose": "AUTOCORRELATION control only, not a geometry control; leaves S identical to 1e-30",
+    "controls.4.case": "C8",
+    "controls.4.control": "paired hidden-scale distortion c = 1.07 / 0.90",
+    "controls.4.purpose": "acts through P3/beta; gates are scale-invariant",
+    "controls.5.case": "C7",
+    "controls.5.control": "forbidden H := K",
+    "controls.5.purpose": "recorded as vacuous; demonstration only",
     "driver.entry_point": "run_campaign",
     "driver.module": "e1a_v4.validation.campaign_driver",
     "driver.path": "e1a_v4/validation/campaign_driver.py",
@@ -690,6 +708,63 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "frozen_identities.foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
     "frozen_identities.implementation_file_hashes_digest": "787b8f5cef19a3eb7aa328282c421970cabbf9aae1060c4927bbdbd4476a6c5b",
     "frozen_identities.implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
+    "generating_model.branch_a.common_mode": "ONE draw per experiment, shared across every field, so it cancels in the P2 ratio and not in P3",
+    "generating_model.branch_a.independence": "Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory",
+    "generating_model.branch_a.model": "H_A = decorated H_true; its OWN seed family branch_a_measurement",
+    "generating_model.branch_a.orientation": "trap-axis psi",
+    "generating_model.branch_a.per_mode_stiffness": "independent per mode",
+    "generating_model.branch_a.thermometry": "T measured with sigma_T",
+    "generating_model.branch_b.T_total_s": 240.0,
+    "generating_model.branch_b.dt_s": 0.00012,
+    "generating_model.branch_b.initialisation": "x_0 ~ N(x*, Sigma_theta); stationary at step 0; burn_in_steps = 0",
+    "generating_model.branch_b.n_samples": 2000000,
+    "generating_model.branch_b.phi": "phi_r = exp(-dt / tau_r)",
+    "generating_model.branch_b.process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "generating_model.branch_b.superseded": "the v3 convention of starting at x = 0 is FORBIDDEN: it is not stationary",
+    "generating_model.branch_b.transition": "x_{k+1} = phi_r x_k + sqrt(1 - phi_r^2) L z, per mode, EXACT",
+    "generating_model.per_field.order": [
+      "theta0_circular",
+      "theta1_power",
+      "theta2_ellipse",
+      "theta3_temperature"
+    ],
+    "generating_model.per_field.theta0_circular.T_K": 298,
+    "generating_model.per_field.theta0_circular.beta_true": 1.0,
+    "generating_model.per_field.theta0_circular.k_uN_per_m": [
+      100,
+      100
+    ],
+    "generating_model.per_field.theta0_circular.reference": true,
+    "generating_model.per_field.theta0_circular.rot_deg": 0,
+    "generating_model.per_field.theta0_circular.tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a",
+    "generating_model.per_field.theta1_power.T_K": 298,
+    "generating_model.per_field.theta1_power.beta_true": 1.0,
+    "generating_model.per_field.theta1_power.k_uN_per_m": [
+      210,
+      210
+    ],
+    "generating_model.per_field.theta1_power.reference": false,
+    "generating_model.per_field.theta1_power.rot_deg": 0,
+    "generating_model.per_field.theta1_power.tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a",
+    "generating_model.per_field.theta2_ellipse.T_K": 298,
+    "generating_model.per_field.theta2_ellipse.beta_true": 1.0,
+    "generating_model.per_field.theta2_ellipse.k_uN_per_m": [
+      150,
+      60
+    ],
+    "generating_model.per_field.theta2_ellipse.reference": false,
+    "generating_model.per_field.theta2_ellipse.rot_deg": 30,
+    "generating_model.per_field.theta2_ellipse.tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a",
+    "generating_model.per_field.theta3_temperature.T_K": 318,
+    "generating_model.per_field.theta3_temperature.beta_true": 1.0,
+    "generating_model.per_field.theta3_temperature.k_uN_per_m": [
+      100,
+      100
+    ],
+    "generating_model.per_field.theta3_temperature.reference": false,
+    "generating_model.per_field.theta3_temperature.rot_deg": 0,
+    "generating_model.per_field.theta3_temperature.tau_rule": "tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a",
+    "generating_model.truth_visibility": "H_true and tau_true are known to the SCORING layer only. The analysis pipeline receives only the Branch-A measured field, exactly as in the real experiment.",
     "output_schema.aggregate_fields": [
       "success_count",
       "failure_count",
@@ -734,7 +809,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.8.0",
+    "plan_version": "1.9.0",
     "seed_map_sha256": "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce"
   },
   "schema": "e1a_v4_plan_authority/2"
@@ -1134,39 +1209,58 @@ used to exist only in the JSON, so a reader could not see them drift.
 
 ## 4. Generating model
 
+The tables below are **generated** from `generating_model` in the JSON plan and
+verified path-by-path at every preflight. Explanatory prose stays *outside* the
+generated region: only the declared values participate in equality checking, and
+every value that defines the synthetic experiment is inside it.
+
+> `n_samples` is **derived**, not an independent input: `e1a_v4.world.World`
+> computes it as `int(round(T_total / dt))`. Preflight recomputes it from the two
+> primitives rather than trusting the stored number, so it can never become a third
+> authority that quietly disagrees.
+
+> The field table restates **frozen design-contract authority**. Preflight refuses a
+> plan whose stiffness, temperature, orientation, reference flag, `dt` or `T_total`
+> contradicts `docs/e1a/e1a_v4_design_contract.json`.
+
+<!-- BEGIN GENERATED GENERATING MODEL -- do not hand-edit -->
+
 **Branch B — the declared observation process.**
 
-```
-process        declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)
-transition     x_{k+1} = phi_r x_k + sqrt(1 - phi_r^2) L z, per mode, EXACT
-phi            phi_r = exp(-dt / tau_r)
-initialisation x_0 ~ N(x*, Sigma_theta); stationary at step 0; burn_in_steps = 0
-dt             0.00012 s
-T_total        240.0 s
-n_samples      2000000
-```
-
-> **the v3 convention of starting at x = 0 is FORBIDDEN: it is not stationary.**
+| setting | value | unit |
+|---|---|---|
+| process | `"declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)"` |  |
+| transition | `"x_{k+1} = phi_r x_k + sqrt(1 - phi_r^2) L z, per mode, EXACT"` |  |
+| phi | `"phi_r = exp(-dt / tau_r)"` |  |
+| initialisation | `"x_0 ~ N(x*, Sigma_theta); stationary at step 0; burn_in_steps = 0"` |  |
+| superseded convention | `"the v3 convention of starting at x = 0 is FORBIDDEN: it is not stationary"` |  |
+| dt | `0.00012` | s |
+| T_total | `240.0` | s |
+| n_samples *(derived: T_total / dt)* | `2000000` | samples |
 
 **Branch A — the measurement-error model.**
 
-- **model**: H_A = decorated H_true; its OWN seed family branch_a_measurement
-- **common mode**: ONE draw per experiment, shared across every field, so it cancels in the P2 ratio and not in P3
-- **per mode stiffness**: independent per mode
-- **orientation**: trap-axis psi
-- **thermometry**: T measured with sigma_T
-- **independence**: Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory
+| setting | value |
+|---|---|
+| model | `"H_A = decorated H_true; its OWN seed family branch_a_measurement"` |
+| common mode | `"ONE draw per experiment, shared across every field, so it cancels in the P2 ratio and not in P3"` |
+| per mode stiffness | `"independent per mode"` |
+| orientation | `"trap-axis psi"` |
+| thermometry | `"T measured with sigma_T"` |
+| independence | `"Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory"` |
 
-**Truth visibility.** H_true and tau_true are known to the SCORING layer only. The analysis pipeline receives only the Branch-A measured field, exactly as in the real experiment.
+**Truth visibility.** `"H_true and tau_true are known to the SCORING layer only. The analysis pipeline receives only the Branch-A measured field, exactly as in the real experiment."`
 
-| field | k (µN/m) | T (K) | rotation | reference | beta_true |
-|---|---|---:|---:|:--:|---:|
-| `theta0_circular` | [100, 100] | 298 | 0° | yes | 1.0 |
-| `theta1_power` | [210, 210] | 298 | 0° | no | 1.0 |
-| `theta2_ellipse` | [150, 60] | 298 | 30° | no | 1.0 |
-| `theta3_temperature` | [100, 100] | 318 | 0° | no | 1.0 |
+**Per-field generating parameters.** Every declared parameter is shown; a parameter not rendered here is not declared.
 
-Relaxation rule: `tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a`.
+| field | k (uN/m) | T (K) | rotation (deg) | reference | beta_true | tau rule |
+|---|---|---|---|---|---|---|
+| `theta0_circular` | `[100, 100]` | `298` | `0` | `true` | `1.0` | `"tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"` |
+| `theta1_power` | `[210, 210]` | `298` | `0` | `false` | `1.0` | `"tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"` |
+| `theta2_ellipse` | `[150, 60]` | `298` | `30` | `false` | `1.0` | `"tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"` |
+| `theta3_temperature` | `[100, 100]` | `318` | `0` | `false` | `1.0` | `"tau_r = gamma(T)/k_r, gamma = 6 pi eta(T) a"` |
+
+<!-- END GENERATED GENERATING MODEL -->
 
 ---
 
@@ -1498,6 +1592,10 @@ reported.
 
 ## 8. Controls
 
+**Generated** from `controls` in the JSON plan.
+
+<!-- BEGIN GENERATED CONTROLS -- do not hand-edit -->
+
 | control | purpose | case |
 |---|---|---|
 | blinded scale distortion | scale-detection sensitivity | `C8` |
@@ -1506,6 +1604,8 @@ reported.
 | time shuffle | AUTOCORRELATION control only, not a geometry control; leaves S identical to 1e-30 | `C7` |
 | paired hidden-scale distortion c = 1.07 / 0.90 | acts through P3/beta; gates are scale-invariant | `C8` |
 | forbidden H := K | recorded as vacuous; demonstration only | `C7` |
+
+<!-- END GENERATED CONTROLS -->
 
 ---
 
@@ -2013,6 +2113,61 @@ seed, case semantic or generator behaviour was touched by this repair.
 - this Markdown hashed into the execution-identity preimage — section 1
 - an external, non-self-referential execution seal with an explicit lifecycle — section 13a
 - an execution gate that refuses on driver absence **before** it reaches the authorisation flag
+
+```
+execution_authorised = false
+official campaign driver = ABSENT
+final execution seal = NOT FROZEN
+RNG OBJECTS = 0   RANDOM DRAWS = 0   TRAJECTORIES = 0
+CALIBRATION EXECUTION = NOT RUN   VALIDATION CAMPAIGN = NOT RUN
+```
+
+---
+
+## 19. Generating-model coherence — SUPERSESSION RECORD
+
+**Status.** PRE-EXECUTION AUTHORITY-INTEGRITY REPAIR. No stochastic evidence exists, so nothing
+scientific is retracted. **No E1a scientific decision rule changed.**
+
+**Trigger.** independent audit finding that section 4 renders the generating model's scientific
+settings while the coherence specification classified `generating_model` as JSON-only.
+
+### What was wrong
+
+The whole object was classified with one subtree-level shortcut, so **every** descendant was
+outside the checked surface. Reproduced at `addd704`, before any edit:
+
+| one-sided change | before |
+|---|---|
+| visible `n_samples` `2000000` → `2000001` | **ACCEPTED** |
+| visible `dt` `0.00012` → `0.00013` | **ACCEPTED** |
+| visible `theta1_power` stiffness `[210,210]` → `[200,200]` | **ACCEPTED** |
+| visible `theta3_temperature` `T` `318 K` → `350 K` | **ACCEPTED** |
+| visible `theta2_ellipse` rotation `30°` → `45°` | **ACCEPTED** |
+| visible `T_total` `240.0` → `480.0 s` | **ACCEPTED** |
+| visible `theta0_circular` reference `yes` → `no` | **ACCEPTED** |
+| visible `beta_true` `1.0` → `1.06` | **ACCEPTED** |
+| visible `burn_in_steps` `0` → `5000` | **ACCEPTED** |
+| the same six changes made in the **JSON** alone | **ACCEPTED** |
+| the plan **contradicting the frozen design contract** on `theta1_power` stiffness | **ACCEPTED** |
+
+Nine Markdown-only and six JSON-only probes, all accepted. The auditor named three; the class was
+wider than the three.
+
+### What is now enforced
+
+- every descendant primitive of `generating_model` is classified **individually** — no
+  subtree-level shortcut may hide a duplicated descendant
+- section 4's normative tables are **generated** from the JSON and compared path by path
+- `n_samples` is **DERIVED**, recomputed as `int(round(T_total / dt))` exactly as
+  `e1a_v4.world.World` derives it, never trusted as a third authority
+- the plan's restatement of **frozen design-contract authority** — every field's stiffness,
+  temperature, orientation and reference flag, plus `dt` and `T_total` — is checked against the
+  contract, which outranks the plan
+- section 8's control-to-case mapping is generated
+- the section-12a size boundaries are recomputed by `size_boundary` and `cp_lower`
+- **every** `##` section of this document is registered as GENERATED, PARSED, DERIVED or
+  NON_NORMATIVE with a reason, and an unregistered section refuses
 
 ```
 execution_authorised = false

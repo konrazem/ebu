@@ -63,6 +63,7 @@ NO RNG. Nothing in this module draws or advances any model state.
 
 from __future__ import annotations
 
+import os
 import re
 from dataclasses import dataclass
 from typing import Any
@@ -112,17 +113,32 @@ class ExecutionSeal:
         return OFFICIAL_CAMPAIGN_DRIVER_PATH
 
 
+def seal_exists(root: str = ".") -> bool:
+    return os.path.isfile(os.path.join(root, SEAL_JSON))
+
+
 def load_seal(root: str = ".") -> ExecutionSeal:
-    """Read and validate the seal. Absent or malformed is FORGOTTEN -> REFUSAL."""
+    """Read and validate the seal.
+
+    ABSENT and MALFORMED are deliberately DIFFERENT outcomes. A seal file that is
+    simply not there has not been frozen: `EXECUTION_SEAL_NOT_FROZEN`. A seal that
+    exists but cannot be used -- bad JSON, wrong schema, undeclared state,
+    contradictory fields -- is `EXECUTION_SEAL_MALFORMED`. Reporting "malformed"
+    for a file nobody has written yet names the wrong missing precondition.
+    """
+    if not seal_exists(root):
+        raise ExecutionSealNotFrozen(
+            f"EXECUTION REFUSED: {SEAL_JSON} does not exist, so no final expected "
+            "execution identity has been frozen. The not-yet-frozen state is normally "
+            "declared explicitly, with state = PRE_DRIVER and "
+            "expected_execution_identity = null."
+        )
     try:
-        raw = strict_load_file(f"{root}/{SEAL_JSON}" if root != "." else SEAL_JSON,
-                               "the execution seal")
+        raw = strict_load_file(os.path.join(root, SEAL_JSON), "the execution seal")
     except Exception as exc:                       # strict_json raises coded refusals
         if type(exc).__name__ == "PlanStructureInvalid":
             raise ExecutionSealMalformed(
-                f"EXECUTION SEAL MISSING OR MALFORMED: {exc}. An absent seal is "
-                "indistinguishable from a forgotten freeze and is never treated as "
-                "'not yet frozen'; the not-yet-frozen state is declared explicitly."
+                f"EXECUTION SEAL MALFORMED: {exc}"
             ) from None
         raise
     if raw.get("schema") != SEAL_SCHEMA:
@@ -187,11 +203,15 @@ def require_execution_gate(root: str, plan: dict[str, Any],
     a driver that does not exist cannot have been audited, and an unaudited
     package cannot have been sealed, and an unsealed package cannot be authorised.
     """
+    # 1. THE DRIVER FIRST, before the seal is even opened. A package whose driver
+    #    does not exist cannot be executed whatever any seal says, and reporting a
+    #    seal problem first names the wrong missing precondition. Binds to the
+    #    CANONICAL declaration, never to anything a seal named.
+    require_canonical_driver(root)
+
+    # 2. only now the seal
     seal = load_seal(root)
     require_seal_plan_agreement(plan, seal)
-
-    # binds to the CANONICAL declaration, never to anything the seal named
-    require_canonical_driver(root)
 
     if not seal.is_frozen:
         raise ExecutionSealNotFrozen(

@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.8.0",
+  "plan_version": "1.9.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -16,7 +16,14 @@
     "why_external": "The execution identity hashes the frozen package inputs, which include this plan and its normative Markdown. An expected identity stored inside one of its own inputs is an impossible fixed point, so the assertion lives outside the preimage.",
     "current_pre_driver_identity_is_not_a_seal": "The identity preflight reports today is a PRE-DRIVER PACKAGE EXECUTION IDENTITY: a diagnostic, not the final expected value. It will legitimately change when the official campaign driver enters the preimage.",
     "seal_may_not_name_the_driver": "The seal used to carry an authoritative driver path checked with os.path.exists. An independent audit showed a correctly FROZEN seal naming e1a_v4/validation/plan.py made the complete execution gate PASS with no campaign driver in existence. The driver is now declared canonically and identity-bound; the seal may only restate it.",
-    "seal_schema": "e1a_v4_execution_seal/2"
+    "seal_schema": "e1a_v4_execution_seal/2",
+    "gate_order": [
+      "1. canonical official driver exists and satisfies its declared interface",
+      "2. external execution seal exists, is well-formed and is FROZEN",
+      "3. recomputed execution identity equals the frozen seal",
+      "4. execution_authorised is true"
+    ],
+    "gate_order_note": "The driver is checked FIRST, before the seal is opened. A missing seal while the driver is absent previously reported EXECUTION_SEAL_MALFORMED, which named the wrong missing precondition. An absent seal is now EXECUTION_SEAL_NOT_FROZEN; EXECUTION_SEAL_MALFORMED is reserved for a seal that exists but is unusable."
   },
   "plan_authority_coherence": {
     "rule": "The JSON is the mechanical schema and ordering source; docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md is its normative human rendering. Any mismatch is an integrity failure requiring fail-closed refusal (AGENTS.md).",
@@ -26,13 +33,19 @@
       "cases",
       "adopted_rules",
       "assurance",
-      "release_rules"
+      "release_rules",
+      "generating_model",
+      "controls"
     ],
     "generated_region_rule": "Each anchor-delimited region is rendered from this JSON and verified BYTE-EXACT at preflight. The visible normative tables are therefore generated, not hand-maintained. Normative content outside a generated region -- the version line, the section-1 identity table, the execution-authorisation sentence, section 9 and section 10 -- is parsed and compared instead.",
     "block_schema": "e1a_v4_plan_authority/2",
     "strict_json": "Authoritative JSON is parsed by e1a_v4.validation.strict_json, which REFUSES duplicate object keys at any depth. json.loads keeps the LAST duplicate while a human reads the FIRST; an authoritative document that states a key twice is ambiguous and neither value is adopted.",
     "superseded_defect_1": "The original preflight compared only the section-9 output schema. The Markdown carried, for four commits, an analysis procedure identity the package has never computed, while preflight reported PASS.",
-    "superseded_defect_2": "Its replacement carried only case-level SCALARS in the generated block and read only seven case rows. An independent audit reproduced nine probes that still passed, including visible fields_affected, primary sigma_psi, and the C1 279/300, C7 4/400 and C8 188/200 release thresholds changed in the Markdown alone, and JSON feeds_primary_claim, C7 beta_true and C8 scale_factors changed with the block regenerated. See docs/e1a/E1A_V4_COHERENCE_HARDENING_REPORT.md."
+    "superseded_defect_2": "Its replacement carried only case-level SCALARS in the generated block and read only seven case rows. An independent audit reproduced nine probes that still passed, including visible fields_affected, primary sigma_psi, and the C1 279/300, C7 4/400 and C8 188/200 release thresholds changed in the Markdown alone, and JSON feeds_primary_claim, C7 beta_true and C8 scale_factors changed with the block regenerated. See docs/e1a/E1A_V4_COHERENCE_HARDENING_REPORT.md.",
+    "section_registry": "e1a_v4.validation.coherence.SECTION_REGISTRY classifies EVERY \"## \" section of the normative Markdown as GENERATED, PARSED, DERIVED or NON_NORMATIVE with a reason. require_section_registry_totality REFUSES a section the registry does not classify, and a registry entry the document no longer carries. This is the whole-document guard: a future normative section added without registration fails statically instead of quietly becoming unchecked authority.",
+    "derived_rendering": "Values the Markdown displays but does not independently own are classified DERIVED_RENDERING and checked by RECOMPUTATION, never trusted as a second source of truth. Currently: generating_model.branch_b.n_samples = int(round(T_total/dt)) as e1a_v4.world.World derives it, and the section-12a size boundaries via size_boundary and cp_lower.",
+    "generating_model_upstream": "generating_model.per_field restates the frozen design contract's fields, and branch_b.dt_s / T_total_s restate its hypothetical_uncertainty_scenario. Preflight refuses a plan that contradicts the contract on any of them: the contract outranks the plan, and a restatement may not become a rival authority.",
+    "superseded_defect_3": "generating_model was classified JSON_ONLY although section 4 visibly renders its settings. An independent audit reproduced one-sided changes to n_samples, dt and theta1_power stiffness as ACCEPTED; probing the same class found 9 Markdown-only and 6 JSON-only probes accepted, and the plan could also contradict the frozen contract on field geometry. Closed by classifying every descendant primitive individually in GENERATING_MODEL_SPEC and generating section 4. See docs/e1a/E1A_V4_GENERATING_MODEL_COHERENCE_REPORT.md."
   },
   "status": "PRE-EXECUTION FROZEN PACKAGE, REPAIRED. Nothing in this plan has been executed. No random number has been drawn, no trajectory generated, no calibration sampled and no scientific outcome inspected. Execution is a separate authorisation.",
   "normative_pair": {
@@ -1202,7 +1215,12 @@
   "preflight_command": "python3 -m e1a_v4.validation.runner --preflight-only",
   "preflight_checks_before_rng": [
     "authoritative JSON is parsed STRICTLY: duplicate object keys at any depth refuse",
+    "every Markdown section is registered in the normative-section registry",
     "the normative coherence specification is TOTAL: no plan key is unclassified",
+    "Markdown section 4 equals the JSON generating model path by path",
+    "n_samples is recomputed from T_total and dt rather than trusted",
+    "the plan's generating model does not contradict the frozen design contract",
+    "the section-12a size boundaries are recomputed by size_boundary and cp_lower",
     "every generated Markdown region is a byte-exact re-render of this JSON",
     "the generated authority block equals the complete JSON normative view",
     "the human-visible Markdown renderings equal the JSON normative view",
