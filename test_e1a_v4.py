@@ -20,7 +20,8 @@ import tempfile
 from e1a_v4 import K_B
 from e1a_v4.branch_a import BranchAField, assert_not_branch_b, build_field, stiffness_matrix
 from e1a_v4.calibration import (
-    CalibrationArtifact, block2_p_value, branch_a_signature, require_calibration,
+    BLOCK1_GATES, CalibrationArtifact, CalibrationCondition, block2_p_value,
+    branch_a_signature, normalised_H, require_calibration,
 )
 from e1a_v4.contract import load_contract
 from e1a_v4.effective_size import (
@@ -395,32 +396,59 @@ def test_p1_semantics() -> None:
     a = analyse_field(f, pts, rank_tol=BINDING.rank_tol,
                       theta_cap_deg=BINDING.theta_cap_deg, phi_modes=(0.9, 0.9))
     pid = procedure_identity(BINDING, {"stage": "test"}, ROOT)
+
+    def cond_for(fld, n, phis=(0.9, 0.9), R=200, alpha=None):
+        """The COMPLETE calibration condition. Replaces the (H_A, n) pair, which
+        did not identify a null law."""
+        return CalibrationCondition(
+            field_id=fld.field_id, m=2, H_normalised=normalised_H(fld.H), n=n,
+            dt=1.2e-4, tau_modes=tuple(-1.2e-4 / math.log(p) for p in phis),
+            phi_modes=tuple(phis), mode_blocks=((0,), (1,)),
+            theta_cap_deg=BINDING.theta_cap_deg,
+            alpha_1=BINDING.alpha_1 if alpha is None else alpha, replicates=R,
+            gates=BLOCK1_GATES, calibrator_identity="TEST-FIXTURE",
+            procedure_identity=pid, contract_sha256=BINDING.sha256,
+            plan_sha256="0" * 64)
+
+    cond = cond_for(f, len(pts))
     check("P1 refuses when calibration is ABSENT",
-          refuses(p1_geometry, a, BINDING, procedure_identity=pid, H_A=f.H,
-                  n=len(pts), phi_modes=(0.9, 0.9), artifact=None),
+          refuses(p1_geometry, a, BINDING, procedure_identity=pid, condition=cond,
+                  artifact=None),
           "no hard-coded threshold, no v3 substitution")
     fixture = CalibrationArtifact(
         kind="block1_min_p", procedure_identity=pid, field_id=f.field_id,
-        n=len(pts), m=2, geometry_signature=branch_a_signature(f.H, len(pts)),
-        alpha_1=BINDING.alpha_1,
+        n=len(pts), m=2, alpha_1=BINDING.alpha_1,
         null_draws={g: tuple(0.001 * k for k in range(1, 201)) for g in
                     ("G1", "G2", "G3", "G4")},
+        condition=cond,
         provenance="HAND-WRITTEN FIXTURE, not calibration", is_fixture=True)
-    check("fixture artifact accepted when identities match",
-          require_calibration(fixture, procedure_identity=pid, H_A=f.H,
-                              n=len(pts), field_id=f.field_id) is fixture)
+    check("fixture artifact accepted when the complete condition matches",
+          require_calibration(fixture, procedure_identity=pid, condition=cond) is fixture)
     other = CalibrationArtifact(
         kind="block1_min_p", procedure_identity="0" * 64, field_id=f.field_id,
-        n=len(pts), m=2, geometry_signature=branch_a_signature(f.H, len(pts)),
-        alpha_1=BINDING.alpha_1,
-        null_draws=fixture.null_draws, is_fixture=True)
+        n=len(pts), m=2, alpha_1=BINDING.alpha_1,
+        null_draws=fixture.null_draws,
+        condition=cond_for(f, len(pts)).__class__(**{**cond.__dict__,
+                                                    "procedure_identity": "0" * 64}),
+        is_fixture=True)
     check("artifact from a different procedure identity refused",
-          refuses(require_calibration, other, procedure_identity=pid, H_A=f.H,
-                  n=len(pts), field_id=f.field_id))
+          refuses(require_calibration, other, procedure_identity=pid, condition=cond))
     g = field_for(2)
     check("artifact calibrated at a different geometry refused",
-          refuses(require_calibration, fixture, procedure_identity=pid, H_A=g.H,
-                  n=len(pts), field_id=g.field_id))
+          refuses(require_calibration, fixture, procedure_identity=pid,
+                  condition=cond_for(g, len(pts))))
+    check("artifact calibrated at a different TEMPORAL law refused",
+          refuses(require_calibration, fixture, procedure_identity=pid,
+                  condition=cond_for(f, len(pts), phis=(0.5, 0.5))),
+          "equal geometry, different phi: the superseded signature accepted this")
+    t0, t1 = field_for(0), field_for(1)
+    check("the superseded geometry signature CANNOT tell theta0 from theta1",
+          branch_a_signature(t0.H, 2_000_000) == branch_a_signature(t1.H, 2_000_000),
+          "both isotropic: identical eigenvalue ratios, tau differs by 2.1x")
+    check("the complete condition CAN",
+          cond_for(t0, 2_000_000, phis=(0.4890438527906016,) * 2).sha256
+          != cond_for(t1, 2_000_000, phis=(0.22265394220297993,) * 2).sha256,
+          "field_id and phi_modes both differ")
     check("block-2 p-value is a number in [0,1]",
           0.0 <= block2_p_value(0.01, 0.9, 10000) <= 1.0)
     check("block-2 p-value shrinks as G5 grows",

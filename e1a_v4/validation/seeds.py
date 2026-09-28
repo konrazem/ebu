@@ -23,6 +23,7 @@ from __future__ import annotations
 import hashlib
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any, Mapping
 
 from .. import seeds as analysis_seeds
 from ..numerics import Refusal
@@ -108,3 +109,84 @@ class FrozenSeedMap:
                 f"consumer declared for {consumer.value!r} may not read {requested.value!r}"
             )
         return self.families[requested.value]
+
+
+# --------------------------------------------------------------------------
+# CASE-SCOPED ENFORCEMENT (repair B3)
+#
+# `FrozenSeedMap.stream` compares the two family arguments a caller supplies and
+# nothing else. It is a symmetry check, not a permission check: passing the same
+# family twice satisfies it, so ANY family was reachable for ANY case and the
+# case plan was honoured only by convention. That is a specification requirement,
+# not a mechanically enforced rule, and it must not be described as one.
+#
+# `CaseSeedAccess` is the enforced boundary. It is constructed from the frozen
+# plan, so the authorisation comes from the committed case declaration rather
+# than from the caller. The OFFICIAL runner obtains streams only through it.
+# `family_seed` and `replicate_seed` remain reusable primitives: a mathematical
+# derivation is not an authorisation, and the boundary is where authorisation is
+# decided.
+# --------------------------------------------------------------------------
+
+#: Plan key carrying each case's authorised families. Machine-readable, not prose.
+ALLOWED_FAMILIES_KEY = "allowed_seed_families"
+
+
+@dataclass(frozen=True)
+class CaseSeedAccess:
+    """Case-scoped seed authorisation. The only route an official run may use."""
+
+    case_id: str
+    allowed: tuple[str, ...]
+    seed_map: FrozenSeedMap
+
+    @classmethod
+    def from_plan(cls, case_id: str, plan: Mapping[str, Any],
+                  seed_map: FrozenSeedMap) -> "CaseSeedAccess":
+        cases = {c["case_id"]: c for c in plan.get("cases", [])}
+        if case_id not in cases:
+            raise Refusal(
+                f"unknown case {case_id!r}: the frozen plan declares "
+                f"{sorted(cases)}. Seed access is granted per declared case only."
+            )
+        case = cases[case_id]
+        if ALLOWED_FAMILIES_KEY not in case:
+            raise Refusal(
+                f"case {case_id!r} does not declare {ALLOWED_FAMILIES_KEY!r}; refusing "
+                "rather than inferring permissions from prose"
+            )
+        declared = tuple(case[ALLOWED_FAMILIES_KEY])
+        if not declared:
+            raise Refusal(f"case {case_id!r} declares an empty seed-family list")
+        known = {f.value for f in ValidationSeedFamily}
+        unknown = [f for f in declared if f not in known]
+        if unknown:
+            raise Refusal(f"case {case_id!r} declares undeclared seed families {unknown}")
+        if len(set(declared)) != len(declared):
+            raise Refusal(f"case {case_id!r} repeats a seed family")
+        return cls(case_id, declared, seed_map)
+
+    def _authorise(self, family: ValidationSeedFamily) -> ValidationSeedFamily:
+        if not isinstance(family, ValidationSeedFamily):
+            raise Refusal(f"undeclared validation seed family {family!r}")
+        if family.value not in self.allowed:
+            raise Refusal(
+                f"SEED FAMILY REFUSED: case {self.case_id!r} is authorised for "
+                f"{list(self.allowed)} and requested {family.value!r}. The frozen case "
+                "plan decides this, not the caller."
+            )
+        return family
+
+    def stream(self, family: ValidationSeedFamily) -> int:
+        """The family seed, only if this case declares that family."""
+        fam = self._authorise(family)
+        return self.seed_map.stream(fam, fam)
+
+    def replicate(self, family: ValidationSeedFamily, replicate: int) -> int:
+        """A replicate seed inside an authorised family. DERIVATION, NOT A DRAW.
+
+        Deriving a seed creates no generator and draws no number. The four
+        stages stay separately reported: seed derivation, RNG construction,
+        random draw, trajectory generation.
+        """
+        return replicate_seed(self.stream(family), self.case_id, replicate)

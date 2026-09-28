@@ -28,7 +28,9 @@ from ..contract import ContractBinding, load_contract, sha256_file
 from ..identity import SCIENTIFIC_MODULES, procedure_identity
 from ..numerics import Refusal
 from . import PLAN_JSON, SEED_MAP_JSON, VALIDATION_IDENTITY
-from .seeds import FrozenSeedMap, ValidationSeedFamily
+from .seeds import (
+    ALLOWED_FAMILIES_KEY, CaseSeedAccess, FrozenSeedMap, ValidationSeedFamily,
+)
 
 #: Validation modules whose content can change an execution. Sorted on use.
 VALIDATION_MODULES = (
@@ -61,6 +63,20 @@ def load_plan(root: str = ".") -> dict[str, Any]:
             raise Refusal(f"validation plan missing required section {key!r}")
     if plan["plan_id"] != "e1a_v4_synthetic_validation":
         raise Refusal(f"unexpected plan_id {plan['plan_id']!r}")
+    known = {f.value for f in ValidationSeedFamily}
+    for case in plan["cases"]:
+        cid = case.get("case_id", "<unnamed>")
+        if ALLOWED_FAMILIES_KEY not in case:
+            raise Refusal(
+                f"case {cid!r} does not declare {ALLOWED_FAMILIES_KEY!r}. Seed "
+                "permissions must be machine-readable, not prose."
+            )
+        declared = case[ALLOWED_FAMILIES_KEY]
+        if not isinstance(declared, list) or not declared:
+            raise Refusal(f"case {cid!r}: {ALLOWED_FAMILIES_KEY!r} must be a non-empty list")
+        bad = [f for f in declared if f not in known]
+        if bad:
+            raise Refusal(f"case {cid!r} declares undeclared seed families {bad}")
     return plan
 
 
@@ -103,6 +119,14 @@ class ExecutionBinding:
     analysis_identity: str
     execution_identity: str
     output_dir: str
+
+    def case_access(self, case_id: str) -> CaseSeedAccess:
+        """The ONLY seed route an official run may use. Authorised by the plan.
+
+        Deriving a seed is not a draw: this returns integers and constructs no
+        generator. RNG construction remains a separate, separately reported step.
+        """
+        return CaseSeedAccess.from_plan(case_id, self.plan, self.seed_map)
 
 
 def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionBinding:

@@ -1,5 +1,23 @@
 # E1a v4 — SYNTHETIC VALIDATION RESULTS
 
+> **PARTIALLY SUPERSEDED — see `docs/e1a/E1A_V4_PREEXEC_REPAIR_REPORT.md`.**
+> An independent audit of the package this report describes found three pre-execution
+> defects, all since reproduced and repaired. Two corrections apply to the text below and
+> nothing in it has been altered or removed:
+> 1. **the runtime figures are PROJECTIONS, not measurements.** "192 core-days",
+>    "13.7 days at 14-way parallelism", "~415 s per artifact" and "about 28 minutes" were
+>    extrapolated from measurements at R = 500, 1000 and 2000, never measured end to end;
+>    and the word "infeasible" overstated the evidence, since no explicit resource ceiling
+>    was part of the study. The supported statement is "very expensive under the previous
+>    implementation". Under the repaired `O(R log R)` algorithm the cost no longer binds.
+> 2. **B1 was reported in only one direction.** This report described the geometry
+>    signature as too *strict* (it excludes a measured `H_A`). It is also too *weak*: it
+>    is blind to the temporal correlation, so the `theta0_circular` artifact was accepted
+>    for `theta1_power`, whose effective sizes differ by about 1.47x. Both directions have
+>    the same root cause and are fixed by the complete calibration condition.
+>
+> The disposition below — that execution was correctly NOT performed — stands unchanged.
+
 Self-contained handoff for independent review. Complete without the originating
 conversation.
 

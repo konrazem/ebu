@@ -1,10 +1,10 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.2.0",
+  "plan_version": "1.3.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
-  "status": "PRE-EXECUTION FROZEN PACKAGE. Nothing in this plan has been executed. No random number has been drawn, no trajectory generated, no calibration sampled and no scientific outcome inspected. Execution is a separate authorisation.",
+  "status": "PRE-EXECUTION FROZEN PACKAGE, REPAIRED. Nothing in this plan has been executed. No random number has been drawn, no trajectory generated, no calibration sampled and no scientific outcome inspected. Execution is a separate authorisation.",
   "normative_pair": {
     "markdown": "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md",
     "json": "docs/e1a/e1a_v4_synthetic_validation_plan.json",
@@ -19,10 +19,10 @@
     "implementation_file_hashes": {
       "e1a_v4/__init__.py": "0b67a89c562d82eb1f4a03603e075d66e0f70826ab7a848e57f4518bd12bdca4",
       "e1a_v4/branch_a.py": "748c2e86e59d3ed6638147aa322cdf113636e8aa5c9c2b93ec8d4b0a9ec0461f",
-      "e1a_v4/calibration.py": "b16453466e5ec6ef5351a55ecab25aed26482cf51d9bdd20728b88a56d9420e6",
+      "e1a_v4/calibration.py": "1400e79f00429dc2c72b715d2d03b9bebb4242d044557bce02301f3ac3b22c42",
       "e1a_v4/contract.py": "4e1b595ebaf73bd8d1e723201d05c10ad23b4ab8a6faf02b7d89842e682d0465",
       "e1a_v4/effective_size.py": "88030960ecc9260fb19a44afbbc8116c212bf35addb5ed0d036af751a079a164",
-      "e1a_v4/endpoints.py": "e09189527bfcf39cf165ce6fa5f06d56fc05cb308ba3e59cc3386e83203bc6aa",
+      "e1a_v4/endpoints.py": "c8def27939ae101fba9b25a129337893d9d35180f7182d342ef69bc1733b760e",
       "e1a_v4/geometry.py": "959b446b01d96a7c5243e65876970d78c57e1e8150298204a35429040f62967f",
       "e1a_v4/identity.py": "72be9c291b91d3f0a3d8c150c6ef00f40bed8b35d8e12e94b4d762f91b36b015",
       "e1a_v4/numerics.py": "bd514b73f66f0bc6887406797c107ddf5dce435834d7832a35771f72e3562a3a",
@@ -30,12 +30,13 @@
       "e1a_v4/status.py": "853a4cf9c602ee4fdc28391969eb7a7ea7157cc71316cf3c86e003d5777ecc8f",
       "e1a_v4/world.py": "64a27ca9cb95b09333ca65aa0eecebeb80f9573d06cd8d08c188668eb7cbc033"
     },
-    "analysis_procedure_identity": "af1177a9d3220f60f78ef738bbee6c925da3ed632b68a9f51830fffe5e985eb4",
+    "analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
     "execution_identity": "",
-    "execution_identity_note": "derived at preflight from the plan sha256, the seed-map sha256, the validation module hashes and the analysis identity. Left empty here because embedding it would be self-referential; it is recorded in docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md and recomputed by preflight.",
+    "execution_identity_note": "derived at preflight from the plan sha256, the seed-map sha256, the validation module hashes and the analysis procedure identity. Deliberately NOT stored: storing it would change the plan file and therefore change the value it records.",
     "analysis_procedure_identity_configuration": {},
     "analysis_procedure_identity_note": "procedure_identity(binding, configuration={}, root). The configuration mapping is part of the identity, so a different configuration yields a different digest by design: the implementation report quoted the {'stage': 'bounded_implementation'} variant 8dd48f42f7ccd259a76e50ef4e1ee4c0a3c5b43986bc54d75438b1acdf15dbe0. The EMPTY configuration is the one frozen for official execution, and preflight recomputes exactly that.",
-    "contract_version": "1.1.0"
+    "contract_version": "1.1.0",
+    "calibration_artifact_schema": "e1a_v4_block1_calibration/2"
   },
   "adopted_rules_unchanged": {
     "delta_cross": 0.02,
@@ -79,7 +80,13 @@
       "seed_family": "validation",
       "replicate_count": 300,
       "role": "primary",
-      "v4_classification_note": ""
+      "v4_classification_note": "",
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "Branch-B trajectories from validation; Branch-A measurement error is REQUIRED because disposition G3 asserts the primary >= 0.90 claim at sigma_psi = 0.5 deg and sigma_psi reaches nothing except a realised rotation into G3",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C2_geometry_false_rejection",
@@ -102,7 +109,13 @@
       "seed_family": "validation",
       "replicate_count": 400,
       "role": "primary",
-      "v4_classification_note": "alpha_geom 1% -> 0.5%, two-block union rule"
+      "v4_classification_note": "alpha_geom 1% -> 0.5%, two-block union rule",
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "Branch-B trajectories from validation; the declared frozen candidate scenario including sigma_psi is realised per replicate",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C3_g5_block",
@@ -125,7 +138,13 @@
       "seed_family": "validation",
       "replicate_count": 400,
       "role": "primary",
-      "v4_classification_note": ""
+      "v4_classification_note": "",
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "Branch-B trajectories from validation; G5 is computed from those observations and the declared Branch-A scenario is realised",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C4_surrogate_validity",
@@ -148,7 +167,14 @@
       "seed_family": "calibration + validation",
       "replicate_count": 2000,
       "role": "primary",
-      "v4_classification_note": ""
+      "v4_classification_note": "",
+      "allowed_seed_families": [
+        "calibration",
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "calibration produces the surrogate null; validation produces the actual correlated observations; the declared Branch-A scenario is realised",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C5_plug_in_branch_a",
@@ -171,7 +197,13 @@
       "seed_family": "validation + branch_a_measurement",
       "replicate_count": 400,
       "role": "primary",
-      "v4_classification_note": ""
+      "v4_classification_note": "",
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "the sweep over sigma_k x sigma_psi IS a Branch-A measurement sweep; already declared",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C6_mode_resolution_boundary",
@@ -191,7 +223,13 @@
       "seed_family": "validation",
       "replicate_count": 400,
       "role": "primary",
-      "v4_classification_note": ""
+      "v4_classification_note": "",
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "Branch-B trajectories at the three declared rho; the declared Branch-A scenario is realised",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C7_false_bridge",
@@ -214,7 +252,13 @@
       "seed_family": "validation",
       "replicate_count": 400,
       "role": "negative_control",
-      "v4_classification_note": "evaluated against the all-field P3 and the IUT P2"
+      "v4_classification_note": "evaluated against the all-field P3 and the IUT P2",
+      "allowed_seed_families": [
+        "validation",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "Branch-B trajectories under each alternative; the declared Branch-A scenario is realised",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     },
     {
       "case_id": "C8_blinded_scale_control",
@@ -237,7 +281,13 @@
       "seed_family": "blinded_scale_control",
       "replicate_count": 200,
       "role": "positive_control",
-      "v4_classification_note": ""
+      "v4_classification_note": "",
+      "allowed_seed_families": [
+        "blinded_scale_control",
+        "branch_a_measurement"
+      ],
+      "allowed_seed_families_rationale": "the blinded control draws its own paired Branch-B replicates from its dedicated family; the declared Branch-A scenario is realised. The blinding factor c is applied deterministically by BranchAField.blinded and is not a draw",
+      "allowed_seed_families_authority": "derived from the frozen generator design (generating_model.branch_a, truth_visibility) and disposition G3; not invented for this repair"
     }
   ],
   "case_count_justification": "Eight cases, one per scientifically required purpose traceable to committed or adopted authority. P2 (cross-field) and P3 (absolute) are NOT separate generating cases: they are endpoints evaluated on C1's data so the shared reference-field dependence and the common-mode calibration error are preserved. Simulating the three P2 ratios independently, or reverting P3 to reference-only, would destroy exactly the structure being validated. The count is eight because eight purposes are required, not to preserve a historical number.",
@@ -348,6 +398,129 @@
       "theta1_power": "calibration/block1_theta1_power.json",
       "theta2_ellipse": "calibration/block1_theta2_ellipse.json",
       "theta3_temperature": "calibration/block1_theta3_temperature.json"
+    },
+    "artifact_schema": "e1a_v4_block1_calibration/2",
+    "artifact_schema_note": "version 2 carries the complete calibration condition and the precomputed null threshold. A version-1 artifact is REFUSED, not reinterpreted. No official stochastic artifact exists, so the break is free to make explicit now.",
+    "condition_binding": {
+      "implementation": "e1a_v4.calibration.CalibrationCondition",
+      "bound": [
+        "field_id",
+        "H_normalised (H_A / tr H_A: eigenvalue ratios AND orientation)",
+        "n",
+        "dt",
+        "tau_modes",
+        "phi_modes",
+        "mode_blocks",
+        "theta_cap_deg",
+        "alpha_1",
+        "replicates",
+        "gates",
+        "calibrator_identity",
+        "procedure_identity",
+        "contract_sha256",
+        "plan_sha256"
+      ],
+      "not_bound": {
+        "T_total": "exactly n * dt",
+        "N_ab": "exactly determined by (phi_modes, n); the primitives are bound instead, which is strictly stronger",
+        "rank_tol": "never read on the calibration path",
+        "alpha_2": "block 2 only",
+        "delta_cross/delta_abs/z_cross/z_abs": "P2 and P3 only",
+        "sigma_k/sigma_cm/sigma_psi/sigma_T": "the calibrator never reads them",
+        "overall scale of H_A": "every Block-1 gate is invariant to H_A -> c H_A in exact arithmetic (verified numerically to ~1e-12 relative), so H_A/tr(H_A) is the canonical representative. The normalisation is NOT bit-invariant in IEEE-754: c*H renormalises to a last-ulp-different matrix, so the digest refuses the rescaled artifact. Fail-closed by one ulp, which is the conservative direction and costs nothing because no cross-field reuse is permitted."
+      },
+      "canonicalisation": "float.hex() per float, json.dumps(sort_keys, separators, ensure_ascii), sha256. No rounded human-formatted text is ever the identity.",
+      "superseded": "branch_a_signature bound only the eigenvalue RATIOS and n. theta0_circular and theta1_power are both isotropic, so their ratios are identical, yet their per-element effective sizes differ by a factor of about 1.47 because tau = gamma/k differs by 2.1x. The theta0 artifact was accepted for theta1 and the stored field_id was never compared. branch_a_signature is retained as PROVENANCE ONLY."
+    },
+    "threshold_algorithm": {
+      "identity": "1 + #{j != i : d_j >= d_i} = #{j : d_j >= d_i}",
+      "why_exact": "the excluded term contributes exactly 1 because d_i >= d_i; both sides are integer counts, so ties are handled identically and no approximation is introduced",
+      "old_complexity": "O(R^2) per artifact, and recomputed on EVERY P1 evaluation",
+      "new_complexity": "O(R log R) per artifact, computed ONCE at artifact construction",
+      "reference_implementation": "e1a_v4.calibration.p_min_null_reference, retained for equivalence tests only, never on the execution path",
+      "non_finite": "a non-finite null draw or observed statistic is REFUSED as an invalid calibration artifact, never sorted"
+    },
+    "artifact_reuse": {
+      "finalised_once": [
+        "sorted null marginals per gate",
+        "p_min null distribution",
+        "critical p_min"
+      ],
+      "consumed_by": "e1a_v4.endpoints.p1_geometry, which reads the stored threshold and never rebuilds it",
+      "anti_circularity": "the stored quantities are functions of the calibration draws and the frozen alpha_1 alone. No validation or confirmatory observation can reach them, and no validation result can trigger a threshold recomputation.",
+      "artifact_identity": "CalibrationArtifact.artifact_sha256 covers the condition digest, the draws AND the stored derived quantities"
+    },
+    "runtime_accounting_correction": {
+      "supersedes": "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_RESULTS.md, commit 58388d7 / 80e33a4, neither rewritten",
+      "corrections": [
+        "'192 core-days' and '13.7 days at 14-way parallelism' were BENCHMARK-BASED PROJECTIONS resting on a quadratic extrapolation and an assumed artifact count, not MEASURED end-to-end runtimes",
+        "'~415 s per artifact at R_cal = 50000' was a PROJECTION extrapolated from measurements at R = 500, 1000 and 2000",
+        "'four locked artifacts cost about 28 minutes' was likewise a PROJECTION",
+        "the word 'infeasible' overstated the evidence: no explicit resource ceiling was part of the study. The supported statement is 'very expensive under the previous implementation'"
+      ],
+      "classification_required": [
+        "MEASURED BENCHMARK",
+        "BENCHMARK-BASED PROJECTION",
+        "PARALLELISM ASSUMPTION",
+        "NOT MEASURED END-TO-END"
+      ],
+      "environment": {
+        "machine": "macOS-26.6.1-arm64-arm-64bit-Mach-O",
+        "python": "3.14.2 CPython",
+        "cpu_count": 14,
+        "note": "pure Python; numpy and scipy are ABSENT from this environment"
+      },
+      "measured_benchmark": {
+        "method": "deterministic van der Corput arrays and a fixed repeating normal supplier; NO RNG",
+        "p_min_null_superseded_O_R2_seconds": {
+          "1000": 0.1585,
+          "10000": 17.8104,
+          "50000": 415.5725
+        },
+        "p_min_null_repaired_finalisation_seconds": {
+          "1000": 0.0014,
+          "10000": 0.0179,
+          "50000": 0.4543
+        },
+        "exact_match_old_vs_new": "TRUE at every R tested, including R = 50000",
+        "speedup_at_R_cal_50000": 915.0,
+        "generate_plus_finalise_seconds_at_50000": {
+          "wall_median": 3.008,
+          "cpu_median": 2.792,
+          "reps": 2
+        },
+        "per_P1_use_microseconds": {
+          "1000": 1.13,
+          "10000": 1.17,
+          "50000": 1.94
+        },
+        "compatibility_check_microseconds": 22.99,
+        "compatibility_check_scaling": "constant in R; it compares digests, not draws",
+        "statistics": "min / median / max over 3 repetitions (2 at R = 50000 for the superseded form)"
+      },
+      "campaign_projection": {
+        "classification": "BENCHMARK-BASED PROJECTION built on the MEASURED per-unit costs above",
+        "call_graph_basis": "derived from the declared case structure, not assumed: field-replicates = C1 300x4 + C2 400x4 + C3 400x4 + C4 2000x4 + C5 400x12x4 + C6 400x3 + C7 400x4x4 + C8 200x4 = 40000",
+        "P1_evaluations": 40000,
+        "reuse_is_mechanical": "test_e1a_v4_repair.py proves one P1 evaluation touches the null exactly once per gate, four lookups, never a rebuild. Reuse is demonstrated, not assumed.",
+        "architecture_A_four_locked_artifacts": {
+          "artifact_builds": 4,
+          "threshold_machinery_seconds": 13.0,
+          "note": "4 x 3.008 s of artifact build plus 40000 x (1.94 + 22.99) us of P1 use"
+        },
+        "architecture_B_one_artifact_per_field_replicate": {
+          "artifact_builds": 40000,
+          "repaired_core_seconds": 120320,
+          "repaired_core_hours": 33.4,
+          "at_14_way_parallelism_hours": 2.4,
+          "superseded_core_seconds": 16726800,
+          "superseded_core_days": 193.6,
+          "note": "the superseded figure uses the MEASURED 415.5725 s threshold cost"
+        },
+        "parallelism_assumption": "14 workers, perfect scaling, no I/O and no scheduling overhead. ASSUMED, not measured. Every wall-clock-at-N-workers figure above rests on it.",
+        "not_measured_end_to_end": "no campaign, no calibration and no trajectory has been run. Branch-B trajectory generation is excluded from these figures entirely and is the larger term under either architecture."
+      },
+      "conclusion": "under the repaired implementation the Block-1 threshold is no longer the binding cost under either architecture. The earlier report's word 'infeasible' is withdrawn; the supported statement is 'very expensive under the previous implementation'."
     }
   },
   "assurance": [
@@ -729,5 +902,37 @@
     ],
     "independent_facts_rule": "complete-pipeline achievement and component size cleanliness are REPORTED SEPARATELY and never collapsed. A campaign may fail because complete-pipeline success < target even with no significant size-inflation diagnostic: a valid scientific failure. Conversely C1 may reach >= 0.90 while a component case detects significant size inflation: also a validation failure, because the implemented calibration is not behaving according to its declared nominal structure. Both facts are reported.",
     "implementation": "e1a_v4.validation.classification.classify_campaign"
+  },
+  "seed_family_enforcement": {
+    "status": "MECHANICALLY ENFORCED (repair B3), not merely specified",
+    "boundary": "e1a_v4.validation.seeds.CaseSeedAccess, reached via ExecutionBinding.case_access / runner.case_seed_access",
+    "rule": "a case may obtain ONLY the families its frozen plan entry declares in allowed_seed_families",
+    "superseded": "FrozenSeedMap.stream(consumer, requested) compares the caller's two family arguments and nothing else. Passing the same family twice satisfies it, so any family was reachable for any case. That was a specification requirement honoured by convention, NOT an enforced rule, and the earlier pre-execution report described it as stronger than it was.",
+    "low_level_primitives": "family_seed and replicate_seed remain importable and remain correct mathematics. A derivation is not an authorisation: an official run reaches a family only through the case-scoped boundary.",
+    "confirmatory_family": "declared in the seed map, authorised for NO case in this campaign",
+    "seed_derivation_is_not_a_draw": "deriving a seed constructs no generator and draws no number; seed derivation, RNG construction, random draw and trajectory generation stay separately reported"
+  },
+  "preexecution_repair": {
+    "status": "PRE-EXECUTION SOFTWARE AND SPECIFICATION REPAIR. No stochastic evidence existed, so nothing scientific is retracted.",
+    "trigger": "independent audit of the frozen validation package",
+    "findings_reproduced": {
+      "B1": "calibration identity incomplete: an artifact for theta0_circular was accepted for theta1_power; field_id never compared; the temporal-correlation law never bound",
+      "B2": "Block-1 threshold computation was O(R_cal^2) and was repeated on every P1 evaluation instead of computed once",
+      "B3": "seed-family enforcement was a symmetry check on the caller's own arguments, not a case-level permission check; a C1 Branch-A seed was derivable"
+    },
+    "scientific_rules_changed": "NONE",
+    "supersedes": {
+      "package": "the pre-execution package described as ready for execution at commit a233811",
+      "state": "SUPERSEDED BEFORE EXECUTION",
+      "preserved": [
+        "docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md",
+        "docs/e1a/E1A_V4_VALIDATION_DISPOSITION_REPORT.md",
+        "docs/e1a/E1A_V4_SIZE_VALIDATION_REPORT.md",
+        "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_RESULTS.md",
+        "docs/e1a/e1a_v4_execution_feasibility_probe.py"
+      ],
+      "rewritten": "NONE - no previous report or commit is altered"
+    },
+    "open_and_not_resolved_here": "whether the campaign calibrates ONE artifact per field or one per replicate at that replicate's measured H_A remains a SPECIFICATION decision, recorded in docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_RESULTS.md. This repair makes either choice mechanically safe and affordable; it does not decide it."
   }
 }

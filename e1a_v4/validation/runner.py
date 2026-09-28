@@ -26,7 +26,7 @@ from typing import Callable
 
 from ..numerics import Refusal
 from .plan import ExecutionBinding, bind_execution
-from .seeds import ValidationSeedFamily
+from .seeds import CaseSeedAccess, ValidationSeedFamily
 
 RNGFactory = Callable[[int], object]
 
@@ -38,6 +38,17 @@ class ExecutionNotAuthorised(Refusal):
 def preflight(root: str = ".", output_dir: str | None = None) -> ExecutionBinding:
     """Every fail-closed check, in order, with no RNG anywhere in scope."""
     return bind_execution(root=root, output_dir=output_dir)
+
+
+def case_seed_access(binding: ExecutionBinding, case_id: str) -> CaseSeedAccess:
+    """The official seed route. A case may reach ONLY the families it declares.
+
+    The low-level derivation functions remain importable and remain correct
+    mathematics. They are not an authorisation: an official run reaches a family
+    through this boundary, which reads the frozen case plan rather than trusting
+    the caller to pass matching family arguments.
+    """
+    return binding.case_access(case_id)
 
 
 def run(root: str = ".", *, rng_factory: RNGFactory | None = None,

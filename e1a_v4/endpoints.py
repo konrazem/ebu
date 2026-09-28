@@ -19,7 +19,10 @@ from dataclasses import dataclass
 from typing import Mapping, Sequence
 
 from . import K_B
-from .calibration import BLOCK1_GATES, CalibrationArtifact, block2_p_value, require_calibration
+from .calibration import (
+    BLOCK1_GATES, CalibrationArtifact, CalibrationCondition, block2_p_value,
+    require_calibration,
+)
 from .contract import ContractBinding
 from .geometry import FieldAnalysis
 from .numerics import Refusal
@@ -56,9 +59,7 @@ def p1_geometry(
     binding: ContractBinding,
     *,
     procedure_identity: str,
-    H_A: Sequence[Sequence[float]],
-    n: int,
-    phi_modes: Sequence[float],
+    condition: CalibrationCondition,
     artifact: CalibrationArtifact | None,
 ) -> EndpointResult:
     """Two-block union-valid gate.
@@ -68,22 +69,34 @@ def p1_geometry(
     The union bound is valid under ARBITRARY dependence between the blocks. No
     independence is asserted, and none is needed.
 
+    The calibration CONDITION replaces the former (H_A, n, field_id) arguments.
+    Those three did not identify the null law: they were blind to the temporal
+    correlation, so an artifact calibrated for one field was accepted for
+    another with a materially different effective size. `n` and `phi` are now
+    read from the condition the artifact was verified against, so the analysis
+    and its null can no longer disagree about them.
+
     *** STOCHASTIC NULL CALIBRATION NOT RUN: without a matching artifact this
     refuses rather than assuming a threshold. ***
     """
     if not analysis.is_estimated and analysis.status not in (AnalysisStatus.GEOMETRY_FAIL,):
         return EndpointResult("P1", False, f"fail-closed on status {analysis.status.value}")
+    if analysis.field_id != condition.field_id:
+        raise Refusal(
+            f"P1: analysis is for {analysis.field_id!r} but the calibration condition "
+            f"is for {condition.field_id!r}"
+        )
     art = require_calibration(artifact, procedure_identity=procedure_identity,
-                              H_A=H_A, n=n, field_id=analysis.field_id)
+                              condition=condition)
     observed = {"G1": analysis.g1, "G2": analysis.g2_spread,
                 "G3": max(analysis.g3) if analysis.g3 else None, "G4": analysis.g4}
     if any(v is None for v in observed.values()) or analysis.g5 is None:
         raise Refusal("P1 requires all five gate statistics")
     p_gates = {g: art.p_value(g, float(observed[g])) for g in BLOCK1_GATES}
     p_min = min(p_gates.values())
-    critical = art.critical_p_min()
+    critical = art.critical_p_min()          # STORED on the artifact, never rebuilt here
     block1_reject = p_min < critical
-    p5 = block2_p_value(float(analysis.g5), float(phi_modes[0]), n)
+    p5 = block2_p_value(float(analysis.g5), float(condition.phi_modes[0]), condition.n)
     block2_reject = p5 < binding.alpha_2
     passed = not (block1_reject or block2_reject)
     rows = tuple((g, float(observed[g]), p_gates[g]) for g in BLOCK1_GATES) + \
