@@ -102,6 +102,13 @@ class CalibrationRequest:
 
     def condition(self) -> CalibrationCondition:
         """The COMPLETE null-law identity this request will calibrate at."""
+        eigenvalues, _ = jacobi(self.H_A)
+        if len(self.tau_modes) != len(eigenvalues) or any(
+                t <= 0.0 or not math.isfinite(t) for t in self.tau_modes):
+            raise Refusal("calibration requires one positive tau per eigenmode")
+        products = [lam * tau for lam, tau in zip(eigenvalues, self.tau_modes)]
+        if any(not math.isclose(v, products[0], rel_tol=1e-10) for v in products[1:]):
+            raise Refusal("calibration tau_modes are not paired with ascending H_A eigenmodes")
         return CalibrationCondition(
             field_id=self.field_id,
             m=len(self.H_A),

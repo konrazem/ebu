@@ -176,19 +176,25 @@ def test_per_replicate_conditions() -> None:
     r0 = ex.replicate_calibration("C1_true_bridge_complete", "sigma_psi_0p5", 0, led)
     r1 = ex.replicate_calibration("C1_true_bridge_complete", "sigma_psi_0p5", 1, led)
     a0 = artifact_for(c0)
-    r0.lock("theta0_circular", a0)
+    check("artifact alone cannot lock without a realised Branch-A condition",
+          refuses(r0.lock, "theta0_circular", a0))
+    check("a different realised condition cannot lock this artifact",
+          refuses(r0.lock, "theta0_circular", a0, c1))
+    check("both rejected locks keep Branch-B closed",
+          refuses(r0.validation_seed, "theta0_circular"))
+    r0.lock("theta0_circular", a0, c0)
     check("replicate 0's artifact cannot satisfy replicate 1 when conditions differ",
-          refuses(r1.lock, "theta0_circular", a0),
+          refuses(r1.lock, "theta0_circular", a0, c1),
           "CALIBRATION_REUSE_REFUSED: the digest is already locked elsewhere")
     check("and the artifact it does accept is its own",
-          r1.lock("theta0_circular", artifact_for(c1)) == artifact_for(c1).artifact_sha256)
+          r1.lock("theta0_circular", artifact_for(c1), c1) == artifact_for(c1).artifact_sha256)
     check("C1 cannot fall back to a global field artifact",
           refuses(ex.replicate_calibration("C1_true_bridge_complete", "sigma_psi_0p5", 2, led).lock,
-                  "theta0_circular", a0))
+                  "theta0_circular", a0, c0))
     check("every stochastic-Branch-A C1 replicate therefore needs its own artifact",
           led.artifact_count == 2, f"{led.artifact_count} locked so far")
     check("a locked artifact is immutable: relocking the same slot REFUSES",
-          refuses(r0.lock, "theta0_circular", artifact_for(c0)))
+          refuses(r0.lock, "theta0_circular", artifact_for(c0), c0))
 
 
 def test_no_silent_reuse() -> None:
@@ -197,7 +203,8 @@ def test_no_silent_reuse() -> None:
     t0, t1 = FIELDS["theta0_circular"], FIELDS["theta1_power"]
     r = ex.replicate_calibration("C2_geometry_false_rejection", "sigma_psi_0p5", 0, led)
     check("same field NAME, different calibration condition -> no reuse",
-          refuses(r.lock, "theta0_circular", artifact_for(condition_for(t0, field_id="theta1_power"))),
+          refuses(r.lock, "theta0_circular", artifact_for(condition_for(t0, field_id="theta1_power")),
+                  condition_for(t0)),
           "the artifact is for a different field than the slot")
     same_ratio = condition_for(t1, field_id="theta0_circular", H=t0.H,
                                taus=t1.tau_modes)
@@ -205,10 +212,10 @@ def test_no_silent_reuse() -> None:
           same_ratio.sha256 != condition_for(t0, field_id="theta0_circular").sha256,
           "theta0 and theta1 share ratios; tau differs by 2.1x")
     shared = artifact_for(condition_for(t0))
-    r.lock("theta0_circular", shared)
+    r.lock("theta0_circular", shared, shared.condition)
     r2 = ex.replicate_calibration("C2_geometry_false_rejection", "sigma_psi_0p5", 1, led)
     check("identical condition digest is STILL not permission to share",
-          refuses(r2.lock, "theta0_circular", shared),
+          refuses(r2.lock, "theta0_circular", shared, shared.condition),
           "no implicit cache-based reuse; sharing must be part of the case design")
     check("the ledger names the owner in its refusal", led.digest_for(
         "C2_geometry_false_rejection", "sigma_psi_0p5", 0, "theta0_circular") == shared.artifact_sha256)
@@ -228,17 +235,17 @@ def test_ordering() -> None:
           refuses(r.validation_seed, "theta2_ellipse"),
           "ORDERING VIOLATION: the threshold is fixed first or it is not a threshold")
     art = artifact_for(condition_for(f))
-    r.lock("theta2_ellipse", art)
+    r.lock("theta2_ellipse", art, art.condition)
     check("after the lock the Branch-B stream is released",
           isinstance(r.validation_seed("theta2_ellipse"), int))
     check("locking AFTER Branch-B has been released REFUSES",
-          refuses(r.lock, "theta3_temperature", art) or True)
+          refuses(r.lock, "theta3_temperature", art, art.condition) or True)
     r2 = ex.replicate_calibration("C1_true_bridge_complete", "sigma_psi_0p5", 8, led)
     a2 = artifact_for(condition_for(FIELDS["theta3_temperature"]))
-    r2.lock("theta3_temperature", a2)
+    r2.lock("theta3_temperature", a2, a2.condition)
     r2.validation_seed("theta3_temperature")
     check("a validation result cannot mutate the locked artifact",
-          refuses(r2.lock, "theta3_temperature", a2),
+          refuses(r2.lock, "theta3_temperature", a2, a2.condition),
           "the slot is locked and immutable")
     check("nor can its calibration be regenerated after Branch-B opened",
           refuses(r2.calibration_seed, "theta3_temperature"))
@@ -304,9 +311,9 @@ def test_deterministic_scheduling() -> None:
     conds = {fld: condition_for(FIELDS[fld], H=measured_H(FIELDS[fld], 0.001 * (i + 1)))
              for i, fld in enumerate(fields)}
     for fld in fields:
-        ex.replicate_calibration("C4_surrogate_validity", "primary", 0, led_a).lock(fld, artifact_for(conds[fld]))
+        ex.replicate_calibration("C4_surrogate_validity", "primary", 0, led_a).lock(fld, artifact_for(conds[fld]), conds[fld])
     for fld in reversed(fields):
-        ex.replicate_calibration("C4_surrogate_validity", "primary", 0, led_b).lock(fld, artifact_for(conds[fld]))
+        ex.replicate_calibration("C4_surrogate_validity", "primary", 0, led_b).lock(fld, artifact_for(conds[fld]), conds[fld])
     check("artifact digests do not depend on lock order",
           {k[3]: v for k, v in led_a.digests.items()}
           == {k[3]: v for k, v in led_b.digests.items()},

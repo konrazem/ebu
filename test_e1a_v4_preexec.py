@@ -87,7 +87,8 @@ def sandbox() -> str:
                 "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
                 "docs/theory/EBU_THEORY_BASELINE.md",
                 "docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
-                PLAN_JSON, SEED_MAP_JSON):
+                PLAN_JSON, SEED_MAP_JSON,
+                "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md"):
         dst = os.path.join(tmp, rel)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         shutil.copy(os.path.join(ROOT, rel), dst)

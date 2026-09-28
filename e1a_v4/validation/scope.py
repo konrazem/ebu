@@ -256,7 +256,7 @@ class ReplicateCalibration:
     # ------------------------------------------------------------------ step 5
     def lock(self, field_id: str, artifact: CalibrationArtifact,
              condition: CalibrationCondition | None = None) -> str:
-        """Finalise and LOCK. Immutable afterwards; Branch B opens only after this."""
+        """Lock only against the separately supplied realised Branch-A condition."""
         if not self.scope.requires_calibration:
             raise Refusal(
                 f"case {self.scope.case_id!r} evaluates no P1 / Block-1 quantity; no "
@@ -275,7 +275,9 @@ class ReplicateCalibration:
         if artifact.field_id != field_id:
             raise Refusal(
                 f"artifact is for {artifact.field_id!r}, presented for {field_id!r}")
-        if condition is not None and artifact.condition.sha256 != condition.sha256:
+        if not isinstance(condition, CalibrationCondition):
+            raise Refusal("realised Branch-A calibration condition is required")
+        if artifact.condition.sha256 != condition.sha256:
             raise Refusal(
                 "artifact condition does not match the realised calibration condition")
         digest = self.ledger.register(self.scope, self.subcondition_id, self.replicate,

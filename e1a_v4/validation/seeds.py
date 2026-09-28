@@ -101,7 +101,6 @@ def replicate_seed(fam_seed: int, case_id: str, replicate: int) -> int:
 #: The scope of a quantity drawn once per experiment and shared across fields.
 EXPERIMENT_SCOPE = "experiment"
 
-
 def _canon(*parts: str) -> str:
     """Deterministic, escaping-safe serialisation. NOT string concatenation."""
     return SEED_DOMAIN + json.dumps(list(parts), separators=(",", ":"), ensure_ascii=True)
@@ -202,6 +201,7 @@ class CaseSeedAccess:
     allowed: tuple[str, ...]
     seed_map: FrozenSeedMap
     subconditions: tuple[str, ...] = ()
+    field_scopes: tuple[str, ...] = ()
 
     @classmethod
     def from_plan(cls, case_id: str, plan: Mapping[str, Any],
@@ -235,7 +235,11 @@ class CaseSeedAccess:
             )
         if len(set(subs)) != len(subs):
             raise Refusal(f"case {case_id!r} repeats a subcondition id")
-        return cls(case_id, declared, seed_map, subs)
+        scopes = tuple(case.get("fields_affected", ()))
+        if (not scopes or any(not isinstance(s, str) or not s for s in scopes)
+                or len(set(scopes)) != len(scopes)):
+            raise Refusal(f"case {case_id!r} has missing or duplicate field scopes")
+        return cls(case_id, declared, seed_map, subs, scopes)
 
     def _authorise(self, family: ValidationSeedFamily) -> ValidationSeedFamily:
         if not isinstance(family, ValidationSeedFamily):
@@ -281,4 +285,8 @@ class CaseSeedAccess:
         declared scenarios never share randomness and scheduling order cannot
         change a stream. `scope` is EXPERIMENT_SCOPE or a field id.
         """
+        if scope != EXPERIMENT_SCOPE and scope not in self.field_scopes:
+            raise Refusal(f"UNDECLARED STOCHASTIC SCOPE for {self.case_id!r}: {scope!r}")
+        if scope == EXPERIMENT_SCOPE and family is not ValidationSeedFamily.BRANCH_A_MEASUREMENT:
+            raise Refusal("experiment-shared stream is reserved for Branch-A common-mode error")
         return scope_seed(self.subcondition(family, subcondition_id, replicate), scope)

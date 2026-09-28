@@ -162,6 +162,9 @@ def g2_alternative_pass(false_acceptances: int, replicates: int = 400,
 def g2_campaign_pass(counts: Mapping[str, int], replicates: int = 400,
                      target: float = 0.025) -> EndpointResult:
     """EVERY declared alternative must independently satisfy the rule."""
+    required = {"alt_1_06", "alt_0_93_1_05", "alt_1_10", "hard_1_025"}
+    if set(counts) != required:
+        raise Refusal("G2 requires exactly the four declared false-bridge alternatives")
     rows, passed = [], True
     for name, k in counts.items():
         ok, bound, thr = g2_alternative_pass(k, replicates, target)

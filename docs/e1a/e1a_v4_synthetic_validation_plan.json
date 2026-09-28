@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.5.0",
+  "plan_version": "1.6.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -1491,5 +1491,54 @@
       "ACCIDENTAL cross-subcondition sharing": "a defect, closed by the subcondition seed level",
       "INTENTIONAL within-experiment sharing": "part of the frozen model, preserved by the experiment scope"
     }
+  },
+  "adopted_preexecution_corrections": {
+    "status": "ADOPTED",
+    "source": "docs/e1a/E1A_V4_PREEXEC_CORRECTION_CANDIDATE.md, independent auditor, uncommitted candidate against c1f2ca13693c6f23e31c9828e063876c500012bf",
+    "independently_reproduced": true,
+    "corrections": {
+      "A_rotated_ou_generator": {
+        "defect": "the superseded recurrence applied distinct modal phi directly in LABORATORY coordinates. For a field that is both ROTATED and ANISOTROPIC this does not preserve the declared stationary covariance: the diagonal is preserved but every off-diagonal is multiplied by phi_i phi_j + sqrt((1-phi_i^2)(1-phi_j^2)) < 1.",
+        "only_affected_field": "theta2_ellipse (k = 150/60 uN/m at 30 deg) is the only declared field that is both rotated and anisotropic",
+        "measured_distortion": "off-diagonal multiplied by 0.935926747418, a 6.4% under-estimate; 1.96e-02 relative to max|Sigma|",
+        "correction": "evolve independent eigenmodes of H_true and rotate back: F = R diag(phi) R^T, Q = Sigma - F Sigma F^T, and in the eigenbasis Q_ii = (1-phi_i^2)/(beta lambda_i)",
+        "verified": "F Sigma F^T + Q = Sigma to 0.0 relative residual; Q_eig off-diagonal ~1e-33",
+        "trajectories_generated": 0
+      },
+      "modal_ordering": {
+        "rule": "tau_true is ordered WITH ascending H eigenvalues, the jacobi convention",
+        "invariant_enforced": "lambda_i * tau_i must be constant across modes (isotropic Stokes drag), which refuses any swapped pairing",
+        "verified": "for theta2_ellipse, lambda ascending pairs with tau descending and tau_i = gamma/k_i exactly; a swapped order is REFUSED"
+      },
+      "beta_covariance": {
+        "rule": "Sigma = (beta H)^-1, never hard-coded H^-1",
+        "verified": "checked at beta = 1.0, 1.06, 0.93, 1.10, 1.025; the stationary covariance tracks 1/beta and the transition identity holds at each",
+        "false_bridge_alternatives_unchanged": true
+      },
+      "B_C2_completeness": "classify_campaign REFUSES any C2 field map that is not exactly the four declared fields",
+      "C_C7_completeness": "classify_campaign and the direct g2_campaign_pass helper both REFUSE any alternative map that is not exactly the four declared alternatives",
+      "D_calibration_lock": "lock() REFUSES an absent, wrongly typed or mismatched separately supplied realised condition; a self-consistent artifact copy is no longer sufficient",
+      "E_seed_scopes": "a case may request only the field scopes in its own fields_affected; the experiment scope is reserved to the branch_a_measurement family",
+      "F_output_schema": "bind_execution refuses a Markdown/JSON output-schema disagreement before any RNG exists"
+    },
+    "stream_inventory": {
+      "expected": 166600,
+      "enumerated": 166600,
+      "unique": 166600,
+      "collisions": 0,
+      "supersedes": 204000,
+      "why_different": "the 204,000 figure was a broader Cartesian product that gave C6 four physical field scopes it does not declare, and counted the experiment scope in every family rather than only branch_a_measurement"
+    },
+    "scientific_rules_changed": "NONE"
+  },
+  "driver_requirements": {
+    "status": "MANDATORY, NOT YET SATISFIED",
+    "branch_a_provenance": {
+      "closed_by_this_adoption": "condition-consistency enforcement: the lock refuses an absent or mismatched separately supplied realised condition",
+      "NOT_closed": "end-to-end Branch-A provenance enforcement",
+      "why": "matching a separately supplied condition is not, by itself, proof that the condition came from that replicate's actual Branch-A measurement. A caller passing a copy of the artifact's own condition still satisfies the check.",
+      "requirement": "the official campaign driver MUST construct the realised CalibrationCondition mechanically from its OWN Branch-A measurement result, and that construction must itself be audited. Until then this is enforcement of consistency, not of provenance."
+    },
+    "official_campaign_driver": "NOT YET IMPLEMENTED OR AUDITED; a passing static preflight is not an execution clearance"
   }
 }

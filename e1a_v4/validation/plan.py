@@ -20,6 +20,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 from dataclasses import dataclass
 from typing import Any
 
@@ -36,6 +37,7 @@ from .scope import (
 from .seeds import (
     ALLOWED_FAMILIES_KEY, CaseSeedAccess, FrozenSeedMap, ValidationSeedFamily,
 )
+from .classification import REQUIRED_C2_FIELDS, REQUIRED_C7_ALTERNATIVES
 
 #: Validation modules whose content can change an execution. Sorted on use.
 VALIDATION_MODULES = (
@@ -56,6 +58,30 @@ REQUIRED_PLAN_KEYS = (
     "calibration", "assurance", "failure_classifications", "output_schema",
     "controls", "no_post_outcome_tuning", "authority_gaps", "execution_command",
 )
+
+
+def require_output_schema_agreement(root: str, plan: dict[str, Any]) -> None:
+    """Refuse a human/mechanical output-schema mismatch before any RNG exists."""
+    path = os.path.join(root, "docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_PLAN.md")
+    if not os.path.exists(path):
+        raise Refusal("normative Markdown validation plan is absent")
+    with open(path, encoding="utf-8") as handle:
+        text = handle.read()
+    section = text.split("## 9. Output schema", 1)
+    if len(section) != 2:
+        raise Refusal("normative Markdown output schema section is absent")
+    body = section[1].split("\n## 10.", 1)[0]
+    schema = plan["output_schema"]
+    if (f"`{schema['record_schema']}`" not in body or
+            f"`{schema['manifest_schema']}`" not in body):
+        raise Refusal("Markdown/JSON output schema versions disagree")
+    for label, key in (("Per record:", "per_record_fields"),
+                       ("Aggregate:", "aggregate_fields")):
+        line = next((line for line in body.splitlines() if line.startswith(label)), None)
+        if line is None or re.findall(r"`([^`]+)`", line) != schema[key]:
+            raise Refusal(f"Markdown/JSON output schema fields disagree at {label}")
+    if "subcondition id + replicate index" not in body or "declared scope" not in body:
+        raise Refusal("Markdown reproduction recipe omits subcondition or scope")
 
 
 def load_plan(root: str = ".") -> dict[str, Any]:
@@ -179,6 +205,14 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     """
     binding = load_contract(root)
     plan = load_plan(root)
+    require_output_schema_agreement(root, plan)
+    cases = {case["case_id"]: case for case in plan["cases"]}
+    if (set(cases["C2_geometry_false_rejection"]["fields_affected"]) != REQUIRED_C2_FIELDS
+            or {s["subcondition_id"] for s in cases["C7_false_bridge"]["subconditions"]}
+            != REQUIRED_C7_ALTERNATIVES):
+        raise Refusal("campaign classifier rows disagree with contract/plan declarations")
+    if {f["id"] for f in binding.fields} != REQUIRED_C2_FIELDS:
+        raise Refusal("campaign classifier fields disagree with the adopted contract")
     frozen = plan["frozen_identities"]
 
     # --- the frozen-execution rule: the EXACT adopted contract, nothing else ----

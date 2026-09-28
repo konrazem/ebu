@@ -708,14 +708,15 @@ reported.
 
 ## 9. Output schema
 
-Directory `results/e1a_v4_validation`, record schema `e1a_v4_validation_result/1`, manifest schema
-`e1a_v4_validation_manifest/1`.
+Directory `results/e1a_v4_validation`, record schema `e1a_v4_validation_result/2`, manifest schema
+`e1a_v4_validation_manifest/2`.
 
-Per record: `case_id`, `replicate_id`, `seed_family`, `seed_identity`, `field_id`, `truth_parameters`, `branch_a_observed`, `analysis_status`, `G1`, `G2`, `G3`, `G4`, `G5`, `P1`, `beta_hat`, `P2`, `P3`, `P4`, `complete_pass`, `refusal_reason`, `procedure_identity`, `contract_sha256`, `plan_sha256`, `implementation_commit`.
+Per record: `case_id`, `subcondition_id`, `replicate_id`, `seed_family`, `seed_identity`, `field_id`, `truth_parameters`, `branch_a_observed`, `analysis_status`, `G1`, `G2`, `G3`, `G4`, `G5`, `P1`, `beta_hat`, `P2`, `P3`, `P4`, `complete_pass`, `refusal_reason`, `procedure_identity`, `contract_sha256`, `plan_sha256`, `implementation_commit`.
 
 Aggregate: `success_count`, `failure_count`, `refusal_count`, `refusals_by_reason`, `confidence_bound`, `false_bridge_acceptance`, `per_field_geometry_rates`, `mode_resolution_behaviour`, `g5_diagnostics`, `scale_control_recovery`, `classification`.
 
-Reproduction: seed family + master seed + case id + replicate index regenerate any record exactly.
+Reproduction: seed family + master seed + case id + subcondition id + replicate index
+and declared scope regenerate any record exactly.
 
 ---
 

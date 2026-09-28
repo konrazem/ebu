@@ -265,9 +265,12 @@ def test_b6_subcondition_independence() -> None:
           c5.stream(VF.CALIBRATION, "sk0p00_sp0p0", 3, "theta1_power")
           != c5.stream(VF.CALIBRATION, "sk1p00_sp1p0", 3, "theta1_power"))
     c6 = EX.case_access("C6_mode_resolution_boundary")
+    c6_scope = CASES["C6_mode_resolution_boundary"]["fields_affected"][0]
     check("same C6 replicate + different rho -> different stream",
-          c6.stream(VF.VALIDATION, "rho_1p019573", 1, "theta0_circular")
-          != c6.stream(VF.VALIDATION, "rho_1p029360", 1, "theta0_circular"))
+          c6.stream(VF.VALIDATION, "rho_1p019573", 1, c6_scope)
+          != c6.stream(VF.VALIDATION, "rho_1p029360", 1, c6_scope))
+    check("C6 cannot borrow theta0's scope",
+          refuses(c6.stream, VF.VALIDATION, "rho_1p019573", 1, "theta0_circular"))
     c7 = EX.case_access("C7_false_bridge")
     alts = sub_ids("C7_false_bridge")
     streams = {a_: c7.stream(VF.VALIDATION, a_, 2, "theta1_power") for a_ in alts}
@@ -312,10 +315,14 @@ def test_b6_intentional_sharing() -> None:
 
 def test_b6_scheduling_and_collisions() -> None:
     jobs = {}
+    expected = 0
     for c in PLAN["cases"]:
         acc = EX.case_access(c["case_id"])
-        scopes = FIELDS + [EXPERIMENT_SCOPE]
         for fam in c["allowed_seed_families"]:
+            scopes = list(acc.field_scopes)
+            if fam == VF.BRANCH_A_MEASUREMENT.value:
+                scopes.append(EXPERIMENT_SCOPE)
+            expected += len(sub_ids(c["case_id"])) * c["replicate_count"] * len(scopes)
             for sub in sub_ids(c["case_id"]):
                 for rep in range(c["replicate_count"]):
                     for sc in scopes:
@@ -324,7 +331,9 @@ def test_b6_scheduling_and_collisions() -> None:
     total = sum(len(v) for v in jobs.values())
     dupes = {k: v for k, v in jobs.items() if len(v) > 1}
     check("full-campaign stream enumeration has ZERO collisions",
-          len(dupes) == 0, f"{total:,} job identities, {len(jobs):,} unique, {len(dupes)} collisions")
+          total == expected and len(dupes) == 0,
+          f"{expected:,} expected, {total:,} identities, {len(jobs):,} unique, "
+          f"{len(dupes)} collisions")
     acc = EX.case_access("C5_plug_in_branch_a")
     subs, reps = sub_ids("C5_plug_in_branch_a")[:4], range(4)
     fwd = [((s, r, f), acc.stream(VF.CALIBRATION, s, r, f))

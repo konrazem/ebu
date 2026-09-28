@@ -120,6 +120,14 @@ RELEASE_FAILING_CLASSIFICATIONS = (
     "NUMERICAL_OR_PRECISION_FAILURE",
 )
 
+# A missing row is not a successful zero-rejection row.
+REQUIRED_C2_FIELDS = frozenset((
+    "theta0_circular", "theta1_power", "theta2_ellipse", "theta3_temperature",
+))
+REQUIRED_C7_ALTERNATIVES = frozenset((
+    "alt_1_06", "alt_0_93_1_05", "alt_1_10", "hard_1_025",
+))
+
 
 @dataclass(frozen=True)
 class CampaignCounts:
@@ -143,6 +151,16 @@ def classify_campaign(counts: CampaignCounts) -> dict:
     Every required case must pass on its own terms. There is NO weighted score and NO
     compensation: one case cannot make up for another's failure.
     """
+    if set(counts.c2_rejections_by_field) != REQUIRED_C2_FIELDS:
+        raise Refusal("C2 requires exactly the four declared field counts")
+    if set(counts.c7_false_acceptances_by_alternative) != REQUIRED_C7_ALTERNATIVES:
+        raise Refusal("C7 requires exactly the four declared alternative counts")
+    if not 0 <= counts.c1_successes <= 300 or not 0 <= counts.c8_successes <= 200:
+        raise Refusal("C1/C8 success counts exceed their declared replicate ranges")
+    if any(not 0 <= k <= 400 for k in counts.c7_false_acceptances_by_alternative.values()):
+        raise Refusal("C7 false-acceptance count exceeds 400 replicates")
+    if type(counts.c5_pass) is not bool or type(counts.c6_pass) is not bool:
+        raise Refusal("C5/C6 require explicit Boolean outcomes")
     failures: list[str] = []
     detail: dict[str, object] = {}
 
