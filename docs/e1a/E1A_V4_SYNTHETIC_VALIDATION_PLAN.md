@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.3.0**. An independent audit found three pre-execution defects in the
+Plan version **1.4.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** — section 5.3. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
 repaired here, **before any random scientific outcome existed**. See section 14.
 **No E1a scientific decision rule changed.**
@@ -108,7 +108,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | complete pass in the large majority of replicates |
 | seed family | `validation` |
-| allowed seed families | `validation`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 1,200 — 300 replicates x 4 fields |
 | replicate count | **300** |
 
 **Pass / fail criterion.** Clopper-Pearson one-sided 95% LOWER bound on the complete-pass rate >= 0.90; requires >= 279/300. An observed proportion above 0.90 is NOT sufficient by itself.
@@ -130,7 +133,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | false rejection at or below alpha_geom = 0.5% |
 | seed family | `validation` |
-| allowed seed families | `validation`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 1,600 — 400 replicates x 4 fields |
 | replicate count | **400** |
 
 **Pass / fail criterion.** PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. Secondary gross-inflation diagnostic (CP upper <= 0.03) may be reported but is not validation of alpha_geom.
@@ -151,7 +157,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | block-2 achieved size consistent with alpha_2 = 0.1%; delta-method error quantified |
 | seed family | `validation` |
-| allowed seed families | `validation`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 1,600 — 400 replicates x 4 fields |
 | replicate count | **400** |
 
 **Pass / fail criterion.** R = 400, nominal alpha_2 = 0.001. Inflation is detected iff CP_lower(G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE. 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.
@@ -173,6 +182,9 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | expected qualitative outcome | achieved Block-1 rejection rate close to alpha_1 = 0.4% |
 | seed family | `calibration + validation` |
 | allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 8,000 — 2000 replicates x 4 fields |
 | replicate count | **2000** |
 
 **Pass / fail criterion.** R = 2000, nominal alpha_1 = 0.004. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation: detected iff CP_lower(rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. The binary diagnostic does not replace the discrepancy report.
@@ -193,7 +205,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | achieved size degrades as sigma_psi grows; the magnitude is the result |
 | seed family | `validation + branch_a_measurement` |
-| allowed seed families | `validation`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 19,200 — 400 replicates x 12 declared cells x 4 fields |
 | replicate count | **400** |
 
 **Pass / fail criterion.** report the Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate in EVERY one of the 12 declared cells, R = 400 each. No cell may be dropped after inspection.
@@ -214,7 +229,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | merge below the boundary, split above; size controlled on both sides |
 | seed family | `validation` |
-| allowed seed families | `validation`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 1,200 — 400 replicates x 3 declared rho |
 | replicate count | **400** |
 
 **Pass / fail criterion.** Clopper-Pearson one-sided 95% UPPER bound on the P1 rejection rate <= 3% at each of the three declared rho, R = 400 each; report the merge/split decision rate at each. theta_cap MUST NOT be changed after observing the result.
@@ -236,7 +254,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | acceptance close to zero for the coarse alternatives; the hard 2.5% case is the informative one |
 | seed family | `validation` |
-| allowed seed families | `validation`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `validation`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 6,400 — 400 replicates x 4 alternatives x 4 fields |
 | replicate count | **400** |
 
 **Pass / fail criterion.** For EACH declared alternative INDEPENDENTLY: one-sided 95% Clopper-Pearson UPPER bound on the false-acceptance rate <= 0.025 over R = 400, i.e. <= 4/400; 5 or more fails. Counts are never pooled and easy and hard alternatives are never averaged. [disposition G2, closed prospectively]
@@ -257,7 +278,10 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | Branch-B process | declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta) |
 | expected qualitative outcome | beta_hat on the blinded branch concentrates on 1/c |
 | seed family | `blinded_scale_control` |
-| allowed seed families | `blinded_scale_control`, `branch_a_measurement` |
+| allowed seed families | `calibration`, `blinded_scale_control`, `branch_a_measurement` |
+| Branch-A uncertainty | **STOCHASTIC_PER_REPLICATE** |
+| calibration scope | **REPLICATE_CONDITIONAL** |
+| calibration artifacts | 800 — 200 paired replicates x 4 fields |
 | replicate count | **200** |
 
 **Pass / fail criterion.** beta_tilde_theta = c * beta_hat_theta must satisfy the SAME P3 absolute-equivalence rule (delta_abs = 0.05, z_abs = 1.959963985, h_theta = z sqrt(sigma_cm^2 + sigma_fs^2 + sigma_stat_theta^2)) at EVERY tested field, for BOTH c = 1.07 and c = 0.90; any non-ESTIMATED field fails that branch. One replicate succeeds only if both branches pass. Campaign: one-sided 95% Clopper-Pearson LOWER bound on paired-control success >= 0.90 over R = 200, i.e. >= 188/200. [disposition G1, closed prospectively]
@@ -387,6 +411,97 @@ condition digest, the draws **and** the stored derived quantities.
 
 Artifact filenames: `calibration/block1_theta0_circular.json`, `calibration/block1_theta1_power.json`, `calibration/block1_theta2_ellipse.json`, `calibration/block1_theta3_temperature.json`.
 
+### 5.3 Calibration scope — REPLICATE-CONDITIONAL, frozen prospectively
+
+```
+calibration_scope = REPLICATE_CONDITIONAL
+```
+
+**Author disposition.** Every synthetic validation replicate that includes stochastic branch-a measurement uncertainty is analysed using calibration artifacts generated for that replicate's own realised branch-a calibration condition.
+
+```
+H_true,theta -> H_A,theta,r -> C_theta,r -> Branch-B analysis_theta,r
+```
+
+**Why.** a replicate stands for one repeated COMPLETE experiment and Branch-A measurement is part of it. The campaign validates Branch-A measurement + conditional calibration + Branch-B measurement + endpoint analysis as ONE repeated pipeline.
+
+**Adopted because it matches the repeated-experiment scientific model, not because of cost.**
+The superseded alternative was *four globally locked per-field calibration artifacts*.
+
+| case | Branch-A | calibration scope | artifacts | basis |
+|---|---|---|---:|---|
+| `C1_true_bridge_complete` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 1,200 | 300 replicates x 4 fields |
+| `C2_geometry_false_rejection` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 1,600 | 400 replicates x 4 fields |
+| `C3_g5_block` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 1,600 | 400 replicates x 4 fields |
+| `C4_surrogate_validity` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 8,000 | 2000 replicates x 4 fields |
+| `C5_plug_in_branch_a` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 19,200 | 400 replicates x 12 declared cells x 4 fields |
+| `C6_mode_resolution_boundary` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 1,200 | 400 replicates x 3 declared rho |
+| `C7_false_bridge` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 6,400 | 400 replicates x 4 alternatives x 4 fields |
+| `C8_blinded_scale_control` | STOCHASTIC_PER_REPLICATE | **REPLICATE_CONDITIONAL** | 800 | 200 paired replicates x 4 fields |
+| | | **total** | **40,000** | |
+
+No case uses `CASE_FIXED`. The value exists in the schema and is enforced, in the same way
+`confirmatory` is a declared seed family authorised for no case.
+
+#### Prohibited
+
+- one theta0 artifact reused across every replicate
+- one theta1 artifact reused across every replicate
+- one theta2 artifact reused across every replicate
+- one theta3 artifact reused across every replicate
+
+whenever those replicates have independently realised Branch-A conditions. The prohibition
+is **mathematical, not merely provenance-based**: the Block-1 null law moves with the
+realised `H_A`.
+
+> **A matching field name is insufficient. A nominal `H` is insufficient. An eigenvalue
+> ratio is insufficient.** The complete repaired `CalibrationCondition` must match.
+
+#### Limited reuse rule
+
+Reuse is **not** categorically prohibited, but it is never implicit. All four conditions are
+required:
+
+1. the frozen case definition explicitly holds the calibration condition fixed across the relevant analyses
+2. the complete CalibrationCondition digest is identical
+3. the plan explicitly classifies that shared calibration as part of the case design
+4. the resulting dependence is compatible with the statistical quantity being estimated
+
+no cache-based reuse is permitted merely because two digests happen to match. CampaignCalibrationLedger refuses a digest already locked to a different (case, replicate, field) under REPLICATE_CONDITIONAL.
+
+#### Ordering — calibration is blind to Branch B
+
+```
+1. derive frozen replicate/job seed identities (no draw)
+2. generate the Branch-A synthetic measurement, branch_a_measurement family
+3. construct the complete CalibrationCondition
+4. generate and finalise the calibration artifact, calibration family
+5. LOCK the artifact; it is immutable from here
+6. ONLY THEN release the Branch-B validation stream, validation family
+```
+
+`ReplicateCalibration.validation_seed` **refuses** until that field's artifact is locked, so
+the threshold cannot inspect Branch-B observations, G1-G5 from validation data, `beta_hat`,
+or any endpoint result — none of them exists when it is built.
+
+**Campaign-level implementation: `STREAMING_PER_REPLICATE`.**
+the preferred PHASE A / PHASE B / PHASE C separation would materialise all 40000 artifacts before any Branch-B draw. Each artifact carries 4 gates x R_cal = 50000 float64 null draws = 1.6 MB raw, so full Phase-B materialisation is about 64 GB binary and several hundred GB as JSON, against 24 GB of RAM on the reference machine. Streaming is therefore adopted, and it is exactly equivalent because ReplicateCalibration mechanically guarantees that the artifact for replicate r is finalised and immutable BEFORE the first Branch-B validation draw for replicate r, and that no later validation result can alter it.
+
+The artifact manifest is materialised in full for all 40000 artifacts, about 2.6 mb of digests, so threshold freezing remains auditable before any validation outcome exists even though the draws themselves are streamed.
+
+#### Artifact identity
+
+Each locked artifact binds: `case_id`, `replicate_id`, `field_id`, `calibration_condition_sha256`, `artifact_sha256`, `analysis_procedure_identity`, `contract_sha256`, `calibrator_identity`, `R_cal`, `alpha_1`, `calibration_seed_identity`, `artifact_schema`.
+
+Finalised artifacts are immutable; the ledger refuses a second lock for the same (case, replicate, field) and refuses any lock after that field's branch-b stream has been released.
+
+#### One-ulp policy
+
+**KEEP THE FAIL-CLOSED EXACT CANONICAL DIGEST.** Mathematical invariance of the statistic is not bitwise identity of the calibration-condition representation.
+
+Every block-1 gate is invariant to h_a -> c h_a in exact arithmetic, but normalised_h(c*h) differs from normalised_h(h) in the last ulp, so the digests differ and the artifact is refused. this may create two artifacts where one would mathematically suffice. ACCEPTED for v4. Introducing rounding solely to increase
+artifact reuse is **forbidden**, and canonical numerical equivalence is not redesigned here.
+
 ---
 
 ## 6. Statistical assurance
@@ -414,8 +529,18 @@ hash                   first 8 bytes of sha256(text), big-endian unsigned
 master                 DOMAIN|master|contract_sha256|campaign
 family                 DOMAIN|family|master_hex16|family_name
 replicate              DOMAIN|replicate|family_hex16|case=<id>|rep=<index>
+job                    DOMAIN|job|replicate_hex16|field=<field_id>          [ADDED]
 hand_picked_values     False
 ```
+
+> **The `job` level was added with replicate-conditional calibration.** It is a fourth level
+> and changes none of the three above: the master seed and **every family seed below are
+> bit-identical**. It is required, not a convenience — one replicate needs one calibration
+> artifact per field, and a single per-replicate stream consumed sequentially would make
+> artifact contents depend on the ORDER fields were processed in, so a parallel execution
+> could not reproduce a serial one. Domain separation by field makes each calibration job a
+> pure function of `(family, case, replicate, field)`. Seed map schema
+> `e1a_v4_seed_map/1` -> `e1a_v4_seed_map/2`, documentation only.
 
 | family | seed |
 |---|---:|
@@ -435,16 +560,22 @@ untouched. No single mutable global RNG is used anywhere.
 
 | case | allowed seed families | why |
 |---|---|---|
-| `C1_true_bridge_complete` | `validation`, `branch_a_measurement` | Branch-B trajectories from validation; Branch-A measurement error is REQUIRED because disposition G3 asserts the primary >= 0.90 claim at sigma_psi = 0.5 deg and sigma_psi reaches nothing except a realised rotation into G3 |
-| `C2_geometry_false_rejection` | `validation`, `branch_a_measurement` | Branch-B trajectories from validation; the declared frozen candidate scenario including sigma_psi is realised per replicate |
-| `C3_g5_block` | `validation`, `branch_a_measurement` | Branch-B trajectories from validation; G5 is computed from those observations and the declared Branch-A scenario is realised |
-| `C4_surrogate_validity` | `calibration`, `validation`, `branch_a_measurement` | calibration produces the surrogate null; validation produces the actual correlated observations; the declared Branch-A scenario is realised |
-| `C5_plug_in_branch_a` | `validation`, `branch_a_measurement` | the sweep over sigma_k x sigma_psi IS a Branch-A measurement sweep; already declared |
-| `C6_mode_resolution_boundary` | `validation`, `branch_a_measurement` | Branch-B trajectories at the three declared rho; the declared Branch-A scenario is realised |
-| `C7_false_bridge` | `validation`, `branch_a_measurement` | Branch-B trajectories under each alternative; the declared Branch-A scenario is realised |
-| `C8_blinded_scale_control` | `blinded_scale_control`, `branch_a_measurement` | the blinded control draws its own paired Branch-B replicates from its dedicated family; the declared Branch-A scenario is realised. The blinding factor c is applied deterministically by BranchAField.blinded and is not a draw |
+| `C1_true_bridge_complete` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C2_geometry_false_rejection` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C3_g5_block` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C4_surrogate_validity` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C5_plug_in_branch_a` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C6_mode_resolution_boundary` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C7_false_bridge` | `calibration`, `validation`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
+| `C8_blinded_scale_control` | `calibration`, `blinded_scale_control`, `branch_a_measurement` | REPLICATE-CONDITIONAL CALIBRATION: this case builds its own calibration artifact per replicate and field, so it consumes the calibration fam… |
 
 `confirmatory` is declared in the seed map and is authorised for **no case** in this campaign.
+`blinded_scale_control` is authorised for **C8 alone**.
+
+> **Every case declares `calibration`.** That is a *derived consequence* of adopting
+> replicate-conditional calibration (section 5.3), not a relaxation: before the scope
+> decision only C4 generated calibration data; now every case builds its own artifact per
+> replicate and field.
 
 **Enforcement.** `e1a_v4.validation.seeds.CaseSeedAccess, reached via ExecutionBinding.case_access / runner.case_seed_access`. A case may obtain **only** the families its frozen plan
 entry declares in `allowed_seed_families`.
@@ -742,6 +873,65 @@ term under either architecture.
 whether the campaign calibrates ONE artifact per field or one per replicate at that replicate's measured H_A remains a SPECIFICATION decision, recorded in docs/e1a/E1A_V4_SYNTHETIC_VALIDATION_RESULTS.md. This repair makes either choice mechanically safe and affordable; it does not decide it.
 
 ---
+
+```
+execution_authorised = false
+RANDOM DRAWS = 0   TRAJECTORIES = 0
+CALIBRATION EXECUTION = NOT RUN   VALIDATION CAMPAIGN = NOT RUN
+```
+
+
+---
+
+## 15. Parallelism policy
+
+Parallel execution is permitted **as an execution optimisation only**. It must not alter seed
+derivation, artifact contents, replicate identities, case definitions, result ordering
+semantics or thresholds. A serial and a parallel execution must produce **identical**
+scientific artifacts and results for the same frozen protocol, aside from non-scientific
+ordering and timing metadata.
+
+The mechanism: every calibration job is a pure function of `(family, case, replicate, field)`.
+Deterministic scheduling is tested in `test_e1a_v4_calibration_scope.py`. **No stochastic job
+is executed.**
+
+---
+
+## 16. What the cost figures actually contain
+
+Re-measured and decomposed before being repeated, because a number quoted without its
+contents is not evidence.
+
+| component of ONE artifact build | measured |
+|---|---:|
+| surrogate draws + four gates, `R_cal = 50000` | `2.645 s` |
+| threshold finalisation | `0.057 s` |
+| **total, wall, median of 5** | **`2.674 s`** (CPU `2.627 s`, range `2.616`–`2.698`) |
+
+**Threshold finalisation is about 2% of an artifact build.** The other ~98% is surrogate
+generation and gate evaluation, which the B2 repair did not touch and could not touch. A
+figure of "N core-hours of calibration" is therefore almost entirely surrogate generation,
+and calling it "threshold work" would misattribute it.
+
+| | artifacts | projection |
+|---|---:|---:|
+| replicate-conditional (adopted) | 40 000 | **29.7 core-hours** |
+| four locked artifacts (superseded) | 4 | **10.7 s** |
+| Branch-A realisations | 40 000 | 0.51 s |
+| compatibility checks + P1 uses | 40 000 | 1.0 s |
+
+**BENCHMARK-BASED PROJECTION** from a MEASURED per-unit cost. **NOT MEASURED END-TO-END.**
+**EXCLUDED from every figure above:** Branch-B trajectory generation, 2 000 000 steps per
+field-replicate, which is the largest term in the campaign.
+
+> The repair report quoted `3.008 s` per artifact and `33.4 core-hours` from a 2-repetition
+> timing taken while other work was running. A 5-repetition timing gives `2.674 s` and
+> **29.7 core-hours**. Both are projections; the earlier one was noisier. Neither is a
+> measured campaign runtime.
+
+**Cost is not the scientific decision rule.** Replicate-conditional calibration is adopted
+because it matches the repeated-experiment model. The cost is recorded for planning only and
+was not allowed to weaken the architecture.
 
 ```
 execution_authorised = false

@@ -28,6 +28,10 @@ from ..contract import ContractBinding, load_contract, sha256_file
 from ..identity import SCIENTIFIC_MODULES, procedure_identity
 from ..numerics import Refusal
 from . import PLAN_JSON, SEED_MAP_JSON, VALIDATION_IDENTITY
+from .scope import (
+    BRANCH_A_STATUS_KEY, CALIBRATION_SCOPE_KEY, CAMPAIGN_CALIBRATION_SCOPE,
+    CampaignCalibrationLedger, CaseCalibrationScope, ReplicateCalibration,
+)
 from .seeds import (
     ALLOWED_FAMILIES_KEY, CaseSeedAccess, FrozenSeedMap, ValidationSeedFamily,
 )
@@ -42,6 +46,7 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/plan.py",
     "e1a_v4/validation/results.py",
     "e1a_v4/validation/runner.py",
+    "e1a_v4/validation/scope.py",
     "e1a_v4/validation/seeds.py",
 )
 
@@ -77,6 +82,12 @@ def load_plan(root: str = ".") -> dict[str, Any]:
         bad = [f for f in declared if f not in known]
         if bad:
             raise Refusal(f"case {cid!r} declares undeclared seed families {bad}")
+        CaseCalibrationScope.from_plan(cid, plan)          # validates the pairing
+    if plan.get("calibration", {}).get("calibration_scope") != CAMPAIGN_CALIBRATION_SCOPE:
+        raise Refusal(
+            "validation plan must declare calibration.calibration_scope = "
+            f"{CAMPAIGN_CALIBRATION_SCOPE!r}; the adopted architecture is not implicit"
+        )
     return plan
 
 
@@ -119,6 +130,20 @@ class ExecutionBinding:
     analysis_identity: str
     execution_identity: str
     output_dir: str
+
+    def calibration_scope(self, case_id: str) -> CaseCalibrationScope:
+        """The case's declared Branch-A status and calibration scope."""
+        return CaseCalibrationScope.from_plan(case_id, self.plan)
+
+    def replicate_calibration(self, case_id: str, replicate: int,
+                              ledger: CampaignCalibrationLedger) -> ReplicateCalibration:
+        """The per-replicate ordering boundary: Branch A, then LOCK, then Branch B.
+
+        This is the ONLY route an official run may use to reach a validation
+        stream, because it refuses one until that field's calibration is locked.
+        """
+        return ReplicateCalibration(self.calibration_scope(case_id),
+                                    self.case_access(case_id), replicate, ledger)
 
     def case_access(self, case_id: str) -> CaseSeedAccess:
         """The ONLY seed route an official run may use. Authorised by the plan.

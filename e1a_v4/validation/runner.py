@@ -26,6 +26,7 @@ from typing import Callable
 
 from ..numerics import Refusal
 from .plan import ExecutionBinding, bind_execution
+from .scope import CampaignCalibrationLedger, ReplicateCalibration
 from .seeds import CaseSeedAccess, ValidationSeedFamily
 
 RNGFactory = Callable[[int], object]
@@ -49,6 +50,18 @@ def case_seed_access(binding: ExecutionBinding, case_id: str) -> CaseSeedAccess:
     the caller to pass matching family arguments.
     """
     return binding.case_access(case_id)
+
+
+def replicate_calibration(binding: ExecutionBinding, case_id: str, replicate: int,
+                          ledger: CampaignCalibrationLedger) -> ReplicateCalibration:
+    """The official per-replicate calibration boundary.
+
+    REPLICATE-CONDITIONAL CALIBRATION is the adopted architecture: each replicate
+    is calibrated at its own realised Branch-A condition, and its Branch-B stream
+    is not released until that artifact is locked. An official run reaches a
+    validation stream only through here.
+    """
+    return binding.replicate_calibration(case_id, replicate, ledger)
 
 
 def run(root: str = ".", *, rng_factory: RNGFactory | None = None,

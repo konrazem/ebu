@@ -8,6 +8,20 @@ reproduce the committed seed map byte for byte.
     master        = H( DOMAIN | "master"    | contract_sha256 | campaign )
     family seed   = H( DOMAIN | "family"    | master_hex      | family    )
     replicate     = H( DOMAIN | "replicate" | family_hex      | case | rep )
+    job           = H( DOMAIN | "job"       | replicate_hex   | field     )
+
+The JOB level is an EXTENSION added with replicate-conditional calibration. It
+adds a fourth level and changes none of the three above: every master, family
+and replicate value is bit-identical to the committed seed map.
+
+WHY IT IS REQUIRED, and not a convenience. Under replicate-conditional
+calibration one replicate needs one calibration artifact PER FIELD. A single
+per-replicate stream consumed sequentially across fields would make the artifact
+contents depend on the ORDER the fields were processed in, so a parallel
+execution could not reproduce a serial one. Domain-separating by field makes each
+calibration job a pure function of (family, case, replicate, field), which is what
+lets independent jobs be scheduled in any order and still produce identical
+artifacts.
 
 H(x) = first 8 bytes of sha256(x), big-endian, as an unsigned 64-bit integer.
 
@@ -64,6 +78,17 @@ def replicate_seed(fam_seed: int, case_id: str, replicate: int) -> int:
     if "|" in case_id or not case_id:
         raise Refusal("invalid case id")
     return _h64(f"{SEED_DOMAIN}|replicate|{fam_seed:016x}|case={case_id}|rep={replicate}")
+
+
+def job_seed(rep_seed: int, field_id: str) -> int:
+    """Per-field stream inside one replicate. DERIVATION, NOT A DRAW.
+
+    Makes each calibration job a pure function of its identity, so scheduling
+    order cannot change an artifact. See the module docstring.
+    """
+    if "|" in field_id or not field_id:
+        raise Refusal("invalid field id")
+    return _h64(f"{SEED_DOMAIN}|job|{rep_seed:016x}|field={field_id}")
 
 
 @dataclass(frozen=True)
@@ -190,3 +215,11 @@ class CaseSeedAccess:
         random draw, trajectory generation.
         """
         return replicate_seed(self.stream(family), self.case_id, replicate)
+
+    def job(self, family: ValidationSeedFamily, replicate: int, field_id: str) -> int:
+        """A per-field stream inside an authorised family. DERIVATION, NOT A DRAW.
+
+        Distinct for every (family, case, replicate, field), so two calibration
+        jobs never share a stream and scheduling order cannot change an artifact.
+        """
+        return job_seed(self.replicate(family, replicate), field_id)
