@@ -119,7 +119,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | seed family | `validation` |
 | replicate count | **400** |
 
-**Pass / fail criterion.** Clopper-Pearson one-sided 95% UPPER bound <= 3% at EVERY declared field, R = 400 each (max 6 rejections). An UPPER bound is required; a lower bound cannot demonstrate control.
+**Pass / fail criterion.** PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. Secondary gross-inflation diagnostic (CP upper <= 0.03) may be reported but is not validation of alpha_geom.
 
 ### `C3_g5_block` — primary
 
@@ -139,7 +139,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | seed family | `validation` |
 | replicate count | **400** |
 
-**Pass / fail criterion.** Clopper-Pearson one-sided 95% UPPER bound on the block-2 rejection rate <= 3%, R = 400; report the measured sd(g2) against the leading-order 24 A4 / n prediction.
+**Pass / fail criterion.** R = 400, nominal alpha_2 = 0.001. Inflation is detected iff CP_lower(G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE. 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.
 
 ### `C4_surrogate_validity` — primary
 
@@ -159,7 +159,7 @@ Eight cases, one per scientifically required purpose traceable to committed or a
 | seed family | `calibration + validation` |
 | replicate count | **2000** |
 
-**Pass / fail criterion.** report the achieved Block-1 rate with a Clopper-Pearson 95% two-sided interval over R = 2000 validation draws against the nominal alpha_1; calibration uses R_cal = 50000 (realised size 0.4000% +/- 0.0282%). Discrepancy is REPORTED and classified, not tuned away.
+**Pass / fail criterion.** R = 2000, nominal alpha_1 = 0.004. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation: detected iff CP_lower(rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. The binary diagnostic does not replace the discrepancy report.
 
 ### `C5_plug_in_branch_a` — primary
 
@@ -312,9 +312,9 @@ Artifact filenames: `calibration/block1_theta0_circular.json`, `calibration/bloc
 | quantity | target | estimator | bound | R | acceptance rule |
 |---|---|---|---|---:|---|
 | complete true-bridge pipeline success | `>= 0.90` | complete-pass proportion over declared replicates | Clopper-Pearson one-sided LOWER | 300 | >= 279 / 300 complete passes |
-| P1 false-rejection rate, per field | `alpha_geom = 0.005` | rejection proportion | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.03, i.e. <= 6 rejections of 400 |
-| block-2 (G5) rejection rate | `alpha_2 = 0.001` | rejection proportion | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.03 |
-| Block-1 achieved size under the surrogate | `alpha_1 = 0.004` | rejection proportion | Clopper-Pearson two-sided | 2000 | REPORTED and classified; the discrepancy is the result |
+| P1 false-rejection rate, per field | `alpha_geom = 0.005` | Clopper-Pearson one-sided LOWER (inflation test) | 400 | no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field |
+| block-2 (G5) rejection rate | `alpha_2 = 0.001` | Clopper-Pearson one-sided LOWER (inflation test) | 400 | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400 |
+| Block-1 achieved size under the surrogate | `alpha_1 = 0.004` | Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test) | 2000 | discrepancy REPORTED and classified; additionally no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000 |
 | false-bridge acceptance, per alternative | `<= 0.025 per alternative` | Clopper-Pearson one-sided UPPER | 400 | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
 | blinded scale recovery beta_hat * c | `>= 0.90 paired-control success` | Clopper-Pearson one-sided LOWER | 200 | >= 188 / 200 paired-control successes |
 
@@ -433,6 +433,88 @@ redesign the E1a bridge.
 The previous frozen pre-execution package — work commit `475633c`, report commit
 `b4b2575` — was **execution-blocked** by G1–G3 and is superseded
 **prospectively** by this closure. neither commit is rewritten, amended or deleted; the historical report is retained as provenance.
+
+---
+## 12a. Size-validation semantics — FROZEN PROSPECTIVELY
+
+### Why the inherited 3% rule was insufficient
+
+The earlier frozen plan validated the geometry gates with a one-sided 95% Clopper–Pearson
+**upper** bound ≤ 0.03. That is a **coarse gross-inflation tolerance** inherited from development
+analysis, not validation of the nominal alpha allocations. At the declared nominal levels it would
+have tolerated:
+
+| case | tolerated | nominal alpha | ratio |
+|---|---|---:|---:|
+| C2 | 6/400 = 0.0150 | `alpha_geom = 0.005` | **3×** |
+| C3 | 6/400 = 0.0150 | `alpha_2 = 0.001` | **15×** |
+| C4 | 47/2000 = 0.0235 | `alpha_1 = 0.004` | **6×** |
+
+**A rule that passes fifteen times the nominal rate cannot be called validation of it.** The 3%
+criterion is superseded for release classification and retained only as a clearly labelled
+secondary gross-inflation diagnostic. It is preserved in provenance, and commit `475633c` and
+`docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md` are not rewritten.
+
+### Two different questions, never merged
+
+**Question A — complete practical performance.** C1, UNCHANGED. One-sided 95% Clopper-Pearson LOWER bound on complete-pipeline success >= 0.90 over R = 300, i.e. >= 279/300. This is the direct prospective validation of whether the whole implemented pipeline meets the release target.
+
+**Question B — component size inflation.** C2, C3 and C4. At the feasible replicate counts these are NOT positive proofs that the achieved rate is at or below a tiny nominal alpha. They prospectively TEST FOR EVIDENCE OF INFLATION: H0: p <= nominal alpha vs H1: p > nominal alpha, one-sided 5%.
+
+```
+H0: p <= nominal alpha        H1: p > nominal alpha       one-sided 5%
+
+STATISTICAL SIZE INFLATION is detected iff CP_lower(rejections, R) > nominal alpha
+```
+
+### Derived boundaries
+
+Each is **recomputed** by `size_boundary(R, nominal)`, never copied.
+
+| case | R | nominal alpha | no inflation detected | `STATISTICAL_SIZE_FAILURE` | CP_lower at boundary | CP_lower at boundary+1 |
+|---|---:|---:|---|---|---:|---:|
+| **C2** | 400 | `0.005` | 0–5 | 6+ | `0.0049379342` | `0.0065521458` |
+| **C3** | 400 | `0.001` | 0–2 | 3+ | `0.0008891209` | `0.0020472587` |
+| **C4** | 2000 | `0.004` | 0–13 | 14+ | `0.0038489425` | `0.0042367805` |
+
+C2 is evaluated **per field and never pooled**. C4 **retains** its full two-sided interval and
+operating-quantile discrepancy report; the binary diagnostic does not replace them.
+
+### What a pass means
+
+> **`NO_SIGNIFICANT_SIZE_INFLATION_DETECTED`** — this experiment did not establish excess size at the chosen confidence level.
+> It does **not** mean that the achieved rate is mathematically proved to be at or below the nominal alpha.
+> Forbidden wording: `NOMINAL SIZE PROVED`, `nominal size proved`, `size proved`, `exact size established`.
+
+---
+
+## 12b. Final campaign classification — FROZEN PROSPECTIVELY
+
+A final **`VALIDATION_PASS`** requires **all** of the following. CONJUNCTIVE. Every required case must pass on its own terms. There is **no weighted score** and **no compensation** between cases.
+
+1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)
+
+2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field
+
+3. C3 produces no STATISTICAL_SIZE_FAILURE
+
+4. C4 produces no STATISTICAL_SIZE_FAILURE
+
+5. C5 satisfies its already-frozen plug-in Branch-A criterion
+
+6. C6 satisfies its already-frozen mode-resolution criterion
+
+7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)
+
+8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)
+
+9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs
+
+10. structured refusals counted exactly per the already-frozen unconditional denominator rule
+
+> complete-pipeline achievement and component size cleanliness are REPORTED SEPARATELY and never collapsed. A campaign may fail because complete-pipeline success < target even with no significant size-inflation diagnostic: a valid scientific failure. Conversely C1 may reach >= 0.90 while a component case detects significant size inflation: also a validation failure, because the implemented calibration is not behaving according to its declared nominal structure. Both facts are reported.
+
+Implemented by `e1a_v4.validation.classification.classify_campaign`.
 
 ---
 ## 13. Execution

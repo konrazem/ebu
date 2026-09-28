@@ -327,8 +327,9 @@ def test_identities() -> None:
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
     check("every validation module enters the execution identity",
-          len(VALIDATION_MODULES) == 8
-          and "e1a_v4/validation/dispositions.py" in VALIDATION_MODULES,
+          len(VALIDATION_MODULES) == 9
+          and "e1a_v4/validation/dispositions.py" in VALIDATION_MODULES
+          and "e1a_v4/validation/classification.py" in VALIDATION_MODULES,
           f"{len(VALIDATION_MODULES)} modules")
     for p in VALIDATION_MODULES:
         check(f"validation module present on disk: {p}",
