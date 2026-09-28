@@ -1,5 +1,17 @@
 # E1a v4 — CALIBRATION SCOPE REPORT
 
+> **PARTIALLY SUPERSEDED — see `docs/e1a/E1A_V4_CASE_SCOPE_REPAIR_REPORT.md`.**
+> An independent pre-execution re-audit did not clear execution. Nothing below is altered,
+> and two figures in it are corrected there:
+> 1. **the 40,000 artifact count is wrong.** It combined a 7,200 over-count (C7 and C8 were
+>    budgeted artifacts their endpoints never consume) with a 13,200 under-count (the G3
+>    `sigma_psi` subconditions of C1/C2/C3 were budgeted once instead of four times). The
+>    corrected total is **46,000**, and the 29.7 core-hour projection becomes **34.2**.
+> 2. **calibration is not required by every stochastic case.** C7 (P2 + P3) and C8
+>    (P3-equivalent) evaluate no P1 / Block-1 quantity and now have no calibration path.
+>
+> The replicate-conditional architecture itself stands unchanged.
+
 Self-contained handoff for independent review. Complete without the originating
 conversation.
 
