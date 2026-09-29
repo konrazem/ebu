@@ -107,6 +107,8 @@ REGION_ANCHORS = {
                   "<!-- END GENERATED ASSURANCE -->"),
     "release_rules": ("<!-- BEGIN GENERATED RELEASE RULES -- do not hand-edit -->",
                       "<!-- END GENERATED RELEASE RULES -->"),
+    "release_authority": ("<!-- BEGIN GENERATED RELEASE AUTHORITY -- do not hand-edit -->",
+                          "<!-- END GENERATED RELEASE AUTHORITY -->"),
     "generating_model": ("<!-- BEGIN GENERATED GENERATING MODEL -- do not hand-edit -->",
                          "<!-- END GENERATED GENERATING MODEL -->"),
     "controls": ("<!-- BEGIN GENERATED CONTROLS -- do not hand-edit -->",
@@ -161,7 +163,14 @@ TOP_LEVEL_SPEC = {
                     "case sections including every subcondition payload"),
     "calibration": (BOTH, "the campaign calibration_scope is rendered; the remaining "
                           "keys are derivation narrative for section 5"),
-    "assurance": (BOTH, "the release criteria, rendered as the generated section-6 table"),
+    "assurance": (BOTH, "the release criteria, rendered as the generated section-6 "
+                        "tables: the human summary AND the structured release binding "
+                        "whose every field is bound to frozen authority"),
+    "release_authority": (BOTH, "the CASE RELEASE SPECIFICATION layer -- the frozen "
+                                "complete-pass event, the IMPLIED_STRONGER relationships "
+                                "and the mandatory contract diagnostics. Section 6a "
+                                "renders it; release-bearing authority may never be "
+                                "JSON-only"),
     "failure_classifications": (BOTH, "rendered as the section-10 list"),
     "output_schema": (BOTH, "rendered in section 9 and checked field by field"),
     "authority_gaps": (BOTH, "the G1/G2/G3 dispositions and their resolutions, "
@@ -466,9 +475,20 @@ def normative_json_view(plan: dict[str, Any], root: str = ".") -> dict[str, Any]
                     view[f"cases.{cid}.subconditions.{sid}.{key}"] = sub[key]
 
     for index, row in enumerate(plan["assurance"]):
-        for key in ("quantity", "target", "confidence_level", "estimator", "bound",
-                    "replicates", "acceptance_rule"):
+        for key in ASSURANCE_KEYS:
             view[f"assurance.{index}.{key}"] = row[key]
+
+    release = plan["release_authority"]
+    view["release_authority.complete_pass_event"] = release["complete_pass_event"]
+    for key in RELEASE_AUTHORITY_PROSE:
+        view[f"release_authority.{key}"] = release[key]
+    for cid, block in release["implied_stronger"].items():
+        for key in sorted(block):
+            view[f"release_authority.implied_stronger.{cid}.{key}"] = block[key]
+    for row in release["mandatory_diagnostics"]:
+        for key in MANDATORY_DIAGNOSTIC_KEYS:
+            view[f"release_authority.mandatory_diagnostics."
+                 f"{row['diagnostic_id']}.{key}"] = row[key]
 
     for gap in plan["authority_gaps"]:
         for key in ("gap", "affects", "status", "resolution"):
@@ -880,39 +900,207 @@ def parse_adopted_rules_region(text: str, plan: dict[str, Any]) -> dict[str, Any
 
 
 # -------------------------------------------------- generated region: assurance
+#: EVERY assurance key, in rendered order. Derived once so the renderer, the
+#: parser and the JSON view cannot drift apart.
+ASSURANCE_SUMMARY_KEYS = ("case_id", "quantity", "target", "confidence_level",
+                          "estimator", "bound", "replicates", "acceptance_rule")
+ASSURANCE_BINDING_KEYS = ("case_id", "unit", "method", "sided", "bound_direction",
+                          "target_value", "comparison", "integer_boundary",
+                          "boundary_derivation", "pooling")
+ASSURANCE_KEYS = tuple(dict.fromkeys(
+    ASSURANCE_SUMMARY_KEYS + ASSURANCE_BINDING_KEYS + ("assurance_at_design_target",)))
+
+RELEASE_AUTHORITY_PROSE = ("status", "authority_rule", "implementation",
+                           "absent_diagnostic_is")
+MANDATORY_DIAGNOSTIC_KEYS = ("diagnostic_id", "case_id", "authority_source",
+                             "authority_path", "requirement", "aggregate_key",
+                             "required_keys")
+
+
+def _cell(value: Any) -> str:
+    """One table cell. `None` renders as an explicit dash, never as blank."""
+    if value is None:
+        return "\u2014"
+    if isinstance(value, str):
+        return value
+    return f"`{json.dumps(value)}`"
+
+
+def _uncell(cell: str, key: str, sample: Any) -> Any:
+    if cell == "\u2014":
+        return None
+    if isinstance(sample, str) or (sample is None and not cell.startswith("`")):
+        return cell
+    return json.loads(cell.strip("`"))
+
+
 def render_assurance_region(plan: dict[str, Any]) -> str:
-    out = ["| quantity | target | confidence | estimator | bound | R | acceptance rule |",
-           "|---|---|---:|---|---|---:|---|"]
+    """Two tables: the human summary, then the structured release binding.
+
+    The second table exists because an audit showed that a release rule carried
+    only as prose -- "R = 300", ">= 279/300" -- cannot be bound to frozen
+    authority without parsing sentences. Every field below is machine-readable and
+    every one is checked against the design contract before the first draw.
+    """
+    out = ["| case | quantity | target | confidence | estimator | bound | R "
+           "| acceptance rule |",
+           "|---|---|---|---:|---|---|---:|---|"]
     for row in plan["assurance"]:
-        out.append(
-            f"| {row['quantity']} | `{row['target']}` | `{json.dumps(row['confidence_level'])}` "
-            f"| {row['estimator']} | {row['bound']} | `{json.dumps(row['replicates'])}` "
-            f"| {row['acceptance_rule']} |")
+        out.append("| " + " | ".join(
+            _cell(row[k]) for k in ASSURANCE_SUMMARY_KEYS) + " |")
+    out.append("")
+    out.append("Structured release binding \u2014 every field below is bound to frozen "
+               "authority by `e1a_v4.validation.release_authority`:")
+    out.append("")
+    out.append("| case | unit | method | sided | direction | target | cmp "
+               "| boundary | derivation | pooling |")
+    out.append("|---|---|---|---|---|---|---|---:|---|---|")
+    for row in plan["assurance"]:
+        out.append("| " + " | ".join(
+            _cell(row[k]) for k in ASSURANCE_BINDING_KEYS) + " |")
+    extra = [r for r in plan["assurance"] if r["assurance_at_design_target"] is not None]
+    if extra:
+        out.append("")
+        for row in extra:
+            out.append(f"- Assurance at design target \u2014 `{row['case_id']}`: "
+                       f"{row['assurance_at_design_target']}")
     return "\n".join(out) + "\n"
 
 
 def parse_assurance_region(text: str, plan: dict[str, Any]) -> dict[str, Any]:
-    rows = [line for line in text.splitlines()
-            if line.startswith("| ") and not line.startswith("| quantity")
-            and not line.startswith("|---")]
-    if len(rows) != len(plan["assurance"]):
-        raise PlanReleaseRuleMismatch(
-            f"the assurance region renders {len(rows)} rows; the plan declares "
-            f"{len(plan['assurance'])}")
+    tables = _split_tables(text, 2, "assurance", PlanReleaseRuleMismatch)
     view: dict[str, Any] = {}
-    for index, line in enumerate(rows):
-        cells = [c.strip() for c in line.strip().strip("|").split(" | ")]
-        if len(cells) != 7:
+    for keys, rows in zip((ASSURANCE_SUMMARY_KEYS, ASSURANCE_BINDING_KEYS), tables):
+        if len(rows) != len(plan["assurance"]):
             raise PlanReleaseRuleMismatch(
-                f"assurance row {index} renders {len(cells)} cells, expected 7")
-        quantity, target, confidence, estimator, bound, replicates, acceptance = cells
-        view[f"assurance.{index}.quantity"] = quantity
-        view[f"assurance.{index}.target"] = target.strip("`")
-        view[f"assurance.{index}.confidence_level"] = json.loads(confidence.strip("`"))
-        view[f"assurance.{index}.estimator"] = estimator
-        view[f"assurance.{index}.bound"] = bound
-        view[f"assurance.{index}.replicates"] = json.loads(replicates.strip("`"))
-        view[f"assurance.{index}.acceptance_rule"] = acceptance
+                f"an assurance table renders {len(rows)} rows; the plan declares "
+                f"{len(plan['assurance'])}")
+        for index, cells in enumerate(rows):
+            if len(cells) != len(keys):
+                raise PlanReleaseRuleMismatch(
+                    f"assurance row {index} renders {len(cells)} cells, expected "
+                    f"{len(keys)}")
+            for key, cell in zip(keys, cells):
+                view[f"assurance.{index}.{key}"] = _uncell(
+                    cell, key, plan["assurance"][index][key])
+    shown = dict(re.findall(
+        r"^- Assurance at design target \u2014 `([^`]+)`: (.+)$", text, re.M))
+    for index, row in enumerate(plan["assurance"]):
+        view[f"assurance.{index}.assurance_at_design_target"] = shown.get(row["case_id"])
+    return view
+
+
+def _split_tables(text: str, expected: int, what: str, refusal) -> list[list[list[str]]]:
+    """Split a region into its Markdown tables, as lists of stripped cells."""
+    tables: list[list[list[str]]] = []
+    current: list[list[str]] | None = None
+    for line in text.splitlines():
+        if line.startswith("|---") or line.startswith("|:-"):
+            continue
+        if line.startswith("| "):
+            cells = [c.strip() for c in line.strip().strip("|").split(" | ")]
+            if current is None:
+                current = []
+                tables.append(current)
+                continue          # the header row
+            current.append(cells)
+        else:
+            current = None
+    if len(tables) != expected:
+        raise refusal(f"the {what} region renders {len(tables)} tables, expected "
+                      f"{expected}")
+    return tables
+
+
+# ------------------------------------- generated region: the release authority
+def render_release_authority_region(plan: dict[str, Any]) -> str:
+    """Section 6a. The CASE RELEASE SPECIFICATION, visible to a human reader."""
+    release = plan["release_authority"]
+    out = [f"**Status.** {release['status']}", "",
+           f"**Authority rule.** {release['authority_rule']}", "",
+           f"**Implementation.** `{release['implementation']}`", "",
+           f"**Complete-pass event.** {release['complete_pass_event']}", "",
+           f"**Absent mandatory diagnostic.** `{release['absent_diagnostic_is']}`", ""]
+    for cid, block in release["implied_stronger"].items():
+        out.append(f"#### IMPLIED_STRONGER \u2014 {cid}")
+        out.append("")
+        for key in sorted(block):
+            out.append(f"- `{key}`: {_cell(block[key])}")
+        out.append("")
+    out.append("#### Mandatory contract diagnostics")
+    out.append("")
+    out.append("| diagnostic | case | authority | requirement | aggregate key "
+               "| required keys |")
+    out.append("|---|---|---|---|---|---|")
+    for row in release["mandatory_diagnostics"]:
+        keys = ", ".join(f"`{k}`" for k in row["required_keys"]) or "\u2014"
+        out.append(f"| `{row['diagnostic_id']}` | `{row['case_id']}` | "
+                   f"`{row['authority_source']}` `{row['authority_path']}` | "
+                   f"{row['requirement']} | `{row['aggregate_key']}` | {keys} |")
+    return "\n".join(out).rstrip() + "\n"
+
+
+def parse_release_authority_region(text: str, plan: dict[str, Any]) -> dict[str, Any]:
+    view: dict[str, Any] = {}
+    labels = (("Status", "status"), ("Authority rule", "authority_rule"),
+              ("Implementation", "implementation"),
+              ("Complete-pass event", "complete_pass_event"),
+              ("Absent mandatory diagnostic", "absent_diagnostic_is"))
+    for label, key in labels:
+        found = re.findall(r"^\*\*" + re.escape(label) + r"\.\*\* (.+)$", text, re.M)
+        if len(found) != 1:
+            raise PlanReleaseRuleMismatch(
+                f"section 6a must state exactly one {label!r} line; found {len(found)}")
+        value = found[0].strip()
+        if key in ("implementation", "absent_diagnostic_is"):
+            value = value.strip("`")
+        view[f"release_authority.{key}"] = value
+    for cid, block in plan["release_authority"]["implied_stronger"].items():
+        head = f"#### IMPLIED_STRONGER \u2014 {cid}"
+        if text.count(head) != 1:
+            raise PlanReleaseRuleMismatch(
+                f"section 6a must carry exactly one {cid} IMPLIED_STRONGER block")
+        chunk = text.split(head, 1)[1].split("\n#### ", 1)[0]
+        shown = re.findall(r"^- `([^`]+)`: (.+)$", chunk, re.M)
+        if len(shown) != len(block):
+            raise PlanReleaseRuleMismatch(
+                f"the {cid} IMPLIED_STRONGER block renders {len(shown)} fields; the "
+                f"plan declares {len(block)}")
+        for key, cell in shown:
+            if key not in block:
+                raise PlanReleaseRuleMismatch(
+                    f"section 6a renders an undeclared {cid} field {key!r}")
+            view[f"release_authority.implied_stronger.{cid}.{key}"] = _uncell(
+                cell.strip(), key, block[key])
+    rows = _split_tables(text.split("#### Mandatory contract diagnostics", 1)[-1],
+                         1, "mandatory-diagnostic", PlanReleaseRuleMismatch)[0]
+    declared = plan["release_authority"]["mandatory_diagnostics"]
+    if len(rows) != len(declared):
+        raise PlanReleaseRuleMismatch(
+            f"section 6a renders {len(rows)} mandatory diagnostics; the plan declares "
+            f"{len(declared)}")
+    for index, cells in enumerate(rows):
+        if len(cells) != 6:
+            raise PlanReleaseRuleMismatch(
+                f"mandatory-diagnostic row {index} renders {len(cells)} cells, "
+                "expected 6")
+        did, case_id, authority, requirement, aggregate, keys = cells
+        did = did.strip("`")
+        parts = re.findall(r"`([^`]+)`", authority)
+        if len(parts) != 2:
+            raise PlanReleaseRuleMismatch(
+                f"mandatory diagnostic {did}: the authority cell must name a source "
+                "and a path")
+        view[f"release_authority.mandatory_diagnostics.{did}.diagnostic_id"] = did
+        view[f"release_authority.mandatory_diagnostics.{did}.case_id"] = (
+            None if case_id.strip("`") == "None" else case_id.strip("`"))
+        view[f"release_authority.mandatory_diagnostics.{did}.authority_source"] = parts[0]
+        view[f"release_authority.mandatory_diagnostics.{did}.authority_path"] = parts[1]
+        view[f"release_authority.mandatory_diagnostics.{did}.requirement"] = requirement
+        view[f"release_authority.mandatory_diagnostics.{did}.aggregate_key"] = (
+            aggregate.strip("`"))
+        view[f"release_authority.mandatory_diagnostics.{did}.required_keys"] = (
+            [] if keys == "\u2014" else re.findall(r"`([^`]+)`", keys))
     return view
 
 
@@ -1069,9 +1257,19 @@ def _human_rendered_keys(plan: dict[str, Any]) -> tuple[str, ...]:
         for key in ("control", "purpose", "case"):
             keys.add(f"controls.{index}.{key}")
     for index, row in enumerate(plan["assurance"]):
-        for key in ("quantity", "target", "confidence_level", "estimator", "bound",
-                    "replicates", "acceptance_rule"):
+        for key in ASSURANCE_KEYS:
             keys.add(f"assurance.{index}.{key}")
+    release = plan["release_authority"]
+    keys.add("release_authority.complete_pass_event")
+    for key in RELEASE_AUTHORITY_PROSE:
+        keys.add(f"release_authority.{key}")
+    for cid, block in release["implied_stronger"].items():
+        for key in block:
+            keys.add(f"release_authority.implied_stronger.{cid}.{key}")
+    for row in release["mandatory_diagnostics"]:
+        for key in MANDATORY_DIAGNOSTIC_KEYS:
+            keys.add(f"release_authority.mandatory_diagnostics."
+                     f"{row['diagnostic_id']}.{key}")
     for gap in plan["authority_gaps"]:
         for key in ("gap", "affects", "status", "resolution"):
             keys.add(f"authority_gaps.{gap['id']}.{key}")
@@ -1105,7 +1303,13 @@ SECTION_REGISTRY = {
                        "Its operative values -- calibration_scope, per-case artifact "
                        "counts and the per-case calibration flags -- are carried by the "
                        "cases region and the authority block, not by this prose"),
-    "6. Statistical assurance": (GENERATED, "assurance region"),
+    "6. Statistical assurance": (
+        GENERATED, "assurance region: the human summary table AND the structured "
+                   "release-binding table"),
+    "6a. Release authority \u2014 FROZEN PROSPECTIVELY": (
+        GENERATED, "release_authority region: the complete-pass event, the "
+                   "IMPLIED_STRONGER relationships and the mandatory contract "
+                   "diagnostics"),
     "7. Seed separation": (
         NON_NORMATIVE, "narrative. The operative seed authority is each case's "
                        "allowed_seed_families and fields_affected, both in the cases "
@@ -1139,6 +1343,10 @@ SECTION_REGISTRY = {
         NON_NORMATIVE, "historical supersession record"),
     "19. Generating-model coherence — SUPERSESSION RECORD": (
         NON_NORMATIVE, "historical supersession record"),
+    "20. Release authority — SUPERSESSION RECORD": (
+        NON_NORMATIVE, "historical supersession record. Its operative content -- the "
+                       "structured release rules and the mandatory contract diagnostics "
+                       "-- lives in the generated sections 6 and 6a"),
 }
 
 
@@ -1200,6 +1408,7 @@ def render_region(name: str, plan: dict[str, Any]) -> str:
         "adopted_rules": render_adopted_rules_region,
         "assurance": render_assurance_region,
         "release_rules": render_release_rules_region,
+        "release_authority": render_release_authority_region,
         "generating_model": render_generating_model_region,
         "controls": render_controls_region,
     }[name](plan)
@@ -1324,6 +1533,8 @@ def normative_markdown_view(root: str = ".") -> dict[str, Any]:
     view.update(parse_cases_region(_region(text, "cases"), plan))
     view.update(parse_assurance_region(_region(text, "assurance"), plan))
     view.update(parse_release_rules_region(_region(text, "release_rules"), plan))
+    view.update(parse_release_authority_region(
+        _region(text, "release_authority"), plan))
     view.update(parse_controls_region(_region(text, "controls"), plan))
     for key, value in canonical_generating_model_from_markdown(
             _region(text, "generating_model"), plan).items():

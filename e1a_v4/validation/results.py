@@ -7,10 +7,13 @@ from dataclasses import asdict, dataclass, field
 from typing import Any
 
 RESULT_SCHEMA = "e1a_v4_validation_result/2"
-MANIFEST_SCHEMA = "e1a_v4_validation_manifest/2"
-#: Schema 2 adds `subcondition_id`. A record is reproducible from
+MANIFEST_SCHEMA = "e1a_v4_validation_manifest/3"
+#: Record schema 2 adds `subcondition_id`. A record is reproducible from
 #: (case_id, subcondition_id, replicate_id, field/scope, seed family, seed identity).
-#: No official result data exists, so the break is free to make explicit now.
+#: Manifest schema 3 adds `contract_diagnostics`: an aggregate that omits a
+#: MANDATORY CONTRACT DIAGNOSTIC is RESULT_SCHEMA_INVALID, so the reporting layer
+#: cannot drop a requirement frozen authority makes mandatory. No official result
+#: data exists, so both breaks are free to make explicit now.
 
 #: Every field a scientific result record must carry. Frozen before execution.
 RESULT_FIELDS = (
@@ -92,6 +95,10 @@ def aggregate_skeleton(case_id: str, subcondition_id: str | None = None) -> dict
         "mode_resolution_behaviour": {},
         "g5_diagnostics": {},
         "scale_control_recovery": {},
+        # MANDATORY CONTRACT DIAGNOSTICS. Frozen authority requires these to be
+        # REPORTED even where a stricter adopted rule is the actual release gate.
+        # `require_mandatory_diagnostics` refuses an aggregate that leaves one out.
+        "contract_diagnostics": {},
         "classification": None,
         "conditional_diagnostic_secondary": {
             "label": "SECONDARY, conditional on estimable runs only",

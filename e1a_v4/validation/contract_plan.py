@@ -13,6 +13,8 @@ from typing import Any
 
 from .classification import size_boundary
 from .dispositions import cp_upper
+from .release_authority import CONTRACT as RELEASE_CONTRACT
+from .release_authority import release_binding_specification
 from .refusals import (
     ContractBindingUnclassified, ContractFieldDuplicate, ContractFieldSetMismatch,
     ContractGeneratingParameterMismatch, ContractReferenceFieldMismatch,
@@ -23,6 +25,9 @@ EXACT = "EXACT"
 DERIVED = "DERIVED"
 CASE_SPECIFIC_ALLOWED_OVERRIDE = "CASE_SPECIFIC_ALLOWED_OVERRIDE"
 NOT_APPLICABLE = "NOT_APPLICABLE"
+#: Bound, but by the RELEASE-AUTHORITY layer rather than here. Named
+#: explicitly so a release-bearing leaf can never read as "not applicable".
+DELEGATED_TO_RELEASE_AUTHORITY = "DELEGATED_TO_RELEASE_AUTHORITY"
 
 
 @dataclass(frozen=True)
@@ -71,8 +76,8 @@ def _contract_tau(contract: dict[str, Any]) -> str:
     return prefix[:-1].replace(" with ", ", ")
 
 
-def binding_specification(contract: dict[str, Any],
-                          plan: dict[str, Any]) -> tuple[ContractPlanBinding, ...]:
+def binding_specification(contract: dict[str, Any], plan: dict[str, Any],
+                          root: str = ".") -> tuple[ContractPlanBinding, ...]:
     """Construct all currently represented contract->plan relations from sources.
 
     An absent/misnamed field is checked before this expansion.  A binding is a
@@ -280,7 +285,20 @@ def binding_specification(contract: dict[str, Any],
             f"author_dispositions.G3.{key}", EXACT,
             "G3 orientation scenario is frozen by the design contract.",
             g3[key], plan["author_dispositions"]["G3"].get(key))
+    # Rows bound by the RELEASE-AUTHORITY layer count as covered here. An auditor
+    # found requirements[3] -- the contract's own R = 300 and >= 0.90 for the
+    # complete pipeline -- classified NOT_APPLICABLE while the plan restated it.
+    # A release-bearing leaf must be BOUND somewhere, never merely excused.
     represented = tuple(rows)
+    for row in release_binding_specification(contract, plan, root):
+        if row.authority_source != RELEASE_CONTRACT:
+            continue
+        if _covered(row.authority_path, represented):
+            continue
+        add(row.authority_path, row.plan_path, DELEGATED_TO_RELEASE_AUTHORITY,
+            f"bound by e1a_v4.validation.release_authority as {row.relationship}: "
+            f"{row.reason}", None, None)
+        represented = tuple(rows)   # the new row now covers its own leaf
     for section in EXECUTION_CONTRACT_SECTIONS:
         for path in _leaf_paths(contract[section], section):
             if _covered(path, represented):
@@ -427,12 +445,6 @@ NOT_REPEATED_CONTRACT_LEAVES = frozenset((
     "synthetic_validation_release_criteria.note",
     "synthetic_validation_requirements[0]",
     "synthetic_validation_requirements[1]",
-    "synthetic_validation_requirements[3]",
-    "synthetic_validation_requirements[4]",
-    "synthetic_validation_requirements[6]",
-    "synthetic_validation_requirements[7]",
-    "synthetic_validation_requirements[8]",
-    "synthetic_validation_requirements[9]",
     "authorization_boundaries.E1b",
     "authorization_boundaries.analytical_design",
     "authorization_boundaries.bounded_implementation",
@@ -487,13 +499,17 @@ def _not_repeated_reason(path: str) -> str | None:
     return roots.get(root) if path in NOT_REPEATED_CONTRACT_LEAVES else None
 
 
-def binding_inventory(contract: dict[str, Any], plan: dict[str, Any]) -> dict[str, int]:
+def binding_inventory(contract: dict[str, Any], plan: dict[str, Any],
+                      root: str = ".") -> dict[str, int]:
     """Measure coverage over actual contract leaves, not just the authored rows."""
-    rows = binding_specification(contract, plan)
+    rows = binding_specification(contract, plan, root)
     result = {name: sum(row.relationship == name for row in rows)
-              for name in (EXACT, DERIVED, CASE_SPECIFIC_ALLOWED_OVERRIDE, NOT_APPLICABLE)}
+              for name in (EXACT, DERIVED, CASE_SPECIFIC_ALLOWED_OVERRIDE,
+                           DELEGATED_TO_RELEASE_AUTHORITY, NOT_APPLICABLE)}
     result["execution_relevant_contract_bindings"] = len(rows)
-    result["plan_bound_bindings"] = sum(row.relationship != NOT_APPLICABLE for row in rows)
+    result["plan_bound_bindings"] = sum(
+        row.relationship not in (NOT_APPLICABLE, DELEGATED_TO_RELEASE_AUTHORITY)
+        for row in rows)
     leaves = [path for section in EXECUTION_CONTRACT_SECTIONS
               for path in _leaf_paths(contract[section], section)]
     result["execution_relevant_contract_leaves"] = len(leaves)
@@ -505,7 +521,8 @@ def binding_inventory(contract: dict[str, Any], plan: dict[str, Any]) -> dict[st
 
 
 def require_contract_plan_conformance(contract: dict[str, Any],
-                                      plan: dict[str, Any]) -> None:
+                                      plan: dict[str, Any],
+                                      root: str = ".") -> None:
     cfields = contract["fields"]
     pfields = plan["generating_model"]["per_field"]
     cids, pids = [f["id"] for f in cfields], [f["id"] for f in pfields]
@@ -521,11 +538,11 @@ def require_contract_plan_conformance(contract: dict[str, Any],
     if len(cref) != 1 or pref != cref:
         raise ContractReferenceFieldMismatch(
             f"reference fields: plan {pref}, contract {cref}; exactly one is required")
-    rows = binding_specification(contract, plan)
-    if binding_inventory(contract, plan)["unclassified_execution_relevant"]:
+    rows = binding_specification(contract, plan, root)
+    if binding_inventory(contract, plan, root)["unclassified_execution_relevant"]:
         raise ContractBindingUnclassified("contract->plan binding specification is incomplete")
     for row in rows:
-        if row.relationship == NOT_APPLICABLE:
+        if row.relationship in (NOT_APPLICABLE, DELEGATED_TO_RELEASE_AUTHORITY):
             continue
         if row.expected != row.actual or type(row.expected) is not type(row.actual):
             detail = (f"{row.plan_path} != {row.contract_path}: "

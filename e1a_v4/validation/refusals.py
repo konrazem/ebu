@@ -113,6 +113,73 @@ class ContractBindingUnclassified(CodedRefusal):
     code = "CONTRACT_BINDING_UNCLASSIFIED"
 
 
+# ------------------------------------------------- frozen RELEASE authority
+class ContractReleaseReplicateCountMismatch(CodedRefusal):
+    """The plan declares a replicate count the frozen authority does not."""
+
+    code = "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH"
+
+
+class ContractReleaseTargetMismatch(CodedRefusal):
+    """A target probability/rate disagrees with frozen release authority."""
+
+    code = "CONTRACT_RELEASE_TARGET_MISMATCH"
+
+
+class ContractReleaseConfidenceRuleMismatch(CodedRefusal):
+    """Confidence level, sidedness or interval method disagrees."""
+
+    code = "CONTRACT_RELEASE_CONFIDENCE_RULE_MISMATCH"
+
+
+class ContractReleaseBoundDirectionMismatch(CodedRefusal):
+    """A lower/upper bound direction disagrees with frozen authority."""
+
+    code = "CONTRACT_RELEASE_BOUND_DIRECTION_MISMATCH"
+
+
+class ContractReleaseDerivedThresholdMismatch(CodedRefusal):
+    """A stored integer threshold is not the one its frozen inputs derive."""
+
+    code = "CONTRACT_RELEASE_DERIVED_THRESHOLD_MISMATCH"
+
+
+class ContractReleaseEndpointMismatch(CodedRefusal):
+    """The declared release endpoint or its semantics disagree."""
+
+    code = "CONTRACT_RELEASE_ENDPOINT_MISMATCH"
+
+
+class ContractReleaseBindingUnclassified(CodedRefusal):
+    """A release-relevant frozen authority leaf carries no classification."""
+
+    code = "CONTRACT_RELEASE_BINDING_UNCLASSIFIED"
+
+
+class ContractReleaseImplicationBroken(CodedRefusal):
+    """An IMPLIED_STRONGER relationship no longer holds over its frozen range."""
+
+    code = "CONTRACT_RELEASE_IMPLICATION_BROKEN"
+
+
+class ContractMandatoryDiagnosticMissing(CodedRefusal):
+    """Frozen authority requires a diagnostic the result does not carry."""
+
+    code = "CONTRACT_MANDATORY_DIAGNOSTIC_MISSING"
+
+
+class ContractMandatoryDiagnosticMismatch(CodedRefusal):
+    """A mandatory diagnostic is present but inconsistent with its raw counts."""
+
+    code = "CONTRACT_MANDATORY_DIAGNOSTIC_MISMATCH"
+
+
+class ResultSchemaInvalid(CodedRefusal):
+    """A completed campaign result is not structurally valid."""
+
+    code = "RESULT_SCHEMA_INVALID"
+
+
 class PlanDerivedValueMismatch(CodedRefusal):
     """A value the Markdown displays as derived does not equal its recomputation
     from the JSON primitives it is derived from."""

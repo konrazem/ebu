@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.9.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.10.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -100,7 +100,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
 
 ```json
 {
-  "field_count": 489,
+  "field_count": 655,
   "fields": {
     "adopted_rules.P3_applies_to": "EVERY tested field",
     "adopted_rules.P4_classification": "DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK",
@@ -121,47 +121,149 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "adopted_rules.z_abs": 1.959963985,
     "adopted_rules.z_cross": 1.959963985,
     "assurance.0.acceptance_rule": ">= 279 / 300 complete passes",
+    "assurance.0.assurance_at_design_target": "0.951 if the true rate is 0.95",
     "assurance.0.bound": "Clopper-Pearson one-sided LOWER",
+    "assurance.0.bound_direction": "LOWER",
+    "assurance.0.boundary_derivation": "smallest k with cp_lower(k, R) >= target",
+    "assurance.0.case_id": "C1_true_bridge_complete",
+    "assurance.0.comparison": ">=",
     "assurance.0.confidence_level": 0.95,
     "assurance.0.estimator": "complete-pass proportion over declared replicates",
+    "assurance.0.integer_boundary": 279,
+    "assurance.0.method": "Clopper-Pearson",
+    "assurance.0.pooling": "FORBIDDEN",
     "assurance.0.quantity": "complete true-bridge pipeline success",
     "assurance.0.replicates": 300,
+    "assurance.0.sided": "one-sided",
     "assurance.0.target": ">= 0.90",
+    "assurance.0.target_value": 0.9,
+    "assurance.0.unit": "campaign",
     "assurance.1.acceptance_rule": "no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field",
+    "assurance.1.assurance_at_design_target": "0.996 if the true rate is 0.005",
     "assurance.1.bound": "Clopper-Pearson one-sided LOWER (inflation test)",
+    "assurance.1.bound_direction": "LOWER",
+    "assurance.1.boundary_derivation": "largest k with cp_lower(k, R) <= target",
+    "assurance.1.case_id": "C2_geometry_false_rejection",
+    "assurance.1.comparison": "<=",
     "assurance.1.confidence_level": 0.95,
     "assurance.1.estimator": "rejection proportion",
+    "assurance.1.integer_boundary": 5,
+    "assurance.1.method": "Clopper-Pearson",
+    "assurance.1.pooling": "FORBIDDEN",
     "assurance.1.quantity": "P1 false-rejection rate, per field",
     "assurance.1.replicates": 400,
+    "assurance.1.sided": "one-sided",
     "assurance.1.target": "alpha_geom = 0.005",
+    "assurance.1.target_value": 0.005,
+    "assurance.1.unit": "per_field",
     "assurance.2.acceptance_rule": "no inflation detected: CP_lower <= 0.001, i.e. <= 2/400",
+    "assurance.2.assurance_at_design_target": null,
     "assurance.2.bound": "Clopper-Pearson one-sided LOWER (inflation test)",
+    "assurance.2.bound_direction": "LOWER",
+    "assurance.2.boundary_derivation": "largest k with cp_lower(k, R) <= target",
+    "assurance.2.case_id": "C3_g5_block",
+    "assurance.2.comparison": "<=",
     "assurance.2.confidence_level": 0.95,
     "assurance.2.estimator": "rejection proportion",
+    "assurance.2.integer_boundary": 2,
+    "assurance.2.method": "Clopper-Pearson",
+    "assurance.2.pooling": "NOT_APPLICABLE",
     "assurance.2.quantity": "block-2 (G5) rejection rate",
     "assurance.2.replicates": 400,
+    "assurance.2.sided": "one-sided",
     "assurance.2.target": "alpha_2 = 0.001",
-    "assurance.3.acceptance_rule": "discrepancy REPORTED and classified; additionally no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000",
-    "assurance.3.bound": "Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test)",
+    "assurance.2.target_value": 0.001,
+    "assurance.2.unit": "campaign",
+    "assurance.3.acceptance_rule": "no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000; the operating-quantile discrepancy and the full two-sided interval are MANDATORY CONTRACT DIAGNOSTICS and are reported regardless",
+    "assurance.3.assurance_at_design_target": null,
+    "assurance.3.bound": "Clopper-Pearson one-sided LOWER (inflation test); the two-sided interval is a MANDATORY CONTRACT DIAGNOSTIC, not the release gate",
+    "assurance.3.bound_direction": "LOWER",
+    "assurance.3.boundary_derivation": "largest k with cp_lower(k, R) <= target",
+    "assurance.3.case_id": "C4_surrogate_validity",
+    "assurance.3.comparison": "<=",
     "assurance.3.confidence_level": 0.95,
     "assurance.3.estimator": "rejection proportion",
+    "assurance.3.integer_boundary": 13,
+    "assurance.3.method": "Clopper-Pearson",
+    "assurance.3.pooling": "NOT_APPLICABLE",
     "assurance.3.quantity": "Block-1 achieved size under the surrogate",
     "assurance.3.replicates": 2000,
+    "assurance.3.sided": "one-sided",
     "assurance.3.target": "alpha_1 = 0.004",
-    "assurance.4.acceptance_rule": "upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently",
+    "assurance.3.target_value": 0.004,
+    "assurance.3.unit": "campaign",
+    "assurance.4.acceptance_rule": "the one-sided 95% upper bound is REPORTED in every one of the 12 declared cells, R = 400 each; no cell may be dropped after inspection",
+    "assurance.4.assurance_at_design_target": null,
     "assurance.4.bound": "Clopper-Pearson one-sided UPPER",
+    "assurance.4.bound_direction": "UPPER",
+    "assurance.4.boundary_derivation": "no frozen threshold: the requirement is to REPORT, not to gate",
+    "assurance.4.case_id": "C5_plug_in_branch_a",
+    "assurance.4.comparison": "REPORT_ONLY",
     "assurance.4.confidence_level": 0.95,
-    "assurance.4.estimator": "acceptance proportion",
-    "assurance.4.quantity": "false-bridge acceptance, per alternative",
+    "assurance.4.estimator": "rejection proportion",
+    "assurance.4.integer_boundary": null,
+    "assurance.4.method": "Clopper-Pearson",
+    "assurance.4.pooling": "FORBIDDEN",
+    "assurance.4.quantity": "P1 rejection rate, per declared plug-in cell",
     "assurance.4.replicates": 400,
-    "assurance.4.target": "<= 0.025 per alternative",
-    "assurance.5.acceptance_rule": ">= 188 / 200 paired-control successes",
-    "assurance.5.bound": "Clopper-Pearson one-sided LOWER",
+    "assurance.4.sided": "one-sided",
+    "assurance.4.target": "REPORT ONLY - the frozen authority states no threshold",
+    "assurance.4.target_value": null,
+    "assurance.4.unit": "per_cell",
+    "assurance.5.acceptance_rule": "upper bound <= 0.03, i.e. <= 6/400, at each of the three declared rho; the merge/split decision rate is a MANDATORY CONTRACT DIAGNOSTIC",
+    "assurance.5.assurance_at_design_target": null,
+    "assurance.5.bound": "Clopper-Pearson one-sided UPPER",
+    "assurance.5.bound_direction": "UPPER",
+    "assurance.5.boundary_derivation": "largest k with cp_upper(k, R) <= target",
+    "assurance.5.case_id": "C6_mode_resolution_boundary",
+    "assurance.5.comparison": "<=",
     "assurance.5.confidence_level": 0.95,
-    "assurance.5.estimator": "distribution of beta_hat * c",
-    "assurance.5.quantity": "blinded scale recovery beta_hat * c",
-    "assurance.5.replicates": 200,
-    "assurance.5.target": ">= 0.90 paired-control success",
+    "assurance.5.estimator": "rejection proportion",
+    "assurance.5.integer_boundary": 6,
+    "assurance.5.method": "Clopper-Pearson",
+    "assurance.5.pooling": "FORBIDDEN",
+    "assurance.5.quantity": "P1 rejection rate, per declared rho",
+    "assurance.5.replicates": 400,
+    "assurance.5.sided": "one-sided",
+    "assurance.5.target": "<= 0.03 at each declared rho",
+    "assurance.5.target_value": 0.03,
+    "assurance.5.unit": "per_rho",
+    "assurance.6.acceptance_rule": "upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently",
+    "assurance.6.assurance_at_design_target": null,
+    "assurance.6.bound": "Clopper-Pearson one-sided UPPER",
+    "assurance.6.bound_direction": "UPPER",
+    "assurance.6.boundary_derivation": "largest k with cp_upper(k, R) <= target",
+    "assurance.6.case_id": "C7_false_bridge",
+    "assurance.6.comparison": "<=",
+    "assurance.6.confidence_level": 0.95,
+    "assurance.6.estimator": "acceptance proportion",
+    "assurance.6.integer_boundary": 4,
+    "assurance.6.method": "Clopper-Pearson",
+    "assurance.6.pooling": "FORBIDDEN",
+    "assurance.6.quantity": "false-bridge acceptance, per alternative",
+    "assurance.6.replicates": 400,
+    "assurance.6.sided": "one-sided",
+    "assurance.6.target": "<= 0.025 per alternative",
+    "assurance.6.target_value": 0.025,
+    "assurance.6.unit": "per_alternative",
+    "assurance.7.acceptance_rule": ">= 188 / 200 paired-control successes",
+    "assurance.7.assurance_at_design_target": null,
+    "assurance.7.bound": "Clopper-Pearson one-sided LOWER",
+    "assurance.7.bound_direction": "LOWER",
+    "assurance.7.boundary_derivation": "smallest k with cp_lower(k, R) >= target",
+    "assurance.7.case_id": "C8_blinded_scale_control",
+    "assurance.7.comparison": ">=",
+    "assurance.7.confidence_level": 0.95,
+    "assurance.7.estimator": "distribution of beta_hat * c",
+    "assurance.7.integer_boundary": 188,
+    "assurance.7.method": "Clopper-Pearson",
+    "assurance.7.pooling": "NOT_APPLICABLE",
+    "assurance.7.quantity": "blinded scale recovery beta_hat * c",
+    "assurance.7.replicates": 200,
+    "assurance.7.sided": "one-sided",
+    "assurance.7.target": ">= 0.90 paired-control success",
+    "assurance.7.target_value": 0.9,
+    "assurance.7.unit": "campaign",
     "authority_gaps.G1.affects": "C8",
     "authority_gaps.G1.gap": "blinded scale control had no quantitative recovery criterion beyond beta = 1/c",
     "authority_gaps.G1.resolution": "beta_tilde = c * beta_hat must satisfy the SAME P3 absolute-equivalence construction (delta_abs = 0.05, z_abs = 1.959963985) at EVERY tested field for BOTH c = 1.07 and c = 0.90; a replicate succeeds only if both branches pass. Campaign: one-sided 95% CP LOWER bound >= 0.90 over R = 200, i.e. >= 188/200.",
@@ -254,7 +356,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "theta3_temperature"
     ],
     "cases.C2_geometry_false_rejection.fields_requiring_calibration": 4,
-    "cases.C2_geometry_false_rejection.formal_pass_fail_criterion": "PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. Secondary gross-inflation diagnostic (CP upper <= 0.03) may be reported but is not validation of alpha_geom.",
+    "cases.C2_geometry_false_rejection.formal_pass_fail_criterion": "PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. MANDATORY CONTRACT DIAGNOSTIC [synthetic_validation_requirements[2]]: the coarse one-sided 95% Clopper-Pearson UPPER bound MUST be reported per required field and compared with the contract threshold 0.03, with an explicit PASS/FAIL. It is not validation of alpha_geom and it is not the release gate; its absence from a campaign result is RESULT_SCHEMA_INVALID.",
     "cases.C2_geometry_false_rejection.geometry_truth": "as declared per field",
     "cases.C2_geometry_false_rejection.primary_release_endpoint": "P1_FALSE_REJECTION_RATE_PER_FIELD",
     "cases.C2_geometry_false_rejection.replicate_count": 400,
@@ -689,6 +791,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "final_campaign.requirements.0": "1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)",
     "final_campaign.requirements.1": "2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field",
+    "final_campaign.requirements.10": "11. every MANDATORY CONTRACT DIAGNOSTIC declared in release_authority.mandatory_diagnostics is present in the campaign result and consistent with its own raw counts; an absent or inconsistent mandatory diagnostic is RESULT_SCHEMA_INVALID",
     "final_campaign.requirements.2": "3. C3 produces no STATISTICAL_SIZE_FAILURE",
     "final_campaign.requirements.3": "4. C4 produces no STATISTICAL_SIZE_FAILURE",
     "final_campaign.requirements.4": "5. C5 satisfies its already-frozen plug-in Branch-A criterion",
@@ -776,10 +879,11 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "mode_resolution_behaviour",
       "g5_diagnostics",
       "scale_control_recovery",
+      "contract_diagnostics",
       "classification"
     ],
     "output_schema.directory": "results/e1a_v4_validation",
-    "output_schema.manifest_schema": "e1a_v4_validation_manifest/2",
+    "output_schema.manifest_schema": "e1a_v4_validation_manifest/3",
     "output_schema.per_record_fields": [
       "case_id",
       "subcondition_id",
@@ -809,7 +913,82 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.9.0",
+    "plan_version": "1.10.0",
+    "release_authority.absent_diagnostic_is": "RESULT_SCHEMA_INVALID",
+    "release_authority.authority_rule": "FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.",
+    "release_authority.complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",
+    "release_authority.implementation": "e1a_v4.validation.release_authority.require_release_authority_conformance",
+    "release_authority.implied_stronger.C2.accepting_range": "0-5 rejections per required field",
+    "release_authority.implied_stronger.C2.bound_at_largest_accepted_count": 0.02610179906691329,
+    "release_authority.implied_stronger.C2.contract_threshold": 0.03,
+    "release_authority.implied_stronger.C2.not_erased": "the older requirement is NOT removed. It remains mandatory to REPORT; only its role as the release classifier is superseded.",
+    "release_authority.implied_stronger.C2.older_contract_requirement": "synthetic_validation_requirements[2]: one-sided 95% Clopper-Pearson UPPER bound <= 3%, R = 400, at every declared geometry.",
+    "release_authority.implied_stronger.C2.preserved_as": "MANDATORY_CONTRACT_DIAGNOSTIC",
+    "release_authority.implied_stronger.C2.primary_release_rule": "nominal-inflation test against alpha_geom = 0.005: inflation detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections in any required field. THIS IS THE RELEASE GATE.",
+    "release_authority.implied_stronger.C2.proof": "cp_upper(k, 400) is strictly increasing in k, and cp_upper(5, 400) = 0.0261017991 < 0.03. Every count the adopted rule accepts therefore also satisfies the contract requirement. The six accepted counts are additionally enumerated, so the implication does not rest on the boundary example alone.",
+    "release_authority.implied_stronger.C2.relationship": "IMPLIED_STRONGER",
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.aggregate_key": "contract_diagnostics",
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.authority_path": "synthetic_validation_requirements[2]",
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.case_id": "C2_geometry_false_rejection",
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.diagnostic_id": "C2_CONTRACT_COARSE_UPPER_BOUND",
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.required_keys": [
+      "per_field"
+    ],
+    "release_authority.mandatory_diagnostics.C2_CONTRACT_COARSE_UPPER_BOUND.requirement": "one-sided 95% Clopper-Pearson UPPER bound on the P1 rejection rate, per required field, compared with the contract threshold 0.03",
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.aggregate_key": "g5_diagnostics",
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.authority_path": "synthetic_validation_requirements[7]",
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.case_id": "C3_g5_block",
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.diagnostic_id": "C3_G5_DELTA_METHOD_ERROR",
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.required_keys": [
+      "measured_sd_g2",
+      "leading_order_prediction"
+    ],
+    "release_authority.mandatory_diagnostics.C3_G5_DELTA_METHOD_ERROR.requirement": "measured sd(g2) against the leading-order 24 A4 / n prediction",
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.aggregate_key": "contract_diagnostics",
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.authority_path": "synthetic_validation_requirements[4]",
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.case_id": "C4_surrogate_validity",
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.diagnostic_id": "C4_OPERATING_QUANTILE_DISCREPANCY",
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.required_keys": [
+      "operating_quantile_discrepancy",
+      "two_sided_interval"
+    ],
+    "release_authority.mandatory_diagnostics.C4_OPERATING_QUANTILE_DISCREPANCY.requirement": "the observed operating-quantile discrepancy and the full two-sided interval, which the binary inflation diagnostic does not replace",
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.aggregate_key": "contract_diagnostics",
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.authority_path": "synthetic_validation_requirements[5]",
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.case_id": "C5_plug_in_branch_a",
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.diagnostic_id": "C5_PER_CELL_UPPER_BOUND",
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.required_keys": [
+      "per_cell"
+    ],
+    "release_authority.mandatory_diagnostics.C5_PER_CELL_UPPER_BOUND.requirement": "the one-sided 95% Clopper-Pearson UPPER bound in EVERY one of the twelve declared cells; no cell may be dropped after inspection",
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.aggregate_key": "mode_resolution_behaviour",
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.authority_path": "synthetic_validation_requirements[6]",
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.case_id": "C6_mode_resolution_boundary",
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.diagnostic_id": "C6_MERGE_SPLIT_DECISION_RATE",
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.required_keys": [
+      "per_rho"
+    ],
+    "release_authority.mandatory_diagnostics.C6_MERGE_SPLIT_DECISION_RATE.requirement": "the merge/split decision rate at each declared rho -- the POWER half of the theta_cap requirement, which the size criterion does not cover",
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.aggregate_key": "refusals_by_reason",
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.authority_path": "synthetic_validation_requirements[8]",
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.case_id": null,
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.diagnostic_id": "JOB_STATUS_RECONCILIATION",
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.required_keys": [],
+    "release_authority.mandatory_diagnostics.JOB_STATUS_RECONCILIATION.requirement": "jobs declared = jobs completed + jobs refused, with a per-status count",
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.aggregate_key": "denominator_rule",
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.authority_path": "synthetic_validation_requirements[9]",
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.authority_source": "design_contract",
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.case_id": "C1_true_bridge_complete",
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.diagnostic_id": "UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS",
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.required_keys": [],
+    "release_authority.mandatory_diagnostics.UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS.requirement": "complete-pipeline success reported UNCONDITIONALLY, with structured refusals counted as failures",
+    "release_authority.status": "FROZEN. Every release-bearing statistic is bound to the design contract and the prospective design, and is checked before the first random draw.",
     "seed_map_sha256": "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce"
   },
   "schema": "e1a_v4_plan_authority/2"
@@ -940,7 +1119,7 @@ used to exist only in the JSON, so a reader could not see them drift.
 | `sigma_psi_0p5` | `{"feeds_primary_claim":true,"g3_role":"PRIMARY","sigma_psi_deg":0.5}` |
 | `sigma_psi_1p0` | `{"feeds_primary_claim":false,"g3_role":"STRESS","sigma_psi_deg":1.0}` |
 
-**Pass / fail criterion.** PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. Secondary gross-inflation diagnostic (CP upper <= 0.03) may be reported but is not validation of alpha_geom.
+**Pass / fail criterion.** PER FIELD, never pooled, R = 400, nominal alpha_geom = 0.005. Inflation is detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections -> STATISTICAL_SIZE_FAILURE. 0-5 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means this experiment did not establish excess size, NOT that nominal size is proved. MANDATORY CONTRACT DIAGNOSTIC [synthetic_validation_requirements[2]]: the coarse one-sided 95% Clopper-Pearson UPPER bound MUST be reported per required field and compared with the contract threshold 0.03, with an explicit PASS/FAIL. It is not validation of alpha_geom and it is not the release gate; its absence from a campaign result is RESULT_SCHEMA_INVALID.
 
 ### `C3_g5_block` — primary
 
@@ -1457,18 +1636,88 @@ The release criteria. **Generated** from the JSON plan and verified at every pre
 
 <!-- BEGIN GENERATED ASSURANCE -- do not hand-edit -->
 
-| quantity | target | confidence | estimator | bound | R | acceptance rule |
-|---|---|---:|---|---|---:|---|
-| complete true-bridge pipeline success | `>= 0.90` | `0.95` | complete-pass proportion over declared replicates | Clopper-Pearson one-sided LOWER | `300` | >= 279 / 300 complete passes |
-| P1 false-rejection rate, per field | `alpha_geom = 0.005` | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field |
-| block-2 (G5) rejection rate | `alpha_2 = 0.001` | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400 |
-| Block-1 achieved size under the surrogate | `alpha_1 = 0.004` | `0.95` | rejection proportion | Clopper-Pearson two-sided (reported) + one-sided LOWER (inflation test) | `2000` | discrepancy REPORTED and classified; additionally no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000 |
-| false-bridge acceptance, per alternative | `<= 0.025 per alternative` | `0.95` | acceptance proportion | Clopper-Pearson one-sided UPPER | `400` | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
-| blinded scale recovery beta_hat * c | `>= 0.90 paired-control success` | `0.95` | distribution of beta_hat * c | Clopper-Pearson one-sided LOWER | `200` | >= 188 / 200 paired-control successes |
+| case | quantity | target | confidence | estimator | bound | R | acceptance rule |
+|---|---|---|---:|---|---|---:|---|
+| C1_true_bridge_complete | complete true-bridge pipeline success | >= 0.90 | `0.95` | complete-pass proportion over declared replicates | Clopper-Pearson one-sided LOWER | `300` | >= 279 / 300 complete passes |
+| C2_geometry_false_rejection | P1 false-rejection rate, per field | alpha_geom = 0.005 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field |
+| C3_g5_block | block-2 (G5) rejection rate | alpha_2 = 0.001 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400 |
+| C4_surrogate_validity | Block-1 achieved size under the surrogate | alpha_1 = 0.004 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test); the two-sided interval is a MANDATORY CONTRACT DIAGNOSTIC, not the release gate | `2000` | no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000; the operating-quantile discrepancy and the full two-sided interval are MANDATORY CONTRACT DIAGNOSTICS and are reported regardless |
+| C5_plug_in_branch_a | P1 rejection rate, per declared plug-in cell | REPORT ONLY - the frozen authority states no threshold | `0.95` | rejection proportion | Clopper-Pearson one-sided UPPER | `400` | the one-sided 95% upper bound is REPORTED in every one of the 12 declared cells, R = 400 each; no cell may be dropped after inspection |
+| C6_mode_resolution_boundary | P1 rejection rate, per declared rho | <= 0.03 at each declared rho | `0.95` | rejection proportion | Clopper-Pearson one-sided UPPER | `400` | upper bound <= 0.03, i.e. <= 6/400, at each of the three declared rho; the merge/split decision rate is a MANDATORY CONTRACT DIAGNOSTIC |
+| C7_false_bridge | false-bridge acceptance, per alternative | <= 0.025 per alternative | `0.95` | acceptance proportion | Clopper-Pearson one-sided UPPER | `400` | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
+| C8_blinded_scale_control | blinded scale recovery beta_hat * c | >= 0.90 paired-control success | `0.95` | distribution of beta_hat * c | Clopper-Pearson one-sided LOWER | `200` | >= 188 / 200 paired-control successes |
+
+Structured release binding — every field below is bound to frozen authority by `e1a_v4.validation.release_authority`:
+
+| case | unit | method | sided | direction | target | cmp | boundary | derivation | pooling |
+|---|---|---|---|---|---|---|---:|---|---|
+| C1_true_bridge_complete | campaign | Clopper-Pearson | one-sided | LOWER | `0.9` | >= | `279` | smallest k with cp_lower(k, R) >= target | FORBIDDEN |
+| C2_geometry_false_rejection | per_field | Clopper-Pearson | one-sided | LOWER | `0.005` | <= | `5` | largest k with cp_lower(k, R) <= target | FORBIDDEN |
+| C3_g5_block | campaign | Clopper-Pearson | one-sided | LOWER | `0.001` | <= | `2` | largest k with cp_lower(k, R) <= target | NOT_APPLICABLE |
+| C4_surrogate_validity | campaign | Clopper-Pearson | one-sided | LOWER | `0.004` | <= | `13` | largest k with cp_lower(k, R) <= target | NOT_APPLICABLE |
+| C5_plug_in_branch_a | per_cell | Clopper-Pearson | one-sided | UPPER | — | REPORT_ONLY | — | no frozen threshold: the requirement is to REPORT, not to gate | FORBIDDEN |
+| C6_mode_resolution_boundary | per_rho | Clopper-Pearson | one-sided | UPPER | `0.03` | <= | `6` | largest k with cp_upper(k, R) <= target | FORBIDDEN |
+| C7_false_bridge | per_alternative | Clopper-Pearson | one-sided | UPPER | `0.025` | <= | `4` | largest k with cp_upper(k, R) <= target | FORBIDDEN |
+| C8_blinded_scale_control | campaign | Clopper-Pearson | one-sided | LOWER | `0.9` | >= | `188` | smallest k with cp_lower(k, R) >= target | NOT_APPLICABLE |
+
+- Assurance at design target — `C1_true_bridge_complete`: 0.951 if the true rate is 0.95
+- Assurance at design target — `C2_geometry_false_rejection`: 0.996 if the true rate is 0.005
 
 <!-- END GENERATED ASSURANCE -->
 
 **Complete-pass denominator:** every declared validation replicate. structured refusals COUNT AS FAILURES for complete-pipeline success permitted only when explicitly labelled SECONDARY, reported beside the unconditional figure refusal counts AND reasons are reported.
+
+---
+
+## 6a. Release authority — FROZEN PROSPECTIVELY
+
+Every release-bearing statistic above is bound to the **frozen design contract** and the
+**prospective design**, and the binding is checked at every preflight, before the first
+random draw. An independent audit showed that without this edge a plan could stay
+internally coherent — Markdown and JSON agreeing, every derived boundary recomputing —
+while moving the C1 target from 0.90 to 0.80, or C1/C3/C8 replicate counts by one.
+Agreement between two renderings of a plan is not authority to amend the contract above
+it.
+
+**Generated** from the JSON plan and verified at every preflight.
+
+<!-- BEGIN GENERATED RELEASE AUTHORITY -- do not hand-edit -->
+
+**Status.** FROZEN. Every release-bearing statistic is bound to the design contract and the prospective design, and is checked before the first random draw.
+
+**Authority rule.** FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.
+
+**Implementation.** `e1a_v4.validation.release_authority.require_release_authority_conformance`
+
+**Complete-pass event.** all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified
+
+**Absent mandatory diagnostic.** `RESULT_SCHEMA_INVALID`
+
+#### IMPLIED_STRONGER — C2
+
+- `accepting_range`: 0-5 rejections per required field
+- `bound_at_largest_accepted_count`: `0.02610179906691329`
+- `contract_threshold`: `0.03`
+- `not_erased`: the older requirement is NOT removed. It remains mandatory to REPORT; only its role as the release classifier is superseded.
+- `older_contract_requirement`: synthetic_validation_requirements[2]: one-sided 95% Clopper-Pearson UPPER bound <= 3%, R = 400, at every declared geometry.
+- `preserved_as`: MANDATORY_CONTRACT_DIAGNOSTIC
+- `primary_release_rule`: nominal-inflation test against alpha_geom = 0.005: inflation detected iff CP_lower(rejections, 400) > 0.005, i.e. 6 or more rejections in any required field. THIS IS THE RELEASE GATE.
+- `proof`: cp_upper(k, 400) is strictly increasing in k, and cp_upper(5, 400) = 0.0261017991 < 0.03. Every count the adopted rule accepts therefore also satisfies the contract requirement. The six accepted counts are additionally enumerated, so the implication does not rest on the boundary example alone.
+- `relationship`: IMPLIED_STRONGER
+
+#### Mandatory contract diagnostics
+
+| diagnostic | case | authority | requirement | aggregate key | required keys |
+|---|---|---|---|---|---|
+| `C2_CONTRACT_COARSE_UPPER_BOUND` | `C2_geometry_false_rejection` | `design_contract` `synthetic_validation_requirements[2]` | one-sided 95% Clopper-Pearson UPPER bound on the P1 rejection rate, per required field, compared with the contract threshold 0.03 | `contract_diagnostics` | `per_field` |
+| `C3_G5_DELTA_METHOD_ERROR` | `C3_g5_block` | `design_contract` `synthetic_validation_requirements[7]` | measured sd(g2) against the leading-order 24 A4 / n prediction | `g5_diagnostics` | `measured_sd_g2`, `leading_order_prediction` |
+| `C4_OPERATING_QUANTILE_DISCREPANCY` | `C4_surrogate_validity` | `design_contract` `synthetic_validation_requirements[4]` | the observed operating-quantile discrepancy and the full two-sided interval, which the binary inflation diagnostic does not replace | `contract_diagnostics` | `operating_quantile_discrepancy`, `two_sided_interval` |
+| `C5_PER_CELL_UPPER_BOUND` | `C5_plug_in_branch_a` | `design_contract` `synthetic_validation_requirements[5]` | the one-sided 95% Clopper-Pearson UPPER bound in EVERY one of the twelve declared cells; no cell may be dropped after inspection | `contract_diagnostics` | `per_cell` |
+| `C6_MERGE_SPLIT_DECISION_RATE` | `C6_mode_resolution_boundary` | `design_contract` `synthetic_validation_requirements[6]` | the merge/split decision rate at each declared rho -- the POWER half of the theta_cap requirement, which the size criterion does not cover | `mode_resolution_behaviour` | `per_rho` |
+| `JOB_STATUS_RECONCILIATION` | `None` | `design_contract` `synthetic_validation_requirements[8]` | jobs declared = jobs completed + jobs refused, with a per-status count | `refusals_by_reason` | — |
+| `UNCONDITIONAL_COMPLETE_PIPELINE_SUCCESS` | `C1_true_bridge_complete` | `design_contract` `synthetic_validation_requirements[9]` | complete-pipeline success reported UNCONDITIONALLY, with structured refusals counted as failures | `denominator_rule` | — |
+
+<!-- END GENERATED RELEASE AUTHORITY -->
 
 ---
 
@@ -1612,11 +1861,11 @@ reported.
 ## 9. Output schema
 
 Directory `results/e1a_v4_validation`, record schema `e1a_v4_validation_result/2`, manifest schema
-`e1a_v4_validation_manifest/2`.
+`e1a_v4_validation_manifest/3`.
 
 Per record: `case_id`, `subcondition_id`, `replicate_id`, `seed_family`, `seed_identity`, `field_id`, `truth_parameters`, `branch_a_observed`, `analysis_status`, `G1`, `G2`, `G3`, `G4`, `G5`, `P1`, `beta_hat`, `P2`, `P3`, `P4`, `complete_pass`, `refusal_reason`, `procedure_identity`, `contract_sha256`, `plan_sha256`, `implementation_commit`.
 
-Aggregate: `success_count`, `failure_count`, `refusal_count`, `refusals_by_reason`, `confidence_bound`, `false_bridge_acceptance`, `per_field_geometry_rates`, `mode_resolution_behaviour`, `g5_diagnostics`, `scale_control_recovery`, `classification`.
+Aggregate: `success_count`, `failure_count`, `refusal_count`, `refusals_by_reason`, `confidence_bound`, `false_bridge_acceptance`, `per_field_geometry_rates`, `mode_resolution_behaviour`, `g5_diagnostics`, `scale_control_recovery`, `contract_diagnostics`, `classification`.
 
 Reproduction: seed family + master seed + case id + subcondition id + replicate index
 and declared scope regenerate any record exactly.
@@ -1692,6 +1941,7 @@ redesign the E1a bridge.
 8. 8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)
 9. 9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs
 10. 10. structured refusals counted exactly per the already-frozen unconditional denominator rule
+11. 11. every MANDATORY CONTRACT DIAGNOSTIC declared in release_authority.mandatory_diagnostics is present in the campaign result and consistent with its own raw counts; an absent or inconsistent mandatory diagnostic is RESULT_SCHEMA_INVALID
 
 <!-- END GENERATED RELEASE RULES -->
 
@@ -2176,3 +2426,34 @@ final execution seal = NOT FROZEN
 RNG OBJECTS = 0   RANDOM DRAWS = 0   TRAJECTORIES = 0
 CALIBRATION EXECUTION = NOT RUN   VALIDATION CAMPAIGN = NOT RUN
 ```
+
+---
+
+## 20. Release authority — SUPERSESSION RECORD
+
+**Superseded.** The release rules were carried only as prose — `R = 300`, `>= 279/300`,
+`alpha_geom = 0.005` — inside each case's `formal_pass_fail_criterion` and the section-6
+table, with nothing comparing them to the frozen design contract. An independent auditor
+demonstrated that `C1` target `0.90 -> 0.80`, `C1` `R 300 -> 301`, `C3` `R 400 -> 401`
+and `C8` `R 200 -> 201` were all ACCEPTED by static preflight once the Markdown was
+regenerated consistently. All four are reproduced as permanent regressions and all four
+now refuse.
+
+**What changed.** Each `assurance` row became a machine-readable release rule carrying
+`case_id`, `unit`, `method`, `sided`, `bound_direction`, `confidence_level`,
+`target_value`, `comparison`, `replicates`, `integer_boundary` and `boundary_derivation`
+beside the existing prose. `C5` and `C6` gained the assurance rows they had never had.
+Section 6a declares the CASE RELEASE SPECIFICATION: the frozen complete-pass event, the
+`IMPLIED_STRONGER` relationships and the mandatory contract diagnostics.
+
+**What did NOT change.** No E1a scientific decision rule. `delta_cross`, `delta_abs`, the
+`z` factors, `alpha_geom`, `alpha_1`, `alpha_2`, `theta_cap`, `rank_tol`, the primary
+`sigma_psi`, the complete true-bridge target `0.90`, every replicate count, every derived
+threshold and the corrected OU generator are all exactly as adopted.
+
+**C2 wording, corrected.** The plan said the contract's coarse one-sided 95% upper-bound
+diagnostic *"may be reported"*. The frozen contract **requires** it
+(`synthetic_validation_requirements[2]`). It is now a MANDATORY CONTRACT DIAGNOSTIC:
+absent from a campaign result, the result is `RESULT_SCHEMA_INVALID`. The stricter
+nominal-inflation rule remains the release gate, and is proved to imply the older
+requirement over its entire accepting range.

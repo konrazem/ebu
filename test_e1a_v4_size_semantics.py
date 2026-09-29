@@ -209,8 +209,15 @@ def test_campaign() -> None:
     check("a non-release-failing classification does not fail the campaign",
           classify_campaign(counts(hard_failures=("VALIDATION_INCONCLUSIVE",)))["verdict"]
           == "VALIDATION_PASS")
-    check("plan and code agree on the ten requirements",
-          len(PLAN["final_campaign_classification"]["requirements"]) == 10)
+    # Eleven since the release-authority repair: requirement 11 makes the MANDATORY
+    # CONTRACT DIAGNOSTICS part of the conjunctive release rule rather than prose.
+    check("plan and code agree on the eleven requirements",
+          len(PLAN["final_campaign_classification"]["requirements"]) == 11)
+    check("the eleventh requirement is the mandatory-diagnostic rule",
+          "MANDATORY CONTRACT DIAGNOSTIC"
+          in PLAN["final_campaign_classification"]["requirements"][10]
+          and "RESULT_SCHEMA_INVALID"
+          in PLAN["final_campaign_classification"]["requirements"][10])
     check("out-of-range counts are refused", refuses(size_inflation_detected, 401, 400, 0.005))
 
 

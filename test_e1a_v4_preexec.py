@@ -427,7 +427,8 @@ def test_identities() -> None:
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
     check("every validation module enters the execution identity",
-          len(VALIDATION_MODULES) == 16
+          len(VALIDATION_MODULES) == 17
+          and "e1a_v4/validation/release_authority.py" in VALIDATION_MODULES
           and "e1a_v4/validation/driver.py" in VALIDATION_MODULES
           and "e1a_v4/validation/refusals.py" in VALIDATION_MODULES
           and "e1a_v4/validation/strict_json.py" in VALIDATION_MODULES

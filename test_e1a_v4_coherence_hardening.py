@@ -17,7 +17,7 @@ WHAT THIS SUITE EXISTS FOR
 
     B  duplicate JSON keys were accepted. `json.loads` keeps the LAST duplicate
        while a human reads the FIRST, so a block reading
-       {"plan_version": "0.0.1-TAMPERED", "plan_version": "1.9.0"} parsed to the
+       {"plan_version": "0.0.1-TAMPERED", "plan_version": "<live>"} parsed to the
        correct value while every reader saw the tampered one. ACCEPTED, in the
        authority block, inside a nested record, and in the plan JSON itself.
 
@@ -63,6 +63,10 @@ from e1a_v4.validation.seal import SEAL_JSON, STATE_FROZEN, STATE_PRE_DRIVER, lo
 from e1a_v4.validation.strict_json import strict_load_file, strict_loads
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+#: Read from the live plan, never hard-coded: these fixtures test the coherence
+#: GATE, not the current version number, and a version bump must not look like
+#: a gate failure.
+PLAN_VERSION = load_plan(ROOT)["plan_version"]
 PASSED = 0
 FAILED = 0
 
@@ -324,7 +328,8 @@ def test_blocker_b_duplicate_keys_refuse() -> None:
           json.loads('{"a": 1, "a": 2}') == {"a": 2},
           "which is why ordinary parsing is not used for authoritative documents")
     for label, text in (
-            ("a top-level duplicate", '{"plan_version": "1.9.0", "plan_version": "9.9.9"}'),
+            ("a top-level duplicate",
+             f'{{"plan_version": "{PLAN_VERSION}", "plan_version": "9.9.9"}}'),
             ("a nested duplicate", '{"frozen": {"id": "aaa", "id": "bbb"}}'),
             ("a duplicate inside a case record",
              '{"cases": [{"case_id": "C1", "case_id": "C9"}]}'),
@@ -343,8 +348,9 @@ def test_blocker_b_duplicate_keys_refuse() -> None:
     a = text.index(BLOCK_BEGIN)
     z = text.index(BLOCK_END) + len(BLOCK_END)
     body = text[a:z].split("```json\n", 1)[1].rsplit("\n```", 1)[0]
-    tampered = body.replace('"plan_version": "1.9.0"',
-                            '"plan_version": "0.0.1-TAMPERED",\n    "plan_version": "1.9.0"', 1)
+    tampered = body.replace(
+        f'"plan_version": "{PLAN_VERSION}"',
+        f'"plan_version": "0.0.1-TAMPERED",\n    "plan_version": "{PLAN_VERSION}"', 1)
     wmd(tmp, text[:a] + BLOCK_BEGIN + "\n\n```json\n" + tampered + "\n```\n\n"
         + BLOCK_END + text[z:])
     refuses_with_code("a duplicate in the BLOCK, hostile first / correct last",
@@ -353,11 +359,13 @@ def test_blocker_b_duplicate_keys_refuse() -> None:
 
     tmp = sandbox()
     raw = open(os.path.join(tmp, PLAN_JSON), encoding="utf-8").read()
-    marker = '"plan_version": "1.9.0",'
+    marker = f'"plan_version": "{PLAN_VERSION}",'
     assert raw.count(marker) == 1
     with open(os.path.join(tmp, PLAN_JSON), "w", encoding="utf-8") as handle:
         handle.write(raw.replace(
-            marker, '"plan_version": "0.0.1-TAMPERED",\n  "plan_version": "1.9.0",', 1))
+            marker,
+            f'"plan_version": "0.0.1-TAMPERED",\n  "plan_version": "{PLAN_VERSION}",',
+            1))
     refuses_with_code("a duplicate in the AUTHORITATIVE plan JSON",
                       "PLAN_DUPLICATE_KEY", preflight, tmp)
     shutil.rmtree(tmp)

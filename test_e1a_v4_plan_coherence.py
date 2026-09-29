@@ -54,6 +54,10 @@ from e1a_v4.validation.driver import (
 )
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
+#: Read from the live plan, never hard-coded: these fixtures test the coherence
+#: GATE, not the current version number, and a version bump must not look like
+#: a gate failure.
+PLAN_VERSION = load_plan(ROOT)["plan_version"]
 PASSED = 0
 FAILED = 0
 
@@ -242,7 +246,7 @@ def test_disagreement_fixtures_refuse() -> None:
     # (a) Markdown VERSION changed only -----------------------------------------
     tmp = sandbox()
     text = read_md(tmp)
-    write_md(tmp, text.replace("Plan version **1.9.0**.", "Plan version **9.9.9**.", 1))
+    write_md(tmp, text.replace(f"Plan version **{PLAN_VERSION}**.", "Plan version **9.9.9**.", 1))
     refuses_without_rng("Markdown version changed only -> REFUSE",
                         require_plan_authority_coherence, tmp, read_json(tmp, PLAN_JSON))
     refuses_without_rng("  ... and preflight refuses too", preflight, tmp)
@@ -400,7 +404,7 @@ def test_human_rendering_cannot_drift() -> None:
     plan["plan_version"] = "2.0.0"
     write_json(tmp, PLAN_JSON, plan)
     regenerate_block(tmp)
-    write_md(tmp, read_md(tmp).replace("Plan version **1.9.0**.",
+    write_md(tmp, read_md(tmp).replace(f"Plan version **{PLAN_VERSION}**.",
                                        "Plan version **2.0.0**.", 1))
     ok = True
     try:
@@ -476,8 +480,9 @@ def test_block_structure_is_fail_closed() -> None:
     # an ambiguous human rendering is a refusal, never a silent skip -------------
     tmp = sandbox()
     text = read_md(tmp)
-    write_md(tmp, text.replace("Plan version **1.9.0**.",
-                               "Plan version **1.9.0**. Plan version **1.9.0**.", 1))
+    write_md(tmp, text.replace(
+        f"Plan version **{PLAN_VERSION}**.",
+        f"Plan version **{PLAN_VERSION}**. Plan version **{PLAN_VERSION}**.", 1))
     refuses_without_rng("a DUPLICATED human version line -> REFUSE (never a silent skip)",
                         require_plan_authority_coherence, tmp, read_json(tmp, PLAN_JSON))
     shutil.rmtree(tmp)

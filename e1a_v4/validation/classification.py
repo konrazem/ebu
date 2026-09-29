@@ -64,10 +64,14 @@ SIZE_INTERPRETATION = {
     "detector": "inflation detected iff CP_lower(rejections, R) > nominal alpha",
 }
 
-#: Inherited coarse rule, retained ONLY as a labelled secondary diagnostic.
+#: The contract's coarse rule. It is SUPERSEDED as the release classifier by the
+#: stricter nominal-inflation test, which implies it over the whole accepting
+#: range -- but `synthetic_validation_requirements[2]` still REQUIRES it, so it is
+#: mandatory to report. "may be reported" was the wrong word and is now corrected.
 GROSS_INFLATION_TOLERANCE = 0.03
-GROSS_INFLATION_LABEL = ("SECONDARY GROSS-INFLATION DIAGNOSTIC, inherited from development "
-                         "analysis; NOT validation of the nominal alpha")
+GROSS_INFLATION_LABEL = ("MANDATORY CONTRACT DIAGNOSTIC [synthetic_validation_"
+                         "requirements[2]], inherited from development analysis; NOT "
+                         "validation of the nominal alpha and NOT the release gate")
 
 
 def size_boundary(n: int, nominal: float) -> int:
