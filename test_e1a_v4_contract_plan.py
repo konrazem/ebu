@@ -155,12 +155,9 @@ def test_field_set(contract):
 
 def test_every_exact_binding(contract, plan):
     rows = [row for row in binding_specification(contract, plan) if row.relationship == EXACT]
+    direct = [row for row in rows if "[*]" not in row.plan_path]
     checked = 0
-    for row in rows:
-        if "[*]" in row.plan_path:
-            # Field-set membership is exhaustively mutated in test_field_set.
-            checked += 1
-            continue
+    for row in direct:
         old = access(plan, row.plan_path)
         assert old == row.actual, row.plan_path
         new = mutate(old)
@@ -175,8 +172,8 @@ def test_every_exact_binding(contract, plan):
         good = coherent == "ACCEPTED" and actual == expected
         check(f"EXACT {row.plan_path}", good, f"{old!r} -> {new!r}; {coherent}/{actual}")
         checked += good
-    check("all EXACT mappings changed coherently then refused by contract",
-          checked == len(rows), f"{checked}/{len(rows)}")
+    check("all directly mutable EXACT mappings changed coherently then refused",
+          checked == len(direct), f"{checked}/{len(direct)}; field-set row tested separately")
 
 
 def test_beta_exceptions(contract, plan):
