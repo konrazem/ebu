@@ -30,6 +30,7 @@ from ..identity import SCIENTIFIC_MODULES, procedure_identity
 from ..numerics import Refusal
 from . import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON, VALIDATION_IDENTITY
 from .coherence import require_plan_authority_coherence
+from .contract_plan import require_contract_plan_conformance
 from .driver import driver_identity_component
 from .refusals import (
     ContractIdentityMismatch, ExecutionIdentityMismatch, FrozenSourceMismatch,
@@ -54,6 +55,7 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/calibrate.py",
     "e1a_v4/validation/classification.py",
     "e1a_v4/validation/coherence.py",
+    "e1a_v4/validation/contract_plan.py",
     "e1a_v4/validation/dispositions.py",
     "e1a_v4/validation/driver.py",
     "e1a_v4/validation/generate.py",
@@ -231,6 +233,7 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     # two agree: a stale identity in either one misidentifies the whole package.
     require_output_schema_agreement(root, plan)
     require_plan_authority_coherence(root, plan)
+    require_contract_plan_conformance(binding.data, plan)
     require_seal_plan_agreement(plan, load_seal(root))
     cases = {case["case_id"]: case for case in plan["cases"]}
     if (set(cases["C2_geometry_false_rejection"]["fields_affected"]) != REQUIRED_C2_FIELDS

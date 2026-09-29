@@ -85,6 +85,34 @@ class PlanGeneratingModelMismatch(CodedRefusal):
     code = "PLAN_GENERATING_MODEL_MISMATCH"
 
 
+class ContractFieldSetMismatch(CodedRefusal):
+    code = "CONTRACT_FIELD_SET_MISMATCH"
+
+
+class ContractFieldDuplicate(CodedRefusal):
+    code = "CONTRACT_FIELD_DUPLICATE"
+
+
+class ContractReferenceFieldMismatch(CodedRefusal):
+    code = "CONTRACT_REFERENCE_FIELD_MISMATCH"
+
+
+class ContractGeneratingParameterMismatch(CodedRefusal):
+    code = "CONTRACT_GENERATING_PARAMETER_MISMATCH"
+
+
+class ContractRelaxationRuleMismatch(CodedRefusal):
+    code = "CONTRACT_RELAXATION_RULE_MISMATCH"
+
+
+class ContractTrueBridgeBetaMismatch(CodedRefusal):
+    code = "CONTRACT_TRUE_BRIDGE_BETA_MISMATCH"
+
+
+class ContractBindingUnclassified(CodedRefusal):
+    code = "CONTRACT_BINDING_UNCLASSIFIED"
+
+
 class PlanDerivedValueMismatch(CodedRefusal):
     """A value the Markdown displays as derived does not equal its recomputation
     from the JSON primitives it is derived from."""

@@ -293,6 +293,7 @@ def test_every_generating_primitive_is_checked() -> None:
         else:
             section, key = path.split(".", 1)
             gm[section][key] = _mutate(gm[section][key])
+        assert canonical_generating_model(p)[path] == _mutate(value), path
         wj(tmp, PLAN_JSON, p)
         refused = False
         try:
@@ -307,13 +308,24 @@ def test_every_generating_primitive_is_checked() -> None:
         # ---- Markdown side ------------------------------------------------
         tmp = sandbox()
         text = rmd(tmp)
-        rendered = f"`{json.dumps(value)}`"
-        if text.count(rendered) < 1:
-            check(f"the rendering of {path} is locatable in section 4", False,
-                  f"expected {rendered}")
-            shutil.rmtree(tmp)
-            continue
-        wmd(tmp, text.replace(rendered, f"`{json.dumps(_mutate(value))}`", 1))
+        altered = copy.deepcopy(plan)
+        gm = altered["generating_model"]
+        if path.startswith("per_field."):
+            _, fid, key = path.split(".", 2)
+            field = next(f for f in gm["per_field"] if f["id"] == fid)
+            field[key] = _mutate(field[key])
+        elif path == "truth_visibility":
+            gm["truth_visibility"] = _mutate(gm["truth_visibility"])
+        else:
+            section, key = path.split(".", 1)
+            gm[section][key] = _mutate(gm[section][key])
+        begin, end = REGION_ANCHORS["generating_model"]
+        a = text.index(begin) + len(begin)
+        z = text.index(end)
+        region = render_region("generating_model", altered)
+        assert canonical_generating_model_from_markdown(region, altered)[path] == _mutate(value), path
+        assert canonical_generating_model_from_markdown(region, altered)[path] != value, path
+        wmd(tmp, text[:a] + "\n\n" + region.rstrip() + "\n\n" + text[z:])
         refused = False
         try:
             require_plan_authority_coherence(tmp, rj(tmp, PLAN_JSON))
@@ -407,8 +419,10 @@ def test_plan_cannot_contradict_the_contract() -> None:
                 p["generating_model"]["branch_b"])
         wj(tmp, PLAN_JSON, p)
         regenerate(tmp)
+        expected = ("CONTRACT_REFERENCE_FIELD_MISMATCH" if label == "reference flag"
+                    else "CONTRACT_GENERATING_PARAMETER_MISMATCH")
         refuses_with_code(f"a plan contradicting the CONTRACT on {label}",
-                          "PLAN_GENERATING_MODEL_MISMATCH", preflight, tmp)
+                          expected, preflight, tmp)
         shutil.rmtree(tmp)
 
 

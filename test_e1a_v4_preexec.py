@@ -167,7 +167,15 @@ def test_preflight_refuses_before_rng() -> None:
     c = json.load(open(os.path.join(tmp, "docs/e1a/e1a_v4_design_contract.json")))
     c["endpoints"]["P2_cross_field"]["delta_cross"] = 0.05
     write(tmp, "docs/e1a/e1a_v4_design_contract.json", c)
-    refuses_with_code("FROZEN contract mismatch refuses before RNG",
+    refuses_with_code("contract-bound rule mismatch refuses before RNG",
+                      "CONTRACT_GENERATING_PARAMETER_MISMATCH", preflight, tmp)
+    shutil.rmtree(tmp)
+
+    tmp = sandbox()
+    c = json.load(open(os.path.join(tmp, "docs/e1a/e1a_v4_design_contract.json")))
+    c["status"] += " PROBE"
+    write(tmp, "docs/e1a/e1a_v4_design_contract.json", c)
+    refuses_with_code("unbound frozen contract edit refuses by identity before RNG",
                       "CONTRACT_IDENTITY_MISMATCH", preflight, tmp)
     shutil.rmtree(tmp)
 
@@ -419,7 +427,7 @@ def test_identities() -> None:
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
     check("every validation module enters the execution identity",
-          len(VALIDATION_MODULES) == 15
+          len(VALIDATION_MODULES) == 16
           and "e1a_v4/validation/driver.py" in VALIDATION_MODULES
           and "e1a_v4/validation/refusals.py" in VALIDATION_MODULES
           and "e1a_v4/validation/strict_json.py" in VALIDATION_MODULES
@@ -427,6 +435,7 @@ def test_identities() -> None:
           and "e1a_v4/validation/classification.py" in VALIDATION_MODULES
           and "e1a_v4/validation/scope.py" in VALIDATION_MODULES
           and "e1a_v4/validation/coherence.py" in VALIDATION_MODULES
+          and "e1a_v4/validation/contract_plan.py" in VALIDATION_MODULES
           and "e1a_v4/validation/seal.py" in VALIDATION_MODULES,
           f"{len(VALIDATION_MODULES)} modules")
     check("the normative Markdown plan entered the execution-identity preimage",

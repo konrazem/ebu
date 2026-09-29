@@ -74,7 +74,6 @@ import os
 import re
 from typing import Any
 
-from .. import DESIGN_CONTRACT
 from ..contract import sha256_file
 from ..numerics import Refusal
 from . import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
@@ -826,8 +825,9 @@ def require_generating_model_coherence(root: str, plan: dict[str, Any],
                                        text: str) -> None:
     """Markdown section 4 must equal the JSON generating model, path by path.
 
-    Also checks the DERIVED n_samples by recomputation, and refuses a plan that
-    contradicts the FROZEN DESIGN CONTRACT about any field's physical parameters.
+    Also checks DERIVED n_samples by recomputation.  The separate
+    contract_plan layer checks the superior frozen contract after both plan
+    representations have been shown to agree.
     """
     expected = canonical_generating_model(plan)
     actual = canonical_generating_model_from_markdown(_region(text, "generating_model"),
@@ -852,32 +852,6 @@ def require_generating_model_coherence(root: str, plan: dict[str, Any],
             f"n_samples is DERIVED as int(round(T_total / dt)) = {derived}, but the "
             f"plan declares {expected['branch_b.n_samples']}. It is not an "
             "independent input and may not disagree with its primitives.")
-
-    # the plan RESTATES contract authority; it may not contradict it
-    contract = strict_load_file(os.path.join(root, DESIGN_CONTRACT),
-                                "the frozen design contract")
-    by_id = {f["id"]: f for f in contract["fields"]}
-    for field in plan["generating_model"]["per_field"]:
-        upstream = by_id.get(field["id"])
-        if upstream is None:
-            raise PlanGeneratingModelMismatch(
-                f"the plan declares field {field['id']!r}, which the frozen design "
-                "contract does not")
-        for key in CONTRACT_MIRRORED_FIELD_KEYS:
-            if _canonical(field[key]) != _canonical(upstream[key]):
-                raise PlanGeneratingModelMismatch(
-                    f"the plan's generating model contradicts the FROZEN DESIGN "
-                    f"CONTRACT at field {field['id']!r} {key!r}: plan "
-                    f"{_canonical(field[key])} vs contract {_canonical(upstream[key])}")
-    scenario = contract["hypothetical_uncertainty_scenario"]
-    for plan_key, contract_key in (("dt_s", "dt_s"), ("T_total_s", "T_total_s")):
-        if plan["generating_model"]["branch_b"][plan_key] != scenario[contract_key]:
-            raise PlanGeneratingModelMismatch(
-                f"the plan's generating model contradicts the FROZEN DESIGN CONTRACT "
-                f"at {plan_key!r}: plan "
-                f"{plan['generating_model']['branch_b'][plan_key]} vs contract "
-                f"{scenario[contract_key]}")
-
 
 # ---------------------------------------------- generated region: adopted rules
 def render_adopted_rules_region(plan: dict[str, Any]) -> str:
