@@ -277,6 +277,53 @@ class CalibrationArtifactBindingInvalid(CodedRefusal):
     code = "CALIBRATION_ARTIFACT_BINDING_INVALID"
 
 
+class CalibrationLockMissing(CalibrationArtifactBindingInvalid):
+    """A calibration-requiring job has no committed lock in the canonical store."""
+
+    code = "CALIBRATION_LOCK_MISSING"
+
+
+class CalibrationLockJobMismatch(CalibrationArtifactBindingInvalid):
+    """The store slot, the lock record's own identity and the planned job disagree.
+
+    A lock is not valid because it names SOME valid planned job. If it occupies
+    the canonical slot for job A and internally names job B, the two identities
+    that must agree do not, and one of them is wrong.
+    """
+
+    code = "CALIBRATION_LOCK_JOB_MISMATCH"
+
+
+class CalibrationLockFieldMismatch(CalibrationArtifactBindingInvalid):
+    """The locked artifact's field is not the job's field/scope."""
+
+    code = "CALIBRATION_LOCK_FIELD_MISMATCH"
+
+
+class CalibrationLockUnplanned(CalibrationArtifactBindingInvalid):
+    """A committed lock exists for coordinates the frozen plan never declared, or
+    for a case that evaluates no P1 / Block-1 quantity."""
+
+    code = "CALIBRATION_LOCK_UNPLANNED"
+
+
+class CalibrationLockWithoutPublication(CalibrationArtifactBindingInvalid):
+    """A committed lock exists with no committed Branch-A publication upstream.
+
+    A threshold conditional on evidence that is not there is not a conditional
+    threshold.
+    """
+
+    code = "CALIBRATION_LOCK_WITHOUT_PUBLICATION"
+
+
+class CalibrationLockProvenanceMismatch(CalibrationArtifactBindingInvalid):
+    """A committed lock's schema, digest, condition, evidence links or package
+    identities disagree with the authority that must corroborate them."""
+
+    code = "CALIBRATION_LOCK_PROVENANCE_MISMATCH"
+
+
 class BranchBPremature(CodedRefusal):
     """Branch-B access was requested before its frozen prerequisites held."""
 
@@ -516,7 +563,10 @@ ALL_REFUSAL_CLASSES = (
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
     ScaleControlInvalid, TerminalProvenanceMismatch,
-    CalibrationArtifactBindingInvalid,
+    CalibrationArtifactBindingInvalid, CalibrationLockMissing,
+    CalibrationLockJobMismatch, CalibrationLockFieldMismatch,
+    CalibrationLockUnplanned, CalibrationLockWithoutPublication,
+    CalibrationLockProvenanceMismatch,
     ContractMandatoryDiagnosticMissing, ContractMandatoryDiagnosticMismatch,
     PlanVersionMismatch, PlanAnalysisIdentityMismatch, PlanIdentityMismatch,
     PlanCaseMismatch, PlanSubconditionMismatch, PlanReleaseRuleMismatch,

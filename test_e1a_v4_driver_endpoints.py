@@ -574,15 +574,12 @@ def published_terminal_record(case_id: str = "C7_false_bridge"):
     execution.analyse(outcome)
     record = execution.record(aggregate_skeleton(case_id))
     publication = committed_publication(out, job.coordinates)
-    return root, binding, job, publication, record
+    return root, binding, job, publication, record, out
 
 
 def test_terminal_provenance_cross_links() -> None:
     """AUDIT FINDING D. Self-consistency is necessary and NOT sufficient."""
-    root, binding, job, publication, record = published_terminal_record()
-    # C7 evaluates no P1 / Block-1 quantity, so it locks no artifact and has no
-    # committed calibration lock. That is the frozen semantics, not an omission.
-    lock = None
+    root, binding, job, publication, record, out = published_terminal_record()
 
     def validate(mutate=None):
         candidate = json.loads(json.dumps(record))
@@ -591,8 +588,10 @@ def test_terminal_provenance_cross_links() -> None:
             # RE-DIGEST, exactly as the auditor did: the record is internally
             # self-consistent again, and must still be refused.
             candidate["result_digest"] = sealed_digest(candidate, "result_digest")
+        # The OFFICIAL entry point takes the campaign output ROOT and resolves
+        # the committed publication and calibration lock itself.
         return refusal_code(validate_job_record, candidate, binding.plan, binding,
-                            job, publication, lock)
+                            job, out)
 
     check("T10: a record bound to the CURRENT authority validates",
           validate() is None, str(validate()))
@@ -627,16 +626,19 @@ def test_terminal_provenance_cross_links() -> None:
           "refuses on the bytes",
           refusal_code(validate_job_record,
                        dict(json.loads(json.dumps(record)), job_id="forged"),
-                       binding.plan, binding, job, publication, lock)
+                       binding.plan, binding, job, out)
           == "RESULT_SCHEMA_INVALID")
     refuses_with_code("no planned job supplied to validate against",
                       "TERMINAL_PROVENANCE_MISMATCH", validate_job_record,
                       json.loads(json.dumps(record)), binding.plan, binding, None,
-                      publication, lock)
-    refuses_with_code("no committed Branch-A publication",
+                      out)
+    # The absence of the publication is now expressed the only way a caller CAN
+    # express it: by the store not holding one. A caller cannot pass None for it.
+    empty = os.path.join(root, "results", "empty")
+    refuses_with_code("no committed Branch-A publication in the store",
                       "TERMINAL_PROVENANCE_MISMATCH", validate_job_record,
                       json.loads(json.dumps(record)), binding.plan, binding, job,
-                      None, lock)
+                      empty)
 
     # a stale-but-self-consistent record is not reusable under a moved package
     class MovedBinding:
@@ -650,7 +652,7 @@ def test_terminal_provenance_cross_links() -> None:
 
     check("a record valid under the OLD package is refused under the current one",
           refusal_code(validate_job_record, json.loads(json.dumps(record)),
-                       binding.plan, MovedBinding(binding), job, publication, lock)
+                       binding.plan, MovedBinding(binding), job, out)
           == "TERMINAL_PROVENANCE_MISMATCH")
     shutil.rmtree(root, ignore_errors=True)
 

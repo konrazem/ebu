@@ -38,6 +38,7 @@ WHAT THIS SUITE PROVES
 
 from __future__ import annotations
 
+import inspect
 import json
 import os
 import shutil
@@ -50,18 +51,20 @@ from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.campaign_driver import (
     CALIBRATION_LOCK_KEYS, CALIBRATION_LOCK_SCHEMA, JobCoordinates,
     calibration_lock_basename, calibration_lock_directory,
+    _compare_terminal_to_verified_lock, calibration_lock_basename,
+    calibration_lock_directory, calibration_lock_envelope,
     committed_calibration_lock, committed_publication, inventory_calibration_locks,
     inventory_job_records, is_sha256, job_execution, plan_campaign,
     publication_basename, publication_directory,
-    publish_job_record, recover_realisations,
-    require_calibration_artifact_binding, validate_job_record,
+    publish_calibration_lock, publish_job_record, reconcile_calibration_locks,
+    recover_realisations, validate_job_record, verified_calibration_lock,
     verify_restart,
 )
 from e1a_v4.validation.classification import GROSS_INFLATION_TOLERANCE
 from e1a_v4.validation.dispositions import cp_upper
 from e1a_v4.validation.plan import bind_execution
 from e1a_v4.validation.publication import (
-    commit_name, read_published, sealed_digest,
+    commit_name, publish_transaction, read_published, sealed_digest,
 )
 from e1a_v4.validation.results import aggregate_skeleton
 from e1a_v4.validation.scope import CampaignCalibrationLedger
@@ -214,12 +217,57 @@ class Campaign:
                 committed_calibration_lock(self.out, coordinates))
 
     def validate(self, job, record):
-        publication, lock = self.links(job.coordinates)
+        """Through the OFFICIAL entry point, which resolves its own provenance."""
         return refusal_code(validate_job_record, record, self.binding.plan,
-                            self.binding, job, publication, lock)
+                            self.binding, job, self.out)
 
     def close(self) -> None:
         shutil.rmtree(self.root, ignore_errors=True)
+
+
+def replace_lock(campaign, job, mutate) -> dict:
+    """Rewrite the COMMITTED lock at this job's canonical slot, re-digested and
+    re-committed so every structural check of the transaction layer is satisfied.
+
+    This is what makes the counterexamples below real: the tampered lock is not
+    a mapping handed to a function, it is a canonically formed committed record
+    sitting in the campaign's own store.
+    """
+    directory = calibration_lock_directory(campaign.out)
+    basename = calibration_lock_basename(job.coordinates)
+    record = json.loads(json.dumps(
+        committed_calibration_lock(campaign.out, job.coordinates)))
+    mutate(record)
+    record["lock_digest"] = sealed_digest(record, "lock_digest")
+    for name in (basename, commit_name(basename)):
+        path = os.path.join(directory, name)
+        os.chmod(path, 0o600)
+        os.remove(path)
+    publish_transaction(directory, basename, record,
+                        publication_digest=record["lock_digest"],
+                        provenance={"coordinates": job.coordinates.as_dict(),
+                                    "job_id": record["job_id"],
+                                    "execution_identity": "restated"})
+    return record
+
+
+def plant_lock(campaign, job, borrow_from) -> dict:
+    """COMMIT a canonically formed lock at `job`'s slot, built from another job's.
+
+    Used to place a lock where the frozen plan says none belongs.
+    """
+    source = json.loads(json.dumps(
+        committed_calibration_lock(campaign.out, borrow_from.coordinates)))
+    source["coordinates"] = job.coordinates.as_dict()
+    source["job_id"] = job.job_id
+    source["lock_digest"] = sealed_digest(source, "lock_digest")
+    publish_transaction(calibration_lock_directory(campaign.out),
+                        calibration_lock_basename(job.coordinates), source,
+                        publication_digest=source["lock_digest"],
+                        provenance={"coordinates": job.coordinates.as_dict(),
+                                    "job_id": job.job_id,
+                                    "execution_identity": "restated"})
+    return source
 
 
 def mutated(record: dict, key: str, value) -> dict:
@@ -259,14 +307,13 @@ def test_auditor_counterexamples() -> None:
         "A. calibration_artifact_sha256 = null, RE-DIGESTED",
         "CALIBRATION_ARTIFACT_BINDING_INVALID", validate_job_record,
         mutated(record, "calibration_artifact_sha256", None), campaign.binding.plan,
-        campaign.binding, job, *campaign.links(job.coordinates))
+        campaign.binding, job, campaign.out)
     refuses_with_code(
         "B. calibration_artifact_sha256 = fabricated valid-looking SHA-256, "
         "RE-DIGESTED",
         "CALIBRATION_ARTIFACT_BINDING_INVALID", validate_job_record,
         mutated(record, "calibration_artifact_sha256", "f" * 64),
-        campaign.binding.plan, campaign.binding, job,
-        *campaign.links(job.coordinates))
+        campaign.binding.plan, campaign.binding, job, campaign.out)
     campaign.close()
 
 
@@ -319,13 +366,24 @@ def test_every_required_case() -> None:
                           validate_job_record,
                           mutated(record, "calibration_artifact_sha256", value),
                           campaign.binding.plan, campaign.binding, job,
-                          publication, lock)
+                          campaign.out)
 
-    # correct artifact SHA, but the artifact was never locked: no committed lock
+    # Correct artifact SHA, but the artifact was never locked. A caller can no
+    # longer express this by passing lock=None; it is expressed the only way it
+    # can actually occur, by the canonical store not holding the lock.
+    directory = calibration_lock_directory(campaign.out)
+    basename = calibration_lock_basename(job.coordinates)
+    for name in (basename, commit_name(basename)):
+        os.chmod(os.path.join(directory, name), 0o600)
+        os.remove(os.path.join(directory, name))
     refuses_with_code("correct artifact SHA but artifact NOT locked",
-                      "CALIBRATION_ARTIFACT_BINDING_INVALID", validate_job_record,
+                      "CALIBRATION_LOCK_MISSING", validate_job_record,
                       json.loads(json.dumps(record)), campaign.binding.plan,
-                      campaign.binding, job, publication, None)
+                      campaign.binding, job, campaign.out)
+    campaign.close()
+    campaign = Campaign()
+    job = campaign.job(C2)
+    _execution, record, digest = campaign.run(job)
     check("correct locked artifact SHA for the exact job -> ACCEPT",
           campaign.validate(job, record) is None,
           str(campaign.validate(job, record)))
@@ -388,6 +446,10 @@ def test_binding_is_external() -> None:
 def test_non_calibrating_cases_unchanged() -> None:
     """FROZEN SEMANTICS PRESERVED. No calibration requirement is invented."""
     campaign = Campaign()
+    # One real calibrating job first, purely so a genuine committed lock exists
+    # to build the planted counterexamples from. Its own validity is A1's job.
+    donor = campaign.job(C2)
+    campaign.run(donor)
     for case_id in (C7, C8):
         job = campaign.job(case_id)
         check(f"{case_id}: the frozen plan requires no calibration",
@@ -413,14 +475,20 @@ def test_non_calibrating_cases_unchanged() -> None:
             f"{case_id}: a fabricated artifact SHA, RE-DIGESTED",
             "TERMINAL_PROVENANCE_MISMATCH", validate_job_record,
             mutated(record, "calibration_artifact_sha256", "f" * 64),
-            campaign.binding.plan, campaign.binding, job, publication, lock)
-        # and the new rule in the other direction: no lock may exist for it
+            campaign.binding.plan, campaign.binding, job, campaign.out)
+        # and the new rule in the other direction: no lock may exist for it.
+        # Checked through the CANONICAL verifier by planting a real committed
+        # lock at this non-calibrating job's canonical slot.
+        plant_lock(campaign, job, borrow_from=donor)
         refuses_with_code(
-            f"{case_id}: a calibration lock present for a no-calibration case",
-            "CALIBRATION_ARTIFACT_BINDING_INVALID",
-            require_calibration_artifact_binding, record, job,
-            {"calibration_artifact_sha256": "a" * 64}, publication,
-            campaign.binding)
+            f"{case_id}: a committed calibration lock present for a "
+            "no-calibration case",
+            "CALIBRATION_LOCK_UNPLANNED", verified_calibration_lock,
+            campaign.out, job, campaign.binding)
+        refuses_with_code(
+            f"{case_id}: and restart reconciliation refuses it too",
+            "CALIBRATION_LOCK_UNPLANNED", reconcile_calibration_locks,
+            campaign.out, campaign.binding, [job])
     campaign.close()
 
 
@@ -471,7 +539,7 @@ def test_restart_uses_the_same_validator() -> None:
     refuses_with_code(
         "RESTART reconciliation of a calibration lock whose Branch-A publication "
         "is absent",
-        "CALIBRATION_ARTIFACT_BINDING_INVALID", verify_restart, campaign.out, {},
+        "CALIBRATION_LOCK_WITHOUT_PUBLICATION", verify_restart, campaign.out, {},
         campaign.binding, [job])
     campaign.close()
 
@@ -507,6 +575,282 @@ def test_valid_round_trip() -> None:
     campaign.close()
 
 
+# ================ B1. FINDING A -- the caller cannot supply the lock
+def test_caller_cannot_supply_the_lock() -> None:
+    """AUDIT FINDING A. The trust boundary, not the comparison, was the defect.
+
+    The auditor's counterexample: a fabricated lock mapping that was never
+    persisted, matching a fabricated artifact digest in a re-digested terminal
+    record, handed straight to the official validator -- which accepted the pair,
+    while the same terminal record checked against the actual committed lock
+    refused. The comparison was already right. What was wrong is that the object
+    which exists to PROVE a record's provenance could be supplied by whoever
+    wanted the record believed.
+    """
+    signature = inspect.signature(validate_job_record)
+    for forbidden in ("lock", "publication", "expected_artifact_sha256",
+                      "expected_lock_digest"):
+        check(f"the official validator declares no {forbidden!r} parameter",
+              forbidden not in signature.parameters,
+              str(list(signature.parameters)))
+    check("it takes the campaign output ROOT instead",
+          "output_dir" in signature.parameters, str(list(signature.parameters)))
+
+    campaign = Campaign()
+    job = campaign.job(C2)
+    _execution, record, digest = campaign.run(job)
+    forged = "a1b2c3d4" * 8
+    tampered = mutated(record, "calibration_artifact_sha256", forged)
+
+    # The auditor's fabricated lock: canonically shaped, self-consistent, and
+    # never written to the store.
+    fake_lock = json.loads(json.dumps(
+        committed_calibration_lock(campaign.out, job.coordinates)))
+    fake_lock["calibration_artifact_sha256"] = forged
+    fake_lock["lock_digest"] = sealed_digest(fake_lock, "lock_digest")
+    check("the fabricated lock IS internally self-consistent, so nothing about "
+          "its own bytes would have caught it",
+          sealed_digest(dict(fake_lock), "lock_digest") == fake_lock["lock_digest"])
+    check("and it was never persisted",
+          committed_calibration_lock(campaign.out, job.coordinates)
+          ["calibration_artifact_sha256"] != forged)
+
+    try:
+        validate_job_record(tampered, campaign.binding.plan, campaign.binding,
+                            job, committed_publication(campaign.out,
+                                                       job.coordinates), fake_lock)
+        supplied = "ACCEPTED"
+    except TypeError:
+        supplied = "TypeError"
+    except Refusal:
+        supplied = "Refusal"
+    check("the fabricated lock cannot even be PASSED to the official validator",
+          supplied == "TypeError", supplied)
+    refuses_with_code(
+        "and the same tampered terminal record, through the official path",
+        "CALIBRATION_ARTIFACT_BINDING_INVALID", validate_job_record, tampered,
+        campaign.binding.plan, campaign.binding, job, campaign.out)
+
+    # THE POSITIVE CONTROL. Mandatory: a repair that refuses everything is not a
+    # repair.
+    check("the untampered record still validates through the official path",
+          campaign.validate(job, record) is None,
+          str(campaign.validate(job, record)))
+
+    # The private pure helper still exists for unit testing, and still means
+    # "compare against an ALREADY-VERIFIED lock".
+    verified = verified_calibration_lock(campaign.out, job, campaign.binding)
+    check("the canonical verifier returns this job's own verified lock",
+          verified["job_id"] == job.job_id
+          and verified["calibration_artifact_sha256"] == digest)
+    check("the private helper is private: it is not the production entry point",
+          _compare_terminal_to_verified_lock.__name__.startswith("_"))
+    check("and it accepts the verified lock for the valid record",
+          refusal_code(_compare_terminal_to_verified_lock, record, job, verified,
+                       committed_publication(campaign.out, job.coordinates),
+                       campaign.binding) is None)
+    campaign.close()
+
+
+# ================ B2. FINDING B -- every lock is valid before any terminal
+def test_locks_validate_before_any_terminal_exists() -> None:
+    """AUDIT FINDING B. Semantic lock validation used to happen too late.
+
+    A canonically committed lock that named another planned job, or another
+    field, was accepted by restart reconciliation whenever no terminal record had
+    been written yet -- because those two checks lived only in terminal
+    validation. Whether an intermediate provenance object is valid may not depend
+    on whether a downstream record happens to exist, and the state in which no
+    terminal record exists is the ordinary resumable state.
+    """
+    # --- Case 1: job A's canonical slot, holding a lock that names job B -----
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    b = campaign.job(C2, field_id=FIELDS[0])
+    campaign.run(a)
+    campaign.run(b)
+    replace_lock(campaign, a, lambda r: r.__setitem__("job_id", b.job_id))
+    check("both A and B are legitimate planned calibrating jobs -- the wrong "
+          "identity is a VALID identity elsewhere",
+          a.requires_calibration and b.requires_calibration and a.job_id != b.job_id)
+    check("no terminal record exists for either", not os.path.isdir(
+        os.path.join(campaign.out, "job_records")) or not os.listdir(
+        os.path.join(campaign.out, "job_records")))
+    for name, fn, args in (
+            ("verify_restart", verify_restart,
+             (campaign.out, recovered(campaign), campaign.binding, [a, b])),
+            ("inventory_job_records", inventory_job_records,
+             (campaign.out, campaign.binding, [a, b])),
+            ("reconcile_calibration_locks", reconcile_calibration_locks,
+             (campaign.out, campaign.binding, [a, b])),
+            ("verified_calibration_lock", verified_calibration_lock,
+             (campaign.out, a, campaign.binding))):
+        refuses_with_code(f"job A's slot holding job B's lock, via {name}",
+                          "CALIBRATION_LOCK_JOB_MISMATCH", fn, *args)
+    campaign.close()
+
+    # --- Case 2: job A's canonical slot, holding another field's artifact ----
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    campaign.run(a)
+    replace_lock(campaign, a,
+                 lambda r: r.__setitem__("artifact_field_id", FIELDS[0]))
+    for name, fn, args in (
+            ("verify_restart", verify_restart,
+             (campaign.out, recovered(campaign), campaign.binding, [a])),
+            ("inventory_job_records", inventory_job_records,
+             (campaign.out, campaign.binding, [a])),
+            ("reconcile_calibration_locks", reconcile_calibration_locks,
+             (campaign.out, campaign.binding, [a])),
+            ("verified_calibration_lock", verified_calibration_lock,
+             (campaign.out, a, campaign.binding))):
+        refuses_with_code(
+            f"job A's lock carrying field {FIELDS[0]!r} instead of "
+            f"{FIELDS[1]!r}, via {name}",
+            "CALIBRATION_LOCK_FIELD_MISMATCH", fn, *args)
+    campaign.close()
+
+    # --- an UNPLANNED lock ---------------------------------------------------
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    other = campaign.job(C2, replicate=1)
+    campaign.run(a)
+    campaign.run(other)
+    refuses_with_code(
+        "a committed lock whose coordinates match no job this campaign planned",
+        "CALIBRATION_LOCK_UNPLANNED", reconcile_calibration_locks, campaign.out,
+        campaign.binding, [a])
+    campaign.close()
+
+    # --- the lock's upstream links, checked with no terminal record ----------
+    for label, mutate, expected in (
+            ("Branch-A evidence hash",
+             lambda r: r.__setitem__("branch_a_evidence_sha256", "0" * 64),
+             "CALIBRATION_LOCK_PROVENANCE_MISMATCH"),
+            ("publication digest",
+             lambda r: r.__setitem__("publication_digest", "0" * 64),
+             "CALIBRATION_LOCK_PROVENANCE_MISMATCH"),
+            ("calibration-condition identity",
+             lambda r: r.__setitem__("calibration_condition_sha256", "0" * 64),
+             "CALIBRATION_LOCK_PROVENANCE_MISMATCH"),
+            ("execution identity",
+             lambda r: r["package_identities"].__setitem__(
+                 "execution_identity", "0" * 64),
+             "CALIBRATION_LOCK_PROVENANCE_MISMATCH"),
+            ("cited publication basename",
+             lambda r: r.__setitem__("publication_basename", "branch_a_0.json"),
+             "CALIBRATION_LOCK_PROVENANCE_MISMATCH")):
+        campaign = Campaign()
+        a = campaign.job(C2, field_id=FIELDS[1])
+        campaign.run(a)
+        replace_lock(campaign, a, mutate)
+        refuses_with_code(
+            f"a committed lock whose {label} is wrong, with no terminal record",
+            expected, verify_restart, campaign.out, recovered(campaign),
+            campaign.binding, [a])
+        campaign.close()
+
+    # --- THE POSITIVE CONTROL. Guards against over-repair. -------------------
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    campaign.run(a)
+    restart = verify_restart(campaign.out, recovered(campaign), campaign.binding,
+                             [a])
+    check("valid publication + exact durable lock + NO terminal record -> "
+          "restart reconciliation ACCEPTS",
+          restart["calibration_locks_on_disk"] == 1,
+          str(restart.get("calibration_locks_on_disk")))
+    check("and the terminal-record inventory accepts that state too",
+          refusal_code(inventory_job_records, campaign.out, campaign.binding,
+                       [a]) is None)
+    check("Branch-A published, calibration locked, terminal not yet written is a "
+          "NORMAL resumable state",
+          reconcile_calibration_locks(campaign.out, campaign.binding, [a])
+          [a.job_id]["job_id"] == a.job_id)
+    campaign.close()
+
+
+# ================ B3. one verifier, no aliases, ordering preserved
+def test_one_verifier_and_no_aliases() -> None:
+    """§20 / §22 / §34. Structural properties the repair must not have lost."""
+    jobs = plan_campaign(PLAN)
+    calibrating = [j for j in jobs if j.requires_calibration]
+    basenames = {calibration_lock_basename(j.coordinates) for j in calibrating}
+    check("every calibrating job has a DISTINCT canonical lock filename",
+          len(basenames) == len(calibrating) == 46000,
+          f"{len(basenames)} names for {len(calibrating)} jobs")
+    check("a lock filename is a pure function of the coordinates, so no two "
+          "coordinates alias one slot",
+          len({calibration_lock_basename(j.coordinates) for j in jobs})
+          == len(jobs) == 53200)
+
+    # ONE verifier: terminal validation and restart both route through it.
+    source = inspect.getsource(validate_job_record)
+    check("the official terminal validator calls the canonical lock verifier",
+          "verified_calibration_lock(" in source)
+    check("and resolves the publication itself",
+          "committed_publication(" in source)
+    restart_source = inspect.getsource(reconcile_calibration_locks)
+    check("restart reconciliation calls the SAME canonical lock verifier",
+          "verified_calibration_lock(" in restart_source)
+    check("and enumerates the store itself rather than trusting an argument",
+          "inventory_calibration_locks(" in restart_source)
+
+    # A second file cannot shadow a job's canonical slot.
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    campaign.run(a)
+    lock = committed_calibration_lock(campaign.out, a.coordinates)
+    alias = "calibration_lock_" + "0" * 64 + ".json"
+    publish_transaction(calibration_lock_directory(campaign.out), alias,
+                        dict(lock), publication_digest=lock["lock_digest"],
+                        provenance={"coordinates": a.coordinates.as_dict(),
+                                    "job_id": a.job_id,
+                                    "execution_identity": "restated"})
+    refuses_with_code(
+        "a SECOND committed file holding the same job's lock record",
+        "CALIBRATION_LOCK_JOB_MISMATCH", inventory_calibration_locks, campaign.out)
+    campaign.close()
+
+    # ORDERING: a lock that cannot be persisted leaves the job before
+    # CALIBRATION_LOCKED, and Branch B stays unreachable.
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    execution = job_execution(campaign.binding, a, campaign.ledger, campaign.out)
+    calibration = execution.calibration
+    spec = next(f for f in campaign.binding.binding.fields
+                if f["id"] == a.coordinates.scope)
+    field = build_field(campaign.binding.binding, spec,
+                        calibration_route="force_displacement_with_stokes_drag",
+                        viscosity=0.00089, bead_radius=1e-6)
+    execution.realise_branch_a(
+        field, branch_a_seed=calibration.branch_a_seed(a.coordinates.scope),
+        common_mode_seed=calibration.common_mode_seed(),
+        generator_identity="PURE-FIXTURE-NO-DRAW")
+    execution.publish_branch_a()
+    condition = execution.calibration_condition()
+    # Obstruct the lock's canonical path with a DIRECTORY, so persistence fails
+    # for a filesystem reason rather than a patched function.
+    os.makedirs(os.path.join(calibration_lock_directory(campaign.out),
+                             calibration_lock_basename(a.coordinates)),
+                exist_ok=True)
+    before = execution.state
+    failed = False
+    try:
+        execution.lock_calibration(fixture_artifact(condition, 7e-9))
+    except (Refusal, OSError):
+        failed = True
+    check("a lock that cannot be persisted FAILS", failed)
+    check("and leaves the job in its pre-lock state, not CALIBRATION_LOCKED",
+          execution.state == before == "CALIBRATION_CONDITION_BOUND",
+          f"{before} -> {execution.state}")
+    refuses_with_code("so Branch B cannot be unblinded", "JOB_STATE_INVALID",
+                      execution.unblind)
+    refuses_with_code("and no Branch-B seed is reachable", "BRANCH_B_PREMATURE",
+                      execution.branch_b_seed)
+    campaign.close()
+
+
 # ================================ A7. no science moved
 def test_science_unchanged() -> None:
     """A provenance repair changes no scientific quantity."""
@@ -539,6 +883,12 @@ GROUPS = (
     ("A4  C7 / C8 remain no-calibration paths", test_non_calibrating_cases_unchanged),
     ("A5  restart is never the weaker path", test_restart_uses_the_same_validator),
     ("A6  the valid round trip survives", test_valid_round_trip),
+    ("B1  FINDING A: the caller cannot supply the lock",
+     test_caller_cannot_supply_the_lock),
+    ("B2  FINDING B: locks validate before any terminal exists",
+     test_locks_validate_before_any_terminal_exists),
+    ("B3  one verifier, no aliases, ordering preserved",
+     test_one_verifier_and_no_aliases),
     ("A7  no science moved", test_science_unchanged),
 )
 

@@ -94,7 +94,10 @@ from .publication import (
 from .refusals import (
     BranchAEvidenceAltered, BranchANotPublished, BranchAProvenanceMismatch,
     BranchAPublicationImmutable, BranchBPremature,
-    CalibrationArtifactBindingInvalid, CampaignIncomplete,
+    CalibrationArtifactBindingInvalid, CalibrationLockFieldMismatch,
+    CalibrationLockJobMismatch, CalibrationLockMissing,
+    CalibrationLockProvenanceMismatch, CalibrationLockUnplanned,
+    CalibrationLockWithoutPublication, CampaignIncomplete,
     CampaignManifestInvalid, CampaignPlanMismatch,
     ContractMandatoryDiagnosticMissing, EndpointEventMissing,
     EndpointEventReductionUndeclared, ExecutionAuthorisationMissing,
@@ -807,19 +810,19 @@ def calibration_lock_envelope(coordinates: JobCoordinates,
 def require_calibration_lock_schema(record: Mapping[str, Any], where: str) -> None:
     """Strict shape and self-authentication, before any field is believed."""
     if record.get("schema") != CALIBRATION_LOCK_SCHEMA:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{where}: schema {record.get('schema')!r} is not "
             f"{CALIBRATION_LOCK_SCHEMA!r}")
     missing = [k for k in CALIBRATION_LOCK_KEYS if k not in record]
     if missing:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{where}: the calibration-lock record omits {missing}")
     if sealed_digest(dict(record), "lock_digest") != record["lock_digest"]:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{where}: the calibration-lock record's own digest does not "
             "authenticate its bytes")
     if not is_sha256(record["calibration_artifact_sha256"]):
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{where}: the locked artifact identity "
             f"{record['calibration_artifact_sha256']!r} is not a SHA-256 identity")
 
@@ -839,7 +842,7 @@ def publish_calibration_lock(output_dir: str, coordinates: JobCoordinates,
     """
     publication = committed_publication(output_dir, coordinates)
     if publication is None:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockWithoutPublication(
             f"{coordinates.job_id}: no committed Branch-A publication exists, so "
             "there is nothing for a calibration lock to be conditional on")
     record = calibration_lock_envelope(coordinates, artifact, condition,
@@ -855,11 +858,18 @@ def publish_calibration_lock(output_dir: str, coordinates: JobCoordinates,
 
 def committed_calibration_lock(output_dir: str, coordinates: JobCoordinates
                                ) -> dict[str, Any] | None:
-    """The COMMITTED calibration-lock record for these coordinates, or None.
+    """STRUCTURALLY load the committed lock at these coordinates' slot, or None.
 
-    None only when no lock record exists at all. Anything present but not
-    committed, misfiled or self-inconsistent refuses here rather than being
-    skipped: a partially written lock is not evidence that a threshold was set.
+    Resolves the canonical path from the coordinates, refuses anything present
+    but not committed, checks the record's own digest and schema, and checks that
+    the record's coordinates are the ones it was read for. It does NOT decide
+    whether the lock is SEMANTICALLY this job's -- that is
+    `verified_calibration_lock`, and this function is not a substitute for it.
+
+    An audit found the difference mattered: a canonically committed lock whose
+    own `job_id` or `artifact_field_id` named another job passed every structural
+    check here, and the semantic checks lived downstream in terminal validation,
+    so a lock with no terminal record yet was never semantically checked at all.
     """
     directory = calibration_lock_directory(output_dir)
     basename = calibration_lock_basename(coordinates)
@@ -870,10 +880,10 @@ def committed_calibration_lock(output_dir: str, coordinates: JobCoordinates
                                     "the calibration-lock record")
     require_calibration_lock_schema(record, path)
     if marker["publication_digest"] != record["lock_digest"]:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{path}: the commit marker committed a different lock digest")
     if record.get("coordinates") != coordinates.as_dict():
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockJobMismatch(
             f"{path}: the lock record addresses {record.get('coordinates')!r} and "
             f"was read for {coordinates.as_dict()!r}; a misfiled lock is not this "
             "job's calibration")
@@ -896,27 +906,188 @@ def inventory_calibration_locks(output_dir: str) -> dict[str, dict[str, Any]]:
         path = os.path.join(directory, basename)
         require_calibration_lock_schema(record, path)
         if marker["publication_digest"] != record["lock_digest"]:
-            raise CalibrationArtifactBindingInvalid(
+            raise CalibrationLockProvenanceMismatch(
                 f"{path}: the commit marker committed a different lock digest")
         coordinates = JobCoordinates(**record["coordinates"])
+        # STORE LOCATION IDENTITY == LOCK RECORD IDENTITY. The basename is a pure
+        # function of the coordinates, so this is what makes an alias impossible:
+        # a second file holding the same coordinates cannot also be that
+        # coordinate's canonical name, and is refused rather than shadowing it.
         if calibration_lock_basename(coordinates) != basename:
-            raise CalibrationArtifactBindingInvalid(
+            raise CalibrationLockJobMismatch(
                 f"{basename!r} holds the lock of {coordinates.job_id!r}, which "
                 f"belongs at {calibration_lock_basename(coordinates)!r}")
         if coordinates.job_id in found:
-            raise CalibrationArtifactBindingInvalid(
+            raise CalibrationLockJobMismatch(
                 f"two committed locks claim {coordinates.job_id}; a job locks "
                 "exactly one calibration artifact")
         found[coordinates.job_id] = record
     return found
 
 
-def require_calibration_artifact_binding(record: Mapping[str, Any],
-                                         job: CampaignJob,
-                                         lock: Mapping[str, Any] | None,
-                                         publication: Mapping[str, Any],
-                                         binding: ExecutionBinding) -> None:
-    """Bind a terminal record to the ACTUAL locked calibration artifact.
+# ---- THE ONE CANONICAL DURABLE-LOCK VERIFIER -------------------------------
+def verified_calibration_lock(output_dir: str, job: CampaignJob,
+                              binding: ExecutionBinding) -> dict[str, Any] | None:
+    """Resolve, load and COMPLETELY verify this job's durable calibration lock.
+
+    THE ONE ROUTINE. Terminal validation and restart reconciliation both call it,
+    so there is no `terminal_lock_verifier` and no separate `restart_lock_
+    verifier` that could drift apart. Everything it needs it derives:
+
+        planned job coordinates
+              -> the canonical lock path in the campaign's own store
+              -> the committed lock record
+              -> the committed Branch-A publication for the SAME coordinates
+              -> every cross-check, then the verified record
+
+    THE DEFECTS THIS CLOSES
+        An audit found two, and both were trust-boundary defects rather than
+        comparison defects.
+
+        FINDING A. The official terminal validator accepted the calibration lock
+        as an ARGUMENT. A caller could therefore hand it a fabricated lock mapping
+        that had never been persisted, matching a fabricated artifact digest in
+        the terminal record, and validation accepted the pair -- while the same
+        terminal record checked against the actual committed lock refused. The
+        object that is supposed to PROVE a record's provenance may not be supplied
+        by whoever wants the record believed.
+
+        FINDING B. The semantic checks -- does this lock name THIS job, and THIS
+        job's field -- lived only in terminal validation. A canonically committed
+        lock that named another planned job, or another field, was therefore
+        accepted by restart reconciliation whenever no terminal record existed
+        yet. Whether an intermediate provenance object is valid cannot depend on
+        whether a downstream record happens to have been written.
+
+    Returns the verified record, or None for a job the frozen plan gives no
+    calibration -- for which the presence of a lock is itself a refusal.
+    """
+    lock = committed_calibration_lock(output_dir, job.coordinates)
+    if not job.requires_calibration:
+        # No calibration requirement is invented for a case that evaluates no
+        # P1 / Block-1 quantity -- and none is smuggled in by a stray lock.
+        if lock is not None:
+            raise CalibrationLockUnplanned(
+                f"{job.job_id}: {job.coordinates.case_id} evaluates no P1 / "
+                "Block-1 quantity, yet a committed calibration lock exists for "
+                "these coordinates")
+        return None
+    if lock is None:
+        raise CalibrationLockMissing(
+            f"{job.job_id}: no committed calibration lock exists at "
+            f"{calibration_lock_basename(job.coordinates)!r} in the campaign's "
+            "calibration-lock store, so no artifact was ever locked for this job")
+    where = os.path.join(calibration_lock_directory(output_dir),
+                         calibration_lock_basename(job.coordinates))
+    # --- identity: the slot, the record and the planned job must all agree ---
+    if lock.get("job_id") != job.job_id:
+        raise CalibrationLockJobMismatch(
+            f"{job.job_id}: the lock in this job's canonical slot names "
+            f"{lock.get('job_id')!r}. A lock is not valid because it names SOME "
+            "valid planned job; the store location, the record's own identity and "
+            "the planned job are one identity or the provenance is wrong.")
+    if lock.get("artifact_field_id") != job.coordinates.scope:
+        raise CalibrationLockFieldMismatch(
+            f"{job.job_id}: the locked artifact is calibrated for field "
+            f"{lock.get('artifact_field_id')!r}; this job is "
+            f"{job.coordinates.scope!r}. Under REPLICATE_CONDITIONAL calibration "
+            "the null law moves with H_A, so another field's artifact is another "
+            "field's threshold.")
+    if lock.get("publication_basename") != publication_basename(job.coordinates):
+        raise CalibrationLockProvenanceMismatch(
+            f"{job.job_id}: the lock cites publication "
+            f"{lock.get('publication_basename')!r}, not this job's "
+            f"{publication_basename(job.coordinates)!r}")
+    # --- the upstream committed Branch-A publication, resolved HERE ----------
+    publication = committed_publication(output_dir, job.coordinates)
+    if publication is None:
+        raise CalibrationLockWithoutPublication(
+            f"{job.job_id}: a committed calibration lock exists with no committed "
+            "Branch-A publication. A threshold conditional on evidence that is "
+            "not there is not a conditional threshold.")
+    for key, category in (("branch_a_evidence_sha256",
+                           "Branch-A evidence hash"),
+                          ("publication_digest", "publication digest"),
+                          ("calibration_condition_sha256",
+                           "calibration-condition identity")):
+        if lock.get(key) != publication.get(key):
+            raise CalibrationLockProvenanceMismatch(
+                f"{job.job_id}: the lock's {category} {lock.get(key)!r} is not the "
+                f"committed Branch-A publication's {publication.get(key)!r}")
+    # --- the package the threshold was locked under -------------------------
+    identities = lock.get("package_identities") or {}
+    for key, current in (("contract_sha256", binding.binding.sha256),
+                         ("plan_sha256", binding.plan_sha256),
+                         ("seed_map_sha256", binding.seed_map_sha256),
+                         ("analysis_procedure_identity", binding.analysis_identity),
+                         ("execution_identity", binding.execution_identity)):
+        if identities.get(key) != current:
+            raise CalibrationLockProvenanceMismatch(
+                f"{where}: the lock's {key} {identities.get(key)!r} is not the "
+                f"current {current!r}; the threshold was locked under a different "
+                "package")
+    if lock.get("analysis_procedure_identity") != binding.analysis_identity:
+        raise CalibrationLockProvenanceMismatch(
+            f"{where}: the locked artifact declares analysis procedure "
+            f"{lock.get('analysis_procedure_identity')!r}, not the current "
+            f"{binding.analysis_identity!r}")
+    return lock
+
+
+def reconcile_calibration_locks(output_dir: str, binding: ExecutionBinding,
+                                planned: Sequence[CampaignJob]
+                                ) -> dict[str, dict[str, Any]]:
+    """Validate EVERY persisted calibration lock as a complete provenance object.
+
+    The authoritative universe is the campaign's own store, never a mapping a
+    caller passes in: `inventory_calibration_locks` enumerates it, and every
+    entry it finds must then survive the one canonical verifier above.
+
+    THE DEFECT THIS CLOSES
+        Restart reconciliation used to check a lock's planned membership, its
+        calibration requirement and the existence of its publication, and left
+        the lock's own semantic identity -- which job, which field -- to terminal
+        validation. An audit demonstrated the consequence: with no terminal record
+        written yet, a canonically committed lock naming another planned job, or
+        another field, was accepted. A legitimate resumable state is exactly the
+        state in which a terminal record does NOT exist yet, so that was the case
+        that mattered most.
+    """
+    declared = {job.job_id: job for job in planned}
+    verified: dict[str, dict[str, Any]] = {}
+    for job_id in sorted(inventory_calibration_locks(output_dir)):
+        job = declared.get(job_id)
+        if job is None:
+            raise CalibrationLockUnplanned(
+                f"the calibration lock for {job_id!r} belongs to no planned job; "
+                "the store holds a threshold this campaign never declared")
+        if not job.requires_calibration:
+            raise CalibrationLockUnplanned(
+                f"{job_id}: a calibration lock exists for a case that evaluates "
+                "no P1 / Block-1 quantity")
+        # THE SAME ROUTINE TERMINAL VALIDATION USES, and it runs here whether or
+        # not a terminal record for this job exists.
+        verified[job_id] = verified_calibration_lock(output_dir, job, binding)
+    return verified
+
+
+def _compare_terminal_to_verified_lock(record: Mapping[str, Any],
+                                       job: CampaignJob,
+                                       lock: Mapping[str, Any] | None,
+                                       publication: Mapping[str, Any],
+                                       binding: ExecutionBinding) -> None:
+    """Compare a terminal record against an ALREADY-VERIFIED calibration lock.
+
+    PRIVATE, AND DELIBERATELY SO. `lock` here means a record that has already
+    passed `verified_calibration_lock` -- the canonical durable-store verifier --
+    and nothing else. This helper is pure, which makes it convenient to unit
+    test, and that convenience is exactly why it must not be the production
+    trust boundary: an audit showed that when the official validator accepted the
+    lock as an argument, a caller could fabricate one that was never persisted
+    and have a forged terminal record believed. The official entry point is
+    `validate_job_record`, which resolves the lock itself.
+
+    Bind a terminal record to the ACTUAL locked calibration artifact.
 
     THE DEFECT THIS CLOSES
         A terminal record for a calibration-requiring job could carry
@@ -954,13 +1125,13 @@ def require_calibration_artifact_binding(record: Mapping[str, Any],
         # which `validate_job_record` already refuses -- and not by a lock record
         # on disk, which would be an artifact this case never needed.
         if lock is not None:
-            raise CalibrationArtifactBindingInvalid(
+            raise CalibrationLockUnplanned(
                 f"{job.job_id}: {job.coordinates.case_id} evaluates no P1 / "
                 "Block-1 quantity, yet a committed calibration lock exists for "
                 "these coordinates")
         return
     if lock is None:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockMissing(
             f"{job.job_id}: no committed calibration lock exists for these "
             "coordinates, so no artifact was ever locked for this job. A record "
             f"naming {stored!r} cites a lock that left no evidence, and "
@@ -989,39 +1160,32 @@ def require_calibration_artifact_binding(record: Mapping[str, Any],
             "locked artifact was calibrated at")
     if lock["calibration_condition_sha256"] != publication.get(
             "calibration_condition_sha256"):
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{job.job_id}: the locked artifact's condition is not the one the "
             "committed Branch-A publication was bound to. An artifact calibrated "
             "at another realised Branch-A condition is not this replicate's: "
             "under REPLICATE_CONDITIONAL calibration the null law moves with H_A.")
     if lock["branch_a_evidence_sha256"] != publication.get(
             "branch_a_evidence_sha256"):
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{job.job_id}: the calibration lock cites Branch-A evidence that is "
             "not the committed publication's")
     if lock["publication_digest"] != publication.get("publication_digest"):
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockProvenanceMismatch(
             f"{job.job_id}: the calibration lock cites a publication digest that "
             "is not the committed publication's own")
+    # The lock's OWN identity, field and package are `verified_calibration_lock`'s
+    # responsibility and are re-asserted here only as a cheap contract check, so
+    # a future caller that reaches this helper with an unverified mapping fails
+    # loudly instead of silently comparing against it.
+    if lock.get("job_id") != job.job_id:
+        raise CalibrationLockJobMismatch(
+            f"{job.job_id}: the calibration lock belongs to {lock.get('job_id')!r}")
     if lock.get("artifact_field_id") != job.coordinates.scope:
-        raise CalibrationArtifactBindingInvalid(
+        raise CalibrationLockFieldMismatch(
             f"{job.job_id}: the locked artifact is calibrated for field "
             f"{lock.get('artifact_field_id')!r}; this job is "
             f"{job.coordinates.scope!r}")
-    if lock.get("job_id") != job.job_id:
-        raise CalibrationArtifactBindingInvalid(
-            f"{job.job_id}: the calibration lock belongs to {lock.get('job_id')!r}")
-    identities = lock.get("package_identities") or {}
-    for key, current in (("contract_sha256", binding.binding.sha256),
-                         ("plan_sha256", binding.plan_sha256),
-                         ("seed_map_sha256", binding.seed_map_sha256),
-                         ("analysis_procedure_identity", binding.analysis_identity),
-                         ("execution_identity", binding.execution_identity)):
-        if identities.get(key) != current:
-            raise CalibrationArtifactBindingInvalid(
-                f"{job.job_id}: the calibration lock's {key} "
-                f"{identities.get(key)!r} is not the current {current!r}; the "
-                "threshold was locked under a different package")
 
 
 # --------------------------------------------------------- Branch-B unblinding
@@ -1239,10 +1403,14 @@ class JobExecution:
         # an audit showed is no witness at all.
         publish_calibration_lock(self.output_dir, self.coordinates, artifact,
                                  self._condition, digest, self.binding)
-        if committed_calibration_lock(self.output_dir, self.coordinates) is None:
-            raise CalibrationArtifactBindingInvalid(
-                f"{self.job.job_id}: the calibration lock was written but cannot "
-                "be read back as committed")
+        # RE-READ THROUGH THE CANONICAL VERIFIER, not the raw loader: what must
+        # hold is that the lock this job will later be judged against verifies
+        # completely NOW, while the failure is still recoverable by refusing.
+        written = verified_calibration_lock(self.output_dir, self.job, self.binding)
+        if written is None or written["calibration_artifact_sha256"] != digest:
+            raise CalibrationLockProvenanceMismatch(
+                f"{self.job.job_id}: the calibration lock was written but does "
+                "not verify as this job's own lock")
         self._enter(CALIBRATION_LOCKED)
         self._artifact_digest = digest
         return digest
@@ -1273,10 +1441,12 @@ class JobExecution:
                 raise BranchBPremature(
                     f"{self.job.job_id}: the locked artifact's condition is not the "
                     "one derived from this job's published Branch-A evidence")
-            # The EXTERNAL record of the lock, re-read from disk. Branch B stays
-            # blind until the threshold it will be judged against is not merely
-            # held in memory but durably committed and still says what it said.
-            lock = committed_calibration_lock(self.output_dir, self.coordinates)
+            # The EXTERNAL record of the lock, re-read from disk through the ONE
+            # canonical verifier. Branch B stays blind until the threshold it will
+            # be judged against is not merely held in memory but durably committed,
+            # completely verified, and still saying what it said.
+            lock = verified_calibration_lock(self.output_dir, self.job,
+                                             self.binding)
             if lock is None:
                 raise BranchBPremature(
                     f"{self.job.job_id}: no committed calibration lock exists for "
@@ -1576,17 +1746,33 @@ def stored_mandatory_diagnostics(plan: Mapping[str, Any], case_id: str,
 
 def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any],
                         binding: ExecutionBinding, job: CampaignJob | None,
-                        publication: Mapping[str, Any] | None,
-                        lock: Mapping[str, Any] | None) -> None:
-    """Re-validate a stored job record: its own bytes AND its external links.
+                        output_dir: str) -> None:
+    """THE OFFICIAL terminal-record validator. It obtains its own provenance.
+
+    A caller identifies the campaign output root, the planned job and the record
+    to check. It supplies NO provenance object: not the Branch-A publication, not
+    the calibration lock, not an expected artifact digest, not an expected lock
+    digest. Those are resolved here, from the frozen job coordinates and the
+    campaign's own durable stores.
+
+    THE DEFECT THIS CLOSES
+        This function used to accept `publication` and `lock` as arguments. An
+        audit fabricated a calibration lock that had never been persisted --
+        matching a fabricated artifact digest in a re-digested terminal record --
+        passed the pair in, and validation ACCEPTED it, while the same terminal
+        record checked against the actual committed lock refused. The comparison
+        logic was right; the trust boundary was not. An object that exists to
+        PROVE a record's provenance may not be provided by whoever wants the
+        record believed.
 
     Three independent layers, and all three are required:
 
         INTERNAL   the record's own digest, its frozen field set, its mandatory
                    diagnostics revalidated from the stored evidence alone
-        EXTERNAL   `require_terminal_provenance`: package identities, planner
+        EXTERNAL   `_require_terminal_links`: package identities, planner
                    coordinates and the committed Branch-A publication
-        THRESHOLD  `require_calibration_artifact_binding`: the committed
+        THRESHOLD  `verified_calibration_lock` then
+                   `_compare_terminal_to_verified_lock`: the committed
                    calibration lock, for every job whose frozen plan requires one
 
     The internal layer is the round trip the first audit found missing. The
@@ -1631,17 +1817,29 @@ def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any],
     require_mandatory_diagnostics(rebuilt, plan, required)
     require_endpoint_events(plan, case_id, record.get("result") or {},
                             record.get("job_id") or "<unnamed job>")
-    require_terminal_provenance(record, binding, job=job, publication=publication)
-    # `require_terminal_provenance` has established that `job` and `publication`
-    # are present and are this record's own, so the threshold check can rely on
-    # both without restating their absence.
-    require_calibration_artifact_binding(record, job, lock, publication, binding)
+    # THE DURABLE PROVENANCE, RESOLVED HERE, from the frozen job and the store.
+    if job is None:
+        raise TerminalProvenanceMismatch(
+            f"{record.get('job_id')}: no planned job was supplied to validate this "
+            "record against. A terminal record cannot vouch for its own "
+            "coordinates.")
+    publication = committed_publication(output_dir, job.coordinates)
+    lock = verified_calibration_lock(output_dir, job, binding)
+    _require_terminal_links(record, binding, job=job, publication=publication)
+    # `_require_terminal_links` has established that `publication` is present and
+    # is this record's own, so the threshold comparison can rely on it without
+    # restating its absence.
+    _compare_terminal_to_verified_lock(record, job, lock, publication, binding)
 
 
-def require_terminal_provenance(record: Mapping[str, Any], binding: ExecutionBinding,
-                                job: CampaignJob | None = None,
-                                publication: Mapping[str, Any] | None = None) -> None:
+def _require_terminal_links(record: Mapping[str, Any], binding: ExecutionBinding,
+                            job: CampaignJob | None = None,
+                            publication: Mapping[str, Any] | None = None) -> None:
     """Bind a terminal record to the CURRENT authority, not only to itself.
+
+    PRIVATE. `publication` must already be the committed record resolved from the
+    campaign's own store; the official entry point `validate_job_record` resolves
+    it, and a caller may not supply one.
 
     THE DEFECT THIS CLOSES
         `validate_job_record` recomputed the record's own digest and nothing
@@ -1911,6 +2109,12 @@ def inventory_job_records(output_dir: str, binding: ExecutionBinding,
     directory = job_record_directory(output_dir)
     inventory = require_clean_inventory(directory, "the terminal job-record store")
     by_job_id = {job.job_id: job for job in (planned or ())}
+    # EVERY PERSISTED LOCK IS VALIDATED FIRST, as a complete intermediate
+    # provenance object in its own right. Whether a lock is valid may not depend
+    # on whether a downstream terminal record happens to exist, so this does not
+    # wait for the loop below to reach one.
+    if planned is not None:
+        reconcile_calibration_locks(output_dir, binding, planned)
     found: dict[str, dict[str, Any]] = {}
     for basename in inventory.committed:
         record, marker = read_committed(directory, basename, "a terminal job record")
@@ -1936,8 +2140,7 @@ def inventory_job_records(output_dir: str, binding: ExecutionBinding,
         # rule, and restart is never the weaker path.
         validate_job_record(record, binding.plan, binding,
                             job=by_job_id.get(coordinates.job_id),
-                            publication=committed_publication(output_dir, coordinates),
-                            lock=committed_calibration_lock(output_dir, coordinates))
+                            output_dir=output_dir)
         if coordinates.job_id in found:
             raise RestartInventoryMismatch(
                 f"two committed records claim {coordinates.job_id}")
@@ -1998,38 +2201,14 @@ def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisatio
     for job_id, realisation in sorted(claimed.items()):
         verify_publication(output_dir, realisation, binding)
         verified += 1
-    # THE CALIBRATION-LOCK STORE, reconciled on the same terms. Every committed
-    # lock is a claim that a Block-1 threshold was fixed for a specific job, so
-    # an unexplained one is exactly as serious as an unexplained publication.
-    locks = inventory_calibration_locks(output_dir)
-    declared = ({job.job_id: job for job in planned} if planned is not None
-                else None)
-    for job_id, lock in sorted(locks.items()):
-        if declared is not None:
-            job = declared.get(job_id)
-            if job is None:
-                raise CalibrationArtifactBindingInvalid(
-                    f"the calibration lock for {job_id!r} belongs to no planned "
-                    "job; the store holds a threshold this campaign never declared")
-            if not job.requires_calibration:
-                raise CalibrationArtifactBindingInvalid(
-                    f"{job_id}: a calibration lock exists for a case that "
-                    "evaluates no P1 / Block-1 quantity")
-        if job_id not in on_disk:
-            raise CalibrationArtifactBindingInvalid(
-                f"{job_id}: a calibration lock exists with no committed Branch-A "
-                "publication. A threshold conditional on evidence that is not "
-                "there is not a conditional threshold.")
-        published = on_disk[job_id]
-        if (lock["branch_a_evidence_sha256"] != published.get(
-                "branch_a_evidence_sha256")
-                or lock["publication_digest"] != published.get(
-                    "publication_digest")
-                or lock["calibration_condition_sha256"] != published.get(
-                    "calibration_condition_sha256")):
-            raise CalibrationArtifactBindingInvalid(
-                f"{job_id}: the committed calibration lock is not bound to the "
-                "committed Branch-A publication for the same coordinates")
+    # THE CALIBRATION-LOCK STORE, reconciled through the ONE canonical verifier.
+    # Every committed lock is a claim that a Block-1 threshold was fixed for a
+    # specific job, so an unexplained one is exactly as serious as an unexplained
+    # publication -- and it is checked COMPLETELY here, not partially, because a
+    # legitimate resumable state is precisely one where no terminal record exists
+    # yet and there is nothing downstream left to catch it.
+    locks = (reconcile_calibration_locks(output_dir, binding, planned)
+             if planned is not None else inventory_calibration_locks(output_dir))
     return {"verified_publications": verified,
             "publications_on_disk": len(on_disk),
             "claimed_publications": len(claimed),
@@ -3074,11 +3253,8 @@ def execute_campaign(binding: ExecutionBinding, jobs: Sequence[CampaignJob],
     completeness = require_campaign_completeness(jobs, records)
     by_job_id = {job.job_id: job for job in jobs}
     for job_id, record in records.items():
-        coordinates = JobCoordinates(**record["coordinates"])
         validate_job_record(record, binding.plan, binding,
-                            job=by_job_id.get(job_id),
-                            publication=committed_publication(output_dir, coordinates),
-                            lock=committed_calibration_lock(output_dir, coordinates))
+                            job=by_job_id.get(job_id), output_dir=output_dir)
     aggregates = assemble_case_aggregates(jobs, records)
     # THE FROZEN RELEASE CLASSIFIER RUNS OVER THE COMPLETE CAMPAIGN OR NOT AT ALL.
     # Whether it runs is decided mechanically, by comparing the supplied job set
