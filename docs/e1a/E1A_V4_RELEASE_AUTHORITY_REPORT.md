@@ -472,7 +472,12 @@ parameter drift, relaxation-rule drift, true-bridge beta drift, reference-field 
 | execution seal | `4df7bb145c588efe6cff788efa5e4f29b6d2aba23e75333f37ef84d8c43715a9` | **unchanged** |
 | validation plan JSON | `dcb3507585791c851e616c81a113fe89d61d2e830a4694f49733d1d04c5b8f5a` | changed (1.9.0 → **1.10.0**) |
 | validation plan Markdown | `3f4715b465da295e21ad99a86390585c9eb7deac44a7810114a88f40aa4bf940` | changed |
-| PRE-DRIVER execution identity | `b7c2ed268ebe45daba4df4b6b744a795ab58ad19a2666831584fd5d20a33b7f8` | changed, not forced |
+| PRE-DRIVER execution identity | `c9d0616dc33a5e96b77326ce27463acca96a9d44212db9382272aa343e761726` | changed, not forced |
+
+The pre-driver execution identity above is the value for work tree
+`95f32197d0f9e389741ca572688260f9392386a6`, recomputed against the committed tree. An
+earlier draft of this report recorded `b7c2ed26…`, which was computed one edit before the
+work commit was finalised; it is superseded by the value in the table.
 
 Master seed `13785910525869478477` unchanged. Result record schema
 `e1a_v4_validation_result/2` unchanged; manifest schema `e1a_v4_validation_manifest/3`
