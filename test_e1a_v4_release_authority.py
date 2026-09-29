@@ -914,9 +914,15 @@ def test_execution_boundary_unchanged() -> None:
           plan["execution_authorised"] is False)
     check("the final execution identity is still deliberately not frozen",
           plan["frozen_identities"]["final_expected_execution_identity"] is None)
-    check("the official campaign driver is still absent",
-          not os.path.exists(os.path.join(
+    # The driver was implemented after this suite was written. What this suite
+    # guards is the RELEASE boundary, and that is unchanged: a present driver is
+    # not an authorisation, and the seal is still not frozen.
+    check("the official campaign driver is now present",
+          os.path.exists(os.path.join(
               ROOT, "e1a_v4/validation/campaign_driver.py")))
+    check("a present driver is still not an execution authorisation",
+          plan["execution_authorised"] is False
+          and plan["execution_seal"]["state"] == "PRE_DRIVER")
     check("no results directory exists",
           not os.path.exists(os.path.join(ROOT, "results/e1a_v4_validation")))
     check("section 6a is registered as a normative section",

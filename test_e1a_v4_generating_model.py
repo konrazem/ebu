@@ -478,22 +478,33 @@ def install_driver_fixture(tmp: str) -> None:
 
 def test_seal_ordering() -> None:
     before = SentinelRNG.CALLS
-    check("the canonical driver is ABSENT in the repository",
-          not os.path.exists(os.path.join(ROOT, OFFICIAL_CAMPAIGN_DRIVER_PATH)))
+    check("the canonical driver is PRESENT in the repository",
+          os.path.exists(os.path.join(ROOT, OFFICIAL_CAMPAIGN_DRIVER_PATH)))
     check("the seal file DOES exist", seal_exists(ROOT))
 
-    # the declared order is driver -> seal -> identity -> authorisation
+    # The declared order is driver -> seal -> identity -> authorisation. The driver
+    # is now implemented, so the LIVE package stops at the seal; the ordering
+    # guarantee is unchanged and is tested below with the driver removed.
+    refuses_with_code("with the driver present, execution refuses on the SEAL",
+                      "EXECUTION_SEAL_NOT_FROZEN", run, ROOT,
+                      rng_factory=rng_factory, execute=True)
+
+    tmp = sandbox()
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     refuses_with_code("with the driver absent, execution refuses on the DRIVER",
-                      "DRIVER_ABSENT", run, ROOT, rng_factory=rng_factory, execute=True)
+                      "DRIVER_ABSENT", run, tmp, rng_factory=rng_factory, execute=True)
+    shutil.rmtree(tmp)
 
     # ... and it still refuses on the DRIVER even with NO seal at all
     tmp = sandbox()
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     os.remove(os.path.join(tmp, SEAL_JSON))
     refuses_with_code("driver absent AND seal absent: the DRIVER is reported first",
                       "DRIVER_ABSENT", run, tmp, rng_factory=rng_factory, execute=True)
     shutil.rmtree(tmp)
 
     tmp = sandbox()
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     with open(os.path.join(tmp, SEAL_JSON), "w", encoding="utf-8") as handle:
         handle.write("{ not json ")
     refuses_with_code("driver absent AND seal malformed: the DRIVER is still first",

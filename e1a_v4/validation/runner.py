@@ -15,10 +15,10 @@ The ordering this module exists to guarantee:
     3. the recomputed execution identity equals the independently frozen seal
     4. the plan's `execution_authorised` flag is true
 
-In the current package the driver is ABSENT and the seal is PRE_DRIVER, so the
-official command runs the preflight and stops at step 1. Ordering matters: a
-refusal must never read as "just flip the authorisation flag" when the driver
-that would do the work does not exist.
+In the current package the official campaign driver is PRESENT and the seal is
+PRE_DRIVER, so the official command runs the preflight and stops at step 2. The
+ordering still matters: a refusal must never read as "just flip the
+authorisation flag", and while the driver was absent it never did.
 
 The preflight never constructs a generator. `run` takes an `rng_factory` so a
 sentinel provider can prove, in a deterministic test, that a failed preflight
@@ -147,8 +147,15 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  output directory           : {binding.output_dir}")
     print(f"  declared cases             : {len(binding.plan['cases'])}")
     seal = load_seal(args.root)
-    label = ("PRE-DRIVER PACKAGE EXECUTION IDENTITY (NOT the final seal)"
-             if not seal.is_frozen else "execution identity")
+    if seal.is_frozen:
+        label = "execution identity"
+    elif driver_exists(args.root):
+        # The driver exists, so this identity now includes its source hash. It is
+        # still a diagnostic, not a seal: the seal is frozen by a reviewer after
+        # the driver has been independently audited.
+        label = "DRIVER-PRESENT / UNSEALED EXECUTION IDENTITY (NOT the final seal)"
+    else:
+        label = "PRE-DRIVER PACKAGE EXECUTION IDENTITY (NOT the final seal)"
     print(f"  {label}:")
     print(f"      {binding.execution_identity}")
     print(f"  execution seal state       : {seal.state}")

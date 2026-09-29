@@ -388,15 +388,26 @@ def test_blocker_c_driver_cannot_be_substituted() -> None:
           OFFICIAL_CAMPAIGN_DRIVER_PATH == "e1a_v4/validation/campaign_driver.py")
     check("the canonical declaration names an entry point",
           OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT == "run_campaign")
-    check("the canonical driver is ABSENT in the repository", not driver_exists(ROOT))
-    check("the driver state is ABSENT", driver_state(ROOT) == "ABSENT")
-    check("the identity component is the ABSENT sentinel",
-          driver_identity_component(ROOT) == DRIVER_ABSENT_SENTINEL)
+    # The driver is now IMPLEMENTED, so the repository is past this lifecycle
+    # stage. The guarantee is unchanged and is still tested, in a sandbox with the
+    # driver removed: an absent driver must refuse, whatever the seal says.
+    check("the canonical driver is PRESENT in the repository", driver_exists(ROOT))
+    check("the driver state is PRESENT", driver_state(ROOT) == "PRESENT")
+    check("the identity component is the file hash, not the ABSENT sentinel",
+          driver_identity_component(ROOT) != DRIVER_ABSENT_SENTINEL
+          and len(driver_identity_component(ROOT)) == 64)
     check("the declaration module is itself identity-bound",
           "e1a_v4/validation/driver.py" in VALIDATION_MODULES,
           "so changing the declared path changes the execution identity")
+    tmp = sandbox()
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
+    check("with the driver removed, the state is ABSENT again",
+          driver_state(tmp) == "ABSENT")
+    check("...and the identity component is the ABSENT sentinel",
+          driver_identity_component(tmp) == DRIVER_ABSENT_SENTINEL)
     refuses_with_code("with no driver, the gate refuses", "DRIVER_ABSENT",
-                      require_canonical_driver, ROOT)
+                      require_canonical_driver, tmp)
+    shutil.rmtree(tmp)
 
     # a seal may RESTATE the declaration; it may not redefine it
     for substitute in ("e1a_v4/validation/plan.py", "e1a_v4/validation/seeds.py",
@@ -437,6 +448,10 @@ def test_blocker_c_driver_cannot_be_substituted() -> None:
     raw["expected_execution_identity"] = ident
     raw["restates_canonical_campaign_driver"] = "e1a_v4/validation/plan.py"
     wj(tmp, SEAL_JSON, raw)
+    # The real driver now exists, so it is removed here: this scenario is
+    # specifically about a seal nominating a substitute while the CANONICAL
+    # driver is absent, which is the defect the audit found.
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     # THE AUDIT SCENARIO. Once the driver is checked FIRST, a seal nominating an
     # unrelated file cannot even reach the question: the canonical driver is
     # absent, so that is what is reported. The seal's nomination is irrelevant,
@@ -470,6 +485,7 @@ def test_blocker_c_driver_cannot_be_substituted() -> None:
     raw["state"] = STATE_FROZEN
     raw["expected_execution_identity"] = ident
     wj(tmp, SEAL_JSON, raw)
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     refuses_with_code("canonical path declared but ABSENT, seal otherwise perfect",
                       "DRIVER_ABSENT", run, tmp, rng_factory=rng_factory, execute=True)
 
@@ -505,8 +521,15 @@ def test_seal_lifecycle() -> None:
           plan["execution_authorised"] is False)
     check("the seal reports the CANONICAL driver, whatever it wrote",
           seal.driver_module == OFFICIAL_CAMPAIGN_DRIVER_PATH)
+    # With the driver now implemented, the live repository stops at the SEAL.
+    refuses_with_code("PRE_DRIVER + driver present: execution refuses on the SEAL",
+                      "EXECUTION_SEAL_NOT_FROZEN", run, ROOT,
+                      rng_factory=rng_factory, execute=True)
+    tmp = sandbox()
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     refuses_with_code("PRE_DRIVER + canonical driver absent: execution REFUSES",
-                      "DRIVER_ABSENT", run, ROOT, rng_factory=rng_factory, execute=True)
+                      "DRIVER_ABSENT", run, tmp, rng_factory=rng_factory, execute=True)
+    shutil.rmtree(tmp)
 
     tmp = sandbox()
     p = rj(tmp, PLAN_JSON)
@@ -515,6 +538,7 @@ def test_seal_lifecycle() -> None:
     wmd(tmp, rmd(tmp).replace("`execution_authorised` is `false`",
                               "`execution_authorised` is `true`", 1))
     regenerate(tmp)
+    os.remove(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH))
     refuses_with_code("PRE_DRIVER + authorisation TRUE: still REFUSES before RNG",
                       "DRIVER_ABSENT", run, tmp, rng_factory=rng_factory, execute=True)
     shutil.rmtree(tmp)

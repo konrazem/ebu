@@ -61,6 +61,12 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/driver.py",
     "e1a_v4/validation/generate.py",
     "e1a_v4/validation/plan.py",
+    # The publication primitive defines what "published" MEANS for Branch-A
+    # evidence, so a change to it changes what the package guarantees. The
+    # CANONICAL DRIVER is deliberately NOT listed: it is bound separately and
+    # explicitly as `official_campaign_driver_sha256` in the same preimage, and
+    # hashing it twice would only obscure which binding is doing the work.
+    "e1a_v4/validation/publication.py",
     "e1a_v4/validation/refusals.py",
     "e1a_v4/validation/release_authority.py",
     "e1a_v4/validation/results.py",

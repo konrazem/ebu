@@ -504,8 +504,9 @@ def test_seal_distinguishes_forgotten_from_not_frozen() -> None:
           seal.expected_execution_identity is None)
     check("the seal names the official campaign driver module",
           seal.driver_module == "e1a_v4/validation/campaign_driver.py")
-    check("the official campaign driver is ABSENT",
-          not driver_present(ROOT, seal.driver_module))
+    check("the official campaign driver is now PRESENT",
+          driver_present(ROOT, seal.driver_module),
+          "implemented; the seal is still deliberately NOT frozen")
 
     tmp = sandbox()
     os.remove(os.path.join(tmp, SEAL_JSON))
@@ -632,9 +633,17 @@ def test_execution_identity_lifecycle() -> None:
     check("PRE_DRIVER: preflight-only SUCCEEDS", preflight(ROOT) is not None)
     check("PRE_DRIVER: the plan is not authorised",
           plan["execution_authorised"] is False)
-    raises_without_rng("PRE_DRIVER + unauthorised: execution REFUSES on the ABSENT DRIVER",
-                       CampaignDriverAbsent, run, ROOT, rng_factory=rng_factory,
+    # The driver is implemented, so the live package refuses at the SEAL. The
+    # driver-first ordering is unchanged and is proved in a driver-less sandbox.
+    raises_without_rng("PRE_DRIVER + unauthorised: execution REFUSES on the SEAL",
+                       ExecutionNotAuthorised, run, ROOT, rng_factory=rng_factory,
                        execute=True)
+    driverless = sandbox()
+    os.remove(os.path.join(driverless, "e1a_v4/validation/campaign_driver.py"))
+    raises_without_rng("with the driver removed, it REFUSES on the ABSENT DRIVER",
+                       CampaignDriverAbsent, run, driverless,
+                       rng_factory=rng_factory, execute=True)
+    shutil.rmtree(driverless)
     check("the refusal is an ExecutionNotAuthorised",
           issubclass(CampaignDriverAbsent, ExecutionNotAuthorised))
 

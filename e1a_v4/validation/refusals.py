@@ -113,6 +113,73 @@ class ContractBindingUnclassified(CodedRefusal):
     code = "CONTRACT_BINDING_UNCLASSIFIED"
 
 
+# ------------------------------------- Branch-A provenance and publication
+class BranchAProvenanceMismatch(CodedRefusal):
+    """Branch-A evidence does not belong to the coordinates it is presented for."""
+
+    code = "BRANCH_A_PROVENANCE_MISMATCH"
+
+
+class BranchAEvidenceAltered(CodedRefusal):
+    """Published Branch-A evidence does not reproduce its own recorded digest."""
+
+    code = "BRANCH_A_EVIDENCE_ALTERED"
+
+
+class BranchANotPublished(CodedRefusal):
+    """Branch-A evidence has not been hashed and published yet."""
+
+    code = "BRANCH_A_NOT_PUBLISHED"
+
+
+class BranchAPublicationImmutable(CodedRefusal):
+    """Published Branch-A evidence may not be replaced, edited or rebound."""
+
+    code = "BRANCH_A_PUBLICATION_IMMUTABLE"
+
+
+class PublicationCollision(CodedRefusal):
+    """A final published path already exists; publication never overwrites."""
+
+    code = "PUBLICATION_COLLISION"
+
+
+class PublicationIncomplete(CodedRefusal):
+    """A published record is truncated, appended to, or otherwise not whole."""
+
+    code = "PUBLICATION_INCOMPLETE"
+
+
+class PublicationNotDurable(CodedRefusal):
+    """The publication primitive could not guarantee atomic durable creation."""
+
+    code = "PUBLICATION_NOT_DURABLE"
+
+
+class BranchBPremature(CodedRefusal):
+    """Branch-B access was requested before its frozen prerequisites held."""
+
+    code = "BRANCH_B_PREMATURE"
+
+
+class JobStateInvalid(CodedRefusal):
+    """An execution-state transition the frozen dependency graph does not allow."""
+
+    code = "JOB_STATE_INVALID"
+
+
+class CampaignPlanMismatch(CodedRefusal):
+    """The driver-generated job plan disagrees with the frozen machine plan."""
+
+    code = "CAMPAIGN_PLAN_MISMATCH"
+
+
+class CampaignManifestInvalid(CodedRefusal):
+    """The pre-execution campaign manifest is incomplete or inconsistent."""
+
+    code = "CAMPAIGN_MANIFEST_INVALID"
+
+
 # ------------------------------------------------- frozen RELEASE authority
 class ContractReleaseReplicateCountMismatch(CodedRefusal):
     """The plan declares a replicate count the frozen authority does not."""
