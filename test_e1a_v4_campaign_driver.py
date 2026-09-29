@@ -57,6 +57,7 @@ from e1a_v4.validation.campaign_driver import (
     required_endpoint_events, required_result_fields,
     resolve_job_specification, run_campaign,
     validate_job_record, verify_publication, verify_restart,
+    committed_calibration_lock, inventory_calibration_locks,
 )
 from e1a_v4.validation.driver import (
     OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT, OFFICIAL_CAMPAIGN_DRIVER_MODULE,
@@ -201,14 +202,16 @@ def endpoint_outcome(case_id: str, **overrides) -> dict:
 def revalidate(harness, execution, record):
     """Validate a terminal record through the SAME strict verifier production uses.
 
-    Internal digest AND external provenance links. There is deliberately no
-    weaker call: `validate_job_record` requires the binding, the planned job and
-    the committed publication, so a test cannot exercise a path production does
-    not have.
+    Internal digest AND external provenance links AND the committed calibration
+    lock. There is deliberately no weaker call: `validate_job_record` requires the
+    binding, the planned job, the committed publication and the committed lock, so
+    a test cannot exercise a path production does not have.
     """
     return refusal_code(validate_job_record, record, harness.binding.plan,
                         harness.binding, execution.job,
-                        committed_publication(harness.out, execution.coordinates))
+                        committed_publication(harness.out, execution.coordinates),
+                        committed_calibration_lock(harness.out,
+                                                   execution.coordinates))
 
 
 def write_record(path: str, record) -> None:
@@ -2246,6 +2249,8 @@ def test_fake_orchestration_end_to_end() -> None:
                       harness.binding,
                       next(j for j in group if j.job_id == record["job_id"]),
                       committed_publication(
+                          harness.out, JobCoordinates(**record["coordinates"])),
+                      committed_calibration_lock(
                           harness.out, JobCoordinates(**record["coordinates"]))) is None)
             break
         if case_id == "C8_blinded_scale_control":

@@ -259,6 +259,24 @@ class TerminalProvenanceMismatch(CodedRefusal):
     code = "TERMINAL_PROVENANCE_MISMATCH"
 
 
+class CalibrationArtifactBindingInvalid(CodedRefusal):
+    """A terminal record's calibration artifact identity is not the LOCKED one.
+
+    `calibration_artifact_sha256` is the only link between a completed job and
+    the artifact that actually set its Block-1 threshold, and until this check
+    existed the field had no external referent at all: nothing on disk recorded
+    the lock, so the record was the sole witness to its own calibration. An audit
+    set the field to null and to a fabricated digest, re-digested the record, and
+    both were accepted -- on the write path and on restart alike.
+
+    The identity is now cross-checked against the COMMITTED calibration-lock
+    record published for these exact coordinates at lock time. A digest the
+    record supplies about itself is not evidence; the locked artifact is.
+    """
+
+    code = "CALIBRATION_ARTIFACT_BINDING_INVALID"
+
+
 class BranchBPremature(CodedRefusal):
     """Branch-B access was requested before its frozen prerequisites held."""
 
@@ -498,6 +516,7 @@ ALL_REFUSAL_CLASSES = (
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
     ScaleControlInvalid, TerminalProvenanceMismatch,
+    CalibrationArtifactBindingInvalid,
     ContractMandatoryDiagnosticMissing, ContractMandatoryDiagnosticMismatch,
     PlanVersionMismatch, PlanAnalysisIdentityMismatch, PlanIdentityMismatch,
     PlanCaseMismatch, PlanSubconditionMismatch, PlanReleaseRuleMismatch,
