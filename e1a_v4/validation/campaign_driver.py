@@ -59,40 +59,81 @@ from __future__ import annotations
 import argparse
 import math
 import os
+import re
 from dataclasses import dataclass
-from typing import Any, Mapping, Sequence
+from typing import Any, Mapping, Protocol, Sequence
 
 from ..branch_a import BranchAField
 from ..contract import sha256_file
 from ..calibration import CalibrationArtifact, CalibrationCondition, canonical_float
+from ..effective_size import sigma_stat
+from ..endpoints import (
+    UncertaintyModel, p1_geometry, p2_cross_field, p3_absolute, p4_consistency,
+)
+from ..geometry import analyse_field
 from ..numerics import Refusal
-from .calibrate import CalibrationRequest
+from .calibrate import CalibrationRequest, generate_block1_artifact
+from .classification import CampaignCounts, classify_campaign
+from .dispositions import cp_upper
 from .driver import (
     OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT, OFFICIAL_CAMPAIGN_DRIVER_MODULE,
     OFFICIAL_CAMPAIGN_DRIVER_PATH, driver_identity_component,
+    require_canonical_driver,
+)
+from .generate import (
+    BranchAErrorModel, Generator, ou_observations, truth_from_field,
 )
 from . import PLAN_MARKDOWN
 from .plan import ExecutionBinding, VALIDATION_MODULES, bind_execution
-from .publication import canonical_digest, publish_atomic, read_published
+from .publication import (
+    COMMIT_SCHEMA, PublicationReceipt, canonical_digest, canonical_json,
+    publish_transaction, read_committed, require_clean_inventory, sealed_digest,
+)
 from .refusals import (
     BranchAEvidenceAltered, BranchANotPublished, BranchAProvenanceMismatch,
-    BranchAPublicationImmutable, BranchBPremature, CampaignManifestInvalid,
-    CampaignPlanMismatch, JobStateInvalid,
+    BranchAPublicationImmutable, BranchBPremature, CampaignIncomplete,
+    CampaignManifestInvalid, CampaignPlanMismatch,
+    ContractMandatoryDiagnosticMissing, ExecutionAuthorisationMissing,
+    JobStateInvalid, PublicationDigestMismatch, PublicationIncomplete,
+    RestartInventoryMismatch, ResultCaseMismatch, ResultFieldSetMismatch,
+    ResultSchemaInvalid, StochasticProviderRefused,
 )
-from .release_authority import require_mandatory_diagnostics
-from .results import MANIFEST_SCHEMA, RESULT_SCHEMA
+from .release_authority import (
+    mandatory_diagnostics_for, require_mandatory_diagnostics,
+)
+from .results import (
+    CAMPAIGN_RESULT_SCHEMA, JOB_RECORD_SCHEMA, MANIFEST_SCHEMA, RESULT_SCHEMA,
+    aggregate_skeleton,
+)
 from .scope import (
     CampaignCalibrationLedger, CaseCalibrationScope, ReplicateCalibration,
 )
+from .seal import require_execution_gate
 from .seeds import EXPERIMENT_SCOPE, ValidationSeedFamily
 
-#: Schema of the immutable Branch-A publication record.
-BRANCH_A_PUBLICATION_SCHEMA = "e1a_v4_branch_a_publication/1"
+#: Schema of the immutable Branch-A publication record. Version 2 adds the
+#: `publication_digest` that authenticates the COMPLETE provenance envelope. An
+#: independent audit demonstrated that version 1, authenticated by the Branch-A
+#: evidence hash alone, accepted a record whose execution identity,
+#: calibration-condition hash or publication state had been edited. No official
+#: publication exists, so the break is free to make explicit now.
+BRANCH_A_PUBLICATION_SCHEMA = "e1a_v4_branch_a_publication/2"
+
+#: The Branch-A measurement generator, named by the frozen plan itself
+#: (`generating_model.branch_a`, "generate.BranchAErrorModel.measure"). Recorded
+#: as provenance on every realisation; it is a pointer to the frozen
+#: implementation, never a scientific constant restated here.
+BRANCH_A_GENERATOR_IDENTITY = "e1a_v4.validation.generate.BranchAErrorModel.measure"
 #: Schema of the deterministic pre-execution campaign manifest.
 CAMPAIGN_MANIFEST_SCHEMA = "e1a_v4_campaign_manifest/1"
 
 #: Where Branch-A publications live, relative to the campaign output directory.
 BRANCH_A_PUBLICATION_DIR = "branch_a"
+#: Where terminal job records live. A completed job is one whose TERMINAL RECORD
+#: is durably committed, not one whose Branch-A evidence happens to exist: an
+#: independent audit found restart trusting a caller's list for exactly this
+#: question, and the answer has to come from persisted storage.
+JOB_RECORD_DIR = "job_records"
 CAMPAIGN_MANIFEST_BASENAME = "campaign_manifest.json"
 
 # --------------------------------------------------------------- job lifecycle
@@ -433,31 +474,63 @@ class BranchARealisation:
         )
         return request.condition()
 
-
 # ------------------------------------------------------ Branch-A publication
+#: Every key a published Branch-A record carries. EXACT: a missing key and an
+#: unknown key are both refusals, so a record cannot gain an unauthenticated
+#: field or lose an authenticated one and still parse.
+PUBLICATION_FIELDS = (
+    "schema", "state", "coordinates", "branch_a_evidence",
+    "branch_a_evidence_sha256", "calibration_condition_sha256",
+    "package_identities", "not_execution_authorisation", "publication_digest",
+)
+#: The package identities a publication binds. Recomputed on every read.
+PUBLICATION_IDENTITIES = (
+    "contract_sha256", "plan_sha256", "seed_map_sha256",
+    "analysis_procedure_identity", "execution_identity",
+)
+
+
 def publication_basename(coordinates: JobCoordinates) -> str:
     """One immutable record per scientific coordinate. Deterministic, no clock."""
     return f"branch_a_{canonical_digest(coordinates.as_dict())}.json"
 
 
 def publication_path(output_dir: str, coordinates: JobCoordinates) -> str:
-    return os.path.join(output_dir, BRANCH_A_PUBLICATION_DIR,
+    return os.path.join(publication_directory(output_dir),
                         publication_basename(coordinates))
 
 
-def publish_branch_a(output_dir: str, realisation: BranchARealisation,
-                     condition: CalibrationCondition | None,
-                     binding: ExecutionBinding) -> str:
-    """HASH AND PUBLISH Branch-A evidence. Durable, immutable, fail-closed.
+def publication_directory(output_dir: str) -> str:
+    return os.path.join(output_dir, BRANCH_A_PUBLICATION_DIR)
 
-    Returns the final published path. After this returns, the record exists at a
-    read-only final path; a partial write never occupies it, and a second
-    publication for the same coordinates refuses.
+
+def publication_envelope(realisation: "BranchARealisation",
+                         condition: CalibrationCondition | None,
+                         binding: ExecutionBinding) -> dict[str, Any]:
+    """The COMPLETE provenance envelope, authenticated as ONE object.
+
+    THE DEFECT THIS CLOSES
+        The first revision authenticated the record by the Branch-A evidence hash
+        alone. An independent audit demonstrated the consequence: the published
+        execution identity, the calibration-condition hash and the publication
+        state could each be edited while verification still accepted the record.
+        Reproduced against the previous HEAD; all three escaped.
+
+        A provenance field that nothing hashes is not provenance. Every field
+        below is inside `publication_digest`, so editing ANY of them -- schema,
+        state, coordinates, evidence, evidence digest, condition hash, or any
+        package identity -- invalidates the publication.
+
+    The digest deliberately excludes itself, so verification is a recomputation
+    rather than a comparison of a field with itself.
     """
-    record = {
+    envelope: dict[str, Any] = {
         "schema": BRANCH_A_PUBLICATION_SCHEMA,
         "state": BRANCH_A_PUBLISHED,
         "coordinates": realisation.coordinates.as_dict(),
+        # The evidence already binds the Branch-A and common-mode seed
+        # identities, the analysis identity and the generator identity; it is
+        # carried whole rather than restated field by field.
         "branch_a_evidence": realisation.canonical(),
         "branch_a_evidence_sha256": realisation.evidence_sha256,
         "calibration_condition_sha256": condition.sha256 if condition else None,
@@ -466,54 +539,174 @@ def publish_branch_a(output_dir: str, realisation: BranchARealisation,
             "plan_sha256": binding.plan_sha256,
             "seed_map_sha256": binding.seed_map_sha256,
             "analysis_procedure_identity": binding.analysis_identity,
+            # The execution identity already contains the canonical driver's own
+            # file hash and every validation module, so binding it binds the
+            # software that produced the evidence.
             "execution_identity": binding.execution_identity,
         },
         "not_execution_authorisation": True,
     }
-    directory = os.path.join(output_dir, BRANCH_A_PUBLICATION_DIR)
-    return publish_atomic(directory, publication_basename(realisation.coordinates),
-                          record)
+    envelope["publication_digest"] = sealed_digest(envelope, "publication_digest")
+    return envelope
 
 
-def verify_publication(output_dir: str, realisation: BranchARealisation,
-                       binding: ExecutionBinding) -> dict[str, Any]:
-    """Re-read published Branch-A evidence and prove it is the same evidence.
+def require_publication_schema(record: Mapping[str, Any], where: str) -> None:
+    """Fail closed on a missing field, an unknown field, or a wrong type.
 
-    Used on the unblind path and on restart. Every check is a recomputation, not
-    a trusted field: the digest is recomputed from the published evidence, and
-    the published evidence is compared with the realisation in hand.
+    Duplicate keys are already refused one layer down, by `strict_loads`: the
+    parser never silently keeps the last of two values a human would read as the
+    first.
     """
-    path = publication_path(output_dir, realisation.coordinates)
-    record = read_published(path, "the Branch-A publication record")
-    if record.get("schema") != BRANCH_A_PUBLICATION_SCHEMA:
-        raise BranchAEvidenceAltered(
-            f"{path}: schema {record.get('schema')!r} is not "
+    keys = set(record)
+    missing = sorted(set(PUBLICATION_FIELDS) - keys)
+    unknown = sorted(keys - set(PUBLICATION_FIELDS))
+    if missing or unknown:
+        raise PublicationIncomplete(
+            f"{where}: the published record is not the frozen publication schema "
+            f"(missing {missing}, unknown {unknown}). An authoritative record "
+            "carries exactly the declared fields: an unknown field is an "
+            "unauthenticated channel and a missing one is a dropped guarantee.")
+    if record["schema"] != BRANCH_A_PUBLICATION_SCHEMA:
+        raise PublicationIncomplete(
+            f"{where}: schema {record['schema']!r} is not "
             f"{BRANCH_A_PUBLICATION_SCHEMA!r}")
-    if record.get("coordinates") != realisation.coordinates.as_dict():
+    if record["state"] != BRANCH_A_PUBLISHED:
+        raise PublicationIncomplete(
+            f"{where}: publication state {record['state']!r} is not "
+            f"{BRANCH_A_PUBLISHED!r}")
+    if record["not_execution_authorisation"] is not True:
+        raise PublicationIncomplete(
+            f"{where}: a publication record always states that it is not an "
+            "execution authorisation")
+    for key, kind in (("coordinates", dict), ("branch_a_evidence", dict),
+                      ("package_identities", dict),
+                      ("branch_a_evidence_sha256", str),
+                      ("publication_digest", str)):
+        if not isinstance(record[key], kind):
+            raise PublicationIncomplete(
+                f"{where}: {key!r} must be {kind.__name__}, found "
+                f"{type(record[key]).__name__}")
+    for key in ("branch_a_evidence_sha256", "publication_digest"):
+        if not re.fullmatch(r"[0-9a-f]{64}", record[key]):
+            raise PublicationIncomplete(
+                f"{where}: {key} {record[key]!r} is not a sha256 digest")
+    condition = record["calibration_condition_sha256"]
+    if condition is not None and not (isinstance(condition, str)
+                                      and re.fullmatch(r"[0-9a-f]{64}", condition)):
+        raise PublicationIncomplete(
+            f"{where}: calibration_condition_sha256 must be null or a sha256 "
+            f"digest, found {condition!r}")
+    identities = record["package_identities"]
+    missing = sorted(set(PUBLICATION_IDENTITIES) - set(identities))
+    unknown = sorted(set(identities) - set(PUBLICATION_IDENTITIES))
+    if missing or unknown:
+        raise PublicationIncomplete(
+            f"{where}: package identities are not the declared set "
+            f"(missing {missing}, unknown {unknown})")
+    coordinates = record["coordinates"]
+    if sorted(coordinates) != ["case_id", "replicate_id", "scope", "subcondition_id"]:
+        raise PublicationIncomplete(
+            f"{where}: coordinates {sorted(coordinates)} are not the complete "
+            "scientific address")
+
+
+def publish_branch_a(output_dir: str, realisation: "BranchARealisation",
+                     condition: CalibrationCondition | None,
+                     binding: ExecutionBinding) -> PublicationReceipt:
+    """HASH, PUBLISH and COMMIT Branch-A evidence. Durable, immutable, closed.
+
+    Returns only when a reader may treat the evidence as published: the artifact
+    is durable AND its commit marker is durable. If it raises, no reader will,
+    whatever residue remains on disk -- which is the invariant the audit found
+    missing.
+    """
+    envelope = publication_envelope(realisation, condition, binding)
+    return publish_transaction(
+        publication_directory(output_dir),
+        publication_basename(realisation.coordinates),
+        envelope,
+        publication_digest=envelope["publication_digest"],
+        provenance={
+            "coordinates": realisation.coordinates.as_dict(),
+            "branch_a_evidence_sha256": realisation.evidence_sha256,
+            "execution_identity": binding.execution_identity,
+        },
+    )
+
+
+#: Sentinel for "the caller did not state an expected calibration condition",
+#: which is different from "the caller states there must be none".
+_UNSTATED = object()
+
+
+def verify_publication(output_dir: str, realisation: "BranchARealisation",
+                       binding: ExecutionBinding,
+                       expected_condition_sha256: Any = _UNSTATED) -> dict[str, Any]:
+    """Re-read committed Branch-A evidence and prove it is the same evidence.
+
+    Used on the unblind path and on restart. EVERY check is a recomputation, not
+    a trusted field: the commit marker is verified against the bytes on disk, the
+    publication digest is recomputed over the whole envelope, the evidence digest
+    is recomputed from the published evidence, and the published evidence is
+    compared with the realisation in hand.
+    """
+    directory = publication_directory(output_dir)
+    basename = publication_basename(realisation.coordinates)
+    path = os.path.join(directory, basename)
+    record, marker = read_committed(directory, basename,
+                                    "the Branch-A publication record")
+    require_publication_schema(record, path)
+    recomputed = sealed_digest(record, "publication_digest")
+    if recomputed != record["publication_digest"]:
+        raise PublicationDigestMismatch(
+            f"{path}: the published envelope hashes to {recomputed}, but the record "
+            f"declares {record['publication_digest']}. Some bound provenance field "
+            "was edited after publication. The evidence hash alone is not the "
+            "authentication; the envelope is.")
+    if marker.get("publication_digest") != record["publication_digest"]:
+        raise PublicationDigestMismatch(
+            f"{path}: the commit marker committed publication digest "
+            f"{marker.get('publication_digest')!r}, the record carries "
+            f"{record['publication_digest']!r}. A marker commits one exact envelope.")
+    if record["coordinates"] != realisation.coordinates.as_dict():
         raise BranchAProvenanceMismatch(
-            f"{path}: published coordinates {record.get('coordinates')!r} are not "
+            f"{path}: published coordinates {record['coordinates']!r} are not "
             f"{realisation.coordinates.as_dict()!r}")
-    evidence = record.get("branch_a_evidence")
+    expected_basename = publication_basename(
+        JobCoordinates(**record["coordinates"]))
+    if expected_basename != basename:
+        raise BranchAProvenanceMismatch(
+            f"{path}: a record whose coordinates address {expected_basename!r} is "
+            f"filed at {basename!r}; the path is a pure function of the coordinates "
+            "and a misfiled record is not this replicate's publication")
+    evidence = record["branch_a_evidence"]
     recomputed = canonical_digest(evidence)
-    if recomputed != record.get("branch_a_evidence_sha256"):
+    if recomputed != record["branch_a_evidence_sha256"]:
         raise BranchAEvidenceAltered(
             f"{path}: the published evidence hashes to {recomputed}, but the record "
-            f"declares {record.get('branch_a_evidence_sha256')}. Published evidence "
+            f"declares {record['branch_a_evidence_sha256']}. Published evidence "
             "and its digest must agree or neither is evidence.")
     if evidence != realisation.canonical():
         raise BranchAEvidenceAltered(
             f"{path}: the published Branch-A evidence is not the evidence held for "
             "these coordinates. Branch B may not be unblinded against substituted "
             "Branch-A evidence.")
-    identities = record.get("package_identities") or {}
+    identities = record["package_identities"]
     for key, actual in (("contract_sha256", binding.binding.sha256),
                         ("plan_sha256", binding.plan_sha256),
                         ("seed_map_sha256", binding.seed_map_sha256),
-                        ("analysis_procedure_identity", binding.analysis_identity)):
+                        ("analysis_procedure_identity", binding.analysis_identity),
+                        ("execution_identity", binding.execution_identity)):
         if identities.get(key) != actual:
             raise BranchAProvenanceMismatch(
                 f"{path}: published {key} {identities.get(key)!r} != current "
                 f"{actual!r}; the package changed since publication")
+    if expected_condition_sha256 is not _UNSTATED:
+        if record["calibration_condition_sha256"] != expected_condition_sha256:
+            raise BranchAProvenanceMismatch(
+                f"{path}: the publication carries calibration condition "
+                f"{record['calibration_condition_sha256']!r}, this job derived "
+                f"{expected_condition_sha256!r} from its own Branch-A evidence")
     return record
 
 
@@ -529,6 +722,7 @@ class BranchBUnblindToken:
     coordinates: JobCoordinates
     branch_a_evidence_sha256: str
     publication_path: str
+    publication_digest: str
     calibration_condition_sha256: str | None
     calibration_artifact_sha256: str | None
 
@@ -537,6 +731,7 @@ class BranchBUnblindToken:
             **self.coordinates.as_dict(),
             "branch_a_evidence_sha256": self.branch_a_evidence_sha256,
             "publication_path": os.path.basename(self.publication_path),
+            "publication_digest": self.publication_digest,
             "calibration_condition_sha256": self.calibration_condition_sha256,
             "calibration_artifact_sha256": self.calibration_artifact_sha256,
         }
@@ -546,8 +741,9 @@ class JobExecution:
     """The state machine for ONE scientific job. The only route to Branch B.
 
     Ordering is enforced by state, not by call convention: every method that
-    advances the chain checks the frozen transition table first, and
-    `branch_b_seed` refuses unless the unblind token exists.
+    advances the chain checks the frozen transition table first, performs the
+    work, verifies the work, and only then enters the new state. A step that
+    fails anywhere leaves the job exactly where it was.
     """
 
     def __init__(self, job: CampaignJob, binding: ExecutionBinding,
@@ -573,11 +769,12 @@ class JobExecution:
         self.output_dir = output_dir
         self._state = PLANNED
         self._realisation: BranchARealisation | None = None
-        self._publication_path: str | None = None
+        self._publication: PublicationReceipt | None = None
         self._condition: CalibrationCondition | None = None
         self._artifact_digest: str | None = None
         self._token: BranchBUnblindToken | None = None
-        self._result: dict[str, Any] | None = None
+        self._outcome: dict[str, Any] | None = None
+        self._record: dict[str, Any] | None = None
 
     # ----------------------------------------------------------------- state
     @property
@@ -587,6 +784,14 @@ class JobExecution:
     @property
     def coordinates(self) -> JobCoordinates:
         return self.job.coordinates
+
+    @property
+    def publication_path(self) -> str | None:
+        return self._publication.path if self._publication else None
+
+    @property
+    def terminal_record(self) -> dict[str, Any] | None:
+        return dict(self._record) if self._record is not None else None
 
     def _require_transition(self, target: str) -> None:
         """Check the transition BEFORE doing the work."""
@@ -599,11 +804,12 @@ class JobExecution:
                 "order in which methods happen to be called.")
 
     def _enter(self, target: str) -> None:
-        """Enter the state only AFTER the work succeeded.
+        """Enter the state only AFTER the work succeeded AND was verified.
 
-        Checking and entering are separate on purpose: a step that refuses must
-        leave the job exactly where it was. Advancing first would let a refused
-        publication or a refused lock satisfy the precondition of the next step.
+        Checking and entering are separate on purpose, and entering is always the
+        LAST statement of a step: an audit found that `analyse` advanced before
+        copying its outcome, so a failing analysis left a job reporting ANALYSED.
+        VALIDATE, PERFORM, VERIFY, THEN COMMIT THE TRANSITION -- never the reverse.
         """
         self._require_transition(target)
         self._state = target
@@ -620,14 +826,15 @@ class JobExecution:
             common_mode_seed=common_mode_seed,
             n_samples=plan_branch_b["n_samples"], dt=plan_branch_b["dt_s"],
             binding=self.binding, generator_identity=generator_identity)
-        expected_seed = self.calibration.branch_a_seed(self.coordinates.scope)
+        boundary = self._require_calibration_boundary()
+        expected_seed = boundary.branch_a_seed(self.coordinates.scope)
         if branch_a_seed != expected_seed:
             raise BranchAProvenanceMismatch(
                 f"{self.job.job_id}: Branch-A evidence carries seed identity "
                 f"{branch_a_seed}, but this job's declared Branch-A stream is "
                 f"{expected_seed}. Evidence from another stream is not this "
                 "replicate's Branch-A measurement.")
-        if common_mode_seed != self.calibration.common_mode_seed():
+        if common_mode_seed != boundary.common_mode_seed():
             raise BranchAProvenanceMismatch(
                 f"{self.job.job_id}: the common-mode stream identity is not this "
                 "experiment's. The Branch-A common mode is drawn ONCE per "
@@ -639,18 +846,24 @@ class JobExecution:
 
     # ------------------------------------------------------------ step 3 & 4
     def publish_branch_a(self) -> str:
-        """Hash and publish. Branch B stays unreachable until this succeeds."""
+        """Hash, publish, COMMIT and re-verify. Branch B stays unreachable until
+        every one of those succeeds."""
         if self._realisation is None:
             raise BranchANotPublished(
                 f"{self.job.job_id}: no Branch-A evidence has been realised")
         self._require_transition(BRANCH_A_PUBLISHED)
         condition = (self._realisation.calibration_condition(self.binding)
                      if self.job.requires_calibration else None)
-        path = publish_branch_a(self.output_dir, self._realisation, condition,
-                                self.binding)
+        receipt = publish_branch_a(self.output_dir, self._realisation, condition,
+                                   self.binding)
+        # VERIFY THE OUTPUT BEFORE COMMITTING THE TRANSITION. Re-reading from disk
+        # is what distinguishes "the write returned" from "a reader can now obtain
+        # exactly this evidence", and only the second is publication.
+        verify_publication(self.output_dir, self._realisation, self.binding,
+                           condition.sha256 if condition else None)
         self._enter(BRANCH_A_PUBLISHED)
-        self._publication_path = path
-        return path
+        self._publication = receipt
+        return receipt.path
 
     # ---------------------------------------------------------------- step 5
     def calibration_condition(self) -> CalibrationCondition:
@@ -664,8 +877,9 @@ class JobExecution:
         if self._realisation is None:
             raise BranchANotPublished(f"{self.job.job_id}: Branch A is not realised")
         self._require_transition(CALIBRATION_CONDITION_BOUND)
-        verify_publication(self.output_dir, self._realisation, self.binding)
         condition = self._realisation.calibration_condition(self.binding)
+        verify_publication(self.output_dir, self._realisation, self.binding,
+                           condition.sha256)
         self._enter(CALIBRATION_CONDITION_BOUND)
         self._condition = condition
         return condition
@@ -677,7 +891,8 @@ class JobExecution:
                 f"{self.job.job_id}: the calibration stream is available only after "
                 f"the condition is derived from published Branch-A evidence; state "
                 f"is {self._state}")
-        return self.calibration.calibration_seed(self.coordinates.scope)
+        return self._require_calibration_boundary().calibration_seed(
+            self.coordinates.scope)
 
     # ---------------------------------------------------------------- step 6
     def lock_calibration(self, artifact: CalibrationArtifact) -> str:
@@ -700,7 +915,8 @@ class JobExecution:
                 f"condition (first difference: {difference}). A condition that merely "
                 "looks numerically similar is not this job's published Branch-A "
                 "evidence.")
-        digest = self.calibration.lock(self.coordinates.scope, artifact, self._condition)
+        digest = self._require_calibration_boundary().lock(
+            self.coordinates.scope, artifact, self._condition)
         self._enter(CALIBRATION_LOCKED)
         self._artifact_digest = digest
         return digest
@@ -712,32 +928,37 @@ class JobExecution:
             raise BranchANotPublished(
                 f"{self.job.job_id}: Branch B may not be unblinded before Branch-A "
                 "evidence exists")
-        if self._publication_path is None:
+        if self._publication is None:
             raise BranchANotPublished(
                 f"{self.job.job_id}: Branch-A evidence has not been published. The "
                 "frozen rule is that Branch-A output is hashed and PUBLISHED before "
                 "Branch B is unblinded.")
         self._require_transition(BRANCH_B_UNBLINDED)
-        verify_publication(self.output_dir, self._realisation, self.binding)
+        record = verify_publication(
+            self.output_dir, self._realisation, self.binding,
+            self._condition.sha256 if self._condition else None)
         if self.job.requires_calibration:
             if self._condition is None or self._artifact_digest is None:
                 raise BranchBPremature(
                     f"{self.job.job_id}: the calibration artifact is not locked")
-            locked = self.calibration.artifact(self.coordinates.scope)
+            locked = self._require_calibration_boundary().artifact(
+                self.coordinates.scope)
             if locked.condition.sha256 != self._condition.sha256:
                 raise BranchBPremature(
                     f"{self.job.job_id}: the locked artifact's condition is not the "
                     "one derived from this job's published Branch-A evidence")
-        self._enter(BRANCH_B_UNBLINDED)
-        self._token = BranchBUnblindToken(
+        token = BranchBUnblindToken(
             coordinates=self.coordinates,
             branch_a_evidence_sha256=self._realisation.evidence_sha256,
-            publication_path=self._publication_path,
+            publication_path=self._publication.path,
+            publication_digest=record["publication_digest"],
             calibration_condition_sha256=(self._condition.sha256
                                           if self._condition else None),
             calibration_artifact_sha256=self._artifact_digest,
         )
-        return self._token
+        self._enter(BRANCH_B_UNBLINDED)
+        self._token = token
+        return token
 
     def branch_b_seed(self, family: ValidationSeedFamily | None = None) -> int:
         """THE ONLY route to a Branch-B stream. Refuses without the token.
@@ -753,7 +974,8 @@ class JobExecution:
                 + (" and its calibration artifact is locked."
                    if self.job.requires_calibration else "."))
         requested = family or self._default_branch_b_family()
-        return self.calibration.validation_seed(self.coordinates.scope, requested)
+        return self._require_calibration_boundary().validation_seed(
+            self.coordinates.scope, requested)
 
     def _default_branch_b_family(self) -> ValidationSeedFamily:
         """The case's declared Branch-B family, read from the plan, never guessed."""
@@ -770,27 +992,173 @@ class JobExecution:
     def token(self) -> BranchBUnblindToken | None:
         return self._token
 
+    def _require_calibration_boundary(self) -> ReplicateCalibration:
+        if self.calibration is None:
+            raise JobStateInvalid(
+                f"{self.job.job_id}: this job's calibration boundary has been "
+                "released. Seeds, calibration and Branch-B access are reachable only "
+                "while the boundary that orders them is held; they are never "
+                "re-derived afterwards.")
+        return self.calibration
+
+    def release_calibration(self) -> None:
+        """Drop this job's reference to its replicate calibration boundary.
+
+        The adopted campaign-level implementation is STREAMING_PER_REPLICATE, for
+        a stated reason: one artifact carries four gates x R_cal null draws, and
+        materialising a whole case's artifacts at once would be tens of gigabytes.
+        Permitted only once the job is ANALYSED -- by then every ordering
+        guarantee the boundary exists to enforce has already been enforced -- and
+        any later seed or calibration request refuses rather than silently
+        re-deriving one.
+        """
+        if self._state not in (ANALYSED, RECORDED):
+            raise JobStateInvalid(
+                f"{self.job.job_id}: the calibration boundary may not be released in "
+                f"state {self._state}; it orders Branch A, the lock and Branch B, and "
+                "releasing it earlier would remove the ordering it exists to enforce.")
+        self.calibration = None
+
     # ---------------------------------------------------------------- step 8-9
-    def analyse(self, outcome: Mapping[str, Any]) -> None:
-        """Record the analysis outcome. Refusals stay refusals."""
+    def analyse(self, outcome: Mapping[str, Any]) -> dict[str, Any]:
+        """Record the analysis outcome. Refusals stay refusals.
+
+        THE DEFECT THIS CLOSES
+            The previous implementation entered ANALYSED and only then copied the
+            outcome. An audit demonstrated that a failing copy therefore left the
+            job reporting ANALYSED with no analysis, and the next step's
+            precondition was satisfied by a step that had failed. The outcome is
+            now copied, canonicalised and validated FIRST.
+        """
         if self._token is None:
             raise BranchBPremature(
                 f"{self.job.job_id}: nothing may be analysed before Branch B is "
                 "unblinded")
         self._require_transition(ANALYSED)
+        canonical = self._canonical_outcome(outcome)
         self._enter(ANALYSED)
-        self._result = dict(outcome)
+        self._outcome = canonical
+        return dict(canonical)
 
-    def record(self, aggregate: Mapping[str, Any], fields: Sequence[str]) -> dict[str, Any]:
-        """Finalise, requiring every MANDATORY CONTRACT DIAGNOSTIC to be present."""
-        if self._result is None:
+    def _canonical_outcome(self, outcome: Mapping[str, Any]) -> dict[str, Any]:
+        """Copy, canonicalise and validate an analysis outcome. May fail; must.
+
+        A structured scientific refusal is a RESULT and is accepted here. What is
+        refused is an outcome that cannot be written down: a non-mapping, an empty
+        one, non-string keys, or a value canonical JSON cannot represent -- NaN
+        and infinity included, because `allow_nan=False` would otherwise fail at
+        write time, long after the job had been marked analysed.
+        """
+        try:
+            copied = dict(outcome)
+        except Exception as exc:
+            raise ResultSchemaInvalid(
+                f"{self.job.job_id}: the analysis outcome could not be copied "
+                f"({type(exc).__name__}: {exc}); nothing has been analysed"
+            ) from exc
+        if not copied:
+            raise ResultSchemaInvalid(
+                f"{self.job.job_id}: an empty analysis outcome is not a result. A "
+                "structured scientific refusal is a result and must say so; silence "
+                "is not.")
+        bad = sorted(k for k in copied if not isinstance(k, str))
+        if bad:
+            raise ResultSchemaInvalid(
+                f"{self.job.job_id}: analysis outcome keys must be strings, found "
+                f"{bad}")
+        try:
+            canonical_json(copied)
+        except (TypeError, ValueError) as exc:
+            raise ResultSchemaInvalid(
+                f"{self.job.job_id}: the analysis outcome is not canonically "
+                f"serialisable ({exc}). A result that cannot be written down "
+                "cannot be evidence."
+            ) from exc
+        return copied
+
+    def record(self, aggregate: Mapping[str, Any],
+               fields: Sequence[str] | None = None) -> dict[str, Any]:
+        """Finalise this job, deriving its structure from the FROZEN job.
+
+        THE DEFECTS THIS CLOSES
+            An audit demonstrated three. The recorder accepted a C7 aggregate for
+            a C2 job; it accepted an EMPTY field list, so C2's mandatory per-field
+            diagnostic was satisfied by having no rows to check; and having
+            checked the mandatory diagnostic it then discarded it, so the stored
+            record could not demonstrate the requirement it had passed.
+
+            Case identity, the expected field set and the mandatory diagnostic set
+            are now all DERIVED from the immutable planned job and the frozen
+            plan. The caller may restate them and is refused if it restates them
+            wrongly; it cannot supply them.
+        """
+        if self._outcome is None:
             raise JobStateInvalid(f"{self.job.job_id}: nothing has been analysed")
         self._require_transition(RECORDED)
-        require_mandatory_diagnostics(dict(aggregate), self.binding.plan, tuple(fields))
+        record = self._terminal_record(aggregate, fields)
         self._enter(RECORDED)
-        return {"schema": RESULT_SCHEMA, **self.coordinates.as_dict(),
-                "branch_a_evidence_sha256": self._realisation.evidence_sha256,
-                "result": self._result}
+        self._record = record
+        return dict(record)
+
+    def _terminal_record(self, aggregate: Mapping[str, Any],
+                         fields: Sequence[str] | None) -> dict[str, Any]:
+        plan = self.binding.plan
+        case_id = self.coordinates.case_id               # FROZEN, not supplied
+        try:
+            supplied = dict(aggregate)
+        except Exception as exc:
+            raise ResultSchemaInvalid(
+                f"{self.job.job_id}: the aggregate could not be read ({exc})") from exc
+        if supplied.get("schema") != MANIFEST_SCHEMA:
+            raise ResultSchemaInvalid(
+                f"{self.job.job_id}: aggregate schema {supplied.get('schema')!r} is "
+                f"not {MANIFEST_SCHEMA!r}")
+        if supplied.get("case_id") != case_id:
+            raise ResultCaseMismatch(
+                f"{self.job.job_id}: this job belongs to case {case_id!r}; the "
+                f"aggregate presented declares {supplied.get('case_id')!r}. A result "
+                "is authorised for the case its frozen job identity names, and for "
+                "no other -- a Python shape that happens to be accepted is not "
+                "case compatibility.")
+        declared_sub = supplied.get("subcondition_id")
+        if declared_sub is not None and declared_sub != self.coordinates.subcondition_id:
+            raise ResultCaseMismatch(
+                f"{self.job.job_id}: the aggregate is for subcondition "
+                f"{declared_sub!r}, this job is {self.coordinates.subcondition_id!r}")
+        required = required_result_fields(plan, case_id)
+        resolved = canonical_result_fields(self.job.job_id, required, fields)
+        require_mandatory_diagnostics(supplied, plan, resolved)
+        stored = stored_mandatory_diagnostics(plan, case_id, supplied)
+        record: dict[str, Any] = {
+            "schema": JOB_RECORD_SCHEMA,
+            "job_id": self.job.job_id,
+            "coordinates": self.coordinates.as_dict(),
+            # DERIVED from the frozen job. The caller never supplies these.
+            "result_kind": self.job.result_kind,
+            "role": self.job.role,
+            "requires_calibration": self.job.requires_calibration,
+            "fields": list(resolved),
+            "branch_a_evidence_sha256": self._realisation.evidence_sha256,
+            "publication_basename": os.path.basename(self._publication.path),
+            "publication_digest": self._publication.commit_record["publication_digest"],
+            "calibration_condition_sha256": (self._condition.sha256
+                                             if self._condition else None),
+            "calibration_artifact_sha256": self._artifact_digest,
+            "package_identities": {
+                "contract_sha256": self.binding.binding.sha256,
+                "plan_sha256": self.binding.plan_sha256,
+                "seed_map_sha256": self.binding.seed_map_sha256,
+                "analysis_procedure_identity": self.binding.analysis_identity,
+                "execution_identity": self.binding.execution_identity,
+            },
+            "result": dict(self._outcome),
+            # The EVIDENCE for every mandatory diagnostic that was checked, kept
+            # so the stored record can demonstrate the requirement it passed.
+            "mandatory_diagnostics": stored,
+            "terminal_state": RECORDED,
+        }
+        record["result_digest"] = sealed_digest(record, "result_digest")
+        return record
 
     # ------------------------------------------------------------- immutability
     def republish_branch_a(self, realisation: BranchARealisation) -> str:
@@ -800,6 +1168,113 @@ class JobExecution:
             "published. It may not be replaced, edited, republished with a different "
             "hash, or rebound to other coordinates -- least of all once Branch B has "
             "been unblinded against it.")
+
+
+# --------------------------------------------------- result structure, derived
+def case_entry(plan: Mapping[str, Any], case_id: str) -> Mapping[str, Any]:
+    for case in plan["cases"]:
+        if case["case_id"] == case_id:
+            return case
+    raise ResultCaseMismatch(
+        f"the frozen plan declares no case {case_id!r}; it declares "
+        f"{[c['case_id'] for c in plan['cases']]}")
+
+
+def required_result_fields(plan: Mapping[str, Any], case_id: str) -> tuple[str, ...]:
+    """The exact per-field rows a case's result must carry, in FROZEN plan order."""
+    return tuple(case_entry(plan, case_id)["fields_affected"])
+
+
+def canonical_result_fields(job_id: str, required: tuple[str, ...],
+                            supplied: Sequence[str] | None) -> tuple[str, ...]:
+    """Validate a caller's field list against the frozen one, and canonicalise it.
+
+    Ordering carries no meaning here -- the plan's order is the canonical one, so
+    a correct set in another order is accepted and re-ordered rather than refused
+    for a difference that is not scientific. Everything else refuses: an empty
+    list, a missing field, an extra field, a duplicate, a wrong name.
+    """
+    if supplied is None:
+        return required
+    listed = list(supplied)
+    duplicates = sorted({f for f in listed if listed.count(f) > 1})
+    if duplicates:
+        raise ResultFieldSetMismatch(
+            f"{job_id}: duplicated per-field rows {duplicates}; one row per declared "
+            "field, and a repeated row is an ambiguous denominator")
+    if set(listed) != set(required):
+        missing = sorted(set(required) - set(listed))
+        extra = sorted(set(listed) - set(required))
+        raise ResultFieldSetMismatch(
+            f"{job_id}: per-field rows are not the frozen field set (missing "
+            f"{missing}, unexpected {extra}). A missing row is not a successful "
+            "zero-rejection row, and the recorder derives the required set from "
+            "the frozen plan rather than accepting the caller's list.")
+    return required
+
+
+def stored_mandatory_diagnostics(plan: Mapping[str, Any], case_id: str,
+                                 aggregate: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Capture the EVIDENCE for every mandatory diagnostic that was validated.
+
+    Frozen authority requires these to be REPORTED. A result that passes
+    validation and then discards what it was validated against cannot demonstrate
+    the requirement, so the raw counts, the computed bound, the confidence rule,
+    the threshold and the classification are carried into the record itself.
+    """
+    stored: list[dict[str, Any]] = []
+    for diagnostic in mandatory_diagnostics_for(plan, case_id):
+        stored.append({
+            "diagnostic_id": diagnostic.diagnostic_id,
+            "authority_source": diagnostic.authority_source,
+            "authority_path": diagnostic.authority_path,
+            "requirement": diagnostic.requirement,
+            "aggregate_key": diagnostic.aggregate_key,
+            "required_keys": list(diagnostic.required_keys),
+            "value": aggregate[diagnostic.aggregate_key],
+        })
+    return stored
+
+
+def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
+    """Re-validate a stored job record, from the record ALONE.
+
+    This is the round trip the audit found missing: a record read back from disk
+    must still prove its own mandatory diagnostics without the aggregate that
+    produced it. If it cannot, the diagnostic was checked and then discarded.
+    """
+    if record.get("schema") != JOB_RECORD_SCHEMA:
+        raise ResultSchemaInvalid(
+            f"job record schema {record.get('schema')!r} is not {JOB_RECORD_SCHEMA!r}")
+    if "result_digest" not in record:
+        raise ResultSchemaInvalid("a job record carries its own digest")
+    recomputed = sealed_digest(dict(record), "result_digest")
+    if recomputed != record["result_digest"]:
+        raise ResultSchemaInvalid(
+            f"the job record hashes to {recomputed} but declares "
+            f"{record['result_digest']}; it was edited after it was recorded")
+    coordinates = record.get("coordinates") or {}
+    case_id = coordinates.get("case_id")
+    required = required_result_fields(plan, case_id)
+    if tuple(record.get("fields") or ()) != required:
+        raise ResultFieldSetMismatch(
+            f"{record.get('job_id')}: stored fields {record.get('fields')} are not "
+            f"the frozen field set {list(required)}")
+    declared = mandatory_diagnostics_for(plan, case_id)
+    stored = {row["diagnostic_id"]: row for row in record.get("mandatory_diagnostics", [])}
+    missing = [d.diagnostic_id for d in declared if d.diagnostic_id not in stored]
+    if missing:
+        raise ContractMandatoryDiagnosticMissing(
+            f"{record.get('job_id')}: the stored result omits mandatory "
+            f"diagnostic(s) {missing}, which frozen authority requires to be "
+            "reported. A result may not pass validation and then discard the "
+            "evidence proving it.")
+    # Rebuild the minimum aggregate the diagnostics describe and re-run the SAME
+    # validator, so the stored evidence is checked rather than merely present.
+    rebuilt = {"case_id": case_id, "schema": MANIFEST_SCHEMA}
+    for row in stored.values():
+        rebuilt[row["aggregate_key"]] = row["value"]
+    require_mandatory_diagnostics(rebuilt, plan, required)
 
 
 def replicate_calibration_for(binding: ExecutionBinding, job: CampaignJob,
@@ -826,19 +1301,223 @@ def job_execution(binding: ExecutionBinding, job: CampaignJob,
                         output_dir)
 
 
-# ---------------------------------------------------------------- restart
-def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisation],
-                   binding: ExecutionBinding) -> dict[str, int]:
-    """Re-verify every published record on resume. Never regenerate, never replace.
+# ------------------------------------------------------- restart reconciliation
+def published_coordinates(record: Mapping[str, Any]) -> JobCoordinates:
+    """The coordinates a published record declares, as a typed address."""
+    return JobCoordinates(**record["coordinates"])
 
-    A completed replicate is never re-run because its outcome was undesirable;
-    this only proves that what was published is still exactly what was published.
+
+def inventory_publications(output_dir: str) -> dict[str, dict[str, Any]]:
+    """INDEPENDENTLY discover every committed Branch-A publication on disk.
+
+    THE DEFECT THIS CLOSES
+        Restart verification used to iterate over the records its CALLER supplied
+        and report success when that list was empty -- including when a published
+        artifact existed on disk. An audit demonstrated exactly that: an empty
+        supplied list returned `{"verified_publications": 0}` beside a real
+        publication. A caller could therefore hide an artifact by not mentioning
+        it, which is the one thing a reconciliation must make impossible.
+
+        Nothing here consults an argument about what should exist. The directory
+        is scanned, every entry is classified, and orphans, dangling markers and
+        unexplained entries refuse rather than being skipped.
     """
+    directory = publication_directory(output_dir)
+    inventory = require_clean_inventory(directory, "the Branch-A publication store")
+    found: dict[str, dict[str, Any]] = {}
+    for basename in inventory.committed:
+        record, _ = read_committed(directory, basename, "a Branch-A publication")
+        require_publication_schema(record, os.path.join(directory, basename))
+        coordinates = published_coordinates(record)
+        if publication_basename(coordinates) != basename:
+            raise RestartInventoryMismatch(
+                f"{basename!r} contains a record addressing "
+                f"{publication_basename(coordinates)!r}; a misfiled publication is "
+                "not this replicate's evidence")
+        if coordinates.job_id in found:
+            raise RestartInventoryMismatch(
+                f"two committed publications claim {coordinates.job_id}; a job has "
+                "exactly one Branch-A publication")
+        found[coordinates.job_id] = record
+    return found
+
+
+def realisation_from_record(record: Mapping[str, Any]) -> BranchARealisation:
+    """Rebuild the Branch-A evidence object from its own published record.
+
+    The canonical form is exact -- every float is `float.hex()` -- so this is a
+    lossless inverse, not a reconstruction. It is what makes a resume possible
+    after the process that published the evidence is gone: the campaign recovers
+    what it published from the publication itself, never from memory and never by
+    regenerating it under a fresh seed.
+    """
+    evidence = record["branch_a_evidence"]
+
+    def number(value: str) -> float:
+        return float.fromhex(value)
+
+    return BranchARealisation(
+        coordinates=JobCoordinates(**record["coordinates"]),
+        field_id=evidence["field_id"],
+        branch_a_seed=evidence["branch_a_seed"],
+        common_mode_seed=evidence["common_mode_seed"],
+        H_A=tuple(tuple(number(v) for v in row) for row in evidence["H_A"]),
+        T_measured=number(evidence["T_measured"]),
+        k_modes_measured=tuple(number(k) for k in evidence["k_modes_measured"]),
+        rot_deg_measured=number(evidence["rot_deg_measured"]),
+        tau_modes=tuple(number(t) for t in evidence["tau_modes"]),
+        scale_factor=number(evidence["scale_factor"]),
+        n_samples=evidence["n_samples"],
+        dt=number(evidence["dt"]),
+        calibration_route=evidence["calibration_route"],
+        branch_a_status=evidence["branch_a_status"],
+        contract_sha256=evidence["contract_sha256"],
+        plan_sha256=evidence["plan_sha256"],
+        analysis_identity=evidence["analysis_identity"],
+        generator_identity=evidence["generator_identity"],
+    )
+
+
+def recover_realisations(output_dir: str,
+                         binding: ExecutionBinding) -> dict[str, BranchARealisation]:
+    """The AUTHORISED deterministic recovery: rebuild the checkpoint from disk.
+
+    This is the only permitted way to answer "what did the previous run publish?"
+    after that run is gone. It reads; it never writes, never deletes and never
+    regenerates. An orphaned or tampered store refuses here rather than being
+    quietly repaired, because an interrupted publication is a thing to inspect.
+
+    The recovered records are then put through the SAME strict reconciliation as
+    a caller-supplied checkpoint: recovery is not a way around set equality, it
+    is a way to obtain the set honestly.
+    """
+    recovered: dict[str, BranchARealisation] = {}
+    for job_id, record in inventory_publications(output_dir).items():
+        realisation = realisation_from_record(record)
+        if realisation.evidence_sha256 != record["branch_a_evidence_sha256"]:
+            raise RestartInventoryMismatch(
+                f"{job_id}: the evidence recovered from its publication does not "
+                "reproduce the published digest; the canonical form is exact, so a "
+                "mismatch means the record is not what it claims to be")
+        recovered[job_id] = realisation
+    return recovered
+
+
+# ------------------------------------------------------ terminal job records
+def job_record_directory(output_dir: str) -> str:
+    return os.path.join(output_dir, JOB_RECORD_DIR)
+
+
+def job_record_basename(coordinates: JobCoordinates) -> str:
+    """One immutable record per job. A pure function of the coordinates."""
+    return f"job_{canonical_digest(coordinates.as_dict())}.json"
+
+
+def publish_job_record(output_dir: str, record: Mapping[str, Any],
+                       binding: ExecutionBinding) -> PublicationReceipt:
+    """Durably COMMIT one job's terminal record, through the same transaction.
+
+    A scientific result that exists only in a process's memory is not evidence,
+    and a result file that appears at a path is not a completed job. Both
+    questions get the same answer as Branch-A publication does: an artifact plus
+    a commit marker that binds its exact bytes.
+    """
+    coordinates = JobCoordinates(**record["coordinates"])
+    return publish_transaction(
+        job_record_directory(output_dir), job_record_basename(coordinates),
+        dict(record), publication_digest=record["result_digest"],
+        provenance={"coordinates": coordinates.as_dict(),
+                    "job_id": record["job_id"],
+                    "execution_identity": binding.execution_identity})
+
+
+def inventory_job_records(output_dir: str, binding: ExecutionBinding,
+                          planned: Sequence[CampaignJob] | None = None
+                          ) -> dict[str, dict[str, Any]]:
+    """INDEPENDENTLY discover every committed terminal record. Reads only.
+
+    Orphans, dangling markers and unexplained entries refuse here exactly as they
+    do for Branch-A publications: a partial result must never count as completed
+    scientific evidence.
+    """
+    directory = job_record_directory(output_dir)
+    inventory = require_clean_inventory(directory, "the terminal job-record store")
+    found: dict[str, dict[str, Any]] = {}
+    for basename in inventory.committed:
+        record, marker = read_committed(directory, basename, "a terminal job record")
+        coordinates = JobCoordinates(**record["coordinates"])
+        if job_record_basename(coordinates) != basename:
+            raise RestartInventoryMismatch(
+                f"{basename!r} holds the record of {coordinates.job_id!r}, which "
+                f"belongs at {job_record_basename(coordinates)!r}")
+        if marker["publication_digest"] != record.get("result_digest"):
+            raise RestartInventoryMismatch(
+                f"{basename!r}: the commit marker committed a different result digest")
+        validate_job_record(record, binding.plan)
+        if coordinates.job_id in found:
+            raise RestartInventoryMismatch(
+                f"two committed records claim {coordinates.job_id}")
+        found[coordinates.job_id] = record
+    if planned is not None:
+        undeclared = sorted(set(found) - {job.job_id for job in planned})
+        if undeclared:
+            raise RestartInventoryMismatch(
+                f"{len(undeclared)} terminal record(s) belong to no planned job "
+                f"(e.g. {undeclared[:3]})")
+    return found
+
+
+def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisation],
+                   binding: ExecutionBinding,
+                   planned: Sequence[CampaignJob] | None = None) -> dict[str, Any]:
+    """Reconcile what the campaign CLAIMS exists against what ACTUALLY exists.
+
+    Set equality in BOTH directions:
+
+        claimed but absent on disk    -> refuse  (the checkpoint is wrong)
+        present on disk but unclaimed -> refuse  (the caller omitted an artifact)
+
+    An empty result is valid only when the persisted inventory is also empty.
+    Published evidence is never regenerated, replaced or dropped here: a completed
+    replicate is not re-run because its outcome was undesirable, and this only
+    proves that what was published is still exactly what was published.
+    """
+    on_disk = inventory_publications(output_dir)
+    claimed = dict(realisations)
+    for job_id, realisation in claimed.items():
+        if realisation.coordinates.job_id != job_id:
+            raise RestartInventoryMismatch(
+                f"the restart record keyed {job_id!r} holds evidence for "
+                f"{realisation.coordinates.job_id!r}")
+    missing = sorted(set(claimed) - set(on_disk))
+    if missing:
+        raise RestartInventoryMismatch(
+            f"the campaign claims {len(missing)} publication(s) that do not exist on "
+            f"disk (e.g. {missing[:3]}). A checkpoint that names evidence the store "
+            "does not hold is not a resumable state.")
+    unclaimed = sorted(set(on_disk) - set(claimed))
+    if unclaimed:
+        raise RestartInventoryMismatch(
+            f"{len(unclaimed)} committed publication(s) exist on disk that the "
+            f"campaign does not claim (e.g. {unclaimed[:3]}). Persisted scientific "
+            "evidence is append-only: it may not be ignored, replaced, regenerated "
+            "under another seed, or dropped because it is inconvenient.")
+    if planned is not None:
+        declared = {job.job_id for job in planned}
+        undeclared = sorted(set(on_disk) - declared)
+        if undeclared:
+            raise RestartInventoryMismatch(
+                f"{len(undeclared)} publication(s) belong to no planned job (e.g. "
+                f"{undeclared[:3]}); the store holds evidence this campaign never "
+                "declared")
     verified = 0
-    for realisation in realisations.values():
+    for job_id, realisation in sorted(claimed.items()):
         verify_publication(output_dir, realisation, binding)
         verified += 1
-    return {"verified_publications": verified}
+    return {"verified_publications": verified,
+            "publications_on_disk": len(on_disk),
+            "claimed_publications": len(claimed),
+            "missing_on_disk": 0, "unclaimed_on_disk": 0}
 
 
 # ---------------------------------------------------------------- manifest
@@ -879,6 +1558,10 @@ def campaign_manifest(binding: ExecutionBinding, root: str = ".") -> dict[str, A
         },
         "result_schema": RESULT_SCHEMA,
         "manifest_schema": MANIFEST_SCHEMA,
+        "job_record_schema": JOB_RECORD_SCHEMA,
+        "campaign_result_schema": CAMPAIGN_RESULT_SCHEMA,
+        "publication_schema": BRANCH_A_PUBLICATION_SCHEMA,
+        "publication_commit_schema": COMMIT_SCHEMA,
         "mandatory_diagnostics": diagnostics,
         "output_directory": binding.output_dir,
     }
@@ -895,17 +1578,759 @@ def manifest_digest(manifest: Mapping[str, Any]) -> str:
     return canonical_digest(manifest)
 
 
+# ------------------------------------------- completeness and case aggregation
+def require_campaign_completeness(jobs: Sequence[CampaignJob],
+                                  records: Mapping[str, Mapping[str, Any]]
+                                  ) -> dict[str, int]:
+    """Every frozen job has EXACTLY ONE authorised terminal record. Derived.
+
+    The expected total is never written down here: it is the length of the job
+    plan the FROZEN plan produces, so a plan declaring different replicate counts
+    changes this number mechanically and a hard-coded one could not.
+    """
+    declared = [job.job_id for job in jobs]
+    if len(set(declared)) != len(declared):
+        raise CampaignPlanMismatch("the job plan contains duplicate job identities")
+    expected, present = set(declared), set(records)
+    missing = sorted(expected - present)
+    extra = sorted(present - expected)
+    if missing or extra:
+        raise CampaignIncomplete(
+            f"campaign aggregation refused: {len(missing)} frozen job(s) have no "
+            f"terminal record (e.g. {missing[:3]}) and {len(extra)} record(s) belong "
+            f"to no frozen job (e.g. {extra[:3]}). A case rate whose denominator is "
+            "'the jobs that happened to finish' is not the declared denominator.")
+    for job_id, record in records.items():
+        if record.get("terminal_state") != RECORDED:
+            raise CampaignIncomplete(
+                f"{job_id}: terminal state {record.get('terminal_state')!r} is not "
+                f"{RECORDED!r}")
+    return {"declared_jobs": len(expected), "terminal_records": len(present),
+            "missing_terminal_jobs": 0, "extra_terminal_jobs": 0,
+            "duplicate_terminal_jobs": 0}
+
+
+def release_subconditions(plan: Mapping[str, Any], case_id: str) -> tuple[str, ...]:
+    """The subconditions a case's RELEASE criterion is evaluated over.
+
+    Where the frozen plan marks one subcondition `feeds_primary_claim`, that one
+    alone carries the release claim and the others are reported and never pooled
+    into it -- disposition G3, closed prospectively. Where none is marked, every
+    declared subcondition is a release unit in its own right (per cell, per rho,
+    per alternative), which is what the assurance row's `unit` says.
+    """
+    subs = case_entry(plan, case_id)["subconditions"]
+    primary = tuple(s["subcondition_id"] for s in subs if s.get("feeds_primary_claim"))
+    return primary or tuple(s["subcondition_id"] for s in subs)
+
+
+def assemble_case_aggregates(jobs: Sequence[CampaignJob],
+                             records: Mapping[str, Mapping[str, Any]]
+                             ) -> dict[str, dict[str, Any]]:
+    """Group terminal records by case using the IMMUTABLE planned job identity.
+
+    Case membership is a property of the frozen plan, never of an argument. A
+    caller cannot present a C7 record inside C1's denominator, because the
+    grouping reads `job.coordinates.case_id` from the planned job and refuses if
+    the record disagrees with the job it is filed under.
+    """
+    membership: dict[str, list[str]] = {}
+    for job in jobs:
+        membership.setdefault(job.coordinates.case_id, []).append(job.job_id)
+    aggregates: dict[str, dict[str, Any]] = {}
+    for case_id, job_ids in sorted(membership.items()):
+        by_subcondition: dict[str, list[str]] = {}
+        for job_id in sorted(job_ids):
+            record = records[job_id]
+            coordinates = record.get("coordinates") or {}
+            if coordinates.get("case_id") != case_id:
+                raise ResultCaseMismatch(
+                    f"{job_id} is planned in case {case_id!r} but its terminal record "
+                    f"declares {coordinates.get('case_id')!r}; cross-case "
+                    "substitution refused")
+            by_subcondition.setdefault(coordinates.get("subcondition_id"),
+                                       []).append(job_id)
+        aggregates[case_id] = {
+            "case_id": case_id,
+            "planned_jobs": len(job_ids),
+            "terminal_records": len(job_ids),
+            "by_subcondition": {k: sorted(v) for k, v in sorted(by_subcondition.items())},
+        }
+    return aggregates
+
+
+def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
+                       subcondition_id: str) -> dict[int, Mapping[str, Any]]:
+    """One outcome per REPLICATE of one subcondition, from the per-field records.
+
+    The fields of a replicate are one experiment, so the replicate-level verdict
+    is stored identically on each of its field records. Reading them back keyed by
+    replicate index refuses if two fields of the same replicate disagree, which
+    would mean the replicate was assembled twice.
+    """
+    out: dict[int, Mapping[str, Any]] = {}
+    for record in records.values():
+        coordinates = record.get("coordinates") or {}
+        if (coordinates.get("case_id") != case_id
+                or coordinates.get("subcondition_id") != subcondition_id):
+            continue
+        replicate = coordinates.get("replicate_id")
+        result = record.get("result") or {}
+        verdict = {k: result.get(k) for k in ("complete_pass", "p1_rejected",
+                                              "g5_rejected", "block1_rejected",
+                                              "false_acceptance", "scale_recovered",
+                                              "analysis_status")}
+        previous = out.get(replicate)
+        if previous is not None and previous != verdict:
+            raise ResultSchemaInvalid(
+                f"{case_id}/{subcondition_id} replicate {replicate}: two field "
+                "records disagree about the replicate-level verdict; the fields of "
+                "one replicate are one experiment and have one outcome")
+        out[replicate] = verdict
+    return out
+
+
+def campaign_counts_from_records(plan: Mapping[str, Any],
+                                 records: Mapping[str, Mapping[str, Any]]
+                                 ) -> CampaignCounts:
+    """Build the frozen classifier's counts from the immutable terminal records.
+
+    Every denominator is the case's DECLARED replicate count, and every count is
+    taken over the subconditions the frozen plan makes release units. Nothing here
+    is a threshold: the thresholds live in `classify_campaign`, which this feeds.
+    """
+    def replicates(case_id: str) -> int:
+        return case_entry(plan, case_id)["replicate_count"]
+
+    def verdicts(case_id: str, subcondition_id: str) -> dict[int, Mapping[str, Any]]:
+        found = replicate_outcomes(records, case_id, subcondition_id)
+        if len(found) != replicates(case_id):
+            raise CampaignIncomplete(
+                f"{case_id}/{subcondition_id}: {len(found)} replicate outcomes for a "
+                f"declared {replicates(case_id)}. Structured refusals COUNT in the "
+                "denominator; a missing replicate does not.")
+        return found
+
+    c1_sub = release_subconditions(plan, "C1_true_bridge_complete")[0]
+    c1 = sum(1 for v in verdicts("C1_true_bridge_complete", c1_sub).values()
+             if v["complete_pass"] is True)
+    c2_sub = release_subconditions(plan, "C2_geometry_false_rejection")[0]
+    c2_fields = required_result_fields(plan, "C2_geometry_false_rejection")
+    c2: dict[str, int] = {}
+    for field_id in c2_fields:
+        c2[field_id] = sum(
+            1 for job_id, record in records.items()
+            if (record["coordinates"]["case_id"] == "C2_geometry_false_rejection"
+                and record["coordinates"]["subcondition_id"] == c2_sub
+                and record["coordinates"]["scope"] == field_id
+                and (record.get("result") or {}).get("p1_rejected") is True))
+    c3_sub = release_subconditions(plan, "C3_g5_block")[0]
+    c3 = sum(1 for v in verdicts("C3_g5_block", c3_sub).values()
+             if v["g5_rejected"] is True)
+    c4_sub = release_subconditions(plan, "C4_surrogate_validity")[0]
+    c4 = sum(1 for v in verdicts("C4_surrogate_validity", c4_sub).values()
+             if v["block1_rejected"] is True)
+    # C5 is REPORT ONLY in frozen authority: the criterion is that every declared
+    # cell is reported, not that any cell clears a threshold. Completeness IS the
+    # criterion, and dropping a cell after inspection is the failure it guards.
+    c5_cells = release_subconditions(plan, "C5_plug_in_branch_a")
+    c5_pass = all(len(replicate_outcomes(records, "C5_plug_in_branch_a", cell))
+                  == replicates("C5_plug_in_branch_a") for cell in c5_cells)
+    # C6 has a frozen upper-bound criterion at EACH declared rho.
+    c6_row = next(r for r in plan["assurance"]
+                  if r["case_id"] == "C6_mode_resolution_boundary")
+    c6_pass = True
+    for rho in release_subconditions(plan, "C6_mode_resolution_boundary"):
+        rejections = sum(1 for v in verdicts("C6_mode_resolution_boundary", rho).values()
+                         if v["p1_rejected"] is True)
+        if cp_upper(rejections, c6_row["replicates"]) > c6_row["target_value"]:
+            c6_pass = False
+    c7 = {alt: sum(1 for v in verdicts("C7_false_bridge", alt).values()
+                   if v["false_acceptance"] is True)
+          for alt in release_subconditions(plan, "C7_false_bridge")}
+    c8_sub = release_subconditions(plan, "C8_blinded_scale_control")[0]
+    c8 = sum(1 for v in verdicts("C8_blinded_scale_control", c8_sub).values()
+             if v["scale_recovered"] is True)
+    return CampaignCounts(
+        c1_successes=c1, c2_rejections_by_field=c2, c3_rejections=c3,
+        c4_rejections=c4, c5_pass=bool(c5_pass), c6_pass=bool(c6_pass),
+        c7_false_acceptances_by_alternative=c7, c8_successes=c8)
+
+
+# ---------------------------------------------------- the stochastic boundary
+class StochasticProvider(Protocol):
+    """The ONLY way the orchestration can obtain a source of random numbers.
+
+    Production and tests differ ONLY in which object implements this. There is no
+    `force`, `skip_gate`, `ignore_seal`, `test_mode` or `rng_factory` parameter
+    anywhere on the production entry point, and `run_campaign` constructs its own
+    provider AFTER the gate rather than accepting one, so no argument can carry a
+    generator past a refused gate.
+    """
+
+    def generator(self, seed: int, purpose: str) -> Generator: ...
+
+
+#: Why the production provider cannot yet build a generator. This is an AUTHORITY
+#: gap, not a missing implementation: frozen authority declares seed INTEGERS
+#: (docs/e1a/e1a_v4_seed_map.json) and nowhere declares the pseudo-random
+#: algorithm or the transform from uniform to standard normal. Two algorithms
+#: seeded identically produce different trajectories, so the choice determines
+#: every number the campaign draws. Making it here would be choosing a scientific
+#: parameter no frozen document has chosen.
+UNDECLARED_GENERATOR = (
+    "the pseudo-random generator is NOT DECLARED in frozen authority. The seed map "
+    "declares the master seed, the family seeds and the derivation of stream "
+    "identities; no frozen document declares the PRNG algorithm or the transform "
+    "from uniform to standard normal. Those determine every number drawn, so the "
+    "driver refuses rather than choosing them. They must be declared in frozen "
+    "authority, and thereby enter the execution identity, BEFORE the seal is frozen."
+)
+
+
+class AuthorisedStochasticProvider:
+    """THE production provider. Constructed only past the complete lifecycle gate.
+
+    It is a real object on the real path and it refuses for a real reason: the
+    generator it would construct is not declared. The refusal is deliberately
+    reachable only after the gate, so a reviewer who ever sees it knows the gate
+    passed and the remaining gap is an authority gap, not a software one.
+    """
+
+    def __init__(self, binding: ExecutionBinding) -> None:
+        self.binding = binding
+        self.requests = 0
+
+    def generator(self, seed: int, purpose: str) -> Generator:
+        self.requests += 1
+        raise StochasticProviderRefused(
+            f"STOCHASTIC PROVIDER REFUSED for {purpose!r}: {UNDECLARED_GENERATOR}")
+
+
+# ------------------------------------------------- the per-job specification
+@dataclass(frozen=True)
+class JobSpecification:
+    """Everything the stochastic path needs for ONE job, resolved from authority.
+
+    Resolution is a separate, auditable step from execution, so "where did this
+    number come from?" has one answer per job and the orchestration below cannot
+    quietly default anything.
+    """
+
+    coordinates: JobCoordinates
+    #: The NOISELESS Branch-A field. Branch-A measurement error is applied to it.
+    field: BranchAField
+    error_model: BranchAErrorModel
+    beta_true: float
+    dt: float
+    n_samples: int
+    rank_tol: float
+    theta_cap_deg: float
+    #: C8 only: the declared deterministic Branch-A scale factors, applied to ONE
+    #: underlying replicate. Empty for every other case.
+    scale_factors: tuple[float, ...] = ()
+
+
+def subcondition_entry(plan: Mapping[str, Any], case_id: str,
+                       subcondition_id: str) -> Mapping[str, Any]:
+    for sub in case_entry(plan, case_id)["subconditions"]:
+        if sub["subcondition_id"] == subcondition_id:
+            return sub
+    raise CampaignPlanMismatch(
+        f"case {case_id!r} declares no subcondition {subcondition_id!r}")
+
+
+def branch_a_error_model(binding: ExecutionBinding, case_id: str,
+                         subcondition_id: str) -> BranchAErrorModel:
+    """The declared Branch-A measurement-error model for one (case, subcondition).
+
+    Every value is READ: the frozen contract's hypothetical uncertainty scenario
+    supplies the declared values, and a subcondition overrides only the parameters
+    it explicitly declares. Nothing is defaulted in code, so a scenario key that
+    disappeared from the contract would refuse rather than silently become zero.
+    """
+    scenario = binding.binding.data["hypothetical_uncertainty_scenario"]
+    for key in ("sigma_cm", "sigma_k", "sigma_T_K", "sigma_psi_deg"):
+        if key not in scenario:
+            raise CampaignPlanMismatch(
+                f"the frozen contract's uncertainty scenario declares no {key!r}; "
+                "the driver refuses to assume a measurement-error parameter")
+    sub = subcondition_entry(binding.plan, case_id, subcondition_id)
+    return BranchAErrorModel(
+        sigma_cm=float(scenario["sigma_cm"]),
+        sigma_k=float(sub.get("sigma_k", scenario["sigma_k"])),
+        sigma_psi_deg=float(sub.get("sigma_psi_deg", scenario["sigma_psi_deg"])),
+        sigma_T=float(scenario["sigma_T_K"]),
+    )
+
+
+def declared_beta_true(plan: Mapping[str, Any], case_id: str, subcondition_id: str,
+                       field_id: str) -> float:
+    """The truth beta for one field of one subcondition, READ from the plan.
+
+    A false-bridge alternative declares a per-field beta vector aligned with the
+    case's `fields_affected`; every other case declares a scalar `beta_truth`.
+    Anything else refuses: guessing which field an unaligned vector refers to is
+    exactly how a negative control stops being a control.
+    """
+    case = case_entry(plan, case_id)
+    sub = subcondition_entry(plan, case_id, subcondition_id)
+    if "beta_true" in sub:
+        declared = sub["beta_true"]
+        fields = list(case["fields_affected"])
+        if not isinstance(declared, list) or len(declared) != len(fields):
+            raise CampaignPlanMismatch(
+                f"{case_id}/{subcondition_id}: beta_true must declare one value per "
+                f"declared field ({len(fields)}), found {declared!r}")
+        return float(declared[fields.index(field_id)])
+    truth = case.get("beta_truth")
+    if isinstance(truth, (int, float)) and not isinstance(truth, bool):
+        return float(truth)
+    raise CampaignPlanMismatch(
+        f"{case_id}/{subcondition_id}: the beta truth for {field_id!r} is declared as "
+        f"{truth!r}, which is not a machine-readable value. The driver refuses to "
+        "interpret prose as a generating parameter.")
+
+
+#: Branch-A field construction needs three inputs frozen authority does not
+#: declare: the calibration route, the medium viscosity eta and the bead radius a.
+#: They are not cosmetic. The frozen relaxation rule is tau_r = gamma(T)/k_r with
+#: gamma = 6 pi eta(T) a, so they set every relaxation time, every phi, every
+#: effective size N_ab and therefore the entire Block-1 null law. Test fixtures
+#: pass literals for them; an official campaign may not.
+UNDECLARED_FIELD_INPUTS = (
+    "the Branch-A field construction inputs are NOT DECLARED in frozen authority: "
+    "calibration_route, viscosity (eta) and bead_radius (a). The frozen relaxation "
+    "rule tau_r = gamma(T)/k_r with gamma = 6 pi eta(T) a makes them determine "
+    "every phi, every effective size and the entire Block-1 null law. They must be "
+    "declared in the frozen contract or plan, and thereby enter the execution "
+    "identity, BEFORE the seal is frozen."
+)
+
+#: C6 analyses a 'synthetic two-mode field at the declared rho'. The plan declares
+#: the three rho values and N_12 and gives no machine-readable construction for
+#: the field that realises them; the four contract fields are not it.
+UNDECLARED_C6_FIELD = (
+    "case C6_mode_resolution_boundary declares its field as prose -- 'synthetic "
+    "two-mode field at the declared rho' -- and frozen authority gives no "
+    "machine-readable construction for it. The contract declares four fields and "
+    "none is at a declared rho. The construction must be declared in frozen "
+    "authority BEFORE the seal is frozen: the driver refuses to invent a geometry "
+    "whose eigenvalue ratio IS the quantity under test."
+)
+
+
+def resolve_job_specification(binding: ExecutionBinding,
+                              job: CampaignJob) -> JobSpecification:
+    """Resolve one job's generating inputs FROM FROZEN AUTHORITY, or refuse.
+
+    This is the AUTHORITY BOUNDARY of the execution path. Below it the
+    orchestration is mechanical; above it every value must have been declared by a
+    frozen document. Where authority is silent the resolver refuses and names the
+    exact missing declaration, because a driver that supplies a plausible default
+    for an undeclared generating parameter has quietly become the author of the
+    experiment.
+
+    Both refusals below are AUTHORITY GAPS found by writing this path before the
+    seal was frozen, which is what writing it before the seal is for.
+    """
+    case_id = job.coordinates.case_id
+    field_id = job.coordinates.scope
+    declared_fields = {f["id"] for f in binding.binding.fields}
+    if field_id not in declared_fields:
+        if case_id == "C6_mode_resolution_boundary":
+            raise CampaignPlanMismatch(f"{job.job_id}: {UNDECLARED_C6_FIELD}")
+        raise CampaignPlanMismatch(
+            f"{job.job_id}: the frozen contract declares no field {field_id!r}")
+    raise CampaignPlanMismatch(f"{job.job_id}: {UNDECLARED_FIELD_INPUTS}")
+
+
+# --------------------------------------------------- endpoint assembly, frozen
+def uncertainty_model(binding: ExecutionBinding,
+                      specifications: Mapping[str, JobSpecification],
+                      analyses: Mapping[str, Any]) -> UncertaintyModel:
+    """The declared uncertainty model, with sigma_stat DERIVED per field.
+
+    sigma_cm and sigma_fs come from the frozen contract scenario;
+    `e1a_v4.effective_size.sigma_stat` supplies the statistical term from the
+    field's own phi modes and record length. No term is restated here.
+    """
+    per_field: dict[str, float] = {}
+    for field_id, specification in specifications.items():
+        phis = [math.exp(-specification.dt / tau)
+                for tau in specification.field.tau_modes]
+        per_field[field_id] = sigma_stat(list(phis), specification.n_samples)
+    return UncertaintyModel.from_contract(binding.binding, per_field)
+
+
+def evaluate_replicate(binding: ExecutionBinding, case_id: str, subcondition_id: str,
+                       specifications: Mapping[str, JobSpecification],
+                       analyses: Mapping[str, Any],
+                       conditions: Mapping[str, CalibrationCondition],
+                       artifacts: Mapping[str, CalibrationArtifact]) -> dict[str, Any]:
+    """The frozen endpoints for ONE replicate. Calls; never reimplements.
+
+        P1  e1a_v4.endpoints.p1_geometry     per field, against its locked artifact
+        P2  e1a_v4.endpoints.p2_cross_field  intersection-union across fields
+        P3  e1a_v4.endpoints.p3_absolute     conjunctive over every tested field
+        P4  e1a_v4.endpoints.p4_consistency  deterministic, consumes no Branch-B data
+
+    The composition is the plan's own declared endpoint, not a convention: a case
+    whose `primary_release_endpoint` is COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4
+    passes only if every one of them passes.
+    """
+    contract = binding.binding
+    unc = uncertainty_model(binding, specifications, analyses)
+    per_field_p1: dict[str, bool] = {}
+    for field_id, analysis in sorted(analyses.items()):
+        condition = conditions.get(field_id)
+        if condition is None:
+            continue
+        result = p1_geometry(analysis, contract,
+                             procedure_identity=binding.analysis_identity,
+                             condition=condition, artifact=artifacts.get(field_id))
+        per_field_p1[field_id] = bool(result.passed)
+    p2 = p2_cross_field(analyses, contract, unc)
+    p3 = p3_absolute(analyses, contract, unc)
+    p4 = p4_consistency(contract)
+    p1_all = all(per_field_p1.values()) if per_field_p1 else None
+    outcome = {
+        "per_field_p1": per_field_p1,
+        "p1_rejected": (not p1_all) if p1_all is not None else None,
+        "P2": bool(p2.passed), "P3": bool(p3.passed), "P4": bool(p4.passed),
+        "g5_rejected": None, "block1_rejected": None,
+        "false_acceptance": bool(p2.passed and p3.passed),
+        "complete_pass": bool(p1_all and p2.passed and p3.passed and p4.passed)
+        if p1_all is not None else None,
+        "scale_recovered": None,
+    }
+    scale_factors = next((s.scale_factors for s in specifications.values()
+                          if s.scale_factors), ())
+    if scale_factors:
+        outcome["scale_recovered"] = evaluate_scale_control(
+            contract, unc, analyses, scale_factors)
+        outcome["scale_factors"] = list(scale_factors)
+    return outcome
+
+
+def evaluate_scale_control(contract, unc: UncertaintyModel,
+                           analyses: Mapping[str, Any],
+                           scale_factors: Sequence[float]) -> bool:
+    """C8: beta_tilde = c * beta_hat must satisfy the SAME P3 rule, for BOTH c.
+
+    The frozen transform is applied to ONE underlying replicate's analyses -- the
+    two factors are not independent subconditions and are given no separate
+    streams -- and the frozen `p3_absolute` implementation does the deciding. A
+    replicate succeeds only if both branches pass.
+    """
+    import dataclasses
+    for factor in scale_factors:
+        scaled = {
+            field_id: (dataclasses.replace(a, beta_hat=a.beta_hat * float(factor))
+                       if a.beta_hat is not None else a)
+            for field_id, a in analyses.items()
+        }
+        if not p3_absolute(scaled, contract, unc).passed:
+            return False
+    return True
+
+
+# ------------------------------------------------- the execution orchestration
+def replicate_groups(jobs: Sequence[CampaignJob]
+                     ) -> list[tuple[tuple[str, str, int], tuple[CampaignJob, ...]]]:
+    """Group planned jobs into replicates, preserving the frozen plan's order.
+
+    A replicate is one synthetic EXPERIMENT: its fields share the Branch-A
+    common mode and are evaluated by the cross-field endpoints together. Grouping
+    is a pure function of the coordinates, so a permuted schedule yields the same
+    groups with the same members.
+    """
+    groups: dict[tuple[str, str, int], list[CampaignJob]] = {}
+    order: list[tuple[str, str, int]] = []
+    for job in jobs:
+        key = (job.coordinates.case_id, job.coordinates.subcondition_id,
+               job.coordinates.replicate_id)
+        if key not in groups:
+            groups[key] = []
+            order.append(key)
+        groups[key].append(job)
+    return [(key, tuple(groups[key])) for key in order]
+
+
+def execute_replicate(binding: ExecutionBinding, group: Sequence[CampaignJob],
+                      provider: StochasticProvider, ledger: CampaignCalibrationLedger,
+                      output_dir: str, *, resolver) -> dict[str, dict[str, Any]]:
+    """Execute ONE replicate's frozen dependency graph. Calls, never reimplements.
+
+        Branch-A measurement  e1a_v4.validation.generate.BranchAErrorModel.measure
+        calibration artifact  e1a_v4.validation.calibrate.generate_block1_artifact
+        Branch-B trajectory   e1a_v4.validation.generate.ou_observations
+        Branch-B analysis     e1a_v4.geometry.analyse_field
+        endpoints             e1a_v4.endpoints.p1..p4
+
+    The driver supplies the ORDER, the provenance and the seeds, and no formula.
+    Every seed comes from the replicate's own `ReplicateCalibration`, so Branch B
+    is unreachable until Branch-A evidence is published and, where the case
+    requires one, its calibration artifact is locked.
+    """
+    first = group[0]
+    calibration = replicate_calibration_for(binding, first, ledger)
+    # ONE common-mode draw per experiment, SHARED across the fields. Redrawing it
+    # per field would destroy the cancellation P2 depends on.
+    common_mode_seed = calibration.common_mode_seed()
+    common_mode = provider.generator(common_mode_seed,
+                                     "branch_a_common_mode").normal(1)[0]
+    executions: dict[str, JobExecution] = {}
+    specifications: dict[str, JobSpecification] = {}
+    analyses: dict[str, Any] = {}
+    conditions: dict[str, CalibrationCondition] = {}
+    artifacts: dict[str, CalibrationArtifact] = {}
+    measured_fields: dict[str, BranchAField] = {}
+    for job in group:
+        field_id = job.coordinates.scope
+        execution = job_execution(binding, job, ledger, output_dir, calibration)
+        specification = resolver(binding, job)
+        specifications[field_id] = specification
+        branch_a_seed = calibration.branch_a_seed(field_id)
+        branch_a_rng = provider.generator(branch_a_seed, "branch_a_measurement")
+        measured = specification.error_model.measure(specification.field,
+                                                     branch_a_rng, common_mode)
+        execution.realise_branch_a(measured, branch_a_seed=branch_a_seed,
+                                   common_mode_seed=common_mode_seed,
+                                   generator_identity=BRANCH_A_GENERATOR_IDENTITY)
+        # HASH, PUBLISH, COMMIT. Branch B is unreachable until this returns.
+        execution.publish_branch_a()
+        if job.requires_calibration:
+            condition = execution.calibration_condition()
+            conditions[field_id] = condition
+            calibration_rng = provider.generator(execution.calibration_seed(),
+                                                 "calibration")
+            artifact = generate_block1_artifact(
+                CalibrationRequest(
+                    field_id=condition.field_id,
+                    H_A=[list(row) for row in measured.H],
+                    n=condition.n, phis=condition.phi_modes,
+                    replicates=condition.replicates, alpha_1=condition.alpha_1,
+                    theta_cap_deg=condition.theta_cap_deg,
+                    procedure_identity=condition.procedure_identity,
+                    contract_sha256=condition.contract_sha256,
+                    plan_sha256=condition.plan_sha256,
+                    dt=condition.dt, tau_modes=condition.tau_modes),
+                calibration_rng)
+            execution.lock_calibration(artifact)
+            artifacts[field_id] = artifact
+        # ---- ONLY NOW may Branch B be unblinded ------------------------------
+        execution.unblind()
+        branch_b_rng = provider.generator(execution.branch_b_seed(), "branch_b")
+        truth = truth_from_field(specification.field, specification.dt,
+                                 specification.n_samples, specification.beta_true)
+        observations = ou_observations(truth, branch_b_rng)
+        analyses[field_id] = analyse_field(
+            measured, observations, rank_tol=specification.rank_tol,
+            theta_cap_deg=specification.theta_cap_deg,
+            phi_modes=[math.exp(-specification.dt / tau) for tau in truth.tau_true])
+        measured_fields[field_id] = measured
+        executions[field_id] = execution
+    replicate = evaluate_replicate(binding, first.coordinates.case_id,
+                                   first.coordinates.subcondition_id,
+                                   specifications, analyses, conditions, artifacts)
+    outcomes: dict[str, dict[str, Any]] = {}
+    for field_id, execution in executions.items():
+        analysis = analyses[field_id]
+        outcome = dict(replicate)
+        outcome.update({
+            "field_id": field_id,
+            "analysis_status": analysis.status.value,
+            "beta_hat": analysis.beta_hat,
+            "G1": analysis.g1, "G2": analysis.g2_spread,
+            "G3": list(analysis.g3) if analysis.g3 else None,
+            "G4": analysis.g4, "G5": analysis.g5,
+            "P1": replicate["per_field_p1"].get(field_id),
+        })
+        execution.analyse(outcome)
+        # STREAMING_PER_REPLICATE: the artifacts are finalised, locked and spent.
+        execution.release_calibration()
+        outcomes[execution.job.job_id] = {"execution": execution, "outcome": outcome}
+    return outcomes
+
+
+#: The per-case DIAGNOSTIC AGGREGATOR is the reporting layer's contribution, and
+#: it is not part of the driver. Frozen authority states each mandatory
+#: diagnostic's requirement in prose (`release_authority.mandatory_diagnostics`)
+#: and states no machine-readable recipe for computing several of them -- C4's
+#: operating-quantile discrepancy and C3's delta-method error among them. The
+#: driver REQUIRES them, which is its job; computing them is not.
+UNDECLARED_DIAGNOSTIC_AGGREGATOR = (
+    "the per-case MANDATORY DIAGNOSTIC AGGREGATOR is not supplied. Frozen "
+    "authority requires these diagnostics to be reported and states several of "
+    "them only in prose, so the driver refuses rather than reporting an empty "
+    "one. The aggregator is supplied by the authorised execution stage, and the "
+    "diagnostics it must compute are declared in "
+    "release_authority.mandatory_diagnostics."
+)
+
+
+def default_case_aggregate(binding: ExecutionBinding, case_id: str,
+                           rows: Sequence[tuple["JobExecution", Mapping[str, Any]]]
+                           ) -> dict[str, Any]:
+    """The frozen aggregate SHAPE for a case, and a refusal where content is owed.
+
+    A case that frozen authority requires no diagnostic for aggregates to the
+    declared skeleton. A case that DOES owe one refuses here, by name, rather
+    than further downstream with a shape error: an empty mandatory diagnostic is
+    exactly the outcome the release-authority layer exists to prevent.
+    """
+    declared = mandatory_diagnostics_for(binding.plan, case_id)
+    owed = [d for d in declared if d.required_keys]
+    if owed:
+        raise ContractMandatoryDiagnosticMissing(
+            f"{case_id}: {UNDECLARED_DIAGNOSTIC_AGGREGATOR} Owed here: "
+            f"{[d.diagnostic_id for d in owed]}.")
+    return aggregate_skeleton(case_id)
+
+
+def execute_campaign(binding: ExecutionBinding, jobs: Sequence[CampaignJob],
+                     provider: StochasticProvider, output_dir: str, *,
+                     resolver=resolve_job_specification,
+                     aggregator=None,
+                     ledger: CampaignCalibrationLedger | None = None,
+                     realisations: Mapping[str, BranchARealisation] | None = None,
+                     ) -> dict[str, Any]:
+    """The campaign loop, BELOW the gate. Not an entry point and not authorised.
+
+        reconcile restart state against the persisted inventory
+              -> for each planned replicate: the frozen dependency graph
+              -> per-case aggregate, built from that case's own records
+              -> immutable terminal record per job, with its mandatory diagnostics
+              -> campaign completeness: every frozen job, exactly once
+              -> case aggregates from the IMMUTABLE planned job identities
+              -> the frozen release classifier
+              -> the final campaign result
+
+    `run_campaign` is the only production caller and passes neither `resolver` nor
+    `aggregator`: both exist so a deterministic fixture can exercise this control
+    flow without a real generator. Neither can reach a real provider past a
+    refused gate, because the gate runs ABOVE this function and this function is
+    never reached when it refuses.
+    """
+    ledger = ledger if ledger is not None else CampaignCalibrationLedger()
+    known = dict(realisations or {})
+    # RECONCILE BOTH PERSISTED STORES BEFORE RESUMING. A restart never begins by
+    # writing, and it never asks the caller what exists.
+    restart = verify_restart(output_dir, known, binding, jobs)
+    completed = inventory_job_records(output_dir, binding, jobs)
+    orphan_results = sorted(set(completed) - set(known))
+    if orphan_results:
+        raise RestartInventoryMismatch(
+            f"{len(orphan_results)} terminal record(s) exist for jobs with no "
+            f"committed Branch-A publication (e.g. {orphan_results[:3]}); a result "
+            "whose evidence is missing is not a completed job.")
+    interrupted = sorted(set(known) - set(completed))
+    if interrupted:
+        raise RestartInventoryMismatch(
+            f"{len(interrupted)} job(s) published Branch-A evidence and committed no "
+            f"terminal record (e.g. {interrupted[:3]}). The run was interrupted "
+            "between publication and recording. That Branch-A evidence is immutable "
+            "and may not be republished, so the job can be neither re-run nor "
+            "completed automatically: recovery is an authorised decision, not "
+            "something a resume may take on its own.")
+    by_case: dict[str, list[tuple[JobExecution, dict[str, Any]]]] = {}
+    executed: list[str] = []
+    for _key, group in replicate_groups(jobs):
+        pending = [job for job in group if job.job_id not in completed]
+        if not pending:
+            continue                        # already published; never re-run
+        if len(pending) != len(group):
+            raise RestartInventoryMismatch(
+                f"replicate {_key} is partially complete: {len(pending)} of "
+                f"{len(group)} field jobs are outstanding. A replicate is one "
+                "experiment and is resumed whole or not at all.")
+        produced = execute_replicate(binding, group, provider, ledger, output_dir,
+                                     resolver=resolver)
+        for job_id, row in produced.items():
+            by_case.setdefault(row["execution"].coordinates.case_id, []).append(
+                (row["execution"], row["outcome"]))
+            executed.append(job_id)
+    records: dict[str, dict[str, Any]] = dict(completed)      # recovered from disk
+    for case_id, rows in sorted(by_case.items()):
+        aggregate = ((aggregator or default_case_aggregate)(binding, case_id, rows))
+        for execution, _outcome in rows:
+            record = execution.record(aggregate)
+            # COMMIT THE RESULT DURABLY before it counts as a completed job.
+            publish_job_record(output_dir, record, binding)
+            records[execution.job.job_id] = record
+    completeness = require_campaign_completeness(jobs, records)
+    for record in records.values():
+        validate_job_record(record, binding.plan)
+    aggregates = assemble_case_aggregates(jobs, records)
+    # THE FROZEN RELEASE CLASSIFIER RUNS OVER THE COMPLETE CAMPAIGN OR NOT AT ALL.
+    # Whether it runs is decided mechanically, by comparing the supplied job set
+    # with the complete frozen plan -- not by a parameter a caller could set. A
+    # subset run is self-evidently not a release decision, and classifying one
+    # would produce a verdict whose denominators are "the jobs that were asked for".
+    complete = {job.job_id for job in jobs} == {
+        job.job_id for job in plan_campaign(binding.plan)}
+    classification = None
+    if complete:
+        classification = classify_campaign(
+            campaign_counts_from_records(binding.plan, records))
+    return {
+        "schema": CAMPAIGN_RESULT_SCHEMA,
+        "restart": restart,
+        "completeness": completeness,
+        "case_aggregates": aggregates,
+        "executed_jobs": executed,
+        "complete_campaign": complete,
+        "classification": classification,
+        "records": records,
+    }
+
+
+# ----------------------------------------------------------- the execution gate
+def require_execution_lifecycle(root: str, binding: ExecutionBinding,
+                                output_dir: str) -> dict[str, Any]:
+    """THE COMPLETE GATE. It runs BEFORE any stochastic provider object exists.
+
+        1. the canonical campaign driver is present and declares its entry point
+        2. the external execution seal is FROZEN
+        3. the recomputed execution identity equals the independently sealed one
+        4. execution_authorised is true in the frozen plan
+        5. the campaign manifest is valid
+        6. the output / restart state is valid
+
+    The order is the plan's declared `execution_gate_order`: the most fundamental
+    missing precondition first, so a refusal never reads as "just flip the
+    authorisation flag".
+    """
+    require_canonical_driver(root)
+    require_execution_gate(root, binding.plan, binding.execution_identity)
+    manifest = campaign_manifest(binding, root)
+    if manifest["execution_authorised"] is not True:
+        raise ExecutionAuthorisationMissing(
+            "the campaign manifest does not carry execution authorisation")
+    inventory = require_clean_inventory(publication_directory(output_dir),
+                                        "the Branch-A publication store")
+    results = require_clean_inventory(job_record_directory(output_dir),
+                                      "the terminal job-record store")
+    return {"manifest": manifest, "manifest_sha256": manifest_digest(manifest),
+            "inventory": inventory.as_dict(), "job_records": results.as_dict()}
+
+
 # ------------------------------------------------------------- the entry point
 def run_campaign(root: str = ".", *, output_dir: str | None = None,
-                 plan_only: bool = False,
-                 rng_factory: Any = None) -> dict[str, Any]:
+                 plan_only: bool = False) -> dict[str, Any]:
     """THE official campaign entry point, declared in e1a_v4/validation/driver.py.
 
     `plan_only` performs the complete RNG-free planning phase and returns the
-    manifest. The stochastic path refuses: the execution seal is not frozen and
-    `execution_authorised` is false. There is deliberately no force, skip-seal or
-    ignore-authorisation parameter -- an escape hatch is exactly the thing this
-    package exists to not have.
+    manifest. The stochastic path passes the COMPLETE lifecycle gate first and
+    constructs its provider only afterwards, so the first real generator cannot be
+    requested before the gate has passed.
+
+    There is deliberately no `force`, `skip_gate`, `ignore_seal`, `test_mode`,
+    `rng_factory` or `provider` parameter. An earlier revision accepted an
+    `rng_factory`: that was an injection point on the production entry point and
+    it is removed. An escape hatch is exactly the thing this package exists not to
+    have.
     """
     binding = bind_execution(root=root, output_dir=output_dir)
     jobs = plan_campaign(binding.plan)
@@ -915,27 +2340,19 @@ def run_campaign(root: str = ".", *, output_dir: str | None = None,
         return {"manifest": manifest, "manifest_sha256": manifest_digest(manifest),
                 "agreement": agreement, "jobs": len(jobs),
                 "rng_objects": 0, "random_draws": 0, "trajectories": 0}
-    # --- the stochastic path -------------------------------------------------
-    # The execution gate lives in the runner and is not duplicated here. The
-    # driver refuses on its own account as well, so importing and calling it
-    # directly cannot become a way around the gate.
-    from .seal import load_seal
-    seal = load_seal(root)
-    if not seal.is_frozen or not binding.plan.get("execution_authorised", False):
-        raise Refusal(
-            "EXECUTION REFUSED: the official campaign driver is PRESENT but the "
-            f"execution seal is {seal.state} and execution_authorised is "
-            f"{binding.plan.get('execution_authorised', False)}. A driver that "
-            "exists is not a driver that may run: the seal is frozen by a reviewer "
-            "after the driver is independently audited, and authorisation is a "
-            "separate task again. No RNG was constructed."
-        )
-    raise Refusal(
-        "EXECUTION REFUSED: the stochastic execution stage is not implemented in "
-        "this task. The driver's planning, provenance, publication and unblind "
-        "machinery are complete and statically tested; drawing the first random "
-        "number is a separately authorised stage."
-    )
+    out = os.path.join(root, binding.output_dir)
+    # --- THE GATE. Nothing stochastic exists yet, and nothing will if it refuses.
+    lifecycle = require_execution_lifecycle(root, binding, out)
+    # --- the AUTHORISED deterministic recovery: the campaign asks the disk what
+    # it published, never its own memory and never the caller. The recovered set
+    # then goes through the same strict reconciliation as any other checkpoint.
+    recovered = recover_realisations(out, binding)
+    # --- only past the gate does a provider get constructed --------------------
+    provider = AuthorisedStochasticProvider(binding)
+    result = execute_campaign(binding, jobs, provider, out, realisations=recovered)
+    result["lifecycle"] = lifecycle
+    result["recovered_publications"] = len(recovered)
+    return result
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -974,7 +2391,6 @@ def main(argv: list[str] | None = None) -> int:
     print(f"  execution identity  : {manifest['identities']['execution_identity']}")
     print(f"  lifecycle state     : {manifest['state']}")
     print(f"  execution_authorised: {manifest['execution_authorised']}")
-    print(f"  final expected id   : {manifest['final_expected_execution_identity']}")
     if not args.plan_only:
         print("EXECUTION NOT ATTEMPTED: pass --plan-only explicitly; the stochastic "
               "path refuses while the seal is unfrozen and execution is unauthorised")

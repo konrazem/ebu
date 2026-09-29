@@ -37,14 +37,23 @@ from e1a_v4.contract import load_contract, sha256_file
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.campaign_driver import (
-    ANALYSED, BRANCH_A_PUBLICATION_DIR, BRANCH_A_PUBLISHED, BRANCH_A_REALIZED,
+    recover_realisations, realisation_from_record,
+    ANALYSED, BRANCH_A_GENERATOR_IDENTITY, BRANCH_A_PUBLICATION_DIR,
+    BRANCH_A_PUBLICATION_SCHEMA, BRANCH_A_PUBLISHED, BRANCH_A_REALIZED,
     BRANCH_B_UNBLINDED, CALIBRATION_CONDITION_BOUND, CALIBRATION_LOCKED,
-    CAMPAIGN_MANIFEST_SCHEMA, PLANNED, RECORDED, BranchARealisation,
-    BranchBUnblindToken, CampaignJob, JobCoordinates, JobExecution,
-    campaign_manifest, campaign_shape, job_execution, main as driver_main,
-    manifest_digest, plan_campaign, publication_path,
-    replicate_calibration_for, require_plan_driver_agreement, run_campaign,
-    verify_publication, verify_restart,
+    CAMPAIGN_MANIFEST_SCHEMA, PLANNED, PUBLICATION_FIELDS, RECORDED,
+    UNDECLARED_C6_FIELD, UNDECLARED_FIELD_INPUTS, UNDECLARED_GENERATOR,
+    AuthorisedStochasticProvider, BranchARealisation, BranchBUnblindToken,
+    CampaignJob, JobCoordinates, JobExecution, JobSpecification,
+    assemble_case_aggregates, branch_a_error_model, campaign_manifest,
+    campaign_shape, canonical_result_fields, declared_beta_true,
+    execute_campaign, inventory_publications, job_execution,
+    main as driver_main, manifest_digest, plan_campaign, publication_basename,
+    publication_directory, publication_envelope, publication_path,
+    replicate_calibration_for, replicate_groups, require_campaign_completeness,
+    require_execution_lifecycle, require_plan_driver_agreement,
+    required_result_fields, resolve_job_specification, run_campaign,
+    validate_job_record, verify_publication, verify_restart,
 )
 from e1a_v4.validation.driver import (
     OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT, OFFICIAL_CAMPAIGN_DRIVER_MODULE,
@@ -53,9 +62,14 @@ from e1a_v4.validation.driver import (
 )
 from e1a_v4.validation.plan import bind_execution, execution_identity, load_plan
 from e1a_v4.validation.publication import (
-    canonical_bytes, canonical_digest, canonical_json, publish_atomic,
-    read_published,
+    PUBLICATION_STAGES, canonical_bytes, canonical_digest, canonical_json,
+    commit_name, inventory_directory, is_commit_name,
+    is_committed, publish_atomic,
+    read_committed, read_published, require_clean_inventory, sealed_digest,
 )
+import e1a_v4.validation.publication as publication_module
+from e1a_v4.validation.results import aggregate_skeleton
+from e1a_v4.validation.dispositions import cp_upper
 from e1a_v4.validation.scope import CampaignCalibrationLedger
 from e1a_v4.validation.seeds import EXPERIMENT_SCOPE, ValidationSeedFamily
 from e1a_v4.validation.seal import SEAL_JSON
@@ -63,6 +77,10 @@ from e1a_v4.validation.strict_json import strict_load_file
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 CONTRACT_JSON = "docs/e1a/e1a_v4_design_contract.json"
+#: Pinned so the repair cannot move the authority it is forbidden to move.
+PLAN_JSON_SHA256 = "dcb3507585791c851e616c81a113fe89d61d2e830a4694f49733d1d04c5b8f5a"
+PLAN_MARKDOWN_SHA256 = "3f4715b465da295e21ad99a86390585c9eb7deac44a7810114a88f40aa4bf940"
+FAKE_SUPPLIERS_BEFORE_GATE = [0]
 PASSED = 0
 FAILED = 0
 
@@ -159,6 +177,42 @@ def fixture_artifact(condition: CalibrationCondition) -> CalibrationArtifact:
         alpha_1=condition.alpha_1, null_draws=draws, condition=condition,
         schema=condition.canonical()["schema"], provenance="deterministic fixture",
         is_fixture=True)
+
+
+def write_record(path: str, record) -> None:
+    """Overwrite a published artifact in place. A read-only file is not immutable
+    storage; it is a convention, and the point of the commit marker is that
+    defeating the convention still does not produce accepted evidence."""
+    os.chmod(path, 0o600)
+    with open(path, "wb") as handle:
+        handle.write(canonical_bytes(record))
+    os.chmod(path, 0o444)
+
+
+def recommit(directory: str, basename: str, mutate, *,
+             fix_publication_digest: bool = False) -> None:
+    """Tamper with an artifact AND rebuild a fully self-consistent commit marker.
+
+    This is the capable adversary: byte digests, the marker's own digest and the
+    commit linkage are all repaired. Only the publication digest over the whole
+    provenance envelope can still catch it, which is exactly what the audit found
+    missing when the evidence hash alone was the authentication.
+    """
+    import hashlib
+    artifact = os.path.join(directory, basename)
+    record = read_published(artifact, "record")
+    mutate(record)
+    if fix_publication_digest:
+        record["publication_digest"] = sealed_digest(record, "publication_digest")
+    write_record(artifact, record)
+    marker_path = os.path.join(directory, commit_name(basename))
+    marker = read_published(marker_path, "marker")
+    marker["artifact_bytes_sha256"] = hashlib.sha256(
+        open(artifact, "rb").read()).hexdigest()
+    if fix_publication_digest:
+        marker["publication_digest"] = record["publication_digest"]
+    marker["commit_digest"] = sealed_digest(marker, "commit_digest")
+    write_record(marker_path, marker)
 
 
 def first_job(jobs, case_id: str, *, scope: str | None = None) -> CampaignJob:
@@ -438,8 +492,14 @@ def test_branch_a_seed_substitution_refuses() -> None:
 # ------------------------------------------------------ 4. durable publication
 def test_publication_primitive() -> None:
     directory = tempfile.mkdtemp()
-    path = publish_atomic(directory, "probe.json", {"b": 2, "a": 1})
+    receipt = publish_atomic(directory, "probe.json", {"b": 2, "a": 1})
+    path = receipt.path
     check("publication creates the final path", os.path.isfile(path))
+    check("the receipt carries the exact byte digest",
+          receipt.byte_sha256
+          == __import__("hashlib").sha256(open(path, "rb").read()).hexdigest())
+    check("a clean publication leaves no residual alias",
+          receipt.residual_alias is None)
     check("the published file is read-only (0444)",
           (os.stat(path).st_mode & 0o777) == 0o444, oct(os.stat(path).st_mode & 0o777))
     check("no temporary alias survives publication",
@@ -482,7 +542,22 @@ def test_branch_a_publication_and_immutability() -> None:
     check("publishing advances the state", execution.state == BRANCH_A_PUBLISHED)
     check("the publication lives under the campaign output directory",
           BRANCH_A_PUBLICATION_DIR in path and os.path.isfile(path))
-    record = read_published(path, "branch A")
+    directory = publication_directory(harness.out)
+    basename = os.path.basename(path)
+    check("publication is COMMITTED, not merely written",
+          is_committed(directory, basename))
+    check("the commit marker exists beside the artifact",
+          os.path.isfile(os.path.join(directory, commit_name(basename))))
+    record, marker = read_committed(directory, basename, "branch A")
+    check("the marker commits this artifact's exact bytes",
+          marker["artifact_bytes_sha256"]
+          == __import__("hashlib").sha256(open(path, "rb").read()).hexdigest())
+    check("the marker commits the same publication digest",
+          marker["publication_digest"] == record["publication_digest"])
+    check("the record carries exactly the declared publication fields",
+          set(record) == set(PUBLICATION_FIELDS), str(sorted(record)))
+    check("the publication digest is a recomputation over everything else",
+          record["publication_digest"] == sealed_digest(record, "publication_digest"))
     check("the record binds the coordinates",
           record["coordinates"] == job.coordinates.as_dict())
     check("the record carries the evidence and its hash",
@@ -511,32 +586,22 @@ def test_branch_a_publication_and_immutability() -> None:
     refuses_with_code("an explicit republish attempt", "BRANCH_A_PUBLICATION_IMMUTABLE",
                       execution.republish_branch_a, realisation)
 
-    # edited evidence on disk is detected by recomputation
-    for label, mutate, expected in (
+    # LAYER 1: editing the artifact alone breaks the committed byte digest.
+    for label, mutate in (
             ("edited published EVIDENCE",
-             lambda r: r["branch_a_evidence"].__setitem__("T_measured", "0x1.0p+8"),
-             "BRANCH_A_EVIDENCE_ALTERED"),
+             lambda r: r["branch_a_evidence"].__setitem__("T_measured", "0x1.0p+8")),
             ("edited published HASH",
-             lambda r: r.__setitem__("branch_a_evidence_sha256", "0" * 64),
-             "BRANCH_A_EVIDENCE_ALTERED"),
+             lambda r: r.__setitem__("branch_a_evidence_sha256", "0" * 64)),
             ("rebound coordinates",
-             lambda r: r["coordinates"].__setitem__("replicate_id", 7),
-             "BRANCH_A_PROVENANCE_MISMATCH"),
+             lambda r: r["coordinates"].__setitem__("replicate_id", 7)),
             ("a package identity changed after publication",
-             lambda r: r["package_identities"].__setitem__("plan_sha256", "0" * 64),
-             "BRANCH_A_PROVENANCE_MISMATCH")):
+             lambda r: r["package_identities"].__setitem__("plan_sha256", "0" * 64))):
         tampered = copy.deepcopy(record)
         mutate(tampered)
-        os.chmod(path, 0o600)
-        with open(path, "wb") as handle:
-            handle.write(canonical_bytes(tampered))
-        os.chmod(path, 0o444)
-        refuses_with_code(label, expected, verify_publication, harness.out,
-                          realisation, harness.binding)
-    os.chmod(path, 0o600)
-    with open(path, "wb") as handle:
-        handle.write(canonical_bytes(record))
-    os.chmod(path, 0o444)
+        write_record(path, tampered)
+        refuses_with_code(label, "PUBLICATION_INCOMPLETE", verify_publication,
+                          harness.out, realisation, harness.binding)
+    write_record(path, record)
     check("restoring the record restores verification",
           refusal_code(verify_publication, harness.out, realisation,
                        harness.binding) is None)
@@ -954,7 +1019,7 @@ def test_restart_verification() -> None:
     with open(path, "wb") as handle:
         handle.write(canonical_bytes(record))
     os.chmod(path, 0o444)
-    refuses_with_code("a tampered record on resume", "BRANCH_A_EVIDENCE_ALTERED",
+    refuses_with_code("a tampered record on resume", "PUBLICATION_INCOMPLETE",
                       verify_restart, harness.out, realisations, harness.binding)
     check("resume never regenerates a completed replicate: it refuses instead",
           os.path.isfile(path))
@@ -977,11 +1042,12 @@ def test_mandatory_diagnostics_required_at_record_time() -> None:
     execution.branch_b_seed()
     execution.analyse({"p1_rejected": False})
 
-    bare = aggregate_skeleton("C2_geometry_false_rejection", "sigma_psi_0p5")
+    subcondition = job.coordinates.subcondition_id
+    bare = aggregate_skeleton("C2_geometry_false_rejection", subcondition)
     refuses_with_code("recording a C2 result with NO contract diagnostic",
                       "RESULT_SCHEMA_INVALID", execution.record, bare, FIELDS)
 
-    complete = aggregate_skeleton("C2_geometry_false_rejection", "sigma_psi_0p5")
+    complete = aggregate_skeleton("C2_geometry_false_rejection", subcondition)
     complete["contract_diagnostics"] = {"per_field": {
         f: {"rejections": 2, "replicates": 400, "cp_upper": cp_upper(2, 400),
             "threshold": GROSS_INFLATION_TOLERANCE, "direction": "UPPER",
@@ -994,6 +1060,19 @@ def test_mandatory_diagnostics_required_at_record_time() -> None:
           == execution._realisation.evidence_sha256)
     check("the C2 contract diagnostic is structurally required, not optional logging",
           "contract_diagnostics" in complete)
+    stored = {d["diagnostic_id"]: d for d in recorded["mandatory_diagnostics"]}
+    check("the checked diagnostic SURVIVES into the stored result",
+          "C2_CONTRACT_COARSE_UPPER_BOUND" in stored, str(sorted(stored)))
+    evidence = stored["C2_CONTRACT_COARSE_UPPER_BOUND"]["value"]["per_field"]
+    check("the stored evidence carries one row per declared field",
+          set(evidence) == set(FIELDS))
+    row = evidence[sorted(evidence)[0]]
+    for key in ("rejections", "replicates", "cp_upper", "threshold", "direction",
+                "confidence_level", "pass"):
+        check(f"the stored diagnostic retains {key!r}", key in row)
+    check("the stored record re-validates from ITSELF after a JSON round trip",
+          refusal_code(validate_job_record, json.loads(json.dumps(recorded)),
+                       harness.binding.plan) is None)
     harness.close()
 
 
@@ -1008,26 +1087,28 @@ def test_execute_path_remains_blocked() -> None:
     check("plan-only reports plan/driver agreement",
           result["agreement"]["missing_planned_jobs"] == 0
           and result["agreement"]["extra_driver_jobs"] == 0)
+    code = refusal_code(run_campaign, harness.root)
+    check("the stochastic path REFUSES at the lifecycle gate",
+          code == "EXECUTION_SEAL_NOT_FROZEN", str(code))
     message = ""
     try:
         run_campaign(harness.root)
     except Refusal as exc:
         message = str(exc)
-    check("the stochastic path REFUSES while the seal is unfrozen", bool(message))
-    check("the refusal names the seal state and the authorisation flag, not a "
-          "missing file",
-          "PRE_DRIVER" in message and "execution_authorised" in message
-          and "ABSENT" not in message, message[:110])
-    check("it says explicitly that no RNG was constructed", "No RNG" in message)
+    check("the refusal names the seal state, not a missing file",
+          "PRE_DRIVER" in message and "ABSENT" not in message, message[:110])
 
     import inspect
     signature = inspect.signature(run_campaign)
-    for forbidden in ("force", "skip_seal", "ignore_authorisation", "yes", "no_check"):
+    for forbidden in ("force", "skip_seal", "skip_gate", "ignore_authorisation",
+                      "ignore_seal", "test_mode", "yes", "no_check", "provider",
+                      "rng_factory"):
         check(f"run_campaign has no {forbidden!r} escape parameter",
               forbidden not in signature.parameters)
     source = open(os.path.join(ROOT, OFFICIAL_CAMPAIGN_DRIVER_PATH),
                   encoding="utf-8").read()
-    for flag in ("--force", "--skip-seal", "--ignore-authorisation"):
+    for flag in ("--force", "--skip-seal", "--skip-gate", "--ignore-authorisation",
+                 "--test-mode"):
         check(f"the CLI declares no {flag} escape", f'"{flag}"' not in source)
     check("the CLI declares --plan-only and --preflight-only",
           '"--plan-only"' in source and '"--preflight-only"' in source)
@@ -1092,6 +1173,1293 @@ def test_stochastic_boundary() -> None:
     check("execution_authorised is still false", PLAN["execution_authorised"] is False)
 
 
+
+# =============================================================================
+# REGRESSION SUITE FOR THE INDEPENDENT AUDIT'S FIVE BLOCKING FINDINGS
+#
+# Every check below was demonstrated to ESCAPE at commit 29ffe625. Each one is
+# reproduced here as a permanent regression, so the repair cannot be undone
+# silently. Nothing in this section draws a random number: the stochastic
+# providers are deterministic van der Corput suppliers, counted separately and
+# never described as scientific execution.
+# =============================================================================
+class FakeSupplier:
+    """A DETERMINISTIC van der Corput supplier. NOT a random number generator.
+
+    It has no entropy source, no seed state beyond an index, and returns the
+    same values every time. It exists to exercise the orchestration's CONTROL
+    FLOW. Nothing it produces is a scientific result, and the numbers below are
+    not samples from any distribution.
+    """
+
+    CONSTRUCTED = 0
+    VALUES = 0
+
+    def __init__(self, seed: int) -> None:
+        self.i = seed % 977
+        type(self).CONSTRUCTED += 1
+
+    def normal(self, count: int) -> list[float]:
+        out = []
+        for _ in range(count):
+            self.i += 1
+            n, base, frac = self.i, 0.0, 0.5
+            while n:
+                frac /= 2
+                base += frac * (n & 1)
+                n >>= 1
+            out.append((base - 0.5) * 2.0)
+        type(self).VALUES += count
+        return out
+
+
+class FakeProvider:
+    """A deterministic StochasticProvider for control-flow tests only."""
+
+    def __init__(self) -> None:
+        self.requests: list[tuple[int, str]] = []
+
+    def generator(self, seed: int, purpose: str):
+        self.requests.append((seed, purpose))
+        return FakeSupplier(seed)
+
+
+def fixture_resolver(binding, job) -> JobSpecification:
+    """Supply the inputs frozen authority does not yet declare. TEST ONLY.
+
+    `resolve_job_specification` refuses for every job today, naming three
+    authority gaps. A test fixture may state what a frozen document must later
+    state; production may not, which is why the production resolver refuses
+    instead of defaulting. The trajectory length here is deliberately tiny: this
+    exercises ordering and provenance, not statistics.
+    """
+    spec = next(f for f in binding.binding.fields if f["id"] == job.coordinates.scope)
+    field = build_field(binding.binding, spec,
+                        calibration_route="force_displacement_with_stokes_drag",
+                        viscosity=0.00089, bead_radius=1e-6)
+    rules = binding.plan["adopted_rules_unchanged"]
+    case_id, sub = job.coordinates.case_id, job.coordinates.subcondition_id
+    scale: tuple[float, ...] = ()
+    for entry in next(c for c in binding.plan["cases"]
+                      if c["case_id"] == case_id)["subconditions"]:
+        if entry["subcondition_id"] == sub and "scale_factors" in entry:
+            scale = tuple(float(x) for x in entry["scale_factors"])
+    beta = (1.0 if case_id == "C8_blinded_scale_control"
+            else declared_beta_true(binding.plan, case_id, sub, job.coordinates.scope))
+    return JobSpecification(
+        coordinates=job.coordinates, field=field,
+        error_model=branch_a_error_model(binding, case_id, sub),
+        beta_true=beta, dt=1e-5, n_samples=400, rank_tol=rules["rank_tol"],
+        theta_cap_deg=rules["theta_cap_deg"], scale_factors=scale)
+
+
+class inject:
+    """Fail EXACTLY ONE filesystem stage, on exactly one call. Deterministic.
+
+    No system state is corrupted: the stage function is restored on exit and the
+    injected error is an ordinary OSError, which is what a full disk or a failing
+    device actually raises.
+    """
+
+    def __init__(self, stage: str, on_call: int = 1) -> None:
+        self.stage, self.on_call, self.calls = stage, on_call, 0
+
+    def __enter__(self):
+        self.attr = f"_stage_{self.stage}"
+        self.original = getattr(publication_module, self.attr)
+        original = self.original
+
+        def failing(*args, **kwargs):
+            self.calls += 1
+            if self.calls == self.on_call:
+                raise OSError(f"INJECTED FAILURE at stage {self.stage!r}")
+            return original(*args, **kwargs)
+
+        setattr(publication_module, self.attr, failing)
+        return self
+
+    def __exit__(self, *exc):
+        setattr(publication_module, self.attr, self.original)
+        return False
+
+
+def published(harness, case_id="C2_geometry_false_rejection", scope=None):
+    """One execution carried to BRANCH_A_PUBLISHED. No draws."""
+    job = first_job(harness.jobs, case_id, scope=scope)
+    execution = harness.execution(job)
+    realisation = harness.realise(execution)
+    path = execution.publish_branch_a()
+    return execution, realisation, path
+
+
+def unblinded(harness, case_id="C2_geometry_false_rejection", scope=None):
+    """One execution carried to BRANCH_B_UNBLINDED using fixture artifacts."""
+    execution, realisation, path = published(harness, case_id, scope)
+    if execution.job.requires_calibration:
+        condition = execution.calibration_condition()
+        execution.lock_calibration(fixture_artifact(condition))
+    execution.unblind()
+    return execution, realisation, path
+
+
+# ----------------------------------- A. the complete provenance envelope binds
+def test_publication_envelope_binds_every_field() -> None:
+    """AUDIT FINDING A. Editing ANY bound provenance field must invalidate."""
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    directory, basename = publication_directory(harness.out), os.path.basename(path)
+    envelope = publication_envelope(
+        realisation, realisation.calibration_condition(harness.binding),
+        harness.binding)
+    check("the envelope binds the schema, state, coordinates, evidence, evidence "
+          "digest, condition hash and every package identity",
+          set(envelope) == set(PUBLICATION_FIELDS), str(sorted(envelope)))
+    check("the publication schema is version 2: version 1 authenticated by the "
+          "evidence hash alone and is refused, not reinterpreted",
+          envelope["schema"] == BRANCH_A_PUBLICATION_SCHEMA
+          and BRANCH_A_PUBLICATION_SCHEMA.endswith("/2"))
+    check("the record is filed at a path that is a pure function of its coordinates",
+          basename == publication_basename(realisation.coordinates))
+    check("the evidence names the frozen Branch-A generator as its provenance",
+          BRANCH_A_GENERATOR_IDENTITY
+          == "e1a_v4.validation.generate.BranchAErrorModel.measure")
+    check("a freshly published store is CLEAN by independent inspection",
+          require_clean_inventory(directory, "probe").committed == (basename,))
+    recovered = realisation_from_record(read_published(path, "record"))
+    check("the evidence recovers losslessly from its own publication",
+          recovered.evidence_sha256 == realisation.evidence_sha256
+          and recovered.canonical() == realisation.canonical())
+    check("the digest excludes itself, so verification is a recomputation",
+          envelope["publication_digest"]
+          == sealed_digest(envelope, "publication_digest"))
+    harness.close()
+
+    # Each field individually, against a tamperer who ALSO re-commits the marker
+    # consistently -- so only the envelope digest can catch the edit.
+    edits = (
+        ("execution identity",
+         lambda r: r["package_identities"].__setitem__("execution_identity", "0" * 64)),
+        ("analysis identity",
+         lambda r: r["package_identities"].__setitem__(
+             "analysis_procedure_identity", "0" * 64)),
+        ("calibration-condition hash",
+         lambda r: r.__setitem__("calibration_condition_sha256", "f" * 64)),
+        ("Branch-A evidence hash",
+         lambda r: r.__setitem__("branch_a_evidence_sha256", "a" * 64)),
+        ("coordinates",
+         lambda r: r["coordinates"].__setitem__("replicate_id", 4242)),
+        ("Branch-A seed identity",
+         lambda r: r["branch_a_evidence"].__setitem__("branch_a_seed", 1)),
+        ("common-mode seed identity",
+         lambda r: r["branch_a_evidence"].__setitem__("common_mode_seed", 2)),
+        ("contract identity",
+         lambda r: r["package_identities"].__setitem__("contract_sha256", "0" * 64)),
+        ("plan identity",
+         lambda r: r["package_identities"].__setitem__("plan_sha256", "0" * 64)),
+        ("seed-map identity",
+         lambda r: r["package_identities"].__setitem__("seed_map_sha256", "0" * 64)),
+    )
+    for label, mutate in edits:
+        harness = Harness()
+        execution, realisation, path = published(harness)
+        directory, basename = publication_directory(harness.out), os.path.basename(path)
+        recommit(directory, basename, mutate)
+        refuses_with_code(f"{label} edited, marker re-committed",
+                          "PUBLICATION_DIGEST_MISMATCH", verify_publication,
+                          harness.out, realisation, harness.binding)
+        harness.close()
+
+    # publication STATE and SCHEMA are refused by the strict schema, before the
+    # digest is even reached: an invalid state is not a record to authenticate.
+    for label, mutate, expected in (
+            ("publication state",
+             lambda r: r.__setitem__("state", "PUBLISHED_HONESTLY"),
+             "PUBLICATION_INCOMPLETE"),
+            ("publication schema",
+             lambda r: r.__setitem__("schema", "e1a_v4_branch_a_publication/1"),
+             "PUBLICATION_INCOMPLETE")):
+        harness = Harness()
+        execution, realisation, path = published(harness)
+        recommit(publication_directory(harness.out), os.path.basename(path), mutate)
+        refuses_with_code(f"{label} edited, marker re-committed", expected,
+                          verify_publication, harness.out, realisation, harness.binding)
+        harness.close()
+
+    # and a tamperer who repairs the envelope digest TOO still cannot substitute
+    # evidence or identities, because the realisation in hand is compared.
+    for label, mutate, expected in (
+            ("execution identity, envelope digest also recomputed",
+             lambda r: r["package_identities"].__setitem__(
+                 "execution_identity", "0" * 64),
+             "BRANCH_A_PROVENANCE_MISMATCH"),
+            ("evidence body, envelope digest also recomputed",
+             lambda r: r["branch_a_evidence"].__setitem__("T_measured", "0x1.0p+0"),
+             "BRANCH_A_EVIDENCE_ALTERED")):
+        harness = Harness()
+        execution, realisation, path = published(harness)
+        recommit(publication_directory(harness.out), os.path.basename(path), mutate,
+                 fix_publication_digest=True)
+        refuses_with_code(label, expected, verify_publication, harness.out,
+                          realisation, harness.binding)
+        harness.close()
+
+
+def test_publication_strict_schema() -> None:
+    """A published record fails closed on shape, not just on content."""
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    directory, basename = publication_directory(harness.out), os.path.basename(path)
+    pristine = read_published(path, "record")
+    for label, mutate, expected in (
+            ("a MISSING required field",
+             lambda r: r.pop("calibration_condition_sha256"), "PUBLICATION_INCOMPLETE"),
+            ("an UNKNOWN authoritative field",
+             lambda r: r.__setitem__("side_channel", 1), "PUBLICATION_INCOMPLETE"),
+            ("a WRONG type",
+             lambda r: r.__setitem__("coordinates", "C2"), "PUBLICATION_INCOMPLETE"),
+            ("an INVALID publication state",
+             lambda r: r.__setitem__("state", "MAYBE"), "PUBLICATION_INCOMPLETE"),
+            ("a MALFORMED digest",
+             lambda r: r.__setitem__("publication_digest", "not-a-digest"),
+             "PUBLICATION_INCOMPLETE"),
+            ("a missing package identity",
+             lambda r: r["package_identities"].pop("execution_identity"),
+             "PUBLICATION_INCOMPLETE"),
+            ("an unknown package identity",
+             lambda r: r["package_identities"].__setitem__("extra", "x"),
+             "PUBLICATION_INCOMPLETE"),
+            ("incomplete coordinates",
+             lambda r: r["coordinates"].pop("scope"), "PUBLICATION_INCOMPLETE")):
+        record = copy.deepcopy(pristine)          # each probe starts from clean
+        mutate(record)
+        write_record(path, record)
+        import hashlib
+        marker_path = os.path.join(directory, commit_name(basename))
+        marker = read_published(marker_path, "marker")
+        marker["artifact_bytes_sha256"] = hashlib.sha256(
+            open(path, "rb").read()).hexdigest()
+        marker["commit_digest"] = sealed_digest(marker, "commit_digest")
+        write_record(marker_path, marker)
+        refuses_with_code(label, expected, verify_publication, harness.out,
+                          realisation, harness.binding)
+    # DUPLICATE KEYS are refused one layer down, by the strict parser, so an
+    # ambiguous record never reaches the schema at all.
+    duplicated = os.path.join(directory, "duplicated.json")
+    with open(duplicated, "wb") as handle:
+        handle.write(b'{"a":1,"a":2}\n')
+    refuses_with_code("a record with a DUPLICATE key", "PLAN_DUPLICATE_KEY",
+                      read_published, duplicated, "duplicated")
+    harness.close()
+
+
+# ---------------------------------------- B. publication transaction semantics
+def test_publication_fault_injection() -> None:
+    """AUDIT FINDING D. A failed publication is never accepted as published.
+
+    For every injectable stage: the operation reports failure, the job does not
+    advance, the verifier does not accept, and restart does not infer completion.
+    """
+    # `publish_branch_a` is ONE transaction publishing TWO artifacts: the
+    # evidence, then its commit marker. Each has its own durability point (the
+    # directory fsync right after its link) and its own alias unlink afterwards.
+    # A failure at or before a durability point must fail the transaction; a
+    # failure after one leaves recoverable residue and must NOT fail it.
+    stages = (
+        ("lstat", 1, False),          # absence probe for the evidence
+        ("open_temp", 1, False),      # evidence temporary
+        ("write", 1, False),          # evidence bytes
+        ("fsync_file", 1, False),     # evidence durability
+        ("fchmod", 1, False),         # evidence read-only
+        ("link", 1, False),           # evidence finalisation
+        ("fsync_dir", 1, False),      # EVIDENCE DURABILITY POINT
+        ("fsync_dir", 2, True),       # evidence alias unlink: residue, not failure
+        ("unlink", 1, True),          # evidence alias unlink: residue, not failure
+        ("open_temp", 2, False),      # commit-marker temporary
+        ("link", 2, False),           # commit-marker finalisation
+        ("fsync_dir", 3, False),      # COMMIT-MARKER DURABILITY POINT
+        ("fsync_dir", 4, True),       # marker alias unlink: residue, not failure
+        ("unlink", 2, True),          # marker alias unlink: residue, not failure
+    )
+    check("every injectable stage is a declared publication stage",
+          {stage for stage, _, _ in stages} <= set(PUBLICATION_STAGES)
+          | {"fsync_dir", "unlink"},
+          str(sorted({stage for stage, _, _ in stages})))
+    for stage, on_call, durable in stages:
+        harness = Harness()
+        job = first_job(harness.jobs, "C2_geometry_false_rejection")
+        execution = harness.execution(job)
+        realisation = harness.realise(execution)
+        raised = None
+        with inject(stage, on_call):
+            try:
+                execution.publish_branch_a()
+            except BaseException as exc:      # noqa: BLE001 - the point of the probe
+                raised = exc
+        label = f"{stage} (call {on_call})"
+        if durable:
+            # PAST the durability point: the artifact IS published and a leftover
+            # alias is recoverable residue, exactly as the addendum specifies.
+            check(f"{label}: publication SUCCEEDS past the durability point",
+                  raised is None and execution.state == BRANCH_A_PUBLISHED,
+                  f"raised={type(raised).__name__ if raised else None}, "
+                  f"state={execution.state}")
+            check(f"{label}: the verifier accepts the durable artifact",
+                  refusal_code(verify_publication, harness.out, realisation,
+                               harness.binding) is None)
+        else:
+            check(f"{label}: the operation REPORTS FAILURE", raised is not None,
+                  type(raised).__name__ if raised else "no exception")
+            check(f"{label}: the job does NOT advance",
+                  execution.state == BRANCH_A_REALIZED, execution.state)
+            check(f"{label}: the verifier does NOT accept a publication",
+                  refusal_code(verify_publication, harness.out, realisation,
+                               harness.binding) is not None)
+            inventory = inventory_directory(publication_directory(harness.out))
+            check(f"{label}: restart does NOT infer a completed publication",
+                  inventory.committed == (), str(inventory.as_dict()))
+            check(f"{label}: any residue is reported, never promoted",
+                  refusal_code(verify_restart, harness.out, {}, harness.binding)
+                  is None or not inventory.is_clean, str(inventory.as_dict()))
+        harness.close()
+
+
+def test_publication_orphan_detection() -> None:
+    """An artifact without its commit marker is ORPHANED, never PUBLISHED."""
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    directory, basename = publication_directory(harness.out), os.path.basename(path)
+    marker = os.path.join(directory, commit_name(basename))
+    os.remove(marker)
+    inventory = inventory_directory(directory)
+    check("the inventory reports the artifact as ORPHANED",
+          inventory.orphaned == (basename,) and inventory.committed == (),
+          str(inventory.as_dict()))
+    refuses_with_code("verifying an orphan", "PUBLICATION_ORPHANED",
+                      verify_publication, harness.out, realisation, harness.binding)
+    refuses_with_code("restarting over an orphan", "PUBLICATION_ORPHANED",
+                      verify_restart, harness.out, {}, harness.binding)
+    check("the orphan is PRESERVED, not deleted: it is the only record of the "
+          "attempt", os.path.isfile(path))
+    harness.close()
+
+    # the mirror image: a commit marker whose artifact is gone
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    directory = publication_directory(harness.out)
+    os.remove(path)
+    inventory = inventory_directory(directory)
+    check("the inventory reports a DANGLING commit marker",
+          len(inventory.dangling) == 1 and inventory.committed == (),
+          str(inventory.as_dict()))
+    refuses_with_code("a marker whose artifact is missing", "PUBLICATION_INCOMPLETE",
+                      verify_restart, harness.out, {}, harness.binding)
+    harness.close()
+
+    # an unexplained entry in a scientific result directory
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    directory = publication_directory(harness.out)
+    with open(os.path.join(directory, "notes.txt"), "w", encoding="utf-8") as handle:
+        handle.write("scratch\n")
+    refuses_with_code("an unexplained entry in the publication store",
+                      "PUBLICATION_UNEXPECTED_ENTRY", verify_restart, harness.out,
+                      {execution.coordinates.job_id: realisation}, harness.binding)
+    harness.close()
+
+
+# ------------------------------------------ C. result recording, case-derived
+def test_case_result_type_compatibility() -> None:
+    """AUDIT FINDING B. A C2 job must not accept a C7 aggregate. Nor any other."""
+    cases = [c["case_id"] for c in PLAN["cases"]]
+    # C6 declares its field as prose and cannot be realised from the contract's
+    # four declared fields; that gap is asserted separately, by name.
+    drivable = [c for c in cases if c != "C6_mode_resolution_boundary"]
+    for case_id in drivable:
+        harness = Harness()
+        execution, realisation, path = unblinded(harness, case_id)
+        execution.analyse({"analysis_status": "ESTIMATED"})
+        job = execution.job
+        own = aggregate_skeleton(case_id, job.coordinates.subcondition_id)
+        wrong = [other for other in cases if other != case_id]
+        refused = 0
+        for other in wrong:
+            foreign = aggregate_skeleton(other, job.coordinates.subcondition_id)
+            if refusal_code(execution.record, foreign,
+                            required_result_fields(PLAN, case_id)) == "RESULT_CASE_MISMATCH":
+                refused += 1
+        check(f"{case_id}: all {len(wrong)} foreign aggregates refused",
+              refused == len(wrong), f"{refused}/{len(wrong)}")
+        check(f"{case_id}: the job is still ANALYSED after every refusal",
+              execution.state == ANALYSED, execution.state)
+        # a foreign SUBCONDITION of the right case is refused too
+        others = [s["subcondition_id"] for s in
+                  next(c for c in PLAN["cases"] if c["case_id"] == case_id)["subconditions"]
+                  if s["subcondition_id"] != job.coordinates.subcondition_id]
+        if others:
+            refuses_with_code(f"{case_id}: a foreign subcondition aggregate",
+                              "RESULT_CASE_MISMATCH", execution.record,
+                              aggregate_skeleton(case_id, others[0]),
+                              required_result_fields(PLAN, case_id))
+        # the aggregate SCHEMA is checked too
+        bad_schema = aggregate_skeleton(case_id, job.coordinates.subcondition_id)
+        bad_schema["schema"] = "e1a_v4_validation_manifest/2"
+        refuses_with_code(f"{case_id}: an aggregate with a superseded schema",
+                          "RESULT_SCHEMA_INVALID", execution.record, bad_schema,
+                          required_result_fields(PLAN, case_id))
+        harness.close()
+
+
+def test_field_set_derived_from_the_job() -> None:
+    """AUDIT FINDING B. The field set comes from the frozen plan, not the caller."""
+    required = required_result_fields(PLAN, "C2_geometry_false_rejection")
+    check("the required set is the plan's declared fields_affected, in plan order",
+          list(required) == next(c for c in PLAN["cases"]
+                                 if c["case_id"] == "C2_geometry_false_rejection"
+                                 )["fields_affected"])
+    probes = (
+        ("an EMPTY field list", ()),
+        ("a MISSING field", required[:-1]),
+        ("an EXTRA field", required + ("theta9_invented",)),
+        ("a DUPLICATE field", required + (required[0],)),
+        ("a WRONG field name", required[:-1] + ("theta3_temperatures",)),
+    )
+    for label, supplied in probes:
+        expected = ("RESULT_FIELD_SET_MISMATCH")
+        got = refusal_code(canonical_result_fields, "probe", required, supplied)
+        check(f"{label} -> {expected}", got == expected, f"got {got!r}")
+    reordered = tuple(reversed(required))
+    check("a CORRECT set in another order is canonicalised, not refused: ordering "
+          "is not semantic here and the plan's order is the canonical one",
+          canonical_result_fields("probe", required, reordered) == required)
+    check("None means 'derive it', which is the recorder's default",
+          canonical_result_fields("probe", required, None) == required)
+
+    # and the same rules through the recorder itself
+    harness = Harness()
+    execution, realisation, path = unblinded(harness, "C2_geometry_false_rejection")
+    execution.analyse({"analysis_status": "ESTIMATED"})
+    aggregate = c2_aggregate(execution.job.coordinates.subcondition_id)
+    for label, supplied in probes:
+        refuses_with_code(f"the recorder rejects {label}", "RESULT_FIELD_SET_MISMATCH",
+                          execution.record, aggregate, supplied)
+    check("the job is still ANALYSED after every refused field set",
+          execution.state == ANALYSED, execution.state)
+    recorded = execution.record(aggregate, reordered)
+    check("a reordered but correct set records, canonicalised",
+          recorded["fields"] == list(required), str(recorded["fields"]))
+    harness.close()
+
+
+def c2_aggregate(subcondition_id: str, rejections: int = 2) -> dict:
+    """A complete, arithmetically consistent C2 aggregate. Deterministic."""
+    from e1a_v4.validation.classification import GROSS_INFLATION_TOLERANCE
+    aggregate = aggregate_skeleton("C2_geometry_false_rejection", subcondition_id)
+    aggregate["contract_diagnostics"] = {"per_field": {
+        f: {"rejections": rejections, "replicates": 400,
+            "cp_upper": cp_upper(rejections, 400),
+            "threshold": GROSS_INFLATION_TOLERANCE, "direction": "UPPER",
+            "confidence_level": 0.95,
+            "pass": cp_upper(rejections, 400) <= GROSS_INFLATION_TOLERANCE}
+        for f in FIELDS}}
+    return aggregate
+
+
+def test_mandatory_diagnostic_persistence_and_round_trip() -> None:
+    """AUDIT FINDING B. A checked diagnostic must survive into the record."""
+    harness = Harness()
+    execution, realisation, path = unblinded(harness, "C2_geometry_false_rejection")
+    execution.analyse({"analysis_status": "ESTIMATED", "p1_rejected": False})
+    subcondition = execution.job.coordinates.subcondition_id
+    recorded = execution.record(c2_aggregate(subcondition))
+    stored = {d["diagnostic_id"]: d for d in recorded["mandatory_diagnostics"]}
+    check("C2's frozen mandatory contract diagnostic is stored",
+          "C2_CONTRACT_COARSE_UPPER_BOUND" in stored, str(sorted(stored)))
+    row = stored["C2_CONTRACT_COARSE_UPPER_BOUND"]
+    check("the stored diagnostic names its frozen authority path",
+          row["authority_path"] == "synthetic_validation_requirements[2]")
+    per_field = row["value"]["per_field"]
+    check("every declared field has a row", set(per_field) == set(FIELDS))
+    sample = per_field[sorted(per_field)[0]]
+    check("the RAW COUNTS survive", {"rejections", "replicates"} <= set(sample))
+    check("the COMPUTED one-sided 95% upper bound survives",
+          abs(sample["cp_upper"] - cp_upper(sample["rejections"],
+                                            sample["replicates"])) < 1e-15)
+    check("the CONFIDENCE RULE survives",
+          sample["confidence_level"] == 0.95 and sample["direction"] == "UPPER")
+    check("the THRESHOLD survives", sample["threshold"] == 0.03)
+    check("the CLASSIFICATION survives", isinstance(sample["pass"], bool))
+
+    # ROUND TRIP: serialise, read back, revalidate from the record ALONE
+    round_trip = json.loads(json.dumps(recorded))
+    check("the record survives a canonical JSON round trip byte for byte",
+          canonical_json(round_trip) == canonical_json(recorded))
+    check("the round-tripped record re-validates WITHOUT its original aggregate",
+          refusal_code(validate_job_record, round_trip, harness.binding.plan) is None)
+    check("the record's own digest is a recomputation over everything else",
+          recorded["result_digest"] == sealed_digest(dict(recorded), "result_digest"))
+    tampered = json.loads(json.dumps(recorded))
+    tampered["result"]["p1_rejected"] = True
+    refuses_with_code("an edited stored result", "RESULT_SCHEMA_INVALID",
+                      validate_job_record, tampered, harness.binding.plan)
+    stripped = json.loads(json.dumps(recorded))
+    stripped["mandatory_diagnostics"] = []
+    stripped["result_digest"] = sealed_digest(stripped, "result_digest")
+    refuses_with_code("a stored result with its diagnostics removed",
+                      "CONTRACT_MANDATORY_DIAGNOSTIC_MISSING", validate_job_record,
+                      stripped, harness.binding.plan)
+    inconsistent = json.loads(json.dumps(recorded))
+    diagnostics = inconsistent["mandatory_diagnostics"][0]["value"]["per_field"]
+    diagnostics[sorted(diagnostics)[0]]["cp_upper"] = 0.5
+    inconsistent["result_digest"] = sealed_digest(inconsistent, "result_digest")
+    refuses_with_code("a stored diagnostic inconsistent with its own counts",
+                      "CONTRACT_MANDATORY_DIAGNOSTIC_MISMATCH", validate_job_record,
+                      inconsistent, harness.binding.plan)
+    harness.close()
+
+    # a C7 result cannot satisfy C2's requirement: it is not a C2 result at all
+    harness = Harness()
+    execution, realisation, path = unblinded(harness, "C7_false_bridge")
+    execution.analyse({"analysis_status": "ESTIMATED"})
+    refuses_with_code("a C7 job presented with C2's mandatory diagnostic",
+                      "RESULT_CASE_MISMATCH", execution.record,
+                      c2_aggregate(execution.job.coordinates.subcondition_id))
+    recorded = execution.record(
+        aggregate_skeleton("C7_false_bridge", execution.job.coordinates.subcondition_id))
+    check("a C7 result carries no C2 diagnostic and is still valid on its own terms",
+          recorded["mandatory_diagnostics"] == []
+          and refusal_code(validate_job_record, recorded, harness.binding.plan) is None)
+    harness.close()
+
+
+def test_result_round_trip_every_case() -> None:
+    """Every drivable case: construct, serialise, read back, revalidate."""
+    for case in PLAN["cases"]:
+        case_id = case["case_id"]
+        if case_id == "C6_mode_resolution_boundary":
+            continue
+        harness = Harness()
+        execution, realisation, path = unblinded(harness, case_id)
+        execution.analyse({"analysis_status": "ESTIMATED"})
+        subcondition = execution.job.coordinates.subcondition_id
+        aggregate = (c2_aggregate(subcondition)
+                     if case_id == "C2_geometry_false_rejection"
+                     else case_aggregate(case_id, subcondition))
+        recorded = execution.record(aggregate)
+        round_trip = json.loads(json.dumps(recorded))
+        ok = refusal_code(validate_job_record, round_trip, harness.binding.plan)
+        check(f"{case_id}: a valid result round-trips and revalidates", ok is None,
+              str(ok))
+        check(f"{case_id}: provenance identities survive",
+              round_trip["package_identities"]["execution_identity"]
+              == harness.binding.execution_identity
+              and round_trip["publication_digest"]
+              and round_trip["branch_a_evidence_sha256"]
+              == realisation.evidence_sha256)
+        check(f"{case_id}: the result kind is DERIVED from the frozen job",
+              round_trip["result_kind"] == execution.job.result_kind)
+        harness.close()
+
+
+def case_aggregate(case_id: str, subcondition_id: str) -> dict:
+    """A minimal aggregate carrying whatever that case's frozen authority demands."""
+    from e1a_v4.validation.release_authority import mandatory_diagnostics_for
+    aggregate = aggregate_skeleton(case_id, subcondition_id)
+    for diagnostic in mandatory_diagnostics_for(PLAN, case_id):
+        if diagnostic.required_keys:
+            aggregate[diagnostic.aggregate_key] = {k: {} for k in diagnostic.required_keys}
+            for key in diagnostic.required_keys:
+                aggregate[diagnostic.aggregate_key][key] = {"declared": True}
+    return aggregate
+
+
+# ---------------------------------------------- D. restart reconciliation
+def test_restart_reconciles_with_the_persisted_inventory() -> None:
+    """AUDIT FINDING C. The caller's list is never the universe of evidence."""
+    harness = Harness()
+    check("an EMPTY restart over an EMPTY store is valid, and only then",
+          refusal_code(verify_restart, harness.out, {}, harness.binding) is None)
+    check("the empty store really is empty",
+          inventory_directory(publication_directory(harness.out)).is_empty)
+    realisations = {}
+    for scope in FIELDS:
+        execution, realisation, path = published(harness, "C1_true_bridge_complete",
+                                                 scope)
+        realisations[execution.coordinates.job_id] = realisation
+    report = verify_restart(harness.out, realisations, harness.binding)
+    check("a complete claim reconciles", report["verified_publications"] == 4
+          and report["publications_on_disk"] == 4, str(report))
+
+    refuses_with_code("a publication exists and the caller supplies []",
+                      "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out, {},
+                      harness.binding)
+    partial = dict(list(realisations.items())[:2])
+    refuses_with_code("the caller omits half the store",
+                      "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
+                      partial, harness.binding)
+    invented = dict(realisations)
+    ghost_job = first_job(harness.jobs, "C1_true_bridge_complete", scope="theta0_circular")
+    ghost_exec = harness.execution(
+        CampaignJob(JobCoordinates("C1_true_bridge_complete", "sigma_psi_0p2", 5,
+                                   "theta0_circular"),
+                    ghost_job.role, ghost_job.requires_calibration,
+                    ghost_job.seed_families, ghost_job.branch_a_scopes,
+                    ghost_job.result_kind, ()))
+    ghost = harness.realise(ghost_exec)
+    invented[ghost_exec.coordinates.job_id] = ghost
+    refuses_with_code("the caller claims a publication whose bytes are missing",
+                      "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
+                      invented, harness.binding)
+    mislabelled = dict(list(realisations.items())[:3])
+    mislabelled["C1_true_bridge_complete|sigma_psi_0p0|000000|wrong"] = \
+        realisations[sorted(realisations)[0]]
+    refuses_with_code("a restart record filed under the wrong key",
+                      "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
+                      mislabelled, harness.binding)
+    harness.close()
+
+    # a publication belonging to no planned job
+    harness = Harness()
+    execution, realisation, path = published(harness, "C1_true_bridge_complete")
+    undeclared = [j for j in harness.jobs
+                  if j.coordinates.case_id != "C1_true_bridge_complete"]
+    refuses_with_code("a publication for a job this campaign never declared",
+                      "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
+                      {execution.coordinates.job_id: realisation}, harness.binding,
+                      undeclared)
+    harness.close()
+
+    # a DUPLICATE publication: two committed records claiming the same coordinates
+    harness = Harness()
+    execution, realisation, path = published(harness, "C1_true_bridge_complete")
+    directory, basename = publication_directory(harness.out), os.path.basename(path)
+    import shutil as _shutil
+    copy_base = "branch_a_" + "0" * 64 + ".json"
+    _shutil.copy(os.path.join(directory, basename), os.path.join(directory, copy_base))
+    _shutil.copy(os.path.join(directory, commit_name(basename)),
+                 os.path.join(directory, commit_name(copy_base)))
+    code = refusal_code(verify_restart, harness.out,
+                        {execution.coordinates.job_id: realisation}, harness.binding)
+    check("a duplicated publication refuses",
+          code in ("RESTART_INVENTORY_MISMATCH", "PUBLICATION_INCOMPLETE"), str(code))
+    harness.close()
+
+
+def test_restart_cannot_delete_history() -> None:
+    """Persisted scientific evidence is append-only, on every path."""
+    harness = Harness()
+    realisations = {}
+    for scope in FIELDS[:2]:
+        execution, realisation, path = published(harness, "C1_true_bridge_complete",
+                                                 scope)
+        realisations[execution.coordinates.job_id] = realisation
+    directory = publication_directory(harness.out)
+    before = sorted(os.listdir(directory))
+    verify_restart(harness.out, realisations, harness.binding)
+    check("a successful reconciliation writes nothing and deletes nothing",
+          sorted(os.listdir(directory)) == before)
+    refusal_code(verify_restart, harness.out, {}, harness.binding)
+    check("a REFUSED reconciliation also writes nothing and deletes nothing",
+          sorted(os.listdir(directory)) == before, str(sorted(os.listdir(directory))))
+    check("inventory_publications is a pure read",
+          set(inventory_publications(harness.out)) == set(realisations)
+          and sorted(os.listdir(directory)) == before)
+    harness.close()
+
+
+# ------------------------------------------- E. transactional state transitions
+def test_every_transition_is_atomic() -> None:
+    """AUDIT FINDING D. A deterministic injected failure never advances a job.
+
+    VALIDATE, PERFORM, VERIFY, THEN COMMIT THE TRANSITION. The audit found
+    `analyse` doing the reverse; this walks every transition of the frozen
+    dependency graph and proves the rule holds at each one.
+    """
+    # 1. Branch-A realisation: evidence from another stream
+    harness = Harness()
+    job = first_job(harness.jobs, "C2_geometry_false_rejection")
+    execution = harness.execution(job)
+    before = execution.state
+    refuses_with_code("realisation with a foreign Branch-A seed",
+                      "BRANCH_A_PROVENANCE_MISMATCH", execution.realise_branch_a,
+                      noiseless_field(job.coordinates.scope), branch_a_seed=1,
+                      common_mode_seed=execution.calibration.common_mode_seed(),
+                      generator_identity="STATIC-FIXTURE-NO-DRAW")
+    check("a refused realisation leaves the job PLANNED",
+          execution.state == before == PLANNED, execution.state)
+    harness.close()
+
+    # 2. publication: injected failure at the durability point
+    harness = Harness()
+    job = first_job(harness.jobs, "C2_geometry_false_rejection")
+    execution = harness.execution(job)
+    harness.realise(execution)
+    with inject("fsync_dir", 1):
+        try:
+            execution.publish_branch_a()
+        except BaseException:                     # noqa: BLE001
+            pass
+    check("a refused publication leaves the job BRANCH_A_REALIZED",
+          execution.state == BRANCH_A_REALIZED, execution.state)
+    harness.close()
+
+    # 3. condition binding: the publication no longer verifies
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    os.remove(os.path.join(publication_directory(harness.out),
+                           commit_name(os.path.basename(path))))
+    refuses_with_code("binding a condition against an uncommitted publication",
+                      "PUBLICATION_ORPHANED", execution.calibration_condition)
+    check("a refused condition binding leaves the job BRANCH_A_PUBLISHED",
+          execution.state == BRANCH_A_PUBLISHED, execution.state)
+    harness.close()
+
+    # 4. calibration lock: an artifact from another condition
+    harness = Harness()
+    execution, realisation, path = published(harness)
+    condition = execution.calibration_condition()
+    other = first_job(harness.jobs, "C2_geometry_false_rejection", scope="theta1_power")
+    other_exec = harness.execution(other)
+    other_real = harness.realise(other_exec)
+    refuses_with_code("locking an artifact calibrated elsewhere",
+                      "BRANCH_A_PROVENANCE_MISMATCH", execution.lock_calibration,
+                      fixture_artifact(other_real.calibration_condition(harness.binding)))
+    check("a refused lock leaves the job CALIBRATION_CONDITION_BOUND",
+          execution.state == CALIBRATION_CONDITION_BOUND, execution.state)
+
+    # 5. unblind: the publication is tampered with after the lock
+    execution.lock_calibration(fixture_artifact(condition))
+    check("locking advanced to CALIBRATION_LOCKED",
+          execution.state == CALIBRATION_LOCKED, execution.state)
+    recommit(publication_directory(harness.out), os.path.basename(path),
+             lambda r: r["package_identities"].__setitem__("plan_sha256", "0" * 64))
+    refuses_with_code("unblinding against an altered publication",
+                      "PUBLICATION_DIGEST_MISMATCH", execution.unblind)
+    check("a refused unblind leaves the job CALIBRATION_LOCKED",
+          execution.state == CALIBRATION_LOCKED, execution.state)
+    check("Branch B is STILL unreachable after the refused unblind",
+          refusal_code(execution.branch_b_seed) == "BRANCH_B_PREMATURE")
+    harness.close()
+
+    # 6. analysis: the outcome cannot be copied (THE AUDIT'S EXACT SCENARIO)
+    harness = Harness()
+    execution, realisation, path = unblinded(harness)
+    from collections.abc import Mapping as _Mapping
+
+    class HostileOutcome(_Mapping):
+        """A real Mapping whose iteration fails, so dict(x) genuinely raises."""
+
+        def __getitem__(self, key):
+            raise KeyError(key)
+
+        def __iter__(self):
+            raise RuntimeError("INJECTED: the analysis outcome could not be copied")
+
+        def __len__(self):
+            return 1
+
+    refuses_with_code("an analysis outcome that cannot be copied",
+                      "RESULT_SCHEMA_INVALID", execution.analyse, HostileOutcome())
+    check("a FAILED analysis leaves the job BRANCH_B_UNBLINDED, not ANALYSED",
+          execution.state == BRANCH_B_UNBLINDED, execution.state)
+    refuses_with_code("an EMPTY analysis outcome", "RESULT_SCHEMA_INVALID",
+                      execution.analyse, {})
+    refuses_with_code("an outcome that is not canonically serialisable",
+                      "RESULT_SCHEMA_INVALID", execution.analyse,
+                      {"beta_hat": float("nan")})
+    refuses_with_code("an outcome with non-string keys", "RESULT_SCHEMA_INVALID",
+                      execution.analyse, {1: "x"})
+    check("after four refused analyses the job is STILL not ANALYSED",
+          execution.state == BRANCH_B_UNBLINDED, execution.state)
+    check("and recording is therefore still impossible",
+          refusal_code(execution.record,
+                       c2_aggregate(execution.job.coordinates.subcondition_id))
+          == "JOB_STATE_INVALID")
+    execution.analyse({"analysis_status": "ESTIMATED"})
+    check("a VALID outcome does advance to ANALYSED", execution.state == ANALYSED)
+
+    # 7. record: a refused record leaves the job ANALYSED
+    refuses_with_code("recording with a foreign aggregate", "RESULT_CASE_MISMATCH",
+                      execution.record, aggregate_skeleton("C7_false_bridge"))
+    check("a refused record leaves the job ANALYSED, not RECORDED",
+          execution.state == ANALYSED, execution.state)
+    execution.record(c2_aggregate(execution.job.coordinates.subcondition_id))
+    check("a valid record advances to RECORDED", execution.state == RECORDED)
+    check("RECORDED is terminal: nothing follows it",
+          refusal_code(execution.analyse, {"a": 1}) == "JOB_STATE_INVALID")
+    harness.close()
+
+
+def test_structured_refusal_is_a_result() -> None:
+    """A scientific refusal is RECORDED, never retried, dropped or reclassified."""
+    harness = Harness()
+    execution, realisation, path = unblinded(harness)
+    refusal_outcome = {"analysis_status": "RANK_GUARD_FAIL",
+                       "refusal_reason": "rank guard", "p1_rejected": None}
+    execution.analyse(refusal_outcome)
+    recorded = execution.record(c2_aggregate(execution.job.coordinates.subcondition_id))
+    check("a structured scientific refusal reaches a TERMINAL record",
+          recorded["terminal_state"] == RECORDED)
+    check("the refusal survives verbatim in the record",
+          recorded["result"]["analysis_status"] == "RANK_GUARD_FAIL"
+          and recorded["result"]["refusal_reason"] == "rank guard")
+    check("it was not converted into a software error and not dropped",
+          refusal_code(validate_job_record, recorded, harness.binding.plan) is None)
+    check("no second seed can be drawn to replace it: the Branch-B stream is a "
+          "pure function of the frozen coordinates, so 'retry under another seed' "
+          "is not an operation this interface has",
+          execution.branch_b_seed() == execution.branch_b_seed())
+    check("and the refusal was not converted into a software error: it is stored "
+          "as the job's scientific result",
+          recorded["result"]["analysis_status"] == "RANK_GUARD_FAIL")
+    harness.close()
+
+
+# ------------------------------- F. completeness, aggregation, classification
+def test_campaign_completeness_and_aggregation() -> None:
+    """AUDIT-ADJACENT. A case rate's denominator is the DECLARED job set."""
+    jobs = plan_campaign(PLAN)
+    total = len(jobs)
+    check("the planned total is DERIVED from the frozen plan, never written down",
+          total == sum(len(c["subconditions"]) * c["replicate_count"]
+                       * len(c["fields_affected"]) for c in PLAN["cases"]), str(total))
+    sample = tuple(jobs[:8])
+
+    def terminal(job, state=RECORDED):
+        return {"schema": "e1a_v4_validation_job_record/1", "job_id": job.job_id,
+                "coordinates": job.coordinates.as_dict(), "terminal_state": state}
+
+    complete = {job.job_id: terminal(job) for job in sample}
+    report = require_campaign_completeness(sample, complete)
+    check("a complete job set reports zero missing, extra and duplicate",
+          report["missing_terminal_jobs"] == 0 and report["extra_terminal_jobs"] == 0
+          and report["duplicate_terminal_jobs"] == 0 and report["declared_jobs"] == 8)
+    missing = {k: v for k, v in list(complete.items())[:-1]}
+    refuses_with_code("a MISSING terminal record", "CAMPAIGN_INCOMPLETE",
+                      require_campaign_completeness, sample, missing)
+    extra = dict(complete)
+    extra["C1_true_bridge_complete|sigma_psi_0p0|999999|theta0_circular"] = {
+        "terminal_state": RECORDED, "coordinates": {}}
+    refuses_with_code("an EXTRA terminal record belonging to no planned job",
+                      "CAMPAIGN_INCOMPLETE", require_campaign_completeness, sample, extra)
+    unfinished = dict(complete)
+    key = sorted(unfinished)[0]
+    unfinished[key] = terminal(sample[0], state=ANALYSED)
+    refuses_with_code("a record that never reached its terminal state",
+                      "CAMPAIGN_INCOMPLETE", require_campaign_completeness, sample,
+                      unfinished)
+    duplicated = sample + (sample[0],)
+    refuses_with_code("a duplicated planned job", "CAMPAIGN_PLAN_MISMATCH",
+                      require_campaign_completeness, duplicated, complete)
+
+    # aggregation derives case membership from the PLANNED job, not the record
+    aggregates = assemble_case_aggregates(sample, complete)
+    check("aggregation groups by the immutable planned case identity",
+          set(aggregates) == {"C1_true_bridge_complete"}, str(sorted(aggregates)))
+    substituted = dict(complete)
+    victim = sorted(substituted)[0]
+    substituted[victim] = dict(substituted[victim])
+    substituted[victim]["coordinates"] = dict(substituted[victim]["coordinates"])
+    substituted[victim]["coordinates"]["case_id"] = "C7_false_bridge"
+    refuses_with_code("a record claiming a different case than its planned job",
+                      "RESULT_CASE_MISMATCH", assemble_case_aggregates, sample,
+                      substituted)
+
+
+def test_release_subconditions_follow_frozen_authority() -> None:
+    """The release unit is the plan's, not the driver's."""
+    from e1a_v4.validation.campaign_driver import release_subconditions
+    for case_id, expected in (
+            ("C1_true_bridge_complete", ("sigma_psi_0p5",)),
+            ("C2_geometry_false_rejection", ("sigma_psi_0p5",)),
+            ("C3_g5_block", ("sigma_psi_0p5",))):
+        check(f"{case_id}: the PRIMARY subcondition alone carries the release claim",
+              release_subconditions(PLAN, case_id) == expected,
+              str(release_subconditions(PLAN, case_id)))
+    check("C5: every one of the twelve declared cells is a release unit",
+          len(release_subconditions(PLAN, "C5_plug_in_branch_a")) == 12)
+    check("C6: each of the three declared rho is a release unit",
+          len(release_subconditions(PLAN, "C6_mode_resolution_boundary")) == 3)
+    check("C7: each of the four alternatives is a release unit, never pooled",
+          len(release_subconditions(PLAN, "C7_false_bridge")) == 4)
+    check("the secondary and stress sigma_psi scenarios are NOT pooled into the "
+          "primary claim",
+          "sigma_psi_1p0" not in release_subconditions(PLAN, "C1_true_bridge_complete"))
+
+
+# ------------------------------- G. the stochastic execution path, without RNG
+def test_execution_gate_refuses_before_any_rng() -> None:
+    """The gate is complete, ordered, and passed BEFORE a provider exists."""
+    harness = Harness()
+    out = os.path.join(harness.root, harness.binding.output_dir)
+    FAKE_SUPPLIERS_BEFORE_GATE[0] = FakeSupplier.CONSTRUCTED
+    code = refusal_code(require_execution_lifecycle, harness.root, harness.binding, out)
+    check("the complete lifecycle gate REFUSES on this package",
+          code == "EXECUTION_SEAL_NOT_FROZEN", str(code))
+    check("no RNG object was constructed by the gate",
+          SentinelRNG.CONSTRUCTED == 0 and SentinelRNG.DRAWS == 0)
+    check("no deterministic supplier was constructed either",
+          FakeSupplier.CONSTRUCTED == FAKE_SUPPLIERS_BEFORE_GATE[0],
+          f"{FakeSupplier.CONSTRUCTED} vs {FAKE_SUPPLIERS_BEFORE_GATE[0]}")
+
+    # the driver's own entry point refuses at the same place
+    check("run_campaign refuses at the gate",
+          refusal_code(run_campaign, harness.root) == "EXECUTION_SEAL_NOT_FROZEN")
+
+    # and the production provider, if it were ever reached, refuses too
+    provider = AuthorisedStochasticProvider(harness.binding)
+    refuses_with_code("the production provider asked for a generator",
+                      "STOCHASTIC_PROVIDER_REFUSED", provider.generator, 1, "branch_b")
+    check("its refusal names the UNDECLARED generator as an authority gap",
+          "NOT DECLARED in frozen authority" in UNDECLARED_GENERATOR
+          and "PRNG algorithm" in UNDECLARED_GENERATOR)
+    check("the provider counted the request rather than silently returning None",
+          provider.requests == 1)
+    harness.close()
+
+
+def test_production_resolver_names_its_authority_gaps() -> None:
+    """The resolver refuses rather than defaulting an undeclared input."""
+    harness = Harness()
+    job = first_job(harness.jobs, "C1_true_bridge_complete")
+    code = refusal_code(resolve_job_specification, harness.binding, job)
+    check("resolving a declared field's job still refuses",
+          code == "CAMPAIGN_PLAN_MISMATCH", str(code))
+    message = ""
+    try:
+        resolve_job_specification(harness.binding, job)
+    except Refusal as exc:
+        message = str(exc)
+    check("it names the undeclared field-construction inputs exactly",
+          UNDECLARED_FIELD_INPUTS in message, message[-90:])
+    check("and it names each of the three by name",
+          all(token in UNDECLARED_FIELD_INPUTS
+              for token in ("calibration_route", "viscosity", "bead_radius")))
+    c6 = first_job(harness.jobs, "C6_mode_resolution_boundary")
+    try:
+        resolve_job_specification(harness.binding, c6)
+    except Refusal as exc:
+        message = str(exc)
+    check("C6's undeclared field construction is named separately",
+          UNDECLARED_C6_FIELD in message)
+    check("and it says why the driver must not supply one: the eigenvalue ratio "
+          "IS the quantity under test",
+          "refuses to invent a geometry" in UNDECLARED_C6_FIELD)
+    check("C8's beta truth is prose, so the driver refuses to read it as a "
+          "generating parameter",
+          refusal_code(declared_beta_true, PLAN, "C8_blinded_scale_control",
+                       "paired_scale_control", "theta0_circular")
+          == "CAMPAIGN_PLAN_MISMATCH")
+    check("C7's per-alternative beta vector IS machine-readable and is read",
+          declared_beta_true(PLAN, "C7_false_bridge", "alt_1_06", "theta1_power")
+          == 1.06)
+    check("a scalar beta truth is read as declared",
+          declared_beta_true(PLAN, "C1_true_bridge_complete", "sigma_psi_0p5",
+                             "theta0_circular") == 1.0)
+    harness.close()
+
+
+def test_fake_orchestration_end_to_end() -> None:
+    """The FULL control flow, with a deterministic supplier. NOT a scientific run.
+
+    Nothing below is a measurement. The supplier is a van der Corput sequence, so
+    the endpoint verdicts are arbitrary and are never read as results; what is
+    being proved is that the frozen dependency graph is walked in the frozen
+    order, that publication precedes unblinding, and that every job reaches
+    exactly one terminal record.
+    """
+    for case_id, label, calibrating in (
+            ("C7_false_bridge", "a NO-CALIBRATION case", False),
+            ("C8_blinded_scale_control", "the C8 PAIRED case", False),
+            ("C1_true_bridge_complete", "a CALIBRATION-REQUIRING case", True)):
+        harness = Harness()
+        key, group = next((k, g) for k, g in replicate_groups(harness.jobs)
+                          if k[0] == case_id)
+        provider = FakeProvider()
+        result = execute_campaign(harness.binding, group, provider, harness.out,
+                                  resolver=fixture_resolver, ledger=harness.ledger)
+        check(f"{label}: every job of the replicate reached a terminal record",
+              len(result["executed_jobs"]) == len(group)
+              and result["completeness"]["missing_terminal_jobs"] == 0)
+        check(f"{label}: a partial job set is NOT classified",
+              result["complete_campaign"] is False and result["classification"] is None)
+        purposes = [p for _, p in provider.requests]
+        check(f"{label}: the common mode was drawn ONCE for the experiment",
+              purposes.count("branch_a_common_mode") == 1, str(purposes.count(
+                  "branch_a_common_mode")))
+        check(f"{label}: one Branch-A stream per field",
+              purposes.count("branch_a_measurement") == len(group))
+        check(f"{label}: one Branch-B stream per field",
+              purposes.count("branch_b") == len(group))
+        check(f"{label}: calibration streams match the case's declared requirement",
+              purposes.count("calibration") == (len(group) if calibrating else 0),
+              f"{purposes.count('calibration')} for requires_calibration={calibrating}")
+        check(f"{label}: every Branch-A publication is COMMITTED on disk",
+              len(inventory_publications(harness.out)) == len(group))
+        for record in result["records"].values():
+            check(f"{label}: {record['job_id']} stores its publication digest and "
+                  "re-validates",
+                  bool(record["publication_digest"])
+                  and refusal_code(validate_job_record, record,
+                                   harness.binding.plan) is None)
+            break
+        if case_id == "C8_blinded_scale_control":
+            sample = result["records"][sorted(result["records"])[0]]["result"]
+            check("C8: BOTH declared scale factors were evaluated on ONE replicate",
+                  sample.get("scale_factors") == [1.07, 0.9]
+                  and isinstance(sample.get("scale_recovered"), bool),
+                  str(sample.get("scale_factors")))
+            check("C8: no calibration artifact was locked for it",
+                  harness.ledger.artifact_count == 0)
+        if case_id == "C7_false_bridge":
+            check("C7: no calibration artifact was locked for it",
+                  harness.ledger.artifact_count == 0)
+        if calibrating:
+            check("a calibrating case locked exactly one artifact per field",
+                  harness.ledger.artifact_count == len(group),
+                  str(harness.ledger.artifact_count))
+        harness.close()
+
+
+def test_fake_orchestration_refusal_and_restart() -> None:
+    """A structured refusal is a result; a resumed campaign never re-runs a job."""
+    harness = Harness()
+    key, group = next((k, g) for k, g in replicate_groups(harness.jobs)
+                      if k[0] == "C7_false_bridge")
+    provider = FakeProvider()
+    first = execute_campaign(harness.binding, group, provider, harness.out,
+                             resolver=fixture_resolver)
+    published_now = inventory_publications(harness.out)
+    check("the first pass published every job of the replicate",
+          len(published_now) == len(group))
+
+    # RESUME after the publishing process is gone: the checkpoint is RECOVERED
+    # from the publications themselves, never carried in memory and never
+    # regenerated under a fresh seed.
+    realisations = recover_realisations(harness.out, harness.binding)
+    check("recovery rebuilds exactly the published evidence, losslessly",
+          set(realisations) == set(published_now)
+          and all(realisations[j].evidence_sha256
+                  == published_now[j]["branch_a_evidence_sha256"]
+                  for j in realisations))
+    resumed = execute_campaign(harness.binding, group, FakeProvider(), harness.out,
+                               resolver=fixture_resolver, realisations=realisations)
+    check("a resumed campaign re-runs NOTHING that is already published",
+          resumed["executed_jobs"] == [], str(resumed["executed_jobs"]))
+    check("and the published evidence is untouched",
+          len(inventory_publications(harness.out)) == len(group))
+
+    # a caller that 'forgets' an artifact cannot resume past it
+    partial = dict(list(realisations.items())[:2])
+    refuses_with_code("resuming while omitting half the published evidence",
+                      "RESTART_INVENTORY_MISMATCH", execute_campaign,
+                      harness.binding, group, FakeProvider(), harness.out,
+                      resolver=fixture_resolver, realisations=partial)
+    harness.close()
+
+
+def test_no_production_bypass_reaches_a_provider() -> None:
+    """There is no argument, flag or path that carries a generator past the gate."""
+    import inspect
+    signature = inspect.signature(run_campaign)
+    check("run_campaign takes only root, output_dir and plan_only",
+          set(signature.parameters) == {"root", "output_dir", "plan_only"},
+          str(sorted(signature.parameters)))
+    source = open(os.path.join(ROOT, OFFICIAL_CAMPAIGN_DRIVER_PATH),
+                  encoding="utf-8").read()
+    for token in ("force=True", "skip_gate", "ignore_seal", "test_mode",
+                  "rng_factory"):
+        check(f"the driver source declares no {token!r} bypass",
+              f"{token}=" not in source.replace(f"`{token}`", "")
+              or token in ("rng_factory",) and "rng_factory=" not in source,
+              token)
+    tree = __import__("ast").parse(source)
+    entry = next(n for n in tree.body
+                 if isinstance(n, __import__("ast").FunctionDef)
+                 and n.name == "run_campaign")
+    names = [a.arg for a in entry.args.args + entry.args.kwonlyargs]
+    check("the AST confirms run_campaign's parameter list",
+          names == ["root", "output_dir", "plan_only"], str(names))
+    # the gate is lexically BEFORE the provider construction in run_campaign
+    body = source.split("def run_campaign(", 1)[1].split("\ndef ", 1)[0]
+    check("the lifecycle gate appears before the provider is constructed",
+          body.index("require_execution_lifecycle")
+          < body.index("AuthorisedStochasticProvider"))
+    check("execute_campaign is never called before the gate in run_campaign",
+          body.index("require_execution_lifecycle") < body.index("execute_campaign("))
+    check("the CLI exposes no provider, resolver or aggregator argument",
+          "--provider" not in source and "--resolver" not in source
+          and "--aggregator" not in source)
+
+
+def test_authority_still_unchanged_by_this_repair() -> None:
+    """NO E1a SCIENTIFIC DECISION RULE CHANGED. Byte-level, on every source."""
+    for label, path, digest in (
+            ("physical foundation",
+             "docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
+             "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507"),
+            ("theory baseline", "docs/theory/EBU_THEORY_BASELINE.md",
+             "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa"),
+            ("design contract", CONTRACT_JSON,
+             "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b"),
+            ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
+             "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495"),
+            ("seed map", SEED_MAP_JSON,
+             "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
+        check(f"the {label} is BYTE-unchanged by this repair",
+              sha256_file(os.path.join(ROOT, path)) == digest)
+    check("the JSON plan is byte-unchanged", sha256_file(os.path.join(ROOT, PLAN_JSON))
+          == PLAN_JSON_SHA256)
+    check("the Markdown plan is byte-unchanged",
+          sha256_file(os.path.join(ROOT, PLAN_MARKDOWN)) == PLAN_MARKDOWN_SHA256)
+    check("the execution seal is still PRE_DRIVER",
+          strict_load_file(os.path.join(ROOT, SEAL_JSON), "seal")["state"] == "PRE_DRIVER")
+    check("the final expected execution identity is still null",
+          PLAN["frozen_identities"]["final_expected_execution_identity"] is None)
+    check("execution_authorised is still false", PLAN["execution_authorised"] is False)
+    check("the campaign has produced no results directory",
+          not os.path.exists(os.path.join(ROOT, "results/e1a_v4_validation")))
+
+
+def test_deterministic_supplier_is_not_an_rng() -> None:
+    """The fake suppliers are reported separately and are never called scientific."""
+    check("NO REAL RNG OBJECT WAS CONSTRUCTED ANYWHERE IN THIS SUITE",
+          SentinelRNG.CONSTRUCTED == 0, str(SentinelRNG.CONSTRUCTED))
+    check("NO REAL RANDOM NUMBER WAS DRAWN", SentinelRNG.DRAWS == 0,
+          str(SentinelRNG.DRAWS))
+    a, b = FakeSupplier(7), FakeSupplier(7)
+    check("the deterministic supplier is reproducible: same seed, same values",
+          a.normal(8) == b.normal(8))
+    check("it has no entropy source and no hidden state",
+          set(vars(FakeSupplier(1))) == {"i"})
+    check("its values are counted and reported SEPARATELY from scientific draws",
+          FakeSupplier.VALUES > 0 and SentinelRNG.DRAWS == 0,
+          f"deterministic values={FakeSupplier.VALUES}, random draws={SentinelRNG.DRAWS}")
+
+
+
+def test_publication_and_result_restart_interactions() -> None:
+    """Crash-shaped states, and what a resume is allowed to conclude from each.
+
+        publication prepared but not committed   -> INCOMPLETE, refuse
+        publication committed                    -> verify and resume
+        publication bytes exist, commit absent   -> ORPHAN, refuse
+        inventory says committed, bytes missing  -> refuse
+        analysis done, result not committed      -> refuse (authorised recovery)
+        result committed, publication missing    -> refuse
+    """
+    from e1a_v4.validation.campaign_driver import (
+        inventory_job_records, job_record_basename, job_record_directory,
+    )
+
+    def one_replicate(harness):
+        return next((k, g) for k, g in replicate_groups(harness.jobs)
+                    if k[0] == "C7_false_bridge")
+
+    # 1. a completed pass, then a clean resume that re-runs nothing
+    harness = Harness()
+    key, group = one_replicate(harness)
+    execute_campaign(harness.binding, group, FakeProvider(), harness.out,
+                     resolver=fixture_resolver)
+    records_dir = job_record_directory(harness.out)
+    check("every terminal record is durably COMMITTED, not merely written",
+          len(inventory_job_records(harness.out, harness.binding, group)) == len(group))
+    check("each terminal record is filed at a path derived from its coordinates",
+          all(os.path.isfile(os.path.join(records_dir,
+                                          job_record_basename(job.coordinates)))
+              for job in group))
+    resumed = execute_campaign(harness.binding, group, FakeProvider(), harness.out,
+                               resolver=fixture_resolver,
+                               realisations=recover_realisations(harness.out,
+                                                                 harness.binding))
+    check("a committed campaign resumes, verifies and re-runs nothing",
+          resumed["executed_jobs"] == [] and
+          resumed["completeness"]["missing_terminal_jobs"] == 0)
+
+    # 2. ANALYSIS COMPLETED, RESULT NOT COMMITTED: remove one terminal record
+    victim = sorted(os.listdir(records_dir))[0]
+    if is_commit_name(victim):
+        victim = sorted(n for n in os.listdir(records_dir)
+                        if not is_commit_name(n) and n.endswith(".json"))[0]
+    os.remove(os.path.join(records_dir, victim))
+    os.remove(os.path.join(records_dir, commit_name(victim)))
+    refuses_with_code("a job that published evidence and committed no result",
+                      "RESTART_INVENTORY_MISMATCH", execute_campaign,
+                      harness.binding, group, FakeProvider(), harness.out,
+                      resolver=fixture_resolver,
+                      realisations=recover_realisations(harness.out, harness.binding))
+    check("the refusal preserves every surviving record and publication",
+          len(inventory_publications(harness.out)) == len(group))
+    harness.close()
+
+    # 3. RESULT COMMITTED, PUBLICATION MISSING
+    harness = Harness()
+    key, group = one_replicate(harness)
+    execute_campaign(harness.binding, group, FakeProvider(), harness.out,
+                     resolver=fixture_resolver)
+    store = publication_directory(harness.out)
+    gone = sorted(n for n in os.listdir(store)
+                  if not is_commit_name(n) and n.endswith(".json"))[0]
+    os.remove(os.path.join(store, gone))
+    os.remove(os.path.join(store, commit_name(gone)))
+    refuses_with_code("a terminal record whose Branch-A evidence is gone",
+                      "RESTART_INVENTORY_MISMATCH", execute_campaign,
+                      harness.binding, group, FakeProvider(), harness.out,
+                      resolver=fixture_resolver,
+                      realisations=recover_realisations(harness.out, harness.binding))
+    harness.close()
+
+    # 4. A TERMINAL RECORD EDITED AFTER COMMIT
+    harness = Harness()
+    key, group = one_replicate(harness)
+    execute_campaign(harness.binding, group, FakeProvider(), harness.out,
+                     resolver=fixture_resolver)
+    records_dir = job_record_directory(harness.out)
+    target = sorted(n for n in os.listdir(records_dir)
+                    if not is_commit_name(n) and n.endswith(".json"))[0]
+    record = read_published(os.path.join(records_dir, target), "record")
+    record["result"]["complete_pass"] = True
+    write_record(os.path.join(records_dir, target), record)
+    refuses_with_code("an edited terminal record on resume", "PUBLICATION_INCOMPLETE",
+                      inventory_job_records, harness.out, harness.binding, group)
+    harness.close()
+
+    # 5. A TERMINAL RECORD FOR A JOB THIS CAMPAIGN NEVER DECLARED
+    harness = Harness()
+    key, group = one_replicate(harness)
+    execute_campaign(harness.binding, group, FakeProvider(), harness.out,
+                     resolver=fixture_resolver)
+    other = [j for j in harness.jobs if j.coordinates.case_id != "C7_false_bridge"]
+    refuses_with_code("a terminal record belonging to no planned job",
+                      "RESTART_INVENTORY_MISMATCH", inventory_job_records,
+                      harness.out, harness.binding, other)
+    harness.close()
+
+
+def test_diagnostic_aggregator_refuses_rather_than_reporting_nothing() -> None:
+    """A case that owes a mandatory diagnostic refuses; it never reports an empty one."""
+    from e1a_v4.validation.campaign_driver import (
+        UNDECLARED_DIAGNOSTIC_AGGREGATOR, default_case_aggregate,
+    )
+    harness = Harness()
+    for case_id, owes in (("C2_geometry_false_rejection", True),
+                          ("C4_surrogate_validity", True),
+                          ("C5_plug_in_branch_a", True),
+                          ("C6_mode_resolution_boundary", True),
+                          ("C7_false_bridge", False),
+                          ("C8_blinded_scale_control", False),
+                          ("C1_true_bridge_complete", False)):
+        code = refusal_code(default_case_aggregate, harness.binding, case_id, ())
+        if owes:
+            check(f"{case_id}: refuses rather than reporting an empty diagnostic",
+                  code == "CONTRACT_MANDATORY_DIAGNOSTIC_MISSING", str(code))
+        else:
+            check(f"{case_id}: owes no keyed diagnostic and aggregates cleanly",
+                  code is None, str(code))
+    check("the refusal names where the requirement is declared",
+          "release_authority.mandatory_diagnostics" in UNDECLARED_DIAGNOSTIC_AGGREGATOR)
+    harness.close()
+
+
 GROUPS = (
     ("the canonical driver declaration", test_canonical_driver_present),
     ("driver identity binding", test_driver_identity_binding),
@@ -1116,6 +2484,45 @@ GROUPS = (
     ("mandatory diagnostics at record time", test_mandatory_diagnostics_required_at_record_time),
     ("the execute path remains blocked", test_execute_path_remains_blocked),
     ("frozen authority unchanged", test_frozen_authority_unchanged),
+    # --- the independent audit's five blocking findings, as regressions -------
+    ("AUDIT A: the publication envelope binds every field",
+     test_publication_envelope_binds_every_field),
+    ("AUDIT A: the strict publication schema", test_publication_strict_schema),
+    ("AUDIT D: publication fault injection", test_publication_fault_injection),
+    ("AUDIT D: orphan and dangling detection", test_publication_orphan_detection),
+    ("AUDIT B: case / result-type compatibility", test_case_result_type_compatibility),
+    ("AUDIT B: the field set is derived from the job",
+     test_field_set_derived_from_the_job),
+    ("AUDIT B: mandatory diagnostics persist and round-trip",
+     test_mandatory_diagnostic_persistence_and_round_trip),
+    ("AUDIT B: result round trip, every case", test_result_round_trip_every_case),
+    ("AUDIT C: restart reconciles with the persisted inventory",
+     test_restart_reconciles_with_the_persisted_inventory),
+    ("AUDIT C: restart cannot delete history", test_restart_cannot_delete_history),
+    ("AUDIT D: every transition is atomic", test_every_transition_is_atomic),
+    ("structured refusals stay results", test_structured_refusal_is_a_result),
+    ("campaign completeness and case aggregation",
+     test_campaign_completeness_and_aggregation),
+    ("release units follow frozen authority",
+     test_release_subconditions_follow_frozen_authority),
+    ("AUDIT E: the execution gate refuses before any RNG",
+     test_execution_gate_refuses_before_any_rng),
+    ("AUDIT E: the resolver names its authority gaps",
+     test_production_resolver_names_its_authority_gaps),
+    ("AUDIT E: fake full-orchestration control flow",
+     test_fake_orchestration_end_to_end),
+    ("AUDIT E: fake refusal and restart paths",
+     test_fake_orchestration_refusal_and_restart),
+    ("publication and result restart interactions",
+     test_publication_and_result_restart_interactions),
+    ("the diagnostic aggregator refuses rather than reporting nothing",
+     test_diagnostic_aggregator_refuses_rather_than_reporting_nothing),
+    ("no production bypass reaches a provider",
+     test_no_production_bypass_reaches_a_provider),
+    ("frozen authority unchanged by this repair",
+     test_authority_still_unchanged_by_this_repair),
+    ("the deterministic supplier is not an RNG",
+     test_deterministic_supplier_is_not_an_rng),
     ("the stochastic boundary", test_stochastic_boundary),
 )
 
@@ -1130,4 +2537,9 @@ if __name__ == "__main__":
     print(f"  REAL RNG OBJECTS      : {SentinelRNG.CONSTRUCTED}")
     print(f"  REAL RANDOM DRAWS     : {SentinelRNG.DRAWS}")
     print("  REAL TRAJECTORIES     : 0")
+    print("  REAL CALIBRATION EXECUTIONS: 0")
+    print("  REAL CAMPAIGN JOBS    : 0")
+    print("Deterministic fixtures, reported separately and NEVER scientific execution:")
+    print(f"  van der Corput suppliers constructed: {FakeSupplier.CONSTRUCTED}")
+    print(f"  deterministic values supplied       : {FakeSupplier.VALUES}")
     raise SystemExit(1 if FAILED else 0)

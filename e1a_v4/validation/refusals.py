@@ -156,6 +156,70 @@ class PublicationNotDurable(CodedRefusal):
     code = "PUBLICATION_NOT_DURABLE"
 
 
+class PublicationOrphaned(CodedRefusal):
+    """Evidence was PREPARED at its final path but never COMMITTED.
+
+    The artifact bytes exist and its commit marker does not. That is the exact
+    state an interrupted publication leaves behind, and it is the one state a
+    reader must never round up to PUBLISHED. It is preserved, not deleted: the
+    orphan is the only surviving record of what was attempted.
+    """
+
+    code = "PUBLICATION_ORPHANED"
+
+
+class PublicationUnexpectedEntry(CodedRefusal):
+    """A publication directory contains something the protocol did not put there."""
+
+    code = "PUBLICATION_UNEXPECTED_ENTRY"
+
+
+class PublicationDigestMismatch(CodedRefusal):
+    """A published record does not reproduce its own publication digest.
+
+    Distinct from BRANCH_A_EVIDENCE_ALTERED: that one means the scientific
+    evidence moved, this one means any bound provenance field did -- execution
+    identity, calibration-condition hash, coordinates, seed identity, state or
+    schema. The envelope is authenticated as a whole, not evidence-first.
+    """
+
+    code = "PUBLICATION_DIGEST_MISMATCH"
+
+
+class RestartInventoryMismatch(CodedRefusal):
+    """What the campaign claims exists and what actually exists disagree.
+
+    Raised in BOTH directions. A caller cannot hide an artifact by omitting it
+    from an argument, and cannot conjure one by naming it.
+    """
+
+    code = "RESTART_INVENTORY_MISMATCH"
+
+
+class ResultCaseMismatch(CodedRefusal):
+    """A result was presented for a job whose frozen case it does not belong to."""
+
+    code = "RESULT_CASE_MISMATCH"
+
+
+class ResultFieldSetMismatch(CodedRefusal):
+    """The per-field rows are not exactly the frozen job's declared field set."""
+
+    code = "RESULT_FIELD_SET_MISMATCH"
+
+
+class CampaignIncomplete(CodedRefusal):
+    """Aggregation was attempted before every frozen job had one terminal record."""
+
+    code = "CAMPAIGN_INCOMPLETE"
+
+
+class StochasticProviderRefused(CodedRefusal):
+    """A real stochastic provider was requested outside an authorised execution."""
+
+    code = "STOCHASTIC_PROVIDER_REFUSED"
+
+
 class BranchBPremature(CodedRefusal):
     """Branch-B access was requested before its frozen prerequisites held."""
 
@@ -386,6 +450,14 @@ class ExecutionAuthorisationMissing(ExecutionNotAuthorised):
 
 #: Every refusal class this layer can emit. A test asserts the mapping is complete.
 ALL_REFUSAL_CLASSES = (
+    BranchAProvenanceMismatch, BranchAEvidenceAltered, BranchANotPublished,
+    BranchAPublicationImmutable, BranchBPremature, JobStateInvalid,
+    PublicationCollision, PublicationIncomplete, PublicationNotDurable,
+    PublicationOrphaned, PublicationUnexpectedEntry, PublicationDigestMismatch,
+    RestartInventoryMismatch, ResultCaseMismatch, ResultFieldSetMismatch,
+    ResultSchemaInvalid, CampaignIncomplete, CampaignPlanMismatch,
+    CampaignManifestInvalid, StochasticProviderRefused,
+    ContractMandatoryDiagnosticMissing, ContractMandatoryDiagnosticMismatch,
     PlanVersionMismatch, PlanAnalysisIdentityMismatch, PlanIdentityMismatch,
     PlanCaseMismatch, PlanSubconditionMismatch, PlanReleaseRuleMismatch,
     PlanAdoptedRuleMismatch, PlanSurfaceMismatch, PlanSurfaceUndeclared,

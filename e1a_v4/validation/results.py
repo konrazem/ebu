@@ -8,6 +8,16 @@ from typing import Any
 
 RESULT_SCHEMA = "e1a_v4_validation_result/2"
 MANIFEST_SCHEMA = "e1a_v4_validation_manifest/3"
+#: The terminal record of ONE planned campaign job. Distinct from RESULT_SCHEMA,
+#: which is the per-field scientific record the plan's `output_schema` freezes:
+#: a job record is the driver's immutable statement that one planned job reached
+#: exactly one authorised terminal state, and it carries the provenance and the
+#: MANDATORY CONTRACT DIAGNOSTICS the job was validated against. The driver used
+#: RESULT_SCHEMA for this, which claimed a shape it never produced.
+JOB_RECORD_SCHEMA = "e1a_v4_validation_job_record/1"
+#: The final campaign result: completeness, per-case aggregates and the frozen
+#: release classification. Written once, after every job has a terminal record.
+CAMPAIGN_RESULT_SCHEMA = "e1a_v4_campaign_result/1"
 #: Record schema 2 adds `subcondition_id`. A record is reproducible from
 #: (case_id, subcondition_id, replicate_id, field/scope, seed family, seed identity).
 #: Manifest schema 3 adds `contract_diagnostics`: an aggregate that omits a
