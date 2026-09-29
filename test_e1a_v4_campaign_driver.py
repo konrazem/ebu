@@ -50,9 +50,12 @@ from e1a_v4.validation.campaign_driver import (
     execute_campaign, inventory_publications, job_execution,
     main as driver_main, manifest_digest, plan_campaign, publication_basename,
     publication_directory, publication_envelope, publication_path,
-    replicate_calibration_for, replicate_groups, require_campaign_completeness,
+    committed_publication, field_event_count,
+    replicate_calibration_for, replicate_groups,
+    require_campaign_completeness,
     require_execution_lifecycle, require_plan_driver_agreement,
-    required_result_fields, resolve_job_specification, run_campaign,
+    required_endpoint_events, required_result_fields,
+    resolve_job_specification, run_campaign,
     validate_job_record, verify_publication, verify_restart,
 )
 from e1a_v4.validation.driver import (
@@ -177,6 +180,35 @@ def fixture_artifact(condition: CalibrationCondition) -> CalibrationArtifact:
         alpha_1=condition.alpha_1, null_draws=draws, condition=condition,
         schema=condition.canonical()["schema"], provenance="deterministic fixture",
         is_fixture=True)
+
+
+def endpoint_outcome(case_id: str, **overrides) -> dict:
+    """A COMPLETE, case-appropriate set of endpoint decisions. Deterministic.
+
+    Derived from `required_endpoint_events`, so a case that owes the per-field P1
+    decision and both block decisions gets all three. A test may not hand the
+    recorder a partial outcome, because production may not either.
+    """
+    outcome = {"analysis_status": "ESTIMATED", "beta_hat": 1.0}
+    for event in required_endpoint_events(PLAN, case_id):
+        if event == "analysis_status":
+            continue
+        outcome.setdefault(event, True if event == "P1" else False)
+    outcome.update(overrides)
+    return outcome
+
+
+def revalidate(harness, execution, record):
+    """Validate a terminal record through the SAME strict verifier production uses.
+
+    Internal digest AND external provenance links. There is deliberately no
+    weaker call: `validate_job_record` requires the binding, the planned job and
+    the committed publication, so a test cannot exercise a path production does
+    not have.
+    """
+    return refusal_code(validate_job_record, record, harness.binding.plan,
+                        harness.binding, execution.job,
+                        committed_publication(harness.out, execution.coordinates))
 
 
 def write_record(path: str, record) -> None:
@@ -809,7 +841,8 @@ def test_state_machine_transitions() -> None:
     execution.lock_calibration(fixture_artifact(condition))
     execution.unblind()
     execution.branch_b_seed()
-    execution.analyse({"complete_pass": True})
+    execution.analyse(endpoint_outcome(execution.coordinates.case_id,
+                                      complete_pass=True))
     check("analysis advances to ANALYSED", execution.state == ANALYSED)
     refuses_with_code("unblinding again after analysis", "JOB_STATE_INVALID",
                       execution.unblind)
@@ -1040,7 +1073,7 @@ def test_mandatory_diagnostics_required_at_record_time() -> None:
     execution.lock_calibration(fixture_artifact(condition))
     execution.unblind()
     execution.branch_b_seed()
-    execution.analyse({"p1_rejected": False})
+    execution.analyse(endpoint_outcome(execution.coordinates.case_id))
 
     subcondition = job.coordinates.subcondition_id
     bare = aggregate_skeleton("C2_geometry_false_rejection", subcondition)
@@ -1071,8 +1104,7 @@ def test_mandatory_diagnostics_required_at_record_time() -> None:
                 "confidence_level", "pass"):
         check(f"the stored diagnostic retains {key!r}", key in row)
     check("the stored record re-validates from ITSELF after a JSON round trip",
-          refusal_code(validate_job_record, json.loads(json.dumps(recorded)),
-                       harness.binding.plan) is None)
+          revalidate(harness, execution, json.loads(json.dumps(recorded))) is None)
     harness.close()
 
 
@@ -1577,7 +1609,7 @@ def test_case_result_type_compatibility() -> None:
     for case_id in drivable:
         harness = Harness()
         execution, realisation, path = unblinded(harness, case_id)
-        execution.analyse({"analysis_status": "ESTIMATED"})
+        execution.analyse(endpoint_outcome(execution.coordinates.case_id))
         job = execution.job
         own = aggregate_skeleton(case_id, job.coordinates.subcondition_id)
         wrong = [other for other in cases if other != case_id]
@@ -1637,7 +1669,7 @@ def test_field_set_derived_from_the_job() -> None:
     # and the same rules through the recorder itself
     harness = Harness()
     execution, realisation, path = unblinded(harness, "C2_geometry_false_rejection")
-    execution.analyse({"analysis_status": "ESTIMATED"})
+    execution.analyse(endpoint_outcome(execution.coordinates.case_id))
     aggregate = c2_aggregate(execution.job.coordinates.subcondition_id)
     for label, supplied in probes:
         refuses_with_code(f"the recorder rejects {label}", "RESULT_FIELD_SET_MISMATCH",
@@ -1668,7 +1700,7 @@ def test_mandatory_diagnostic_persistence_and_round_trip() -> None:
     """AUDIT FINDING B. A checked diagnostic must survive into the record."""
     harness = Harness()
     execution, realisation, path = unblinded(harness, "C2_geometry_false_rejection")
-    execution.analyse({"analysis_status": "ESTIMATED", "p1_rejected": False})
+    execution.analyse(endpoint_outcome(execution.coordinates.case_id))
     subcondition = execution.job.coordinates.subcondition_id
     recorded = execution.record(c2_aggregate(subcondition))
     stored = {d["diagnostic_id"]: d for d in recorded["mandatory_diagnostics"]}
@@ -1694,32 +1726,37 @@ def test_mandatory_diagnostic_persistence_and_round_trip() -> None:
     check("the record survives a canonical JSON round trip byte for byte",
           canonical_json(round_trip) == canonical_json(recorded))
     check("the round-tripped record re-validates WITHOUT its original aggregate",
-          refusal_code(validate_job_record, round_trip, harness.binding.plan) is None)
+          revalidate(harness, execution, round_trip) is None)
     check("the record's own digest is a recomputation over everything else",
           recorded["result_digest"] == sealed_digest(dict(recorded), "result_digest"))
     tampered = json.loads(json.dumps(recorded))
     tampered["result"]["p1_rejected"] = True
-    refuses_with_code("an edited stored result", "RESULT_SCHEMA_INVALID",
-                      validate_job_record, tampered, harness.binding.plan)
+    check("an edited stored result -> RESULT_SCHEMA_INVALID",
+          revalidate(harness, execution, tampered) == "RESULT_SCHEMA_INVALID",
+          str(revalidate(harness, execution, tampered)))
     stripped = json.loads(json.dumps(recorded))
     stripped["mandatory_diagnostics"] = []
     stripped["result_digest"] = sealed_digest(stripped, "result_digest")
-    refuses_with_code("a stored result with its diagnostics removed",
-                      "CONTRACT_MANDATORY_DIAGNOSTIC_MISSING", validate_job_record,
-                      stripped, harness.binding.plan)
+    check("a stored result with its diagnostics removed -> "
+          "CONTRACT_MANDATORY_DIAGNOSTIC_MISSING",
+          revalidate(harness, execution, stripped)
+          == "CONTRACT_MANDATORY_DIAGNOSTIC_MISSING",
+          str(revalidate(harness, execution, stripped)))
     inconsistent = json.loads(json.dumps(recorded))
     diagnostics = inconsistent["mandatory_diagnostics"][0]["value"]["per_field"]
     diagnostics[sorted(diagnostics)[0]]["cp_upper"] = 0.5
     inconsistent["result_digest"] = sealed_digest(inconsistent, "result_digest")
-    refuses_with_code("a stored diagnostic inconsistent with its own counts",
-                      "CONTRACT_MANDATORY_DIAGNOSTIC_MISMATCH", validate_job_record,
-                      inconsistent, harness.binding.plan)
+    check("a stored diagnostic inconsistent with its own counts -> "
+          "CONTRACT_MANDATORY_DIAGNOSTIC_MISMATCH",
+          revalidate(harness, execution, inconsistent)
+          == "CONTRACT_MANDATORY_DIAGNOSTIC_MISMATCH",
+          str(revalidate(harness, execution, inconsistent)))
     harness.close()
 
     # a C7 result cannot satisfy C2's requirement: it is not a C2 result at all
     harness = Harness()
     execution, realisation, path = unblinded(harness, "C7_false_bridge")
-    execution.analyse({"analysis_status": "ESTIMATED"})
+    execution.analyse(endpoint_outcome(execution.coordinates.case_id))
     refuses_with_code("a C7 job presented with C2's mandatory diagnostic",
                       "RESULT_CASE_MISMATCH", execution.record,
                       c2_aggregate(execution.job.coordinates.subcondition_id))
@@ -1727,7 +1764,7 @@ def test_mandatory_diagnostic_persistence_and_round_trip() -> None:
         aggregate_skeleton("C7_false_bridge", execution.job.coordinates.subcondition_id))
     check("a C7 result carries no C2 diagnostic and is still valid on its own terms",
           recorded["mandatory_diagnostics"] == []
-          and refusal_code(validate_job_record, recorded, harness.binding.plan) is None)
+          and revalidate(harness, execution, recorded) is None)
     harness.close()
 
 
@@ -1739,14 +1776,14 @@ def test_result_round_trip_every_case() -> None:
             continue
         harness = Harness()
         execution, realisation, path = unblinded(harness, case_id)
-        execution.analyse({"analysis_status": "ESTIMATED"})
+        execution.analyse(endpoint_outcome(execution.coordinates.case_id))
         subcondition = execution.job.coordinates.subcondition_id
         aggregate = (c2_aggregate(subcondition)
                      if case_id == "C2_geometry_false_rejection"
                      else case_aggregate(case_id, subcondition))
         recorded = execution.record(aggregate)
         round_trip = json.loads(json.dumps(recorded))
-        ok = refusal_code(validate_job_record, round_trip, harness.binding.plan)
+        ok = revalidate(harness, execution, round_trip)
         check(f"{case_id}: a valid result round-trips and revalidates", ok is None,
               str(ok))
         check(f"{case_id}: provenance identities survive",
@@ -1974,7 +2011,7 @@ def test_every_transition_is_atomic() -> None:
           refusal_code(execution.record,
                        c2_aggregate(execution.job.coordinates.subcondition_id))
           == "JOB_STATE_INVALID")
-    execution.analyse({"analysis_status": "ESTIMATED"})
+    execution.analyse(endpoint_outcome(execution.coordinates.case_id))
     check("a VALID outcome does advance to ANALYSED", execution.state == ANALYSED)
 
     # 7. record: a refused record leaves the job ANALYSED
@@ -1993,8 +2030,13 @@ def test_structured_refusal_is_a_result() -> None:
     """A scientific refusal is RECORDED, never retried, dropped or reclassified."""
     harness = Harness()
     execution, realisation, path = unblinded(harness)
-    refusal_outcome = {"analysis_status": "RANK_GUARD_FAIL",
-                       "refusal_reason": "rank guard", "p1_rejected": None}
+    # A STRUCTURED SCIENTIFIC REFUSAL. P1 fails closed, so `p1_rejected` is True
+    # and well defined; the two block decisions genuinely do not exist because the
+    # frozen gate produced no p-values, and the record says why.
+    refusal_outcome = endpoint_outcome(
+        execution.coordinates.case_id, analysis_status="RANK_GUARD_FAIL",
+        refusal_reason="rank guard", beta_hat=None, P1=False, p1_rejected=True,
+        block1_rejected=None, g5_rejected=None)
     execution.analyse(refusal_outcome)
     recorded = execution.record(c2_aggregate(execution.job.coordinates.subcondition_id))
     check("a structured scientific refusal reaches a TERMINAL record",
@@ -2003,7 +2045,7 @@ def test_structured_refusal_is_a_result() -> None:
           recorded["result"]["analysis_status"] == "RANK_GUARD_FAIL"
           and recorded["result"]["refusal_reason"] == "rank guard")
     check("it was not converted into a software error and not dropped",
-          refusal_code(validate_job_record, recorded, harness.binding.plan) is None)
+          revalidate(harness, execution, recorded) is None)
     check("no second seed can be drawn to replace it: the Branch-B stream is a "
           "pure function of the frozen coordinates, so 'retry under another seed' "
           "is not an operation this interface has",
@@ -2199,8 +2241,12 @@ def test_fake_orchestration_end_to_end() -> None:
             check(f"{label}: {record['job_id']} stores its publication digest and "
                   "re-validates",
                   bool(record["publication_digest"])
-                  and refusal_code(validate_job_record, record,
-                                   harness.binding.plan) is None)
+                  and refusal_code(
+                      validate_job_record, record, harness.binding.plan,
+                      harness.binding,
+                      next(j for j in group if j.job_id == record["job_id"]),
+                      committed_publication(
+                          harness.out, JobCoordinates(**record["coordinates"]))) is None)
             break
         if case_id == "C8_blinded_scale_control":
             sample = result["records"][sorted(result["records"])[0]]["result"]
@@ -2401,8 +2447,10 @@ def test_publication_and_result_restart_interactions() -> None:
                   if not is_commit_name(n) and n.endswith(".json"))[0]
     os.remove(os.path.join(store, gone))
     os.remove(os.path.join(store, commit_name(gone)))
+    # The provenance verifier now names this precisely: the record's upstream
+    # evidence is gone, so the record is not evidence of a completed job.
     refuses_with_code("a terminal record whose Branch-A evidence is gone",
-                      "RESTART_INVENTORY_MISMATCH", execute_campaign,
+                      "TERMINAL_PROVENANCE_MISMATCH", execute_campaign,
                       harness.binding, group, FakeProvider(), harness.out,
                       resolver=fixture_resolver,
                       realisations=recover_realisations(harness.out, harness.binding))

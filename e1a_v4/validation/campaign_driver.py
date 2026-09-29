@@ -65,7 +65,9 @@ from typing import Any, Mapping, Protocol, Sequence
 
 from ..branch_a import BranchAField
 from ..contract import sha256_file
-from ..calibration import CalibrationArtifact, CalibrationCondition, canonical_float
+from ..calibration import (
+    BLOCK1_GATES, CalibrationArtifact, CalibrationCondition, canonical_float,
+)
 from ..effective_size import sigma_stat
 from ..endpoints import (
     UncertaintyModel, p1_geometry, p2_cross_field, p3_absolute, p4_consistency,
@@ -93,10 +95,12 @@ from .refusals import (
     BranchAEvidenceAltered, BranchANotPublished, BranchAProvenanceMismatch,
     BranchAPublicationImmutable, BranchBPremature, CampaignIncomplete,
     CampaignManifestInvalid, CampaignPlanMismatch,
-    ContractMandatoryDiagnosticMissing, ExecutionAuthorisationMissing,
+    ContractMandatoryDiagnosticMissing, EndpointEventMissing,
+    EndpointEventReductionUndeclared, ExecutionAuthorisationMissing,
     JobStateInvalid, PublicationDigestMismatch, PublicationIncomplete,
     RestartInventoryMismatch, ResultCaseMismatch, ResultFieldSetMismatch,
-    ResultSchemaInvalid, StochasticProviderRefused,
+    ResultSchemaInvalid, ScaleControlInvalid, StochasticProviderRefused,
+    TerminalProvenanceMismatch,
 )
 from .release_authority import (
     mandatory_diagnostics_for, require_mandatory_diagnostics,
@@ -1236,12 +1240,23 @@ def stored_mandatory_diagnostics(plan: Mapping[str, Any], case_id: str,
     return stored
 
 
-def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any]) -> None:
-    """Re-validate a stored job record, from the record ALONE.
+def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any],
+                        binding: ExecutionBinding, job: CampaignJob | None,
+                        publication: Mapping[str, Any] | None) -> None:
+    """Re-validate a stored job record: its own bytes AND its external links.
 
-    This is the round trip the audit found missing: a record read back from disk
-    must still prove its own mandatory diagnostics without the aggregate that
-    produced it. If it cannot, the diagnostic was checked and then discarded.
+    Two independent layers, and both are required:
+
+        INTERNAL   the record's own digest, its frozen field set, its mandatory
+                   diagnostics revalidated from the stored evidence alone
+        EXTERNAL   `require_terminal_provenance`, when the current binding is
+                   supplied: package identities, planner coordinates and the
+                   committed Branch-A publication
+
+    The internal layer is the round trip the first audit found missing. The
+    external layer is what the second audit found missing: without it a caller
+    could edit any provenance link, recompute the record's digest, and be
+    believed.
     """
     if record.get("schema") != JOB_RECORD_SCHEMA:
         raise ResultSchemaInvalid(
@@ -1275,6 +1290,100 @@ def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any]) -> N
     for row in stored.values():
         rebuilt[row["aggregate_key"]] = row["value"]
     require_mandatory_diagnostics(rebuilt, plan, required)
+    require_endpoint_events(plan, case_id, record.get("result") or {},
+                            record.get("job_id") or "<unnamed job>")
+    require_terminal_provenance(record, binding, job=job, publication=publication)
+
+
+def require_terminal_provenance(record: Mapping[str, Any], binding: ExecutionBinding,
+                                job: CampaignJob | None = None,
+                                publication: Mapping[str, Any] | None = None) -> None:
+    """Bind a terminal record to the CURRENT authority, not only to itself.
+
+    THE DEFECT THIS CLOSES
+        `validate_job_record` recomputed the record's own digest and nothing
+        else. An independent audit changed the execution identity, the Branch-A
+        evidence hash, the publication digest and even the job coordinates,
+        re-digested the record, and validation accepted all four. A self-
+        consistent digest proves only that the bytes were not edited after they
+        were written; it cannot prove the bytes describe THIS campaign.
+
+    The internal digest is KEPT -- it protects the bytes -- and these external
+    links are added on top:
+
+        package identities   == the current ExecutionBinding
+        coordinates, job id,
+        result kind, role,
+        calibration requirement
+                             == the frozen deterministic planner
+        Branch-A evidence hash,
+        publication digest,
+        calibration condition
+                             == the COMMITTED Branch-A publication for this job
+
+    A record cannot define its own scientific coordinates, and it cannot vouch
+    for upstream evidence by quoting a hash it also supplies.
+    """
+    job_id = record.get("job_id") or "<unnamed job>"
+    # BOTH external anchors are REQUIRED. An optional cross-check is a weaker
+    # validation path, and a weaker path is the defect: a terminal record with no
+    # planned job or no committed publication is not evidence of anything.
+    if job is None:
+        raise TerminalProvenanceMismatch(
+            f"{job_id}: no planned job was supplied to validate this record "
+            "against. A terminal record cannot vouch for its own coordinates.")
+    if publication is None:
+        raise TerminalProvenanceMismatch(
+            f"{job_id}: no committed Branch-A publication exists for these "
+            "coordinates. A result whose upstream evidence is absent is not a "
+            "completed job, whatever its own digest says.")
+    identities = record.get("package_identities") or {}
+    for key, current in (("contract_sha256", binding.binding.sha256),
+                         ("plan_sha256", binding.plan_sha256),
+                         ("seed_map_sha256", binding.seed_map_sha256),
+                         ("analysis_procedure_identity", binding.analysis_identity),
+                         ("execution_identity", binding.execution_identity)):
+        if identities.get(key) != current:
+            raise TerminalProvenanceMismatch(
+                f"{job_id}: stored {key} {identities.get(key)!r} is not the current "
+                f"{current!r}. The record describes a different package than the one "
+                "validating it; re-digesting the record does not make it current.")
+    # --- the frozen deterministic planner ------------------------------------
+    if record.get("coordinates") != job.coordinates.as_dict():
+        raise TerminalProvenanceMismatch(
+            f"{job_id}: stored coordinates {record.get('coordinates')!r} are not "
+            f"the planner's {job.coordinates.as_dict()!r}. A terminal record does "
+            "not define its own scientific coordinates.")
+    for key, expected in (("job_id", job.job_id),
+                          ("result_kind", job.result_kind),
+                          ("role", job.role),
+                          ("requires_calibration", job.requires_calibration)):
+        if record.get(key) != expected:
+            raise TerminalProvenanceMismatch(
+                f"{job_id}: stored {key} {record.get(key)!r} is not the frozen "
+                f"planner's {expected!r}")
+    # --- the COMMITTED Branch-A publication for these exact coordinates ------
+    if record.get("branch_a_evidence_sha256") != publication.get(
+            "branch_a_evidence_sha256"):
+        raise TerminalProvenanceMismatch(
+            f"{job_id}: the stored Branch-A evidence hash is not the one in the "
+            "committed publication for these coordinates")
+    if record.get("publication_digest") != publication.get("publication_digest"):
+        raise TerminalProvenanceMismatch(
+            f"{job_id}: the stored publication digest is not the committed "
+            "publication's own digest")
+    if record.get("calibration_condition_sha256") != publication.get(
+            "calibration_condition_sha256"):
+        raise TerminalProvenanceMismatch(
+            f"{job_id}: the stored calibration-condition identity is not the one "
+            "the committed Branch-A publication was bound to")
+    if not job.requires_calibration:
+        for key in ("calibration_condition_sha256", "calibration_artifact_sha256"):
+            if record.get(key) is not None:
+                raise TerminalProvenanceMismatch(
+                    f"{job_id}: {job.coordinates.case_id} evaluates no P1 / Block-1 "
+                    f"quantity, so {key} must be null; a calibration requirement may "
+                    "not be invented for it")
 
 
 def replicate_calibration_for(binding: ExecutionBinding, job: CampaignJob,
@@ -1413,6 +1522,22 @@ def job_record_basename(coordinates: JobCoordinates) -> str:
     return f"job_{canonical_digest(coordinates.as_dict())}.json"
 
 
+def committed_publication(output_dir: str,
+                          coordinates: JobCoordinates) -> dict[str, Any] | None:
+    """The COMMITTED Branch-A publication for these coordinates, or None.
+
+    None only when no publication exists at all; anything present but not
+    committed refuses inside `read_committed` rather than being skipped.
+    """
+    directory = publication_directory(output_dir)
+    basename = publication_basename(coordinates)
+    if not os.path.lexists(os.path.join(directory, basename)):
+        return None
+    record, _marker = read_committed(directory, basename,
+                                     "the Branch-A publication record")
+    return record
+
+
 def publish_job_record(output_dir: str, record: Mapping[str, Any],
                        binding: ExecutionBinding) -> PublicationReceipt:
     """Durably COMMIT one job's terminal record, through the same transaction.
@@ -1442,6 +1567,7 @@ def inventory_job_records(output_dir: str, binding: ExecutionBinding,
     """
     directory = job_record_directory(output_dir)
     inventory = require_clean_inventory(directory, "the terminal job-record store")
+    by_job_id = {job.job_id: job for job in (planned or ())}
     found: dict[str, dict[str, Any]] = {}
     for basename in inventory.committed:
         record, marker = read_committed(directory, basename, "a terminal job record")
@@ -1453,7 +1579,19 @@ def inventory_job_records(output_dir: str, binding: ExecutionBinding,
         if marker["publication_digest"] != record.get("result_digest"):
             raise RestartInventoryMismatch(
                 f"{basename!r}: the commit marker committed a different result digest")
-        validate_job_record(record, binding.plan)
+        # An undeclared job is named as such BEFORE the provenance verifier runs,
+        # so the refusal says "this record belongs to no planned job" rather than
+        # the vaguer "no planned job was supplied to validate it against".
+        if planned is not None and coordinates.job_id not in by_job_id:
+            raise RestartInventoryMismatch(
+                f"the terminal record {basename!r} belongs to {coordinates.job_id!r}, "
+                "which this campaign never declared")
+        # THE SAME VERIFIER THE WRITE PATH USES, with the same external links.
+        # A record accepted when written and refused on restart, or the reverse,
+        # is a design error; there is one terminal-provenance rule.
+        validate_job_record(record, binding.plan, binding,
+                            job=by_job_id.get(coordinates.job_id),
+                            publication=committed_publication(output_dir, coordinates))
         if coordinates.job_id in found:
             raise RestartInventoryMismatch(
                 f"two committed records claim {coordinates.job_id}")
@@ -1659,14 +1797,112 @@ def assemble_case_aggregates(jobs: Sequence[CampaignJob],
     return aggregates
 
 
+#: Endpoint events that belong to ONE FIELD. Each field record carries its own.
+FIELD_LEVEL_EVENTS = ("analysis_status", "P1", "p1_rejected", "block1_rejected",
+                      "g5_rejected", "beta_hat")
+#: Endpoint events that belong to the REPLICATE as a whole. Every field record of
+#: a replicate carries the same value, and disagreement is a defect.
+REPLICATE_LEVEL_EVENTS = ("P2", "P3", "P4", "complete_pass", "false_acceptance",
+                          "scale_recovered")
+
+
+def required_endpoint_events(plan: Mapping[str, Any], case_id: str) -> tuple[str, ...]:
+    """The endpoint decisions a case's record MUST carry, derived from the plan.
+
+    Case-aware by construction, as the audit requires: a case that evaluates a
+    P1 / Block-1 quantity owes the per-field P1 decision and both block decisions;
+    a case whose release endpoint is the complete pipeline owes `complete_pass`;
+    the false-bridge control owes its acceptance event; the blinded scale control
+    owes its recovery event. Nothing is nullable-by-default and then interpreted
+    opportunistically.
+    """
+    case = case_entry(plan, case_id)
+    required = ["analysis_status"]
+    if case.get("uses_p1_block1"):
+        required += ["P1", "p1_rejected", "block1_rejected", "g5_rejected"]
+    endpoint = case["primary_release_endpoint"]
+    if endpoint == "COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4":
+        required.append("complete_pass")
+    if endpoint == "P2_INTERSECTION_UNION_AND_P3_ALL_FIELD_ABSOLUTE":
+        required.append("false_acceptance")
+    if endpoint == "P3_EQUIVALENT_TRANSFORMED_BETA_RECOVERY":
+        required.append("scale_recovered")
+    return tuple(required)
+
+
+def require_endpoint_events(plan: Mapping[str, Any], case_id: str,
+                            outcome: Mapping[str, Any], job_id: str) -> None:
+    """Fail closed on an absent endpoint decision. MISSING IS NOT PASS.
+
+    The one legitimate absence is a STRUCTURED SCIENTIFIC REFUSAL: when the
+    analysis did not reach ESTIMATED, the two block decisions do not exist
+    because the frozen gate produced no p-values, and P1 has already failed
+    closed. That exemption is explicit, is justified by the record's own
+    `analysis_status`, and is the only one.
+    """
+    estimated = outcome.get("analysis_status") == "ESTIMATED"
+    for event in required_endpoint_events(plan, case_id):
+        if event not in outcome:
+            raise EndpointEventMissing(
+                f"{job_id}: the record carries no {event!r}, which {case_id} "
+                "requires. A missing decision is not a pass and not a "
+                "zero-rejection.")
+        if outcome[event] is None:
+            if event in ("block1_rejected", "g5_rejected") and not estimated:
+                continue          # structured refusal: the gate produced no rows
+            raise EndpointEventMissing(
+                f"{job_id}: {event!r} is null while analysis_status is "
+                f"{outcome.get('analysis_status')!r}. A null decision may not be "
+                "counted as zero rejections.")
+
+
+def field_event_count(records: Mapping[str, Mapping[str, Any]], case_id: str,
+                      subcondition_id: str, field_id: str, event: str,
+                      declared_replicates: int) -> int:
+    """Count the replicates in which THIS FIELD's own event occurred.
+
+    THE DEFECT THIS CLOSES
+        C2's frozen rule is PER FIELD, never pooled. The previous counter
+        filtered records by field but read a replicate-wide value, so one field
+        rejecting made all four fields count a rejection. This reads the field's
+        own decision, and refuses if it is absent rather than scoring it zero.
+    """
+    if event not in FIELD_LEVEL_EVENTS:
+        raise ResultSchemaInvalid(
+            f"{event!r} is not a per-field endpoint event; per-field counting of a "
+            "replicate-level value is exactly the defect this function exists to "
+            "prevent")
+    seen: dict[int, bool] = {}
+    for record in records.values():
+        coordinates = record.get("coordinates") or {}
+        if (coordinates.get("case_id") != case_id
+                or coordinates.get("subcondition_id") != subcondition_id
+                or coordinates.get("scope") != field_id):
+            continue
+        result = record.get("result") or {}
+        if event not in result or result[event] is None:
+            raise EndpointEventMissing(
+                f"{case_id}/{subcondition_id}/{field_id} replicate "
+                f"{coordinates.get('replicate_id')}: {event!r} is absent or null; "
+                "it may not be counted as a non-event")
+        seen[coordinates.get("replicate_id")] = bool(result[event])
+    if len(seen) != declared_replicates:
+        raise CampaignIncomplete(
+            f"{case_id}/{subcondition_id}/{field_id}: {len(seen)} replicate records "
+            f"for a declared {declared_replicates}. Structured refusals COUNT in "
+            "the denominator; a missing replicate does not.")
+    return sum(1 for value in seen.values() if value)
+
+
 def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
                        subcondition_id: str) -> dict[int, Mapping[str, Any]]:
     """One outcome per REPLICATE of one subcondition, from the per-field records.
 
-    The fields of a replicate are one experiment, so the replicate-level verdict
-    is stored identically on each of its field records. Reading them back keyed by
-    replicate index refuses if two fields of the same replicate disagree, which
-    would mean the replicate was assembled twice.
+    Only genuinely REPLICATE-LEVEL events are read. Per-field events -- the
+    analysis status, P1, and the two block decisions -- legitimately differ
+    between the fields of one replicate and are counted by
+    `field_event_count` instead; requiring them to agree here was part of the
+    same conflation the audit found.
     """
     out: dict[int, Mapping[str, Any]] = {}
     for record in records.values():
@@ -1676,18 +1912,58 @@ def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
             continue
         replicate = coordinates.get("replicate_id")
         result = record.get("result") or {}
-        verdict = {k: result.get(k) for k in ("complete_pass", "p1_rejected",
-                                              "g5_rejected", "block1_rejected",
-                                              "false_acceptance", "scale_recovered",
-                                              "analysis_status")}
+        verdict = {k: result.get(k) for k in REPLICATE_LEVEL_EVENTS}
         previous = out.get(replicate)
         if previous is not None and previous != verdict:
             raise ResultSchemaInvalid(
                 f"{case_id}/{subcondition_id} replicate {replicate}: two field "
-                "records disagree about the replicate-level verdict; the fields of "
-                "one replicate are one experiment and have one outcome")
+                "records disagree about a REPLICATE-LEVEL endpoint; the fields of "
+                "one replicate are one experiment and have one such outcome")
         out[replicate] = verdict
     return out
+
+
+#: C3 and C4 are scored over REPLICATES -- `unit: campaign`, R = 400 and R = 2000 --
+#: while the events they score, the Block-2 (G5) and Block-1 decisions, are
+#: produced PER FIELD by the two-block gate. Both cases declare four fields, so a
+#: rule is needed to turn four per-field decisions into the one replicate-level
+#: event their denominators count. Frozen authority does not state one:
+#: `size_validation_semantics.derived_boundaries` marks C2 `per_field: true` and
+#: says nothing of the kind for C3 or C4, and neither case's criterion, endpoint
+#: nor assurance row defines the reduction. Disjunction ("any field rejects") is
+#: the obvious guess and it is still a guess: it changes the measured size, so it
+#: is a scientific decision, not an implementation detail.
+UNDECLARED_EVENT_REDUCTION = (
+    "frozen authority does not declare how the four PER-FIELD decisions of a "
+    "replicate combine into the ONE replicate-level event this case's denominator "
+    "counts. The case is scored over replicates (assurance unit 'campaign') while "
+    "the two-block gate decides per field, and no frozen document states the "
+    "reduction. The driver refuses rather than choosing between 'any field "
+    "rejects', 'the reference field rejects' and 'every field rejects', which are "
+    "different measured sizes. This must be declared in frozen authority BEFORE "
+    "the seal is frozen."
+)
+
+
+def replicate_level_rejections(plan: Mapping[str, Any],
+                               records: Mapping[str, Mapping[str, Any]],
+                               case_id: str, event: str) -> int:
+    """The replicate-level rejection count for a case scored over replicates.
+
+    Implemented where the reduction is unambiguous (a single declared field) and
+    REFUSED, by name, where frozen authority leaves it open. The per-field
+    decisions themselves are recorded faithfully either way, so the eventual
+    authorised reduction has genuine events to consume.
+    """
+    fields = required_result_fields(plan, case_id)
+    subcondition = release_subconditions(plan, case_id)[0]
+    declared = case_entry(plan, case_id)["replicate_count"]
+    if len(fields) == 1:
+        return field_event_count(records, case_id, subcondition, fields[0], event,
+                                 declared)
+    raise EndpointEventReductionUndeclared(
+        f"{case_id}: {UNDECLARED_EVENT_REDUCTION} It declares {len(fields)} fields "
+        f"and scores {event!r} over {declared} replicates.")
 
 
 def campaign_counts_from_records(plan: Mapping[str, Any],
@@ -1714,22 +1990,17 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
     c1_sub = release_subconditions(plan, "C1_true_bridge_complete")[0]
     c1 = sum(1 for v in verdicts("C1_true_bridge_complete", c1_sub).values()
              if v["complete_pass"] is True)
-    c2_sub = release_subconditions(plan, "C2_geometry_false_rejection")[0]
-    c2_fields = required_result_fields(plan, "C2_geometry_false_rejection")
-    c2: dict[str, int] = {}
-    for field_id in c2_fields:
-        c2[field_id] = sum(
-            1 for job_id, record in records.items()
-            if (record["coordinates"]["case_id"] == "C2_geometry_false_rejection"
-                and record["coordinates"]["subcondition_id"] == c2_sub
-                and record["coordinates"]["scope"] == field_id
-                and (record.get("result") or {}).get("p1_rejected") is True))
-    c3_sub = release_subconditions(plan, "C3_g5_block")[0]
-    c3 = sum(1 for v in verdicts("C3_g5_block", c3_sub).values()
-             if v["g5_rejected"] is True)
-    c4_sub = release_subconditions(plan, "C4_surrogate_validity")[0]
-    c4 = sum(1 for v in verdicts("C4_surrogate_validity", c4_sub).values()
-             if v["block1_rejected"] is True)
+    # C2: PER FIELD, never pooled. Each field's own P1 decision, counted over its
+    # own R replicates -- `size_validation_semantics.derived_boundaries.C2`
+    # carries `per_field: true` and `pooling: FORBIDDEN`.
+    c2_case = "C2_geometry_false_rejection"
+    c2_sub = release_subconditions(plan, c2_case)[0]
+    c2 = {field_id: field_event_count(records, c2_case, c2_sub, field_id,
+                                      "p1_rejected", replicates(c2_case))
+          for field_id in required_result_fields(plan, c2_case)}
+    c3 = replicate_level_rejections(plan, records, "C3_g5_block", "g5_rejected")
+    c4 = replicate_level_rejections(plan, records, "C4_surrogate_validity",
+                                    "block1_rejected")
     # C5 is REPORT ONLY in frozen authority: the criterion is that every declared
     # cell is reported, not that any cell clears a threshold. Completeness IS the
     # criterion, and dropping a cell after inspection is the failure it guards.
@@ -1737,12 +2008,20 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
     c5_pass = all(len(replicate_outcomes(records, "C5_plug_in_branch_a", cell))
                   == replicates("C5_plug_in_branch_a") for cell in c5_cells)
     # C6 has a frozen upper-bound criterion at EACH declared rho.
-    c6_row = next(r for r in plan["assurance"]
-                  if r["case_id"] == "C6_mode_resolution_boundary")
+    # C6 declares exactly ONE field, so its per-field and per-replicate counts
+    # coincide and no reduction rule is needed.
+    c6_case = "C6_mode_resolution_boundary"
+    c6_row = next(r for r in plan["assurance"] if r["case_id"] == c6_case)
+    c6_field = required_result_fields(plan, c6_case)
+    if len(c6_field) != 1:
+        raise EndpointEventReductionUndeclared(
+            f"{c6_case} now declares {len(c6_field)} fields; its per-rho count "
+            "assumed exactly one and frozen authority declares no reduction rule "
+            "for more")
     c6_pass = True
-    for rho in release_subconditions(plan, "C6_mode_resolution_boundary"):
-        rejections = sum(1 for v in verdicts("C6_mode_resolution_boundary", rho).values()
-                         if v["p1_rejected"] is True)
+    for rho in release_subconditions(plan, c6_case):
+        rejections = field_event_count(records, c6_case, rho, c6_field[0],
+                                       "p1_rejected", replicates(c6_case))
         if cp_upper(rejections, c6_row["replicates"]) > c6_row["target_value"]:
             c6_pass = False
     c7 = {alt: sum(1 for v in verdicts("C7_false_bridge", alt).values()
@@ -1963,11 +2242,54 @@ def uncertainty_model(binding: ExecutionBinding,
     return UncertaintyModel.from_contract(binding.binding, per_field)
 
 
+#: The two-block P1 gate's own gate names, from the frozen calibration layer.
+#: Used only to READ the p-values `p1_geometry` already computed.
+_BLOCK1_GATES = BLOCK1_GATES
+
+
+def p1_block_decisions(result: Any, artifact: CalibrationArtifact | None,
+                       binding: ExecutionBinding) -> tuple[bool | None, bool | None]:
+    """Split the FROZEN P1 result into its two block decisions. READS; recomputes nothing.
+
+    THE DEFECT THIS CLOSES
+        Endpoint assembly wrote `block1_rejected = None` and `g5_rejected = None`
+        unconditionally, so C4's and C3's rejection counters read zero whatever
+        was observed. An independent audit demonstrated it; this recovers the two
+        decisions the frozen gate already made.
+
+    `e1a_v4.endpoints.p1_geometry` returns the per-gate p-values it computed and
+    the artifact carries the critical p_min it finalised at calibration time.
+    Both are read here; no statistic, threshold or p-value is recalculated, and
+    no new test is introduced. `p1_geometry` itself is an analysis-bound
+    SCIENTIFIC MODULE and is deliberately not modified to expose them, because
+    that would move the frozen analysis procedure identity.
+
+    Returns `(None, None)` only when the gate produced no rows at all, which
+    happens exactly when the analysis was not ESTIMATED and P1 failed closed.
+    That case is a STRUCTURED SCIENTIFIC REFUSAL, and the record must say so.
+    """
+    rows = {gate: p_value for gate, _observed, p_value in getattr(result, "rows", ())}
+    if not rows or artifact is None:
+        return None, None
+    missing = [g for g in _BLOCK1_GATES if g not in rows] + (
+        [] if "G5" in rows else ["G5"])
+    if missing:
+        raise EndpointEventMissing(
+            f"the frozen P1 result carries no p-value for {missing}; the two-block "
+            "decision cannot be read from it")
+    p_min = min(rows[gate] for gate in _BLOCK1_GATES)
+    block1_rejected = bool(p_min < artifact.critical_p_min())
+    g5_rejected = bool(rows["G5"] < binding.binding.alpha_2)
+    return block1_rejected, g5_rejected
+
+
 def evaluate_replicate(binding: ExecutionBinding, case_id: str, subcondition_id: str,
                        specifications: Mapping[str, JobSpecification],
                        analyses: Mapping[str, Any],
                        conditions: Mapping[str, CalibrationCondition],
-                       artifacts: Mapping[str, CalibrationArtifact]) -> dict[str, Any]:
+                       artifacts: Mapping[str, CalibrationArtifact],
+                       blinded: Mapping[float, Mapping[str, Any]] | None = None,
+                       ) -> dict[str, Any]:
     """The frozen endpoints for ONE replicate. Calls; never reimplements.
 
         P1  e1a_v4.endpoints.p1_geometry     per field, against its locked artifact
@@ -1975,64 +2297,158 @@ def evaluate_replicate(binding: ExecutionBinding, case_id: str, subcondition_id:
         P3  e1a_v4.endpoints.p3_absolute     conjunctive over every tested field
         P4  e1a_v4.endpoints.p4_consistency  deterministic, consumes no Branch-B data
 
+    THE DEFECT THIS CLOSES
+        The previous revision returned ONE replicate-wide `p1_rejected`, which
+        `execute_replicate` then stamped onto all four field records. An
+        independent audit showed the consequence: a replicate in which exactly
+        one field rejected was counted by C2 as FOUR field rejections, because
+        C2's frozen rule is PER FIELD and the value it read was the replicate's
+        disjunction. Per-field outcomes now live in `per_field`, one entry per
+        field, and the replicate-level endpoints keep their own names.
+
     The composition is the plan's own declared endpoint, not a convention: a case
     whose `primary_release_endpoint` is COMPLETE_PIPELINE_P1_AND_P2_AND_P3_AND_P4
     passes only if every one of them passes.
     """
     contract = binding.binding
     unc = uncertainty_model(binding, specifications, analyses)
-    per_field_p1: dict[str, bool] = {}
+    per_field: dict[str, dict[str, Any]] = {}
     for field_id, analysis in sorted(analyses.items()):
+        status = getattr(analysis.status, "value", str(analysis.status))
+        row: dict[str, Any] = {"analysis_status": status,
+                               "beta_hat": analysis.beta_hat}
         condition = conditions.get(field_id)
-        if condition is None:
-            continue
-        result = p1_geometry(analysis, contract,
-                             procedure_identity=binding.analysis_identity,
-                             condition=condition, artifact=artifacts.get(field_id))
-        per_field_p1[field_id] = bool(result.passed)
+        if condition is not None:
+            result = p1_geometry(analysis, contract,
+                                 procedure_identity=binding.analysis_identity,
+                                 condition=condition, artifact=artifacts.get(field_id))
+            # THE FROZEN FAIL-CLOSED SEMANTIC: a non-ESTIMATED analysis does not
+            # pass P1, so `not passed` is well defined for every field.
+            block1, g5 = p1_block_decisions(result, artifacts.get(field_id), binding)
+            row.update({"P1": bool(result.passed),
+                        "p1_rejected": bool(not result.passed),
+                        "block1_rejected": block1, "g5_rejected": g5})
+        per_field[field_id] = row
+    p1_values = [row["P1"] for row in per_field.values() if "P1" in row]
+    p1_all = all(p1_values) if p1_values else None
     p2 = p2_cross_field(analyses, contract, unc)
     p3 = p3_absolute(analyses, contract, unc)
     p4 = p4_consistency(contract)
-    p1_all = all(per_field_p1.values()) if per_field_p1 else None
-    outcome = {
-        "per_field_p1": per_field_p1,
-        "p1_rejected": (not p1_all) if p1_all is not None else None,
+    outcome: dict[str, Any] = {
+        "per_field": per_field,
         "P2": bool(p2.passed), "P3": bool(p3.passed), "P4": bool(p4.passed),
-        "g5_rejected": None, "block1_rejected": None,
         "false_acceptance": bool(p2.passed and p3.passed),
-        "complete_pass": bool(p1_all and p2.passed and p3.passed and p4.passed)
-        if p1_all is not None else None,
+        "complete_pass": (bool(p1_all and p2.passed and p3.passed and p4.passed)
+                          if p1_all is not None else None),
         "scale_recovered": None,
     }
     scale_factors = next((s.scale_factors for s in specifications.values()
                           if s.scale_factors), ())
     if scale_factors:
-        outcome["scale_recovered"] = evaluate_scale_control(
-            contract, unc, analyses, scale_factors)
-        outcome["scale_factors"] = list(scale_factors)
+        outcome.update(evaluate_scale_control(binding, case_id, contract, unc,
+                                              analyses, blinded or {}, scale_factors))
     return outcome
 
 
-def evaluate_scale_control(contract, unc: UncertaintyModel,
-                           analyses: Mapping[str, Any],
-                           scale_factors: Sequence[float]) -> bool:
-    """C8: beta_tilde = c * beta_hat must satisfy the SAME P3 rule, for BOTH c.
+#: Only this case may request the blinded Branch-A scale transform. Read from the
+#: frozen plan: it is the sole case declaring `scale_factors` on a subcondition.
+SCALE_CONTROL_CASE = "C8_blinded_scale_control"
 
-    The frozen transform is applied to ONE underlying replicate's analyses -- the
-    two factors are not independent subconditions and are given no separate
-    streams -- and the frozen `p3_absolute` implementation does the deciding. A
-    replicate succeeds only if both branches pass.
+
+def blinded_branch_a(field: BranchAField, factor: float) -> BranchAField:
+    """THE frozen Branch-A scale transform. `e1a_v4.branch_a.BranchAField.blinded`.
+
+    Not reimplemented here: the transform lives in the analysis-bound scientific
+    layer, which states its own consequence --
+
+        "Under the ideal null the analysis must then recover beta_hat = 1/c,
+         because beta_hat = m / tr(H_A S) and H_A -> c H_A."
+
+    -- and returns a NEW field, leaving the primary one unmutated. H is
+    H_U * scale_factor / (k_B T), so multiplying the declared scale multiplies H,
+    which is exactly the "duplicate Branch-A declaration" the frozen C8 design
+    calls for.
+    """
+    return field.blinded(float(factor))
+
+
+def evaluate_scale_control(binding: ExecutionBinding, case_id: str, contract,
+                           unc: UncertaintyModel, analyses: Mapping[str, Any],
+                           blinded: Mapping[float, Mapping[str, Any]],
+                           scale_factors: Sequence[float]) -> dict[str, Any]:
+    """C8: the BLINDED BRANCH-A CONTROL, then the frozen recovery rule.
+
+    THE DEFECT THIS CLOSES
+        The previous revision never built the blinded branch at all. It took the
+        ordinary UNBLINDED estimate and multiplied it by c:
+
+            beta_tilde = c * beta_hat_unblinded        # WRONG
+
+        Under the true null beta_hat_unblinded ~ 1, so that evaluates to ~c --
+        1.07 and 0.90 -- which lies outside delta_abs = 0.05 of 1 and can never
+        pass P3. It reproduced neither the declared control nor its arithmetic.
+
+        The frozen design duplicates the Branch-A DECLARATION and scales it:
+
+            H_control = c * H        (same Branch-B observations, byte-identical)
+            beta_hat_blind = m / tr(c H S) = beta_hat / c   ~ 1/c
+            beta_tilde     = c * beta_hat_blind             ~ 1
+
+        `blinded` carries the analyses of those scaled duplicates, produced by
+        the frozen `analyse_field` against the SAME Branch-B record. The frozen
+        `p3_absolute` then decides, at every tested field, for BOTH factors; a
+        replicate succeeds only if both branches pass.
     """
     import dataclasses
+    if case_id != SCALE_CONTROL_CASE:
+        raise ScaleControlInvalid(
+            f"{case_id} declared scale factors {list(scale_factors)}, but the "
+            f"blinded Branch-A control is frozen to {SCALE_CONTROL_CASE!r} alone. "
+            "A free scaling parameter on every Branch-A job is not a control.")
+    missing = [factor for factor in scale_factors if factor not in blinded]
+    if missing:
+        raise ScaleControlInvalid(
+            f"{case_id}: no blinded Branch-A analysis was supplied for c={missing}. "
+            "The control is the scaled duplicate re-analysed against the same "
+            "Branch-B observations; multiplying the unblinded estimate is not it.")
+    branches: dict[str, Any] = {}
+    recovered = True
     for factor in scale_factors:
-        scaled = {
-            field_id: (dataclasses.replace(a, beta_hat=a.beta_hat * float(factor))
+        analyses_blind = blinded[factor]
+        absent = sorted(set(analyses) - set(analyses_blind))
+        if absent:
+            raise ScaleControlInvalid(
+                f"{case_id}: the c={factor} control is missing fields {absent}")
+        # THE FROZEN RECOVERY RULE, verbatim from the case criterion:
+        #     beta_tilde_theta = c * beta_hat_theta
+        # applied to the BLINDED estimate, then judged by the frozen P3 rule.
+        transformed = {
+            field_id: (dataclasses.replace(a, beta_hat=float(factor) * a.beta_hat)
                        if a.beta_hat is not None else a)
-            for field_id, a in analyses.items()
+            for field_id, a in analyses_blind.items()
         }
-        if not p3_absolute(scaled, contract, unc).passed:
-            return False
-    return True
+        result = p3_absolute(transformed, contract, unc)
+        recovered = recovered and bool(result.passed)
+        branches[repr(float(factor))] = {
+            "c": float(factor),
+            "beta_hat_blind": {f: a.beta_hat for f, a in sorted(analyses_blind.items())},
+            "beta_tilde_recovered": {f: (None if a.beta_hat is None
+                                         else float(factor) * a.beta_hat)
+                                     for f, a in sorted(analyses_blind.items())},
+            "blinded_field_ids": {f: a.field_id for f, a in sorted(analyses_blind.items())},
+            "p3_passed": bool(result.passed),
+        }
+    return {
+        "scale_recovered": bool(recovered),
+        "scale_factors": [float(f) for f in scale_factors],
+        "scale_control": {
+            "transform": "e1a_v4.branch_a.BranchAField.blinded",
+            "recovery_rule": "beta_tilde_theta = c * beta_hat_blind_theta",
+            "branch_b_shared": True,
+            "beta_hat_unblinded": {f: a.beta_hat for f, a in sorted(analyses.items())},
+            "branches": branches,
+        },
+    }
 
 
 # ------------------------------------------------- the execution orchestration
@@ -2086,6 +2502,7 @@ def execute_replicate(binding: ExecutionBinding, group: Sequence[CampaignJob],
     conditions: dict[str, CalibrationCondition] = {}
     artifacts: dict[str, CalibrationArtifact] = {}
     measured_fields: dict[str, BranchAField] = {}
+    blinded_analyses: dict[float, dict[str, Any]] = {}
     for job in group:
         field_id = job.coordinates.scope
         execution = job_execution(binding, job, ledger, output_dir, calibration)
@@ -2125,28 +2542,44 @@ def execute_replicate(binding: ExecutionBinding, group: Sequence[CampaignJob],
         truth = truth_from_field(specification.field, specification.dt,
                                  specification.n_samples, specification.beta_true)
         observations = ou_observations(truth, branch_b_rng)
+        phi_modes = [math.exp(-specification.dt / tau) for tau in truth.tau_true]
         analyses[field_id] = analyse_field(
             measured, observations, rank_tol=specification.rank_tol,
-            theta_cap_deg=specification.theta_cap_deg,
-            phi_modes=[math.exp(-specification.dt / tau) for tau in truth.tau_true])
+            theta_cap_deg=specification.theta_cap_deg, phi_modes=phi_modes)
+        # --- C8 ONLY: the blinded Branch-A control ---------------------------
+        # A DUPLICATE Branch-A declaration scaled by c, re-analysed against the
+        # SAME Branch-B observations object. Branch B is not regenerated, not
+        # reseeded and not touched; only the Branch-A declaration differs. The
+        # duplicates are built here, while the observations are live, so the
+        # trajectory is never retained beyond its own replicate.
+        for factor in specification.scale_factors:
+            blinded_analyses.setdefault(float(factor), {})[field_id] = analyse_field(
+                blinded_branch_a(measured, factor), observations,
+                rank_tol=specification.rank_tol,
+                theta_cap_deg=specification.theta_cap_deg, phi_modes=phi_modes)
         measured_fields[field_id] = measured
         executions[field_id] = execution
     replicate = evaluate_replicate(binding, first.coordinates.case_id,
                                    first.coordinates.subcondition_id,
-                                   specifications, analyses, conditions, artifacts)
+                                   specifications, analyses, conditions, artifacts,
+                                   blinded_analyses)
     outcomes: dict[str, dict[str, Any]] = {}
     for field_id, execution in executions.items():
         analysis = analyses[field_id]
-        outcome = dict(replicate)
+        # The replicate-level endpoints, then THIS FIELD's own events. The
+        # per-field block is merged last and deliberately: an audit found the
+        # replicate-wide P1 disjunction being stamped on every field record and
+        # then counted by C2, whose frozen rule is PER FIELD.
+        outcome = {k: v for k, v in replicate.items() if k != "per_field"}
         outcome.update({
             "field_id": field_id,
-            "analysis_status": analysis.status.value,
-            "beta_hat": analysis.beta_hat,
             "G1": analysis.g1, "G2": analysis.g2_spread,
             "G3": list(analysis.g3) if analysis.g3 else None,
             "G4": analysis.g4, "G5": analysis.g5,
-            "P1": replicate["per_field_p1"].get(field_id),
         })
+        outcome.update(replicate["per_field"][field_id])
+        require_endpoint_events(binding.plan, first.coordinates.case_id, outcome,
+                                execution.job.job_id)
         execution.analyse(outcome)
         # STREAMING_PER_REPLICATE: the artifacts are finalised, locked and spent.
         execution.release_calibration()
@@ -2260,8 +2693,12 @@ def execute_campaign(binding: ExecutionBinding, jobs: Sequence[CampaignJob],
             publish_job_record(output_dir, record, binding)
             records[execution.job.job_id] = record
     completeness = require_campaign_completeness(jobs, records)
-    for record in records.values():
-        validate_job_record(record, binding.plan)
+    by_job_id = {job.job_id: job for job in jobs}
+    for job_id, record in records.items():
+        coordinates = JobCoordinates(**record["coordinates"])
+        validate_job_record(record, binding.plan, binding,
+                            job=by_job_id.get(job_id),
+                            publication=committed_publication(output_dir, coordinates))
     aggregates = assemble_case_aggregates(jobs, records)
     # THE FROZEN RELEASE CLASSIFIER RUNS OVER THE COMPLETE CAMPAIGN OR NOT AT ALL.
     # Whether it runs is decided mechanically, by comparing the supplied job set

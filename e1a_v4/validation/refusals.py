@@ -220,6 +220,45 @@ class StochasticProviderRefused(CodedRefusal):
     code = "STOCHASTIC_PROVIDER_REFUSED"
 
 
+class EndpointEventMissing(CodedRefusal):
+    """A frozen endpoint decision the case requires is absent from a record.
+
+    A missing decision is NOT a pass and NOT a zero-rejection. An independent
+    audit found `g5_rejected` and `block1_rejected` written as null and then
+    counted as zero, so every observation of those endpoints was discarded while
+    the campaign reported a clean size. Absence now refuses.
+    """
+
+    code = "ENDPOINT_EVENT_MISSING"
+
+
+class EndpointEventReductionUndeclared(CodedRefusal):
+    """Frozen authority does not declare how per-field events become one
+    replicate-level event for this case, so the driver refuses to choose."""
+
+    code = "ENDPOINT_EVENT_REDUCTION_UNDECLARED"
+
+
+class ScaleControlInvalid(CodedRefusal):
+    """The blinded Branch-A scale control was requested or built incorrectly."""
+
+    code = "SCALE_CONTROL_INVALID"
+
+
+class TerminalProvenanceMismatch(CodedRefusal):
+    """A terminal record's provenance links disagree with the CURRENT authority.
+
+    An internally self-consistent digest proves only that the record's bytes were
+    not edited after it was written. It cannot prove the bytes describe this
+    campaign: an audit re-digested a record after changing its execution
+    identity, its Branch-A evidence hash and its publication digest, and
+    validation still accepted it. The links are now cross-checked against the
+    execution binding, the frozen planner and the committed publication.
+    """
+
+    code = "TERMINAL_PROVENANCE_MISMATCH"
+
+
 class BranchBPremature(CodedRefusal):
     """Branch-B access was requested before its frozen prerequisites held."""
 
@@ -457,6 +496,8 @@ ALL_REFUSAL_CLASSES = (
     RestartInventoryMismatch, ResultCaseMismatch, ResultFieldSetMismatch,
     ResultSchemaInvalid, CampaignIncomplete, CampaignPlanMismatch,
     CampaignManifestInvalid, StochasticProviderRefused,
+    EndpointEventMissing, EndpointEventReductionUndeclared,
+    ScaleControlInvalid, TerminalProvenanceMismatch,
     ContractMandatoryDiagnosticMissing, ContractMandatoryDiagnosticMismatch,
     PlanVersionMismatch, PlanAnalysisIdentityMismatch, PlanIdentityMismatch,
     PlanCaseMismatch, PlanSubconditionMismatch, PlanReleaseRuleMismatch,
