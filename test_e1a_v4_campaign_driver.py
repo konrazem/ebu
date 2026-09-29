@@ -1040,7 +1040,8 @@ def test_restart_verification() -> None:
         execution = harness.execution(job)
         realisations[job.job_id] = harness.realise(execution)
         execution.publish_branch_a()
-    report = verify_restart(harness.out, realisations, harness.binding)
+    report = verify_restart(harness.out, realisations, harness.binding,
+                            harness.jobs)
     check("every published record re-verifies on resume",
           report["verified_publications"] == 4, str(report))
 
@@ -1054,7 +1055,8 @@ def test_restart_verification() -> None:
         handle.write(canonical_bytes(record))
     os.chmod(path, 0o444)
     refuses_with_code("a tampered record on resume", "PUBLICATION_INCOMPLETE",
-                      verify_restart, harness.out, realisations, harness.binding)
+                      verify_restart, harness.out, realisations, harness.binding,
+                      harness.jobs)
     check("resume never regenerates a completed replicate: it refuses instead",
           os.path.isfile(path))
     harness.close()
@@ -1551,7 +1553,8 @@ def test_publication_fault_injection() -> None:
             check(f"{label}: restart does NOT infer a completed publication",
                   inventory.committed == (), str(inventory.as_dict()))
             check(f"{label}: any residue is reported, never promoted",
-                  refusal_code(verify_restart, harness.out, {}, harness.binding)
+                  refusal_code(verify_restart, harness.out, {}, harness.binding,
+                               harness.jobs)
                   is None or not inventory.is_clean, str(inventory.as_dict()))
         harness.close()
 
@@ -1570,7 +1573,8 @@ def test_publication_orphan_detection() -> None:
     refuses_with_code("verifying an orphan", "PUBLICATION_ORPHANED",
                       verify_publication, harness.out, realisation, harness.binding)
     refuses_with_code("restarting over an orphan", "PUBLICATION_ORPHANED",
-                      verify_restart, harness.out, {}, harness.binding)
+                      verify_restart, harness.out, {}, harness.binding,
+                      harness.jobs)
     check("the orphan is PRESERVED, not deleted: it is the only record of the "
           "attempt", os.path.isfile(path))
     harness.close()
@@ -1585,7 +1589,8 @@ def test_publication_orphan_detection() -> None:
           len(inventory.dangling) == 1 and inventory.committed == (),
           str(inventory.as_dict()))
     refuses_with_code("a marker whose artifact is missing", "PUBLICATION_INCOMPLETE",
-                      verify_restart, harness.out, {}, harness.binding)
+                      verify_restart, harness.out, {}, harness.binding,
+                      harness.jobs)
     harness.close()
 
     # an unexplained entry in a scientific result directory
@@ -1596,7 +1601,8 @@ def test_publication_orphan_detection() -> None:
         handle.write("scratch\n")
     refuses_with_code("an unexplained entry in the publication store",
                       "PUBLICATION_UNEXPECTED_ENTRY", verify_restart, harness.out,
-                      {execution.coordinates.job_id: realisation}, harness.binding)
+                      {execution.coordinates.job_id: realisation}, harness.binding,
+                      harness.jobs)
     harness.close()
 
 
@@ -1815,7 +1821,8 @@ def test_restart_reconciles_with_the_persisted_inventory() -> None:
     """AUDIT FINDING C. The caller's list is never the universe of evidence."""
     harness = Harness()
     check("an EMPTY restart over an EMPTY store is valid, and only then",
-          refusal_code(verify_restart, harness.out, {}, harness.binding) is None)
+          refusal_code(verify_restart, harness.out, {}, harness.binding,
+                       harness.jobs) is None)
     check("the empty store really is empty",
           inventory_directory(publication_directory(harness.out)).is_empty)
     realisations = {}
@@ -1823,17 +1830,18 @@ def test_restart_reconciles_with_the_persisted_inventory() -> None:
         execution, realisation, path = published(harness, "C1_true_bridge_complete",
                                                  scope)
         realisations[execution.coordinates.job_id] = realisation
-    report = verify_restart(harness.out, realisations, harness.binding)
+    report = verify_restart(harness.out, realisations, harness.binding,
+                            harness.jobs)
     check("a complete claim reconciles", report["verified_publications"] == 4
           and report["publications_on_disk"] == 4, str(report))
 
     refuses_with_code("a publication exists and the caller supplies []",
                       "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out, {},
-                      harness.binding)
+                      harness.binding, harness.jobs)
     partial = dict(list(realisations.items())[:2])
     refuses_with_code("the caller omits half the store",
                       "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
-                      partial, harness.binding)
+                      partial, harness.binding, harness.jobs)
     invented = dict(realisations)
     ghost_job = first_job(harness.jobs, "C1_true_bridge_complete", scope="theta0_circular")
     ghost_exec = harness.execution(
@@ -1846,13 +1854,13 @@ def test_restart_reconciles_with_the_persisted_inventory() -> None:
     invented[ghost_exec.coordinates.job_id] = ghost
     refuses_with_code("the caller claims a publication whose bytes are missing",
                       "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
-                      invented, harness.binding)
+                      invented, harness.binding, harness.jobs)
     mislabelled = dict(list(realisations.items())[:3])
     mislabelled["C1_true_bridge_complete|sigma_psi_0p0|000000|wrong"] = \
         realisations[sorted(realisations)[0]]
     refuses_with_code("a restart record filed under the wrong key",
                       "RESTART_INVENTORY_MISMATCH", verify_restart, harness.out,
-                      mislabelled, harness.binding)
+                      mislabelled, harness.binding, harness.jobs)
     harness.close()
 
     # a publication belonging to no planned job
@@ -1876,7 +1884,8 @@ def test_restart_reconciles_with_the_persisted_inventory() -> None:
     _shutil.copy(os.path.join(directory, commit_name(basename)),
                  os.path.join(directory, commit_name(copy_base)))
     code = refusal_code(verify_restart, harness.out,
-                        {execution.coordinates.job_id: realisation}, harness.binding)
+                        {execution.coordinates.job_id: realisation},
+                        harness.binding, harness.jobs)
     check("a duplicated publication refuses",
           code in ("RESTART_INVENTORY_MISMATCH", "PUBLICATION_INCOMPLETE"), str(code))
     harness.close()
@@ -1892,10 +1901,10 @@ def test_restart_cannot_delete_history() -> None:
         realisations[execution.coordinates.job_id] = realisation
     directory = publication_directory(harness.out)
     before = sorted(os.listdir(directory))
-    verify_restart(harness.out, realisations, harness.binding)
+    verify_restart(harness.out, realisations, harness.binding, harness.jobs)
     check("a successful reconciliation writes nothing and deletes nothing",
           sorted(os.listdir(directory)) == before)
-    refusal_code(verify_restart, harness.out, {}, harness.binding)
+    refusal_code(verify_restart, harness.out, {}, harness.binding, harness.jobs)
     check("a REFUSED reconciliation also writes nothing and deletes nothing",
           sorted(os.listdir(directory)) == before, str(sorted(os.listdir(directory))))
     check("inventory_publications is a pure read",

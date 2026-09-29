@@ -827,7 +827,7 @@ def require_calibration_lock_schema(record: Mapping[str, Any], where: str) -> No
             f"{record['calibration_artifact_sha256']!r} is not a SHA-256 identity")
 
 
-def publish_calibration_lock(output_dir: str, coordinates: JobCoordinates,
+def publish_calibration_lock(output_dir: str, job: CampaignJob,
                              artifact: CalibrationArtifact,
                              condition: CalibrationCondition,
                              artifact_sha256: str,
@@ -840,7 +840,10 @@ def publish_calibration_lock(output_dir: str, coordinates: JobCoordinates,
     Branch-A evidence: a record with no commit marker is an orphan, and is
     refused rather than promoted.
     """
-    publication = committed_publication(output_dir, coordinates)
+    coordinates = job.coordinates
+    # VERIFIED, not merely committed: a lock is a statement about the evidence it
+    # is conditional on, so that evidence is proven valid before the lock cites it.
+    publication = verified_publication(output_dir, job, binding)
     if publication is None:
         raise CalibrationLockWithoutPublication(
             f"{coordinates.job_id}: no committed Branch-A publication exists, so "
@@ -925,6 +928,132 @@ def inventory_calibration_locks(output_dir: str) -> dict[str, dict[str, Any]]:
     return found
 
 
+# ---- THE ONE CANONICAL VERIFIED-PUBLICATION LOADER --------------------------
+def verified_publication(output_dir: str, job: CampaignJob,
+                         binding: ExecutionBinding) -> dict[str, Any] | None:
+    """Resolve, load and COMPLETELY verify this job's Branch-A publication.
+
+    COMMIT VERIFICATION IS NOT PUBLICATION VALIDATION. They answer different
+    questions, and the official path needs both:
+
+        commit verification        "were these exact bytes durably committed?"
+        publication verification   "is this committed record a VALID Branch-A
+                                    publication, for this exact planned job, under
+                                    the current execution package?"
+
+    THE DEFECT THIS CLOSES
+        Terminal validation resolved the publication from the store -- which
+        closed the caller-trust hole -- and then trusted it on the strength of its
+        commit transaction alone. An audit committed publications carrying an
+        invalid schema, a state other than BRANCH_A_PUBLISHED, an extra
+        unauthenticated field, a false execution identity and a false analysis
+        procedure identity, re-digested the lock and the terminal record so the
+        whole downstream chain agreed with the forgery, and terminal validation
+        accepted every one of them. Atomic commitment makes bytes durable; it
+        says nothing about whether those bytes are a valid publication.
+
+        Internal consistency downstream cannot legalise invalid upstream
+        provenance. The hierarchy is frozen planned job and current package, then
+        the verified publication, then the verified lock, then the terminal
+        record -- each one authoritative over the next, never the reverse.
+
+    The heavy lifting is delegated to the EXISTING `verify_publication`, which is
+    the same routine the unblind path and restart already use. Nothing about
+    publication validity is reimplemented here.
+    """
+    directory = publication_directory(output_dir)
+    basename = publication_basename(job.coordinates)
+    path = os.path.join(directory, basename)
+    if not os.path.lexists(path):
+        return None
+    record, _marker = read_committed(directory, basename,
+                                     "the Branch-A publication record")
+    # STRICT PARSE FIRST. Every check below reads fields of this record, so its
+    # shape is established before any of them believes one.
+    require_publication_schema(record, path)
+    # THE PLANNED JOB'S coordinates, checked against the record independently.
+    # This cannot be delegated: the realisation rebuilt below comes FROM the
+    # record, so `verify_publication`'s own coordinate check would compare the
+    # record with itself. The frozen planner is the authority here, not the file.
+    if record["coordinates"] != job.coordinates.as_dict():
+        raise BranchAProvenanceMismatch(
+            f"{path}: the committed publication addresses "
+            f"{record['coordinates']!r}, but this is the canonical location of "
+            f"{job.coordinates.as_dict()!r}. A publication filed under another "
+            "job's coordinates is not this job's evidence.")
+    # THE COMPLETE EXISTING VERIFIER: envelope digest recomputed, marker digest
+    # compared, basename re-derived, evidence digest recomputed, package and
+    # execution identities compared with the current binding.
+    return verify_publication(output_dir, realisation_from_record(record), binding)
+
+
+# ---- THE CANONICAL PLAN IS THE AUTHORITY, NOT THE CALLER'S LIST -------------
+_CANONICAL_PLAN_CACHE: dict[str, tuple[CampaignJob, ...]] = {}
+
+
+def canonical_plan(binding: ExecutionBinding) -> tuple[CampaignJob, ...]:
+    """The frozen deterministic job plan, memoised on the plan's own identity.
+
+    `plan_campaign` remains the ONE planner; this only avoids re-enumerating
+    53,200 descriptors on every reconciliation. The cache key is the plan digest,
+    so a different plan can never return another plan's jobs.
+    """
+    cached = _CANONICAL_PLAN_CACHE.get(binding.plan_sha256)
+    if cached is None:
+        cached = plan_campaign(binding.plan)
+        _CANONICAL_PLAN_CACHE[binding.plan_sha256] = cached
+    return cached
+
+
+def require_authentic_plan(binding: ExecutionBinding,
+                           planned: Sequence[CampaignJob] | None,
+                           what: str) -> tuple[CampaignJob, ...]:
+    """The planned jobs a reconciliation runs against must BE the frozen plan's.
+
+    THE DEFECT THIS CLOSES
+        `planned` was optional, and omitting it silently downgraded restart from
+        semantic reconciliation to a structural inventory. An audit placed a
+        canonically committed lock naming job B in job A's slot and showed that
+        `verify_restart(planned=None)` accepted it while
+        `verify_restart(planned=<plan>)` refused. A provenance API must not offer
+        a mode that stops checking identity.
+
+    A SUBSET IS STILL ALLOWED, deliberately: the campaign supports running part
+    of the plan, and omitting a job makes reconciliation STRICTER rather than
+    weaker -- a persisted object whose job is not listed refuses as unplanned, so
+    nothing can be hidden by leaving it out. What is refused is a job descriptor
+    that is not the frozen planner's: an unknown identity, or a known identity
+    whose coordinates, role, calibration requirement, seed families or result kind
+    have been edited. Those could legalise a bad object, so they fail closed.
+    """
+    if planned is None:
+        raise CampaignPlanMismatch(
+            f"{what} requires the canonical planned jobs. Passing none used to "
+            "mean 'skip semantic reconciliation', which is not a mode a "
+            "provenance verifier may offer: persisted evidence is checked "
+            "against the frozen plan or it is not checked.")
+    supplied = tuple(planned)
+    authentic = {job.job_id: job for job in canonical_plan(binding)}
+    seen: set[str] = set()
+    for job in supplied:
+        expected = authentic.get(job.job_id)
+        if expected is None:
+            raise CampaignPlanMismatch(
+                f"{what}: {job.job_id!r} is not a job the frozen plan declares; a "
+                "caller may not introduce jobs the deterministic planner never "
+                "produced")
+        if job.as_dict() != expected.as_dict():
+            raise CampaignPlanMismatch(
+                f"{what}: the supplied descriptor for {job.job_id!r} is not the "
+                "frozen planner's. Restart truth is defined by frozen authority, "
+                "not by the descriptor a caller hands in.")
+        if job.job_id in seen:
+            raise CampaignPlanMismatch(
+                f"{what}: {job.job_id!r} is listed twice")
+        seen.add(job.job_id)
+    return supplied
+
+
 # ---- THE ONE CANONICAL DURABLE-LOCK VERIFIER -------------------------------
 def verified_calibration_lock(output_dir: str, job: CampaignJob,
                               binding: ExecutionBinding) -> dict[str, Any] | None:
@@ -998,8 +1127,10 @@ def verified_calibration_lock(output_dir: str, job: CampaignJob,
             f"{job.job_id}: the lock cites publication "
             f"{lock.get('publication_basename')!r}, not this job's "
             f"{publication_basename(job.coordinates)!r}")
-    # --- the upstream committed Branch-A publication, resolved HERE ----------
-    publication = committed_publication(output_dir, job.coordinates)
+    # --- the upstream Branch-A publication, resolved AND VERIFIED HERE -------
+    # Not `committed_publication`: a durable commit proves the bytes, not that
+    # they are a valid publication for this job under the current package.
+    publication = verified_publication(output_dir, job, binding)
     if publication is None:
         raise CalibrationLockWithoutPublication(
             f"{job.job_id}: a committed calibration lock exists with no committed "
@@ -1401,7 +1532,7 @@ class JobExecution:
         # external evidence of which threshold this job's P1 decision was taken
         # against; without it the terminal record is its own sole witness, which
         # an audit showed is no witness at all.
-        publish_calibration_lock(self.output_dir, self.coordinates, artifact,
+        publish_calibration_lock(self.output_dir, self.job, artifact,
                                  self._condition, digest, self.binding)
         # RE-READ THROUGH THE CANONICAL VERIFIER, not the raw loader: what must
         # hold is that the lock this job will later be judged against verifies
@@ -1823,7 +1954,7 @@ def validate_job_record(record: Mapping[str, Any], plan: Mapping[str, Any],
             f"{record.get('job_id')}: no planned job was supplied to validate this "
             "record against. A terminal record cannot vouch for its own "
             "coordinates.")
-    publication = committed_publication(output_dir, job.coordinates)
+    publication = verified_publication(output_dir, job, binding)
     lock = verified_calibration_lock(output_dir, job, binding)
     _require_terminal_links(record, binding, job=job, publication=publication)
     # `_require_terminal_links` has established that `publication` is present and
@@ -2098,23 +2229,27 @@ def publish_job_record(output_dir: str, record: Mapping[str, Any],
 
 
 def inventory_job_records(output_dir: str, binding: ExecutionBinding,
-                          planned: Sequence[CampaignJob] | None = None
+                          planned: Sequence[CampaignJob]
                           ) -> dict[str, dict[str, Any]]:
     """INDEPENDENTLY discover every committed terminal record. Reads only.
 
     Orphans, dangling markers and unexplained entries refuse here exactly as they
     do for Branch-A publications: a partial result must never count as completed
     scientific evidence.
+
+    `planned` is REQUIRED and is checked against the frozen planner. It used to
+    default to None, which silently turned off every semantic check below.
     """
+    planned = require_authentic_plan(binding, planned,
+                                     "terminal-record reconciliation")
     directory = job_record_directory(output_dir)
     inventory = require_clean_inventory(directory, "the terminal job-record store")
-    by_job_id = {job.job_id: job for job in (planned or ())}
+    by_job_id = {job.job_id: job for job in planned}
     # EVERY PERSISTED LOCK IS VALIDATED FIRST, as a complete intermediate
     # provenance object in its own right. Whether a lock is valid may not depend
     # on whether a downstream terminal record happens to exist, so this does not
     # wait for the loop below to reach one.
-    if planned is not None:
-        reconcile_calibration_locks(output_dir, binding, planned)
+    reconcile_calibration_locks(output_dir, binding, planned)
     found: dict[str, dict[str, Any]] = {}
     for basename in inventory.committed:
         record, marker = read_committed(directory, basename, "a terminal job record")
@@ -2129,7 +2264,7 @@ def inventory_job_records(output_dir: str, binding: ExecutionBinding,
         # An undeclared job is named as such BEFORE the provenance verifier runs,
         # so the refusal says "this record belongs to no planned job" rather than
         # the vaguer "no planned job was supplied to validate it against".
-        if planned is not None and coordinates.job_id not in by_job_id:
+        if coordinates.job_id not in by_job_id:
             raise RestartInventoryMismatch(
                 f"the terminal record {basename!r} belongs to {coordinates.job_id!r}, "
                 "which this campaign never declared")
@@ -2145,18 +2280,17 @@ def inventory_job_records(output_dir: str, binding: ExecutionBinding,
             raise RestartInventoryMismatch(
                 f"two committed records claim {coordinates.job_id}")
         found[coordinates.job_id] = record
-    if planned is not None:
-        undeclared = sorted(set(found) - {job.job_id for job in planned})
-        if undeclared:
-            raise RestartInventoryMismatch(
-                f"{len(undeclared)} terminal record(s) belong to no planned job "
-                f"(e.g. {undeclared[:3]})")
+    undeclared = sorted(set(found) - {job.job_id for job in planned})
+    if undeclared:
+        raise RestartInventoryMismatch(
+            f"{len(undeclared)} terminal record(s) belong to no planned job "
+            f"(e.g. {undeclared[:3]})")
     return found
 
 
 def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisation],
                    binding: ExecutionBinding,
-                   planned: Sequence[CampaignJob] | None = None) -> dict[str, Any]:
+                   planned: Sequence[CampaignJob]) -> dict[str, Any]:
     """Reconcile what the campaign CLAIMS exists against what ACTUALLY exists.
 
     Set equality in BOTH directions:
@@ -2169,6 +2303,7 @@ def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisatio
     replicate is not re-run because its outcome was undesirable, and this only
     proves that what was published is still exactly what was published.
     """
+    planned = require_authentic_plan(binding, planned, "restart reconciliation")
     on_disk = inventory_publications(output_dir)
     claimed = dict(realisations)
     for job_id, realisation in claimed.items():
@@ -2189,16 +2324,23 @@ def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisatio
             f"campaign does not claim (e.g. {unclaimed[:3]}). Persisted scientific "
             "evidence is append-only: it may not be ignored, replaced, regenerated "
             "under another seed, or dropped because it is inconvenient.")
-    if planned is not None:
-        declared = {job.job_id for job in planned}
-        undeclared = sorted(set(on_disk) - declared)
-        if undeclared:
-            raise RestartInventoryMismatch(
-                f"{len(undeclared)} publication(s) belong to no planned job (e.g. "
-                f"{undeclared[:3]}); the store holds evidence this campaign never "
-                "declared")
+    declared = {job.job_id: job for job in planned}
+    undeclared = sorted(set(on_disk) - set(declared))
+    if undeclared:
+        raise RestartInventoryMismatch(
+            f"{len(undeclared)} publication(s) belong to no planned job (e.g. "
+            f"{undeclared[:3]}); the store holds evidence this campaign never "
+            "declared")
+    # EVERY PERSISTED PUBLICATION, through the SAME verifier terminal validation
+    # uses -- not only the ones a caller claims. A publication that was durably
+    # committed but is not a valid publication for its planned job under the
+    # current package must not enter reconciled state.
+    for job_id in sorted(on_disk):
+        verified_publication(output_dir, declared[job_id], binding)
     verified = 0
     for job_id, realisation in sorted(claimed.items()):
+        # The claimed ones additionally prove that the evidence IN HAND is the
+        # evidence that was published, which the store alone cannot show.
         verify_publication(output_dir, realisation, binding)
         verified += 1
     # THE CALIBRATION-LOCK STORE, reconciled through the ONE canonical verifier.
@@ -2207,8 +2349,7 @@ def verify_restart(output_dir: str, realisations: Mapping[str, BranchARealisatio
     # publication -- and it is checked COMPLETELY here, not partially, because a
     # legitimate resumable state is precisely one where no terminal record exists
     # yet and there is nothing downstream left to catch it.
-    locks = (reconcile_calibration_locks(output_dir, binding, planned)
-             if planned is not None else inventory_calibration_locks(output_dir))
+    locks = reconcile_calibration_locks(output_dir, binding, planned)
     return {"verified_publications": verified,
             "publications_on_disk": len(on_disk),
             "claimed_publications": len(claimed),

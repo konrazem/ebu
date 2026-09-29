@@ -53,11 +53,13 @@ from e1a_v4.validation.campaign_driver import (
     calibration_lock_basename, calibration_lock_directory,
     _compare_terminal_to_verified_lock, calibration_lock_basename,
     calibration_lock_directory, calibration_lock_envelope,
-    committed_calibration_lock, committed_publication, inventory_calibration_locks,
+    CampaignJob, canonical_plan, committed_calibration_lock, committed_publication,
+    inventory_calibration_locks,
     inventory_job_records, is_sha256, job_execution, plan_campaign,
     publication_basename, publication_directory,
     publish_calibration_lock, publish_job_record, reconcile_calibration_locks,
     recover_realisations, validate_job_record, verified_calibration_lock,
+    verified_publication,
     verify_restart,
 )
 from e1a_v4.validation.classification import GROSS_INFLATION_TOLERANCE
@@ -185,8 +187,12 @@ class Campaign:
                 return job
         raise AssertionError(f"no planned job for {case_id} r{replicate} {field_id}")
 
-    def run(self, job, *, aggregate=None, outcome=None):
-        """Drive ONE job through the frozen dependency graph. No RNG, no draws."""
+    def run(self, job, *, aggregate=None, outcome=None, terminal=True):
+        """Drive ONE job through the frozen dependency graph. No RNG, no draws.
+
+        `terminal=False` stops after the calibration lock, which is the ordinary
+        partially completed state a restart must reconcile.
+        """
         execution = job_execution(self.binding, job, self.ledger, self.out)
         calibration = execution.calibration
         spec = next(f for f in self.binding.binding.fields
@@ -205,6 +211,8 @@ class Campaign:
             self._fixtures += 1
             digest = execution.lock_calibration(
                 fixture_artifact(condition, self._fixtures * 1e-9))
+        if not terminal:
+            return execution, None, digest
         execution.unblind()
         execution.analyse(dict(outcome if outcome is not None else C2_OUTCOME))
         record = execution.record(
@@ -788,8 +796,9 @@ def test_one_verifier_and_no_aliases() -> None:
     source = inspect.getsource(validate_job_record)
     check("the official terminal validator calls the canonical lock verifier",
           "verified_calibration_lock(" in source)
-    check("and resolves the publication itself",
-          "committed_publication(" in source)
+    check("and resolves a VERIFIED publication itself, not a merely committed one",
+          "verified_publication(" in source
+          and "committed_publication(" not in source)
     restart_source = inspect.getsource(reconcile_calibration_locks)
     check("restart reconciliation calls the SAME canonical lock verifier",
           "verified_calibration_lock(" in restart_source)
@@ -851,6 +860,287 @@ def test_one_verifier_and_no_aliases() -> None:
     campaign.close()
 
 
+# ================ C1. FINDING A -- a committed publication is not a valid one
+def republish(directory, basename, record, digest_key, job_id, coordinates):
+    """Re-COMMIT a record at its canonical slot through the real transaction."""
+    for name in (basename, commit_name(basename)):
+        path = os.path.join(directory, name)
+        if os.path.lexists(path):
+            os.chmod(path, 0o600)
+            os.remove(path)
+    publish_transaction(directory, basename, record,
+                        publication_digest=record[digest_key],
+                        provenance={"coordinates": coordinates.as_dict(),
+                                    "job_id": job_id,
+                                    "execution_identity": "restated"})
+
+
+def restart_refusal(campaign, planned):
+    """The first coded refusal anywhere on the restart path, or None."""
+    try:
+        known = recover_realisations(campaign.out, campaign.binding)
+    except Refusal as exc:
+        return getattr(type(exc), "code", "UNCODED")
+    return refusal_code(verify_restart, campaign.out, known, campaign.binding,
+                        planned)
+
+
+def forge_chain(campaign, job, mutate_publication):
+    """Tamper the COMMITTED publication, then re-digest the lock and the terminal
+    record so the entire downstream chain agrees with the forgery.
+
+    This is the shape that matters: every object is internally self-consistent and
+    durably committed, and they all agree with each other. What they disagree with
+    is frozen authority, which is the only thing that can tell.
+    """
+    coordinates = job.coordinates
+    publication = json.loads(json.dumps(
+        committed_publication(campaign.out, coordinates)))
+    mutate_publication(publication)
+    publication["publication_digest"] = sealed_digest(publication,
+                                                      "publication_digest")
+    republish(publication_directory(campaign.out),
+              publication_basename(coordinates), publication,
+              "publication_digest", job.job_id, coordinates)
+    lock = json.loads(json.dumps(
+        committed_calibration_lock(campaign.out, coordinates)))
+    for key in ("publication_digest", "branch_a_evidence_sha256",
+                "calibration_condition_sha256"):
+        lock[key] = publication[key]
+    lock["lock_digest"] = sealed_digest(lock, "lock_digest")
+    republish(calibration_lock_directory(campaign.out),
+              calibration_lock_basename(coordinates), lock, "lock_digest",
+              job.job_id, coordinates)
+    return publication, lock
+
+
+def retied(record, publication, lock):
+    """The terminal record, re-digested to agree with the forged chain."""
+    out = json.loads(json.dumps(record))
+    for key in ("publication_digest", "branch_a_evidence_sha256",
+                "calibration_condition_sha256"):
+        out[key] = publication[key]
+    out["calibration_artifact_sha256"] = lock["calibration_artifact_sha256"]
+    out["result_digest"] = sealed_digest(out, "result_digest")
+    return out
+
+
+PUBLICATION_MUTATIONS = (
+    ("invalid publication schema", "PUBLICATION_INCOMPLETE",
+     lambda p: p.__setitem__("schema", "e1a_v4_branch_a_publication/999")),
+    ("state is not BRANCH_A_PUBLISHED", "PUBLICATION_INCOMPLETE",
+     lambda p: p.__setitem__("state", "PLANNED")),
+    ("an unknown extra field in the envelope", "PUBLICATION_INCOMPLETE",
+     lambda p: p.__setitem__("smuggled", "an unauthenticated channel")),
+    ("a declared field removed", "PUBLICATION_INCOMPLETE",
+     lambda p: p.pop("not_execution_authorisation")),
+    ("not_execution_authorisation is false", "PUBLICATION_INCOMPLETE",
+     lambda p: p.__setitem__("not_execution_authorisation", False)),
+    ("false execution identity", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["package_identities"].__setitem__("execution_identity", "0" * 64)),
+    ("false analysis procedure identity", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["package_identities"].__setitem__(
+         "analysis_procedure_identity", "0" * 64)),
+    ("false contract identity", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["package_identities"].__setitem__("contract_sha256", "0" * 64)),
+    ("false plan identity", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["package_identities"].__setitem__("plan_sha256", "0" * 64)),
+    ("false seed-map identity", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["package_identities"].__setitem__("seed_map_sha256", "0" * 64)),
+    ("wrong case", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["coordinates"].__setitem__("case_id", "C1_true_bridge_complete")),
+    ("wrong subcondition", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["coordinates"].__setitem__("subcondition_id", "sigma_psi_0p5")),
+    ("wrong replicate", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["coordinates"].__setitem__("replicate_id", 999999)),
+    ("wrong field/scope", "BRANCH_A_PROVENANCE_MISMATCH",
+     lambda p: p["coordinates"].__setitem__("scope", "theta3_temperature")),
+    ("wrong evidence digest", "BRANCH_A_EVIDENCE_ALTERED",
+     lambda p: p.__setitem__("branch_a_evidence_sha256", "0" * 64)),
+)
+
+
+def test_committed_publication_is_not_a_valid_one() -> None:
+    """AUDIT FINDING A. Commit verification is not publication validation.
+
+        commit verification       "were these exact bytes durably committed?"
+        publication verification  "is this committed record a VALID Branch-A
+                                   publication, for this exact planned job, under
+                                   the current execution package?"
+
+    Terminal validation resolved the publication from the store -- which closed
+    the caller-trust hole -- and then trusted it on its commit transaction alone.
+    Every mutation below is durably committed and every downstream object is
+    re-digested to agree with it, so nothing local can tell. Only frozen authority
+    can, and now it does.
+    """
+    for label, expected, mutate in PUBLICATION_MUTATIONS:
+        campaign = Campaign()
+        job = campaign.job(C2)
+        _execution, record, _digest = campaign.run(job)
+        publication, lock = forge_chain(campaign, job, mutate)
+        forged = retied(record, publication, lock)
+        refuses_with_code(
+            f"committed publication with {label}, whole chain re-digested",
+            expected, validate_job_record, forged, campaign.binding.plan,
+            campaign.binding, job, campaign.out)
+        # §9: RESTART must not be the weaker path for the same forgery. The
+        # refusal may come from either half of the restart path -- recovering the
+        # claimed evidence, or reconciling the store -- so both are taken.
+        got = restart_refusal(campaign, [job])
+        check(f"    and the restart path refuses it too", got is not None,
+              f"got {got!r}")
+        campaign.close()
+
+    # PINNED: the package-identity forgeries pass every STRUCTURAL check, so they
+    # are exactly the class that used to be invisible. They must be refused by the
+    # publication verifier itself, inside verify_restart, not by an earlier layer.
+    for label, mutate in (
+            ("execution identity",
+             lambda p: p["package_identities"].__setitem__(
+                 "execution_identity", "0" * 64)),
+            ("analysis procedure identity",
+             lambda p: p["package_identities"].__setitem__(
+                 "analysis_procedure_identity", "0" * 64))):
+        campaign = Campaign()
+        job = campaign.job(C2)
+        campaign.run(job)
+        forge_chain(campaign, job, mutate)
+        known = recover_realisations(campaign.out, campaign.binding)
+        check(f"the store still RECOVERS a publication with a false {label} -- "
+              "nothing structural can tell", len(known) == 1)
+        refuses_with_code(
+            f"    and verify_restart's publication verifier refuses it",
+            "BRANCH_A_PROVENANCE_MISMATCH", verify_restart, campaign.out, known,
+            campaign.binding, [job])
+        campaign.close()
+
+    # THE POSITIVE CONTROL. A valid publication still verifies, end to end.
+    campaign = Campaign()
+    job = campaign.job(C2)
+    _execution, record, digest = campaign.run(job)
+    check("a valid committed publication verifies",
+          verified_publication(campaign.out, job, campaign.binding)
+          ["branch_a_evidence_sha256"] == record["branch_a_evidence_sha256"])
+    check("and the valid terminal chain still validates",
+          campaign.validate(job, record) is None,
+          str(campaign.validate(job, record)))
+    check("a job with no publication at all resolves to None, not a refusal",
+          verified_publication(campaign.out, campaign.job(C2, replicate=3),
+                               campaign.binding) is None)
+    campaign.close()
+
+
+# ================ C2. FINDING B -- semantic reconciliation cannot be disabled
+def test_restart_requires_the_canonical_plan() -> None:
+    """AUDIT FINDING B. `planned=None` used to mean "stop checking identity".
+
+    A provenance verifier may not offer a mode that silently downgrades itself to
+    a structural inventory. The auditor placed a canonically committed lock naming
+    job B in job A's slot, with no terminal record, and showed that
+    `verify_restart(planned=None)` accepted what `verify_restart(planned=<plan>)`
+    refused.
+    """
+    for label, mutate, with_plan in (
+            ("a lock naming another planned job",
+             lambda r, a, b: r.__setitem__("job_id", b.job_id),
+             "CALIBRATION_LOCK_JOB_MISMATCH"),
+            ("a lock carrying the wrong field",
+             lambda r, a, b: r.__setitem__("artifact_field_id",
+                                           b.coordinates.scope),
+             "CALIBRATION_LOCK_FIELD_MISMATCH")):
+        campaign = Campaign()
+        a = campaign.job(C2, field_id=FIELDS[1])
+        b = campaign.job(C2, field_id=FIELDS[0])
+        campaign.run(a, terminal=False)
+        campaign.run(b, terminal=False)
+        replace_lock(campaign, a, lambda r: mutate(r, a, b))
+        known = recover_realisations(campaign.out, campaign.binding)
+        check(f"no terminal record exists for {label}",
+              not os.path.isdir(os.path.join(campaign.out, "job_records")))
+        refuses_with_code(f"{label}, with the canonical plan", with_plan,
+                          verify_restart, campaign.out, known, campaign.binding,
+                          [a, b])
+        refuses_with_code(f"{label}, with planned=None",
+                          "CAMPAIGN_PLAN_MISMATCH", verify_restart, campaign.out,
+                          known, campaign.binding, None)
+        omitted = False
+        try:
+            verify_restart(campaign.out, known, campaign.binding)
+        except TypeError:
+            omitted = True
+        except Refusal:
+            omitted = False
+        check(f"{label}, with planned omitted entirely -> TypeError", omitted)
+        campaign.close()
+
+    # The same rule on the terminal-record inventory.
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job)
+    refuses_with_code("the terminal-record inventory also requires the plan",
+                      "CAMPAIGN_PLAN_MISMATCH", inventory_job_records,
+                      campaign.out, campaign.binding, None)
+
+    # §14: a caller may not REDEFINE restart truth by editing a descriptor.
+    forged_job = CampaignJob(
+        coordinates=job.coordinates, role=job.role, requires_calibration=False,
+        seed_families=job.seed_families, branch_a_scopes=job.branch_a_scopes,
+        result_kind=job.result_kind, depends_on=job.depends_on)
+    refuses_with_code(
+        "a supplied job descriptor whose calibration requirement was edited",
+        "CAMPAIGN_PLAN_MISMATCH", verify_restart, campaign.out,
+        recover_realisations(campaign.out, campaign.binding), campaign.binding,
+        [forged_job])
+    alien = CampaignJob(
+        coordinates=JobCoordinates(C2, "sigma_psi_0p0", 999999, FIELDS[0]),
+        role=job.role, requires_calibration=True,
+        seed_families=job.seed_families, branch_a_scopes=job.branch_a_scopes,
+        result_kind=job.result_kind, depends_on=())
+    refuses_with_code("a supplied job the frozen planner never produced",
+                      "CAMPAIGN_PLAN_MISMATCH", verify_restart, campaign.out,
+                      recover_realisations(campaign.out, campaign.binding),
+                      campaign.binding, [alien])
+    check("a SUBSET of the canonical plan is still accepted, because omitting a "
+          "job makes reconciliation stricter, not weaker",
+          refusal_code(verify_restart, campaign.out,
+                       recover_realisations(campaign.out, campaign.binding),
+                       campaign.binding, [job]) is None)
+    check("and the canonical plan is the frozen planner's, memoised by plan digest",
+          len(canonical_plan(campaign.binding)) == 53200
+          and canonical_plan(campaign.binding)
+          is canonical_plan(campaign.binding))
+    campaign.close()
+
+    # THE POSITIVE CONTROLS. Valid partial progress, and the valid full chain.
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    campaign.run(a, terminal=False)
+    restart = verify_restart(campaign.out,
+                             recover_realisations(campaign.out, campaign.binding),
+                             campaign.binding, [a])
+    check("valid publication + valid lock + NO terminal -> restart ACCEPTS",
+          restart["calibration_locks_on_disk"] == 1
+          and restart["publications_on_disk"] == 1,
+          str(restart))
+    campaign.close()
+
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[1])
+    _execution, record, _digest = campaign.run(a)
+    publish_job_record(campaign.out, record, campaign.binding)
+    check("valid publication + valid lock + valid terminal -> terminal ACCEPTS",
+          campaign.validate(a, record) is None, str(campaign.validate(a, record)))
+    check("   and restart ACCEPTS",
+          refusal_code(verify_restart, campaign.out,
+                       recover_realisations(campaign.out, campaign.binding),
+                       campaign.binding, [a]) is None)
+    check("   and the terminal-record inventory ACCEPTS",
+          refusal_code(inventory_job_records, campaign.out, campaign.binding,
+                       [a]) is None)
+    campaign.close()
+
+
 # ================================ A7. no science moved
 def test_science_unchanged() -> None:
     """A provenance repair changes no scientific quantity."""
@@ -889,6 +1179,10 @@ GROUPS = (
      test_locks_validate_before_any_terminal_exists),
     ("B3  one verifier, no aliases, ordering preserved",
      test_one_verifier_and_no_aliases),
+    ("C1  FINDING A: a committed publication is not a valid one",
+     test_committed_publication_is_not_a_valid_one),
+    ("C2  FINDING B: restart requires the canonical plan",
+     test_restart_requires_the_canonical_plan),
     ("A7  no science moved", test_science_unchanged),
 )
 

@@ -650,10 +650,14 @@ def test_terminal_provenance_cross_links() -> None:
             self.analysis_identity = source.analysis_identity
             self.execution_identity = "f" * 64
 
+    # The refusal now names the UPSTREAM object that first disagrees. Since the
+    # official validator verifies the committed Branch-A publication against the
+    # current package before it judges the terminal record, a moved package is
+    # caught at the publication, which is where the disagreement actually is.
     check("a record valid under the OLD package is refused under the current one",
           refusal_code(validate_job_record, json.loads(json.dumps(record)),
                        binding.plan, MovedBinding(binding), job, out)
-          == "TERMINAL_PROVENANCE_MISMATCH")
+          == "BRANCH_A_PROVENANCE_MISMATCH")
     shutil.rmtree(root, ignore_errors=True)
 
 
