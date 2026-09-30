@@ -59,7 +59,8 @@ from e1a_v4.validation.campaign_driver import (
     AUTHORITY_DERIVED, AUTHORITY_MEASURED, AUTHORITY_OPEN_UNRESOLVED,
     BRANCH_A_FIELD_AUTHORITY, BRANCH_A_MEASUREMENT_INVARIANTS,
     single_gamma_feasible, _rounding_interval, _VIRTUAL_BINADE,
-    require_branch_a_measurement_invariants,
+    require_branch_a_measurement_invariants, interval_contains_binary64,
+    _smallest_binary64_at_least, _MAX_FINITE,
     BRANCH_A_FIELD_AUTHORITY_BY_FIELD, EMBEDDED_EVIDENCE_CLASSIFICATION,
     EMBEDDED_PACKAGE_IDENTITY_FIELDS, EMBEDDED_TO_OUTER_IDENTITY,
     EXTERNALLY_BOUND_EMBEDDED_FIELDS, authority_class_counts, CampaignJob,
@@ -2438,6 +2439,308 @@ def test_branch_a_relaxation_domain() -> None:
               and "rtol" not in text and "atol" not in text)
 
 
+
+# ---------------------------------------------------------------------------
+# H1  THE SHARED DRAG VALUE MUST BE REPRESENTABLE, NOT MERELY REAL
+# ---------------------------------------------------------------------------
+#: The smallest positive binary64. Below it there are infinitely many positive
+#: REALS and no positive float at all -- the whole of this group's subject.
+SMALLEST_SUBNORMAL = 2.0 ** -1074
+SMALLEST_NORMAL = 2.0 ** -1022
+
+
+def gamma_region(stiffness, tau):
+    """The exact real gamma interval one mode admits, as the verifier forms it."""
+    lo, hi = _rounding_interval(tau)
+    low, high = lo * Fraction(stiffness), hi * Fraction(stiffness)
+    return (low, high) if low <= high else (high, low)
+
+
+def scan_contains_binary64(lower, upper, lower_closed, upper_closed, anchor,
+                           span=6):
+    """An EXPLICIT walk over the floats around `anchor`, for cross-checking only.
+
+    The verifier must never enumerate the float space; a test may, over a bounded
+    neighbourhood, to confirm the closed-form helper agrees with the ground truth.
+    """
+    value = anchor
+    for _ in range(span):
+        value = math.nextafter(value, -math.inf)
+    for _ in range(2 * span):
+        if math.isinf(value):
+            break
+        exact = Fraction(value)
+        if ((exact > lower or (lower_closed and exact == lower))
+                and (exact < upper or (upper_closed and exact == upper))):
+            return True
+        value = math.nextafter(value, math.inf)
+    return False
+
+
+#: Representative finite drag values that production could actually hold, and
+#: stiffness pairs spanning the checkable domain. Test data only: choosing one of
+#: these as THE drag coefficient is exactly what this verifier must not do.
+FIXTURE_GAMMAS = (SMALLEST_SUBNORMAL, SMALLEST_SUBNORMAL * 7, SMALLEST_NORMAL,
+                  math.nextafter(SMALLEST_NORMAL, 0.0), 1e-300,
+                  1.6776104770169493e-08, 3.3e-12, 1.0, 1e10, 1e300, _MAX_FINITE)
+FIXTURE_STIFFNESSES = ((6.0e-5, 1.5e-4), (1.0e-4, 1.0e-4), (1.0e-300, 6.0e-5),
+                       (1e10, 1.0), (2.0, 3.0), (1.0e-4, 9.7e-5))
+
+
+def test_shared_drag_representability() -> None:
+    """AUDIT BLOCKER. A real witness is not a production witness.
+
+    The previous repair asked whether SOME real gamma satisfies every mode's
+    rounding constraint. Production does not divide by a real number: the value
+    reaching the division is a binary64, so a record whose solution region holds
+    no representable value cannot have been produced, however non-empty that
+    region is over the reals.
+    """
+    # --- §3: what actually enters the division -------------------------------
+    # gamma is a rounded product chain, and the result is ONE float. Established
+    # by executing it, not by reading the expression.
+    field = BranchAField(
+        field_id="drag", H_U=stiffness_matrix((6.0e-5, 1.5e-4), 0.0), T=300.0,
+        x_star=[0.0, 0.0], k_modes=(6.0e-5, 1.5e-4), rot_deg=0.0,
+        viscosity=0.00089, bead_radius=1e-6,
+        calibration_route="force_displacement_with_stokes_drag")
+    check("the production drag coefficient is a single binary64 value",
+          isinstance(field.gamma, float) and math.isfinite(field.gamma))
+    check("   and it is NOT the exact real 6*pi*eta*a: the product chain rounds",
+          Fraction(field.gamma) != Fraction(6) * Fraction(math.pi)
+          * Fraction(0.00089) * Fraction(1e-6))
+    check("   so each recorded tau is fl(gamma_fp / k_fp)",
+          field.tau_modes[0] == field.gamma / 6.0e-5)
+
+    # --- §2 / §19: the auditor's counterexample ------------------------------
+    low, high = gamma_region(1.0e-4, SMALLEST_SUBNORMAL)
+    check("the 2**-1074 fixture DOES admit a real gamma", low <= high)
+    check("   but its whole region lies below the smallest positive binary64",
+          high < Fraction(SMALLEST_SUBNORMAL) and low > 0)
+    check("   so a representable gamma does not exist",
+          not interval_contains_binary64(low, high))
+    check("   and the smallest representable gamma overshoots by far",
+          SMALLEST_SUBNORMAL / 1.0e-4 > SMALLEST_SUBNORMAL)
+    check("the feasibility predicate now refuses it",
+          not single_gamma_feasible((1.0e-4, 1.0e-4),
+                                    (SMALLEST_SUBNORMAL, SMALLEST_SUBNORMAL)))
+
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta0_circular")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, forced_measurement(
+        (1.0e-4, 1.0e-4), (SMALLEST_SUBNORMAL, SMALLEST_SUBNORMAL)))
+    refuses_with_code(
+        "k = (1e-4, 1e-4) with tau = (2**-1074, 2**-1074) -- no representable "
+        "drag value produces it", "BRANCH_A_MEASUREMENT_INVALID",
+        verified_publication, campaign.out, job, campaign.binding)
+    check("   and restart refuses it with the measurement code",
+          restart_refusal(campaign, [job]) == "BRANCH_A_MEASUREMENT_INVALID",
+          str(restart_refusal(campaign, [job])))
+    campaign.close()
+
+    # --- §10 / §11: the helper, cross-checked against an explicit scan -------
+    # float(Fraction) rounds to NEAREST-EVEN, so it does not by itself give "the
+    # smallest float at or above this rational". The correction is verified here
+    # rather than assumed.
+    for value in (1.0, 3.7e-5, SMALLEST_SUBNORMAL, SMALLEST_NORMAL, 1e300):
+        exact = Fraction(value)
+        check(f"smallest binary64 >= exact {value!r} is itself",
+              _smallest_binary64_at_least(exact, strict=False) == value)
+        check(f"smallest binary64 > exact {value!r} is its successor",
+              _smallest_binary64_at_least(exact, strict=True)
+              == math.nextafter(value, math.inf))
+    combinations = 0
+    disagreements = 0
+    for anchor in (1.0, 0.5, 3.7e-5, SMALLEST_SUBNORMAL, SMALLEST_NORMAL,
+                   math.nextafter(SMALLEST_NORMAL, 0.0), 1e300, _MAX_FINITE, 0.0,
+                   1.6776104770169493e-08):
+        successor = math.nextafter(anchor, math.inf)
+        if math.isinf(successor):
+            successor = anchor
+        a, b = Fraction(anchor), Fraction(successor)
+        endpoints = (a, b, (a * 2 + b) / 3, (a + b * 2) / 3, (a + b) / 2)
+        for lower in endpoints:
+            for upper in endpoints:
+                if lower > upper:
+                    continue
+                for lower_closed in (True, False):
+                    for upper_closed in (True, False):
+                        combinations += 1
+                        if (interval_contains_binary64(
+                                lower, upper, lower_closed=lower_closed,
+                                upper_closed=upper_closed)
+                                != scan_contains_binary64(
+                                    lower, upper, lower_closed, upper_closed,
+                                    anchor)):
+                            disagreements += 1
+    check(f"the closed-form helper agrees with an explicit float walk on all "
+          f"{combinations} interval/endpoint combinations", disagreements == 0,
+          f"{disagreements} disagreements")
+
+    # --- §21: real-nonempty, binary64-empty ---------------------------------
+    one, successor = 1.0, math.nextafter(1.0, math.inf)
+    inner_low = (Fraction(one) * 2 + Fraction(successor)) / 3
+    inner_high = (Fraction(one) + Fraction(successor) * 2) / 3
+    check("an interval strictly between two adjacent floats is non-empty over R",
+          inner_low < inner_high)
+    check("   and contains NO representable value",
+          not interval_contains_binary64(inner_low, inner_high))
+
+    # --- §20: the witness just above a fractional lower bound ---------------
+    check("a lower bound between floats still finds the next representable one",
+          interval_contains_binary64(inner_low, Fraction(successor)))
+    check("   unless that endpoint is excluded",
+          not interval_contains_binary64(inner_low, Fraction(successor),
+                                         upper_closed=False))
+
+    # --- §22: singleton intervals and endpoint semantics --------------------
+    check("a closed singleton at a representable value is a witness",
+          interval_contains_binary64(Fraction(one), Fraction(one)))
+    check("   not with the lower endpoint open",
+          not interval_contains_binary64(Fraction(one), Fraction(one),
+                                         lower_closed=False))
+    check("   not with the upper endpoint open",
+          not interval_contains_binary64(Fraction(one), Fraction(one),
+                                         upper_closed=False))
+    check("an empty interval has no witness",
+          not interval_contains_binary64(Fraction(3), Fraction(2)))
+
+    # --- §13: the zero / subnormal boundary, which IS the audit finding -----
+    check("an interval inside (0, 2**-1074) holds positive reals",
+          Fraction(SMALLEST_SUBNORMAL) / 8 < Fraction(SMALLEST_SUBNORMAL) / 2)
+    check("   and no positive representable value",
+          not interval_contains_binary64(Fraction(SMALLEST_SUBNORMAL) / 8,
+                                         Fraction(SMALLEST_SUBNORMAL) / 2))
+    check("   while one reaching 2**-1074 does",
+          interval_contains_binary64(Fraction(SMALLEST_SUBNORMAL) / 8,
+                                     Fraction(SMALLEST_SUBNORMAL)))
+    check("zero itself is representable",
+          interval_contains_binary64(Fraction(0), Fraction(SMALLEST_SUBNORMAL) / 2))
+
+    # --- §14: the subnormal/normal transition, where spacing changes --------
+    check("the helper does not assume constant spacing across 2**-1022",
+          interval_contains_binary64(
+              Fraction(math.nextafter(SMALLEST_NORMAL, 0.0)),
+              Fraction(SMALLEST_NORMAL)))
+    check("   and finds nothing strictly inside that last subnormal gap",
+          not interval_contains_binary64(
+              (Fraction(math.nextafter(SMALLEST_NORMAL, 0.0)) * 2
+               + Fraction(SMALLEST_NORMAL)) / 3,
+              (Fraction(math.nextafter(SMALLEST_NORMAL, 0.0))
+               + Fraction(SMALLEST_NORMAL) * 2) / 3))
+
+    # --- §15: the large finite boundary is still handled --------------------
+    check("no finite binary64 lies above the max-finite value",
+          not interval_contains_binary64(Fraction(_MAX_FINITE) * 2,
+                                         Fraction(_MAX_FINITE) * 4))
+    check("   but an interval reaching max finite has it as a witness",
+          interval_contains_binary64(Fraction(_MAX_FINITE),
+                                     Fraction(_MAX_FINITE) * 2))
+
+    # --- §23: ONE gamma must serve EVERY mode -------------------------------
+    # Each mode alone admits a representable gamma. Their intersection is the
+    # single point 1 + 2**-53, which is exactly a midpoint between adjacent
+    # floats and therefore not representable. A verifier that asked each mode
+    # separately would accept this.
+    region_a = gamma_region(1.0, 1.0)
+    region_b = gamma_region(2.0, math.nextafter(0.5, math.inf))
+    check("mode A alone admits a representable gamma",
+          interval_contains_binary64(*region_a))
+    check("mode B alone admits a representable gamma",
+          interval_contains_binary64(*region_b))
+    joint_low, joint_high = max(region_a[0], region_b[0]), min(region_a[1],
+                                                              region_b[1])
+    check("their intersection is non-empty over the reals",
+          joint_low <= joint_high)
+    check("   and is exactly the non-representable midpoint 1 + 2**-53",
+          joint_low == joint_high == Fraction(1) + Fraction(2) ** -53)
+    check("so the SHARED requirement refuses the pair",
+          not single_gamma_feasible((1.0, 2.0),
+                                    (1.0, math.nextafter(0.5, math.inf))))
+
+    # --- §18 / §33: ACTUAL production outputs must be accepted --------------
+    accepted = tested = 0
+    for gamma in FIXTURE_GAMMAS:
+        for k_modes in FIXTURE_STIFFNESSES:
+            ascending = sorted(k_modes)
+            taus = tuple(gamma / stiffness for stiffness in ascending)
+            if any(t == 0.0 or not math.isfinite(t) for t in taus):
+                continue        # canonical_float refuses these; not serializable
+            tested += 1
+            if single_gamma_feasible(ascending, taus):
+                accepted += 1
+    check(f"every genuine production (gamma, k) tuple is accepted "
+          f"({tested} tuples, subnormal through max-finite gamma)",
+          tested == accepted and tested >= 40, f"{accepted}/{tested}")
+
+    # --- §18: and end to end, through the shared read path ------------------
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    verified_publication(campaign.out, job, campaign.binding)
+    check("an UNFORGED production publication is accepted by the shared verifier",
+          True)
+    check("   and restart accepts it",
+          restart_refusal(campaign, [job]) is None,
+          str(restart_refusal(campaign, [job])))
+    campaign.close()
+
+    # --- §41 / §27 / §28: the four cleared repairs stay cleared -------------
+    check("zero stiffness is still refused by the predicate",
+          not single_gamma_feasible((0.0, 0.0), (1.0, 1.0)))
+    check("   including negative zero",
+          not single_gamma_feasible((-0.0, 6.0e-5), (1.0, 0.5)))
+    check("max-finite tau is still handled without an uncoded exception, and "
+          "still accepted", single_gamma_feasible((1.0, 2.0),
+                                                  (_MAX_FINITE, _MAX_FINITE / 2)))
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    evidence = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    taus = [float.fromhex(v) for v in evidence["tau_modes"]]
+    shrunk = [canonical_float(taus[0] * 0.8), evidence["tau_modes"][1]]
+    forge_evidence(campaign, job, lambda e: e.__setitem__("tau_modes", shrunk))
+    refuses_with_code(
+        "the order-preserving inconsistent tau tuple is still refused",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    campaign.close()
+
+    # --- §29: the parity divergence count must NOT have moved ---------------
+    divergences = []
+    for label, k_modes in RELAXATION_DOMAIN_CASES:
+        evidence, _status, _failure = production_record(k_modes)
+        if evidence is None:
+            continue
+        if read_outcome(evidence) != "ACCEPT":
+            divergences.append(label)
+    check("the constructor/verifier parity divergence set is UNCHANGED: still "
+          "exactly the negative-stiffness class",
+          set(divergences) == {"one negative stiffness",
+                               "both stiffnesses negative"}, str(divergences))
+
+    # --- §5 / §25: no gamma was chosen, and none is persisted ---------------
+    source = inspect.getsource(single_gamma_feasible)
+    check("the predicate still names no drag coefficient of its own",
+          "6.0 * math.pi" not in source and "viscosity" not in source
+          and "bead_radius" not in source)
+    check("the representability helper names none either",
+          all(token not in inspect.getsource(interval_contains_binary64)
+              for token in ("viscosity", "bead_radius", "6.0 * math.pi")))
+    check("gamma is still absent from the published evidence schema",
+          "gamma" not in BRANCH_A_FIELD_AUTHORITY_BY_FIELD)
+
+    # --- §7: still no tolerance anywhere on the path ------------------------
+    for fn in (single_gamma_feasible, interval_contains_binary64,
+               _smallest_binary64_at_least, _rounding_interval):
+        text = inspect.getsource(fn)
+        check(f"{fn.__name__} introduces no epsilon or isclose",
+              "isclose" not in text and "rtol" not in text and "atol" not in text
+              and "1e-6" not in text and "1e-9" not in text)
+
+
 GROUPS = (
     ("A1  the auditor's two counterexamples", test_auditor_counterexamples),
     ("A2  every required case of the invariant", test_every_required_case),
@@ -2463,6 +2766,8 @@ GROUPS = (
      test_branch_a_measurement_invariants),
     ("G1  the relaxation domain: production realizability",
      test_branch_a_relaxation_domain),
+    ("H1  the shared drag value must be representable",
+     test_shared_drag_representability),
     ("A7  no science moved", test_science_unchanged),
 )
 

@@ -1451,11 +1451,14 @@ BRANCH_A_MEASUREMENT_INVARIANTS = (
         "recomputed from the same reconstruction and compared exactly"),
     BranchAInvariant(
         "TAU_SINGLE_GAMMA", ("tau_modes",), ("k_modes_measured",),
-        "tau_r = gamma / k_r for ONE shared gamma = 6 pi eta a, carried with "
-        "ASCENDING k",
-        "exact rational feasibility that SOME gamma yields every recorded tau, "
-        "plus the exact consequence that equal stiffnesses give equal relaxation "
-        "times; no gamma value is chosen and no tolerance is introduced"),
+        "tau_r = fl(gamma / k_r) for ONE shared BINARY64 gamma, itself the "
+        "rounded product 6 pi eta a, carried with ASCENDING k",
+        "exact rational feasibility that some gamma yields every recorded tau, "
+        "AND that the intersection of those exact regions contains a finite "
+        "binary64 -- production divides by a representable value, not by a real "
+        "number -- plus the exact consequence that equal stiffnesses give equal "
+        "relaxation times; no gamma value is chosen and no tolerance is "
+        "introduced"),
     BranchAInvariant(
         "RELAXATION_DOMAIN", ("tau_modes", "H_A"),
         ("k_modes_measured", "T_measured", "scale_factor"),
@@ -1608,10 +1611,86 @@ def _rounding_interval(value: float) -> tuple[Fraction, Fraction]:
             (exact + _neighbour(value, math.inf)) / 2)
 
 
+#: The largest finite binary64, exactly. Written as a hex literal so the constant
+#: is the bit pattern itself rather than a decimal that has to be re-rounded.
+_MAX_FINITE = float.fromhex("0x1.fffffffffffffp+1023")
+_MAX_FINITE_EXACT = Fraction(_MAX_FINITE)
+
+
+def _smallest_binary64_at_least(bound: Fraction, *, strict: bool) -> float | None:
+    """The smallest finite binary64 `x` with `x > bound`, or `x >= bound`.
+
+    `None` when no finite binary64 satisfies the bound at all.
+
+    `float(Fraction)` rounds to NEAREST-EVEN, so it does not by itself answer
+    "the smallest float at or above this rational" -- it can land either side of
+    the bound. The result is therefore corrected exactly: step outward until the
+    bound is satisfied, then step back in while it still is. Each phase moves at
+    most a couple of ulps, because the nearest-even result is already within one
+    ulp of the bound, and every comparison is made in `Fraction`, never in
+    floating point. No float space is enumerated and no tolerance is involved.
+    """
+    if bound > _MAX_FINITE_EXACT:
+        return None                     # above every finite binary64
+    if bound < -_MAX_FINITE_EXACT:
+        return -_MAX_FINITE             # below every finite binary64
+    candidate = float(bound)            # finite: |bound| <= MAX by the guards above
+
+    def satisfies(value: float) -> bool:
+        exact = Fraction(value)
+        return exact > bound if strict else exact >= bound
+
+    while not satisfies(candidate):
+        step = math.nextafter(candidate, math.inf)
+        if math.isinf(step):
+            return None
+        candidate = step
+    while True:
+        step = math.nextafter(candidate, -math.inf)
+        if math.isinf(step) or not satisfies(step):
+            return candidate
+        candidate = step
+
+
+def interval_contains_binary64(lower: Fraction, upper: Fraction, *,
+                               lower_closed: bool = True,
+                               upper_closed: bool = True) -> bool:
+    """Does this exact rational interval contain a finite binary64 value?
+
+    THE DISTINCTION THIS DRAWS
+        A non-empty interval of REALS need not contain a representable one. Below
+        the smallest positive subnormal there are infinitely many positive reals
+        and no positive binary64 at all, so "some gamma exists" and "some gamma
+        production could hold exists" are different statements. That gap is
+        exactly what let a record through whose relaxation times no representable
+        drag coefficient can produce.
+
+    Decided in closed form: take the smallest binary64 satisfying the lower
+    bound, then test it against the upper bound. If that one fails, no larger
+    one can pass either. Endpoint strictness is carried through both bounds, so a
+    float sitting exactly on an EXCLUDED endpoint is not counted as a witness.
+    """
+    witness = _smallest_binary64_at_least(lower, strict=not lower_closed)
+    if witness is None:
+        return False
+    exact = Fraction(witness)
+    return exact < upper or (upper_closed and exact == upper)
+
+
 def single_gamma_feasible(k_ascending: Sequence[float],
                           taus: Sequence[float]) -> bool:
-    """Is there ANY gamma with tau_r == fl(gamma / k_r) for every mode, where
-    every mode's division is itself DEFINED in production?
+    """Is there ONE REPRESENTABLE gamma with tau_r == fl(gamma / k_r) for every
+    mode, where every mode's division is itself DEFINED in production?
+
+    REPRESENTABLE is the operative word. Production does not divide by a real
+    number: `BranchAField.gamma` is a rounded binary64 product chain, and the
+    value that reaches the division is that single float. So the question is not
+    "does some real gamma satisfy the rounding constraints" but "does some
+    binary64 gamma". Those differ near the representational boundaries, and the
+    difference is not academic: a record recording tau = 2**-1074 against
+    k = 1e-4 has a non-empty real solution region lying entirely BELOW the
+    smallest positive subnormal, so a real witness exists and no production value
+    does.
 
     The domain clause is not decoration. Asking only "do the tau intervals
     intersect" admits k_r = 0, because the interval scaled by zero collapses to
@@ -1621,9 +1700,21 @@ def single_gamma_feasible(k_ascending: Sequence[float],
 
     EXACT, and deliberately free of any tolerance. The production relation is one
     division per mode from ONE shared drag coefficient, so each recorded tau
-    constrains gamma to an interval; a valid record is one whose intervals
-    intersect. The absolute gamma is never chosen -- only its existence is tested,
-    which is why the acknowledged-open drag coefficient stays open.
+    constrains gamma to an interval; the intersection of those intervals is the
+    exact real solution region, and the record is realizable only if that region
+    contains a finite binary64. IEEE division is correctly rounded, so
+    `fl(g / k_r) == tau_r` exactly when the real quotient `g / k_r` lies in the
+    rounding cell of `tau_r` -- which is what makes the interval intersection the
+    faithful statement of the production map rather than an approximation of it.
+
+    The intersection is taken FIRST and the witness sought once, in it. Asking
+    each mode separately whether some representable gamma works would be a
+    different and much weaker question: the modes share one drag coefficient.
+
+    The absolute gamma is never chosen -- only its existence is tested, which is
+    why the acknowledged-open drag coefficient stays open. The witness is a pure
+    internal decision value; it is not persisted, compared against authority, or
+    treated as a measurement.
 
     Comparing the products tau_r * k_r for exact equality would be WRONG: for
     unequal stiffnesses (theta2_ellipse) genuine production values differ in the
@@ -1646,7 +1737,11 @@ def single_gamma_feasible(k_ascending: Sequence[float],
             lower, upper = upper, lower
         low = lower if low is None else max(low, lower)
         high = upper if high is None else min(high, upper)
-    return low is not None and low <= high
+    if low is None:
+        return False
+    # The real solution region is necessary but NOT sufficient. Production holds
+    # gamma as a binary64, so the region has to contain one.
+    return interval_contains_binary64(low, high)
 
 
 def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
