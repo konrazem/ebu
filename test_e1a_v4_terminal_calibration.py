@@ -60,7 +60,8 @@ from e1a_v4.validation.campaign_driver import (
     BRANCH_A_FIELD_AUTHORITY, BRANCH_A_MEASUREMENT_INVARIANTS,
     single_gamma_feasible, _rounding_interval, _VIRTUAL_BINADE,
     require_branch_a_measurement_invariants, interval_contains_binary64,
-    _smallest_binary64_at_least, _MAX_FINITE,
+    _smallest_binary64_at_least, _MAX_FINITE, _rounding_cell,
+    _significand_is_even, binary64_in_interval, _VIRTUAL_BINADE as VIRTUAL,
     BRANCH_A_FIELD_AUTHORITY_BY_FIELD, EMBEDDED_EVIDENCE_CLASSIFICATION,
     EMBEDDED_PACKAGE_IDENTITY_FIELDS, EMBEDDED_TO_OUTER_IDENTITY,
     EXTERNALLY_BOUND_EMBEDDED_FIELDS, authority_class_counts, CampaignJob,
@@ -2741,6 +2742,260 @@ def test_shared_drag_representability() -> None:
               and "1e-6" not in text and "1e-9" not in text)
 
 
+
+# ---------------------------------------------------------------------------
+# I1  IEEE-754 TIES TO EVEN: WHO OWNS AN EXACT MIDPOINT
+# ---------------------------------------------------------------------------
+M_SUB = 2.0 ** -1074            # smallest positive binary64; ODD significand
+
+
+def rounds_to(exact, target):
+    """Independent oracle: does this exact rational round to `target`?
+
+    `float(Fraction)` performs a correctly-rounded, ties-to-even conversion, so
+    this asks the question through a DIFFERENT mechanism than the bit-level
+    parity rule under test.
+    """
+    try:
+        return float(exact) == target
+    except OverflowError:
+        return False
+
+
+def oracle_cell_closed(value):
+    """Do BOTH exact midpoints round back to `value`? Ground truth for ownership."""
+    lower, upper = _rounding_interval(value)
+    return rounds_to(lower, value), rounds_to(upper, value)
+
+
+def test_ties_to_even_midpoints() -> None:
+    """AUDIT BLOCKER. A midpoint belongs to ONE neighbour, not to both.
+
+    The rounding-cell endpoint LOCATIONS were right. Their OWNERSHIP was not:
+    both were treated as included, so a drag value sitting exactly on a midpoint
+    counted as a witness for a relaxation time that production's own division
+    would never have produced from it.
+    """
+    # --- §2 / §33: the auditor's arithmetic, replayed ------------------------
+    gamma = 3 * M_SUB
+    check("3 * 2**-1074 is representable", Fraction(gamma) == 3 * Fraction(M_SUB))
+    check("fl(3m / 2) is 2m, NOT m -- the tie at 1.5m goes to the even neighbour",
+          gamma / 2.0 == 2 * M_SUB and gamma / 2.0 != M_SUB)
+    check("fl(3m / 6) is 0, NOT m -- the tie at 0.5m goes to zero",
+          gamma / 6.0 == 0.0 and gamma / 6.0 != M_SUB)
+    check("so gamma = 3m produces NEITHER stored value",
+          gamma / 2.0 != M_SUB and gamma / 6.0 != M_SUB)
+
+    # --- §5: the ownership rule, and why one flag covers both endpoints -----
+    check("the smallest positive subnormal has an ODD significand",
+          not _significand_is_even(M_SUB))
+    lower, upper, closed = _rounding_cell(M_SUB)
+    check("   so its cell is OPEN at both ends", not closed)
+    check("   its endpoints are still at m/2 and 3m/2",
+          lower == Fraction(M_SUB) / 2 and upper == Fraction(M_SUB) * 3 / 2)
+    check("adjacent floats always differ in significand parity, so a tie always "
+          "resolves to exactly one of them",
+          all(_significand_is_even(v) != _significand_is_even(
+              math.nextafter(v, math.inf))
+              for v in (0.0, M_SUB, 2 * M_SUB, 1.0, 0.5, 2.0, 1e300,
+                        math.nextafter(2.0 ** -1022, 0.0), 2.0 ** -1022)))
+
+    # --- §13: the midpoint goes to the ties-to-even winner, both directions --
+    lower_wins = 1.0                      # even significand
+    check("a midpoint whose LOWER neighbour is even rounds down",
+          _significand_is_even(lower_wins)
+          and rounds_to((Fraction(lower_wins)
+                         + Fraction(math.nextafter(lower_wins, math.inf))) / 2,
+                        lower_wins))
+    upper_wins = math.nextafter(1.0, math.inf)          # odd
+    beyond = math.nextafter(upper_wins, math.inf)       # even
+    check("a midpoint whose UPPER neighbour is even rounds up",
+          not _significand_is_even(upper_wins) and _significand_is_even(beyond)
+          and rounds_to((Fraction(upper_wins) + Fraction(beyond)) / 2, beyond))
+
+    # --- §19: bounded oracle cross-check of ownership ------------------------
+    # The verifier stays non-enumerative; the TEST may walk a finite set and
+    # compare the bit-level rule against correctly-rounded conversion.
+    regions = {
+        "zero / subnormal": [0.0, M_SUB, 2 * M_SUB, 3 * M_SUB, 4 * M_SUB,
+                             5 * M_SUB, 17 * M_SUB],
+        "subnormal / normal transition": [
+            math.nextafter(2.0 ** -1022, 0.0), 2.0 ** -1022,
+            math.nextafter(2.0 ** -1022, math.inf)],
+        "ordinary normal": [1.0, math.nextafter(1.0, math.inf), 0.1, 0.2, 3.7e-5,
+                            1.6776104770169493e-08, 123.456, 2.0, 3.0, 7.0],
+        "power of two / binade edge": [
+            0.5, math.nextafter(0.5, 0.0), 1.0, math.nextafter(1.0, 0.0), 2.0,
+            math.nextafter(2.0, 0.0), 4.0, 2.0 ** 60,
+            math.nextafter(2.0 ** 60, 0.0)],
+        "large finite and max finite": [1e300, _MAX_FINITE,
+                                        math.nextafter(_MAX_FINITE, 0.0)],
+        "negative": [-1.0, -M_SUB, -2 * M_SUB, -_MAX_FINITE, -0.0],
+    }
+    for name, values in regions.items():
+        disagreements = 0
+        for value in values:
+            low_closed, high_closed = oracle_cell_closed(value)
+            _lo, _hi, rule = _rounding_cell(value)
+            if not (low_closed == high_closed == rule):
+                disagreements += 1
+        check(f"ownership matches correctly-rounded conversion across {name} "
+              f"({len(values)} values)", disagreements == 0,
+              f"{disagreements} disagreements")
+    walked = mismatched = 0
+    for start, count in ((0.0, 400), (1.0, 400), (math.nextafter(2.0, 0.0), 60),
+                         (math.nextafter(2.0 ** -1022, 0.0), 60)):
+        value = start
+        for _ in range(count):
+            walked += 1
+            low_closed, high_closed = oracle_cell_closed(value)
+            _lo, _hi, rule = _rounding_cell(value)
+            if not (low_closed == high_closed == rule):
+                mismatched += 1
+            value = math.nextafter(value, math.inf)
+    check(f"and across {walked} CONSECUTIVE floats spanning the subnormals, the "
+          f"binade edge and the normal/subnormal transition", mismatched == 0,
+          f"{mismatched} mismatches")
+
+    # --- §18: max finite still has no inf -> Fraction failure ---------------
+    lo, hi, closed = _rounding_cell(_MAX_FINITE)
+    check("the max-finite cell is still exact and finite",
+          hi == VIRTUAL - Fraction(2) ** 970 and isinstance(lo, Fraction))
+    check("   and max finite has an odd significand, so it is open",
+          not closed and not _significand_is_even(_MAX_FINITE))
+
+    # --- §9: a singleton intersection excluded by ONE contributor is empty ---
+    cell_lo, cell_hi, _c = _rounding_cell(M_SUB)
+    region_a = (cell_lo * Fraction(2.0), cell_hi * Fraction(2.0))
+    region_b = (cell_lo * Fraction(6.0), cell_hi * Fraction(6.0))
+    check("the two mode regions meet at exactly one point, 3m",
+          region_a[1] == region_b[0] == 3 * Fraction(M_SUB))
+    check("that point is representable, so CLOSED endpoints admit it",
+          interval_contains_binary64(region_a[1], region_b[0]))
+    check("but both contributors EXCLUDE it, so the intersection is empty",
+          not interval_contains_binary64(region_a[1], region_b[0],
+                                         lower_closed=False, upper_closed=False))
+    check("   and one contributor excluding it is already enough",
+          not interval_contains_binary64(region_a[1], region_b[0],
+                                         lower_closed=False))
+    check("the predicate refuses k = (2, 6) with tau = (m, m)",
+          not single_gamma_feasible((2.0, 6.0), (M_SUB, M_SUB)))
+
+    # --- §33: the permanent publication regression --------------------------
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, forced_measurement((2.0, 6.0),
+                                                     (M_SUB, M_SUB)))
+    refuses_with_code(
+        "k = (2, 6) with tau = (2**-1074, 2**-1074) -- gamma = 3m sits on a "
+        "midpoint each mode rounds AWAY from", "BRANCH_A_MEASUREMENT_INVALID",
+        verified_publication, campaign.out, job, campaign.binding)
+    check("   and restart refuses it with the measurement code",
+          restart_refusal(campaign, [job]) == "BRANCH_A_MEASUREMENT_INVALID",
+          str(restart_refusal(campaign, [job])))
+    campaign.close()
+
+    # --- §11 / §12: the replay guard ----------------------------------------
+    source = inspect.getsource(single_gamma_feasible)
+    check("the predicate replays the witness through the REAL division",
+          "witness / stiffness == tau" in source)
+    check("   and does not search neighbouring floats on failure",
+          "nextafter" not in source)
+    witness = binary64_in_interval(*_rounding_cell(1.0)[:2])
+    check("the witness helper returns an actual float, not just a verdict",
+          isinstance(witness, float))
+    check("   and that witness really does reproduce the stored value",
+          witness / 1.0 == 1.0)
+
+    # --- §22: genuine production tuples, including subnormal gamma ----------
+    accepted = tested = 0
+    for gamma in (M_SUB, 2 * M_SUB, 3 * M_SUB, 7 * M_SUB, 17 * M_SUB,
+                  2.0 ** -1022, math.nextafter(2.0 ** -1022, 0.0), 1e-300,
+                  1.6776104770169493e-08, 3.3e-12, 0.1, 1.0, 2.0, 1e10, 1e300,
+                  _MAX_FINITE, math.nextafter(1.0, math.inf)):
+        for k_modes in ((6.0e-5, 1.5e-4), (1.0e-4, 1.0e-4), (1.0e-300, 6.0e-5),
+                        (1e10, 1.0), (2.0, 3.0), (1.0e-4, 9.7e-5), (2.0, 6.0),
+                        (1.0, 1.0), (3.0, 7.0), (0.5, 0.25), (2.0 ** 60, 1.0)):
+            ascending = sorted(k_modes)
+            relaxations = tuple(gamma / k for k in ascending)
+            if any(t == 0.0 or not math.isfinite(t) for t in relaxations):
+                continue
+            tested += 1
+            if single_gamma_feasible(ascending, relaxations):
+                accepted += 1
+    check(f"every genuine production tuple is STILL accepted after tightening "
+          f"({tested} tuples)", tested == accepted and tested >= 150,
+          f"{accepted}/{tested}")
+    # exhaustive over a contiguous run of subnormal drag values: the region the
+    # tightening actually changed
+    swept = lost = 0
+    for multiple in range(1, 301):
+        gamma = multiple * M_SUB
+        for k_modes in ((2.0, 6.0), (1.0, 2.0), (3.0, 5.0), (0.5, 4.0)):
+            ascending = sorted(k_modes)
+            relaxations = tuple(gamma / k for k in ascending)
+            if any(t == 0.0 for t in relaxations):
+                continue
+            swept += 1
+            if not single_gamma_feasible(ascending, relaxations):
+                lost += 1
+    check(f"and every subnormal drag value from 1m to 300m still round-trips "
+          f"({swept} tuples)", lost == 0, f"{lost} rejected")
+    check("the neighbouring GENUINE records at k = (2, 6) are accepted",
+          all(single_gamma_feasible((2.0, 6.0),
+                                    ((n * M_SUB) / 2.0, (n * M_SUB) / 6.0))
+              for n in (4, 6, 12)))
+
+    # --- §20 / §21: the two previous drag fixes are not regressed -----------
+    one, successor = 1.0, math.nextafter(1.0, math.inf)
+    inner_low = (Fraction(one) * 2 + Fraction(successor)) / 3
+    inner_high = (Fraction(one) + Fraction(successor) * 2) / 3
+    check("real-nonempty but binary64-empty still has no witness",
+          inner_low < inner_high
+          and not interval_contains_binary64(inner_low, inner_high))
+    check("the 2**-1074 representability case is still refused",
+          not single_gamma_feasible((1.0e-4, 1.0e-4), (M_SUB, M_SUB)))
+    check("the common-witness case is still refused",
+          not single_gamma_feasible((1.0, 2.0),
+                                    (1.0, math.nextafter(0.5, math.inf))))
+
+    # --- §25: the domain repairs are regression-only ------------------------
+    check("zero stiffness still refused", not single_gamma_feasible((0.0, 0.0),
+                                                                    (1.0, 1.0)))
+    check("mixed zero/nonzero still refused",
+          not single_gamma_feasible((0.0, 6.0e-5), (1.0, 0.5)))
+    check("max-finite tau still total and accepted",
+          single_gamma_feasible((1.0, 2.0), (_MAX_FINITE, _MAX_FINITE / 2)))
+
+    # --- §26: the open authority question is untouched ----------------------
+    divergences = []
+    for label, k_modes in RELAXATION_DOMAIN_CASES:
+        evidence, _status, _failure = production_record(k_modes)
+        if evidence is None:
+            continue
+        if read_outcome(evidence) != "ACCEPT":
+            divergences.append(label)
+    check("the parity divergence set is UNCHANGED: still exactly the "
+          "negative-stiffness class",
+          set(divergences) == {"one negative stiffness",
+                               "both stiffnesses negative"}, str(divergences))
+
+    # --- §23 / §24: no shortcut, no tolerance -------------------------------
+    # Structural, not a word search: the docstring legitimately discusses why
+    # product equality is the wrong test, so assert the interval path is intact.
+    check("no product-equality shortcut replaced the interval logic",
+          "_rounding_cell(" in source and "binary64_in_interval(" in source
+          and "Fraction(stiffness)" in source)
+    for fn in (single_gamma_feasible, _rounding_cell, _significand_is_even,
+               binary64_in_interval, interval_contains_binary64,
+               _smallest_binary64_at_least):
+        text = inspect.getsource(fn)
+        check(f"{fn.__name__} introduces no epsilon or isclose",
+              "isclose" not in text and "rtol" not in text and "atol" not in text
+              and "1e-6" not in text and "1e-9" not in text)
+
+
 GROUPS = (
     ("A1  the auditor's two counterexamples", test_auditor_counterexamples),
     ("A2  every required case of the invariant", test_every_required_case),
@@ -2768,6 +3023,8 @@ GROUPS = (
      test_branch_a_relaxation_domain),
     ("H1  the shared drag value must be representable",
      test_shared_drag_representability),
+    ("I1  ties to even: who owns an exact midpoint",
+     test_ties_to_even_midpoints),
     ("A7  no science moved", test_science_unchanged),
 )
 

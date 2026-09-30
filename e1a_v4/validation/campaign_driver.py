@@ -61,6 +61,7 @@ import math
 from fractions import Fraction
 import os
 import re
+import struct
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
@@ -1454,11 +1455,12 @@ BRANCH_A_MEASUREMENT_INVARIANTS = (
         "tau_r = fl(gamma / k_r) for ONE shared BINARY64 gamma, itself the "
         "rounded product 6 pi eta a, carried with ASCENDING k",
         "exact rational feasibility that some gamma yields every recorded tau, "
-        "AND that the intersection of those exact regions contains a finite "
+        "with each rounding cell owning its endpoints by the IEEE ties-to-even "
+        "rule, AND that the intersection of those exact regions contains a finite "
         "binary64 -- production divides by a representable value, not by a real "
-        "number -- plus the exact consequence that equal stiffnesses give equal "
-        "relaxation times; no gamma value is chosen and no tolerance is "
-        "introduced"),
+        "number -- confirmed by replaying that witness through the real division; "
+        "plus the exact consequence that equal stiffnesses give equal relaxation "
+        "times. No gamma value is chosen and no tolerance is introduced"),
     BranchAInvariant(
         "RELAXATION_DOMAIN", ("tau_modes", "H_A"),
         ("k_modes_measured", "T_measured", "scale_factor"),
@@ -1593,13 +1595,17 @@ def _neighbour(value: float, direction: float) -> Fraction:
 
 
 def _rounding_interval(value: float) -> tuple[Fraction, Fraction]:
-    """The EXACT real interval whose members round to this float.
+    """The exact LOCATIONS of this float's two rounding-cell endpoints.
 
-    Round-to-nearest maps every real between the midpoints to `value`, so the
-    interval is [(prev+value)/2, (value+next)/2]. Computed in `Fraction`, so it
-    is exact: no epsilon is chosen and no floating comparison is involved.
-    Closed endpoints make the test conservative at a tie -- it can only ever
-    accept slightly more, never reject a genuine production value.
+    Round-to-nearest maps the reals between the midpoints to `value`, so the
+    endpoints sit at (prev+value)/2 and (value+next)/2. Computed in `Fraction`,
+    so they are exact: no epsilon is chosen and no floating comparison is
+    involved.
+
+    LOCATIONS ONLY. Whether each endpoint BELONGS to this float's cell is decided
+    by the ties-to-even rule and is returned by `_rounding_cell`. Treating both as
+    included is wrong at an exact midpoint, which is where a tie is resolved
+    against one of the two neighbours.
 
     TOTAL over every finite float, the largest and the most negative included.
     The zero and subnormal neighbourhoods need no special case: `nextafter` is
@@ -1609,6 +1615,38 @@ def _rounding_interval(value: float) -> tuple[Fraction, Fraction]:
     exact = Fraction(value)
     return ((_neighbour(value, -math.inf) + exact) / 2,
             (exact + _neighbour(value, math.inf)) / 2)
+
+
+def _significand_is_even(value: float) -> bool:
+    """Is this float's significand even -- the tie-break winner at a midpoint?
+
+    Read from the binary64 bit pattern, so it is exact by construction and needs
+    no arithmetic at all.
+    """
+    return struct.unpack("<Q", struct.pack("<d", value))[0] & 1 == 0
+
+
+def _rounding_cell(value: float) -> tuple[Fraction, Fraction, bool]:
+    """This float's EXACT rounding cell: endpoint locations AND ownership.
+
+    IEEE-754 binary64 division rounds to nearest with TIES TO EVEN, so a real
+    landing exactly on a midpoint does not belong to both neighbours -- it belongs
+    to whichever has the even significand. Adjacent floats always differ in that
+    last bit (within a binade the significand increments by one; at a binade edge,
+    at the subnormal/normal edge and at zero, the lower neighbour's significand is
+    all ones and the upper one's is zero), so the tie is always resolved against
+    exactly one of them and BOTH of this value's endpoints are owned together:
+
+        significand even  ->  both midpoints round back here, cell CLOSED
+        significand odd   ->  both go to the neighbours, cell OPEN
+
+    Returned as one flag because both endpoints always share it. The distinction
+    is not cosmetic: the smallest positive subnormal has an odd significand, so
+    its cell is open at both ends, and treating it as closed admits drag values
+    whose actual division lands on a neighbour instead.
+    """
+    lower, upper = _rounding_interval(value)
+    return lower, upper, _significand_is_even(value)
 
 
 #: The largest finite binary64, exactly. Written as a hex literal so the constant
@@ -1670,11 +1708,27 @@ def interval_contains_binary64(lower: Fraction, upper: Fraction, *,
     one can pass either. Endpoint strictness is carried through both bounds, so a
     float sitting exactly on an EXCLUDED endpoint is not counted as a witness.
     """
+    return binary64_in_interval(lower, upper, lower_closed=lower_closed,
+                                upper_closed=upper_closed) is not None
+
+
+def binary64_in_interval(lower: Fraction, upper: Fraction, *,
+                         lower_closed: bool = True,
+                         upper_closed: bool = True) -> float | None:
+    """One finite binary64 inside this exact rational interval, or `None`.
+
+    Same decision as `interval_contains_binary64`, returning the value so the
+    caller can REPLAY it through the real operation. The witness is
+    verifier-local: it is never persisted, never compared against authority and
+    never treated as a measurement.
+    """
     witness = _smallest_binary64_at_least(lower, strict=not lower_closed)
     if witness is None:
-        return False
+        return None
     exact = Fraction(witness)
-    return exact < upper or (upper_closed and exact == upper)
+    if exact < upper or (upper_closed and exact == upper):
+        return witness
+    return None
 
 
 def single_gamma_feasible(k_ascending: Sequence[float],
@@ -1721,6 +1775,7 @@ def single_gamma_feasible(k_ascending: Sequence[float],
     last bits, and such a check rejects real measurements.
     """
     low = high = None
+    low_closed = high_closed = True
     for stiffness, tau in zip(k_ascending, taus):
         if stiffness == 0.0:
             # PRODUCTION DOMAIN, not a numeric edge case. Production evaluates
@@ -1731,17 +1786,39 @@ def single_gamma_feasible(k_ascending: Sequence[float],
             # like a witness, which is exactly how an impossible record passed.
             # `== 0.0` is true for -0.0 as well: -0.0 divides just as badly.
             return False
-        lo, hi = _rounding_interval(tau)
+        lo, hi, closed = _rounding_cell(tau)
         lower, upper = lo * Fraction(stiffness), hi * Fraction(stiffness)
         if lower > upper:                       # negative stiffness flips the order
             lower, upper = upper, lower
-        low = lower if low is None else max(low, lower)
-        high = upper if high is None else min(high, upper)
+        # Scaling by an exact nonzero rational maps endpoints to endpoints and
+        # cannot change whether one is included, so both carry this cell's own
+        # ownership -- including through the reversal above, where the two swap
+        # places but share the same flag.
+        if low is None or lower > low:
+            low, low_closed = lower, closed
+        elif lower == low:
+            low_closed = low_closed and closed
+        if high is None or upper < high:
+            high, high_closed = upper, closed
+        elif upper == high:
+            high_closed = high_closed and closed
     if low is None:
         return False
     # The real solution region is necessary but NOT sufficient. Production holds
-    # gamma as a binary64, so the region has to contain one.
-    return interval_contains_binary64(low, high)
+    # gamma as a binary64, so the region has to contain one. A singleton
+    # intersection survives only if EVERY contributing endpoint includes it --
+    # which is exactly the auditor's case, where one mode excludes the point.
+    witness = binary64_in_interval(low, high, lower_closed=low_closed,
+                                   upper_closed=high_closed)
+    if witness is None:
+        return False
+    # FINAL REPLAY. The interval arithmetic above is exact, so this should always
+    # agree; it is kept as an independent confirmation through the real operation
+    # rather than through a model of it. Deliberately NOT a search: if the witness
+    # the exact machinery produced does not reproduce the record, that is a defect
+    # in this verifier, and it fails closed rather than trying its neighbours.
+    return all(witness / stiffness == tau
+               for stiffness, tau in zip(k_ascending, taus))
 
 
 def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
