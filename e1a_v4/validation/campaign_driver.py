@@ -58,12 +58,13 @@ from __future__ import annotations
 
 import argparse
 import math
+from fractions import Fraction
 import os
 import re
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
-from ..branch_a import BranchAField
+from ..branch_a import BranchAField, stiffness_matrix
 from ..contract import sha256_file
 from ..calibration import (
     BLOCK1_GATES, CalibrationArtifact, CalibrationCondition, canonical_float,
@@ -93,7 +94,7 @@ from .publication import (
     publish_transaction, read_committed, require_clean_inventory, sealed_digest,
 )
 from .refusals import (
-    BranchAEvidenceAltered, BranchANotPublished, BranchAProvenanceMismatch,
+    BranchAEvidenceAltered, BranchAMeasurementInvalid, CodedRefusal, BranchANotPublished, BranchAProvenanceMismatch,
     BranchAPublicationImmutable, BranchBPremature,
     CalibrationArtifactBindingInvalid, CalibrationLockFieldMismatch,
     CalibrationLockJobMismatch, CalibrationLockMissing,
@@ -1080,7 +1081,9 @@ BRANCH_A_FIELD_AUTHORITY = (
         "scale_factor",
         "the declared scale factor AFTER the common-mode perturbation "
         "scale_factor * (1 + sigma_cm * common_mode); it is realised, not fixed",
-        AUTHORITY_MEASURED, "realised measurement", "FLOAT"),
+        AUTHORITY_MEASURED,
+        "realised measurement; BranchAField.__post_init__ requires it > 0",
+        "POSITIVE_FLOAT"),
     # ---- OPEN_UNRESOLVED: authority genuinely not frozen yet ----------------
     EmbeddedFieldAuthority(
         "generator_identity",
@@ -1245,6 +1248,15 @@ def _rule_status_enum(evidence, row, expectations, binding, where) -> None:
 
 
 def _rule_tau_pairing(evidence, row, expectations, binding, where) -> None:
+    """SHAPE and the pairing ORDER only.
+
+    The substantive relation -- that one shared drag coefficient produces every
+    recorded tau -- is a JOINT constraint and lives in
+    `require_branch_a_measurement_invariants`, because it needs the recorded
+    stiffnesses too. An audit showed why the order check alone is not enough: a
+    tau rescaled so the sequence stays non-increasing preserved the order and
+    still broke the relation.
+    """
     taus = evidence.get(row.field)
     modes = evidence.get("H_A")
     if not isinstance(taus, list) or not all(_is_canonical_float(t) for t in taus):
@@ -1255,15 +1267,10 @@ def _rule_tau_pairing(evidence, row, expectations, binding, where) -> None:
             f"{where}: embedded {row.field} carries {len(taus)} relaxation "
             "time(s); the frozen rule is one per mode")
     values = [float.fromhex(t) for t in taus]
-    if any(t <= 0.0 for t in values):
-        raise BranchAProvenanceMismatch(
-            f"{where}: embedded {row.field} carries a non-positive relaxation time")
-    # tau_r = gamma / k_r with ONE gamma, carried with ASCENDING k. The stored
-    # order is therefore non-increasing, and a re-sorted or shuffled list is a
-    # broken pairing -- which is the invariant the frozen calibration layer
-    # refuses on, checked here so the READ path refuses it too.
+    # tau_r = gamma / k_r with ONE gamma, carried with ASCENDING k, so the stored
+    # order is non-increasing. A shuffled list is a broken pairing.
     if any(b > a for a, b in zip(values, values[1:])):
-        raise BranchAProvenanceMismatch(
+        raise BranchAMeasurementInvalid(
             f"{where}: embedded {row.field} is not carried with ascending "
             "stiffness. tau_r = gamma / k_r, so the frozen pairing gives a "
             "non-increasing sequence; this one is not, and a mispaired tau "
@@ -1271,10 +1278,23 @@ def _rule_tau_pairing(evidence, row, expectations, binding, where) -> None:
 
 
 def _rule_float(evidence, row, expectations, binding, where) -> None:
+    """A finite canonically encoded float. Domain, not value: a measurement is
+    free to be any value production would accept."""
     if not _is_canonical_float(evidence.get(row.field)):
         raise PublicationIncomplete(
             f"{where}: embedded {row.field} {evidence.get(row.field)!r} is not a "
             "canonically encoded float")
+    _persisted_float(evidence, row.field, where)
+
+
+def _rule_positive_float(evidence, row, expectations, binding, where) -> None:
+    """Finite AND strictly positive, because that is exactly what
+    `BranchAField.__post_init__` requires of this field."""
+    _rule_float(evidence, row, expectations, binding, where)
+    if _persisted_float(evidence, row.field, where) <= 0.0:
+        raise BranchAMeasurementInvalid(
+            f"{where}: embedded {row.field} is not positive; the production "
+            "constructor refuses to build a Branch-A measurement with it")
 
 
 def _rule_float_list(evidence, row, expectations, binding, where) -> None:
@@ -1313,6 +1333,7 @@ _AUTHORITY_RULES = {
     "STATUS_ENUM": _rule_status_enum,
     "TAU_PAIRING": _rule_tau_pairing,
     "FLOAT": _rule_float,
+    "POSITIVE_FLOAT": _rule_positive_float,
     "FLOAT_LIST": _rule_float_list,
     "FLOAT_MATRIX": _rule_float_matrix,
     "NON_EMPTY_STRING": _rule_non_empty_string,
@@ -1360,7 +1381,268 @@ def require_embedded_field_authority(record: Mapping[str, Any], job: CampaignJob
         raise BranchAProvenanceMismatch(
             f"{where}: the embedded evidence schema {evidence.get('schema')!r} is "
             f"not the envelope's {record.get('schema')!r}")
+    # THE RECORD AS A WHOLE. Per-field authority is necessary and not sufficient:
+    # every field can be individually valid while the combination is one the
+    # production constructor could never have produced.
+    require_branch_a_measurement_invariants(evidence, where)
 
+
+
+# ---- Branch-A MEASUREMENT INVARIANTS: the record as a WHOLE ----------------
+#: INDIVIDUALLY VALID FIELDS ARE NOT A VALID MEASUREMENT.
+#:
+#: THE DEFECT THIS SECTION CLOSES
+#:     The field-authority repair verified each embedded field against its own
+#:     authority. An audit then forged records in which every field was
+#:     individually well-formed and externally authorised, the record was
+#:     correctly re-digested and durably committed, and the COMBINATION could
+#:     never have come out of the production constructor:
+#:
+#:         H_A altered while the recorded stiffnesses, orientation, temperature
+#:           and scale stayed exactly as published
+#:         relaxation times no single drag coefficient could produce
+#:         T_measured = -1
+#:         scale_factor = -1
+#:
+#:     A committed digest authenticates the record's bytes. It says nothing about
+#:     whether those bytes form a physically and algorithmically possible
+#:     Branch-A measurement.
+#:
+#: HOW THE EXPECTATIONS ARE OBTAINED
+#:     By REUSING the production constructor. `reconstructed_branch_a_field`
+#:     rebuilds a real `BranchAField` from the persisted primitives, so every
+#:     creation-time domain rule `BranchAField.__post_init__` enforces is enforced
+#:     again on read, and the derived values are taken from its own properties --
+#:     `.H` and `.status`. No production formula is restated here, and
+#:     `e1a_v4/branch_a.py` is NOT modified: it is one of the SCIENTIFIC_MODULES
+#:     and the analysis identity must not move for a provenance repair.
+#:
+#: WHAT IS NOT DONE
+#:     Measured values are NOT pinned to nominal plan values. A measurement is
+#:     free to be any value inside the production constructor's declared domain.
+#:     The absolute drag coefficient gamma is NOT chosen, estimated or frozen: it
+#:     is not persisted, it is the acknowledged-open field-construction input, and
+#:     the relaxation check below is deliberately scale-free in gamma.
+@dataclass(frozen=True)
+class BranchAInvariant:
+    """One joint constraint on a persisted Branch-A record."""
+
+    invariant_id: str
+    dependent_fields: tuple[str, ...]
+    primitive_sources: tuple[str, ...]
+    production_rule: str
+    verification: str
+
+
+BRANCH_A_MEASUREMENT_INVARIANTS = (
+    BranchAInvariant(
+        "H_A_FROM_PRIMITIVES", ("H_A",),
+        ("k_modes_measured", "rot_deg_measured", "T_measured", "scale_factor"),
+        "BranchAField.H = stiffness_matrix(k_modes, rot_deg) * scale_factor "
+        "/ (K_B * T)",
+        "recomputed by reconstructing the production BranchAField from the "
+        "persisted primitives and reading its own .H property; compared exactly, "
+        "because every persisted float is an exact float.hex() and the operation "
+        "order is the production one"),
+    BranchAInvariant(
+        "STATUS_FROM_H_U", ("branch_a_status",),
+        ("k_modes_measured", "rot_deg_measured"),
+        "BranchAField.__post_init__ sets BRANCH_A_INVALID when min eig(H_U) <= 0",
+        "recomputed from the same reconstruction and compared exactly"),
+    BranchAInvariant(
+        "TAU_SINGLE_GAMMA", ("tau_modes",), ("k_modes_measured",),
+        "tau_r = gamma / k_r for ONE shared gamma = 6 pi eta a, carried with "
+        "ASCENDING k",
+        "exact rational feasibility that SOME gamma yields every recorded tau, "
+        "plus the exact consequence that equal stiffnesses give equal relaxation "
+        "times; no gamma value is chosen and no tolerance is introduced"),
+    BranchAInvariant(
+        "PRODUCTION_DOMAIN",
+        ("T_measured", "scale_factor", "H_A"),
+        ("T_measured", "scale_factor", "k_modes_measured", "rot_deg_measured"),
+        "BranchAField.__post_init__ refuses a non-symmetric H_U, a temperature "
+        "that is not positive, an x_star dimension mismatch, and a scale factor "
+        "that is not positive",
+        "the production constructor is CALLED on the persisted primitives; its "
+        "own refusals become coded provenance refusals"),
+)
+
+
+def _finite(value: float) -> bool:
+    return isinstance(value, float) and math.isfinite(value)
+
+
+def _persisted_float(evidence: Mapping[str, Any], key: str, where: str) -> float:
+    value = evidence.get(key)
+    try:
+        number = float.fromhex(value)
+    except (AttributeError, TypeError, ValueError):
+        raise BranchAMeasurementInvalid(
+            f"{where}: embedded {key} {value!r} is not a canonically encoded "
+            "float") from None
+    if not _finite(number):
+        # The production rule for temperature is "must be positive" and for the
+        # scale factor "must be positive". NaN and the infinities are not
+        # positive real measurements: `NaN <= 0.0` is False, so a NaN would slip
+        # through the production comparison itself. Requiring a finite value is
+        # the faithful reading of that rule, not an additional one.
+        raise BranchAMeasurementInvalid(
+            f"{where}: embedded {key} is {number!r}, which is not a finite "
+            "measured value")
+    return number
+
+
+def _persisted_float_list(evidence: Mapping[str, Any], key: str,
+                          where: str) -> tuple[float, ...]:
+    values = evidence.get(key)
+    if not isinstance(values, list) or not values:
+        raise BranchAMeasurementInvalid(
+            f"{where}: embedded {key} is not a non-empty list")
+    out = []
+    for index, raw in enumerate(values):
+        try:
+            number = float.fromhex(raw)
+        except (AttributeError, TypeError, ValueError):
+            raise BranchAMeasurementInvalid(
+                f"{where}: embedded {key}[{index}] {raw!r} is not a canonically "
+                "encoded float") from None
+        if not _finite(number):
+            raise BranchAMeasurementInvalid(
+                f"{where}: embedded {key}[{index}] is {number!r}, which is not a "
+                "finite measured value")
+        out.append(number)
+    return tuple(out)
+
+
+def reconstructed_branch_a_field(evidence: Mapping[str, Any],
+                                 where: str) -> BranchAField:
+    """Rebuild the PRODUCTION `BranchAField` from the persisted primitives.
+
+    This is reuse, not reimplementation: constructing the real object re-applies
+    every domain rule `BranchAField.__post_init__` enforces, and its `.H` and
+    `.status` properties ARE the expected derived values.
+
+    `viscosity` and `bead_radius` are not persisted -- they are the acknowledged
+    OPEN field-construction inputs -- and they enter only `gamma`, which is never
+    recomputed here. Neutral positive placeholders keep the constructor's own
+    checks meaningful without inventing a drag coefficient; nothing derived from
+    them is compared against anything.
+    """
+    k_modes = _persisted_float_list(evidence, "k_modes_measured", where)
+    rot_deg = _persisted_float(evidence, "rot_deg_measured", where)
+    temperature = _persisted_float(evidence, "T_measured", where)
+    scale_factor = _persisted_float(evidence, "scale_factor", where)
+    try:
+        return BranchAField(
+            field_id=str(evidence.get("field_id")),
+            H_U=stiffness_matrix(k_modes, rot_deg),
+            T=temperature,
+            x_star=[0.0] * len(k_modes),
+            k_modes=k_modes,
+            rot_deg=rot_deg,
+            viscosity=1.0,
+            bead_radius=1.0,
+            calibration_route=str(evidence.get("calibration_route")),
+            scale_factor=scale_factor,
+        )
+    except Refusal as exc:
+        raise BranchAMeasurementInvalid(
+            f"{where}: the persisted primitives do not form a Branch-A "
+            f"measurement the production constructor would create ({exc})"
+        ) from exc
+
+
+def _rounding_interval(value: float) -> tuple[Fraction, Fraction]:
+    """The EXACT real interval whose members round to this float.
+
+    Round-to-nearest maps every real between the midpoints to `value`, so the
+    interval is [(prev+value)/2, (value+next)/2]. Computed in `Fraction`, so it
+    is exact: no epsilon is chosen and no floating comparison is involved.
+    Closed endpoints make the test conservative at a tie -- it can only ever
+    accept slightly more, never reject a genuine production value.
+    """
+    return ((Fraction(math.nextafter(value, -math.inf)) + Fraction(value)) / 2,
+            (Fraction(value) + Fraction(math.nextafter(value, math.inf))) / 2)
+
+
+def single_gamma_feasible(k_ascending: Sequence[float],
+                          taus: Sequence[float]) -> bool:
+    """Is there ANY gamma with tau_r == fl(gamma / k_r) for every mode?
+
+    EXACT, and deliberately free of any tolerance. The production relation is one
+    division per mode from ONE shared drag coefficient, so each recorded tau
+    constrains gamma to an interval; a valid record is one whose intervals
+    intersect. The absolute gamma is never chosen -- only its existence is tested,
+    which is why the acknowledged-open drag coefficient stays open.
+
+    Comparing the products tau_r * k_r for exact equality would be WRONG: for
+    unequal stiffnesses (theta2_ellipse) genuine production values differ in the
+    last bits, and such a check rejects real measurements.
+    """
+    low = high = None
+    for stiffness, tau in zip(k_ascending, taus):
+        lo, hi = _rounding_interval(tau)
+        lower, upper = lo * Fraction(stiffness), hi * Fraction(stiffness)
+        if lower > upper:                       # negative stiffness flips the order
+            lower, upper = upper, lower
+        low = lower if low is None else max(low, lower)
+        high = upper if high is None else min(high, upper)
+    return low is not None and low <= high
+
+
+def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
+                                            where: str) -> None:
+    """The JOINT constraints: derived fields and intra-record relations.
+
+    Every check here is either a recomputation through production code or an
+    exact consequence of the production relation. Nothing is compared against a
+    nominal plan value, so the measurement stays free to vary.
+    """
+    field = reconstructed_branch_a_field(evidence, where)
+    # --- H_A_FROM_PRIMITIVES: recomputed by production, compared exactly ------
+    expected_h = [[canonical_float(v) for v in row] for row in field.H]
+    if evidence.get("H_A") != expected_h:
+        raise BranchAMeasurementInvalid(
+            f"{where}: the published H_A is not the matrix the recorded "
+            "stiffnesses, orientation, temperature and scale produce. H_A is "
+            "DERIVED -- H_U(k, psi) * scale / (k_B T) -- so it is not "
+            "independently choosable, however consistently the digests are "
+            "recomputed.")
+    # --- STATUS_FROM_H_U ------------------------------------------------------
+    if evidence.get("branch_a_status") != field.status:
+        raise BranchAMeasurementInvalid(
+            f"{where}: the published Branch-A status "
+            f"{evidence.get('branch_a_status')!r} is not the status these "
+            f"primitives yield ({field.status!r}); the status is derived from the "
+            "eigenvalues of H_U, not declared")
+    # --- TAU_SINGLE_GAMMA ----------------------------------------------------
+    taus = _persisted_float_list(evidence, "tau_modes", where)
+    k_modes = _persisted_float_list(evidence, "k_modes_measured", where)
+    if len(taus) != len(k_modes):
+        raise BranchAMeasurementInvalid(
+            f"{where}: {len(taus)} relaxation time(s) for {len(k_modes)} "
+            "stiffness(es); the frozen rule is one per mode")
+    if any(tau <= 0.0 for tau in taus):
+        raise BranchAMeasurementInvalid(
+            f"{where}: a recorded relaxation time is not positive")
+    # The stored order is tau carried with ASCENDING stiffness, exactly as
+    # `from_branch_a_field` pairs them. Sorting k the same way is what makes the
+    # pairing check meaningful -- mode ordering has been a defect source before.
+    ascending = sorted(k_modes)
+    for index in range(1, len(ascending)):
+        if ascending[index] == ascending[index - 1] and taus[index] != taus[index - 1]:
+            raise BranchAMeasurementInvalid(
+                f"{where}: modes {index - 1} and {index} record the SAME measured "
+                f"stiffness and DIFFERENT relaxation times ({taus[index - 1]!r} "
+                f"and {taus[index]!r}). One shared drag coefficient gives one "
+                "relaxation time for one stiffness, exactly.")
+    if not single_gamma_feasible(ascending, taus):
+        raise BranchAMeasurementInvalid(
+            f"{where}: no single drag coefficient yields the recorded relaxation "
+            f"times for the recorded stiffnesses. tau_r = gamma / k_r with ONE "
+            "gamma per measurement, so the recorded pairs are not a measurement; "
+            "a mispaired or rescaled tau changes every phi and the whole Block-1 "
+            "null law.")
 
 
 # ---- THE ONE CANONICAL VERIFIED-PUBLICATION LOADER --------------------------
@@ -2617,8 +2899,20 @@ def recover_realisations(output_dir: str,
     """
     recovered: dict[str, BranchARealisation] = {}
     for job_id, record in inventory_publications(output_dir).items():
-        realisation = realisation_from_record(record)
-        if realisation.evidence_sha256 != record["branch_a_evidence_sha256"]:
+        # A persisted non-finite measurement refuses in the SCIENTIFIC canonical
+        # encoder, which is right but uncoded. Recovery gives it the same coded
+        # provenance category the shared verifier uses, so restart reports the
+        # same diagnosis rather than an anonymous refusal.
+        try:
+            realisation = realisation_from_record(record)
+            recomputed = realisation.evidence_sha256
+        except Refusal as exc:
+            if isinstance(exc, CodedRefusal):
+                raise
+            raise BranchAMeasurementInvalid(
+                f"{job_id}: the published Branch-A evidence cannot be recovered "
+                f"as a measurement ({exc})") from exc
+        if recomputed != record["branch_a_evidence_sha256"]:
             raise RestartInventoryMismatch(
                 f"{job_id}: the evidence recovered from its publication does not "
                 "reproduce the published digest; the canonical form is exact, so a "

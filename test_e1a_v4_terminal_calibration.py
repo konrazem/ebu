@@ -44,7 +44,7 @@ import os
 import shutil
 import tempfile
 
-from e1a_v4.branch_a import build_field
+from e1a_v4.branch_a import BranchAField, build_field, stiffness_matrix
 from e1a_v4.calibration import CalibrationArtifact, canonical_float
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
@@ -54,7 +54,9 @@ from e1a_v4.validation.campaign_driver import (
     _compare_terminal_to_verified_lock, calibration_lock_basename,
     calibration_lock_directory, calibration_lock_envelope,
     AUTHORITY_CLASSES, AUTHORITY_CLASSES_WITH_EXPECTED_VALUE,
-    AUTHORITY_MEASURED, AUTHORITY_OPEN_UNRESOLVED, BRANCH_A_FIELD_AUTHORITY,
+    AUTHORITY_DERIVED, AUTHORITY_MEASURED, AUTHORITY_OPEN_UNRESOLVED,
+    BRANCH_A_FIELD_AUTHORITY, BRANCH_A_MEASUREMENT_INVARIANTS,
+    single_gamma_feasible,
     BRANCH_A_FIELD_AUTHORITY_BY_FIELD, EMBEDDED_EVIDENCE_CLASSIFICATION,
     EMBEDDED_PACKAGE_IDENTITY_FIELDS, EMBEDDED_TO_OUTER_IDENTITY,
     EXTERNALLY_BOUND_EMBEDDED_FIELDS, authority_class_counts, CampaignJob,
@@ -1654,13 +1656,15 @@ def test_embedded_field_authority() -> None:
                            campaign.binding) is None)
     check("measured temperatures genuinely differ across the contract fields, "
           "and all verify", len(temperatures) > 1, str(len(temperatures)))
-    # a measured value CHANGED is still accepted: it is an observation
+    # A measured value changed ON ITS OWN is now an INCONSISTENT record, because
+    # H_A is derived from the temperature. That is the joint-invariant repair
+    # working; the "observations may vary" control needs a COMPLETE consistent
+    # measurement and lives in group F1.
     j = campaign.job(C2, field_id=FIELDS[0])
     forge_embedded(campaign, j, "T_measured", canonical_float(297.5))
-    check("a DIFFERENT measured temperature is accepted -- the repair did not "
-          "turn observations into expected constants",
-          refusal_code(verified_publication, campaign.out, j, campaign.binding)
-          is None)
+    refuses_with_code("a measured temperature changed ALONE leaves H_A "
+                      "inconsistent with it", "BRANCH_A_MEASUREMENT_INVALID",
+                      verified_publication, campaign.out, j, campaign.binding)
     # but its ENCODING is still enforced
     forge_embedded(campaign, j, "T_measured", "not-a-float")
     refuses_with_code("a malformed measured temperature", "PUBLICATION_INCOMPLETE",
@@ -1728,6 +1732,334 @@ def test_embedded_field_authority() -> None:
         campaign.close()
 
 
+# ================ F1. the record as a WHOLE: domain and joint invariants
+def forge_evidence(campaign, job, mutate):
+    """Mutate the embedded evidence, then consistently recompute the evidence
+    digest, the envelope digest and the commit marker."""
+    coordinates = job.coordinates
+    publication = json.loads(json.dumps(
+        committed_publication(campaign.out, coordinates)))
+    mutate(publication["branch_a_evidence"])
+    publication["branch_a_evidence_sha256"] = canonical_digest(
+        publication["branch_a_evidence"])
+    publication["publication_digest"] = sealed_digest(publication,
+                                                      "publication_digest")
+    republish(publication_directory(campaign.out),
+              publication_basename(coordinates), publication,
+              "publication_digest", job.job_id, coordinates)
+    return publication
+
+
+def valid_measurement(job, k_modes, rot_deg, temperature, scale, gamma):
+    """A COMPLETE, internally consistent, NON-NOMINAL Branch-A measurement.
+
+    Built the way production builds one: H_A and the status come from a real
+    `BranchAField`, and the relaxation times come from one shared gamma carried
+    with ascending stiffness. `gamma` here is an arbitrary positive fixture
+    value, never frozen authority -- the verifier only asks that ONE exists.
+    """
+    field = BranchAField(
+        field_id=job.coordinates.scope, H_U=stiffness_matrix(k_modes, rot_deg),
+        T=temperature, x_star=[0.0] * len(k_modes), k_modes=k_modes,
+        rot_deg=rot_deg, viscosity=1.0, bead_radius=1.0,
+        calibration_route="force_displacement_with_stokes_drag",
+        scale_factor=scale)
+    taus = tuple(gamma / k for k in k_modes)
+    paired = tuple(t for _, t in sorted(zip(k_modes, taus)))
+
+    def mutate(evidence):
+        evidence["k_modes_measured"] = [canonical_float(v) for v in k_modes]
+        evidence["rot_deg_measured"] = canonical_float(rot_deg)
+        evidence["T_measured"] = canonical_float(temperature)
+        evidence["scale_factor"] = canonical_float(scale)
+        evidence["H_A"] = [[canonical_float(v) for v in row] for row in field.H]
+        evidence["branch_a_status"] = field.status
+        evidence["tau_modes"] = [canonical_float(t) for t in paired]
+
+    return mutate
+
+
+#: Valid measurements well away from the nominal contract values. If any of these
+#: were rejected, the repair would have pinned observations to expectations.
+NON_NOMINAL_MEASUREMENTS = (
+    ("warmer, softer, rotated, scaled", (8.7e-5, 1.93e-4), 17.5, 301.44, 1.0037,
+     1.6776e-8),
+    ("cooler, stiffer, unrotated", (2.4e-4, 2.4e-4), 0.0, 288.13, 0.9912, 2.5e-8),
+    ("strongly elliptic, large rotation", (5.1e-5, 3.3e-4), 42.7, 318.66, 1.05,
+     9.1e-9),
+    ("very small drag, unequal stiffness", (1.1e-4, 7.9e-5), 5.0, 297.0, 1.0,
+     3.3e-12),
+)
+
+
+def test_branch_a_measurement_invariants() -> None:
+    """AUDIT BLOCKER. Individually valid fields are not a valid measurement.
+
+    Every field can pass its own authority check, the record can be correctly
+    re-digested and durably committed, and the COMBINATION can still be one the
+    production constructor could never have produced. A digest authenticates
+    bytes; it does not prove they form a measurement.
+    """
+    # --- §26: the invariant inventory, and what each one covers --------------
+    check("the invariant inventory declares every joint constraint",
+          len(BRANCH_A_MEASUREMENT_INVARIANTS) == 4,
+          str([i.invariant_id for i in BRANCH_A_MEASUREMENT_INVARIANTS]))
+    dependents = {f for i in BRANCH_A_MEASUREMENT_INVARIANTS
+                  for f in i.dependent_fields}
+    derived = {row.field for row in BRANCH_A_FIELD_AUTHORITY
+               if row.authority_class == AUTHORITY_DERIVED}
+    # A DERIVED field is verified either by a joint measurement invariant or by a
+    # recomputed expectation in the field-authority layer. `n_samples` takes the
+    # second route: it is recomputed from the plan's own primitives.
+    campaign0 = Campaign()
+    recomputed = set(embedded_authority_expectations(campaign0.job(C2),
+                                                     campaign0.binding))
+    campaign0.close()
+    uncovered = sorted(derived - dependents - recomputed)
+    check("every DERIVED persisted field is covered, by an invariant or by a "
+          "recomputed expectation", uncovered == [], f"uncovered {uncovered}")
+
+    # --- §2 A / §14: H_A is derived, not independently choosable -------------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    _execution, record, _digest = campaign.run(job)
+    forge_evidence(campaign, job, lambda e: e.__setitem__(
+        "H_A", [[canonical_float(float.fromhex(v) * 1.5) for v in row]
+                for row in e["H_A"]]))
+    refuses_with_code(
+        "H_A changed while the recorded stiffnesses, orientation, temperature "
+        "and scale stayed exactly as published",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    check("   and restart refuses it",
+          restart_refusal(campaign, [job]) == "BRANCH_A_MEASUREMENT_INVALID",
+          str(restart_refusal(campaign, [job])))
+    campaign.close()
+
+    # --- §2 B / §21 / §22: the relaxation relation ---------------------------
+    # equal stiffness, unequal relaxation times
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta0_circular")   # k_1 == k_2
+    campaign.run(job, terminal=False)
+    evidence = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    ks = [float.fromhex(v) for v in evidence["k_modes_measured"]]
+    check("theta0_circular records EQUAL measured stiffnesses", ks[0] == ks[1],
+          str(ks))
+    forge_evidence(campaign, job, lambda e: e.__setitem__(
+        "tau_modes", [e["tau_modes"][0],
+                      canonical_float(float.fromhex(e["tau_modes"][0]) * 0.5)]))
+    refuses_with_code(
+        "equal stiffnesses, UNEQUAL relaxation times -- one gamma cannot do that",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    campaign.close()
+
+    # unequal stiffness, order preserved, products broken. This is the case a
+    # pairing-order check alone misses, which is why it is tested separately.
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")    # k_1 != k_2
+    campaign.run(job, terminal=False)
+    evidence = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    ks = [float.fromhex(v) for v in evidence["k_modes_measured"]]
+    taus = [float.fromhex(v) for v in evidence["tau_modes"]]
+    check("theta2_ellipse records UNEQUAL measured stiffnesses", ks[0] != ks[1],
+          str(ks))
+    shrunk = [canonical_float(taus[0] * 0.8), evidence["tau_modes"][1]]
+    check("the forged sequence is still NON-INCREASING, so the ordering rule "
+          "alone would accept it",
+          float.fromhex(shrunk[0]) >= float.fromhex(shrunk[1]))
+    forge_evidence(campaign, job, lambda e: e.__setitem__("tau_modes", shrunk))
+    refuses_with_code(
+        "unequal stiffnesses, tau*k products broken while the order is preserved",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    check("   and restart refuses it",
+          restart_refusal(campaign, [job]) == "BRANCH_A_MEASUREMENT_INVALID",
+          str(restart_refusal(campaign, [job])))
+    campaign.close()
+
+    # a SHUFFLED pairing, same multiset
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, lambda e: e.__setitem__(
+        "tau_modes", list(reversed(e["tau_modes"]))))
+    refuses_with_code("the relaxation times re-paired with the wrong stiffnesses",
+                      "BRANCH_A_MEASUREMENT_INVALID", verified_publication,
+                      campaign.out, job, campaign.binding)
+    campaign.close()
+
+    # --- §23: the POSITIVE relaxation control, at an arbitrary fixture gamma --
+    check("one shared gamma over UNEQUAL stiffnesses is feasible",
+          single_gamma_feasible((6.0e-5, 1.5e-4),
+                                (1.6776104770169493e-08 / 6.0e-5,
+                                 1.6776104770169493e-08 / 1.5e-4)))
+    # Exact PRODUCT equality would have been the wrong test. Measured over real
+    # production fixtures rather than asserted: for unequal stiffnesses the
+    # products tau_r * k_r are not bit-identical, so a product-equality check
+    # rejects genuine measurements while the interval test accepts them.
+    product_mismatches = 0
+    for _label, k_modes, rot_deg, temperature, scale, gamma in NON_NOMINAL_MEASUREMENTS:
+        taus = tuple(gamma / k for k in k_modes)
+        paired = tuple(t for _, t in sorted(zip(k_modes, taus)))
+        ascending = sorted(k_modes)
+        products = {t * k for t, k in zip(paired, ascending)}
+        if len(products) > 1:
+            product_mismatches += 1
+        check(f"one shared gamma is feasible for {_label}",
+              single_gamma_feasible(ascending, paired))
+    check("and at least one genuine fixture has products that are NOT "
+          "bit-identical, which is why exact product equality is the wrong test",
+          product_mismatches >= 1, f"{product_mismatches} of "
+          f"{len(NON_NOMINAL_MEASUREMENTS)}")
+
+    # --- §2 C / §2 D / §8 / §9: measured-value domains ----------------------
+    for field, label, value, expected in (
+            ("T_measured", "= -1", canonical_float(-1.0),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("T_measured", "= 0", canonical_float(0.0),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("T_measured", "= NaN", float("nan").hex(),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("T_measured", "= +inf", float("inf").hex(),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("T_measured", "= -inf", float("-inf").hex(),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("scale_factor", "= -1", canonical_float(-1.0),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("scale_factor", "= 0", canonical_float(0.0),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("scale_factor", "= NaN", float("nan").hex(),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("scale_factor", "= +inf", float("inf").hex(),
+             "BRANCH_A_MEASUREMENT_INVALID"),
+            ("rot_deg_measured", "= NaN", float("nan").hex(),
+             "BRANCH_A_MEASUREMENT_INVALID")):
+        campaign = Campaign()
+        job = campaign.job(C2)
+        campaign.run(job, terminal=False)
+        forge_evidence(campaign, job, lambda e, f=field, v=value: e.__setitem__(f, v))
+        refuses_with_code(f"{field} {label}", expected, verified_publication,
+                          campaign.out, job, campaign.binding)
+        check(f"   and restart refuses {field} {label}",
+              restart_refusal(campaign, [job]) is not None,
+              str(restart_refusal(campaign, [job])))
+        campaign.close()
+
+    # --- §4 / §5: the production constructor's own domain rules, on read ------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, lambda e: e.__setitem__(
+        "H_A", [[e["H_A"][0][0], canonical_float(7.0)],
+                [e["H_A"][1][0], e["H_A"][1][1]]]))
+    refuses_with_code("an asymmetric published H_A", "BRANCH_A_MEASUREMENT_INVALID",
+                      verified_publication, campaign.out, job, campaign.binding)
+    campaign.close()
+
+    # the status is DERIVED from the eigenvalues, not declared
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job,
+                   lambda e: e.__setitem__("branch_a_status", "BRANCH_A_INVALID"))
+    refuses_with_code("a declared status the primitives do not yield",
+                      "BRANCH_A_MEASUREMENT_INVALID", verified_publication,
+                      campaign.out, job, campaign.binding)
+    campaign.close()
+
+    # --- §39: every DERIVED field, changed alone with primitives fixed -------
+    tested = unexpected = 0
+    for row in BRANCH_A_FIELD_AUTHORITY:
+        if row.authority_class != AUTHORITY_DERIVED:
+            continue
+        campaign = Campaign()
+        job = campaign.job(C2, field_id="theta2_ellipse")
+        campaign.run(job, terminal=False)
+        evidence = committed_publication(campaign.out, job.coordinates)[
+            "branch_a_evidence"]
+        if row.field == "H_A":
+            forged = [[canonical_float(float.fromhex(v) * 1.5) for v in r]
+                      for r in evidence["H_A"]]
+        elif row.field == "tau_modes":
+            forged = [canonical_float(float.fromhex(evidence["tau_modes"][0]) * 0.8),
+                      evidence["tau_modes"][1]]
+        elif row.field == "branch_a_status":
+            forged = "BRANCH_A_INVALID"
+        elif row.field == "n_samples":
+            forged = int(evidence["n_samples"]) + 1
+        else:                                     # a newly DERIVED field
+            forged = None
+        tested += 1
+        forge_evidence(campaign, job,
+                       lambda e, f=row.field, v=forged: e.__setitem__(f, v))
+        got = refusal_code(verified_publication, campaign.out, job,
+                           campaign.binding)
+        if got is None:
+            unexpected += 1
+        check(f"DERIVED {row.field} changed alone, primitives fixed -> refuses",
+              got is not None, f"got {got!r}")
+        campaign.close()
+    check(f"derived-field audit: {tested} field(s) tested, {unexpected} "
+          f"unexpected pass(es)", unexpected == 0 and tested == len(derived),
+          f"{tested}/{unexpected}")
+
+    # --- §12 / §15 / §38: POSITIVE controls, several valid realisations -------
+    for label, k_modes, rot_deg, temperature, scale, gamma in NON_NOMINAL_MEASUREMENTS:
+        campaign = Campaign()
+        job = campaign.job(C2, field_id="theta2_ellipse")
+        campaign.run(job, terminal=False)
+        forge_evidence(campaign, job, valid_measurement(
+            job, k_modes, rot_deg, temperature, scale, gamma))
+        check(f"NON-NOMINAL valid measurement accepted: {label}",
+              refusal_code(verified_publication, campaign.out, job,
+                           campaign.binding) is None,
+              str(refusal_code(verified_publication, campaign.out, job,
+                               campaign.binding)))
+        campaign.close()
+    check("none of those measurements is the nominal contract state",
+          all(temperature != 298.0 or scale != 1.0
+              for _l, _k, _r, temperature, scale, _g in NON_NOMINAL_MEASUREMENTS))
+
+    # every contract field's real production publication still verifies
+    campaign = Campaign()
+    for field_id in FIELDS:
+        job = campaign.job(C2, field_id=field_id)
+        _execution, record, _digest = campaign.run(job)
+        check(f"{field_id}: the production publication verifies",
+              refusal_code(verified_publication, campaign.out, job,
+                           campaign.binding) is None)
+        check(f"{field_id}: terminal validation ACCEPTS",
+              campaign.validate(job, record) is None,
+              str(campaign.validate(job, record)))
+    campaign.close()
+
+    # --- §31: previously cleared external-authority checks still refuse ------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    for label, field, value, expected in (
+            ("embedded analysis identity", "analysis_identity", "a" * 64,
+             "BRANCH_A_PROVENANCE_MISMATCH"),
+            ("the Branch-A seed", "branch_a_seed", 1234567890123456789,
+             "BRANCH_A_PROVENANCE_MISMATCH"),
+            ("dt", "dt", canonical_float(0.00024),
+             "BRANCH_A_PROVENANCE_MISMATCH"),
+            ("the calibration route", "calibration_route",
+             "equipartition_k_equals_kBT_over_sigma_squared",
+             "BRANCH_A_PROVENANCE_MISMATCH")):
+        campaign2 = Campaign()
+        j = campaign2.job(C2)
+        campaign2.run(j, terminal=False)
+        forge_evidence(campaign2, j, lambda e, f=field, v=value: e.__setitem__(f, v))
+        refuses_with_code(f"{label} still refuses (previously cleared)", expected,
+                          verified_publication, campaign2.out, j, campaign2.binding)
+        campaign2.close()
+    campaign.close()
+
+
 # ================================ A7. no science moved
 def test_science_unchanged() -> None:
     """A provenance repair changes no scientific quantity."""
@@ -1774,6 +2106,8 @@ GROUPS = (
      test_embedded_identities_bound_to_package),
     ("E1  every embedded field verified against its authority",
      test_embedded_field_authority),
+    ("F1  the record as a whole: domain and joint invariants",
+     test_branch_a_measurement_invariants),
     ("A7  no science moved", test_science_unchanged),
 )
 

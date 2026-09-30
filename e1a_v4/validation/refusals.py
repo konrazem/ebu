@@ -277,6 +277,25 @@ class CalibrationArtifactBindingInvalid(CodedRefusal):
     code = "CALIBRATION_ARTIFACT_BINDING_INVALID"
 
 
+class BranchAMeasurementInvalid(BranchAProvenanceMismatch):
+    """A persisted Branch-A record the production constructor could never produce.
+
+    Every field can be individually well-formed and externally authorised, the
+    record can be correctly re-digested and durably committed, and the
+    COMBINATION can still be impossible: an H_A that does not follow from the
+    recorded stiffnesses, orientation, temperature and scale; relaxation times no
+    single drag coefficient could yield; a negative temperature; a negative scale
+    factor.
+
+    A digest authenticates the bytes. It does not prove the bytes form a valid
+    measurement. Deliberately a subclass of `BranchAProvenanceMismatch`, so every
+    existing handler still catches it while the diagnosis stays distinguishable:
+    "wrong authority value" and "impossible measurement" are different faults.
+    """
+
+    code = "BRANCH_A_MEASUREMENT_INVALID"
+
+
 class CalibrationLockMissing(CalibrationArtifactBindingInvalid):
     """A calibration-requiring job has no committed lock in the canonical store."""
 
@@ -563,6 +582,7 @@ ALL_REFUSAL_CLASSES = (
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
     ScaleControlInvalid, TerminalProvenanceMismatch,
+    BranchAMeasurementInvalid,
     CalibrationArtifactBindingInvalid, CalibrationLockMissing,
     CalibrationLockJobMismatch, CalibrationLockFieldMismatch,
     CalibrationLockUnplanned, CalibrationLockWithoutPublication,
