@@ -293,7 +293,8 @@ CASE_SPEC = {
     "authority": (BOTH, "the committed authority the case traces to"),
     "calibration_artifact_basis": (BOTH, "the arithmetic behind the artifact count"),
     "calibration_not_required_reason": (BOTH, "why C7/C8 need no calibration"),
-    "c3_semantics": (BOTH, "C3's release-versus-diagnostic resolution"),
+    "c3_semantics": (BOTH, "C3's release-versus-diagnostic resolution and its resolved PER-FIELD size structure"),
+    "c4_semantics": (BOTH, "C4's resolved PER-FIELD size structure"),
     "calibration_scope_rationale": (JSON_ONLY, "rationale prose for the scope, which is "
                                                "itself BOTH"),
     "allowed_seed_families_rationale": (JSON_ONLY, "rationale prose for the grants, which "
@@ -546,7 +547,12 @@ CASE_ROW_LABELS = (
     ("replicate count", "replicate_count"),
 )
 
-C3_SEMANTICS_LABELS = (
+#: Per-case keys carrying a resolved-semantics block. Each is rendered as its own
+#: visible table and parsed back, so an unlabelled member below cannot survive: the
+#: recovered dict would differ from the JSON and the comparison refuses.
+SEMANTICS_CASE_KEYS = ("c3_semantics", "c4_semantics")
+
+SEMANTICS_LABELS = (
     ("status", "status"),
     ("primary release endpoint", "primary_release_endpoint"),
     ("release criterion", "release_criterion"),
@@ -555,6 +561,12 @@ C3_SEMANTICS_LABELS = (
     ("joint P1 result changes the C3 release verdict",
      "joint_p1_result_changes_C3_release_verdict"),
     ("why calibration is retained", "why_calibration_is_retained"),
+    ("field structure", "field_structure"),
+    ("within-replicate field reduction", "field_reduction"),
+    ("pooling", "pooling"),
+    ("field structure status", "field_structure_status"),
+    ("field structure rule", "field_structure_rule"),
+    ("case-level rule", "case_level_rule"),
     ("what is forbidden", "what_is_forbidden"),
 )
 
@@ -610,15 +622,17 @@ def render_cases_region(plan: dict[str, Any]) -> str:
         out.append("")
         out.append(f"**Pass / fail criterion.** {case['formal_pass_fail_criterion']}")
         out.append("")
-        if "c3_semantics" in case:
-            out.append(f"#### `{cid}` semantics — resolved prospectively")
-            out.append("")
-            out.append("| | |")
-            out.append("|---|---|")
-            for label, key in C3_SEMANTICS_LABELS:
-                if key in case["c3_semantics"]:
-                    out.append(f"| {label} | {_render_value(case['c3_semantics'][key])} |")
-            out.append("")
+        for semantics_key in SEMANTICS_CASE_KEYS:
+            if semantics_key in case:
+                out.append(f"#### `{cid}` semantics — resolved prospectively")
+                out.append("")
+                out.append("| | |")
+                out.append("|---|---|")
+                for label, key in SEMANTICS_LABELS:
+                    if key in case[semantics_key]:
+                        out.append(
+                            f"| {label} | {_render_value(case[semantics_key][key])} |")
+                out.append("")
     return "\n".join(out).rstrip() + "\n"
 
 
@@ -673,17 +687,20 @@ def parse_cases_region(text: str, plan: dict[str, Any]) -> dict[str, Any]:
                 view[f"cases.{cid}.subconditions.{sid}.{key}"] = value
             view[f"cases.{cid}.subconditions.{sid}.subcondition_id"] = sid
         view[f"cases.{cid}.subconditions.order"] = sub_order
-        if "c3_semantics" in case and "#### " in block:
-            sem = block.split("#### ", 1)[1]
-            rendered = {}
-            for label, key in C3_SEMANTICS_LABELS:
-                found = re.findall(r"^\| " + re.escape(label) + r" \| (.*?) \|$", sem, re.M)
-                if key in case["c3_semantics"]:
-                    if len(found) != 1:
-                        raise PlanCaseMismatch(
-                            f"case {cid!r} semantics must render exactly one {label!r} row")
-                    rendered[key] = _parse_value(found[0], case["c3_semantics"][key])
-            view[f"cases.{cid}.c3_semantics"] = rendered
+        for semantics_key in SEMANTICS_CASE_KEYS:
+            if semantics_key in case and "#### " in block:
+                sem = block.split("#### ", 1)[1]
+                rendered = {}
+                for label, key in SEMANTICS_LABELS:
+                    found = re.findall(r"^\| " + re.escape(label) + r" \| (.*?) \|$",
+                                       sem, re.M)
+                    if key in case[semantics_key]:
+                        if len(found) != 1:
+                            raise PlanCaseMismatch(
+                                f"case {cid!r} semantics must render exactly one "
+                                f"{label!r} row")
+                        rendered[key] = _parse_value(found[0], case[semantics_key][key])
+                view[f"cases.{cid}.{semantics_key}"] = rendered
     view["cases.order"] = order
     return view
 

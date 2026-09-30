@@ -707,10 +707,14 @@ def test_frozen_authority_unchanged() -> None:
              "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b"),
             ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
              "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495"),
+            # Plan 1.10.0 -> 1.11.0: the PROSPECTIVE C3/C4 per-field amendment,
+            # authority_gaps G4. The frozen sources ABOVE and the seed map BELOW are
+            # deliberately unmoved by it -- the amendment resolves field structure in
+            # the validation package and changes no adopted decision rule.
             ("JSON plan", PLAN_JSON,
-             "dcb3507585791c851e616c81a113fe89d61d2e830a4694f49733d1d04c5b8f5a"),
+             "02d2117ac9c7f18ccb005b1b774f54e78ee23847ecfce4382084e74a36cfbc95"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "3f4715b465da295e21ad99a86390585c9eb7deac44a7810114a88f40aa4bf940"),
+             "af5d7e9a5ddcc7e1f3714916f10fdcc9cb6eafb539a67e35e361ef2d69b839c2"),
             ("seed map", SEED_MAP_JSON,
              "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
         check(f"the {label} is BYTE-unchanged",

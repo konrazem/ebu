@@ -250,6 +250,20 @@ JOINT_GATE_R_REASON = (
     "P1 is the two-block union declared in endpoints.P1_geometry.procedure; this case "
     "demonstrates one block of that same joint gate at the same declared geometries, so "
     "it inherits the frozen R of the joint-gate size requirement")
+#: Cases whose resolved field structure is carried in a per-case semantics block
+#: as well as in the assurance row. Both are authority; binding them is what stops
+#: a coherent edit to one of them alone from changing the measured size.
+FIELD_STRUCTURE_CASES = {
+    "C3_g5_block": "c3_semantics",
+    "C4_surrogate_validity": "c4_semantics",
+}
+
+FIELD_REDUCTION_REASON = (
+    "the elementary size event is PER FIELD under the prospective amendment recorded as "
+    "authority_gaps G4: each declared field keeps its own R-replicate rejection sequence, "
+    "so there is nothing to pool and no within-replicate field reduction exists. The case "
+    "contributes one required condition per field to the conjunctive final classification, "
+    "exactly as C2 does")
 PACKAGE_R_REASON = (
     "the frozen authority states WHAT must be validated but no replicate count; this "
     "count was frozen with the adopted package at 475633c, has never changed, and is "
@@ -319,7 +333,7 @@ def case_release_specification(contract: dict[str, Any], root: str) -> tuple[Cas
                        "'at every declared geometry' requires a per-field figure"),
         ),
         CaseRelease(
-            "C3_g5_block", 2, "campaign", "G5_BLOCK_SIZE",
+            "C3_g5_block", 2, "per_field", "G5_BLOCK_SIZE",
             replicates=_c(req2.replicates, DERIVED, CONTRACT, r2, JOINT_GATE_R_REASON),
             method=_c(req2.method, DERIVED, CONTRACT, r2, JOINT_GATE_R_REASON),
             sided=_c(req2.sided, DERIVED, CONTRACT, r2, JOINT_GATE_R_REASON),
@@ -329,11 +343,11 @@ def case_release_specification(contract: dict[str, Any], root: str) -> tuple[Cas
                           "an inflation test accepts while the bound stays within alpha"),
             target=_c(p1["alpha_2"], EXACT, CONTRACT, "endpoints.P1_geometry.alpha_2",
                       "Block-2's nominal allocation in the two-block union rule"),
-            pooling=_c("NOT_APPLICABLE", NOT_APPLICABLE, CONTRACT, r2,
-                       "C3 reports one campaign-level G5 rejection count"),
+            pooling=_c(no_pool, CASE_SPECIFIC, PACKAGE, "authority_gaps.G4",
+                       FIELD_REDUCTION_REASON),
         ),
         CaseRelease(
-            "C4_surrogate_validity", 3, "campaign", "BLOCK1_ACHIEVED_SIZE",
+            "C4_surrogate_validity", 3, "per_field", "BLOCK1_ACHIEVED_SIZE",
             replicates=_c(2000, CASE_SPECIFIC, PACKAGE,
                           "synthetic_validation_requirements[4]", PACKAGE_R_REASON),
             method=_c(req2.method, DERIVED, CONTRACT, r2, CP_LEVEL_REASON),
@@ -344,8 +358,8 @@ def case_release_specification(contract: dict[str, Any], root: str) -> tuple[Cas
                           "an inflation test accepts while the bound stays within alpha"),
             target=_c(p1["alpha_1"], EXACT, CONTRACT, "endpoints.P1_geometry.alpha_1",
                       "Block-1's nominal allocation, which the surrogate must not inflate"),
-            pooling=_c("NOT_APPLICABLE", NOT_APPLICABLE, CONTRACT, r2,
-                       "C4 reports one campaign-level Block-1 rejection count"),
+            pooling=_c(no_pool, CASE_SPECIFIC, PACKAGE, "authority_gaps.G4",
+                       FIELD_REDUCTION_REASON),
         ),
         CaseRelease(
             "C5_plug_in_branch_a", 4, "per_cell", "P1_REJECTION_RATE_PER_CELL",
@@ -695,6 +709,33 @@ def release_binding_specification(contract: dict[str, Any], plan: dict[str, Any]
             f"{ap}.unit", EXACT,
             "per-field / per-alternative / per-cell / per-rho / joint semantics",
             spec.unit, row.get("unit"), ContractReleaseEndpointMismatch)
+        # The resolved field structure is stated TWICE -- in the assurance row and
+        # in the case's own semantics block -- because both are read by humans as
+        # authority. Bind them to the same specification so a coherent edit to
+        # either one alone refuses instead of quietly changing the measured size.
+        semantics_key = FIELD_STRUCTURE_CASES.get(spec.case_id)
+        if semantics_key is not None:
+            semantics = case.get(semantics_key) or {}
+            sp = f"cases[{index}].{semantics_key}"
+            add("field structure", spec.case_id, PACKAGE, "case release specification",
+                f"{sp}.field_structure", EXACT,
+                "the elementary size event's scope, which must agree with the "
+                "assurance unit that restates it",
+                "PER_FIELD" if spec.unit == "per_field" else spec.unit.upper(),
+                semantics.get("field_structure"), ContractReleaseEndpointMismatch)
+            add("within-replicate field reduction", spec.case_id, PACKAGE,
+                "case release specification", f"{sp}.field_reduction", EXACT,
+                "a PER-FIELD elementary event leaves NO within-replicate reduction; "
+                "any other value names a different statistical object with a "
+                "different null rate",
+                "NONE", semantics.get("field_reduction"),
+                ContractReleaseEndpointMismatch)
+            add("semantics pooling", spec.case_id, PACKAGE,
+                "case release specification", f"{sp}.pooling", EXACT,
+                "the semantics block restates the pooling rule and may not disagree "
+                "with the assurance row",
+                spec.pooling[0], semantics.get("pooling"),
+                ContractReleaseTargetMismatch)
 
         for name, value, plan_key, refusal in (
                 ("replicate count R", spec.replicates, "replicates",
@@ -858,6 +899,20 @@ def release_binding_specification(contract: dict[str, Any], plan: dict[str, Any]
         "refusal counts AND reasons are reported",
         plan["complete_pass_denominator"].get("reporting"),
         ContractMandatoryDiagnosticMissing)
+
+    # A release rule may rest on a prospective disposition only while that
+    # disposition is actually recorded and closed. Deleting or reopening it must
+    # not leave the rule it justifies standing unsupported.
+    gaps = {gap["id"]: gap for gap in plan.get("authority_gaps", [])}
+    for cited in sorted({str(s.pooling[3]) for s in specification
+                         if str(s.pooling[3]).startswith("authority_gaps.")}):
+        gid = cited.split(".", 1)[1]
+        add("cited prospective disposition", None, PACKAGE, cited,
+            f"authority_gaps.{gid}.status", EXACT,
+            "a release rule citing a prospective disposition requires that "
+            "disposition to be recorded and CLOSED PROSPECTIVELY",
+            "CLOSED PROSPECTIVELY", (gaps.get(gid) or {}).get("status"),
+            ContractReleaseBindingUnclassified)
 
     # --------------------------------------------------------- IMPLIED_STRONGER
     req2 = parse_requirement(_require_frozen_text(contract, 2),

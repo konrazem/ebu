@@ -931,8 +931,155 @@ def test_execution_boundary_unchanged() -> None:
           str(SentinelRNG.CALLS))
 
 
+
+def _case(plan, case_id):
+    return next(c for c in plan["cases"] if c["case_id"] == case_id)
+
+
+def _row(plan, case_id):
+    return next(r for r in plan["assurance"] if r["case_id"] == case_id)
+
+
+def test_c3_c4_per_field_authority() -> None:
+    """The PROSPECTIVE C3/C4 per-field amendment, authority_gaps G4.
+
+    Every mutation below is COHERENT -- the Markdown is regenerated from the
+    mutated JSON, so nothing is caught merely by a rendering mismatch. Each one
+    is a scientifically different rule than the amended authority, and each must
+    refuse before any RNG exists.
+    """
+    plan = load_plan(ROOT)
+    # --- the amendment is present and says one thing only -------------------
+    for case_id, semantics_key, endpoint in (
+            ("C3_g5_block", "c3_semantics", "G5_BLOCK_SIZE"),
+            ("C4_surrogate_validity", "c4_semantics", "BLOCK1_ACHIEVED_SIZE")):
+        case = _case(plan, case_id)
+        row = _row(plan, case_id)
+        semantics = case[semantics_key]
+        check(f"{case_id} declares the elementary event PER FIELD",
+              semantics["field_structure"] == "PER_FIELD", str(semantics["field_structure"]))
+        check(f"{case_id} declares NO within-replicate field reduction",
+              semantics["field_reduction"] == "NONE")
+        check(f"{case_id} forbids pooling in the semantics block",
+              semantics["pooling"] == "FORBIDDEN")
+        check(f"{case_id} assurance unit is per_field", row["unit"] == "per_field",
+              str(row["unit"]))
+        check(f"{case_id} assurance pooling is FORBIDDEN",
+              row["pooling"] == "FORBIDDEN", str(row["pooling"]))
+        check(f"{case_id} still declares all four fields",
+              case["fields_affected"] == ["theta0_circular", "theta1_power",
+                                          "theta2_ellipse", "theta3_temperature"],
+              str(case["fields_affected"]))
+        check(f"{case_id} criterion states PER FIELD and never pooled",
+              "PER FIELD" in case["formal_pass_fail_criterion"]
+              and "never pooled" in case["formal_pass_fail_criterion"])
+        check(f"{case_id} release endpoint is unchanged at {endpoint}",
+              case["primary_release_endpoint"] == endpoint)
+        check(f"{case_id} derived boundary row records per_field",
+              plan["size_validation_semantics"]["derived_boundaries"][
+                  case_id[:2]]["per_field"] is True)
+        check(f"{case_id} derived boundary row records no replicate reduction",
+              plan["size_validation_semantics"]["derived_boundaries"][
+                  case_id[:2]]["replicate_reduction"] == "NONE")
+
+    # --- R, alpha and the integer boundaries are UNCHANGED by the amendment --
+    for cid, replicates, alpha, boundary in (("C3", 400, 0.001, 2),
+                                             ("C4", 2000, 0.004, 13)):
+        row = plan["size_validation_semantics"]["derived_boundaries"][cid]
+        check(f"{cid} R, nominal alpha and boundary are unchanged",
+              (row["replicates"], row["nominal_alpha"], row["boundary"])
+              == (replicates, alpha, boundary), str(row))
+
+    # --- G4 is recorded as a PROSPECTIVE closure ----------------------------
+    gap = next(g for g in plan["authority_gaps"] if g["id"] == "G4")
+    check("G4 affects C3 and C4", gap["affects"] == "C3, C4")
+    check("G4 is CLOSED PROSPECTIVELY", gap["status"] == "CLOSED PROSPECTIVELY")
+    for phrase in ("PER FIELD", "no pooling of field counts",
+                   "must not simply be assumed", "C1-only"):
+        check(f"G4 records {phrase!r}", phrase in gap["resolution"])
+    check("G4 discloses the operating characteristic without making it a threshold",
+          "0.00788343125882217" in gap["resolution"]
+          and "0.033884449548367356" in gap["resolution"]
+          and "CONSERVATIVE VALIDATION FAILURE" in gap["resolution"])
+    check("G4 does NOT claim a dependence direction",
+          "positively associated" not in gap["resolution"]
+          and "not established" in gap["resolution"].lower())
+
+    # --- COHERENT BUT WRONG: every one must refuse --------------------------
+    def unit(case_id, value):
+        return lambda p: _row(p, case_id).__setitem__("unit", value)
+
+    def pooling(case_id, value):
+        return lambda p: _row(p, case_id).__setitem__("pooling", value)
+
+    def semantics(case_id, key, field, value):
+        return lambda p: _case(p, case_id)[key].__setitem__(field, value)
+
+    def fields(case_id, value):
+        return lambda p: _case(p, case_id).__setitem__("fields_affected", value)
+
+    reference_only = ["theta0_circular"]
+    three_only = ["theta0_circular", "theta1_power", "theta2_ellipse"]
+    for label, mutate in (
+            ("C3 unit per_field -> campaign", unit("C3_g5_block", "campaign")),
+            ("C3 pooling FORBIDDEN -> ALLOWED", pooling("C3_g5_block", "ALLOWED")),
+            ("C3 field_structure PER_FIELD -> ANY_FIELD",
+             semantics("C3_g5_block", "c3_semantics", "field_structure", "ANY_FIELD")),
+            ("C3 field_reduction NONE -> ANY_FIELD",
+             semantics("C3_g5_block", "c3_semantics", "field_reduction", "ANY_FIELD")),
+            ("C3 four fields -> reference field only",
+             fields("C3_g5_block", reference_only)),
+            ("C4 unit per_field -> campaign", unit("C4_surrogate_validity", "campaign")),
+            ("C4 pooling FORBIDDEN -> ALLOWED",
+             pooling("C4_surrogate_validity", "ALLOWED")),
+            ("C4 field_structure PER_FIELD -> ANY_FIELD",
+             semantics("C4_surrogate_validity", "c4_semantics", "field_structure",
+                       "ANY_FIELD")),
+            ("C4 field_reduction NONE -> EVERY_FIELD",
+             semantics("C4_surrogate_validity", "c4_semantics", "field_reduction",
+                       "EVERY_FIELD")),
+            ("C4 field list missing one field",
+             fields("C4_surrogate_validity", three_only)),
+            ("C4 four fields -> reference field only",
+             fields("C4_surrogate_validity", reference_only)),
+            ("G4 disposition deleted",
+             lambda p: p["authority_gaps"].pop()),
+            ("G4 status flipped to OPEN",
+             lambda p: p["authority_gaps"][-1].__setitem__("status", "OPEN")),
+    ):
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        mutate(mutant)
+        wj(tmp, PLAN_JSON, mutant)
+        try:
+            regenerate(tmp)
+        except Refusal:
+            pass          # a structurally invalid plan cannot even be re-rendered
+        got = refusal_code(preflight, tmp)
+        check(f"COHERENT BUT WRONG: {label} refuses", got is not None, f"got {got!r}")
+        shutil.rmtree(tmp)
+
+    # --- the C3 secondary diagnostic is untouched by the amendment ----------
+    c3 = _case(plan, "C3_g5_block")["c3_semantics"]
+    check("C3 primary release endpoint is still the G5 block",
+          c3["primary_release_endpoint"] == "G5_BLOCK_SIZE")
+    check("C3 Block-1 role is still the SECONDARY predeclared diagnostic",
+          c3["block1_role"] == "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC")
+    check("the joint P1 result still does NOT change the C3 release verdict",
+          c3["joint_p1_result_changes_C3_release_verdict"] is False)
+
+    # --- implementation is deliberately BEHIND authority --------------------
+    check("the driver still REFUSES to reduce C3/C4 across fields, which is now "
+          "authority-correct rather than a guess",
+          "ENDPOINT_EVENT_REDUCTION_UNDECLARED"
+          in open(os.path.join(ROOT, "e1a_v4/validation/refusals.py"),
+                  encoding="utf-8").read())
+    check("execution is still not authorised", plan["execution_authorised"] is False)
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
+    ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),

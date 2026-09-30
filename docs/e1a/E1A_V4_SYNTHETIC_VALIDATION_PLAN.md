@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.10.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.11.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -100,7 +100,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
 
 ```json
 {
-  "field_count": 655,
+  "field_count": 660,
   "fields": {
     "adopted_rules.P3_applies_to": "EVERY tested field",
     "adopted_rules.P4_classification": "DETERMINISTIC PHYSICAL/THEORETICAL CONSISTENCY CHECK",
@@ -156,7 +156,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "assurance.1.target": "alpha_geom = 0.005",
     "assurance.1.target_value": 0.005,
     "assurance.1.unit": "per_field",
-    "assurance.2.acceptance_rule": "no inflation detected: CP_lower <= 0.001, i.e. <= 2/400",
+    "assurance.2.acceptance_rule": "no inflation detected: CP_lower <= 0.001, i.e. <= 2/400, PER FIELD; every declared field is assessed and reported separately and counts are never pooled",
     "assurance.2.assurance_at_design_target": null,
     "assurance.2.bound": "Clopper-Pearson one-sided LOWER (inflation test)",
     "assurance.2.bound_direction": "LOWER",
@@ -167,14 +167,14 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "assurance.2.estimator": "rejection proportion",
     "assurance.2.integer_boundary": 2,
     "assurance.2.method": "Clopper-Pearson",
-    "assurance.2.pooling": "NOT_APPLICABLE",
-    "assurance.2.quantity": "block-2 (G5) rejection rate",
+    "assurance.2.pooling": "FORBIDDEN",
+    "assurance.2.quantity": "block-2 (G5) rejection rate, per field",
     "assurance.2.replicates": 400,
     "assurance.2.sided": "one-sided",
     "assurance.2.target": "alpha_2 = 0.001",
     "assurance.2.target_value": 0.001,
-    "assurance.2.unit": "campaign",
-    "assurance.3.acceptance_rule": "no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000; the operating-quantile discrepancy and the full two-sided interval are MANDATORY CONTRACT DIAGNOSTICS and are reported regardless",
+    "assurance.2.unit": "per_field",
+    "assurance.3.acceptance_rule": "no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000, PER FIELD; every declared field is assessed and reported separately and counts are never pooled. The operating-quantile discrepancy and the full two-sided interval are MANDATORY CONTRACT DIAGNOSTICS and are reported regardless",
     "assurance.3.assurance_at_design_target": null,
     "assurance.3.bound": "Clopper-Pearson one-sided LOWER (inflation test); the two-sided interval is a MANDATORY CONTRACT DIAGNOSTIC, not the release gate",
     "assurance.3.bound_direction": "LOWER",
@@ -185,13 +185,13 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "assurance.3.estimator": "rejection proportion",
     "assurance.3.integer_boundary": 13,
     "assurance.3.method": "Clopper-Pearson",
-    "assurance.3.pooling": "NOT_APPLICABLE",
-    "assurance.3.quantity": "Block-1 achieved size under the surrogate",
+    "assurance.3.pooling": "FORBIDDEN",
+    "assurance.3.quantity": "Block-1 achieved size under the surrogate, per field",
     "assurance.3.replicates": 2000,
     "assurance.3.sided": "one-sided",
     "assurance.3.target": "alpha_1 = 0.004",
     "assurance.3.target_value": 0.004,
-    "assurance.3.unit": "campaign",
+    "assurance.3.unit": "per_field",
     "assurance.4.acceptance_rule": "the one-sided 95% upper bound is REPORTED in every one of the 12 declared cells, R = 400 each; no cell may be dropped after inspection",
     "assurance.4.assurance_at_design_target": null,
     "assurance.4.bound": "Clopper-Pearson one-sided UPPER",
@@ -276,6 +276,10 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "authority_gaps.G3.gap": "sigma_psi was recorded in the contract as 'to be declared'",
     "authority_gaps.G3.resolution": "PRIMARY RELEASE SCENARIO sigma_psi = 0.5 degrees; the complete true-bridge >= 0.90 claim is asserted there. 0.0 and 0.2 degrees are secondary lower-uncertainty sensitivity cases; 1.0 degree is a stress/robustness case. All are reported, none is pooled into the primary result, and the stress case neither redefines the primary criterion nor is removed if it performs poorly.",
     "authority_gaps.G3.status": "CLOSED PROSPECTIVELY",
+    "authority_gaps.G4.affects": "C3, C4",
+    "authority_gaps.G4.gap": "C3 and C4 each declare four physical fields while the two-block P1 gate decides PER FIELD, so one replicate yields four Block-2 (C3) or four Block-1 (C4) decisions; no frozen document stated how those four field decisions produce the one event each case's replicate denominator counts. C2 carried 'at every declared geometry' from the contract and was explicitly per field; C3 and C4 carried no field-structure statement at all, and C3's records were mutually contradictory - its R was derived from the contract clause that says 'at every declared geometry' while its unit and pooling asserted one campaign-level count",
+    "authority_gaps.G4.resolution": "The elementary size event for BOTH C3 and C4 is PER FIELD. Each declared field keeps its own R-replicate Bernoulli sequence of actual rejection decisions - G5 / Block-2 for C3, Block-1 for C4 - and its own rejection count, rejection rate, Clopper-Pearson bound and size classification. There is no within-replicate any-field reduction, no every-field reduction, no reference-field-only reduction and no pooling of field counts. R, the nominal alphas, the confidence method and level and the integer boundaries are UNCHANGED and now apply per field: C3 R = 400 per field at alpha_2 = 0.001 with boundary 2; C4 R = 2000 per field at alpha_1 = 0.004 with boundary 13. Case-level semantics are DERIVED, not a new statistical event: each case contributes four required field-level conditions to the existing conjunctive final classification, exactly as C2 already does, so the case is clean iff all four fields are clean, with no compensation and with the failing field identity preserved. That conjunction is a CLASSIFICATION-level conjunction and must never be reimplemented as a replicate-wide 'any field rejects' event. OPERATING CHARACTERISTIC, disclosed and not a threshold: at the exact nominal per-field null the probability of a false size-inflation flag is 0.00788343125882217 for a C3 field and 0.033884449548367356 for a C4 field, so the dependence-free probability that all four fields are clean lies in [0.9684663, 0.9921166] for C3 and in [0.8644622, 0.9661156] for C4; the C4 union bound therefore admits a family-level false-failure probability of about 13.55%. That is a CONSERVATIVE VALIDATION FAILURE - a spurious block on release - and NOT a false scientific pass, and no size rule was altered to reduce it. DEPENDENCE: the frozen generating model intentionally shares one Branch-A common-mode draw across the fields of a replicate, so probabilistic independence of field-level gate outcomes must not simply be assumed; the direction and magnitude of the resulting dependence are NOT established by current authority or analysis, and the bounds above rely on no association assumption. The complete-pipeline target >= 0.90 remains C1-only and is NOT a C3 or C4 familywise target. Decided before any official campaign job, trajectory or outcome existed.",
+    "authority_gaps.G4.status": "CLOSED PROSPECTIVELY",
     "calibration.calibration_scope": "REPLICATE_CONDITIONAL",
     "cases.C1_true_bridge_complete.allowed_seed_families": [
       "calibration",
@@ -404,7 +408,13 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "cases.C3_g5_block.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
     "cases.C3_g5_block.c3_semantics": {
       "block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+      "case_level_rule": "the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created",
+      "field_reduction": "NONE",
+      "field_structure": "PER_FIELD",
+      "field_structure_rule": "four field-specific primary G5 / Block-2 size assessments, one per declared field, each with its own rejection count, rate, Clopper-Pearson bound and size classification",
+      "field_structure_status": "FIELD STRUCTURE RESOLVED PROSPECTIVELY at plan 1.11.0, before any random outcome exists; see authority_gaps G4",
       "joint_p1_result_changes_C3_release_verdict": false,
+      "pooling": "FORBIDDEN",
       "primary_release_endpoint": "G5_BLOCK_SIZE",
       "release_criterion": "UNCHANGED: R = 400, nominal alpha_2 = 0.001, CP_lower(G5 rejections, 400) > 0.001 detects inflation; 0-2 clean, 3+ STATISTICAL_SIZE_FAILURE",
       "requires_block1_calibration": true,
@@ -423,7 +433,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "theta3_temperature"
     ],
     "cases.C3_g5_block.fields_requiring_calibration": 4,
-    "cases.C3_g5_block.formal_pass_fail_criterion": "R = 400, nominal alpha_2 = 0.001. Inflation is detected iff CP_lower(G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE. 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.",
+    "cases.C3_g5_block.formal_pass_fail_criterion": "PER FIELD, never pooled, R = 400 per field, nominal alpha_2 = 0.001. Each declared field keeps its OWN R-replicate sequence of decisions: there is NO within-replicate reduction across fields, NO any-field event, NO every-field event, NO reference-field-only event and NO pooling of counts. Inflation is detected in a field iff CP_lower(that field's G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE for that field; 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED for that field, which means this experiment did not establish excess size at that field, NOT that nominal size is proved. The case contributes one required condition PER FIELD to the final conjunctive campaign classification and is clean only when all four are clean. That conjunction happens at CLASSIFICATION level; it must NEVER be reimplemented as a replicate-wide 'any field rejects' event, which is a different statistical object with a different null rate. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.",
     "cases.C3_g5_block.geometry_truth": "as declared per field",
     "cases.C3_g5_block.primary_release_endpoint": "G5_BLOCK_SIZE",
     "cases.C3_g5_block.replicate_count": 400,
@@ -469,6 +479,17 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "cases.C4_surrogate_validity.branch_a_uncertainty": "frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, sigma_T = 0.1 K",
     "cases.C4_surrogate_validity.branch_a_uncertainty_status": "STOCHASTIC_PER_REPLICATE",
     "cases.C4_surrogate_validity.branch_b_process": "declared correlated OU, exact transition, stationary initialisation x0 ~ N(x*, Sigma_theta)",
+    "cases.C4_surrogate_validity.c4_semantics": {
+      "case_level_rule": "the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created",
+      "field_reduction": "NONE",
+      "field_structure": "PER_FIELD",
+      "field_structure_rule": "four field-specific Block-1 size assessments, one per declared field, each with its own rejection count, rate, Clopper-Pearson bound and size classification",
+      "pooling": "FORBIDDEN",
+      "primary_release_endpoint": "BLOCK1_ACHIEVED_SIZE",
+      "release_criterion": "UNCHANGED, now stated per field: R = 2000 per field, nominal alpha_1 = 0.004, CP_lower(rejections, 2000) > 0.004 detects inflation; 0-13 clean, 14+ STATISTICAL_SIZE_FAILURE",
+      "status": "FIELD STRUCTURE RESOLVED PROSPECTIVELY at plan 1.11.0, before any random outcome exists; see authority_gaps G4",
+      "what_is_forbidden": "pooling the four fields' rejection counts, reducing the four field decisions of a replicate to one replicate-level event, and releasing on the reference field alone"
+    },
     "cases.C4_surrogate_validity.calibration_artifact_basis": "2000 replicates x 1 subconditions x 4 fields requiring calibration = 8,000",
     "cases.C4_surrogate_validity.calibration_artifact_count": 8000,
     "cases.C4_surrogate_validity.calibration_scope": "REPLICATE_CONDITIONAL",
@@ -480,7 +501,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "theta3_temperature"
     ],
     "cases.C4_surrogate_validity.fields_requiring_calibration": 4,
-    "cases.C4_surrogate_validity.formal_pass_fail_criterion": "R = 2000, nominal alpha_1 = 0.004. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation: detected iff CP_lower(rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. The binary diagnostic does not replace the discrepancy report.",
+    "cases.C4_surrogate_validity.formal_pass_fail_criterion": "PER FIELD, never pooled, R = 2000 per field, nominal alpha_1 = 0.004. Each declared field keeps its OWN R-replicate sequence of decisions: there is NO within-replicate reduction across fields, NO any-field event, NO every-field event, NO reference-field-only event and NO pooling of counts. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation PER FIELD: detected iff CP_lower(that field's rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE for that field; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED for that field. The case contributes one required condition PER FIELD to the final conjunctive campaign classification and is clean only when all four are clean. That conjunction happens at CLASSIFICATION level; it must NEVER be reimplemented as a replicate-wide 'any field rejects' event, which is a different statistical object with a different null rate. The binary diagnostic does not replace the discrepancy report.",
     "cases.C4_surrogate_validity.geometry_truth": "as declared per field",
     "cases.C4_surrogate_validity.primary_release_endpoint": "BLOCK1_ACHIEVED_SIZE",
     "cases.C4_surrogate_validity.replicate_count": 2000,
@@ -792,8 +813,8 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "final_campaign.requirements.0": "1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)",
     "final_campaign.requirements.1": "2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field",
     "final_campaign.requirements.10": "11. every MANDATORY CONTRACT DIAGNOSTIC declared in release_authority.mandatory_diagnostics is present in the campaign result and consistent with its own raw counts; an absent or inconsistent mandatory diagnostic is RESULT_SCHEMA_INVALID",
-    "final_campaign.requirements.2": "3. C3 produces no STATISTICAL_SIZE_FAILURE",
-    "final_campaign.requirements.3": "4. C4 produces no STATISTICAL_SIZE_FAILURE",
+    "final_campaign.requirements.2": "3. C3 produces no STATISTICAL_SIZE_FAILURE in any required field",
+    "final_campaign.requirements.3": "4. C4 produces no STATISTICAL_SIZE_FAILURE in any required field",
     "final_campaign.requirements.4": "5. C5 satisfies its already-frozen plug-in Branch-A criterion",
     "final_campaign.requirements.5": "6. C6 satisfies its already-frozen mode-resolution criterion",
     "final_campaign.requirements.6": "7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)",
@@ -913,7 +934,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.10.0",
+    "plan_version": "1.11.0",
     "release_authority.absent_diagnostic_is": "RESULT_SCHEMA_INVALID",
     "release_authority.authority_rule": "FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.",
     "release_authority.complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",
@@ -1160,7 +1181,7 @@ used to exist only in the JSON, so a reader could not see them drift.
 | `sigma_psi_0p5` | `{"feeds_primary_claim":true,"g3_role":"PRIMARY","sigma_psi_deg":0.5}` |
 | `sigma_psi_1p0` | `{"feeds_primary_claim":false,"g3_role":"STRESS","sigma_psi_deg":1.0}` |
 
-**Pass / fail criterion.** R = 400, nominal alpha_2 = 0.001. Inflation is detected iff CP_lower(G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE. 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.
+**Pass / fail criterion.** PER FIELD, never pooled, R = 400 per field, nominal alpha_2 = 0.001. Each declared field keeps its OWN R-replicate sequence of decisions: there is NO within-replicate reduction across fields, NO any-field event, NO every-field event, NO reference-field-only event and NO pooling of counts. Inflation is detected in a field iff CP_lower(that field's G5 rejections, 400) > 0.001, i.e. 3 or more -> STATISTICAL_SIZE_FAILURE for that field; 0-2 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED for that field, which means this experiment did not establish excess size at that field, NOT that nominal size is proved. The case contributes one required condition PER FIELD to the final conjunctive campaign classification and is clean only when all four are clean. That conjunction happens at CLASSIFICATION level; it must NEVER be reimplemented as a replicate-wide 'any field rejects' event, which is a different statistical object with a different null rate. Also report the measured sd(g2) against the leading-order 24 A4 / n prediction.
 
 #### `C3_g5_block` semantics — resolved prospectively
 
@@ -1173,6 +1194,12 @@ used to exist only in the JSON, so a reader could not see them drift.
 | Block-1 role | SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC |
 | joint P1 result changes the C3 release verdict | `false` |
 | why calibration is retained | the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input. |
+| field structure | PER_FIELD |
+| within-replicate field reduction | NONE |
+| pooling | FORBIDDEN |
+| field structure status | FIELD STRUCTURE RESOLVED PROSPECTIVELY at plan 1.11.0, before any random outcome exists; see authority_gaps G4 |
+| field structure rule | four field-specific primary G5 / Block-2 size assessments, one per declared field, each with its own rejection count, rate, Clopper-Pearson bound and size classification |
+| case-level rule | the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created |
 | what is forbidden | adding any new C3 release threshold based on Block 1 or on the joint P1 result. The release verdict depends only on the already-frozen Block-2 / G5 size criterion. |
 
 ### `C4_surrogate_validity` — primary
@@ -1211,7 +1238,21 @@ used to exist only in the JSON, so a reader could not see them drift.
 |---|---|
 | `primary` | `{}` |
 
-**Pass / fail criterion.** R = 2000, nominal alpha_1 = 0.004. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation: detected iff CP_lower(rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. The binary diagnostic does not replace the discrepancy report.
+**Pass / fail criterion.** PER FIELD, never pooled, R = 2000 per field, nominal alpha_1 = 0.004. Each declared field keeps its OWN R-replicate sequence of decisions: there is NO within-replicate reduction across fields, NO any-field event, NO every-field event, NO reference-field-only event and NO pooling of counts. RETAIN the full two-sided interval and the observed operating-quantile discrepancy. IN ADDITION, classify inflation PER FIELD: detected iff CP_lower(that field's rejections, 2000) > 0.004, i.e. 14 or more -> STATISTICAL_SIZE_FAILURE for that field; 0-13 -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED for that field. The case contributes one required condition PER FIELD to the final conjunctive campaign classification and is clean only when all four are clean. That conjunction happens at CLASSIFICATION level; it must NEVER be reimplemented as a replicate-wide 'any field rejects' event, which is a different statistical object with a different null rate. The binary diagnostic does not replace the discrepancy report.
+
+#### `C4_surrogate_validity` semantics — resolved prospectively
+
+| | |
+|---|---|
+| status | FIELD STRUCTURE RESOLVED PROSPECTIVELY at plan 1.11.0, before any random outcome exists; see authority_gaps G4 |
+| primary release endpoint | BLOCK1_ACHIEVED_SIZE |
+| release criterion | UNCHANGED, now stated per field: R = 2000 per field, nominal alpha_1 = 0.004, CP_lower(rejections, 2000) > 0.004 detects inflation; 0-13 clean, 14+ STATISTICAL_SIZE_FAILURE |
+| field structure | PER_FIELD |
+| within-replicate field reduction | NONE |
+| pooling | FORBIDDEN |
+| field structure rule | four field-specific Block-1 size assessments, one per declared field, each with its own rejection count, rate, Clopper-Pearson bound and size classification |
+| case-level rule | the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created |
+| what is forbidden | pooling the four fields' rejection counts, reducing the four field decisions of a replicate to one replicate-level event, and releasing on the reference field alone |
 
 ### `C5_plug_in_branch_a` — primary
 
@@ -1640,8 +1681,8 @@ The release criteria. **Generated** from the JSON plan and verified at every pre
 |---|---|---|---:|---|---|---:|---|
 | C1_true_bridge_complete | complete true-bridge pipeline success | >= 0.90 | `0.95` | complete-pass proportion over declared replicates | Clopper-Pearson one-sided LOWER | `300` | >= 279 / 300 complete passes |
 | C2_geometry_false_rejection | P1 false-rejection rate, per field | alpha_geom = 0.005 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.005, i.e. <= 5/400, per field |
-| C3_g5_block | block-2 (G5) rejection rate | alpha_2 = 0.001 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400 |
-| C4_surrogate_validity | Block-1 achieved size under the surrogate | alpha_1 = 0.004 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test); the two-sided interval is a MANDATORY CONTRACT DIAGNOSTIC, not the release gate | `2000` | no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000; the operating-quantile discrepancy and the full two-sided interval are MANDATORY CONTRACT DIAGNOSTICS and are reported regardless |
+| C3_g5_block | block-2 (G5) rejection rate, per field | alpha_2 = 0.001 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test) | `400` | no inflation detected: CP_lower <= 0.001, i.e. <= 2/400, PER FIELD; every declared field is assessed and reported separately and counts are never pooled |
+| C4_surrogate_validity | Block-1 achieved size under the surrogate, per field | alpha_1 = 0.004 | `0.95` | rejection proportion | Clopper-Pearson one-sided LOWER (inflation test); the two-sided interval is a MANDATORY CONTRACT DIAGNOSTIC, not the release gate | `2000` | no inflation detected: CP_lower <= 0.004, i.e. <= 13/2000, PER FIELD; every declared field is assessed and reported separately and counts are never pooled. The operating-quantile discrepancy and the full two-sided interval are MANDATORY CONTRACT DIAGNOSTICS and are reported regardless |
 | C5_plug_in_branch_a | P1 rejection rate, per declared plug-in cell | REPORT ONLY - the frozen authority states no threshold | `0.95` | rejection proportion | Clopper-Pearson one-sided UPPER | `400` | the one-sided 95% upper bound is REPORTED in every one of the 12 declared cells, R = 400 each; no cell may be dropped after inspection |
 | C6_mode_resolution_boundary | P1 rejection rate, per declared rho | <= 0.03 at each declared rho | `0.95` | rejection proportion | Clopper-Pearson one-sided UPPER | `400` | upper bound <= 0.03, i.e. <= 6/400, at each of the three declared rho; the merge/split decision rate is a MANDATORY CONTRACT DIAGNOSTIC |
 | C7_false_bridge | false-bridge acceptance, per alternative | <= 0.025 per alternative | `0.95` | acceptance proportion | Clopper-Pearson one-sided UPPER | `400` | upper bound <= 0.025, i.e. <= 4 / 400, evaluated per alternative independently |
@@ -1653,8 +1694,8 @@ Structured release binding — every field below is bound to frozen authority by
 |---|---|---|---|---|---|---|---:|---|---|
 | C1_true_bridge_complete | campaign | Clopper-Pearson | one-sided | LOWER | `0.9` | >= | `279` | smallest k with cp_lower(k, R) >= target | FORBIDDEN |
 | C2_geometry_false_rejection | per_field | Clopper-Pearson | one-sided | LOWER | `0.005` | <= | `5` | largest k with cp_lower(k, R) <= target | FORBIDDEN |
-| C3_g5_block | campaign | Clopper-Pearson | one-sided | LOWER | `0.001` | <= | `2` | largest k with cp_lower(k, R) <= target | NOT_APPLICABLE |
-| C4_surrogate_validity | campaign | Clopper-Pearson | one-sided | LOWER | `0.004` | <= | `13` | largest k with cp_lower(k, R) <= target | NOT_APPLICABLE |
+| C3_g5_block | per_field | Clopper-Pearson | one-sided | LOWER | `0.001` | <= | `2` | largest k with cp_lower(k, R) <= target | FORBIDDEN |
+| C4_surrogate_validity | per_field | Clopper-Pearson | one-sided | LOWER | `0.004` | <= | `13` | largest k with cp_lower(k, R) <= target | FORBIDDEN |
 | C5_plug_in_branch_a | per_cell | Clopper-Pearson | one-sided | UPPER | — | REPORT_ONLY | — | no frozen threshold: the requirement is to REPORT, not to gate | FORBIDDEN |
 | C6_mode_resolution_boundary | per_rho | Clopper-Pearson | one-sided | UPPER | `0.03` | <= | `6` | largest k with cp_upper(k, R) <= target | FORBIDDEN |
 | C7_false_bridge | per_alternative | Clopper-Pearson | one-sided | UPPER | `0.025` | <= | `4` | largest k with cp_upper(k, R) <= target | FORBIDDEN |
@@ -1925,6 +1966,12 @@ redesign the E1a bridge.
 
 **Resolution.** PRIMARY RELEASE SCENARIO sigma_psi = 0.5 degrees; the complete true-bridge >= 0.90 claim is asserted there. 0.0 and 0.2 degrees are secondary lower-uncertainty sensitivity cases; 1.0 degree is a stress/robustness case. All are reported, none is pooled into the primary result, and the stress case neither redefines the primary criterion nor is removed if it performs poorly.
 
+#### G4 — affects `C3, C4` — **CLOSED PROSPECTIVELY**
+
+**Gap.** C3 and C4 each declare four physical fields while the two-block P1 gate decides PER FIELD, so one replicate yields four Block-2 (C3) or four Block-1 (C4) decisions; no frozen document stated how those four field decisions produce the one event each case's replicate denominator counts. C2 carried 'at every declared geometry' from the contract and was explicitly per field; C3 and C4 carried no field-structure statement at all, and C3's records were mutually contradictory - its R was derived from the contract clause that says 'at every declared geometry' while its unit and pooling asserted one campaign-level count
+
+**Resolution.** The elementary size event for BOTH C3 and C4 is PER FIELD. Each declared field keeps its own R-replicate Bernoulli sequence of actual rejection decisions - G5 / Block-2 for C3, Block-1 for C4 - and its own rejection count, rejection rate, Clopper-Pearson bound and size classification. There is no within-replicate any-field reduction, no every-field reduction, no reference-field-only reduction and no pooling of field counts. R, the nominal alphas, the confidence method and level and the integer boundaries are UNCHANGED and now apply per field: C3 R = 400 per field at alpha_2 = 0.001 with boundary 2; C4 R = 2000 per field at alpha_1 = 0.004 with boundary 13. Case-level semantics are DERIVED, not a new statistical event: each case contributes four required field-level conditions to the existing conjunctive final classification, exactly as C2 already does, so the case is clean iff all four fields are clean, with no compensation and with the failing field identity preserved. That conjunction is a CLASSIFICATION-level conjunction and must never be reimplemented as a replicate-wide 'any field rejects' event. OPERATING CHARACTERISTIC, disclosed and not a threshold: at the exact nominal per-field null the probability of a false size-inflation flag is 0.00788343125882217 for a C3 field and 0.033884449548367356 for a C4 field, so the dependence-free probability that all four fields are clean lies in [0.9684663, 0.9921166] for C3 and in [0.8644622, 0.9661156] for C4; the C4 union bound therefore admits a family-level false-failure probability of about 13.55%. That is a CONSERVATIVE VALIDATION FAILURE - a spurious block on release - and NOT a false scientific pass, and no size rule was altered to reduce it. DEPENDENCE: the frozen generating model intentionally shares one Branch-A common-mode draw across the fields of a replicate, so probabilistic independence of field-level gate outcomes must not simply be assumed; the direction and magnitude of the resulting dependence are NOT established by current authority or analysis, and the bounds above rely on no association assumption. The complete-pipeline target >= 0.90 remains C1-only and is NOT a C3 or C4 familywise target. Decided before any official campaign job, trajectory or outcome existed.
+
 #### Final campaign classification
 
 **Verdict on success.** `VALIDATION_PASS`
@@ -1933,8 +1980,8 @@ redesign the E1a bridge.
 
 1. 1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)
 2. 2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field
-3. 3. C3 produces no STATISTICAL_SIZE_FAILURE
-4. 4. C4 produces no STATISTICAL_SIZE_FAILURE
+3. 3. C3 produces no STATISTICAL_SIZE_FAILURE in any required field
+4. 4. C4 produces no STATISTICAL_SIZE_FAILURE in any required field
 5. 5. C5 satisfies its already-frozen plug-in Branch-A criterion
 6. 6. C6 satisfies its already-frozen mode-resolution criterion
 7. 7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)
