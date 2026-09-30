@@ -53,20 +53,23 @@ from e1a_v4.validation.campaign_driver import (
     calibration_lock_basename, calibration_lock_directory,
     _compare_terminal_to_verified_lock, calibration_lock_basename,
     calibration_lock_directory, calibration_lock_envelope,
-    CampaignJob, canonical_plan, committed_calibration_lock, committed_publication,
-    inventory_calibration_locks,
+    EMBEDDED_EVIDENCE_CLASSIFICATION, EMBEDDED_PACKAGE_IDENTITY_FIELDS,
+    EMBEDDED_TO_OUTER_IDENTITY, CampaignJob, canonical_plan,
+    committed_calibration_lock, committed_publication,
+    embedded_identity_expectations, inventory_calibration_locks,
     inventory_job_records, is_sha256, job_execution, plan_campaign,
     publication_basename, publication_directory,
     publish_calibration_lock, publish_job_record, reconcile_calibration_locks,
-    recover_realisations, validate_job_record, verified_calibration_lock,
-    verified_publication,
+    realisation_from_record, recover_realisations, validate_job_record,
+    verified_calibration_lock, verified_publication,
     verify_restart,
 )
 from e1a_v4.validation.classification import GROSS_INFLATION_TOLERANCE
 from e1a_v4.validation.dispositions import cp_upper
 from e1a_v4.validation.plan import bind_execution
 from e1a_v4.validation.publication import (
-    commit_name, publish_transaction, read_published, sealed_digest,
+    canonical_digest, commit_name, publish_transaction, read_published,
+    sealed_digest,
 )
 from e1a_v4.validation.results import aggregate_skeleton
 from e1a_v4.validation.scope import CampaignCalibrationLedger
@@ -1141,6 +1144,255 @@ def test_restart_requires_the_canonical_plan() -> None:
     campaign.close()
 
 
+# ================ D1. embedded Branch-A identities bound to the package
+def forge_embedded(campaign, job, key, value):
+    """Change ONE identity INSIDE the Branch-A evidence, then consistently
+    recompute the evidence digest, the envelope digest and the commit marker.
+
+    The result is a durably committed, internally self-consistent publication.
+    Nothing local can tell it is wrong -- which is the whole point.
+    """
+    coordinates = job.coordinates
+    publication = json.loads(json.dumps(
+        committed_publication(campaign.out, coordinates)))
+    if value is _ABSENT:
+        publication["branch_a_evidence"].pop(key, None)
+    else:
+        publication["branch_a_evidence"][key] = value
+    publication["branch_a_evidence_sha256"] = canonical_digest(
+        publication["branch_a_evidence"])
+    publication["publication_digest"] = sealed_digest(publication,
+                                                      "publication_digest")
+    republish(publication_directory(campaign.out),
+              publication_basename(coordinates), publication,
+              "publication_digest", job.job_id, coordinates)
+    return publication
+
+
+#: A different valid-looking value for each package-bound embedded identity.
+FOREIGN_IDENTITY = {
+    "schema": "e1a_v4_branch_a_publication/999",
+    "contract_sha256": "b" * 64,
+    "plan_sha256": "c" * 64,
+    "analysis_identity": "a" * 64,
+}
+
+
+def test_embedded_identities_bound_to_package() -> None:
+    """AUDIT BLOCKER. The evidence carried its own copies of the package
+    identities and nobody compared them.
+
+    The constructor stamped `contract_sha256`, `plan_sha256` and
+    `analysis_identity` into the Branch-A evidence from the binding, and the
+    verifier only ever compared the envelope's OUTER `package_identities`. An
+    audit changed the embedded analysis identity and the embedded contract
+    identity, recomputed the evidence digest, the envelope digest and the commit
+    marker, and the shared publication verifier accepted the record -- on the
+    terminal path and on restart alike.
+
+    A field written from authority and never read back against it is the shape of
+    defect that keeps recurring here.
+    """
+    # --- §4 / §10: the machine-defined set, and a guard against it going stale
+    campaign = Campaign()
+    job = campaign.job(C2)
+    execution, record, digest = campaign.run(job)
+    emitted = set(execution._realisation.canonical())
+    check("every key the evidence emits is CLASSIFIED -- a new field cannot ship "
+          "unclassified",
+          sorted(emitted - set(EMBEDDED_EVIDENCE_CLASSIFICATION)) == [],
+          str(sorted(emitted - set(EMBEDDED_EVIDENCE_CLASSIFICATION))))
+    check("and the classification carries no stale key",
+          sorted(set(EMBEDDED_EVIDENCE_CLASSIFICATION) - emitted) == [],
+          str(sorted(set(EMBEDDED_EVIDENCE_CLASSIFICATION) - emitted)))
+    check("the package-bound subset is exactly the four authority identities",
+          EMBEDDED_PACKAGE_IDENTITY_FIELDS
+          == ("analysis_identity", "contract_sha256", "plan_sha256", "schema"),
+          str(EMBEDDED_PACKAGE_IDENTITY_FIELDS))
+
+    # --- §18: the CONSTRUCTOR's source and the VERIFIER's expectation agree ---
+    evidence = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    for key, label, expected in embedded_identity_expectations(campaign.binding):
+        check(f"constructor stamps embedded {key} from the binding, and the "
+              f"verifier expects that same value", evidence[key] == expected,
+              f"{evidence[key]!r} vs {expected!r}")
+    campaign.close()
+
+    # --- §10 / §13 / §14 / §15: the programmatic mutation audit --------------
+    tested = refused = unexpected = 0
+    for key in EMBEDDED_PACKAGE_IDENTITY_FIELDS:
+        campaign = Campaign()
+        job = campaign.job(C2)
+        _execution, record, _digest = campaign.run(job)
+        publication = forge_embedded(campaign, job, key, FOREIGN_IDENTITY[key])
+        # §9 / §21: the whole chain re-digested to agree with the forgery.
+        lock = json.loads(json.dumps(
+            committed_calibration_lock(campaign.out, job.coordinates)))
+        for linked in ("publication_digest", "branch_a_evidence_sha256",
+                       "calibration_condition_sha256"):
+            lock[linked] = publication[linked]
+        lock["lock_digest"] = sealed_digest(lock, "lock_digest")
+        republish(calibration_lock_directory(campaign.out),
+                  calibration_lock_basename(job.coordinates), lock, "lock_digest",
+                  job.job_id, job.coordinates)
+        forged = retied(record, publication, lock)
+        tested += 1
+        outcomes = {
+            "shared verifier": refusal_code(verified_publication, campaign.out,
+                                            job, campaign.binding),
+            "terminal validation": refusal_code(
+                validate_job_record, forged, campaign.binding.plan,
+                campaign.binding, job, campaign.out),
+            "restart": restart_refusal(campaign, [job]),
+        }
+        if all(v is not None for v in outcomes.values()):
+            refused += 1
+        else:
+            unexpected += 1
+        for path, got in outcomes.items():
+            check(f"embedded {key} mismatched, whole chain re-digested -> "
+                  f"{path} refuses", got is not None, f"got {got!r}")
+        campaign.close()
+    check(f"mutation audit: {tested} package-bound embedded identity field(s) "
+          f"tested, {refused} refused on every path, {unexpected} unexpected "
+          f"pass(es)", unexpected == 0 and tested == 4, f"{tested}/{refused}/{unexpected}")
+
+    # --- §13 / §14: the two the auditor named, pinned to a stable category ---
+    for label, key in (("analysis identity", "analysis_identity"),
+                       ("contract identity", "contract_sha256"),
+                       ("plan identity", "plan_sha256")):
+        campaign = Campaign()
+        job = campaign.job(C2)
+        campaign.run(job, terminal=False)
+        forge_embedded(campaign, job, key, FOREIGN_IDENTITY[key])
+        refuses_with_code(
+            f"embedded {label} != current, all digests recomputed, correctly "
+            "committed", "BRANCH_A_PROVENANCE_MISMATCH", verified_publication,
+            campaign.out, job, campaign.binding)
+        # The claimed set must be the recovered one, or an earlier
+        # unclaimed-publication check fires before the publication verifier.
+        refuses_with_code(f"    and restart refuses it",
+                          "BRANCH_A_PROVENANCE_MISMATCH", verify_restart,
+                          campaign.out, recovered(campaign), campaign.binding,
+                          [job])
+        campaign.close()
+
+    # --- §5: embedded and OUTER must not be two editable copies of one truth --
+    for embedded_key, outer_key in EMBEDDED_TO_OUTER_IDENTITY:
+        campaign = Campaign()
+        job = campaign.job(C2)
+        campaign.run(job, terminal=False)
+        coordinates = job.coordinates
+        publication = json.loads(json.dumps(
+            committed_publication(campaign.out, coordinates)))
+        # BOTH copies moved to the same foreign value: the record is now fully
+        # self-consistent AND disagrees with the binding.
+        foreign = "d" * 64
+        publication["branch_a_evidence"][embedded_key] = foreign
+        publication["package_identities"][outer_key] = foreign
+        publication["branch_a_evidence_sha256"] = canonical_digest(
+            publication["branch_a_evidence"])
+        publication["publication_digest"] = sealed_digest(publication,
+                                                          "publication_digest")
+        republish(publication_directory(campaign.out),
+                  publication_basename(coordinates), publication,
+                  "publication_digest", job.job_id, coordinates)
+        refuses_with_code(
+            f"embedded AND outer {embedded_key} both moved to one foreign value",
+            "BRANCH_A_PROVENANCE_MISMATCH", verified_publication, campaign.out,
+            job, campaign.binding)
+        campaign.close()
+
+    # --- §17: required embedded identities may not be absent or malformed -----
+    for key in EMBEDDED_PACKAGE_IDENTITY_FIELDS + ("generator_identity",):
+        for label, value in (("absent", _ABSENT), ("null", None),
+                             ("an empty string", ""), ("a non-string", 12345)):
+            campaign = Campaign()
+            job = campaign.job(C2)
+            campaign.run(job, terminal=False)
+            forge_embedded(campaign, job, key, value)
+            refuses_with_code(f"embedded {key} is {label}",
+                              "PUBLICATION_INCOMPLETE", verified_publication,
+                              campaign.out, job, campaign.binding)
+            campaign.close()
+
+    # --- §11: a RECORDED PROVENANCE field, classified and NOT pinned ----------
+    # `generator_identity` names the code that produced the measurement. Frozen
+    # authority declares no expected value for it: the plan's
+    # `generating_model.branch_a` describes the MODEL in prose, and the only
+    # `generator_identity` the plan declares anywhere belongs to CALIBRATION
+    # ("EBU-E1A-V4-BLOCK1-SURROGATE-CALIBRATOR-v1"), not to Branch-A evidence.
+    # Pinning it would invent a requirement and would forbid these very fixtures,
+    # which legitimately record that the official generator did NOT run.
+    plan_declared = json.loads(json.dumps(PLAN.get("calibration", {}))).get(
+        "generator_identity")
+    check("the plan declares a generator identity for CALIBRATION only",
+          plan_declared == "EBU-E1A-V4-BLOCK1-SURROGATE-CALIBRATOR-v1",
+          str(plan_declared))
+    check("Branch-A evidence has no plan-declared generator identity to pin to",
+          "generator_identity" not in PLAN["generating_model"]["branch_a"])
+    check("so it is classified RECORDED_PROVENANCE, not PACKAGE_IDENTITY",
+          EMBEDDED_EVIDENCE_CLASSIFICATION["generator_identity"]
+          == "RECORDED_PROVENANCE")
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    forge_embedded(campaign, job, "generator_identity", "ANOTHER-GENERATOR")
+    check("a DIFFERENT non-empty generator identity is therefore accepted, by "
+          "classification rather than by omission",
+          refusal_code(verified_publication, campaign.out, job,
+                       campaign.binding) is None)
+    campaign.close()
+
+    # --- §12 / §19: the positive control and the round trip -------------------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    execution, record, digest = campaign.run(job)
+    publish_job_record(campaign.out, record, campaign.binding)
+    check("a publication built by the production constructor VERIFIES",
+          refusal_code(verified_publication, campaign.out, job,
+                       campaign.binding) is None)
+    check("   terminal validation ACCEPTS it", campaign.validate(job, record)
+          is None, str(campaign.validate(job, record)))
+    check("   restart ACCEPTS it",
+          refusal_code(verify_restart, campaign.out, recovered(campaign),
+                       campaign.binding, [job]) is None)
+    reread = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    original = execution._realisation.canonical()
+    check("construct -> serialise -> commit -> read preserves every package "
+          "identity exactly",
+          all(reread[k] == original[k]
+              for k in EMBEDDED_PACKAGE_IDENTITY_FIELDS + ("generator_identity",)))
+    check("and the rebuilt realisation round-trips to the same evidence digest",
+          realisation_from_record(
+              committed_publication(campaign.out, job.coordinates)
+          ).evidence_sha256 == record["branch_a_evidence_sha256"])
+    campaign.close()
+
+    # --- §22: the CLEARED restart-plan finding is preserved, not reopened -----
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    known = recover_realisations(campaign.out, campaign.binding)
+    refuses_with_code("planned=None still refuses (previously cleared)",
+                      "CAMPAIGN_PLAN_MISMATCH", verify_restart, campaign.out,
+                      known, campaign.binding, None)
+    omitted = False
+    try:
+        verify_restart(campaign.out, known, campaign.binding)
+    except TypeError:
+        omitted = True
+    except Refusal:
+        omitted = False
+    check("planned omitted still raises TypeError (previously cleared)", omitted)
+    check("a valid partial restart still ACCEPTS (previously cleared)",
+          refusal_code(verify_restart, campaign.out, known, campaign.binding,
+                       [job]) is None)
+    campaign.close()
+
+
 # ================================ A7. no science moved
 def test_science_unchanged() -> None:
     """A provenance repair changes no scientific quantity."""
@@ -1183,6 +1435,8 @@ GROUPS = (
      test_committed_publication_is_not_a_valid_one),
     ("C2  FINDING B: restart requires the canonical plan",
      test_restart_requires_the_canonical_plan),
+    ("D1  embedded Branch-A identities bound to the package",
+     test_embedded_identities_bound_to_package),
     ("A7  no science moved", test_science_unchanged),
 )
 

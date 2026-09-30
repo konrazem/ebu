@@ -928,6 +928,180 @@ def inventory_calibration_locks(output_dir: str) -> dict[str, dict[str, Any]]:
     return found
 
 
+# ---- EMBEDDED Branch-A EVIDENCE IDENTITIES, CLASSIFIED ----------------------
+#: EVERY key `BranchARealisation.canonical()` emits, classified by what it is.
+#:
+#: THE DEFECT THIS CLASSIFICATION CLOSES
+#:     The publication envelope's OUTER `package_identities` were compared with
+#:     the current binding, but the Branch-A evidence carried its own copies of
+#:     the contract, plan and analysis identities and nobody compared those. An
+#:     audit changed the embedded analysis identity and the embedded contract
+#:     identity to other valid-looking digests, recomputed the evidence digest,
+#:     the envelope digest and the commit marker, and the shared publication
+#:     verifier accepted the record -- on the terminal path and on restart.
+#:
+#:     The constructor stamped these fields from the binding and the verifier
+#:     ignored them, which is precisely the shape of defect that keeps recurring:
+#:     a field written from authority and never read back against it.
+#:
+#: WHY A CLASSIFICATION AND NOT A LIST
+#:     A hand-maintained list of "identities to check" silently goes stale the
+#:     next time a field is added to the evidence. Every key is classified here
+#:     instead, and a permanent test enumerates `canonical()` and refuses any key
+#:     this mapping does not classify. A new field must be classified to ship.
+EMBEDDED_PACKAGE_IDENTITY = "PACKAGE_IDENTITY"
+EMBEDDED_COORDINATES = "COORDINATES"
+EMBEDDED_SEED_IDENTITY = "SEED_IDENTITY"
+EMBEDDED_RECORDED_PROVENANCE = "RECORDED_PROVENANCE"
+EMBEDDED_SCIENTIFIC = "SCIENTIFIC"
+
+EMBEDDED_EVIDENCE_CLASSIFICATION = {
+    # Current-package authority. Verified against the binding by
+    # `require_embedded_branch_a_identities`.
+    "schema": EMBEDDED_PACKAGE_IDENTITY,
+    "contract_sha256": EMBEDDED_PACKAGE_IDENTITY,
+    "plan_sha256": EMBEDDED_PACKAGE_IDENTITY,
+    "analysis_identity": EMBEDDED_PACKAGE_IDENTITY,
+    # Scientific address. Verified against the FROZEN PLANNED JOB, not the record.
+    "coordinates": EMBEDDED_COORDINATES,
+    "field_id": EMBEDDED_COORDINATES,
+    # Stream identities. Verified on the realisation path against the job's own
+    # declared streams (`realise_branch_a`), which is where they are meaningful.
+    "branch_a_seed": EMBEDDED_SEED_IDENTITY,
+    "common_mode_seed": EMBEDDED_SEED_IDENTITY,
+    # RECORDED PROVENANCE, deliberately NOT pinned. `generator_identity` names
+    # the code that produced the measurement, and frozen authority declares no
+    # expected value for it: `generating_model.branch_a` describes the MODEL in
+    # prose, not an implementation path. Pinning it to the driver's constant
+    # would invent a requirement the schema does not state and would forbid the
+    # deterministic pre-execution fixtures, which legitimately record that the
+    # official generator did NOT run. It is authenticated by the evidence digest
+    # and required to be a non-empty string; choosing an authoritative value for
+    # it is a separate question for the authorised stage.
+    "generator_identity": EMBEDDED_RECORDED_PROVENANCE,
+    # Scientific measurement values. Authenticated by the evidence digest and by
+    # the existing scientific validation; NOT compared against the plan here.
+    # Provenance verification does not re-litigate measurements.
+    "H_A": EMBEDDED_SCIENTIFIC,
+    "T_measured": EMBEDDED_SCIENTIFIC,
+    "k_modes_measured": EMBEDDED_SCIENTIFIC,
+    "rot_deg_measured": EMBEDDED_SCIENTIFIC,
+    "tau_modes": EMBEDDED_SCIENTIFIC,
+    "scale_factor": EMBEDDED_SCIENTIFIC,
+    "n_samples": EMBEDDED_SCIENTIFIC,
+    "dt": EMBEDDED_SCIENTIFIC,
+    "calibration_route": EMBEDDED_SCIENTIFIC,
+    "branch_a_status": EMBEDDED_SCIENTIFIC,
+}
+
+#: The embedded keys that carry current-package authority, in sorted order.
+EMBEDDED_PACKAGE_IDENTITY_FIELDS = tuple(sorted(
+    key for key, kind in EMBEDDED_EVIDENCE_CLASSIFICATION.items()
+    if kind == EMBEDDED_PACKAGE_IDENTITY))
+
+#: Embedded key -> the OUTER envelope key restating the SAME identity. The two
+#: spellings differ for the analysis identity, which is exactly why they were
+#: never noticed to be two independently editable sources of one truth.
+EMBEDDED_TO_OUTER_IDENTITY = (
+    ("contract_sha256", "contract_sha256"),
+    ("plan_sha256", "plan_sha256"),
+    ("analysis_identity", "analysis_procedure_identity"),
+)
+
+
+def embedded_identity_expectations(binding: ExecutionBinding
+                                   ) -> tuple[tuple[str, str, Any], ...]:
+    """(embedded key, label, expected value) taken from the CURRENT binding.
+
+    The expected values come from the canonical binding and from nowhere else --
+    not from the publication's outer envelope, not from the evidence itself, and
+    not from a caller.
+    """
+    return (
+        ("schema", "publication schema", BRANCH_A_PUBLICATION_SCHEMA),
+        ("contract_sha256", "design-contract identity", binding.binding.sha256),
+        ("plan_sha256", "validation-plan identity", binding.plan_sha256),
+        ("analysis_identity", "analysis procedure identity",
+         binding.analysis_identity),
+    )
+
+
+def require_embedded_evidence_shape(evidence: Any, where: str) -> None:
+    """Presence and type of the embedded authority fields, before anything reads
+    them. Runs before the evidence is rebuilt, so a missing field refuses with a
+    coded provenance failure instead of crashing on a KeyError."""
+    if not isinstance(evidence, dict):
+        raise PublicationIncomplete(
+            f"{where}: the published Branch-A evidence is not an object")
+    for key in EMBEDDED_PACKAGE_IDENTITY_FIELDS + ("generator_identity",):
+        if key not in evidence:
+            raise PublicationIncomplete(
+                f"{where}: the published Branch-A evidence omits {key!r}, which "
+                "the frozen evidence schema requires. A missing identity is not "
+                "a satisfied one.")
+        value = evidence[key]
+        if not isinstance(value, str) or not value:
+            raise PublicationIncomplete(
+                f"{where}: embedded {key} is {value!r}; the frozen evidence "
+                "schema carries it as a non-empty string")
+
+
+def require_embedded_branch_a_identities(record: Mapping[str, Any],
+                                         job: CampaignJob,
+                                         binding: ExecutionBinding,
+                                         where: str) -> None:
+    """Bind the identities INSIDE Branch-A evidence to the CURRENT package.
+
+    Three comparisons, and all three are needed:
+
+        embedded == current binding      the evidence claims to have been
+                                         produced under this package
+        embedded == outer envelope       one truth, not two independently
+                                         editable copies of it
+        embedded coordinates == the frozen planned job's
+
+    A digest proves that bytes were not edited AFTER they were written. It cannot
+    prove the bytes describe this package, because a forger who edits an embedded
+    identity simply recomputes every digest that depends on it -- which is exactly
+    what the audit did, down through the lock and the terminal record. Only a
+    comparison against frozen authority can tell, and it is made here, inside the
+    ONE shared publication verifier, so terminal validation and restart
+    reconciliation get it identically.
+    """
+    evidence = record["branch_a_evidence"]
+    require_embedded_evidence_shape(evidence, where)
+    for key, label, expected in embedded_identity_expectations(binding):
+        if evidence.get(key) != expected:
+            raise BranchAProvenanceMismatch(
+                f"{where}: the Branch-A evidence embeds {label} "
+                f"{evidence.get(key)!r}, the current package is {expected!r}. "
+                "Recomputing the evidence and envelope digests makes the record "
+                "self-consistent; it does not make it this package's evidence.")
+    identities = record.get("package_identities") or {}
+    for embedded_key, outer_key in EMBEDDED_TO_OUTER_IDENTITY:
+        if evidence.get(embedded_key) != identities.get(outer_key):
+            raise BranchAProvenanceMismatch(
+                f"{where}: embedded {embedded_key} {evidence.get(embedded_key)!r} "
+                f"disagrees with the envelope's {outer_key} "
+                f"{identities.get(outer_key)!r}. One publication carries one "
+                "package identity, not two editable copies of it.")
+    if evidence.get("schema") != record.get("schema"):
+        raise BranchAProvenanceMismatch(
+            f"{where}: the embedded evidence schema {evidence.get('schema')!r} is "
+            f"not the envelope's {record.get('schema')!r}")
+    # The scientific address, against the FROZEN PLANNER rather than the record.
+    if evidence.get("coordinates") != job.coordinates.as_dict():
+        raise BranchAProvenanceMismatch(
+            f"{where}: the Branch-A evidence embeds coordinates "
+            f"{evidence.get('coordinates')!r}, this job is "
+            f"{job.coordinates.as_dict()!r}")
+    if evidence.get("field_id") != job.coordinates.scope:
+        raise BranchAProvenanceMismatch(
+            f"{where}: the Branch-A evidence embeds field "
+            f"{evidence.get('field_id')!r}, this job is "
+            f"{job.coordinates.scope!r}")
+
+
 # ---- THE ONE CANONICAL VERIFIED-PUBLICATION LOADER --------------------------
 def verified_publication(output_dir: str, job: CampaignJob,
                          binding: ExecutionBinding) -> dict[str, Any] | None:
@@ -981,10 +1155,21 @@ def verified_publication(output_dir: str, job: CampaignJob,
             f"{record['coordinates']!r}, but this is the canonical location of "
             f"{job.coordinates.as_dict()!r}. A publication filed under another "
             "job's coordinates is not this job's evidence.")
+    # EMBEDDED SHAPE, before the evidence is rebuilt from it: a missing or
+    # malformed embedded identity must refuse with a coded provenance failure
+    # rather than crash inside the reconstruction.
+    require_embedded_evidence_shape(record.get("branch_a_evidence"), path)
     # THE COMPLETE EXISTING VERIFIER: envelope digest recomputed, marker digest
-    # compared, basename re-derived, evidence digest recomputed, package and
+    # compared, basename re-derived, evidence digest recomputed, outer package and
     # execution identities compared with the current binding.
-    return verify_publication(output_dir, realisation_from_record(record), binding)
+    verified = verify_publication(output_dir, realisation_from_record(record),
+                                  binding)
+    # THE IDENTITIES CARRIED INSIDE THE EVIDENCE, bound to the same authority.
+    # The step above cannot do this: the realisation it compares against is
+    # rebuilt FROM the record, so for every embedded field that round-trips it is
+    # comparing the record with itself. Only the binding can tell.
+    require_embedded_branch_a_identities(verified, job, binding, path)
+    return verified
 
 
 # ---- THE CANONICAL PLAN IS THE AUTHORITY, NOT THE CALLER'S LIST -------------
