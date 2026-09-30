@@ -40,9 +40,11 @@ from __future__ import annotations
 
 import inspect
 import json
+import math
 import os
 import shutil
 import tempfile
+from fractions import Fraction
 
 from e1a_v4.branch_a import BranchAField, build_field, stiffness_matrix
 from e1a_v4.calibration import CalibrationArtifact, canonical_float
@@ -56,7 +58,8 @@ from e1a_v4.validation.campaign_driver import (
     AUTHORITY_CLASSES, AUTHORITY_CLASSES_WITH_EXPECTED_VALUE,
     AUTHORITY_DERIVED, AUTHORITY_MEASURED, AUTHORITY_OPEN_UNRESOLVED,
     BRANCH_A_FIELD_AUTHORITY, BRANCH_A_MEASUREMENT_INVARIANTS,
-    single_gamma_feasible,
+    single_gamma_feasible, _rounding_interval, _VIRTUAL_BINADE,
+    require_branch_a_measurement_invariants,
     BRANCH_A_FIELD_AUTHORITY_BY_FIELD, EMBEDDED_EVIDENCE_CLASSIFICATION,
     EMBEDDED_PACKAGE_IDENTITY_FIELDS, EMBEDDED_TO_OUTER_IDENTITY,
     EXTERNALLY_BOUND_EMBEDDED_FIELDS, authority_class_counts, CampaignJob,
@@ -1802,7 +1805,7 @@ def test_branch_a_measurement_invariants() -> None:
     """
     # --- §26: the invariant inventory, and what each one covers --------------
     check("the invariant inventory declares every joint constraint",
-          len(BRANCH_A_MEASUREMENT_INVARIANTS) == 4,
+          len(BRANCH_A_MEASUREMENT_INVARIANTS) == 5,
           str([i.invariant_id for i in BRANCH_A_MEASUREMENT_INVARIANTS]))
     dependents = {f for i in BRANCH_A_MEASUREMENT_INVARIANTS
                   for f in i.dependent_fields}
@@ -2085,6 +2088,356 @@ def test_science_unchanged() -> None:
           f"{seal['random_draws']} draws, {seal['trajectories']} trajectories")
 
 
+
+# ---------------------------------------------------------------------------
+# G1  THE RELAXATION DOMAIN: RECORDS PRODUCTION COULD NEVER HAVE WRITTEN
+# ---------------------------------------------------------------------------
+#: The three binary64 boundaries the interval arithmetic has to survive.
+MAX_FINITE = 1.7976931348623157e308
+MIN_SUBNORMAL = 5e-324
+MIN_NORMAL = 2.2250738585072014e-308
+
+#: An arbitrary POSITIVE fixture drag coefficient. Never frozen authority: the
+#: verifier only ever asks whether SOME gamma exists, and this file must not
+#: become the place an absolute gamma is chosen.
+FIXTURE_GAMMA = 1.6776104770169493e-08
+
+
+def production_record(k_modes, *, gamma=FIXTURE_GAMMA, temperature=300.0,
+                      scale=1.0, rot_deg=0.0):
+    """Run the REAL production path and report what it could actually write.
+
+    Returns `(evidence, status, failure)`. `failure` is non-None exactly when
+    production raises before a record exists -- which is the whole question the
+    read verifier has to mirror. Nothing is asserted from intuition here: the
+    constructor, the derived properties and the serializer are all executed.
+    """
+    try:
+        field = BranchAField(
+            field_id="parity", H_U=stiffness_matrix(k_modes, rot_deg),
+            T=temperature, x_star=[0.0] * len(k_modes), k_modes=tuple(k_modes),
+            rot_deg=rot_deg, viscosity=gamma / (6.0 * math.pi), bead_radius=1.0,
+            calibration_route="force_displacement_with_stokes_drag",
+            scale_factor=scale)
+        paired = tuple(t for _, t in sorted(zip(k_modes, field.tau_modes)))
+        evidence = {
+            "field_id": "parity",
+            "calibration_route": "force_displacement_with_stokes_drag",
+            "k_modes_measured": [canonical_float(v) for v in k_modes],
+            "rot_deg_measured": canonical_float(rot_deg),
+            "T_measured": canonical_float(temperature),
+            "scale_factor": canonical_float(scale),
+            "H_A": [[canonical_float(v) for v in row] for row in field.H],
+            "branch_a_status": field.status,
+            "tau_modes": [canonical_float(t) for t in paired],
+        }
+        return evidence, field.status, None
+    except Exception as exc:                      # noqa: BLE001 - classified below
+        return None, None, f"{type(exc).__name__}: {exc}"
+
+
+def forced_measurement(k_modes, taus, *, temperature=300.0, scale=1.0, rot_deg=0.0):
+    """Set the primitives AND everything derived from them, leaving the
+    relaxation tuple free.
+
+    `valid_measurement` cannot express these cases: it computes tau from a shared
+    gamma, so by construction it can only ever build a POSSIBLE record. An
+    impossible one has to be stated directly.
+    """
+    field = BranchAField(
+        field_id="forced", H_U=stiffness_matrix(k_modes, rot_deg), T=temperature,
+        x_star=[0.0] * len(k_modes), k_modes=tuple(k_modes), rot_deg=rot_deg,
+        viscosity=1.0, bead_radius=1.0,
+        calibration_route="force_displacement_with_stokes_drag",
+        scale_factor=scale)
+
+    def mutate(evidence):
+        evidence["k_modes_measured"] = [canonical_float(v) for v in k_modes]
+        evidence["rot_deg_measured"] = canonical_float(rot_deg)
+        evidence["T_measured"] = canonical_float(temperature)
+        evidence["scale_factor"] = canonical_float(scale)
+        evidence["H_A"] = [[canonical_float(v) for v in row] for row in field.H]
+        evidence["branch_a_status"] = field.status
+        evidence["tau_modes"] = [canonical_float(t) for t in taus]
+
+    return mutate
+
+
+def read_outcome(evidence):
+    """ACCEPT, REFUSE[code], or UNCODED-<type>. Never raises."""
+    try:
+        require_branch_a_measurement_invariants(evidence, "g1")
+        return "ACCEPT"
+    except Refusal as exc:
+        code = getattr(type(exc), "code", None)
+        return f"REFUSE[{code}]" if code else f"UNCODED-Refusal"
+    except Exception as exc:                      # noqa: BLE001 - that IS the defect
+        return f"UNCODED-{type(exc).__name__}"
+
+
+#: Representative constructor inputs spanning the stiffness domain. Whether each
+#: is serializable is MEASURED by `production_record`, never declared here.
+RELAXATION_DOMAIN_CASES = (
+    ("ordinary positive, equal stiffnesses", (1.0e-4, 1.0e-4)),
+    ("ordinary positive, unequal stiffnesses", (1.5e-4, 6.0e-5)),
+    ("one negative stiffness", (-1.0e-4, 6.0e-5)),
+    ("both stiffnesses negative", (-1.0e-4, -6.0e-5)),
+    ("zero stiffness mixed with a real one", (0.0, 6.0e-5)),
+    ("both stiffnesses zero", (0.0, 0.0)),
+    ("negative zero stiffness", (-0.0, 6.0e-5)),
+    ("very small nonzero stiffness", (1.0e-300, 6.0e-5)),
+    ("large magnitude stiffness", (1.0e10, 6.0e-5)),
+)
+
+
+def test_branch_a_relaxation_domain() -> None:
+    """AUDIT BLOCKER. A shared gamma must exist AND every division must be real.
+
+    The previous repair asked whether some drag coefficient could produce the
+    recorded relaxation times. That question is necessary but not sufficient: it
+    is answerable for stiffness tuples the production constructor cannot divide
+    by at all, and it was asked with interval arithmetic that was not total over
+    the floats it accepted.
+    """
+    # --- §28: the invariant inventory records the realizability constraint ----
+    ids = [i.invariant_id for i in BRANCH_A_MEASUREMENT_INVARIANTS]
+    check("the invariant inventory declares the relaxation domain", len(ids) == 5,
+          str(ids))
+    check("RELAXATION_DOMAIN is one of them", "RELAXATION_DOMAIN" in ids, str(ids))
+
+    # --- §4 / §5: what production ACTUALLY does at each stiffness -------------
+    # Established by running the constructor, not by reading the formula.
+    serializable = {}
+    for label, k_modes in RELAXATION_DOMAIN_CASES:
+        evidence, status, failure = production_record(k_modes)
+        serializable[label] = evidence is not None
+        if label == "both stiffnesses zero":
+            check("PRODUCTION cannot serialize a zero stiffness at all",
+                  evidence is None and "ZeroDivisionError" in failure, str(failure))
+        if label == "one negative stiffness":
+            check("PRODUCTION CAN serialize a negative stiffness, as "
+                  "BRANCH_A_INVALID", evidence is not None
+                  and status == "BRANCH_A_INVALID", str(status or failure))
+
+    # The distinction the repair turns on, stated as an assertion rather than as
+    # prose: negative is publishable, zero is not. Solving k == 0 by requiring a
+    # positive stiffness would have erased a legitimate outcome.
+    check("negative stiffness and zero stiffness are DIFFERENT production cases",
+          serializable["one negative stiffness"]
+          and not serializable["both stiffnesses zero"])
+
+    # --- §17: the auditor's zero-stiffness counterexample --------------------
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, forced_measurement((0.0, 0.0), (1.0, 1.0)))
+    refuses_with_code(
+        "k = (0, 0) with tau = (1, 1) -- gamma = 0 is not a witness, because "
+        "production cannot divide by zero under ANY gamma",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    check("   and restart refuses it with the measurement code",
+          restart_refusal(campaign, [job]) == "BRANCH_A_MEASUREMENT_INVALID",
+          str(restart_refusal(campaign, [job])))
+    campaign.close()
+
+    # --- §18: a verifier that only special-cased (0, 0) would still be wrong --
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, forced_measurement((0.0, 6.0e-5), (1.0, 0.5)))
+    refuses_with_code(
+        "a zero stiffness MIXED with a real one still refuses",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    campaign.close()
+
+    # --- §19: IEEE signed zero divides exactly as badly ----------------------
+    check("-0.0 and 0.0 are the same divisor problem", -0.0 == 0.0)
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job, forced_measurement((-0.0, 6.0e-5), (1.0, 0.5)))
+    refuses_with_code(
+        "a NEGATIVE zero stiffness refuses too",
+        "BRANCH_A_MEASUREMENT_INVALID", verified_publication, campaign.out, job,
+        campaign.binding)
+    campaign.close()
+    check("the feasibility predicate itself rejects a zero stiffness",
+          not single_gamma_feasible((0.0, 0.0), (1.0, 1.0)))
+    check("   and rejects a negative zero",
+          not single_gamma_feasible((-0.0, 6.0e-5), (1.0, 0.5)))
+
+    # --- §13 / §14 / §22: the interval routine is TOTAL and EXACT ------------
+    # nextafter saturates to infinity at the outermost finite floats, and
+    # Fraction(infinity) raises. The cell of MAX is still a finite rational
+    # interval; 2**1024 is its exact outer endpoint, not a stand-in for infinity.
+    lo, hi = _rounding_interval(MAX_FINITE)
+    check("the rounding cell of the largest finite float is exact and finite",
+          lo == Fraction(MAX_FINITE) - Fraction(2) ** 970
+          and hi == _VIRTUAL_BINADE - Fraction(2) ** 970, f"{lo} {hi}")
+    check("   and its upper endpoint IS the IEEE overflow threshold",
+          hi == Fraction(2) ** 1024 - Fraction(2) ** 970)
+    lo, hi = _rounding_interval(-MAX_FINITE)
+    check("the cell of the most negative finite float is exact and finite",
+          lo == -(_VIRTUAL_BINADE - Fraction(2) ** 970)
+          and hi == Fraction(-MAX_FINITE) + Fraction(2) ** 970, f"{lo} {hi}")
+    for label, value in (("zero", 0.0), ("smallest subnormal", MIN_SUBNORMAL),
+                         ("smallest normal", MIN_NORMAL),
+                         ("just below the smallest normal",
+                          math.nextafter(MIN_NORMAL, 0.0))):
+        lo, hi = _rounding_interval(value)
+        check(f"the cell around the {label} is a proper exact interval",
+              lo < Fraction(value) < hi or (value == 0.0 and lo < 0 < hi),
+              f"{lo} {hi}")
+    check("the cell of zero is symmetric across the subnormal boundary",
+          _rounding_interval(0.0)[0] == -_rounding_interval(0.0)[1])
+    check("no endpoint anywhere is an approximation: every one is a Fraction",
+          all(isinstance(e, Fraction)
+              for v in (MAX_FINITE, -MAX_FINITE, 0.0, MIN_SUBNORMAL, MIN_NORMAL)
+              for e in _rounding_interval(v)))
+
+    # --- §15 / §20: the largest finite relaxation time -----------------------
+    # It is NOT rejected for being large. gamma = 6 pi eta a reaches MAX for
+    # finite eta and a, so tau = MAX is production-realizable and must be read
+    # back. The requirement was no UNCODED exception, not a rejection.
+    reachable, _status, failure = production_record(
+        (1.0, 2.0), gamma=MAX_FINITE, temperature=300.0)
+    check("gamma = MAX is reachable from FINITE eta and a, so tau = MAX is "
+          "production-realizable", reachable is not None, str(failure))
+    check("   and its recorded relaxation times really are the largest finite "
+          "float", reachable is not None
+          and float.fromhex(reachable["tau_modes"][0]) == MAX_FINITE)
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    forge_evidence(campaign, job,
+                   forced_measurement((1.0, 2.0), (MAX_FINITE, MAX_FINITE / 2.0)))
+    outcome = read_outcome(committed_publication(
+        campaign.out, job.coordinates)["branch_a_evidence"])
+    check("tau = MAX raises NO uncoded exception (it used to be OverflowError)",
+          not outcome.startswith("UNCODED"), outcome)
+    check("   and it is ACCEPTED, because production can produce it",
+          outcome == "ACCEPT", outcome)
+    campaign.close()
+
+    # --- §16: no raw numeric exception escapes the read verifier -------------
+    # Each of these persists FINITE, individually well-formed primitives and
+    # still names a record production could not have written.
+    escapes = (
+        ("H_U * scale / (K_B T) overflows to infinity",
+         (1.0e300, 2.0e300), (1.0, 0.5), 1.0e-300, 1.0),
+        ("K_B * T underflows to zero, so production's own division raises",
+         (6.0e-5, 1.5e-4), (1.0, 0.5), MIN_SUBNORMAL, 1.0),
+        ("a subnormal temperature above the smallest one, same failure",
+         (6.0e-5, 1.5e-4), (1.0, 0.5), 1.0e-310, 1.0),
+        ("the scale factor drives H_A out of range",
+         (6.0e-5, 1.5e-4), (1.0, 0.5), 300.0, MAX_FINITE),
+    )
+    for label, k_modes, taus, temperature, scale in escapes:
+        evidence = {
+            "field_id": "escape",
+            "calibration_route": "force_displacement_with_stokes_drag",
+            "k_modes_measured": [canonical_float(v) for v in k_modes],
+            "rot_deg_measured": canonical_float(0.0),
+            "T_measured": canonical_float(temperature),
+            "scale_factor": canonical_float(scale),
+            "H_A": [[canonical_float(0.0)] * len(k_modes)] * len(k_modes),
+            "branch_a_status": "VALID",
+            "tau_modes": [canonical_float(t) for t in taus],
+        }
+        check(f"{label} -> coded refusal, not a raw exception",
+              read_outcome(evidence) == "REFUSE[BRANCH_A_MEASUREMENT_INVALID]",
+              read_outcome(evidence))
+
+    # --- §23: constructor / read-verifier parity -----------------------------
+    # For every representative input: if production can write the record, the
+    # verifier must accept the UNTOUCHED produced record; if it cannot, the
+    # equivalent forged record must refuse. One divergence is known, named and
+    # deliberately left open -- see the gamma-sign item below.
+    divergences = []
+    for label, k_modes in RELAXATION_DOMAIN_CASES:
+        evidence, _status, _failure = production_record(k_modes)
+        if evidence is None:
+            forged = dict(
+                field_id="parity",
+                calibration_route="force_displacement_with_stokes_drag",
+                k_modes_measured=[canonical_float(v) for v in k_modes],
+                rot_deg_measured=canonical_float(0.0),
+                T_measured=canonical_float(300.0),
+                scale_factor=canonical_float(1.0),
+                H_A=[[canonical_float(0.0)] * len(k_modes)] * len(k_modes),
+                branch_a_status="BRANCH_A_INVALID",
+                tau_modes=[canonical_float(1.0) for _ in k_modes])
+            check(f"production CANNOT write {label!r}; the forgery refuses",
+                  read_outcome(forged) == "REFUSE[BRANCH_A_MEASUREMENT_INVALID]",
+                  read_outcome(forged))
+            continue
+        outcome = read_outcome(evidence)
+        check(f"no uncoded exception reading a produced record: {label}",
+              not outcome.startswith("UNCODED"), outcome)
+        if outcome != "ACCEPT":
+            divergences.append((label, outcome))
+    # The ONLY tolerated divergence is the negative-stiffness class, which the
+    # verifier refuses because it requires a positive relaxation time -- i.e.
+    # because it assumes gamma > 0. That assumption is NOT resolved here: eta and
+    # a are undeclared in frozen authority, so the sign of gamma is an open
+    # field-construction question and this check is left exactly as it was.
+    check("the only production/read divergence is the negative-stiffness class",
+          {label for label, _ in divergences}
+          == {"one negative stiffness", "both stiffnesses negative"},
+          str(divergences))
+
+    # --- §24: positive controls; the exact method must not become strict -----
+    for label, k_modes in (("unequal", (6.0e-5, 1.5e-4)),
+                           ("equal", (1.0e-4, 1.0e-4)),
+                           ("very small", (1.0e-300, 6.0e-5)),
+                           ("large", (1.0e10, 6.0e-5))):
+        for gamma in (FIXTURE_GAMMA, 1.0, 3.3e-12):
+            ascending = sorted(k_modes)
+            taus = tuple(gamma / k for k in ascending)
+            check(f"a genuine shared gamma over {label} stiffnesses is feasible "
+                  f"(gamma={gamma!r})", single_gamma_feasible(ascending, taus))
+
+    # --- §25: the order-preserving forgery must STILL refuse -----------------
+    # The case a pairing-order rule alone misses. Re-asserted here because the
+    # domain clause added above must not have made the predicate coarser.
+    campaign = Campaign()
+    job = campaign.job(C2, field_id="theta2_ellipse")
+    campaign.run(job, terminal=False)
+    evidence = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    taus = [float.fromhex(v) for v in evidence["tau_modes"]]
+    shrunk = [canonical_float(taus[0] * 0.8), evidence["tau_modes"][1]]
+    check("the forged relaxation sequence is still correctly ORDERED",
+          float.fromhex(shrunk[0]) >= float.fromhex(shrunk[1]))
+    forge_evidence(campaign, job, lambda e: e.__setitem__("tau_modes", shrunk))
+    refuses_with_code(
+        "unequal stiffnesses, order preserved, common gamma broken -- still "
+        "refused", "BRANCH_A_MEASUREMENT_INVALID", verified_publication,
+        campaign.out, job, campaign.binding)
+    campaign.close()
+
+    # --- §8 / §30: no absolute gamma was chosen ------------------------------
+    source = inspect.getsource(single_gamma_feasible)
+    check("the feasibility predicate names no drag coefficient of its own",
+          "6.0 * math.pi" not in source and "viscosity" not in source
+          and "bead_radius" not in source)
+    check("it decides EXISTENCE: the same stiffnesses are feasible at wildly "
+          "different gammas",
+          all(single_gamma_feasible((6.0e-5, 1.5e-4),
+                                    (g / 6.0e-5, g / 1.5e-4))
+              for g in (1e-12, 1e-8, 1.0, 1e8)))
+
+    # --- §12: still no tolerance anywhere on this path -----------------------
+    for fn in (single_gamma_feasible, _rounding_interval,
+               require_branch_a_measurement_invariants):
+        text = inspect.getsource(fn)
+        check(f"{fn.__name__} introduces no epsilon or isclose",
+              "isclose" not in text and "1e-6" not in text and "1e-9" not in text
+              and "rtol" not in text and "atol" not in text)
+
+
 GROUPS = (
     ("A1  the auditor's two counterexamples", test_auditor_counterexamples),
     ("A2  every required case of the invariant", test_every_required_case),
@@ -2108,6 +2461,8 @@ GROUPS = (
      test_embedded_field_authority),
     ("F1  the record as a whole: domain and joint invariants",
      test_branch_a_measurement_invariants),
+    ("G1  the relaxation domain: production realizability",
+     test_branch_a_relaxation_domain),
     ("A7  no science moved", test_science_unchanged),
 )
 

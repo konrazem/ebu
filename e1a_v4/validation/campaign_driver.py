@@ -1457,6 +1457,18 @@ BRANCH_A_MEASUREMENT_INVARIANTS = (
         "plus the exact consequence that equal stiffnesses give equal relaxation "
         "times; no gamma value is chosen and no tolerance is introduced"),
     BranchAInvariant(
+        "RELAXATION_DOMAIN", ("tau_modes", "H_A"),
+        ("k_modes_measured", "T_measured", "scale_factor"),
+        "production evaluates tau_r = gamma / k_r and H = H_U * scale / (K_B * T) "
+        "in binary64 and then SERIALIZES the result: a zero stiffness makes the "
+        "division undefined, a temperature whose K_B * T underflows to zero makes "
+        "it raise, and a product that overflows to infinity is refused by "
+        "canonical_float -- each of them before any record exists",
+        "the persisted record must lie in the IMAGE of the production constructor "
+        "AND serializer, so every one of those conditions becomes a coded "
+        "BRANCH_A_MEASUREMENT_INVALID on read and never a raw ZeroDivisionError, "
+        "OverflowError or uncoded Refusal"),
+    BranchAInvariant(
         "PRODUCTION_DOMAIN",
         ("T_measured", "scale_factor", "H_A"),
         ("T_measured", "scale_factor", "k_modes_measured", "rot_deg_measured"),
@@ -1545,11 +1557,36 @@ def reconstructed_branch_a_field(evidence: Mapping[str, Any],
             calibration_route=str(evidence.get("calibration_route")),
             scale_factor=scale_factor,
         )
-    except Refusal as exc:
+    except (Refusal, ZeroDivisionError, OverflowError) as exc:
         raise BranchAMeasurementInvalid(
             f"{where}: the persisted primitives do not form a Branch-A "
             f"measurement the production constructor would create ({exc})"
         ) from exc
+
+
+#: One step above the largest finite binary64 value, in EXACT arithmetic. The
+#: format holds MAX = 2**1024 - 2**971 and the ulp of that binade is 2**971, so
+#: the value the format would hold next, were its exponent range unbounded, is
+#: exactly 2**1024. `math.nextafter` cannot return it -- it saturates to infinity,
+#: and `Fraction(infinity)` raises OverflowError -- yet the rounding cell of MAX
+#: is still an ordinary FINITE rational interval, and 2**1024 is its outer
+#: endpoint. This is not a large-finite sentinel standing in for infinity: it is
+#: the exact mathematical successor, so the interval stays exact and no tolerance
+#: is introduced anywhere.
+_VIRTUAL_BINADE = Fraction(2) ** 1024
+
+
+def _neighbour(value: float, direction: float) -> Fraction:
+    """The adjacent representable value, exactly, saturating to the virtual binade.
+
+    Total over every finite `value`, which is what makes `_rounding_interval`
+    total: only at +/- MAX is the outward neighbour unrepresentable, and there its
+    exact value is +/- 2**1024.
+    """
+    step = math.nextafter(value, direction)
+    if math.isinf(step):
+        return _VIRTUAL_BINADE if step > 0.0 else -_VIRTUAL_BINADE
+    return Fraction(step)
 
 
 def _rounding_interval(value: float) -> tuple[Fraction, Fraction]:
@@ -1560,14 +1597,27 @@ def _rounding_interval(value: float) -> tuple[Fraction, Fraction]:
     is exact: no epsilon is chosen and no floating comparison is involved.
     Closed endpoints make the test conservative at a tie -- it can only ever
     accept slightly more, never reject a genuine production value.
+
+    TOTAL over every finite float, the largest and the most negative included.
+    The zero and subnormal neighbourhoods need no special case: `nextafter` is
+    exact there, and only the two outermost finite values reach the virtual
+    binade at all.
     """
-    return ((Fraction(math.nextafter(value, -math.inf)) + Fraction(value)) / 2,
-            (Fraction(value) + Fraction(math.nextafter(value, math.inf))) / 2)
+    exact = Fraction(value)
+    return ((_neighbour(value, -math.inf) + exact) / 2,
+            (exact + _neighbour(value, math.inf)) / 2)
 
 
 def single_gamma_feasible(k_ascending: Sequence[float],
                           taus: Sequence[float]) -> bool:
-    """Is there ANY gamma with tau_r == fl(gamma / k_r) for every mode?
+    """Is there ANY gamma with tau_r == fl(gamma / k_r) for every mode, where
+    every mode's division is itself DEFINED in production?
+
+    The domain clause is not decoration. Asking only "do the tau intervals
+    intersect" admits k_r = 0, because the interval scaled by zero collapses to
+    the single point 0 and gamma = 0 then looks like a witness -- while production
+    cannot perform that division at all. A witness gamma is only a witness if
+    production could have executed every division that produced the record.
 
     EXACT, and deliberately free of any tolerance. The production relation is one
     division per mode from ONE shared drag coefficient, so each recorded tau
@@ -1581,6 +1631,15 @@ def single_gamma_feasible(k_ascending: Sequence[float],
     """
     low = high = None
     for stiffness, tau in zip(k_ascending, taus):
+        if stiffness == 0.0:
+            # PRODUCTION DOMAIN, not a numeric edge case. Production evaluates
+            # `gamma / k_r`, and that raises ZeroDivisionError for EVERY gamma
+            # when k_r is zero, so no witness exists and the pair is outside the
+            # image of the constructor. Multiplying the tau interval by zero would
+            # instead collapse it to the single point 0 and make gamma = 0 look
+            # like a witness, which is exactly how an impossible record passed.
+            # `== 0.0` is true for -0.0 as well: -0.0 divides just as badly.
+            return False
         lo, hi = _rounding_interval(tau)
         lower, upper = lo * Fraction(stiffness), hi * Fraction(stiffness)
         if lower > upper:                       # negative stiffness flips the order
@@ -1600,7 +1659,24 @@ def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
     """
     field = reconstructed_branch_a_field(evidence, where)
     # --- H_A_FROM_PRIMITIVES: recomputed by production, compared exactly ------
-    expected_h = [[canonical_float(v) for v in row] for row in field.H]
+    # Production evaluates H = H_U * scale / (K_B * T) and then serializes it, and
+    # BOTH steps can fail on primitives that are individually finite and well
+    # formed: K_B * T underflows to zero for a subnormal temperature, which makes
+    # the division raise, and the product overflows to infinity for a large enough
+    # stiffness or scale, which `canonical_float` refuses. In production either
+    # failure happens BEFORE a record exists, so on read they are impossible-record
+    # conditions and must carry the measurement code rather than escaping the read
+    # verifier as a raw numeric exception.
+    try:
+        expected_h = [[canonical_float(v) for v in row] for row in field.H]
+    except CodedRefusal:
+        raise
+    except (Refusal, ZeroDivisionError, OverflowError) as exc:
+        raise BranchAMeasurementInvalid(
+            f"{where}: the recorded stiffnesses, orientation, temperature and "
+            f"scale do not yield a representable H_A ({exc}). Production computes "
+            "H_U * scale / (K_B * T) and serializes it, so it could never have "
+            "written this record.") from exc
     if evidence.get("H_A") != expected_h:
         raise BranchAMeasurementInvalid(
             f"{where}: the published H_A is not the matrix the recorded "
@@ -1622,6 +1698,25 @@ def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
         raise BranchAMeasurementInvalid(
             f"{where}: {len(taus)} relaxation time(s) for {len(k_modes)} "
             "stiffness(es); the frozen rule is one per mode")
+    # RELAXATION_DOMAIN: the production division must be DEFINED for every mode.
+    # A zero stiffness is not a badly measured stiffness. Production evaluates
+    # tau_r = gamma / k_r, which raises ZeroDivisionError under EVERY drag
+    # coefficient when k_r is zero, so no such record can ever be serialized. This
+    # is precisely the line between "a measurement production CAN publish" and "a
+    # record production CANNOT construct": a NEGATIVE stiffness stays publishable
+    # -- it drives min eig(H_U) <= 0 and therefore status BRANCH_A_INVALID, a
+    # legitimate recorded outcome -- while a zero stiffness has no publishable form
+    # at all. Checked before the feasibility test because zero is a domain fact
+    # about the operation, not a statement about which gamma might exist.
+    for index, stiffness in enumerate(k_modes):
+        if stiffness == 0.0:
+            raise BranchAMeasurementInvalid(
+                f"{where}: mode {index} records a measured stiffness of "
+                f"{stiffness!r}. The frozen relaxation rule is tau_r = gamma / k_r "
+                "and that division is undefined for a zero stiffness under every "
+                "drag coefficient, so production raises before any such record "
+                "exists. A negative stiffness is a different matter and remains "
+                "publishable as BRANCH_A_INVALID.")
     if any(tau <= 0.0 for tau in taus):
         raise BranchAMeasurementInvalid(
             f"{where}: a recorded relaxation time is not positive")
