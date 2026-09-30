@@ -45,7 +45,7 @@ import shutil
 import tempfile
 
 from e1a_v4.branch_a import build_field
-from e1a_v4.calibration import CalibrationArtifact
+from e1a_v4.calibration import CalibrationArtifact, canonical_float
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.campaign_driver import (
@@ -53,10 +53,14 @@ from e1a_v4.validation.campaign_driver import (
     calibration_lock_basename, calibration_lock_directory,
     _compare_terminal_to_verified_lock, calibration_lock_basename,
     calibration_lock_directory, calibration_lock_envelope,
-    EMBEDDED_EVIDENCE_CLASSIFICATION, EMBEDDED_PACKAGE_IDENTITY_FIELDS,
-    EMBEDDED_TO_OUTER_IDENTITY, CampaignJob, canonical_plan,
+    AUTHORITY_CLASSES, AUTHORITY_CLASSES_WITH_EXPECTED_VALUE,
+    AUTHORITY_MEASURED, AUTHORITY_OPEN_UNRESOLVED, BRANCH_A_FIELD_AUTHORITY,
+    BRANCH_A_FIELD_AUTHORITY_BY_FIELD, EMBEDDED_EVIDENCE_CLASSIFICATION,
+    EMBEDDED_PACKAGE_IDENTITY_FIELDS, EMBEDDED_TO_OUTER_IDENTITY,
+    EXTERNALLY_BOUND_EMBEDDED_FIELDS, authority_class_counts, CampaignJob,
+    canonical_plan,
     committed_calibration_lock, committed_publication,
-    embedded_identity_expectations, inventory_calibration_locks,
+    embedded_authority_expectations, inventory_calibration_locks,
     inventory_job_records, is_sha256, job_execution, plan_campaign,
     publication_basename, publication_directory,
     publish_calibration_lock, publish_job_record, reconcile_calibration_locks,
@@ -73,6 +77,7 @@ from e1a_v4.validation.publication import (
 )
 from e1a_v4.validation.results import aggregate_skeleton
 from e1a_v4.validation.scope import CampaignCalibrationLedger
+from e1a_v4.validation.seeds import EXPERIMENT_SCOPE, ValidationSeedFamily
 from e1a_v4.validation.seal import SEAL_JSON
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -1213,7 +1218,8 @@ def test_embedded_identities_bound_to_package() -> None:
     # --- §18: the CONSTRUCTOR's source and the VERIFIER's expectation agree ---
     evidence = committed_publication(campaign.out, job.coordinates)[
         "branch_a_evidence"]
-    for key, label, expected in embedded_identity_expectations(campaign.binding):
+    for key, expected in sorted(
+            embedded_authority_expectations(job, campaign.binding).items()):
         check(f"constructor stamps embedded {key} from the binding, and the "
               f"verifier expects that same value", evidence[key] == expected,
               f"{evidence[key]!r} vs {expected!r}")
@@ -1332,9 +1338,9 @@ def test_embedded_identities_bound_to_package() -> None:
           str(plan_declared))
     check("Branch-A evidence has no plan-declared generator identity to pin to",
           "generator_identity" not in PLAN["generating_model"]["branch_a"])
-    check("so it is classified RECORDED_PROVENANCE, not PACKAGE_IDENTITY",
+    check("so it is classified OPEN_UNRESOLVED, not PACKAGE_BOUND",
           EMBEDDED_EVIDENCE_CLASSIFICATION["generator_identity"]
-          == "RECORDED_PROVENANCE")
+          == "OPEN_UNRESOLVED")
     campaign = Campaign()
     job = campaign.job(C2)
     campaign.run(job, terminal=False)
@@ -1393,6 +1399,335 @@ def test_embedded_identities_bound_to_package() -> None:
     campaign.close()
 
 
+# ================ E1. every embedded field verified against its authority
+def foreign_job_seed(campaign, case_id, subcondition_id, replicate, scope):
+    """A GENUINE authorised stream identity belonging to another planned job.
+
+    Adversarially stronger than random garbage: the substituted value is a real
+    seed the seed map authorises somewhere, so only a coordinate-specific check
+    can tell it is not this job's.
+    """
+    return campaign.binding.case_access(case_id).stream(
+        ValidationSeedFamily.BRANCH_A_MEASUREMENT, subcondition_id, replicate,
+        scope)
+
+
+def authority_mutations(campaign, job):
+    """(label, embedded field, forged value) for EVERY externally bound field.
+
+    Derived from the authority table, so a newly bound field that nobody writes a
+    mutation for is caught by the coverage assertion below rather than skipped.
+    """
+    coordinates = job.coordinates
+    sub = coordinates.subcondition_id
+    other_sub = next(s["subcondition_id"] for c in PLAN["cases"]
+                     if c["case_id"] == C2 for s in c["subconditions"]
+                     if s["subcondition_id"] != sub)
+    other_field = next(f for f in FIELDS if f != coordinates.scope)
+    branch_b = campaign.binding.plan["generating_model"]["branch_b"]
+    return (
+        # PACKAGE_BOUND
+        ("schema", "schema", "e1a_v4_branch_a_publication/999"),
+        ("contract_sha256", "contract_sha256", "b" * 64),
+        ("plan_sha256", "plan_sha256", "c" * 64),
+        ("analysis_identity", "analysis_identity", "a" * 64),
+        # JOB_BOUND
+        ("coordinates", "coordinates",
+         dict(coordinates.as_dict(), replicate_id=999999)),
+        ("field_id", "field_id", other_field),
+        # SEED_BOUND -- a GENUINE seed from another planned job
+        ("branch_a_seed", "branch_a_seed",
+         foreign_job_seed(campaign, C2, sub, coordinates.replicate_id,
+                          other_field)),
+        ("common_mode_seed", "common_mode_seed",
+         foreign_job_seed(campaign, C2, other_sub, coordinates.replicate_id,
+                          EXPERIMENT_SCOPE)),
+        # PLAN_BOUND
+        ("dt", "dt", canonical_float(float(branch_b["dt_s"]) * 2.0)),
+        # CONTRACT_BOUND
+        ("calibration_route", "calibration_route",
+         "equipartition_k_equals_kBT_over_sigma_squared"),
+        # DERIVED
+        ("n_samples", "n_samples", int(branch_b["n_samples"]) + 1),
+        ("branch_a_status", "branch_a_status", "TOTALLY_FINE"),
+        ("tau_modes", "tau_modes", None),        # filled in below: re-sorted
+    )
+
+
+def test_embedded_field_authority() -> None:
+    """AUDIT BLOCKER. A digest authenticates bytes; it does not establish
+    agreement with the frozen job, the seed map, the plan or the contract.
+
+    The previous repair bound the embedded PACKAGE identities and classified
+    everything else as "scientific value". That catch-all was wrong: an audit
+    forged correctly committed, fully re-digested publications carrying another
+    planned job's Branch-A seed, another subcondition's common-mode stream,
+    n_samples 2,000,001, a doubled dt, and the calibration route the contract
+    explicitly FORBIDS -- and the shared read verifier accepted all of them.
+
+    Seed correctness was checked when evidence was CREATED and not when it was
+    RECOVERED. A read path that trusts what a write path proved is not a
+    verifier.
+    """
+    # --- §6: totality, from machine-derived counts ---------------------------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    execution, record, digest = campaign.run(job)
+    emitted = set(execution._realisation.canonical())
+    declared = {row.field for row in BRANCH_A_FIELD_AUTHORITY}
+    counts = authority_class_counts()
+    check("the authority table classifies EXACTLY the keys the evidence emits",
+          emitted == declared,
+          f"unclassified {sorted(emitted - declared)}, stale {sorted(declared - emitted)}")
+    check(f"unclassified = 0 (total {counts['total']})",
+          len(emitted - declared) == 0, str(sorted(emitted - declared)))
+    check("every class count is machine-derived and sums to the total",
+          sum(counts[name] for name in AUTHORITY_CLASSES) == counts["total"]
+          == len(emitted), str(counts))
+    check("every declared class is one of the eight authority classes",
+          all(row.authority_class in AUTHORITY_CLASSES
+              for row in BRANCH_A_FIELD_AUTHORITY))
+    check("there is no ambiguous catch-all: nothing is classified MEASURED that "
+          "the plan, contract, seed map or planner fixes",
+          set(EXTERNALLY_BOUND_EMBEDDED_FIELDS).isdisjoint(
+              {row.field for row in BRANCH_A_FIELD_AUTHORITY
+               if row.authority_class == AUTHORITY_MEASURED}))
+
+    # --- §24: constructor source and verifier expectation agree --------------
+    evidence = committed_publication(campaign.out, job.coordinates)[
+        "branch_a_evidence"]
+    expectations = embedded_authority_expectations(job, campaign.binding)
+    for field, expected in sorted(expectations.items()):
+        check(f"constructor stamps {field} and the verifier expects that same "
+              f"value", evidence[field] == expected,
+              f"{evidence[field]!r} vs {expected!r}")
+    check("every class that fixes an exact value has an expectation derived",
+          all(row.field in expectations for row in BRANCH_A_FIELD_AUTHORITY
+              if row.authority_class in AUTHORITY_CLASSES_WITH_EXPECTED_VALUE),
+          str(sorted(expectations)))
+    campaign.close()
+
+    # --- §10 / §14 / §17 / §18 / §19 / §26 / §27 / §28: the mutation audit ---
+    campaign = Campaign()
+    probe = campaign.job(C2)
+    campaign.run(probe, terminal=False)
+    mutations = list(authority_mutations(campaign, probe))
+    campaign.close()
+    covered = {field for _label, field, _value in mutations}
+    check("the mutation audit covers EVERY externally bound field",
+          covered == set(EXTERNALLY_BOUND_EMBEDDED_FIELDS),
+          f"missing {sorted(set(EXTERNALLY_BOUND_EMBEDDED_FIELDS) - covered)}")
+
+    tested = unexpected = 0
+    by_class = {}
+    for label, field, value in mutations:
+        campaign = Campaign()
+        job = campaign.job(C2)
+        _execution, record, _digest = campaign.run(job)
+        if field == "tau_modes":
+            # Break the FROZEN PAIRING while keeping the same multiset: the taus
+            # are carried with ascending stiffness, so reversing them to
+            # non-decreasing order is a mispairing, not a different measurement.
+            current = committed_publication(campaign.out, job.coordinates)[
+                "branch_a_evidence"]["tau_modes"]
+            value = sorted(current, key=lambda h: float.fromhex(h))
+            if len(set(value)) == 1:
+                # degenerate field: make it strictly increasing instead
+                value = [current[0],
+                         canonical_float(float.fromhex(current[0]) * 2.0)]
+        publication = forge_embedded(campaign, job, field, value)
+        lock = json.loads(json.dumps(
+            committed_calibration_lock(campaign.out, job.coordinates)))
+        for linked in ("publication_digest", "branch_a_evidence_sha256",
+                       "calibration_condition_sha256"):
+            lock[linked] = publication[linked]
+        lock["lock_digest"] = sealed_digest(lock, "lock_digest")
+        republish(calibration_lock_directory(campaign.out),
+                  calibration_lock_basename(job.coordinates), lock, "lock_digest",
+                  job.job_id, job.coordinates)
+        forged = retied(record, publication, lock)
+        tested += 1
+        paths = {
+            "shared verifier": refusal_code(verified_publication, campaign.out,
+                                            job, campaign.binding),
+            "terminal": refusal_code(validate_job_record, forged,
+                                     campaign.binding.plan, campaign.binding,
+                                     job, campaign.out),
+            "restart": restart_refusal(campaign, [job]),
+        }
+        if any(v is None for v in paths.values()):
+            unexpected += 1
+        row = BRANCH_A_FIELD_AUTHORITY_BY_FIELD[field]
+        by_class.setdefault(row.authority_class, 0)
+        by_class[row.authority_class] += 1
+        for path, got in paths.items():
+            check(f"{row.authority_class} {label} forged, whole chain "
+                  f"re-digested -> {path} refuses", got is not None,
+                  f"got {got!r}")
+        campaign.close()
+    check(f"mutation audit: {tested} externally bound field(s) tested across "
+          f"{len(by_class)} authority class(es), {unexpected} unexpected pass(es)",
+          unexpected == 0 and tested == len(EXTERNALLY_BOUND_EMBEDDED_FIELDS),
+          f"{tested} tested, {unexpected} unexpected, by class {by_class}")
+
+    # --- §8 / §9 / §10: seeds, pinned, with the frozen shared-scope intact ---
+    campaign = Campaign()
+    a = campaign.job(C2, field_id=FIELDS[0])
+    b = campaign.job(C2, field_id=FIELDS[1])
+    campaign.run(a, terminal=False)
+    campaign.run(b, terminal=False)
+    ev_a = committed_publication(campaign.out, a.coordinates)["branch_a_evidence"]
+    ev_b = committed_publication(campaign.out, b.coordinates)["branch_a_evidence"]
+    check("the per-field Branch-A streams DIFFER between fields of one replicate",
+          ev_a["branch_a_seed"] != ev_b["branch_a_seed"])
+    check("but the COMMON-MODE stream is SHARED, exactly as the frozen model "
+          "intends -- it cancels in P2 and not in P3",
+          ev_a["common_mode_seed"] == ev_b["common_mode_seed"])
+    check("and the verifier accepts that sharing rather than demanding a "
+          "per-field common mode",
+          refusal_code(verified_publication, campaign.out, a, campaign.binding)
+          is None
+          and refusal_code(verified_publication, campaign.out, b,
+                           campaign.binding) is None)
+    # the cross-job substitution: b's REAL seed placed in a's publication
+    forge_embedded(campaign, a, "branch_a_seed", ev_b["branch_a_seed"])
+    refuses_with_code(
+        "another field's GENUINE authorised Branch-A seed, substituted",
+        "BRANCH_A_PROVENANCE_MISMATCH", verified_publication, campaign.out, a,
+        campaign.binding)
+    campaign.close()
+
+    # --- §15 / §16: the contract's route rule, both directions ---------------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    contract = campaign.binding.binding
+    check("the contract declares a closed authorised route set",
+          len(contract.authorised_branch_a_routes) >= 1
+          and len(contract.forbidden_branch_a_routes) >= 1,
+          f"{list(contract.authorised_branch_a_routes)} / "
+          f"{list(contract.forbidden_branch_a_routes)}")
+    for route in contract.forbidden_branch_a_routes:
+        campaign2 = Campaign()
+        j = campaign2.job(C2)
+        campaign2.run(j, terminal=False)
+        forge_embedded(campaign2, j, "calibration_route", route)
+        refuses_with_code(f"contract-FORBIDDEN route {route!r}",
+                          "BRANCH_A_PROVENANCE_MISMATCH", verified_publication,
+                          campaign2.out, j, campaign2.binding)
+        campaign2.close()
+    forge_embedded(campaign, job, "calibration_route", "a_route_nobody_declared")
+    refuses_with_code("a route on neither contract list (closed world)",
+                      "BRANCH_A_PROVENANCE_MISMATCH", verified_publication,
+                      campaign.out, job, campaign.binding)
+    campaign.close()
+    for route in contract.authorised_branch_a_routes:
+        campaign2 = Campaign()
+        j = campaign2.job(C2)
+        campaign2.run(j, terminal=False)
+        forge_embedded(campaign2, j, "calibration_route", route)
+        check(f"contract-AUTHORISED route {route!r} is accepted",
+              refusal_code(verified_publication, campaign2.out, j,
+                           campaign2.binding) is None)
+        campaign2.close()
+
+    # --- §20 / §38: MEASURED values stay observations, not constants ----------
+    campaign = Campaign()
+    measured = tuple(row.field for row in BRANCH_A_FIELD_AUTHORITY
+                     if row.authority_class == AUTHORITY_MEASURED)
+    check("the MEASURED set is exactly the realised Branch-A observations",
+          measured == ("H_A", "T_measured", "k_modes_measured",
+                       "rot_deg_measured", "scale_factor"), str(measured))
+    check("no MEASURED field has an expectation derived for it -- none is "
+          "compared with a predetermined number",
+          all(f not in embedded_authority_expectations(
+              campaign.job(C2), campaign.binding) for f in measured))
+    temperatures = set()
+    for field_id in FIELDS:
+        j = campaign.job(C2, field_id=field_id)
+        campaign.run(j, terminal=False)
+        ev = committed_publication(campaign.out, j.coordinates)[
+            "branch_a_evidence"]
+        temperatures.add(ev["T_measured"])
+        check(f"{field_id}: its realised measurement verifies",
+              refusal_code(verified_publication, campaign.out, j,
+                           campaign.binding) is None)
+    check("measured temperatures genuinely differ across the contract fields, "
+          "and all verify", len(temperatures) > 1, str(len(temperatures)))
+    # a measured value CHANGED is still accepted: it is an observation
+    j = campaign.job(C2, field_id=FIELDS[0])
+    forge_embedded(campaign, j, "T_measured", canonical_float(297.5))
+    check("a DIFFERENT measured temperature is accepted -- the repair did not "
+          "turn observations into expected constants",
+          refusal_code(verified_publication, campaign.out, j, campaign.binding)
+          is None)
+    # but its ENCODING is still enforced
+    forge_embedded(campaign, j, "T_measured", "not-a-float")
+    refuses_with_code("a malformed measured temperature", "PUBLICATION_INCOMPLETE",
+                      verified_publication, campaign.out, j, campaign.binding)
+    campaign.close()
+
+    # --- §21 / §22: the OPEN field, classified and left open -----------------
+    open_fields = tuple(row.field for row in BRANCH_A_FIELD_AUTHORITY
+                        if row.authority_class == AUTHORITY_OPEN_UNRESOLVED)
+    check("exactly one embedded field is OPEN_UNRESOLVED, and it is the "
+          "generator identity", open_fields == ("generator_identity",),
+          str(open_fields))
+    check("no expectation is invented for it",
+          "generator_identity" not in embedded_authority_expectations(
+              Campaign().job(C2), BINDING) if True else False)
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    forge_embedded(campaign, job, "generator_identity", "ANOTHER-GENERATOR")
+    check("a different non-empty generator identity is accepted, because its "
+          "authority is genuinely unresolved",
+          refusal_code(verified_publication, campaign.out, job, campaign.binding)
+          is None)
+    forge_embedded(campaign, job, "generator_identity", "")
+    refuses_with_code("but an empty generator identity still refuses",
+                      "PUBLICATION_INCOMPLETE", verified_publication,
+                      campaign.out, job, campaign.binding)
+    campaign.close()
+
+    # --- §5: an UNDECLARED embedded field is an unauthenticated channel ------
+    campaign = Campaign()
+    job = campaign.job(C2)
+    campaign.run(job, terminal=False)
+    coordinates = job.coordinates
+    publication = json.loads(json.dumps(
+        committed_publication(campaign.out, coordinates)))
+    publication["branch_a_evidence"]["smuggled"] = "extra"
+    publication["branch_a_evidence_sha256"] = canonical_digest(
+        publication["branch_a_evidence"])
+    publication["publication_digest"] = sealed_digest(publication,
+                                                      "publication_digest")
+    republish(publication_directory(campaign.out),
+              publication_basename(coordinates), publication,
+              "publication_digest", job.job_id, coordinates)
+    refuses_with_code("an undeclared extra field inside the evidence",
+                      "PUBLICATION_INCOMPLETE", verified_publication,
+                      campaign.out, job, campaign.binding)
+    campaign.close()
+
+    # --- §38: the positive control, every contract field, every path ---------
+    for field_id in FIELDS:
+        campaign = Campaign()
+        job = campaign.job(C2, field_id=field_id)
+        _execution, record, _digest = campaign.run(job)
+        publish_job_record(campaign.out, record, campaign.binding)
+        check(f"{field_id}: constructor-produced publication -> verifier ACCEPTS",
+              refusal_code(verified_publication, campaign.out, job,
+                           campaign.binding) is None)
+        check(f"{field_id}: -> terminal validation ACCEPTS",
+              campaign.validate(job, record) is None,
+              str(campaign.validate(job, record)))
+        check(f"{field_id}: -> restart ACCEPTS",
+              refusal_code(verify_restart, campaign.out, recovered(campaign),
+                           campaign.binding, [job]) is None)
+        campaign.close()
+
+
 # ================================ A7. no science moved
 def test_science_unchanged() -> None:
     """A provenance repair changes no scientific quantity."""
@@ -1437,6 +1772,8 @@ GROUPS = (
      test_restart_requires_the_canonical_plan),
     ("D1  embedded Branch-A identities bound to the package",
      test_embedded_identities_bound_to_package),
+    ("E1  every embedded field verified against its authority",
+     test_embedded_field_authority),
     ("A7  no science moved", test_science_unchanged),
 )
 

@@ -642,13 +642,25 @@ def test_terminal_provenance_cross_links() -> None:
 
     # a stale-but-self-consistent record is not reusable under a moved package
     class MovedBinding:
+        """The SAME package with a moved execution identity, and nothing else.
+
+        It delegates `case_access` to the real binding: the publication verifier
+        now checks the embedded Branch-A and common-mode stream identities
+        against the frozen seed map, and this double must not accidentally make
+        that check pass or fail for the wrong reason.
+        """
+
         def __init__(self, source):
+            self._source = source
             self.binding = source.binding
             self.plan = source.plan
             self.plan_sha256 = source.plan_sha256
             self.seed_map_sha256 = source.seed_map_sha256
             self.analysis_identity = source.analysis_identity
             self.execution_identity = "f" * 64
+
+        def case_access(self, case_id):
+            return self._source.case_access(case_id)
 
     # The refusal now names the UPSTREAM object that first disagrees. Since the
     # official validator verifies the committed Branch-A publication against the

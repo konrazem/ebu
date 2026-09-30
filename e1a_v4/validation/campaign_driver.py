@@ -76,6 +76,7 @@ from ..geometry import analyse_field
 from ..numerics import Refusal
 from .calibrate import CalibrationRequest, generate_block1_artifact
 from .classification import CampaignCounts, classify_campaign
+from .coherence import derived_n_samples
 from .dispositions import cp_upper
 from .driver import (
     OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT, OFFICIAL_CAMPAIGN_DRIVER_MODULE,
@@ -928,76 +929,200 @@ def inventory_calibration_locks(output_dir: str) -> dict[str, dict[str, Any]]:
     return found
 
 
-# ---- EMBEDDED Branch-A EVIDENCE IDENTITIES, CLASSIFIED ----------------------
-#: EVERY key `BranchARealisation.canonical()` emits, classified by what it is.
+# ---- EMBEDDED Branch-A FIELD AUTHORITY, DECLARED FIELD BY FIELD -------------
+#: A DIGEST AUTHENTICATES BYTES. IT DOES NOT ESTABLISH AGREEMENT WITH AUTHORITY.
 #:
-#: THE DEFECT THIS CLASSIFICATION CLOSES
-#:     The publication envelope's OUTER `package_identities` were compared with
-#:     the current binding, but the Branch-A evidence carried its own copies of
-#:     the contract, plan and analysis identities and nobody compared those. An
-#:     audit changed the embedded analysis identity and the embedded contract
-#:     identity to other valid-looking digests, recomputed the evidence digest,
-#:     the envelope digest and the commit marker, and the shared publication
-#:     verifier accepted the record -- on the terminal path and on restart.
+#: THE DEFECT THIS TABLE CLOSES
+#:     The previous repair bound the embedded PACKAGE identities to the current
+#:     binding and classified everything else as "scientific value". That
+#:     catch-all was wrong: several of those values are fixed externally, by the
+#:     frozen job, the seed map, the validation plan or the design contract. An
+#:     audit forged correctly committed, fully re-digested publications carrying
+#:     another planned job's Branch-A seed, another subcondition's common-mode
+#:     stream, n_samples 2,000,001 instead of 2,000,000, a doubled dt, and the
+#:     calibration route the contract explicitly FORBIDS -- and the shared read
+#:     verifier accepted every one of them.
 #:
-#:     The constructor stamped these fields from the binding and the verifier
-#:     ignored them, which is precisely the shape of defect that keeps recurring:
-#:     a field written from authority and never read back against it.
+#:     Seed correctness was checked when evidence was CREATED and not when it was
+#:     RECOVERED. That asymmetry is the defect: a read path that trusts what a
+#:     write path proved is not a verifier.
 #:
-#: WHY A CLASSIFICATION AND NOT A LIST
-#:     A hand-maintained list of "identities to check" silently goes stale the
-#:     next time a field is added to the evidence. Every key is classified here
-#:     instead, and a permanent test enumerates `canonical()` and refuses any key
-#:     this mapping does not classify. A new field must be classified to ship.
-EMBEDDED_PACKAGE_IDENTITY = "PACKAGE_IDENTITY"
-EMBEDDED_COORDINATES = "COORDINATES"
-EMBEDDED_SEED_IDENTITY = "SEED_IDENTITY"
-EMBEDDED_RECORDED_PROVENANCE = "RECORDED_PROVENANCE"
-EMBEDDED_SCIENTIFIC = "SCIENTIFIC"
+#: WHY A TABLE AND NOT A SEQUENCE OF SPECIAL CASES
+#:     A chain of `if field == "dt"` checks cannot be audited for completeness and
+#:     silently omits the next field someone adds. Every embedded field is
+#:     declared here with its meaning, its authority class, where that authority
+#:     comes from and which rule verifies it. The verifier DISPATCHES on the
+#:     table, and a permanent test requires the table to cover exactly the keys
+#:     `BranchARealisation.canonical()` emits -- no unclassified key, no stale row.
+#: The closed set of Branch-A field statuses `BranchAField` can carry.
+#: A realised field that fails its own validity check is BRANCH_A_INVALID,
+#: and publishing one is legitimate -- the analysis then fails closed and
+#: that refusal is a scientific RESULT. So the rule is closed-world
+#: membership, not "must be VALID".
+BRANCH_A_FIELD_STATUSES = ("VALID", "BRANCH_A_INVALID")
 
-EMBEDDED_EVIDENCE_CLASSIFICATION = {
-    # Current-package authority. Verified against the binding by
-    # `require_embedded_branch_a_identities`.
-    "schema": EMBEDDED_PACKAGE_IDENTITY,
-    "contract_sha256": EMBEDDED_PACKAGE_IDENTITY,
-    "plan_sha256": EMBEDDED_PACKAGE_IDENTITY,
-    "analysis_identity": EMBEDDED_PACKAGE_IDENTITY,
-    # Scientific address. Verified against the FROZEN PLANNED JOB, not the record.
-    "coordinates": EMBEDDED_COORDINATES,
-    "field_id": EMBEDDED_COORDINATES,
-    # Stream identities. Verified on the realisation path against the job's own
-    # declared streams (`realise_branch_a`), which is where they are meaningful.
-    "branch_a_seed": EMBEDDED_SEED_IDENTITY,
-    "common_mode_seed": EMBEDDED_SEED_IDENTITY,
-    # RECORDED PROVENANCE, deliberately NOT pinned. `generator_identity` names
-    # the code that produced the measurement, and frozen authority declares no
-    # expected value for it: `generating_model.branch_a` describes the MODEL in
-    # prose, not an implementation path. Pinning it to the driver's constant
-    # would invent a requirement the schema does not state and would forbid the
-    # deterministic pre-execution fixtures, which legitimately record that the
-    # official generator did NOT run. It is authenticated by the evidence digest
-    # and required to be a non-empty string; choosing an authoritative value for
-    # it is a separate question for the authorised stage.
-    "generator_identity": EMBEDDED_RECORDED_PROVENANCE,
-    # Scientific measurement values. Authenticated by the evidence digest and by
-    # the existing scientific validation; NOT compared against the plan here.
-    # Provenance verification does not re-litigate measurements.
-    "H_A": EMBEDDED_SCIENTIFIC,
-    "T_measured": EMBEDDED_SCIENTIFIC,
-    "k_modes_measured": EMBEDDED_SCIENTIFIC,
-    "rot_deg_measured": EMBEDDED_SCIENTIFIC,
-    "tau_modes": EMBEDDED_SCIENTIFIC,
-    "scale_factor": EMBEDDED_SCIENTIFIC,
-    "n_samples": EMBEDDED_SCIENTIFIC,
-    "dt": EMBEDDED_SCIENTIFIC,
-    "calibration_route": EMBEDDED_SCIENTIFIC,
-    "branch_a_status": EMBEDDED_SCIENTIFIC,
-}
+AUTHORITY_PACKAGE_BOUND = "PACKAGE_BOUND"
+AUTHORITY_JOB_BOUND = "JOB_BOUND"
+AUTHORITY_SEED_BOUND = "SEED_BOUND"
+AUTHORITY_PLAN_BOUND = "PLAN_BOUND"
+AUTHORITY_CONTRACT_BOUND = "CONTRACT_BOUND"
+AUTHORITY_DERIVED = "DERIVED"
+AUTHORITY_MEASURED = "MEASURED"
+AUTHORITY_OPEN_UNRESOLVED = "OPEN_UNRESOLVED"
 
-#: The embedded keys that carry current-package authority, in sorted order.
+AUTHORITY_CLASSES = (
+    AUTHORITY_PACKAGE_BOUND, AUTHORITY_JOB_BOUND, AUTHORITY_SEED_BOUND,
+    AUTHORITY_PLAN_BOUND, AUTHORITY_CONTRACT_BOUND, AUTHORITY_DERIVED,
+    AUTHORITY_MEASURED, AUTHORITY_OPEN_UNRESOLVED,
+)
+
+#: The classes whose authority fixes an EXACT value, which
+#: `embedded_authority_expectations` must therefore supply.
+AUTHORITY_CLASSES_WITH_EXPECTED_VALUE = (
+    AUTHORITY_PACKAGE_BOUND, AUTHORITY_JOB_BOUND, AUTHORITY_SEED_BOUND,
+    AUTHORITY_PLAN_BOUND,
+)
+
+
+@dataclass(frozen=True)
+class EmbeddedFieldAuthority:
+    """One embedded Branch-A evidence field and where its authority comes from."""
+
+    field: str
+    meaning: str
+    authority_class: str
+    authority_source: str
+    rule: str
+
+
+BRANCH_A_FIELD_AUTHORITY = (
+    # ---- PACKAGE_BOUND: the package this evidence claims to come from --------
+    EmbeddedFieldAuthority(
+        "schema", "the frozen Branch-A publication schema",
+        AUTHORITY_PACKAGE_BOUND, "BRANCH_A_PUBLICATION_SCHEMA", "EQUALS_EXPECTED"),
+    EmbeddedFieldAuthority(
+        "contract_sha256", "the design contract this evidence was produced under",
+        AUTHORITY_PACKAGE_BOUND, "binding.binding.sha256", "EQUALS_EXPECTED"),
+    EmbeddedFieldAuthority(
+        "plan_sha256", "the validation plan this evidence was produced under",
+        AUTHORITY_PACKAGE_BOUND, "binding.plan_sha256", "EQUALS_EXPECTED"),
+    EmbeddedFieldAuthority(
+        "analysis_identity", "the analysis procedure identity",
+        AUTHORITY_PACKAGE_BOUND, "binding.analysis_identity", "EQUALS_EXPECTED"),
+    # ---- JOB_BOUND: the exact planned scientific job ------------------------
+    EmbeddedFieldAuthority(
+        "coordinates", "the complete scientific address of this job",
+        AUTHORITY_JOB_BOUND, "the frozen planner (plan_campaign)",
+        "EQUALS_EXPECTED"),
+    EmbeddedFieldAuthority(
+        "field_id", "the field/scope this evidence measures",
+        AUTHORITY_JOB_BOUND, "job.coordinates.scope", "EQUALS_EXPECTED"),
+    # ---- SEED_BOUND: streams authorised for THESE coordinates ---------------
+    EmbeddedFieldAuthority(
+        "branch_a_seed", "the per-field Branch-A measurement stream identity",
+        AUTHORITY_SEED_BOUND,
+        "CaseSeedAccess.stream(branch_a_measurement, sub, replicate, scope)",
+        "EQUALS_EXPECTED"),
+    EmbeddedFieldAuthority(
+        "common_mode_seed",
+        "the Branch-A COMMON-MODE stream: ONE per experiment, SHARED across the "
+        "fields of a replicate, which is why it cancels in P2 and not in P3",
+        AUTHORITY_SEED_BOUND,
+        "CaseSeedAccess.stream(branch_a_measurement, sub, replicate, "
+        "EXPERIMENT_SCOPE)", "EQUALS_EXPECTED"),
+    # ---- PLAN_BOUND: frozen generating-model primitives ---------------------
+    EmbeddedFieldAuthority(
+        "dt", "the Branch-B sampling interval, seconds -- a plan PRIMITIVE",
+        AUTHORITY_PLAN_BOUND, "plan.generating_model.branch_b.dt_s",
+        "EQUALS_EXPECTED"),
+    # ---- CONTRACT_BOUND: the anti-circularity route rule -------------------
+    EmbeddedFieldAuthority(
+        "calibration_route", "how the Branch-A stiffness was calibrated",
+        AUTHORITY_CONTRACT_BOUND,
+        "contract.information_separation.authorised_branch_A_routes and "
+        "forbidden_branch_A_routes", "CONTRACT_ROUTE"),
+    # ---- DERIVED: mechanically determined by authoritative primitives -------
+    EmbeddedFieldAuthority(
+        "n_samples", "the Branch-B record length in samples",
+        AUTHORITY_DERIVED,
+        "int(round(T_total_s / dt_s)), exactly as e1a_v4.world.World derives it "
+        "and as the plan's own surface map declares it DERIVED",
+        "EQUALS_EXPECTED"),
+    EmbeddedFieldAuthority(
+        "branch_a_status", "whether the realised field is usable",
+        AUTHORITY_DERIVED, "BranchAField.status, a closed set of two values",
+        "STATUS_ENUM"),
+    EmbeddedFieldAuthority(
+        "tau_modes",
+        "per-mode relaxation times tau_r = gamma / k_r, carried with ASCENDING "
+        "k so the pairing survives -- deliberately not sorted(tau)",
+        AUTHORITY_DERIVED,
+        "the frozen pairing rule. The absolute values depend on gamma = 6 pi eta "
+        "a, whose inputs are the ACKNOWLEDGED OPEN field-construction gap, so "
+        "only the pairing and arity are verifiable here",
+        "TAU_PAIRING"),
+    # ---- MEASURED: realised Branch-A observations ---------------------------
+    # These vary by design. Comparing them with a predetermined number would
+    # validate a procedure nobody proposes to run.
+    EmbeddedFieldAuthority(
+        "H_A", "the realised Branch-A stiffness matrix the analysis receives",
+        AUTHORITY_MEASURED, "realised measurement", "FLOAT_MATRIX"),
+    EmbeddedFieldAuthority(
+        "T_measured", "the measured temperature, carrying thermometry error",
+        AUTHORITY_MEASURED, "realised measurement", "FLOAT"),
+    EmbeddedFieldAuthority(
+        "k_modes_measured", "the measured per-mode stiffnesses",
+        AUTHORITY_MEASURED, "realised measurement", "FLOAT_LIST"),
+    EmbeddedFieldAuthority(
+        "rot_deg_measured", "the measured trap-axis orientation",
+        AUTHORITY_MEASURED, "realised measurement", "FLOAT"),
+    EmbeddedFieldAuthority(
+        "scale_factor",
+        "the declared scale factor AFTER the common-mode perturbation "
+        "scale_factor * (1 + sigma_cm * common_mode); it is realised, not fixed",
+        AUTHORITY_MEASURED, "realised measurement", "FLOAT"),
+    # ---- OPEN_UNRESOLVED: authority genuinely not frozen yet ----------------
+    EmbeddedFieldAuthority(
+        "generator_identity",
+        "which code produced the Branch-A measurement",
+        AUTHORITY_OPEN_UNRESOLVED,
+        "NOT DECLARED by frozen authority. generating_model.branch_a describes "
+        "the MODEL in prose; the only generator_identity the plan declares "
+        "anywhere belongs to CALIBRATION. Choosing an authoritative value is a "
+        "pre-seal decision and is NOT made here.",
+        "NON_EMPTY_STRING"),
+)
+
+#: field -> its authority row. Built once; the table is the single source.
+BRANCH_A_FIELD_AUTHORITY_BY_FIELD = {row.field: row
+                                     for row in BRANCH_A_FIELD_AUTHORITY}
+
+#: field -> authority class. Kept as the coarse view earlier code and reports use.
+EMBEDDED_EVIDENCE_CLASSIFICATION = {row.field: row.authority_class
+                                    for row in BRANCH_A_FIELD_AUTHORITY}
+
+#: The embedded keys carrying CURRENT-PACKAGE authority, derived from the table.
 EMBEDDED_PACKAGE_IDENTITY_FIELDS = tuple(sorted(
-    key for key, kind in EMBEDDED_EVIDENCE_CLASSIFICATION.items()
-    if kind == EMBEDDED_PACKAGE_IDENTITY))
+    row.field for row in BRANCH_A_FIELD_AUTHORITY
+    if row.authority_class == AUTHORITY_PACKAGE_BOUND))
+
+#: Every embedded field whose value is fixed OUTSIDE the record, derived from the
+#: table. These are the ones a forger must not be able to choose.
+EXTERNALLY_BOUND_EMBEDDED_FIELDS = tuple(sorted(
+    row.field for row in BRANCH_A_FIELD_AUTHORITY
+    if row.authority_class in (AUTHORITY_PACKAGE_BOUND, AUTHORITY_JOB_BOUND,
+                               AUTHORITY_SEED_BOUND, AUTHORITY_PLAN_BOUND,
+                               AUTHORITY_CONTRACT_BOUND, AUTHORITY_DERIVED)))
+
+
+def authority_class_counts() -> dict[str, int]:
+    """MACHINE-DERIVED totals. Never hard-coded in a report."""
+    counts = {name: 0 for name in AUTHORITY_CLASSES}
+    for row in BRANCH_A_FIELD_AUTHORITY:
+        counts[row.authority_class] += 1
+    counts["total"] = len(BRANCH_A_FIELD_AUTHORITY)
+    return counts
+
 
 #: Embedded key -> the OUTER envelope key restating the SAME identity. The two
 #: spellings differ for the analysis identity, which is exactly why they were
@@ -1009,74 +1134,220 @@ EMBEDDED_TO_OUTER_IDENTITY = (
 )
 
 
-def embedded_identity_expectations(binding: ExecutionBinding
-                                   ) -> tuple[tuple[str, str, Any], ...]:
-    """(embedded key, label, expected value) taken from the CURRENT binding.
+def embedded_authority_expectations(job: CampaignJob,
+                                    binding: ExecutionBinding) -> dict[str, Any]:
+    """The value frozen authority REQUIRES for every field that fixes one.
 
-    The expected values come from the canonical binding and from nowhere else --
-    not from the publication's outer envelope, not from the evidence itself, and
-    not from a caller.
+    Every expectation is obtained INDEPENDENTLY of the record being checked --
+    from the current binding, the frozen planned job, the seed map through its
+    own scoped interface, and the validated plan. Nothing is read from the
+    publication, the evidence, a downstream lock or a terminal record.
+
+    No seed arithmetic happens here. `CaseSeedAccess.stream` is the frozen
+    authorisation boundary and is the only route to a stream identity; deriving
+    one constructs no generator and draws no number.
     """
-    return (
-        ("schema", "publication schema", BRANCH_A_PUBLICATION_SCHEMA),
-        ("contract_sha256", "design-contract identity", binding.binding.sha256),
-        ("plan_sha256", "validation-plan identity", binding.plan_sha256),
-        ("analysis_identity", "analysis procedure identity",
-         binding.analysis_identity),
-    )
+    branch_b = binding.plan["generating_model"]["branch_b"]
+    access = binding.case_access(job.coordinates.case_id)
+    subcondition = job.coordinates.subcondition_id
+    replicate = job.coordinates.replicate_id
+    return {
+        # PACKAGE_BOUND
+        "schema": BRANCH_A_PUBLICATION_SCHEMA,
+        "contract_sha256": binding.binding.sha256,
+        "plan_sha256": binding.plan_sha256,
+        "analysis_identity": binding.analysis_identity,
+        # JOB_BOUND
+        "coordinates": job.coordinates.as_dict(),
+        "field_id": job.coordinates.scope,
+        # SEED_BOUND -- through the frozen scoped seed interface
+        "branch_a_seed": access.stream(
+            ValidationSeedFamily.BRANCH_A_MEASUREMENT, subcondition, replicate,
+            job.coordinates.scope),
+        "common_mode_seed": access.stream(
+            ValidationSeedFamily.BRANCH_A_MEASUREMENT, subcondition, replicate,
+            EXPERIMENT_SCOPE),
+        # PLAN_BOUND -- the plan's own primitive, never a literal in driver code
+        "dt": canonical_float(float(branch_b["dt_s"])),
+        # DERIVED -- recomputed from the plan's primitives by the plan layer's
+        # own function, so the driver does not define the derivation
+        "n_samples": derived_n_samples(branch_b),
+    }
 
 
-def require_embedded_evidence_shape(evidence: Any, where: str) -> None:
-    """Presence and type of the embedded authority fields, before anything reads
-    them. Runs before the evidence is rebuilt, so a missing field refuses with a
-    coded provenance failure instead of crashing on a KeyError."""
+def _is_canonical_float(value: Any) -> bool:
+    if not isinstance(value, str):
+        return False
+    try:
+        float.fromhex(value)
+    except (TypeError, ValueError):
+        return False
+    return True
+
+
+def _rule_equals_expected(evidence, row, expectations, binding, where) -> None:
+    if row.field not in expectations:
+        raise BranchAProvenanceMismatch(
+            f"{where}: {row.field!r} is classified {row.authority_class} but no "
+            "expectation was derived for it; a bound field with no expectation is "
+            "an unverified field")
+    expected = expectations[row.field]
+    value = evidence.get(row.field)
+    # SHAPE BEFORE VALUE, so "this is not even a string" stays distinguishable
+    # from "this is the wrong string". Both refuse; they refuse differently.
+    if isinstance(expected, str) and (not isinstance(value, str) or not value):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is {value!r}; the frozen evidence "
+            "schema carries it as a non-empty string")
+    if isinstance(expected, bool) or not isinstance(expected, (str, dict)):
+        if isinstance(value, bool) or not isinstance(value, type(expected)):
+            raise PublicationIncomplete(
+                f"{where}: embedded {row.field} is {value!r}; the frozen evidence "
+                f"schema carries it as {type(expected).__name__}")
+    if isinstance(expected, dict) and not isinstance(value, dict):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is {value!r}; the frozen evidence "
+            "schema carries it as an object")
+    if value != expected:
+        raise BranchAProvenanceMismatch(
+            f"{where}: the Branch-A evidence embeds {row.field} "
+            f"{value!r}; {row.authority_class} authority "
+            f"({row.authority_source}) requires {expected!r}. Recomputing the "
+            "evidence and envelope digests makes the record self-consistent; it "
+            "does not make it conform to authority.")
+
+
+def _rule_contract_route(evidence, row, expectations, binding, where) -> None:
+    route = evidence.get(row.field)
+    if not isinstance(route, str) or not route:
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is {route!r}; the schema carries it "
+            "as a non-empty string")
+    if route in binding.binding.forbidden_branch_a_routes:
+        raise BranchAProvenanceMismatch(
+            f"{where}: ANTI-CIRCULARITY. The published Branch-A evidence declares "
+            f"calibration route {route!r}, which the adopted contract FORBIDS. "
+            f"Authorised: {list(binding.binding.authorised_branch_a_routes)}")
+    if route not in binding.binding.authorised_branch_a_routes:
+        raise BranchAProvenanceMismatch(
+            f"{where}: calibration route {route!r} is not on the contract's "
+            f"authorised list {list(binding.binding.authorised_branch_a_routes)}; "
+            "refusing rather than assuming")
+
+
+def _rule_status_enum(evidence, row, expectations, binding, where) -> None:
+    status = evidence.get(row.field)
+    if status not in BRANCH_A_FIELD_STATUSES:
+        raise BranchAProvenanceMismatch(
+            f"{where}: embedded {row.field} {status!r} is not one of the declared "
+            f"Branch-A field statuses {list(BRANCH_A_FIELD_STATUSES)}. A status "
+            "outside the closed set cannot be branched on.")
+
+
+def _rule_tau_pairing(evidence, row, expectations, binding, where) -> None:
+    taus = evidence.get(row.field)
+    modes = evidence.get("H_A")
+    if not isinstance(taus, list) or not all(_is_canonical_float(t) for t in taus):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is not a list of canonical floats")
+    if not isinstance(modes, list) or len(taus) != len(modes):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} carries {len(taus)} relaxation "
+            "time(s); the frozen rule is one per mode")
+    values = [float.fromhex(t) for t in taus]
+    if any(t <= 0.0 for t in values):
+        raise BranchAProvenanceMismatch(
+            f"{where}: embedded {row.field} carries a non-positive relaxation time")
+    # tau_r = gamma / k_r with ONE gamma, carried with ASCENDING k. The stored
+    # order is therefore non-increasing, and a re-sorted or shuffled list is a
+    # broken pairing -- which is the invariant the frozen calibration layer
+    # refuses on, checked here so the READ path refuses it too.
+    if any(b > a for a, b in zip(values, values[1:])):
+        raise BranchAProvenanceMismatch(
+            f"{where}: embedded {row.field} is not carried with ascending "
+            "stiffness. tau_r = gamma / k_r, so the frozen pairing gives a "
+            "non-increasing sequence; this one is not, and a mispaired tau "
+            "changes every phi and the whole Block-1 null law.")
+
+
+def _rule_float(evidence, row, expectations, binding, where) -> None:
+    if not _is_canonical_float(evidence.get(row.field)):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} {evidence.get(row.field)!r} is not a "
+            "canonically encoded float")
+
+
+def _rule_float_list(evidence, row, expectations, binding, where) -> None:
+    value = evidence.get(row.field)
+    if not isinstance(value, list) or not value or not all(
+            _is_canonical_float(v) for v in value):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is not a non-empty list of "
+            "canonically encoded floats")
+
+
+def _rule_float_matrix(evidence, row, expectations, binding, where) -> None:
+    value = evidence.get(row.field)
+    if (not isinstance(value, list) or not value
+            or not all(isinstance(r, list) and r
+                       and all(_is_canonical_float(v) for v in r) for r in value)
+            or len({len(r) for r in value}) != 1):
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is not a rectangular matrix of "
+            "canonically encoded floats")
+
+
+def _rule_non_empty_string(evidence, row, expectations, binding, where) -> None:
+    value = evidence.get(row.field)
+    if not isinstance(value, str) or not value:
+        raise PublicationIncomplete(
+            f"{where}: embedded {row.field} is {value!r}; the schema carries it "
+            "as a non-empty string")
+
+
+#: rule name -> implementation. The verifier dispatches; it does not branch on
+#: field names.
+_AUTHORITY_RULES = {
+    "EQUALS_EXPECTED": _rule_equals_expected,
+    "CONTRACT_ROUTE": _rule_contract_route,
+    "STATUS_ENUM": _rule_status_enum,
+    "TAU_PAIRING": _rule_tau_pairing,
+    "FLOAT": _rule_float,
+    "FLOAT_LIST": _rule_float_list,
+    "FLOAT_MATRIX": _rule_float_matrix,
+    "NON_EMPTY_STRING": _rule_non_empty_string,
+}
+
+
+def require_embedded_field_authority(record: Mapping[str, Any], job: CampaignJob,
+                                     binding: ExecutionBinding,
+                                     where: str) -> None:
+    """Verify EVERY embedded Branch-A field against its declared authority.
+
+    Table-driven: one row per embedded field, one rule per row, dispatched. The
+    expectations are derived independently of the record, so a forger who edits
+    an embedded value and recomputes every digest down through the lock and the
+    terminal record still disagrees with the only thing that can tell -- frozen
+    authority.
+    """
+    evidence = record.get("branch_a_evidence")
     if not isinstance(evidence, dict):
         raise PublicationIncomplete(
             f"{where}: the published Branch-A evidence is not an object")
-    for key in EMBEDDED_PACKAGE_IDENTITY_FIELDS + ("generator_identity",):
-        if key not in evidence:
+    unknown = sorted(set(evidence) - set(BRANCH_A_FIELD_AUTHORITY_BY_FIELD))
+    if unknown:
+        raise PublicationIncomplete(
+            f"{where}: the published Branch-A evidence carries undeclared "
+            f"field(s) {unknown}; an unknown field is an unauthenticated channel")
+    expectations = embedded_authority_expectations(job, binding)
+    for row in BRANCH_A_FIELD_AUTHORITY:
+        if row.field not in evidence:
             raise PublicationIncomplete(
-                f"{where}: the published Branch-A evidence omits {key!r}, which "
-                "the frozen evidence schema requires. A missing identity is not "
-                "a satisfied one.")
-        value = evidence[key]
-        if not isinstance(value, str) or not value:
-            raise PublicationIncomplete(
-                f"{where}: embedded {key} is {value!r}; the frozen evidence "
-                "schema carries it as a non-empty string")
-
-
-def require_embedded_branch_a_identities(record: Mapping[str, Any],
-                                         job: CampaignJob,
-                                         binding: ExecutionBinding,
-                                         where: str) -> None:
-    """Bind the identities INSIDE Branch-A evidence to the CURRENT package.
-
-    Three comparisons, and all three are needed:
-
-        embedded == current binding      the evidence claims to have been
-                                         produced under this package
-        embedded == outer envelope       one truth, not two independently
-                                         editable copies of it
-        embedded coordinates == the frozen planned job's
-
-    A digest proves that bytes were not edited AFTER they were written. It cannot
-    prove the bytes describe this package, because a forger who edits an embedded
-    identity simply recomputes every digest that depends on it -- which is exactly
-    what the audit did, down through the lock and the terminal record. Only a
-    comparison against frozen authority can tell, and it is made here, inside the
-    ONE shared publication verifier, so terminal validation and restart
-    reconciliation get it identically.
-    """
-    evidence = record["branch_a_evidence"]
-    require_embedded_evidence_shape(evidence, where)
-    for key, label, expected in embedded_identity_expectations(binding):
-        if evidence.get(key) != expected:
-            raise BranchAProvenanceMismatch(
-                f"{where}: the Branch-A evidence embeds {label} "
-                f"{evidence.get(key)!r}, the current package is {expected!r}. "
-                "Recomputing the evidence and envelope digests makes the record "
-                "self-consistent; it does not make it this package's evidence.")
+                f"{where}: the published Branch-A evidence omits {row.field!r}, "
+                f"which the frozen evidence schema requires "
+                f"({row.authority_class})")
+        _AUTHORITY_RULES[row.rule](evidence, row, expectations, binding, where)
+    # ONE package identity per publication, not two editable copies of it.
     identities = record.get("package_identities") or {}
     for embedded_key, outer_key in EMBEDDED_TO_OUTER_IDENTITY:
         if evidence.get(embedded_key) != identities.get(outer_key):
@@ -1089,17 +1360,7 @@ def require_embedded_branch_a_identities(record: Mapping[str, Any],
         raise BranchAProvenanceMismatch(
             f"{where}: the embedded evidence schema {evidence.get('schema')!r} is "
             f"not the envelope's {record.get('schema')!r}")
-    # The scientific address, against the FROZEN PLANNER rather than the record.
-    if evidence.get("coordinates") != job.coordinates.as_dict():
-        raise BranchAProvenanceMismatch(
-            f"{where}: the Branch-A evidence embeds coordinates "
-            f"{evidence.get('coordinates')!r}, this job is "
-            f"{job.coordinates.as_dict()!r}")
-    if evidence.get("field_id") != job.coordinates.scope:
-        raise BranchAProvenanceMismatch(
-            f"{where}: the Branch-A evidence embeds field "
-            f"{evidence.get('field_id')!r}, this job is "
-            f"{job.coordinates.scope!r}")
+
 
 
 # ---- THE ONE CANONICAL VERIFIED-PUBLICATION LOADER --------------------------
@@ -1155,20 +1416,17 @@ def verified_publication(output_dir: str, job: CampaignJob,
             f"{record['coordinates']!r}, but this is the canonical location of "
             f"{job.coordinates.as_dict()!r}. A publication filed under another "
             "job's coordinates is not this job's evidence.")
-    # EMBEDDED SHAPE, before the evidence is rebuilt from it: a missing or
-    # malformed embedded identity must refuse with a coded provenance failure
-    # rather than crash inside the reconstruction.
-    require_embedded_evidence_shape(record.get("branch_a_evidence"), path)
+    # EVERY EMBEDDED FIELD AGAINST ITS DECLARED AUTHORITY, before the evidence
+    # is rebuilt from it: a missing, malformed or unauthorised embedded value must
+    # refuse with a coded provenance failure rather than crash inside the
+    # reconstruction, and the seed, plan, contract and derived rules must hold on
+    # the READ path exactly as they did when the evidence was created.
+    require_embedded_field_authority(record, job, binding, path)
     # THE COMPLETE EXISTING VERIFIER: envelope digest recomputed, marker digest
     # compared, basename re-derived, evidence digest recomputed, outer package and
     # execution identities compared with the current binding.
     verified = verify_publication(output_dir, realisation_from_record(record),
                                   binding)
-    # THE IDENTITIES CARRIED INSIDE THE EVIDENCE, bound to the same authority.
-    # The step above cannot do this: the realisation it compares against is
-    # rebuilt FROM the record, so for every embedded field that round-trips it is
-    # comparing the record with itself. Only the binding can tell.
-    require_embedded_branch_a_identities(verified, job, binding, path)
     return verified
 
 
