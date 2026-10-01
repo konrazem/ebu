@@ -54,6 +54,7 @@ from __future__ import annotations
 import functools
 import os
 import re
+import dataclasses
 from dataclasses import dataclass
 from typing import Any
 
@@ -65,7 +66,7 @@ from .refusals import (
     ContractReleaseConfidenceRuleMismatch, ContractReleaseDerivedThresholdMismatch,
     ContractReleaseEndpointMismatch, ContractReleaseImplicationBroken,
     ContractReleaseReplicateCountMismatch, ContractReleaseTargetMismatch,
-    ResultSchemaInvalid,
+    ProspectiveAmendmentMismatch, ResultSchemaInvalid,
 )
 
 EXACT = "EXACT"
@@ -268,6 +269,268 @@ PACKAGE_R_REASON = (
     "the frozen authority states WHAT must be validated but no replicate count; this "
     "count was frozen with the adopted package at 475633c, has never changed, and is "
     "pinned here so that editing it moves the execution identity")
+
+
+# ============================================================================
+# THE CANONICAL C3/C4 PER-FIELD AMENDMENT
+# ============================================================================
+#: ONE source for the approved prospective amendment (plan disposition G4).
+#:
+#: WHY THIS EXISTS. The amendment was first written as structured plan fields
+#: PLUS four separate pieces of normative English -- the G4 resolution, the two
+#: formal pass/fail criteria, and the per-case semantics prose. An independent
+#: audit then showed that all four could be edited to say ANY-FIELD reduction or
+#: pooling while the structured fields still said PER_FIELD, with Markdown and
+#: JSON mutually coherent, and the whole package still passed preflight. Four
+#: hand-maintained descriptions of one decision is the defect; this is the fix.
+#:
+#: The rule lives HERE, in the case-release-specification layer that already sits
+#: above the machine plan, so the expected semantics are NOT read from the text
+#: being checked. Every normative rendering in the plan is generated from this
+#: object and compared byte-exactly, so a contradicting edit cannot be coherent.
+FIELD_SIZE_DISPOSITION_ID = "G4"
+FIELD_SIZE_DISPOSITION_TYPE = "C3_C4_PER_FIELD_SIZE"
+FIELD_SIZE_DISPOSITION_STATUS = "CLOSED PROSPECTIVELY"
+FIELD_SIZE_DISPOSITION_AFFECTS = "C3, C4"
+
+EVALUATION_SCOPE_PER_FIELD = "PER_FIELD"
+FIELD_REDUCTION_NONE = "NONE"
+POOLING_FORBIDDEN = "FORBIDDEN"
+FINAL_RELEASE_REPRESENTATION = "FIELD_CONDITION_VECTOR"
+FINAL_RELEASE_COMPENSATION = "FORBIDDEN"
+
+#: The declared physical fields, in declaration order. Order, membership and
+#: multiplicity are all load-bearing: a removed, duplicated, replaced or extra
+#: field changes which conditions the conjunction requires.
+FIELD_SIZE_REQUIRED_FIELDS = ("theta0_circular", "theta1_power", "theta2_ellipse",
+                              "theta3_temperature")
+
+
+@dataclass(frozen=True)
+class FieldSizeRule:
+    """The approved per-field size semantics for one case."""
+
+    case_id: str
+    semantics_key: str
+    evaluation_scope: str
+    field_reduction: str
+    pooling: str
+    required_fields: tuple[str, ...]
+    primary_endpoint: str
+    replicates: int
+    nominal_alpha: float
+    alpha_name: str
+    boundary: int
+    decision: str
+    #: Case-specific sentence the frozen authority already required, carried
+    #: verbatim so the whole criterion can be generated rather than hand-kept.
+    trailing_requirement: str
+    #: Exact per-field false size-inflation probability at the nominal null, and
+    #: the dependence-free bounds on all four fields being clean. Disclosure, not
+    #: thresholds; rendered into the disposition so the numbers cannot drift.
+    false_flag_probability: str
+    all_clean_lower: str
+    all_clean_upper: str
+    #: Which semantics key carries the field-structure status sentence. C3's own
+    #: `status` already records an EARLIER disposition (Block-1 versus G5), so its
+    #: field-structure status lives beside it rather than overwriting it.
+    status_key: str = "status"
+    secondary_diagnostic: str | None = None
+    secondary_feeds_primary_release: bool | None = None
+
+
+FIELD_SIZE_RULES = (
+    FieldSizeRule(
+        case_id="C3_g5_block", semantics_key="c3_semantics",
+        evaluation_scope=EVALUATION_SCOPE_PER_FIELD,
+        field_reduction=FIELD_REDUCTION_NONE, pooling=POOLING_FORBIDDEN,
+        required_fields=FIELD_SIZE_REQUIRED_FIELDS,
+        primary_endpoint="G5_BLOCK_SIZE", replicates=400, nominal_alpha=0.001,
+        alpha_name="alpha_2", boundary=2, decision="G5",
+        trailing_requirement=("Also report the measured sd(g2) against the "
+                              "leading-order 24 A4 / n prediction."),
+        false_flag_probability="0.00788343125882217",
+        all_clean_lower="0.9684663", all_clean_upper="0.9921166",
+        status_key="field_structure_status",
+        secondary_diagnostic="SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+        secondary_feeds_primary_release=False),
+    FieldSizeRule(
+        case_id="C4_surrogate_validity", semantics_key="c4_semantics",
+        evaluation_scope=EVALUATION_SCOPE_PER_FIELD,
+        field_reduction=FIELD_REDUCTION_NONE, pooling=POOLING_FORBIDDEN,
+        required_fields=FIELD_SIZE_REQUIRED_FIELDS,
+        primary_endpoint="BLOCK1_ACHIEVED_SIZE", replicates=2000,
+        nominal_alpha=0.004, alpha_name="alpha_1", boundary=13,
+        decision="Block-1",
+        trailing_requirement=("RETAIN the full two-sided interval and the observed "
+                              "operating-quantile discrepancy; the binary diagnostic "
+                              "does not replace the discrepancy report."),
+        false_flag_probability="0.033884449548367356",
+        all_clean_lower="0.8644622", all_clean_upper="0.9661156"),
+)
+
+FIELD_SIZE_RULES_BY_CASE = {rule.case_id: rule for rule in FIELD_SIZE_RULES}
+
+#: The one sentence that states the field structure. Every normative rendering
+#: embeds exactly this, so there is one place the scope can be read.
+_SCOPE_SENTENCE = (
+    "Each declared field keeps its OWN R-replicate sequence of decisions: there is "
+    "NO within-replicate reduction across fields, NO any-field event, NO "
+    "every-field event, NO reference-field-only event and NO pooling of counts.")
+_CASE_LEVEL_SENTENCE = (
+    "The case contributes one required condition PER FIELD to the final conjunctive "
+    "campaign classification and is clean only when all four are clean. That "
+    "conjunction happens at CLASSIFICATION level; it must NEVER be reimplemented as "
+    "a replicate-wide 'any field rejects' event, which is a different statistical "
+    "object with a different null rate.")
+
+
+def render_field_size_criterion(rule: FieldSizeRule) -> str:
+    """The case's complete formal pass/fail criterion. GENERATED, not kept."""
+    return (
+        f"PER FIELD, never pooled, R = {rule.replicates} per field, nominal "
+        f"{rule.alpha_name} = {rule.nominal_alpha}. {_SCOPE_SENTENCE} Inflation is "
+        f"detected in a field iff CP_lower(that field's {rule.decision} rejections, "
+        f"{rule.replicates}) > {rule.nominal_alpha}, i.e. {rule.boundary + 1} or more "
+        f"-> STATISTICAL_SIZE_FAILURE for that field; 0-{rule.boundary} -> "
+        "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED for that field, which means this "
+        "experiment did not establish excess size at that field, NOT that nominal "
+        f"size is proved. {_CASE_LEVEL_SENTENCE} {rule.trailing_requirement}")
+
+
+def render_field_size_semantics(rule: FieldSizeRule) -> dict[str, Any]:
+    """The GENERATED members of the case's semantics block."""
+    fields = ", ".join(rule.required_fields)
+    generated = {
+        "field_structure": rule.evaluation_scope,
+        "field_reduction": rule.field_reduction,
+        "pooling": rule.pooling,
+        "field_structure_rule": (
+            f"four field-specific {rule.decision} size assessments, one per declared "
+            f"field ({fields}), each with its own rejection count, rate, "
+            "Clopper-Pearson bound and size classification"),
+        "case_level_rule": (
+            "the four field conditions enter the final conjunctive classification "
+            "separately and the case is clean iff all four are clean; no new scalar "
+            "statistical event is created and no compensation between fields is "
+            "permitted"),
+        "what_is_forbidden": (
+            "pooling the four fields' rejection counts, reducing the four field "
+            "decisions of a replicate to one replicate-level event, and releasing on "
+            "the reference field alone"),
+    }
+    generated["release_criterion"] = (
+        f"UNCHANGED, stated per field: R = {rule.replicates} per field, nominal "
+        f"{rule.alpha_name} = {rule.nominal_alpha}, CP_lower(rejections, "
+        f"{rule.replicates}) > {rule.nominal_alpha} detects inflation; "
+        f"0-{rule.boundary} clean, {rule.boundary + 1}+ STATISTICAL_SIZE_FAILURE")
+    generated["primary_release_endpoint"] = rule.primary_endpoint
+    generated[rule.status_key] = (
+        "FIELD STRUCTURE RESOLVED PROSPECTIVELY, before any random outcome exists; "
+        f"see authority_gaps {FIELD_SIZE_DISPOSITION_ID}")
+    if rule.secondary_diagnostic is not None:
+        generated["block1_role"] = rule.secondary_diagnostic
+    return generated
+
+
+def render_field_size_assurance(rule: FieldSizeRule) -> dict[str, Any]:
+    """The GENERATED members of the case's assurance row."""
+    return {
+        "quantity": (f"block-2 (G5) rejection rate, per field"
+                     if rule.decision == "G5"
+                     else "Block-1 achieved size under the surrogate, per field"),
+        "unit": "per_field",
+        "pooling": rule.pooling,
+        "acceptance_rule": (
+            f"no inflation detected: CP_lower <= {rule.nominal_alpha}, i.e. <= "
+            f"{rule.boundary}/{rule.replicates}, PER FIELD; every declared field is "
+            "assessed and reported separately and counts are never pooled"),
+    }
+
+
+def render_field_size_boundary_rule(rule: FieldSizeRule) -> str:
+    """The GENERATED section-12a boundary prose for the case."""
+    return (f"0-{rule.boundary} {rule.decision} rejections PER FIELD: no significant "
+            f"inflation detected; {rule.boundary + 1}+ in any field: "
+            "STATISTICAL_SIZE_FAILURE for that field")
+
+
+def render_field_size_gap_statement() -> str:
+    """The GENERATED statement of what the disposition closes."""
+    return (
+        "C3 and C4 each declare four physical fields while the two-block P1 gate "
+        "decides PER FIELD, so one replicate yields four Block-2 (C3) or four "
+        "Block-1 (C4) decisions; no frozen document stated how those four field "
+        "decisions produce the one event each case's replicate denominator counts. "
+        "C2 carried 'at every declared geometry' from the contract and was "
+        "explicitly per field; C3 and C4 carried no field-structure statement at "
+        "all, and C3's records were mutually contradictory - its R was derived from "
+        "the contract clause that says 'at every declared geometry' while its unit "
+        "and pooling asserted one campaign-level count.")
+
+
+def render_field_size_disposition() -> str:
+    """The G4 resolution text. GENERATED from the canonical rule."""
+    parts = [
+        "The elementary size event for BOTH C3 and C4 is PER FIELD. "
+        + _SCOPE_SENTENCE
+        + " Each declared field carries its own rejection count, rejection rate, "
+        "Clopper-Pearson bound and size classification over the declared fields "
+        f"{', '.join(FIELD_SIZE_REQUIRED_FIELDS)}."]
+    for rule in FIELD_SIZE_RULES:
+        parts.append(
+            f"{rule.case_id}: evaluation scope {rule.evaluation_scope}, "
+            f"within-replicate field reduction {rule.field_reduction}, pooling "
+            f"{rule.pooling}, primary endpoint {rule.primary_endpoint}, R = "
+            f"{rule.replicates} per field at {rule.alpha_name} = "
+            f"{rule.nominal_alpha} with integer boundary {rule.boundary} "
+            f"(clean 0-{rule.boundary}).")
+    parts.append(
+        "R, the nominal alphas, the confidence method and level and the integer "
+        "boundaries are UNCHANGED by this amendment and now apply per field.")
+    parts.append(
+        "Case-level semantics are DERIVED, not a new statistical event: each case "
+        f"contributes four required field-level conditions to the existing "
+        f"conjunctive final classification as a {FINAL_RELEASE_REPRESENTATION}, "
+        f"exactly as C2 already does, so the case is clean iff all four fields are "
+        f"clean, with compensation {FINAL_RELEASE_COMPENSATION} and the failing "
+        "field identity preserved. " + _CASE_LEVEL_SENTENCE)
+    parts.append(
+        "C3's primary release endpoint remains the G5 block; the full two-block P1 "
+        "result remains the SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC and does "
+        "NOT feed the C3 primary release verdict.")
+    parts.append(
+        "OPERATING CHARACTERISTIC, disclosed and not a threshold: at the exact "
+        "nominal per-field null the probability of a false size-inflation flag is "
+        + " and ".join(
+            f"{rule.false_flag_probability} for a {rule.case_id[:2]} field"
+            for rule in FIELD_SIZE_RULES)
+        + ", so the dependence-free probability that all four fields are clean lies "
+        + " and ".join(
+            f"in [{rule.all_clean_lower}, {rule.all_clean_upper}] for {rule.case_id[:2]}"
+            for rule in FIELD_SIZE_RULES)
+        + ". The C4 union bound therefore admits a family-level false-failure "
+        "probability of about 13.55%. That is a CONSERVATIVE VALIDATION FAILURE -- a "
+        "spurious block on release -- and NOT a false scientific pass, and no size "
+        "rule was altered to reduce it.")
+    parts.append(
+        "DEPENDENCE: the frozen generating model intentionally shares one Branch-A "
+        "common-mode draw across the fields of a replicate, so probabilistic "
+        "independence of field-level gate outcomes must not simply be assumed; the "
+        "direction and magnitude of the resulting dependence are NOT established by "
+        "current authority or analysis, and the bounds above rely on no association "
+        "assumption.")
+    parts.append(
+        "The complete-pipeline target >= 0.90 remains C1-only and is NOT a C3 or C4 "
+        "familywise target. Decided before any official campaign job, trajectory or "
+        "outcome existed.")
+    return " ".join(parts)
+
+
+def render_field_size_requirement(rule: FieldSizeRule, index: int) -> str:
+    """The case's numbered line in the final-campaign requirement list."""
+    return (f"{index}. {rule.case_id[:2]} produces no STATISTICAL_SIZE_FAILURE in any "
+            "required field")
 
 
 def case_release_specification(contract: dict[str, Any], root: str) -> tuple[CaseRelease, ...]:
@@ -673,6 +936,129 @@ def _at(obj: Any, path: str) -> Any:
 
 def _numbers_in(text: str) -> list[float]:
     return [float(t) for t in re.findall(r"\d+(?:\.\d+)?", text)]
+
+
+
+def _amendment_rows(plan: dict[str, Any]) -> list[tuple[str, Any, Any]]:
+    """Every (path, expected, actual) the canonical amendment determines.
+
+    Built from `FIELD_SIZE_RULES` and the renderers above -- never from the plan
+    text being checked -- so a contradicting edit cannot justify itself.
+    """
+    rows: list[tuple[str, Any, Any]] = []
+    gaps = {gap["id"]: gap for gap in plan.get("authority_gaps", [])}
+    gap = gaps.get(FIELD_SIZE_DISPOSITION_ID) or {}
+    gid = f"authority_gaps.{FIELD_SIZE_DISPOSITION_ID}"
+    rows.append((f"{gid}.status", FIELD_SIZE_DISPOSITION_STATUS, gap.get("status")))
+    rows.append((f"{gid}.affects", FIELD_SIZE_DISPOSITION_AFFECTS, gap.get("affects")))
+    rows.append((f"{gid}.resolution", render_field_size_disposition(),
+                 gap.get("resolution")))
+    rows.append((f"{gid}.gap", render_field_size_gap_statement(), gap.get("gap")))
+
+    cases = {case["case_id"]: (index, case) for index, case in enumerate(plan["cases"])}
+    assurance = {row["case_id"]: row for row in plan["assurance"]}
+    boundaries = plan["size_validation_semantics"]["derived_boundaries"]
+    requirements = plan["final_campaign_classification"]["requirements"]
+    for rule in FIELD_SIZE_RULES:
+        index, case = cases.get(rule.case_id, (None, {}))
+        cp = f"cases[{index}]"
+        rows.append((f"{cp}.fields_affected", list(rule.required_fields),
+                     case.get("fields_affected")))
+        rows.append((f"{cp}.primary_release_endpoint", rule.primary_endpoint,
+                     case.get("primary_release_endpoint")))
+        rows.append((f"{cp}.formal_pass_fail_criterion",
+                     render_field_size_criterion(rule),
+                     case.get("formal_pass_fail_criterion")))
+        semantics = case.get(rule.semantics_key) or {}
+        for key, expected in render_field_size_semantics(rule).items():
+            rows.append((f"{cp}.{rule.semantics_key}.{key}", expected,
+                         semantics.get(key)))
+        if rule.secondary_feeds_primary_release is not None:
+            rows.append((f"{cp}.{rule.semantics_key}."
+                         "joint_p1_result_changes_C3_release_verdict",
+                         rule.secondary_feeds_primary_release,
+                         semantics.get("joint_p1_result_changes_C3_release_verdict")))
+        row = assurance.get(rule.case_id) or {}
+        for key, expected in render_field_size_assurance(rule).items():
+            rows.append((f"assurance[{rule.case_id}].{key}", expected, row.get(key)))
+        short = rule.case_id[:2]
+        declared = boundaries.get(short) or {}
+        rows.append((f"derived_boundaries.{short}.per_field", True,
+                     declared.get("per_field")))
+        rows.append((f"derived_boundaries.{short}.rule",
+                     render_field_size_boundary_rule(rule), declared.get("rule")))
+        rows.append((f"derived_boundaries.{short}.replicate_reduction",
+                     rule.field_reduction, declared.get("replicate_reduction")))
+        rows.append((f"derived_boundaries.{short}.replicates", rule.replicates,
+                     declared.get("replicates")))
+        rows.append((f"derived_boundaries.{short}.nominal_alpha", rule.nominal_alpha,
+                     declared.get("nominal_alpha")))
+        rows.append((f"derived_boundaries.{short}.boundary", rule.boundary,
+                     declared.get("boundary")))
+        position = 3 if rule.case_id.startswith("C3") else 4
+        rows.append((f"final_campaign_classification.requirements[{position - 1}]",
+                     render_field_size_requirement(rule, position),
+                     requirements[position - 1] if len(requirements) >= position
+                     else None))
+    final = plan["final_campaign_classification"]
+    rows.append(("final_campaign_classification.no_compensation_between_cases", True,
+                 final.get("no_compensation_between_cases")))
+    rows.append(("final_campaign_classification.no_weighted_score", True,
+                 final.get("no_weighted_score")))
+    return rows
+
+
+def field_size_amendment_counts(plan: dict[str, Any]) -> dict[str, int]:
+    """Machine-derived totality counts for the amendment. Nothing hand-counted."""
+    rows = _amendment_rows(plan)
+    generated = sum(1 for path, _e, _a in rows
+                    if path.endswith((".resolution", ".formal_pass_fail_criterion"))
+                    or ".c3_semantics." in path or ".c4_semantics." in path
+                    or "requirements[" in path)
+    # Derived from the dataclass itself plus the module-level canonical constants,
+    # so the figure cannot drift from the object it describes.
+    canonical = len(FIELD_SIZE_RULES) * len(dataclasses.fields(FieldSizeRule)) + len(
+        (FIELD_SIZE_DISPOSITION_ID, FIELD_SIZE_DISPOSITION_TYPE,
+         FIELD_SIZE_DISPOSITION_STATUS, FIELD_SIZE_DISPOSITION_AFFECTS,
+         FIELD_SIZE_REQUIRED_FIELDS, FINAL_RELEASE_REPRESENTATION,
+         FINAL_RELEASE_COMPENSATION))
+    # A normative amendment field is UNCLASSIFIED if the plan carries it under a
+    # checked semantics block but the canonical rule does not determine it.
+    unclassified = 0
+    for rule in FIELD_SIZE_RULES:
+        case = next((c for c in plan["cases"] if c["case_id"] == rule.case_id), {})
+        determined = set(render_field_size_semantics(rule)) | {
+            "status", "primary_release_endpoint", "release_criterion",
+            "requires_block1_calibration", "why_calibration_is_retained",
+            "field_structure_status",
+            "joint_p1_result_changes_C3_release_verdict"}
+        unclassified += len(set(case.get(rule.semantics_key) or {}) - determined)
+    return {
+        "canonical_rule_fields": canonical,
+        "generated_normative_fields": generated,
+        "strictly_verified_duplicate_fields": len(rows) - generated,
+        "checked_total": len(rows),
+        "unclassified_normative_amendment_fields": unclassified,
+    }
+
+
+def require_field_size_amendment(plan: dict[str, Any]) -> None:
+    """Every normative rendering of the C3/C4 amendment must BE the canonical rule.
+
+    Markdown/JSON coherence cannot catch a package whose two renderings agree with
+    each other and both contradict the approved amendment. This compares each
+    rendering against the canonical object instead.
+    """
+    if FIELD_SIZE_DISPOSITION_ID not in {gap.get("id")
+                                         for gap in plan.get("authority_gaps", [])}:
+        raise ProspectiveAmendmentMismatch(
+            f"the plan carries no {FIELD_SIZE_DISPOSITION_ID} disposition; the C3/C4 "
+            "per-field amendment has no recorded prospective authority")
+    for path, expected, actual in _amendment_rows(plan):
+        if expected != actual or type(expected) is not type(actual):
+            raise ProspectiveAmendmentMismatch(
+                f"{path} does not express the approved {FIELD_SIZE_DISPOSITION_TYPE} "
+                f"amendment: plan {actual!r}, canonical {expected!r}")
 
 
 def release_binding_specification(contract: dict[str, Any], plan: dict[str, Any],
@@ -1085,6 +1471,7 @@ def require_release_authority_conformance(contract: dict[str, Any], plan: dict[s
             "the plan carries no release_authority block; release-bearing statistics "
             "would have no machine-readable binding to frozen authority")
     require_c2_implies_contract_diagnostic(contract)
+    require_field_size_amendment(plan)
     rows = release_binding_specification(contract, plan, root)
     inventory = release_inventory(contract, plan, root, rows)
     if inventory["unclassified"]:

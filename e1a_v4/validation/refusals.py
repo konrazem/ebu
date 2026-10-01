@@ -239,6 +239,19 @@ class EndpointEventReductionUndeclared(CodedRefusal):
     code = "ENDPOINT_EVENT_REDUCTION_UNDECLARED"
 
 
+class ProspectiveAmendmentMismatch(CodedRefusal):
+    """A normative rendering of a prospective amendment contradicts the canonical
+    rule it is supposed to express.
+
+    The amendment is approved science; what this catches is a package that STATES
+    it inconsistently. Markdown and JSON can agree with each other perfectly and
+    still both disagree with the approved rule, which is why representation
+    coherence alone cannot detect it.
+    """
+
+    code = "PROSPECTIVE_AMENDMENT_MISMATCH"
+
+
 class ScaleControlInvalid(CodedRefusal):
     """The blinded Branch-A scale control was requested or built incorrectly."""
 
@@ -581,6 +594,7 @@ ALL_REFUSAL_CLASSES = (
     ResultSchemaInvalid, CampaignIncomplete, CampaignPlanMismatch,
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
+    ProspectiveAmendmentMismatch,
     ScaleControlInvalid, TerminalProvenanceMismatch,
     BranchAMeasurementInvalid,
     CalibrationArtifactBindingInvalid, CalibrationLockMissing,

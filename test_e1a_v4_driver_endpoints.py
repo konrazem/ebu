@@ -712,9 +712,9 @@ def test_frozen_authority_unchanged() -> None:
             # deliberately unmoved by it -- the amendment resolves field structure in
             # the validation package and changes no adopted decision rule.
             ("JSON plan", PLAN_JSON,
-             "02d2117ac9c7f18ccb005b1b774f54e78ee23847ecfce4382084e74a36cfbc95"),
+             "dc2442dd34dca69330575e2ad9a8c647f72ad47a4ba6bb77311d6933bb0d6f0c"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "af5d7e9a5ddcc7e1f3714916f10fdcc9cb6eafb539a67e35e361ef2d69b839c2"),
+             "28ad45fb00598a7857ca78bbe9878d57fd3fd614d9cff8e379b0d796e2d89304"),
             ("seed map", SEED_MAP_JSON,
              "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
         check(f"the {label} is BYTE-unchanged",

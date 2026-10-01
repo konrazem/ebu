@@ -50,9 +50,12 @@ from e1a_v4.validation.contract_plan import (
     DELEGATED_TO_RELEASE_AUTHORITY, NOT_REPEATED_CONTRACT_LEAVES, binding_inventory,
 )
 from e1a_v4.validation.dispositions import cp_lower, cp_upper
+from e1a_v4.validation.campaign_driver import replicate_level_rejections
 from e1a_v4.validation.plan import load_plan
 from e1a_v4.validation.release_authority import (
     CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER, NOT_APPLICABLE,
+    FIELD_SIZE_RULES, field_size_amendment_counts, render_field_size_criterion,
+    render_field_size_disposition, render_field_size_semantics,
     RELEASE_AUTHORITY_SECTIONS, RELEASE_NOT_APPLICABLE, REPORT_ONLY_MANDATORY,
     c2_implication_range, case_release_specification, derived_boundary,
     mandatory_diagnostics, release_binding_specification, release_inventory,
@@ -303,8 +306,12 @@ NAMED_PROBES = (
      "CONTRACT_RELEASE_TARGET_MISMATCH"),
     ("B. C1 R = 300 -> 301", probe_c1_replicates,
      "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH"),
+    # C3's criterion is GENERATED from the canonical amendment, which carries
+    # R = 400, so moving R now contradicts the amendment before the replicate-count
+    # binding is reached. Both refusals are correct; the earlier one is accepted.
     ("C. C3 R = 400 -> 401, derived boundary recomputed", probe_c3_replicates,
-     "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH"),
+     ("PROSPECTIVE_AMENDMENT_MISMATCH",
+      "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH")),
     ("D. C8 R = 200 -> 201", probe_c8_replicates,
      "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH"),
 )
@@ -327,7 +334,12 @@ def test_named_release_probes() -> None:
                                  rj(tmp, PLAN_JSON))
         check(f"{label}: Markdown/JSON coherence still PASSES", coherence is None,
               f"coherence said {coherence!r}")
-        refuses_with_code(f"{label}: preflight", expected, preflight, tmp)
+        if isinstance(expected, tuple):
+            got = refusal_code(preflight, tmp)
+            check(f"{label}: preflight refuses, one of {expected}",
+                  got in expected, f"got {got!r}")
+        else:
+            refuses_with_code(f"{label}: preflight", expected, preflight, tmp)
         shutil.rmtree(tmp)
 
 
@@ -994,7 +1006,7 @@ def test_c3_c4_per_field_authority() -> None:
     gap = next(g for g in plan["authority_gaps"] if g["id"] == "G4")
     check("G4 affects C3 and C4", gap["affects"] == "C3, C4")
     check("G4 is CLOSED PROSPECTIVELY", gap["status"] == "CLOSED PROSPECTIVELY")
-    for phrase in ("PER FIELD", "no pooling of field counts",
+    for phrase in ("PER FIELD", "NO pooling of counts", "pooling FORBIDDEN",
                    "must not simply be assumed", "C1-only"):
         check(f"G4 records {phrase!r}", phrase in gap["resolution"])
     check("G4 discloses the operating characteristic without making it a threshold",
@@ -1069,17 +1081,269 @@ def test_c3_c4_per_field_authority() -> None:
           c3["joint_p1_result_changes_C3_release_verdict"] is False)
 
     # --- implementation is deliberately BEHIND authority --------------------
-    check("the driver still REFUSES to reduce C3/C4 across fields, which is now "
-          "authority-correct rather than a guess",
-          "ENDPOINT_EVENT_REDUCTION_UNDECLARED"
-          in open(os.path.join(ROOT, "e1a_v4/validation/refusals.py"),
-                  encoding="utf-8").read())
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        check(f"the driver still REFUSES to reduce {case_id[:2]} across fields, "
+              "which is now authority-correct rather than a guess",
+              refusal_code(replicate_level_rejections, plan, {}, case_id, event)
+              == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
     check("execution is still not authorised", plan["execution_authorised"] is False)
+
+
+
+def _gap_index(plan, gid="G4"):
+    return next(i for i, g in enumerate(plan["authority_gaps"]) if g["id"] == gid)
+
+
+def _case_index(plan, case_id):
+    return next(i for i, c in enumerate(plan["cases"]) if c["case_id"] == case_id)
+
+
+def _text_swap(old, a, b):
+    """Replace a token INSIDE ONE named field's value. Never document-wide."""
+    assert a in old, f"token {a!r} absent from the targeted field"
+    return old.replace(a, b)
+
+
+def semantic_mutations(plan):
+    """Every load-bearing semantic component of the approved amendment.
+
+    Each entry names the component, the EXACT normative path it edits, and the
+    token swap, so the mutation provably lands where it is meant to.
+    """
+    g4 = f"authority_gaps[{_gap_index(plan)}]"
+    out = []
+
+    def add(component, path, old_token, new_token):
+        out.append((component, path, old_token, new_token))
+
+    # ---- G4 resolution -----------------------------------------------------
+    add("G4 resolution scope", f"{g4}.resolution", "PER FIELD", "ANY FIELD")
+    add("G4 resolution reduction", f"{g4}.resolution",
+        "within-replicate field reduction NONE",
+        "within-replicate field reduction ANY_FIELD")
+    add("G4 resolution pooling", f"{g4}.resolution", "pooling FORBIDDEN",
+        "pooling ALLOWED")
+    add("G4 resolution final-release compensation", f"{g4}.resolution",
+        "compensation FORBIDDEN", "compensation PERMITTED")
+    add("G4 resolution C3 secondary role", f"{g4}.resolution",
+        "does NOT feed the C3 primary release verdict",
+        "DOES feed the C3 primary release verdict")
+    add("G4 resolution dependence wording", f"{g4}.resolution",
+        "must not simply be assumed",
+        "is established: the shared common mode makes the gates positively associated")
+    add("G4 resolution 0.90 scope", f"{g4}.resolution",
+        "remains C1-only", "now also applies to C3 and C4")
+
+    # ---- the two formal criteria -------------------------------------------
+    for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+        short = case_id[:2]
+        path = f"cases[{_case_index(plan, case_id)}].formal_pass_fail_criterion"
+        add(f"{short} criterion scope -> ANY_FIELD", path,
+            "PER FIELD, never pooled", "ANY FIELD within a replicate, counts pooled")
+        add(f"{short} criterion scope -> REFERENCE_ONLY", path,
+            "PER FIELD, never pooled",
+            "on the reference field theta0_circular only")
+        add(f"{short} criterion reduction -> EVERY_FIELD", path,
+            "NO within-replicate reduction across fields",
+            "an EVERY-field within-replicate reduction")
+        add(f"{short} criterion pooling -> pooled", path,
+            "NO pooling of counts", "counts POOLED across the four fields")
+        add(f"{short} criterion case-level -> compensating", path,
+            "is clean only when all four are clean",
+            "is clean when at least three of four are clean")
+
+    # ---- per-case semantics blocks -----------------------------------------
+    for case_id, key in (("C3_g5_block", "c3_semantics"),
+                         ("C4_surrogate_validity", "c4_semantics")):
+        short = case_id[:2]
+        base = f"cases[{_case_index(plan, case_id)}].{key}"
+        add(f"{short} semantics field_structure", f"{base}.field_structure",
+            "PER_FIELD", "ANY_FIELD")
+        add(f"{short} semantics field_reduction", f"{base}.field_reduction",
+            "NONE", "EVERY_FIELD")
+        add(f"{short} semantics pooling", f"{base}.pooling", "FORBIDDEN", "ALLOWED")
+        add(f"{short} semantics field_structure_rule", f"{base}.field_structure_rule",
+            "four field-specific", "one pooled four-field")
+        add(f"{short} semantics case_level_rule", f"{base}.case_level_rule",
+            "iff all four are clean", "if at least three are clean")
+        add(f"{short} semantics what_is_forbidden", f"{base}.what_is_forbidden",
+            "pooling the four fields", "nothing in particular, including pooling")
+
+    # ---- assurance rows and derived boundaries -----------------------------
+    for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+        short = case_id[:2]
+        index = next(i for i, r in enumerate(plan["assurance"])
+                     if r["case_id"] == case_id)
+        add(f"{short} assurance unit", f"assurance[{index}].unit",
+            "per_field", "campaign")
+        add(f"{short} assurance pooling", f"assurance[{index}].pooling",
+            "FORBIDDEN", "NOT_APPLICABLE")
+        add(f"{short} derived boundary replicate_reduction",
+            f"size_validation_semantics.derived_boundaries.{short}.replicate_reduction",
+            "NONE", "ANY_FIELD")
+
+    # ---- newly guarded normative prose -------------------------------------
+    for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+        short = case_id[:2]
+        index = next(i for i, r in enumerate(plan["assurance"])
+                     if r["case_id"] == case_id)
+        add(f"{short} assurance acceptance_rule",
+            f"assurance[{index}].acceptance_rule",
+            "PER FIELD; every declared field is assessed",
+            "POOLED across fields; the campaign is assessed")
+        add(f"{short} assurance quantity", f"assurance[{index}].quantity",
+            ", per field", ", pooled over the four fields")
+        add(f"{short} derived boundary rule prose",
+            f"size_validation_semantics.derived_boundaries.{short}.rule",
+            "PER FIELD", "over the pooled four-field count")
+        key = "c3_semantics" if short == "C3" else "c4_semantics"
+        add(f"{short} semantics release_criterion",
+            f"cases[{_case_index(plan, case_id)}].{key}.release_criterion",
+            "stated per field", "stated over one pooled campaign count")
+    add("G4 gap statement", f"{g4}.gap", "decides PER FIELD",
+        "decides once per replicate")
+
+    # ---- C3 secondary diagnostic becomes release-bearing -------------------
+    c3 = f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics"
+    add("C3 secondary diagnostic role", f"{c3}.block1_role",
+        "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC", "PRIMARY_RELEASE_ENDPOINT")
+
+    # ---- final release representation --------------------------------------
+    add("final release requirement C3",
+        "final_campaign_classification.requirements[2]",
+        "in any required field", "in the reference field")
+    add("final release requirement C4",
+        "final_campaign_classification.requirements[3]",
+        "in any required field", "in at least three required fields")
+    return out
+
+
+def test_c3_c4_amendment_semantic_mutations() -> None:
+    """AUDIT BLOCKER. Normative TEXT could contradict the structured rule.
+
+    Three coherent Markdown+JSON mutations passed full static preflight: the G4
+    resolution could require ANY-FIELD reduction and pooling, and either formal
+    criterion could define a replicate-wide or pooled event, while every
+    structured field still said PER_FIELD. Representation coherence cannot catch
+    that, because both renderings agree -- with each other, and not with the
+    approved amendment.
+    """
+    plan = load_plan(ROOT)
+
+    # --- the canonical object is the ONE source -----------------------------
+    counts = field_size_amendment_counts(plan)
+    check("the amendment declares canonical rule fields",
+          counts["canonical_rule_fields"] > 0, str(counts))
+    check("every normative amendment field is classified and checked",
+          counts["unclassified_normative_amendment_fields"] == 0, str(counts))
+    check("generated and strictly-verified fields account for the whole check set",
+          counts["generated_normative_fields"]
+          + counts["strictly_verified_duplicate_fields"] == counts["checked_total"],
+          str(counts))
+    check("the canonical rule says PER_FIELD for both cases",
+          all(r.evaluation_scope == "PER_FIELD" for r in FIELD_SIZE_RULES))
+    check("the canonical rule says NO within-replicate reduction",
+          all(r.field_reduction == "NONE" for r in FIELD_SIZE_RULES))
+    check("the canonical rule forbids pooling",
+          all(r.pooling == "FORBIDDEN" for r in FIELD_SIZE_RULES))
+    check("the canonical rule declares exactly the four fields, in order",
+          all(r.required_fields == ("theta0_circular", "theta1_power",
+                                    "theta2_ellipse", "theta3_temperature")
+              for r in FIELD_SIZE_RULES))
+
+    # --- normative renderings ARE the canonical rule ------------------------
+    gap = plan["authority_gaps"][_gap_index(plan)]
+    check("the G4 resolution is the generated canonical text",
+          gap["resolution"] == render_field_size_disposition())
+    for rule in FIELD_SIZE_RULES:
+        case = next(c for c in plan["cases"] if c["case_id"] == rule.case_id)
+        check(f"{rule.case_id} criterion is the generated canonical text",
+              case["formal_pass_fail_criterion"]
+              == render_field_size_criterion(rule))
+        for key, value in render_field_size_semantics(rule).items():
+            check(f"{rule.case_id} semantics {key} is generated",
+                  case[rule.semantics_key][key] == value)
+
+    # --- SEMANTIC MUTATION AUDIT -------------------------------------------
+    mutations = semantic_mutations(plan)
+    unexpected = []
+    for component, path, old_token, new_token in mutations:
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        before = path_get(mutant, path)
+        after = (_text_swap(before, old_token, new_token)
+                 if isinstance(before, str) else new_token)
+        assert after != before, f"{component}: mutation did not change {path}"
+        path_set(mutant, path, after)
+        check(f"MUTATION LANDS: {component} at {path}",
+              path_get(mutant, path) == after and after != before)
+        wj(tmp, PLAN_JSON, mutant)
+        try:
+            regenerate(tmp)       # Markdown made COHERENT with the mutated JSON
+        except Refusal:
+            pass
+        got = refusal_code(preflight, tmp)
+        if got is None:
+            unexpected.append(f"{component} @ {path}")
+        check(f"COHERENT BUT WRONG: {component} refuses", got is not None,
+              f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"semantic mutation audit: {len(mutations)} tested, 0 unexpected passes",
+          not unexpected, str(unexpected))
+
+    # --- field-list mutations: remove / duplicate / replace / extra ---------
+    base = ["theta0_circular", "theta1_power", "theta2_ellipse", "theta3_temperature"]
+    list_mutations = (
+        ("remove a field", base[:3]),
+        ("duplicate a field", [base[0], base[0], base[2], base[3]]),
+        ("replace a field", [base[0], base[1], base[2], "theta4_invented"]),
+        ("extra field", base + ["theta4_invented"]),
+        ("reorder fields", [base[1], base[0], base[2], base[3]]),
+    )
+    for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+        path = f"cases[{_case_index(plan, case_id)}].fields_affected"
+        for label, value in list_mutations:
+            tmp = sandbox()
+            mutant = rj(tmp, PLAN_JSON)
+            path_set(mutant, path, value)
+            wj(tmp, PLAN_JSON, mutant)
+            try:
+                regenerate(tmp)
+            except Refusal:
+                pass
+            got = refusal_code(preflight, tmp)
+            check(f"COHERENT BUT WRONG: {case_id[:2]} required field list, "
+                  f"{label} refuses", got is not None, f"got {got!r}")
+            shutil.rmtree(tmp)
+
+    # --- the amendment did NOT move the per-field size rules ----------------
+    for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
+        row = plan["size_validation_semantics"]["derived_boundaries"][short]
+        check(f"{short} R, alpha and boundary are untouched by this repair",
+              (row["replicates"], row["nominal_alpha"], row["boundary"])
+              == (rule.replicates, rule.nominal_alpha, rule.boundary), str(row))
+    check("the >= 0.90 target is still C1-only",
+          "remains C1-only" in gap["resolution"]
+          and plan["assurance"][0]["case_id"] == "C1_true_bridge_complete"
+          and plan["assurance"][0]["target_value"] == 0.9)
+    check("the dependence wording claims no direction",
+          "not simply be assumed" in gap["resolution"]
+          and "positively associated" not in gap["resolution"])
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        check(f"the driver is STILL behind authority and still refuses for "
+              f"{case_id[:2]}",
+              refusal_code(replicate_level_rejections, plan, {}, case_id, event)
+              == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
 
 
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
+    ("C3/C4 amendment semantic mutations",
+     test_c3_c4_amendment_semantic_mutations),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),
