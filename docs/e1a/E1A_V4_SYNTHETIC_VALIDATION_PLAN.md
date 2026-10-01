@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.13.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.14.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -934,7 +934,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.13.0",
+    "plan_version": "1.14.0",
     "release_authority.absent_diagnostic_is": "RESULT_SCHEMA_INVALID",
     "release_authority.authority_rule": "FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.",
     "release_authority.complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",

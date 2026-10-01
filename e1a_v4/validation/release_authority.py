@@ -58,7 +58,10 @@ import dataclasses
 from dataclasses import dataclass
 from typing import Any
 
-from .classification import GROSS_INFLATION_TOLERANCE, size_boundary
+from .classification import (
+    GROSS_INFLATION_TOLERANCE, SIZE_FAILURE, SIZE_INTERPRETATION,
+    SIZE_NO_INFLATION, size_boundary,
+)
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
 from .refusals import (
     ContractMandatoryDiagnosticMismatch, ContractMandatoryDiagnosticMissing,
@@ -87,8 +90,18 @@ GENERATED_FROM_CANONICAL = "GENERATED_FROM_CANONICAL"
 STRICTLY_VERIFIED_DUPLICATE = "STRICTLY_VERIFIED_DUPLICATE"
 NON_NORMATIVE_EXPLANATION = "NON_NORMATIVE_EXPLANATION"
 
+#: Leaf-level classes for the nested authority subtree. A parent classification
+#: does NOT authorise its descendants, so every leaf carries its own.
+STRICTLY_PINNED_NON_RULE_TEXT = "STRICTLY_PINNED_NON_RULE_TEXT"
+STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA = "STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA"
+#: Enumerated and classified, deliberately NOT bound. Used only where binding
+#: would silently close a defect that is tracked as separate authorised work.
+DEFERRED_OUT_OF_SCOPE = "DEFERRED_OUT_OF_SCOPE"
+
 VERIFICATION_MODES = (CANONICAL_SOURCE, GENERATED_FROM_CANONICAL,
-                      STRICTLY_VERIFIED_DUPLICATE, NON_NORMATIVE_EXPLANATION)
+                      STRICTLY_VERIFIED_DUPLICATE, NON_NORMATIVE_EXPLANATION,
+                      STRICTLY_PINNED_NON_RULE_TEXT,
+                      STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA, DEFERRED_OUT_OF_SCOPE)
 
 #: Authority sources, most authoritative first.
 CONTRACT = "design_contract"
@@ -1637,6 +1650,269 @@ def field_size_amendment_counts(plan: dict[str, Any]) -> dict[str, int]:
     }
 
 
+#: C1's half of the `two_questions` block. It states the complete-pipeline
+#: target, which is C1-only authority: pinned here as a tripwire so the C3/C4
+#: repair cannot leave it free, without taking custody of the C1 decision.
+TWO_QUESTIONS_COMPLETE_PIPELINE_PIN = (
+    'C1, UNCHANGED. One-sided 95% Clopper-Pearson LOWER bound on '
+    'complete-pipeline success >= 0.90 over R = 300, i.e. >= 279/300. '
+    'This is the direct prospective validation of whether the whole '
+    'implemented pipeline meets the release target.'
+)
+
+#: The superseded coarse gross-inflation criterion. Historical record rather
+#: than a live rule -- but it names C2, C3 and C4 nominal alphas, so it is
+#: pinned exactly rather than left as free prose.
+SUPERSEDED_CRITERION_PINS = {
+    "rule": 'one-sided 95% Clopper-Pearson UPPER bound <= 0.03',
+    "origin": (
+        'coarse assurance / gross-inflation tolerance inherited from '
+        'development analysis'
+    ),
+    "status": (
+        'SUPERSEDED as the RELEASE CLASSIFIER by the nominal-inflation '
+        'tests above, which are strictly stronger; RETAINED as a mandatory '
+        'reported diagnostic'
+    ),
+    "retained_as": (
+        'MANDATORY CONTRACT DIAGNOSTIC '
+        '[synthetic_validation_requirements[2]], inherited from development '
+        'analysis and still required to be reported; NOT validation of the '
+        'nominal alpha and NOT the release classifier'
+    ),
+    "tolerance": 0.03,
+    "why_insufficient": {
+        "C2": (
+            'would have tolerated 6/400 = 0.0150, 3x the nominal alpha_geom = '
+            '0.005'
+        ),
+        "C3": (
+            'would have tolerated 6/400 = 0.0150, 15x the nominal alpha_2 = '
+            '0.001'
+        ),
+        "C4": (
+            'would have tolerated 47/2000 = 0.0235, 6x the nominal alpha_1 = '
+            '0.004'
+        ),
+        "conclusion": (
+            'a rule that passes fifteen times the nominal rate cannot be called '
+            'validation of it'
+        ),
+    },
+    "preserved_in": (
+        'docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md and commit 475633c, '
+        'neither rewritten'
+    ),
+}
+
+
+# ======================================================================== leaves
+#: `size_validation_semantics` is a controlled scientific-authority SUBTREE, not a
+#: flat container. The F1e-r6 audit changed two of its NESTED string leaves --
+#: `interpretation.detector` and `two_questions.B_component_size_inflation` -- to
+#: say that C3/C4 pool their four fields, and every checker accepted it, because
+#: classification stopped at the registered parent. Neither leaf is rendered into
+#: Markdown, so representation coherence could not see them either.
+#:
+#: The repair is leaf-level totality: the subtree is walked RECURSIVELY and every
+#: leaf, at any depth, must carry its own classification. A classified parent
+#: authorises nothing below it.
+SIZE_SEMANTICS_ROOT = "size_validation_semantics"
+
+#: Cases whose derived-boundary leaves this stage deliberately does NOT bind.
+#: C2's pooling-authority text is a confirmed, separately tracked defect; binding
+#: it here would make its symptom disappear while its substance -- that C2 has no
+#: canonical pooling rule object -- remained. Enumerated and classified so the
+#: totality claim stays honest, and left contradictable so the open item stays
+#: visible.
+DEFERRED_BOUNDARY_CASES = {"C2": "D6a - C2 pooling authority-text binding"}
+
+
+@dataclass(frozen=True)
+class SemanticLeaf:
+    """ONE leaf of a controlled authority subtree and how it is held."""
+
+    path: str
+    mode: str
+    expected: Any = None
+    source: str = ""
+    deferred_to: str | None = None
+
+
+def render_component_size_question() -> str:
+    """The `two_questions` statement of what the component size tests ARE.
+
+    GENERATED. The audit rewrote this leaf into a familywise test over a pooled
+    four-field count; the scope sentence is now read off the canonical rule, so
+    that rewrite cannot be stated here any more.
+    """
+    cases = " and ".join(rule.case_id[:2] for rule in FIELD_SIZE_RULES)
+    return (
+        "C2, C3 and C4. At the feasible replicate counts these are NOT positive "
+        "proofs that the achieved rate is at or below a tiny nominal alpha. They "
+        "prospectively TEST FOR EVIDENCE OF INFLATION: "
+        f"{SIZE_INTERPRETATION['test']}. The {cases} component tests are evaluated "
+        f"{EVALUATION_SCOPE_PER_FIELD}, with within-replicate field reduction "
+        f"{FIELD_REDUCTION_NONE} and pooling {POOLING_FORBIDDEN}; each is a "
+        "COMPONENT size test and never a familywise or pooled test.")
+
+
+def size_semantics_leaves(plan: dict[str, Any]) -> tuple[SemanticLeaf, ...]:
+    """EVERY leaf of the controlled subtree, each with its own classification.
+
+    Built from canonical sources that sit ABOVE the plan -- `FIELD_SIZE_RULES`,
+    `classification.SIZE_INTERPRETATION`, the verdict labels and the pins -- never
+    from the subtree being checked.
+    """
+    out: list[SemanticLeaf] = []
+    add = out.append
+    root = SIZE_SEMANTICS_ROOT
+
+    for key, expected in SHARED_SIZE_SEMANTICS_PINS.items():
+        add(SemanticLeaf(f"{root}.{key}", STRICTLY_PINNED_NON_RULE_TEXT, expected,
+                         "SHARED_SIZE_SEMANTICS_PINS"))
+
+    # --- the two_questions block ------------------------------------------
+    add(SemanticLeaf(f"{root}.two_questions.A_complete_practical_performance",
+                     STRICTLY_PINNED_NON_RULE_TEXT,
+                     TWO_QUESTIONS_COMPLETE_PIPELINE_PIN,
+                     "TWO_QUESTIONS_COMPLETE_PIPELINE_PIN (C1 authority)"))
+    add(SemanticLeaf(f"{root}.two_questions.B_component_size_inflation",
+                     GENERATED_FROM_CANONICAL, render_component_size_question(),
+                     "FIELD_SIZE_RULES + SIZE_INTERPRETATION"))
+
+    # --- the verdict labels -------------------------------------------------
+    for key, expected in (("on_detection", SIZE_FAILURE),
+                          ("otherwise", SIZE_NO_INFLATION)):
+        add(SemanticLeaf(f"{root}.verdicts.{key}", STRICTLY_VERIFIED_DUPLICATE,
+                         expected, "e1a_v4.validation.classification"))
+
+    # --- the whole interpretation block -------------------------------------
+    # `classification.SIZE_INTERPRETATION` is the machine-readable statement of
+    # what a size pass does and does not mean. The plan restates it; nothing
+    # compared them, which is how `interpretation.detector` became free.
+    for key, expected in SIZE_INTERPRETATION.items():
+        mode = (STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA if isinstance(expected, list)
+                else STRICTLY_VERIFIED_DUPLICATE)
+        value = list(expected) if isinstance(expected, list) else expected
+        add(SemanticLeaf(f"{root}.interpretation.{key}", mode, value,
+                         "e1a_v4.validation.classification.SIZE_INTERPRETATION"))
+
+    # --- the superseded coarse criterion ------------------------------------
+    for key, expected in SUPERSEDED_CRITERION_PINS.items():
+        if isinstance(expected, dict):
+            for sub, text in expected.items():
+                add(SemanticLeaf(f"{root}.superseded_criterion.{key}.{sub}",
+                                 STRICTLY_PINNED_NON_RULE_TEXT, text,
+                                 "SUPERSEDED_CRITERION_PINS"))
+            continue
+        mode = (STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA
+                if not isinstance(expected, str) else STRICTLY_PINNED_NON_RULE_TEXT)
+        add(SemanticLeaf(f"{root}.superseded_criterion.{key}", mode, expected,
+                         "SUPERSEDED_CRITERION_PINS"))
+
+    # --- derived boundaries --------------------------------------------------
+    # C3 and C4 are already generated/verified by the normative-surface registry;
+    # their leaves are declared here so the recursive walk is TOTAL, and point at
+    # that registry rather than restating it.
+    surface = {s.path: s for s in normative_surface_registry(plan)}
+    for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
+        declared = plan[root]["derived_boundaries"].get(short) or {}
+        for key in declared:
+            entry = surface.get(f"derived_boundaries.{short}.{key}")
+            if entry is None:
+                continue          # the surface registry's own totality refuses it
+            add(SemanticLeaf(f"{root}.derived_boundaries.{short}.{key}", entry.mode,
+                             entry.expected, "normative_surface_registry"))
+    for short, tracker in DEFERRED_BOUNDARY_CASES.items():
+        for key in plan[root]["derived_boundaries"].get(short) or {}:
+            add(SemanticLeaf(f"{root}.derived_boundaries.{short}.{key}",
+                             DEFERRED_OUT_OF_SCOPE, None, "", tracker))
+    return tuple(out)
+
+
+def _subtree_leaf_paths(node: Any, prefix: str):
+    """Every leaf path in a nested plan object. Lists of scalars are one leaf."""
+    if isinstance(node, dict):
+        for key, value in node.items():
+            yield from _subtree_leaf_paths(value, f"{prefix}.{key}")
+    elif isinstance(node, list) and any(isinstance(x, (dict, list)) for x in node):
+        for index, value in enumerate(node):
+            yield from _subtree_leaf_paths(value, f"{prefix}[{index}]")
+    else:
+        yield prefix, node
+
+
+def size_semantics_leaf_counts(plan: dict[str, Any]) -> dict[str, int]:
+    """Machine-derived recursive coverage. Nothing hand-counted."""
+    leaves = size_semantics_leaves(plan)
+    declared = {leaf.path for leaf in leaves}
+    actual = dict(_subtree_leaf_paths(plan[SIZE_SEMANTICS_ROOT], SIZE_SEMANTICS_ROOT))
+    objects = 0
+    stack = [plan[SIZE_SEMANTICS_ROOT]]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, dict):
+            objects += 1
+            stack.extend(node.values())
+    by_mode = {mode: sum(1 for leaf in leaves if leaf.mode == mode)
+               for mode in VERIFICATION_MODES}
+    return {
+        "controlled_subtrees": 1,
+        "controlled_nested_objects": objects,
+        "total_leaves": len(actual),
+        "declared_leaves": len(declared),
+        "generated_leaves": by_mode[GENERATED_FROM_CANONICAL],
+        "strictly_verified_leaves": by_mode[STRICTLY_VERIFIED_DUPLICATE],
+        "exact_pinned_leaves": by_mode[STRICTLY_PINNED_NON_RULE_TEXT],
+        "structural_schema_leaves": by_mode[STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA],
+        "deferred_out_of_scope_leaves": by_mode[DEFERRED_OUT_OF_SCOPE],
+        "unclassified_leaves": len(set(actual) - declared),
+        "unknown_child_keys": len(set(actual) - declared),
+        "missing_declared_leaves": len(declared - set(actual)),
+    }
+
+
+def require_size_semantics_leaf_totality(plan: dict[str, Any]) -> None:
+    """Every leaf of the controlled authority subtree, at ANY depth, is bound.
+
+    A classified parent authorises nothing below it. The walk is over the plan's
+    OWN structure, so a new nested child at any depth appears as an undeclared
+    leaf and is refused -- that is what makes this recursive rather than a longer
+    list of known paths.
+    """
+    if SIZE_SEMANTICS_ROOT not in plan:
+        raise NormativeSurfaceUnclassified(
+            f"the plan carries no {SIZE_SEMANTICS_ROOT} block")
+    leaves = {leaf.path: leaf for leaf in size_semantics_leaves(plan)}
+    for leaf in leaves.values():
+        if leaf.mode not in VERIFICATION_MODES:
+            raise NormativeSurfaceUnclassified(
+                f"{leaf.path} carries verification mode {leaf.mode!r}")
+    actual = dict(_subtree_leaf_paths(plan[SIZE_SEMANTICS_ROOT], SIZE_SEMANTICS_ROOT))
+    for path in actual:
+        if path not in leaves:
+            raise NormativeSurfaceUnclassified(
+                f"{path} is a nested authority leaf under {SIZE_SEMANTICS_ROOT} with "
+                "no entry in the semantic-leaf registry: a classified parent does "
+                "not authorise its descendants, and this leaf could state a "
+                "contrary C3/C4 rule that nothing checks")
+    for path, leaf in leaves.items():
+        if path not in actual:
+            raise NormativeSurfaceUnclassified(
+                f"{path} is declared in the semantic-leaf registry but absent from "
+                "the plan; an authority leaf may not be silently dropped")
+        if leaf.mode == DEFERRED_OUT_OF_SCOPE:
+            continue
+        value = actual[path]
+        if leaf.expected != value or type(leaf.expected) is not type(value):
+            raise ProspectiveAmendmentMismatch(
+                f"{path} does not express the approved authority: plan {value!r}, "
+                f"canonical {leaf.expected!r} (source: {leaf.source})")
+
+
+
 def require_field_size_amendment(plan: dict[str, Any]) -> None:
     """Every normative rendering of the C3/C4 amendment must BE the canonical rule.
 
@@ -2067,6 +2343,7 @@ def require_release_authority_conformance(contract: dict[str, Any], plan: dict[s
             "would have no machine-readable binding to frozen authority")
     require_c2_implies_contract_diagnostic(contract)
     require_field_size_surface_totality(plan)
+    require_size_semantics_leaf_totality(plan)
     require_field_size_amendment(plan)
     rows = release_binding_specification(contract, plan, root)
     inventory = release_inventory(contract, plan, root, rows)

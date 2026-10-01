@@ -41,7 +41,8 @@ import tempfile
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.classification import (
-    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE, size_boundary,
+    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE, SIZE_FAILURE,
+    SIZE_INTERPRETATION, SIZE_NO_INFLATION, size_boundary,
 )
 from e1a_v4.validation.coherence import (
     BLOCK_BEGIN, BLOCK_END, REGION_ANCHORS, SECTION_REGISTRY,
@@ -58,8 +59,11 @@ from e1a_v4.validation.release_authority import (
     CASE_PROSE_PINS, CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER,
     NON_NORMATIVE_EXPLANATION, NOT_APPLICABLE, SHARED_SIZE_SEMANTICS_PINS,
     FIELD_SIZE_RULES, FIELD_SIZE_RULES_BY_CASE, VERIFICATION_MODES,
-    render_field_size_block1_role, render_field_size_calibration_rationale,
-    require_field_size_amendment, field_size_amendment_counts,
+    DEFERRED_OUT_OF_SCOPE, TWO_QUESTIONS_COMPLETE_PIPELINE_PIN,
+    render_component_size_question, render_field_size_block1_role,
+    render_field_size_calibration_rationale, require_field_size_amendment,
+    require_size_semantics_leaf_totality, size_semantics_leaf_counts,
+    size_semantics_leaves, field_size_amendment_counts,
     normative_surface_registry, render_field_size_criterion,
     render_field_size_disposition, render_field_size_pooling_statement,
     render_field_size_semantics, render_final_campaign_rule,
@@ -310,10 +314,17 @@ def fix_c3_markdown(text: str) -> str:
 
 
 NAMED_PROBES = (
+    # Probes A and B deliberately rewrite C1's statement in
+    # `size_validation_semantics.two_questions.A_complete_practical_performance`
+    # so the mutation is coherent everywhere the target is stated. That leaf is
+    # now exact-pinned by the semantic-leaf registry, which therefore refuses
+    # BEFORE the contract-release binding is reached. Both refusals are correct;
+    # the earlier one is accepted.
     ("A. C1 complete-pipeline target 0.90 -> 0.80", probe_c1_target,
-     "CONTRACT_RELEASE_TARGET_MISMATCH"),
+     ("PROSPECTIVE_AMENDMENT_MISMATCH", "CONTRACT_RELEASE_TARGET_MISMATCH")),
     ("B. C1 R = 300 -> 301", probe_c1_replicates,
-     "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH"),
+     ("PROSPECTIVE_AMENDMENT_MISMATCH",
+      "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH")),
     # C3's criterion is GENERATED from the canonical amendment, which carries
     # R = 400, so moving R now contradicts the amendment before the replicate-count
     # binding is reached. Both refusals are correct; the earlier one is accepted.
@@ -1457,6 +1468,17 @@ def known_escape_classes(plan):
         ("fourth audit", "11. C4 Block-1 role demoted to secondary",
          [(f"cases[{c4}].block1_role", "PRIMARY_RELEASE_ENDPOINT",
            "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC")]),
+        ("fifth audit",
+         "12. nested interpretation.detector pools the four fields",
+         [("size_validation_semantics.interpretation.detector",
+           "CP_lower(rejections, R)",
+           "CP_lower(pooled rejections across the four fields, 4R)")]),
+        ("fifth audit",
+         "13. nested two_questions.B becomes a pooled familywise test",
+         [("size_validation_semantics.two_questions.B_component_size_inflation",
+           "COMPONENT size test and never a familywise or pooled test",
+           "FAMILYWISE test over the pooled four-field count, in which one clean "
+           "field suffices")]),
     )
 
 
@@ -1917,6 +1939,303 @@ def test_c3_explanatory_semantics() -> None:
           (c4.replicates, c4.nominal_alpha, c4.boundary) == (2000, 0.004, 13))
 
 
+# ------------------------------- 19. nested semantic-leaf totality (F1e-r7)
+#: Coherent contrary rewrites of nested authority leaves. The first two are the
+#: fifth audit's verbatim blockers; the rest exercise every string-leaf class in
+#: the controlled subtree, per the mutation classes the brief requires.
+NESTED_LEAF_MUTATIONS = (
+    ("AUDIT: interpretation.detector pools four fields",
+     "size_validation_semantics.interpretation.detector",
+     "inflation detected iff CP_lower(pooled rejections across the four fields, "
+     "4R) > nominal alpha; C3 and C4 pool their four fields into one count"),
+    ("AUDIT: two_questions.B becomes familywise over a pooled count",
+     "size_validation_semantics.two_questions.B_component_size_inflation",
+     "C2, C3 and C4. These are FAMILYWISE component tests over the pooled "
+     "four-field count: a case is flagged only if the pooled rate exceeds "
+     "nominal alpha, and a single clean field is sufficient."),
+    ("two_questions.B: per-field -> any-field",
+     "size_validation_semantics.two_questions.B_component_size_inflation",
+     "C2, C3 and C4 are evaluated ANY_FIELD within a replicate."),
+    ("two_questions.B: component -> familywise",
+     "size_validation_semantics.two_questions.B_component_size_inflation",
+     "C3 and C4 carry a familywise size target across their four fields."),
+    ("two_questions.A: C1 target 0.90 -> 0.80",
+     "size_validation_semantics.two_questions.A_complete_practical_performance",
+     "C1, UNCHANGED. One-sided 95% Clopper-Pearson LOWER bound on "
+     "complete-pipeline success >= 0.80 over R = 300, i.e. >= 279/300."),
+    ("two_questions.A: >= 0.90 extended to C3/C4",
+     "size_validation_semantics.two_questions.A_complete_practical_performance",
+     "C1, C3 and C4 each carry the >= 0.90 familywise target over R = 300."),
+    ("interpretation.verdict_on_pass flipped to failure",
+     "size_validation_semantics.interpretation.verdict_on_pass",
+     "STATISTICAL_SIZE_FAILURE"),
+    ("interpretation.means: did-not-establish -> proved",
+     "size_validation_semantics.interpretation.means",
+     "this experiment proved the achieved size is at or below nominal alpha"),
+    ("interpretation.does_not_mean weakened",
+     "size_validation_semantics.interpretation.does_not_mean",
+     "nothing in particular; the nominal rate may be treated as proved"),
+    ("interpretation.test: one-sided 5% -> 50%",
+     "size_validation_semantics.interpretation.test",
+     "H0: p <= nominal alpha  vs  H1: p > nominal alpha, one-sided 50%"),
+    ("verdicts.on_detection relabelled",
+     "size_validation_semantics.verdicts.on_detection",
+     "POOLED_SIZE_ADVISORY"),
+    ("verdicts.otherwise relabelled to a proof claim",
+     "size_validation_semantics.verdicts.otherwise", "NOMINAL_SIZE_PROVED"),
+    ("detector: per-replicate -> pooled",
+     "size_validation_semantics.detector",
+     "STATISTICAL SIZE INFLATION is detected iff CP_lower(pooled rejections over "
+     "all four fields, 4R) > nominal alpha"),
+    ("superseded_criterion.status: superseded -> live classifier",
+     "size_validation_semantics.superseded_criterion.status",
+     "LIVE RELEASE CLASSIFIER for C3 and C4, replacing the nominal-inflation "
+     "tests"),
+    ("superseded_criterion.why_insufficient.C3 rewritten",
+     "size_validation_semantics.superseded_criterion.why_insufficient.C3",
+     "would have been entirely adequate for C3 at the pooled four-field rate"),
+    ("superseded_criterion.rule tolerance restated",
+     "size_validation_semantics.superseded_criterion.rule",
+     "one-sided 95% Clopper-Pearson UPPER bound <= 0.30"),
+)
+
+#: Unregistered children injected at depth 1, 2 and 3 of the controlled subtree.
+NESTED_UNKNOWN_CHILDREN = (
+    ("depth 1: size_validation_semantics.pooling_override",
+     ("size_validation_semantics",), "pooling_override", "POOL_ALL_FIELDS"),
+    ("depth 2: interpretation.pooling_override",
+     ("size_validation_semantics", "interpretation"), "pooling_override", "POOL_ALL"),
+    ("depth 2: interpretation.release_rule",
+     ("size_validation_semantics", "interpretation"), "release_rule",
+     "the full P1 verdict decides C3"),
+    ("depth 2: two_questions.C3_global_pooling",
+     ("size_validation_semantics", "two_questions"), "C3_global_pooling",
+     "C3 pools its four fields"),
+    ("depth 2: two_questions.release_override",
+     ("size_validation_semantics", "two_questions"), "release_override",
+     "any one clean field is sufficient"),
+    ("depth 2: verdicts.on_pooled_detection",
+     ("size_validation_semantics", "verdicts"), "on_pooled_detection",
+     "POOLED_SIZE_FAILURE"),
+    ("depth 2: superseded_criterion.new_rule",
+     ("size_validation_semantics", "superseded_criterion"), "new_rule",
+     "C3 passes when any one field is clean"),
+    ("depth 3: derived_boundaries.C3.pooling_override",
+     ("size_validation_semantics", "derived_boundaries", "C3"), "pooling_override",
+     "POOLED"),
+    ("depth 3: derived_boundaries.C4.field_reduction",
+     ("size_validation_semantics", "derived_boundaries", "C4"), "field_reduction",
+     "ANY_FIELD"),
+    ("depth 3: superseded_criterion.why_insufficient.C5",
+     ("size_validation_semantics", "superseded_criterion", "why_insufficient"),
+     "C5", "pools its fields"),
+)
+
+
+def test_nested_semantic_leaf_totality() -> None:
+    """F1e-r6 BLOCKER. Classified parent, unclassified nested children.
+
+    The fifth independent audit changed two leaves BELOW a registered parent --
+
+        size_validation_semantics.interpretation.detector
+        size_validation_semantics.two_questions.B_component_size_inflation
+
+    -- to say that C3 and C4 pool their four fields. Plan coherence, the
+    prospective-amendment checker, the normative-surface totality checker and
+    full static preflight all ACCEPTED it, and the reported free/unclassified
+    counts stayed at zero, because those counts only ever looked at top-level
+    strings. Neither leaf is rendered into the Markdown, so representation
+    coherence could not have seen them either.
+
+    Registering the two audited paths would have repeated the enumeration defect
+    one level deeper. The subtree is therefore walked RECURSIVELY from the plan's
+    own structure: every leaf at any depth must carry its own classification, and
+    a classified parent authorises nothing below it.
+    """
+    plan = load_plan(ROOT)
+
+    # --- recursive coverage, machine-derived --------------------------------
+    counts = size_semantics_leaf_counts(plan)
+    check("UNCLASSIFIED size_validation_semantics LEAVES = 0",
+          counts["unclassified_leaves"] == 0, str(counts))
+    check("UNKNOWN NESTED AUTHORITY KEYS = 0",
+          counts["unknown_child_keys"] == 0, str(counts))
+    check("no declared authority leaf is missing from the plan",
+          counts["missing_declared_leaves"] == 0, str(counts))
+    check("every actual leaf is declared",
+          counts["declared_leaves"] == counts["total_leaves"], str(counts))
+    check("the class counts account for every declared leaf",
+          counts["generated_leaves"] + counts["strictly_verified_leaves"]
+          + counts["exact_pinned_leaves"] + counts["structural_schema_leaves"]
+          + counts["deferred_out_of_scope_leaves"] == counts["declared_leaves"],
+          str(counts))
+    check("the subtree is walked recursively, not at one level",
+          counts["controlled_nested_objects"] >= 8, str(counts))
+    check("the live plan satisfies recursive leaf totality",
+          refusal_code(require_size_semantics_leaf_totality, plan) is None)
+    for leaf in size_semantics_leaves(plan):
+        check(f"leaf classified: {leaf.path}", leaf.mode in VERIFICATION_MODES,
+              leaf.mode)
+
+    # --- the interpretation block IS the canonical one in code --------------
+    check("the plan's interpretation block equals classification.SIZE_INTERPRETATION",
+          plan["size_validation_semantics"]["interpretation"] == SIZE_INTERPRETATION)
+    check("the verdict labels equal the canonical ones",
+          plan["size_validation_semantics"]["verdicts"]
+          == {"on_detection": SIZE_FAILURE, "otherwise": SIZE_NO_INFLATION})
+    check("two_questions.B is the generated canonical text",
+          plan["size_validation_semantics"]["two_questions"]
+          ["B_component_size_inflation"] == render_component_size_question())
+    check("two_questions.B states the per-field component scope",
+          "PER_FIELD" in render_component_size_question()
+          and "pooling FORBIDDEN" in render_component_size_question()
+          and "never a familywise or pooled test"
+          in render_component_size_question())
+
+    # --- every contrary leaf mutation, through the WHOLE preflight ----------
+    survived = []
+    for label, path, value in NESTED_LEAF_MUTATIONS:
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        before = path_get(mutant, path)
+        assert before != value, f"{label}: mutation equals the approved value"
+        path_set(mutant, path, value)
+        check(f"MUTATION LANDS: {label} at {path}",
+              path_get(mutant, path) == value)
+        wj(tmp, PLAN_JSON, mutant)
+        coherent = True
+        try:
+            regenerate(tmp)
+        except Refusal:
+            coherent = False
+        if coherent:
+            said = refusal_code(require_plan_authority_coherence, tmp,
+                                rj(tmp, PLAN_JSON))
+            check(f"COHERENT: {label}: Markdown and JSON still agree",
+                  said is None, f"coherence said {said!r}")
+        got = refusal_code(preflight, tmp)
+        if got is None:
+            survived.append(label)
+        check(f"COHERENT BUT WRONG: {label} refuses", got is not None,
+              f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"nested leaf mutation audit: {len(NESTED_LEAF_MUTATIONS)} tested, "
+          "0 unexpected passes", not survived, str(survived))
+
+    # --- unregistered nested children at depths 1, 2 and 3 ------------------
+    accepted = []
+    for label, parents, key, value in NESTED_UNKNOWN_CHILDREN:
+        mutant = copy.deepcopy(plan)
+        node = mutant
+        for step in parents:
+            node = node[step]
+        assert key not in node, f"{label}: key already present"
+        node[key] = value
+        got = refusal_code(require_size_semantics_leaf_totality, mutant)
+        if got is None:
+            accepted.append(label)
+        check(f"UNKNOWN NESTED CHILD REFUSED: {label}",
+              got == "NORMATIVE_SURFACE_UNCLASSIFIED", f"got {got!r}")
+    check(f"nested unknown-child audit: {len(NESTED_UNKNOWN_CHILDREN)} injected, "
+          "0 accepted", not accepted, str(accepted))
+
+    # a classified PARENT does not authorise its children
+    mutant = copy.deepcopy(plan)
+    mutant["size_validation_semantics"]["interpretation"]["whatever"] = "anything"
+    check("a classified parent does NOT authorise an unregistered child",
+          refusal_code(require_size_semantics_leaf_totality, mutant)
+          == "NORMATIVE_SURFACE_UNCLASSIFIED")
+    # and a declared leaf may not be silently dropped
+    mutant = copy.deepcopy(plan)
+    del mutant["size_validation_semantics"]["interpretation"]["detector"]
+    check("a declared authority leaf may not be deleted",
+          refusal_code(require_size_semantics_leaf_totality, mutant)
+          == "NORMATIVE_SURFACE_UNCLASSIFIED")
+
+    # --- NO SELF-VALIDATION: expectations ignore the candidate subtree ------
+    for path, value in (
+            ("size_validation_semantics.interpretation.detector",
+             "inflation detected iff the pooled four-field count exceeds alpha"),
+            ("size_validation_semantics.two_questions.B_component_size_inflation",
+             "C3 and C4 are familywise tests.")):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, path, value)
+        honest = {l.path: l.expected for l in size_semantics_leaves(plan)}
+        corrupt = {l.path: l.expected for l in size_semantics_leaves(mutant)}
+        check(f"the expected value for {path} is INDEPENDENT of the plan text",
+              honest == corrupt and honest[path] != value,
+              f"expected stayed {str(honest[path])[:70]!r}")
+
+    # --- the refusal is structural, not keyword matching --------------------
+    saved = release_authority.FIELD_RULE_PROSE_TOKENS
+    try:
+        release_authority.FIELD_RULE_PROSE_TOKENS = ()
+        for label, path, value in NESTED_LEAF_MUTATIONS[:2]:
+            mutant = copy.deepcopy(plan)
+            path_set(mutant, path, value)
+            check(f"with the keyword list EMPTIED, {label} still refuses",
+                  refusal_code(require_size_semantics_leaf_totality, mutant)
+                  == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    finally:
+        release_authority.FIELD_RULE_PROSE_TOKENS = saved
+
+    # --- C2 is enumerated but DELIBERATELY NOT bound (tracked separately) ---
+    deferred = [l for l in size_semantics_leaves(plan)
+                if l.mode == DEFERRED_OUT_OF_SCOPE]
+    check("C2's derived-boundary leaves are enumerated and classified",
+          deferred and all(".derived_boundaries.C2." in l.path for l in deferred),
+          f"{len(deferred)} leaves")
+    check("each deferred leaf names the task that owns it",
+          all(l.deferred_to for l in deferred),
+          str({l.deferred_to for l in deferred}))
+    c2 = copy.deepcopy(plan)
+    c2["size_validation_semantics"]["derived_boundaries"]["C2"]["pooling"] = (
+        "POOLED - all four field counts summed")
+    check("the C2 residual is STILL reachable: this repair did not mask it",
+          refusal_code(require_size_semantics_leaf_totality, c2) is None
+          and refusal_code(require_field_size_amendment, c2) is None)
+
+    # --- the earlier repairs still hold -------------------------------------
+    c3_path = (f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics."
+               "why_calibration_is_retained")
+    for text in ("The full P1 verdict is the deciding condition for C3.",
+                 "C3 follows the combined P1 verdict.",
+                 "Only a successful full P1 outcome permits C3 acceptance."):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, c3_path, text)
+        check(f"F1e-r5 still holds: {text[:46]!r} refuses",
+              refusal_code(require_field_size_amendment, mutant)
+              == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    counts2 = field_size_amendment_counts(plan)
+    check("the surface registry is still total",
+          counts2["unclassified_normative_amendment_fields"] == 0
+          and counts2["semantically_free_rule_bearing_locations"] == 0,
+          str(counts2))
+
+    # --- approved science untouched -----------------------------------------
+    for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
+        row = plan["size_validation_semantics"]["derived_boundaries"][short]
+        check(f"{short} R, alpha and integer boundary unchanged",
+              (row["replicates"], row["nominal_alpha"], row["boundary"])
+              == (rule.replicates, rule.nominal_alpha, rule.boundary), str(row))
+    check("C3 is still per field, G5 primary, full P1 secondary and non-release",
+          FIELD_SIZE_RULES_BY_CASE["C3_g5_block"].primary_endpoint == "G5_BLOCK_SIZE"
+          and FIELD_SIZE_RULES_BY_CASE["C3_g5_block"]
+          .secondary_feeds_primary_release is False)
+    check("C4 is still per field with Block-1 primary",
+          FIELD_SIZE_RULES_BY_CASE["C4_surrogate_validity"].primary_endpoint
+          == "BLOCK1_ACHIEVED_SIZE")
+    gap = plan["authority_gaps"][_gap_index(plan)]
+    check("the >= 0.90 target is still C1-only",
+          "remains C1-only" in gap["resolution"]
+          and "0.90" in TWO_QUESTIONS_COMPLETE_PIPELINE_PIN
+          and "C1, UNCHANGED" in TWO_QUESTIONS_COMPLETE_PIPELINE_PIN)
+    check("the dependence wording still claims no direction",
+          "not simply be assumed" in gap["resolution"]
+          and "positively associated" not in gap["resolution"])
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
@@ -1926,6 +2245,8 @@ GROUPS = (
      test_c3_c4_normative_surface_totality),
     ("C3 explanatory semantics bound to canonical authority",
      test_c3_explanatory_semantics),
+    ("nested size-validation semantic-leaf totality",
+     test_nested_semantic_leaf_totality),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),

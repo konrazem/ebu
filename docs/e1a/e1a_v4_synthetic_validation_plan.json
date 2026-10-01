@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.13.0",
+  "plan_version": "1.14.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -1550,7 +1550,7 @@
     "status": "FROZEN PROSPECTIVELY, before any random outcome exists",
     "two_questions": {
       "A_complete_practical_performance": "C1, UNCHANGED. One-sided 95% Clopper-Pearson LOWER bound on complete-pipeline success >= 0.90 over R = 300, i.e. >= 279/300. This is the direct prospective validation of whether the whole implemented pipeline meets the release target.",
-      "B_component_size_inflation": "C2, C3 and C4. At the feasible replicate counts these are NOT positive proofs that the achieved rate is at or below a tiny nominal alpha. They prospectively TEST FOR EVIDENCE OF INFLATION: H0: p <= nominal alpha vs H1: p > nominal alpha, one-sided 5%."
+      "B_component_size_inflation": "C2, C3 and C4. At the feasible replicate counts these are NOT positive proofs that the achieved rate is at or below a tiny nominal alpha. They prospectively TEST FOR EVIDENCE OF INFLATION: H0: p <= nominal alpha  vs  H1: p > nominal alpha, one-sided 5%. The C3 and C4 component tests are evaluated PER_FIELD, with within-replicate field reduction NONE and pooling FORBIDDEN; each is a COMPONENT size test and never a familywise or pooled test."
     },
     "detector": "STATISTICAL SIZE INFLATION is detected iff CP_lower(rejections, R) > nominal alpha",
     "verdicts": {

@@ -707,18 +707,19 @@ def test_frozen_authority_unchanged() -> None:
              "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b"),
             ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
              "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495"),
-            # Plan 1.12.0 -> 1.13.0: the last semantically free statement inside a
-            # controlled C3/C4 container, c3_semantics.why_calibration_is_retained,
-            # is now GENERATED from the canonical rule. A fourth independent audit
-            # rewrote it as "The full P1 verdict is the deciding condition for C3."
-            # and preflight accepted it, because it was guarded only by a keyword
-            # list that the sentence avoids. The frozen sources ABOVE and the seed
-            # map BELOW are deliberately unmoved -- no adopted decision rule,
+            # Plan 1.13.0 -> 1.14.0: NESTED semantic-leaf totality. A fifth
+            # independent audit rewrote two leaves BELOW a classified parent --
+            # interpretation.detector and two_questions.B_component_size_inflation
+            # -- to say C3/C4 pool their four fields, and every checker accepted it;
+            # neither leaf reaches the Markdown, so coherence could not see them.
+            # The only content change is B_component_size_inflation, now generated
+            # with the canonical per-field scope. The frozen sources ABOVE and the
+            # seed map BELOW are deliberately unmoved -- no adopted decision rule,
             # replicate count, alpha or boundary changed.
             ("JSON plan", PLAN_JSON,
-             "bbb5fd60ea657a9204a27b57ba982ebb75519ff6cd6c4c57a5329fa401b85db8"),
+             "16b0384d0022bb34e5733e09d0d6a233ab245f066987604f0a721e286629067e"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "eeed237aeda14f03b309cadbc8f3ff5d682f7016151a3132238d3d398a38d3c6"),
+             "70f81dce52161bb17122d27f1c9211e9d7f724493a92cc4581df43d3e43c3d76"),
             ("seed map", SEED_MAP_JSON,
              "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
         check(f"the {label} is BYTE-unchanged",
