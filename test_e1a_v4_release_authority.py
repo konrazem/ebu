@@ -59,6 +59,10 @@ from e1a_v4.validation.campaign_driver import (
 from e1a_v4.validation.plan import load_plan
 from e1a_v4.validation import classification, release_authority
 from e1a_v4.validation.release_authority import (
+    NOT_EVALUABLE, PRIMARY_ENDPOINT_UNDEFINABLE, REFUSAL_DISPOSITION_AFFECTS,
+    REFUSAL_DISPOSITION_ID, STRUCTURED_REFUSAL_RULE, render_refusal_disposition,
+    render_refusal_gap_statement, render_refusal_semantics,
+    render_refusal_verdict_order, render_structured_refusal_block,
     CASE_PROSE_PINS, CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER,
     NON_NORMATIVE_EXPLANATION, NOT_APPLICABLE, SHARED_SIZE_SEMANTICS_PINS,
     FIELD_SIZE_RULES, FIELD_SIZE_RULES_BY_CASE, VERIFICATION_MODES,
@@ -1250,10 +1254,10 @@ def semantic_mutations(plan):
     # ---- final release representation --------------------------------------
     add("final release requirement C3",
         "final_campaign_classification.requirements[2]",
-        "in any required field", "in the reference field")
+        "in every required field", "in the reference field")
     add("final release requirement C4",
         "final_campaign_classification.requirements[3]",
-        "in any required field", "in at least three required fields")
+        "in every required field", "in at least three required fields")
 
     # ---- SECOND AUDIT: the two surfaces that were bound to nothing ---------
     for case_id in ("C3_g5_block", "C4_surrogate_validity"):
@@ -1548,8 +1552,9 @@ def test_c3_c4_normative_surface_totality() -> None:
     counts = field_size_amendment_counts(plan)
     check("UNCLASSIFIED NORMATIVE C3/C4 LOCATIONS = 0",
           counts["unclassified_normative_amendment_fields"] == 0, str(counts))
+    # 11 since F1f-d: the G5 structured-refusal disposition record is swept too.
     check("the registry covers every controlled container",
-          counts["controlled_containers"] == 10, str(counts))
+          counts["controlled_containers"] == 11, str(counts))
     check("the mode counts account for every registered location",
           counts["generated_normative_fields"]
           + counts["strictly_verified_duplicate_fields"]
@@ -2111,9 +2116,17 @@ def test_nested_semantic_leaf_totality() -> None:
     # --- the interpretation block IS the canonical one in code --------------
     check("the plan's interpretation block equals classification.SIZE_INTERPRETATION",
           plan["size_validation_semantics"]["interpretation"] == SIZE_INTERPRETATION)
+    # THREE verdicts since the G5 amendment, plus the precedence that stops the
+    # `otherwise` branch claiming a clean field from an incomplete sequence.
     check("the verdict labels equal the canonical ones",
           plan["size_validation_semantics"]["verdicts"]
-          == {"on_detection": SIZE_FAILURE, "otherwise": SIZE_NO_INFLATION})
+          == {"on_detection": SIZE_FAILURE, "otherwise": SIZE_NO_INFLATION,
+              "on_undefined_primary_endpoint": NOT_EVALUABLE,
+              "evaluation_order": render_refusal_verdict_order()})
+    check("the two statistical verdicts are unchanged by the amendment",
+          plan["size_validation_semantics"]["verdicts"]["on_detection"] == SIZE_FAILURE
+          and plan["size_validation_semantics"]["verdicts"]["otherwise"]
+          == SIZE_NO_INFLATION)
     check("two_questions.B is the generated canonical text",
           plan["size_validation_semantics"]["two_questions"]
           ["B_component_size_inflation"] == render_component_size_question())
@@ -2223,8 +2236,10 @@ def test_nested_semantic_leaf_totality() -> None:
           DEFERRED_C2_LEAF_PATHS == ())
     c2_leaves = [l for l in size_semantics_leaves(plan)
                  if ".derived_boundaries.C2." in l.path]
-    check("C2's nine derived-boundary leaves are generated or strictly verified",
-          len(c2_leaves) == 9
+    # Twelve since F1f-d: the three leaves recording that C2's primary endpoint
+    # cannot be undefined, so its scope-out from G5 is stated rather than implied.
+    check("C2's twelve derived-boundary leaves are generated or strictly verified",
+          len(c2_leaves) == 12
           and all(l.mode in (GENERATED_FROM_CANONICAL, STRICTLY_VERIFIED_DUPLICATE)
                   for l in c2_leaves),
           str(sorted({l.mode for l in c2_leaves})))
@@ -3037,6 +3052,282 @@ def test_f1f_implementation_conformance() -> None:
           callable(per_field_rejections))
 
 
+# ------------------------- 23. G5 structured-refusal authority (F1f-d)
+def structured_refusal_mutations(plan):
+    """Every coherent-but-wrong reading of the approved structured-refusal rule.
+
+    Each entry names the exact authoritative location, so a mutation that fails to
+    land is an assertion error rather than a false pass. All of them must REFUSE.
+    """
+    sr = "size_validation_semantics.structured_refusal"
+    vd = "size_validation_semantics.verdicts"
+    g5 = f"authority_gaps[{_gap_index(plan, REFUSAL_DISPOSITION_ID)}]"
+    c3 = f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics"
+    c4 = f"cases[{_case_index(plan, 'C4_surrogate_validity')}].c4_semantics"
+    b = "size_validation_semantics.derived_boundaries"
+    return (
+        # ---- the two readings the amendment exists to forbid ----------------
+        ("None -> rejection (block)", f"{sr}.refusal_is_statistical_rejection",
+         False, True),
+        ("None -> rejection (C3)", f"{c3}.refusal_is_statistical_rejection",
+         False, True),
+        ("None -> rejection (C4)", f"{c4}.refusal_is_statistical_rejection",
+         False, True),
+        ("None -> non-rejection (block)",
+         f"{sr}.refusal_is_statistical_non_rejection", False, True),
+        ("None -> non-rejection (C3)",
+         f"{c3}.refusal_is_statistical_non_rejection", False, True),
+        ("None -> non-rejection (C4)",
+         f"{c4}.refusal_is_statistical_non_rejection", False, True),
+        # ---- the denominator shrinks to the survivors -----------------------
+        ("evaluable_N becomes the primary denominator (block)",
+         f"{sr}.primary_denominator", "PLANNED_R_PRESERVED", "EVALUABLE_N"),
+        ("evaluable_N becomes the primary denominator (C3)",
+         f"{c3}.primary_denominator_under_refusal", "PLANNED_R_PRESERVED",
+         "EVALUABLE_N"),
+        ("planned R dropped from the G5 resolution", f"{g5}.resolution",
+         "PLANNED_R_PRESERVED -- R stays at its planned",
+         "EVALUABLE_N -- R shrinks from its planned"),
+        # ---- a refusal resolved into one of the two statistical verdicts ----
+        ("refusal -> ordinary clean verdict", f"{vd}.on_undefined_primary_endpoint",
+         NOT_EVALUABLE, "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED"),
+        ("refusal -> statistical size failure",
+         f"{vd}.on_undefined_primary_endpoint", NOT_EVALUABLE,
+         "STATISTICAL_SIZE_FAILURE"),
+        ("refusal -> clean verdict (C3)",
+         f"{c3}.primary_verdict_on_structured_refusal", NOT_EVALUABLE,
+         "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED"),
+        ("refusal -> size failure (C4)",
+         f"{c4}.primary_verdict_on_structured_refusal", NOT_EVALUABLE,
+         "STATISTICAL_SIZE_FAILURE"),
+        # ---- all-refused silently becomes clean -----------------------------
+        ("the detector runs on an incomplete sequence", f"{vd}.evaluation_order",
+         "the detector is NOT run", "the detector is run on the surviving replicates"),
+        ("the precedence is inverted", f"{vd}.evaluation_order",
+         "resolved in order: if any required PRIMARY endpoint decision",
+         "resolved in order: if the detector fires first, and only then if any "
+         "required PRIMARY endpoint decision"),
+        # ---- NOT_EVALUABLE allowed to pass release --------------------------
+        ("NOT_EVALUABLE may pass release (block)", f"{sr}.release_requires",
+         "EVALUABLE_AND_CLEAN", "CLEAN_OR_NOT_EVALUABLE"),
+        ("NOT_EVALUABLE may pass release (C3)", f"{c3}.release_requires",
+         "EVALUABLE_AND_CLEAN", "CLEAN_OR_NOT_EVALUABLE"),
+        ("NOT_EVALUABLE may pass release (final rule)",
+         "final_campaign_classification.rule",
+         "has NOT satisfied it, and prevents the campaign from passing",
+         "has satisfied it, and does not prevent the campaign from passing"),
+        ("NOT_EVALUABLE dropped from the C3 requirement line",
+         "final_campaign_classification.requirements[2]",
+         f"and no {NOT_EVALUABLE} field", "and NOT_EVALUABLE fields are tolerated"),
+        ("NOT_EVALUABLE dropped from the C4 requirement line",
+         "final_campaign_classification.requirements[3]",
+         f"and no {NOT_EVALUABLE} field", "and NOT_EVALUABLE fields are tolerated"),
+        # ---- the terminal report stops being mandatory ----------------------
+        ("terminal report not required under all-refused",
+         f"{sr}.terminal_report_required_under_all_refusals", True, False),
+        ("the G5 resolution drops the terminal-report duty", f"{g5}.resolution",
+         "The terminal campaign report MUST still be produced",
+         "The terminal campaign report need NOT be produced"),
+        # ---- a survivor-conditioned figure promoted to release-bearing ------
+        ("survivor-conditioned rate becomes primary (block)",
+         f"{sr}.survivor_conditioned_rate_role", "SECONDARY_DIAGNOSTIC_ONLY",
+         "PRIMARY_RELEASE_BEARING"),
+        ("survivor-conditioned rate becomes primary (C3)",
+         f"{c3}.survivor_conditioned_rate_role", "SECONDARY_DIAGNOSTIC_ONLY",
+         "PRIMARY_RELEASE_BEARING"),
+        # ---- a tolerated-refusal threshold is invented ----------------------
+        ("a tolerated-refusal fraction is introduced (block)",
+         f"{sr}.tolerated_structured_refusal_fraction", "NONE", "0.01"),
+        ("a tolerated-refusal fraction is introduced (C4)",
+         f"{c4}.tolerated_structured_refusal_fraction", "NONE", "0.01"),
+        ("the G5 resolution tolerates some refusals", f"{g5}.resolution",
+         f"The tolerated structured-refusal fraction is "
+         f"{STRUCTURED_REFUSAL_RULE.tolerated_fraction}",
+         "The tolerated structured-refusal fraction is 1 percent"),
+        # ---- full P1 substituted for the undefined block decision -----------
+        ("C3: the G5 decision is claimed always defined",
+         f"{c3}.undefined_primary_endpoint_possible", True, False),
+        ("C4: the Block-1 decision is claimed always defined",
+         f"{c4}.undefined_primary_endpoint_possible", True, False),
+        ("C3 boundary row claims the decision is always defined",
+         f"{b}.C3.undefined_primary_endpoint_possible", True, False),
+        ("C4 boundary row claims the decision is always defined",
+         f"{b}.C4.undefined_primary_endpoint_possible", True, False),
+        # ---- C2 dragged into the amendment ----------------------------------
+        ("C2 is claimed to have an undefined primary endpoint",
+         f"{b}.C2.undefined_primary_endpoint_possible", False, True),
+        ("C2 is given a NOT_EVALUABLE path", f"{b}.C2.verdict_on_structured_refusal",
+         "NOT_APPLICABLE", NOT_EVALUABLE),
+        # ---- the campaign failure reason becomes a statistical rejection ----
+        ("the failure reason becomes a size failure (block)",
+         f"{sr}.campaign_failure_classification", "VALIDATION_INCONCLUSIVE",
+         "STATISTICAL_SIZE_FAILURE"),
+        ("the failure reason becomes a size failure (C3)",
+         f"{c3}.campaign_failure_classification_when_not_evaluable",
+         "VALIDATION_INCONCLUSIVE", "STATISTICAL_SIZE_FAILURE"),
+        # ---- the disposition record itself ----------------------------------
+        ("G5 affects is widened to C2", f"{g5}.affects", "C3, C4", "C2, C3, C4"),
+        ("G5 status is downgraded", f"{g5}.status", "CLOSED PROSPECTIVELY", "OPEN"),
+        ("the G5 gap statement denies the gap", f"{g5}.gap",
+         "can leave a C3 or C4 PRIMARY endpoint decision undefined",
+         "never leaves a C3 or C4 PRIMARY endpoint decision undefined"),
+        ("the encoding stops being neither/nor", f"{sr}.encoding",
+         "NEITHER_REJECTION_NOR_NONREJECTION", "TREATED_AS_REJECTION"),
+    )
+
+
+def test_structured_refusal_authority() -> None:
+    """F1f-d. The G5 amendment is bound to a canonical rule, not to prose.
+
+    A valid structured refusal can leave a C3 G5 / C4 Block-1 decision undefined.
+    Frozen authority defined refusal treatment for complete-pipeline success only,
+    so the author decided prospectively: an undefined primary endpoint is NEITHER a
+    rejection NOR a non-rejection, planned R is preserved, and the field's primary
+    size assessment is NOT_EVALUABLE, which blocks release.
+    """
+    plan = load_plan(ROOT)
+
+    # --- the canonical rule says exactly what was approved -------------------
+    rule = STRUCTURED_REFUSAL_RULE
+    check("an undefined primary endpoint is NOT a statistical rejection",
+          rule.is_statistical_rejection is False)
+    check("an undefined primary endpoint is NOT a statistical non-rejection",
+          rule.is_statistical_non_rejection is False)
+    check("the encoding is NEITHER_REJECTION_NOR_NONREJECTION",
+          rule.encoding == "NEITHER_REJECTION_NOR_NONREJECTION")
+    check("the planned denominator is preserved",
+          rule.denominator_rule == "PLANNED_R_PRESERVED")
+    check("the primary verdict on any structured refusal is NOT_EVALUABLE",
+          rule.verdict == NOT_EVALUABLE)
+    check("NOT_EVALUABLE is neither of the two statistical verdicts",
+          rule.verdict != SIZE_FAILURE and rule.verdict != SIZE_NO_INFLATION)
+    check("release requires EVALUABLE_AND_CLEAN",
+          rule.release_requirement == "EVALUABLE_AND_CLEAN")
+    check("the campaign failure reason is not a size failure",
+          rule.campaign_classification == "VALIDATION_INCONCLUSIVE"
+          and rule.campaign_classification != SIZE_FAILURE)
+    check("the failure reason is a DECLARED frozen classification",
+          rule.campaign_classification in plan["failure_classifications"])
+    check("no tolerated-refusal fraction is introduced",
+          rule.tolerated_fraction == "NONE")
+    check("a survivor-conditioned rate is SECONDARY only",
+          rule.survivor_role == "SECONDARY_DIAGNOSTIC_ONLY")
+    check("the terminal report is required under all refusals",
+          rule.terminal_report_required is True)
+    check("the required terminal counts distinguish the three states",
+          set(rule.required_terminal_counts) >= {
+              "planned_R", "evaluable_primary_endpoint_count",
+              "structured_refusal_count", "defined_rejection_count",
+              "primary_size_status"})
+
+    # --- the amendment reaches C3 and C4 and NOT C2 -------------------------
+    check("C2's primary endpoint cannot be undefined",
+          PRIMARY_ENDPOINT_UNDEFINABLE["C2"][0] is False)
+    check("C3's and C4's primary endpoints can be undefined",
+          PRIMARY_ENDPOINT_UNDEFINABLE["C3"][0] is True
+          and PRIMARY_ENDPOINT_UNDEFINABLE["C4"][0] is True)
+    check("the disposition declares it affects C3 and C4 only",
+          REFUSAL_DISPOSITION_AFFECTS == "C3, C4")
+    boundaries = plan["size_validation_semantics"]["derived_boundaries"]
+    check("C2's boundary row records the scope-out explicitly",
+          boundaries["C2"]["undefined_primary_endpoint_possible"] is False
+          and boundaries["C2"]["verdict_on_structured_refusal"] == "NOT_APPLICABLE")
+    check("C2's own release rule is untouched by the amendment",
+          boundaries["C2"]["replicates"] == 400
+          and boundaries["C2"]["nominal_alpha"] == 0.005
+          and boundaries["C2"]["boundary"] == 5)
+
+    # --- every normative rendering IS the canonical rule --------------------
+    gap = plan["authority_gaps"][_gap_index(plan, REFUSAL_DISPOSITION_ID)]
+    check("the G5 gap statement is the generated canonical text",
+          gap["gap"] == render_refusal_gap_statement())
+    check("the G5 resolution is the generated canonical text",
+          gap["resolution"] == render_refusal_disposition())
+    svs = plan["size_validation_semantics"]
+    for key, value in render_structured_refusal_block().items():
+        check(f"structured_refusal.{key} is generated",
+              svs["structured_refusal"][key] == value)
+    check("the third verdict is generated",
+          svs["verdicts"]["on_undefined_primary_endpoint"] == rule.verdict)
+    check("the verdict precedence is generated",
+          svs["verdicts"]["evaluation_order"] == render_refusal_verdict_order())
+    for field_rule in FIELD_SIZE_RULES:
+        case = next(c for c in plan["cases"] if c["case_id"] == field_rule.case_id)
+        for key, value in render_refusal_semantics(field_rule).items():
+            check(f"{field_rule.case_id[:2]} semantics {key} is generated",
+                  case[field_rule.semantics_key][key] == value)
+
+    # --- the numeric size rules are UNCHANGED when evaluable ----------------
+    for field_rule in FIELD_SIZE_RULES:
+        short = field_rule.case_id[:2]
+        row = boundaries[short]
+        check(f"{short} R, alpha and boundary are untouched by the amendment",
+              (row["replicates"], row["nominal_alpha"], row["boundary"])
+              == (field_rule.replicates, field_rule.nominal_alpha,
+                  field_rule.boundary))
+        check(f"{short} scope, reduction and pooling are untouched",
+              (field_rule.evaluation_scope, field_rule.field_reduction,
+               field_rule.pooling) == ("PER_FIELD", "NONE", "FORBIDDEN"))
+    check("C3's secondary P1 diagnostic is still non-release-bearing",
+          FIELD_SIZE_RULES_BY_CASE["C3_g5_block"]
+          .secondary_feeds_primary_release is False)
+    check("the disposition FORBIDS multiplicity corrections rather than adding one",
+          "no refusal threshold, Bonferroni correction, familywise correction, "
+          "new alpha or new integer boundary is introduced"
+          in render_refusal_disposition())
+
+    # --- MUTATION AUDIT: every coherent wrong reading REFUSES ---------------
+    mutations = structured_refusal_mutations(plan)
+    unexpected = []
+    for component, path, old_token, new_token in mutations:
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        before = path_get(mutant, path)
+        after = (_text_swap(before, old_token, new_token)
+                 if isinstance(before, str) else new_token)
+        assert after != before, f"{component}: mutation did not change {path}"
+        path_set(mutant, path, after)
+        wj(tmp, PLAN_JSON, mutant)
+        try:
+            regenerate(tmp)       # Markdown made COHERENT with the mutated JSON
+        except Refusal:
+            pass
+        got = refusal_code(preflight, tmp)
+        if got is None:
+            unexpected.append(f"{component} @ {path}")
+        check(f"COHERENT BUT WRONG: {component} refuses", got is not None,
+              f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"structured-refusal mutation audit: {len(mutations)} tested, "
+          "0 unexpected passes", not unexpected, str(unexpected))
+
+    # --- the RUNTIME is deliberately still behind this authority (F1f-e) ----
+    # The amendment is authority only. `per_field_rejections` still raises
+    # ENDPOINT_EVENT_MISSING on a refused record, so the terminal report the
+    # contract requires is still not produced. F1f-e repairs that; recording the
+    # lag here stops it from being forgotten or silently papered over.
+    refused = {"job": {"coordinates": {"case_id": "C3_g5_block",
+                                       "subcondition_id": "sigma_psi_0p5",
+                                       "replicate_id": 0,
+                                       "scope": "theta0_circular"},
+                       "result": {"analysis_status": "RANK_GUARD_FAIL",
+                                  "P1": False, "p1_rejected": True,
+                                  "block1_rejected": None, "g5_rejected": None}}}
+    small = copy.deepcopy(plan)
+    for case in small["cases"]:
+        if case["case_id"] == "C3_g5_block":
+            case["replicate_count"] = 1
+            case["fields_affected"] = ["theta0_circular"]
+    check("KNOWN LAG: the runtime still refuses to aggregate a valid structured "
+          "refusal, which F1f-e must repair",
+          refusal_code(per_field_rejections, small, refused, "C3_g5_block",
+                       "g5_rejected") == "ENDPOINT_EVENT_MISSING")
+    check("authority now REQUIRES the terminal report under all refusals",
+          svs["structured_refusal"]["terminal_report_required_under_all_refusals"]
+          is True)
+    check("execution is still not authorised", plan["execution_authorised"] is False)
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
@@ -3052,6 +3343,7 @@ GROUPS = (
      test_list_and_deferred_scope_totality),
     ("F1f runtime implementation conformance",
      test_f1f_implementation_conformance),
+    ("F1f-d G5 structured-refusal authority", test_structured_refusal_authority),
     ("C2 DERIVED per-field authority binding",
      test_c2_derived_authority_binding),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),

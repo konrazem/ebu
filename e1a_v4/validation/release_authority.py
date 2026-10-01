@@ -434,6 +434,241 @@ FIELD_SIZE_RULES = (
                              "binary diagnostic does not replace them")),
 )
 
+
+# ---- STRUCTURED REFUSAL: the G5 prospective amendment -----------------------
+#: A VALID STRUCTURED REFUSAL can leave a C3 or C4 PRIMARY endpoint decision
+#: undefined. Frozen authority defined what a refusal means for complete-pipeline
+#: success (C1) and said nothing about what it means for a COMPONENT SIZE TEST.
+#: The author closed that gap prospectively, before any outcome existed.
+REFUSAL_DISPOSITION_ID = "G5"
+REFUSAL_DISPOSITION_STATUS = "CLOSED PROSPECTIVELY"
+REFUSAL_DISPOSITION_AFFECTS = "C3, C4"
+
+#: The THIRD primary field-level state. It is neither of the two statistical
+#: verdicts: it says the preregistered evidence was not fully observed.
+NOT_EVALUABLE = "NOT_EVALUABLE"
+#: How an undefined primary endpoint is encoded. The whole point of the amendment.
+REFUSAL_ENCODING = "NEITHER_REJECTION_NOR_NONREJECTION"
+#: The primary denominator does not shrink to the surviving replicates.
+REFUSAL_DENOMINATOR_RULE = "PLANNED_R_PRESERVED"
+#: What a required field must be for the campaign to pass.
+REFUSAL_RELEASE_REQUIREMENT = "EVALUABLE_AND_CLEAN"
+#: The campaign-level failure reason. Deliberately NOT STATISTICAL_SIZE_FAILURE,
+#: which would assert a rejection that never happened, and deliberately NOT
+#: STRUCTURED_REFUSAL_EXCESS, whose name implies a tolerated fraction that this
+#: amendment does not create. VALIDATION_INCONCLUSIVE is already frozen in
+#: `failure_classifications` and carried no declared trigger; this supplies one.
+REFUSAL_CAMPAIGN_CLASSIFICATION = "VALIDATION_INCONCLUSIVE"
+#: There is NO tolerated-refusal fraction. One refusal is enough.
+REFUSAL_TOLERATED_FRACTION = "NONE"
+#: The per-field terminal information the amendment requires, so a reader can tell
+#: "the size test rejected" from "the size test could not be validly evaluated".
+REFUSAL_REQUIRED_TERMINAL_COUNTS = (
+    "planned_R",
+    "evaluable_primary_endpoint_count",
+    "structured_refusal_count",
+    "defined_rejection_count",
+    "primary_size_status",
+    "refusal_reasons",
+)
+#: A survivor-conditioned figure is permitted only in the role design section 14
+#: and `complete_pass_denominator.conditional_diagnostics` already allow.
+REFUSAL_SURVIVOR_ROLE = "SECONDARY_DIAGNOSTIC_ONLY"
+
+#: Whether a valid structured refusal can leave the case's PRIMARY endpoint
+#: undefined, and why. C2 releases on the COMPOSITE P1 decision, which FAILS
+#: CLOSED, so its elementary event exists for every replicate including a refusal;
+#: C3 and C4 release on ONE BLOCK of that gate, and a refusal that produced no
+#: p-values leaves that block's decision undefined. This is why the amendment
+#: reaches C3 and C4 and does not reach C2.
+PRIMARY_ENDPOINT_UNDEFINABLE = {
+    "C2": (False,
+           "the composite P1 decision FAILS CLOSED, so this case's elementary "
+           "event is defined for every replicate including a structured refusal"),
+    "C3": (True,
+           "the primary endpoint is ONE BLOCK of the two-block gate; a structured "
+           "refusal that produced no p-values leaves the G5 decision undefined"),
+    "C4": (True,
+           "the primary endpoint is ONE BLOCK of the two-block gate; a structured "
+           "refusal that produced no p-values leaves the Block-1 decision undefined"),
+}
+
+
+@dataclass(frozen=True)
+class StructuredRefusalRule:
+    """The approved treatment of a valid structured refusal in a size case."""
+
+    disposition_id: str
+    encoding: str
+    verdict: str
+    denominator_rule: str
+    release_requirement: str
+    campaign_classification: str
+    tolerated_fraction: str
+    survivor_role: str
+    required_terminal_counts: tuple[str, ...]
+    terminal_report_required: bool = True
+    is_statistical_rejection: bool = False
+    is_statistical_non_rejection: bool = False
+
+
+STRUCTURED_REFUSAL_RULE = StructuredRefusalRule(
+    disposition_id=REFUSAL_DISPOSITION_ID,
+    encoding=REFUSAL_ENCODING,
+    verdict=NOT_EVALUABLE,
+    denominator_rule=REFUSAL_DENOMINATOR_RULE,
+    release_requirement=REFUSAL_RELEASE_REQUIREMENT,
+    campaign_classification=REFUSAL_CAMPAIGN_CLASSIFICATION,
+    tolerated_fraction=REFUSAL_TOLERATED_FRACTION,
+    survivor_role=REFUSAL_SURVIVOR_ROLE,
+    required_terminal_counts=REFUSAL_REQUIRED_TERMINAL_COUNTS)
+
+
+def render_refusal_gap_statement(rule: StructuredRefusalRule = STRUCTURED_REFUSAL_RULE
+                                 ) -> str:
+    """G5's gap sentence. GENERATED from the canonical rule."""
+    return (
+        "a VALID STRUCTURED REFUSAL can leave a C3 or C4 PRIMARY endpoint decision "
+        "undefined: C3 releases on the actual G5 / Block-2 decision and C4 on the "
+        "actual Block-1 decision, and when the two-block gate produced no p-values "
+        "at all neither decision exists. Frozen authority defined the treatment of "
+        "structured refusals for COMPLETE-PIPELINE success only -- the contract "
+        "states it inside complete_pipeline, synthetic_validation_requirements[9] "
+        "names complete-pipeline success, and the mandatory diagnostic carrying the "
+        "denominator_rule aggregate key is bound to C1_true_bridge_complete -- and "
+        "said nothing about what an undefined primary endpoint means for a "
+        "COMPONENT SIZE TEST. C1 could not absorb it either, because C1 and C3/C4 "
+        "are disjoint job sets. The frozen size vocabulary offered only two "
+        "verdicts, so applying the detector to an incomplete primary sequence would "
+        "have reported NO_SIGNIFICANT_SIZE_INFLATION_DETECTED on evidence that was "
+        "never obtained.")
+
+
+def render_refusal_disposition(rule: StructuredRefusalRule = STRUCTURED_REFUSAL_RULE
+                               ) -> str:
+    """G5's resolution. GENERATED from the canonical rule."""
+    counts = ", ".join(rule.required_terminal_counts)
+    cases = " or ".join(r.case_id[:2] for r in FIELD_SIZE_RULES)
+    return (
+        f"A valid structured refusal that leaves a {cases} PRIMARY endpoint decision "
+        f"undefined is encoded {rule.encoding}: it is NOT a statistical rejection "
+        "and it is NOT a statistical non-rejection. The prospectively declared "
+        f"primary denominator is {rule.denominator_rule} -- R stays at its planned "
+        "value per field and is never silently reduced to the surviving replicates. "
+        f"If a required field carries one or more structured refusals affecting its "
+        f"primary endpoint, that field's PRIMARY size assessment is {rule.verdict}, "
+        "and the frozen two-way detector is NOT run on the incomplete sequence. "
+        f"{rule.verdict} is neither {SIZE_FAILURE} nor {SIZE_NO_INFLATION}: missing "
+        "evidence neither establishes excess size nor establishes nominal size "
+        f"behaviour. Because C3 and C4 are mandatory validation conditions, release "
+        f"requires every required field to be {rule.release_requirement}, so a "
+        f"{rule.verdict} field prevents the campaign from passing; the campaign "
+        f"failure is classified {rule.campaign_classification} and names incomplete "
+        "required validation evidence, never statistical size inflation. The "
+        f"tolerated structured-refusal fraction is {rule.tolerated_fraction}: one "
+        "refusal affecting a required primary endpoint is sufficient, and no "
+        "refusal threshold, Bonferroni correction, familywise correction, new alpha "
+        "or new integer boundary is introduced. The terminal campaign report MUST "
+        "still be produced when one, some or every C3/C4 job is a valid structured "
+        "refusal, as the contract's refusal reconciliation already requires. Each "
+        f"required field must separately retain {counts}. A survivor-conditioned "
+        f"rejection rate or confidence bound is {rule.survivor_role} and SHALL NEVER "
+        "substitute for the frozen primary planned-R assessment. Per-field scope, "
+        "pooling FORBIDDEN and within-replicate cross-field reduction NONE are "
+        "unchanged, NOT_EVALUABLE applies independently by field and one field's "
+        "evaluability never rescues another's, and the C3/C4 primary endpoint "
+        "definitions, the nominal alphas and the integer boundaries are unchanged. "
+        "C2 is NOT affected: its composite P1 endpoint fails closed, so its "
+        "elementary event is defined even under a structured refusal. Decided "
+        "before any official campaign job, trajectory or outcome existed.")
+
+
+def render_refusal_verdict_order(rule: StructuredRefusalRule = STRUCTURED_REFUSAL_RULE
+                                 ) -> str:
+    """How the three verdicts are resolved. GENERATED.
+
+    Stated as an ORDER because the two statistical verdicts partition every
+    (rejections, R) pair between them: without an explicit precedence the
+    `otherwise` branch would silently claim a clean field from an incomplete
+    primary sequence, which is the pathology the amendment exists to prevent.
+    """
+    return (
+        "resolved in order: if any required PRIMARY endpoint decision for the field "
+        f"is undefined because of a valid structured refusal the verdict is "
+        f"{rule.verdict} and the detector is NOT run; only on a COMPLETE primary "
+        "sequence, with structured_refusal_count = 0, do on_detection and otherwise "
+        "apply")
+
+
+def render_refusal_semantics(field_rule: FieldSizeRule,
+                             rule: StructuredRefusalRule = STRUCTURED_REFUSAL_RULE
+                             ) -> dict[str, Any]:
+    """The GENERATED structured-refusal members of a case's semantics block."""
+    short = field_rule.case_id[:2]
+    undefinable, reason = PRIMARY_ENDPOINT_UNDEFINABLE[short]
+    return {
+        "structured_refusal_status": (
+            "STRUCTURED-REFUSAL SEMANTICS RESOLVED PROSPECTIVELY, before any random "
+            f"outcome exists; see authority_gaps {rule.disposition_id}"),
+        "undefined_primary_endpoint_possible": undefinable,
+        "undefined_primary_endpoint_reason": reason,
+        "undefined_primary_endpoint_encoding": rule.encoding,
+        "refusal_is_statistical_rejection": rule.is_statistical_rejection,
+        "refusal_is_statistical_non_rejection": rule.is_statistical_non_rejection,
+        "primary_denominator_under_refusal": rule.denominator_rule,
+        "primary_verdict_on_structured_refusal": rule.verdict,
+        "release_requires": rule.release_requirement,
+        "campaign_failure_classification_when_not_evaluable": (
+            rule.campaign_classification),
+        "tolerated_structured_refusal_fraction": rule.tolerated_fraction,
+        "survivor_conditioned_rate_role": rule.survivor_role,
+        "required_terminal_counts": list(rule.required_terminal_counts),
+    }
+
+
+def render_refusal_boundary_leaves(short: str,
+                                   rule: StructuredRefusalRule = STRUCTURED_REFUSAL_RULE
+                                   ) -> dict[str, Any]:
+    """The GENERATED structured-refusal leaves of one derived-boundary row.
+
+    Declared for C2 as well as C3 and C4, with C2's value recording that its
+    primary endpoint cannot be undefined. Stating the scope-out explicitly is what
+    stops the amendment from being read as silently applying to C2.
+    """
+    undefinable, reason = PRIMARY_ENDPOINT_UNDEFINABLE[short]
+    if not undefinable:
+        return {
+            "undefined_primary_endpoint_possible": False,
+            "verdict_on_structured_refusal": "NOT_APPLICABLE",
+            "structured_refusal_note": reason,
+        }
+    return {
+        "undefined_primary_endpoint_possible": True,
+        "verdict_on_structured_refusal": rule.verdict,
+        "structured_refusal_note": reason,
+    }
+
+
+def render_structured_refusal_block(
+        rule: StructuredRefusalRule = STRUCTURED_REFUSAL_RULE) -> dict[str, Any]:
+    """The GENERATED `size_validation_semantics.structured_refusal` block."""
+    return {
+        "status": ("AMENDED PROSPECTIVELY, before any random outcome exists; see "
+                   f"authority_gaps {rule.disposition_id}"),
+        "applies_to": REFUSAL_DISPOSITION_AFFECTS,
+        "encoding": rule.encoding,
+        "refusal_is_statistical_rejection": rule.is_statistical_rejection,
+        "refusal_is_statistical_non_rejection": rule.is_statistical_non_rejection,
+        "primary_denominator": rule.denominator_rule,
+        "primary_verdict_on_any_structured_refusal": rule.verdict,
+        "release_requires": rule.release_requirement,
+        "campaign_failure_classification": rule.campaign_classification,
+        "tolerated_structured_refusal_fraction": rule.tolerated_fraction,
+        "survivor_conditioned_rate_role": rule.survivor_role,
+        "terminal_report_required_under_all_refusals": rule.terminal_report_required,
+        "required_terminal_counts": list(rule.required_terminal_counts),
+    }
+
 FIELD_SIZE_RULES_BY_CASE = {rule.case_id: rule for rule in FIELD_SIZE_RULES}
 
 #: The one sentence that states the field structure. Every normative rendering
@@ -495,6 +730,10 @@ def render_field_size_semantics(rule: FieldSizeRule) -> dict[str, Any]:
         f"see authority_gaps {FIELD_SIZE_DISPOSITION_ID}")
     if rule.secondary_diagnostic is not None:
         generated["block1_role"] = rule.secondary_diagnostic
+    # The G5 structured-refusal amendment. Merged here, not registered separately,
+    # so the surface registry and the recursive leaf walk pick it up by the same
+    # route as every other generated semantics member.
+    generated.update(render_refusal_semantics(rule))
     return generated
 
 
@@ -618,9 +857,16 @@ def final_campaign_requirements() -> tuple[str, ...]:
 
 
 def render_field_size_requirement(rule: FieldSizeRule, index: int) -> str:
-    """The case's numbered line in the final-campaign requirement list."""
-    return (f"{index}. {rule.case_id[:2]} produces no STATISTICAL_SIZE_FAILURE in any "
-            "required field")
+    """The case's numbered line in the final-campaign requirement list.
+
+    Since the G5 amendment the line demands EVALUABILITY as well as cleanliness: a
+    field whose primary assessment is NOT_EVALUABLE has not satisfied the
+    condition, and saying only "no STATISTICAL_SIZE_FAILURE" would have let an
+    unevaluated field pass by silence.
+    """
+    return (f"{index}. {rule.case_id[:2]} is "
+            f"{STRUCTURED_REFUSAL_RULE.release_requirement} in every required "
+            f"field: no {SIZE_FAILURE} and no {NOT_EVALUABLE} field")
 
 
 def render_field_size_pooling_statement(rule: FieldSizeRule) -> str:
@@ -649,7 +895,11 @@ def render_final_campaign_rule() -> str:
         f"per declared field; a case is clean only when all {count} are clean, NO "
         "required condition may fail, a single clean field is NEVER sufficient, and "
         f"compensation is {FINAL_RELEASE_COMPENSATION} both between fields and "
-        "between cases.")
+        f"between cases. A required field satisfies its condition only when it is "
+        f"{STRUCTURED_REFUSAL_RULE.release_requirement}: a field whose primary size "
+        f"assessment is {NOT_EVALUABLE} has NOT satisfied it, and prevents the "
+        f"campaign from passing under {STRUCTURED_REFUSAL_RULE.campaign_classification} "
+        f"rather than under {SIZE_FAILURE}.")
 
 
 def render_field_size_target(rule: FieldSizeRule) -> str:
@@ -1606,6 +1856,18 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
         add(_surface("G4", f"disposition {key}", gid, key, mode,
                      "generated release-rules region", expected, gap))
 
+    # ------------------------------------------------- the G5 disposition record
+    refusal_gap = gaps.get(REFUSAL_DISPOSITION_ID) or {}
+    rid = f"authority_gaps.{REFUSAL_DISPOSITION_ID}"
+    for key, mode, expected in (
+            ("id", STRICTLY_VERIFIED_DUPLICATE, REFUSAL_DISPOSITION_ID),
+            ("status", STRICTLY_VERIFIED_DUPLICATE, REFUSAL_DISPOSITION_STATUS),
+            ("affects", STRICTLY_VERIFIED_DUPLICATE, REFUSAL_DISPOSITION_AFFECTS),
+            ("gap", GENERATED_FROM_CANONICAL, render_refusal_gap_statement()),
+            ("resolution", GENERATED_FROM_CANONICAL, render_refusal_disposition())):
+        add(_surface("G5", f"disposition {key}", rid, key, mode,
+                     "generated release-rules region", expected, refusal_gap))
+
     cases = {case.get("case_id"): (i, case) for i, case in enumerate(plan["cases"])}
     assurance = {row.get("case_id"): row for row in plan["assurance"]}
     boundaries = plan["size_validation_semantics"]["derived_boundaries"]
@@ -1721,6 +1983,10 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
             add(_surface(short, "derived boundary retention", bp, "retains",
                          GENERATED_FROM_CANONICAL, "section 12a boundary table",
                          rule.retention_statement, declared))
+        for key, expected in render_refusal_boundary_leaves(short).items():
+            add(_surface(short, f"structured refusal {key}", bp, key,
+                         GENERATED_FROM_CANONICAL, "section 12a boundary table",
+                         expected, declared))
 
     # ------------------------------------------- C2, bound to its DERIVED rule
     c2 = C2_RELEASE_RULE
@@ -1788,6 +2054,12 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
             ("replicate_reduction", GENERATED_FROM_CANONICAL, c2.field_reduction)):
         add(_surface("C2", f"derived boundary {key}", c2b, key, mode,
                      "section 12a boundary table", expected, c2_declared))
+    # C2's scope-out from the G5 amendment is STATED, not left to silence: its
+    # composite P1 endpoint cannot be undefined, so it has no NOT_EVALUABLE path.
+    for key, expected in render_refusal_boundary_leaves("C2").items():
+        add(_surface("C2", f"structured refusal {key}", c2b, key,
+                     GENERATED_FROM_CANONICAL, "section 12a boundary table",
+                     expected, c2_declared))
 
     # ------------------------------- shared size-validation semantics (C2/C3/C4)
     svs = plan["size_validation_semantics"]
@@ -1844,8 +2116,8 @@ def _controlled_containers(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
     assurance = {row.get("case_id"): row for row in plan["assurance"]}
     out: dict[str, dict[str, Any]] = {}
     for gap in plan.get("authority_gaps", []):
-        if gap.get("id") == FIELD_SIZE_DISPOSITION_ID:
-            out[f"authority_gaps.{FIELD_SIZE_DISPOSITION_ID}"] = gap
+        if gap.get("id") in (FIELD_SIZE_DISPOSITION_ID, REFUSAL_DISPOSITION_ID):
+            out[f"authority_gaps.{gap['id']}"] = gap
     for rule in FIELD_SIZE_RULES:
         index, case = cases.get(rule.case_id, (None, {}))
         out[f"cases[{index}].{rule.semantics_key}"] = case.get(rule.semantics_key) or {}
@@ -2200,6 +2472,21 @@ def size_semantics_leaves(plan: dict[str, Any]) -> tuple[SemanticLeaf, ...]:
                           ("otherwise", SIZE_NO_INFLATION)):
         add(SemanticLeaf(f"{root}.verdicts.{key}", STRICTLY_VERIFIED_DUPLICATE,
                          expected, "e1a_v4.validation.classification"))
+    # The THIRD verdict and its precedence, from the G5 amendment. The order is
+    # itself normative: without it the `otherwise` branch claims a clean field
+    # from an incomplete primary sequence.
+    add(SemanticLeaf(f"{root}.verdicts.on_undefined_primary_endpoint",
+                     GENERATED_FROM_CANONICAL, STRUCTURED_REFUSAL_RULE.verdict,
+                     "STRUCTURED_REFUSAL_RULE"))
+    add(SemanticLeaf(f"{root}.verdicts.evaluation_order", GENERATED_FROM_CANONICAL,
+                     render_refusal_verdict_order(), "STRUCTURED_REFUSAL_RULE"))
+
+    # --- the structured-refusal block (G5) ----------------------------------
+    for key, expected in render_structured_refusal_block().items():
+        mode = (STRUCTURAL_VALUE_WITH_EXPLICIT_SCHEMA if isinstance(expected, list)
+                else GENERATED_FROM_CANONICAL)
+        add(SemanticLeaf(f"{root}.structured_refusal.{key}", mode, expected,
+                         "STRUCTURED_REFUSAL_RULE"))
 
     # --- the whole interpretation block -------------------------------------
     # `classification.SIZE_INTERPRETATION` is the machine-readable statement of

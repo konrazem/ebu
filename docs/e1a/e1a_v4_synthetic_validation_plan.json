@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.14.0",
+  "plan_version": "1.15.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -326,7 +326,27 @@
         "pooling": "FORBIDDEN",
         "field_structure_status": "FIELD STRUCTURE RESOLVED PROSPECTIVELY, before any random outcome exists; see authority_gaps G4",
         "field_structure_rule": "four field-specific G5 size assessments, one per declared field (theta0_circular, theta1_power, theta2_ellipse, theta3_temperature), each with its own rejection count, rate, Clopper-Pearson bound and size classification",
-        "case_level_rule": "the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created and no compensation between fields is permitted"
+        "case_level_rule": "the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created and no compensation between fields is permitted",
+        "structured_refusal_status": "STRUCTURED-REFUSAL SEMANTICS RESOLVED PROSPECTIVELY, before any random outcome exists; see authority_gaps G5",
+        "undefined_primary_endpoint_possible": true,
+        "undefined_primary_endpoint_reason": "the primary endpoint is ONE BLOCK of the two-block gate; a structured refusal that produced no p-values leaves the G5 decision undefined",
+        "undefined_primary_endpoint_encoding": "NEITHER_REJECTION_NOR_NONREJECTION",
+        "refusal_is_statistical_rejection": false,
+        "refusal_is_statistical_non_rejection": false,
+        "primary_denominator_under_refusal": "PLANNED_R_PRESERVED",
+        "primary_verdict_on_structured_refusal": "NOT_EVALUABLE",
+        "release_requires": "EVALUABLE_AND_CLEAN",
+        "campaign_failure_classification_when_not_evaluable": "VALIDATION_INCONCLUSIVE",
+        "tolerated_structured_refusal_fraction": "NONE",
+        "survivor_conditioned_rate_role": "SECONDARY_DIAGNOSTIC_ONLY",
+        "required_terminal_counts": [
+          "planned_R",
+          "evaluable_primary_endpoint_count",
+          "structured_refusal_count",
+          "defined_rejection_count",
+          "primary_size_status",
+          "refusal_reasons"
+        ]
       }
     },
     {
@@ -383,7 +403,27 @@
         "pooling": "FORBIDDEN",
         "field_structure_rule": "four field-specific Block-1 size assessments, one per declared field (theta0_circular, theta1_power, theta2_ellipse, theta3_temperature), each with its own rejection count, rate, Clopper-Pearson bound and size classification",
         "case_level_rule": "the four field conditions enter the final conjunctive classification separately and the case is clean iff all four are clean; no new scalar statistical event is created and no compensation between fields is permitted",
-        "what_is_forbidden": "pooling the four fields' rejection counts, reducing the four field decisions of a replicate to one replicate-level event, and releasing on the reference field alone"
+        "what_is_forbidden": "pooling the four fields' rejection counts, reducing the four field decisions of a replicate to one replicate-level event, and releasing on the reference field alone",
+        "structured_refusal_status": "STRUCTURED-REFUSAL SEMANTICS RESOLVED PROSPECTIVELY, before any random outcome exists; see authority_gaps G5",
+        "undefined_primary_endpoint_possible": true,
+        "undefined_primary_endpoint_reason": "the primary endpoint is ONE BLOCK of the two-block gate; a structured refusal that produced no p-values leaves the Block-1 decision undefined",
+        "undefined_primary_endpoint_encoding": "NEITHER_REJECTION_NOR_NONREJECTION",
+        "refusal_is_statistical_rejection": false,
+        "refusal_is_statistical_non_rejection": false,
+        "primary_denominator_under_refusal": "PLANNED_R_PRESERVED",
+        "primary_verdict_on_structured_refusal": "NOT_EVALUABLE",
+        "release_requires": "EVALUABLE_AND_CLEAN",
+        "campaign_failure_classification_when_not_evaluable": "VALIDATION_INCONCLUSIVE",
+        "tolerated_structured_refusal_fraction": "NONE",
+        "survivor_conditioned_rate_role": "SECONDARY_DIAGNOSTIC_ONLY",
+        "required_terminal_counts": [
+          "planned_R",
+          "evaluable_primary_endpoint_count",
+          "structured_refusal_count",
+          "defined_rejection_count",
+          "primary_size_status",
+          "refusal_reasons"
+        ]
       }
     },
     {
@@ -1435,6 +1475,13 @@
       "affects": "C3, C4",
       "status": "CLOSED PROSPECTIVELY",
       "resolution": "The elementary size event for BOTH C3 and C4 is PER FIELD. Each declared field keeps its OWN R-replicate sequence of decisions: there is NO within-replicate reduction across fields, NO any-field event, NO every-field event, NO reference-field-only event and NO pooling of counts. Each declared field carries its own rejection count, rejection rate, Clopper-Pearson bound and size classification over the declared fields theta0_circular, theta1_power, theta2_ellipse, theta3_temperature. C3_g5_block: evaluation scope PER_FIELD, within-replicate field reduction NONE, pooling FORBIDDEN, primary endpoint G5_BLOCK_SIZE, R = 400 per field at alpha_2 = 0.001 with integer boundary 2 (clean 0-2). C4_surrogate_validity: evaluation scope PER_FIELD, within-replicate field reduction NONE, pooling FORBIDDEN, primary endpoint BLOCK1_ACHIEVED_SIZE, R = 2000 per field at alpha_1 = 0.004 with integer boundary 13 (clean 0-13). R, the nominal alphas, the confidence method and level and the integer boundaries are UNCHANGED by this amendment and now apply per field. Case-level semantics are DERIVED, not a new statistical event: each case contributes four required field-level conditions to the existing conjunctive final classification as a FIELD_CONDITION_VECTOR, exactly as C2 already does, so the case is clean iff all four fields are clean, with compensation FORBIDDEN and the failing field identity preserved. The case contributes one required condition PER FIELD to the final conjunctive campaign classification and is clean only when all four are clean. That conjunction happens at CLASSIFICATION level; it must NEVER be reimplemented as a replicate-wide 'any field rejects' event, which is a different statistical object with a different null rate. C3's primary release endpoint remains the G5 block; the full two-block P1 result remains the SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC and does NOT feed the C3 primary release verdict. OPERATING CHARACTERISTIC, disclosed and not a threshold: at the exact nominal per-field null the probability of a false size-inflation flag is 0.00788343125882217 for a C3 field and 0.033884449548367356 for a C4 field, so the dependence-free probability that all four fields are clean lies in [0.9684663, 0.9921166] for C3 and in [0.8644622, 0.9661156] for C4. The C4 union bound therefore admits a family-level false-failure probability of about 13.55%. That is a CONSERVATIVE VALIDATION FAILURE -- a spurious block on release -- and NOT a false scientific pass, and no size rule was altered to reduce it. DEPENDENCE: the frozen generating model intentionally shares one Branch-A common-mode draw across the fields of a replicate, so probabilistic independence of field-level gate outcomes must not simply be assumed; the direction and magnitude of the resulting dependence are NOT established by current authority or analysis, and the bounds above rely on no association assumption. The complete-pipeline target >= 0.90 remains C1-only and is NOT a C3 or C4 familywise target. Decided before any official campaign job, trajectory or outcome existed."
+    },
+    {
+      "id": "G5",
+      "gap": "a VALID STRUCTURED REFUSAL can leave a C3 or C4 PRIMARY endpoint decision undefined: C3 releases on the actual G5 / Block-2 decision and C4 on the actual Block-1 decision, and when the two-block gate produced no p-values at all neither decision exists. Frozen authority defined the treatment of structured refusals for COMPLETE-PIPELINE success only -- the contract states it inside complete_pipeline, synthetic_validation_requirements[9] names complete-pipeline success, and the mandatory diagnostic carrying the denominator_rule aggregate key is bound to C1_true_bridge_complete -- and said nothing about what an undefined primary endpoint means for a COMPONENT SIZE TEST. C1 could not absorb it either, because C1 and C3/C4 are disjoint job sets. The frozen size vocabulary offered only two verdicts, so applying the detector to an incomplete primary sequence would have reported NO_SIGNIFICANT_SIZE_INFLATION_DETECTED on evidence that was never obtained.",
+      "affects": "C3, C4",
+      "status": "CLOSED PROSPECTIVELY",
+      "resolution": "A valid structured refusal that leaves a C3 or C4 PRIMARY endpoint decision undefined is encoded NEITHER_REJECTION_NOR_NONREJECTION: it is NOT a statistical rejection and it is NOT a statistical non-rejection. The prospectively declared primary denominator is PLANNED_R_PRESERVED -- R stays at its planned value per field and is never silently reduced to the surviving replicates. If a required field carries one or more structured refusals affecting its primary endpoint, that field's PRIMARY size assessment is NOT_EVALUABLE, and the frozen two-way detector is NOT run on the incomplete sequence. NOT_EVALUABLE is neither STATISTICAL_SIZE_FAILURE nor NO_SIGNIFICANT_SIZE_INFLATION_DETECTED: missing evidence neither establishes excess size nor establishes nominal size behaviour. Because C3 and C4 are mandatory validation conditions, release requires every required field to be EVALUABLE_AND_CLEAN, so a NOT_EVALUABLE field prevents the campaign from passing; the campaign failure is classified VALIDATION_INCONCLUSIVE and names incomplete required validation evidence, never statistical size inflation. The tolerated structured-refusal fraction is NONE: one refusal affecting a required primary endpoint is sufficient, and no refusal threshold, Bonferroni correction, familywise correction, new alpha or new integer boundary is introduced. The terminal campaign report MUST still be produced when one, some or every C3/C4 job is a valid structured refusal, as the contract's refusal reconciliation already requires. Each required field must separately retain planned_R, evaluable_primary_endpoint_count, structured_refusal_count, defined_rejection_count, primary_size_status, refusal_reasons. A survivor-conditioned rejection rate or confidence bound is SECONDARY_DIAGNOSTIC_ONLY and SHALL NEVER substitute for the frozen primary planned-R assessment. Per-field scope, pooling FORBIDDEN and within-replicate cross-field reduction NONE are unchanged, NOT_EVALUABLE applies independently by field and one field's evaluability never rescues another's, and the C3/C4 primary endpoint definitions, the nominal alphas and the integer boundaries are unchanged. C2 is NOT affected: its composite P1 endpoint fails closed, so its elementary event is defined even under a structured refusal. Decided before any official campaign job, trajectory or outcome existed."
     }
   ],
   "execution_command": "python3 -m e1a_v4.validation.runner --execute --i-have-execution-authorisation",
@@ -1555,7 +1602,9 @@
     "detector": "STATISTICAL SIZE INFLATION is detected iff CP_lower(rejections, R) > nominal alpha",
     "verdicts": {
       "on_detection": "STATISTICAL_SIZE_FAILURE",
-      "otherwise": "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED"
+      "otherwise": "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED",
+      "on_undefined_primary_endpoint": "NOT_EVALUABLE",
+      "evaluation_order": "resolved in order: if any required PRIMARY endpoint decision for the field is undefined because of a valid structured refusal the verdict is NOT_EVALUABLE and the detector is NOT run; only on a COMPLETE primary sequence, with structured_refusal_count = 0, do on_detection and otherwise apply"
     },
     "interpretation": {
       "verdict_on_pass": "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED",
@@ -1580,7 +1629,10 @@
         "rule": "0-5 rejections: no significant inflation detected; 6+ : STATISTICAL_SIZE_FAILURE",
         "per_field": true,
         "pooling": "FORBIDDEN - every field is reported separately",
-        "replicate_reduction": "NONE"
+        "replicate_reduction": "NONE",
+        "undefined_primary_endpoint_possible": false,
+        "verdict_on_structured_refusal": "NOT_APPLICABLE",
+        "structured_refusal_note": "the composite P1 decision FAILS CLOSED, so this case's elementary event is defined for every replicate including a structured refusal"
       },
       "C3": {
         "replicates": 400,
@@ -1591,7 +1643,10 @@
         "rule": "0-2 G5 rejections PER FIELD: no significant inflation detected; 3+ in any field: STATISTICAL_SIZE_FAILURE for that field",
         "per_field": true,
         "pooling": "FORBIDDEN - every field is reported separately",
-        "replicate_reduction": "NONE"
+        "replicate_reduction": "NONE",
+        "undefined_primary_endpoint_possible": true,
+        "verdict_on_structured_refusal": "NOT_EVALUABLE",
+        "structured_refusal_note": "the primary endpoint is ONE BLOCK of the two-block gate; a structured refusal that produced no p-values leaves the G5 decision undefined"
       },
       "C4": {
         "replicates": 2000,
@@ -1603,7 +1658,10 @@
         "retains": "the full two-sided interval and the observed operating-quantile discrepancy are STILL reported; this binary diagnostic does not replace them",
         "per_field": true,
         "pooling": "FORBIDDEN - every field is reported separately",
-        "replicate_reduction": "NONE"
+        "replicate_reduction": "NONE",
+        "undefined_primary_endpoint_possible": true,
+        "verdict_on_structured_refusal": "NOT_EVALUABLE",
+        "structured_refusal_note": "the primary endpoint is ONE BLOCK of the two-block gate; a structured refusal that produced no p-values leaves the Block-1 decision undefined"
       }
     },
     "superseded_criterion": {
@@ -1619,18 +1677,40 @@
         "conclusion": "a rule that passes fifteen times the nominal rate cannot be called validation of it"
       },
       "preserved_in": "docs/e1a/E1A_V4_SYNTHETIC_PREEXEC_REPORT.md and commit 475633c, neither rewritten"
+    },
+    "structured_refusal": {
+      "status": "AMENDED PROSPECTIVELY, before any random outcome exists; see authority_gaps G5",
+      "applies_to": "C3, C4",
+      "encoding": "NEITHER_REJECTION_NOR_NONREJECTION",
+      "refusal_is_statistical_rejection": false,
+      "refusal_is_statistical_non_rejection": false,
+      "primary_denominator": "PLANNED_R_PRESERVED",
+      "primary_verdict_on_any_structured_refusal": "NOT_EVALUABLE",
+      "release_requires": "EVALUABLE_AND_CLEAN",
+      "campaign_failure_classification": "VALIDATION_INCONCLUSIVE",
+      "tolerated_structured_refusal_fraction": "NONE",
+      "survivor_conditioned_rate_role": "SECONDARY_DIAGNOSTIC_ONLY",
+      "terminal_report_required_under_all_refusals": true,
+      "required_terminal_counts": [
+        "planned_R",
+        "evaluable_primary_endpoint_count",
+        "structured_refusal_count",
+        "defined_rejection_count",
+        "primary_size_status",
+        "refusal_reasons"
+      ]
     }
   },
   "final_campaign_classification": {
     "verdict_on_success": "VALIDATION_PASS",
-    "rule": "CONJUNCTIVE. Every required case must pass on its own terms. C3 and C4 each contribute 4 required field-level conditions, one per declared field; a case is clean only when all 4 are clean, NO required condition may fail, a single clean field is NEVER sufficient, and compensation is FORBIDDEN both between fields and between cases.",
+    "rule": "CONJUNCTIVE. Every required case must pass on its own terms. C3 and C4 each contribute 4 required field-level conditions, one per declared field; a case is clean only when all 4 are clean, NO required condition may fail, a single clean field is NEVER sufficient, and compensation is FORBIDDEN both between fields and between cases. A required field satisfies its condition only when it is EVALUABLE_AND_CLEAN: a field whose primary size assessment is NOT_EVALUABLE has NOT satisfied it, and prevents the campaign from passing under VALIDATION_INCONCLUSIVE rather than under STATISTICAL_SIZE_FAILURE.",
     "no_weighted_score": true,
     "no_compensation_between_cases": true,
     "requirements": [
       "1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)",
       "2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field",
-      "3. C3 produces no STATISTICAL_SIZE_FAILURE in any required field",
-      "4. C4 produces no STATISTICAL_SIZE_FAILURE in any required field",
+      "3. C3 is EVALUABLE_AND_CLEAN in every required field: no STATISTICAL_SIZE_FAILURE and no NOT_EVALUABLE field",
+      "4. C4 is EVALUABLE_AND_CLEAN in every required field: no STATISTICAL_SIZE_FAILURE and no NOT_EVALUABLE field",
       "5. C5 satisfies its already-frozen plug-in Branch-A criterion",
       "6. C6 satisfies its already-frozen mode-resolution criterion",
       "7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= 0.025 (<= 4/400)",

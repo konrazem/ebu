@@ -568,6 +568,27 @@ SEMANTICS_LABELS = (
     ("field structure rule", "field_structure_rule"),
     ("case-level rule", "case_level_rule"),
     ("what is forbidden", "what_is_forbidden"),
+    # ---- the G5 structured-refusal amendment --------------------------------
+    ("structured-refusal status", "structured_refusal_status"),
+    ("primary endpoint can be undefined", "undefined_primary_endpoint_possible"),
+    ("why the primary endpoint can be undefined",
+     "undefined_primary_endpoint_reason"),
+    ("undefined primary endpoint is encoded as",
+     "undefined_primary_endpoint_encoding"),
+    ("a structured refusal is a statistical rejection",
+     "refusal_is_statistical_rejection"),
+    ("a structured refusal is a statistical non-rejection",
+     "refusal_is_statistical_non_rejection"),
+    ("primary denominator under refusal", "primary_denominator_under_refusal"),
+    ("primary verdict on any structured refusal",
+     "primary_verdict_on_structured_refusal"),
+    ("release requires", "release_requires"),
+    ("campaign failure classification when not evaluable",
+     "campaign_failure_classification_when_not_evaluable"),
+    ("tolerated structured-refusal fraction",
+     "tolerated_structured_refusal_fraction"),
+    ("survivor-conditioned rate role", "survivor_conditioned_rate_role"),
+    ("required terminal counts", "required_terminal_counts"),
 )
 
 

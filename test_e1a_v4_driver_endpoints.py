@@ -1053,19 +1053,20 @@ def test_frozen_authority_unchanged() -> None:
              "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b"),
             ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
              "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495"),
-            # Plan 1.13.0 -> 1.14.0: NESTED semantic-leaf totality. A fifth
-            # independent audit rewrote two leaves BELOW a classified parent --
-            # interpretation.detector and two_questions.B_component_size_inflation
-            # -- to say C3/C4 pool their four fields, and every checker accepted it;
-            # neither leaf reaches the Markdown, so coherence could not see them.
-            # The only content change is B_component_size_inflation, now generated
-            # with the canonical per-field scope. The frozen sources ABOVE and the
-            # seed map BELOW are deliberately unmoved -- no adopted decision rule,
-            # replicate count, alpha or boundary changed.
+            # Plan 1.14.0 -> 1.15.0: the G5 STRUCTURED-REFUSAL amendment. A valid
+            # structured refusal can leave a C3 G5 / C4 Block-1 decision undefined,
+            # and frozen authority defined refusal treatment for complete-pipeline
+            # success only. The author decided prospectively, before any outcome
+            # existed: an undefined primary endpoint is NEITHER a rejection NOR a
+            # non-rejection, planned R is preserved, and the field's primary size
+            # assessment is NOT_EVALUABLE, which blocks release under
+            # VALIDATION_INCONCLUSIVE. The frozen sources ABOVE and the seed map
+            # BELOW are deliberately unmoved -- no alpha, replicate count, integer
+            # boundary or endpoint definition changed, and C2 is untouched.
             ("JSON plan", PLAN_JSON,
-             "16b0384d0022bb34e5733e09d0d6a233ab245f066987604f0a721e286629067e"),
+             "dcf0c575a048ceebfcd3deb261d1a76ff269bfb16178a531b8911b5bdf8808ec"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "70f81dce52161bb17122d27f1c9211e9d7f724493a92cc4581df43d3e43c3d76"),
+             "5b76c3095ecbf5bc0f0273f2b83da8fab2d0c51154efc7628031b6445a4fbb18"),
             ("seed map", SEED_MAP_JSON,
              "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
         check(f"the {label} is BYTE-unchanged",

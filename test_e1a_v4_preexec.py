@@ -351,11 +351,11 @@ def test_plan() -> None:
           "Bonferroni correction" in PLAN["adopted_rules_unchanged"]["forbidden"]
           and "fixed-B0 normalisation" in PLAN["adopted_rules_unchanged"]["forbidden"])
     # G4 closes the C3/C4 field-to-replicate reduction, prospectively, at plan
-    # 1.11.0. The list is asserted exactly so a gap cannot be added or dropped
-    # silently.
-    check("four author dispositions are recorded",
-          [g["id"] for g in PLAN["authority_gaps"]] == ["G1", "G2", "G3", "G4"])
-    check("all four are CLOSED PROSPECTIVELY",
+    # 1.11.0; G5 closes their structured-refusal semantics at 1.15.0. The list is
+    # asserted exactly so a gap cannot be added or dropped silently.
+    check("five author dispositions are recorded",
+          [g["id"] for g in PLAN["authority_gaps"]] == ["G1", "G2", "G3", "G4", "G5"])
+    check("all five are CLOSED PROSPECTIVELY",
           all(g["status"] == "CLOSED PROSPECTIVELY" for g in PLAN["authority_gaps"]))
     check("no assurance row still says the criterion is undeclared",
           not any("NOT DECLARED IN ADOPTED AUTHORITY" in a["acceptance_rule"]
