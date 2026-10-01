@@ -617,6 +617,51 @@ def render_field_size_target(rule: FieldSizeRule) -> str:
     return f"{rule.alpha_name} = {rule.nominal_alpha}"
 
 
+def render_field_size_block1_role(rule: FieldSizeRule) -> str:
+    """What Block-1 IS for this case. DERIVED from the canonical primary endpoint.
+
+    C4's primary release endpoint is the Block-1 achieved size, so Block-1 is its
+    PRIMARY_RELEASE_ENDPOINT. C3 releases on the G5 block, so Block-1 is its
+    secondary predeclared diagnostic. This audit found C4's declaration carried no
+    binding at all -- a primary/secondary status statement that nothing checked.
+    """
+    if rule.primary_endpoint == "BLOCK1_ACHIEVED_SIZE":
+        return "PRIMARY_RELEASE_ENDPOINT"
+    if rule.secondary_diagnostic is None:
+        raise ValueError(f"{rule.case_id} declares no Block-1 role")
+    return rule.secondary_diagnostic
+
+
+def render_field_size_calibration_rationale(rule: FieldSizeRule) -> str:
+    """Why Block-1 calibration is retained, and what it does NOT decide. GENERATED.
+
+    The fourth independent audit replaced this field -- the last semantically free
+    statement inside a controlled container -- with "The full P1 verdict is the
+    deciding condition for C3." and full static preflight ACCEPTED it. The text was
+    classified NON_NORMATIVE_EXPLANATION and guarded only by a short list of
+    suspicious words, which that sentence avoids entirely.
+
+    No vocabulary list can decide whether free prose has become rule-bearing:
+    natural language states the same rule without the listed words. So the field is
+    GENERATED instead, and every semantic claim in it is read off the canonical
+    rule -- including the verb, which is derived from
+    `secondary_feeds_primary_release` rather than written. A package whose
+    explanation contradicts the rule can no longer be built.
+    """
+    if rule.secondary_diagnostic is None:
+        raise ValueError(f"{rule.case_id} declares no secondary diagnostic")
+    decides = ("does NOT determine" if rule.secondary_feeds_primary_release is False
+               else "determines")
+    return (
+        "the frozen scientific purpose requires reporting the two-mode max "
+        "statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 "
+        "quantity and needs a CalibrationArtifact, so calibration is retained as a "
+        f"diagnostic input. The full P1 result is the {rule.secondary_diagnostic} "
+        f"and {decides} the {rule.case_id[:2]} primary release verdict, which "
+        f"remains the {rule.evaluation_scope} {rule.primary_endpoint} assessment "
+        f"over {', '.join(rule.required_fields)}.")
+
+
 def case_release_specification(contract: dict[str, Any], root: str) -> tuple[CaseRelease, ...]:
     """Build the frozen per-case release rules from authoritative records only."""
     req2 = parse_requirement(_require_frozen_text(contract, 2),
@@ -1023,6 +1068,151 @@ def _numbers_in(text: str) -> list[float]:
 
 
 
+#: EXACT approved text of every remaining string-valued field in the two C3/C4
+#: case records that no renderer generates.
+#:
+#: Free prose is the whole attack surface. The fourth audit showed that a field
+#: classified "explanatory" and guarded by a keyword list is not guarded at all,
+#: because natural language states a release rule without the listed words. The
+#: guarantee therefore cannot be "the text avoids suspicious vocabulary"; it has
+#: to be "there is no free text". Every string in a controlled C3/C4 record is now
+#: either GENERATED from the canonical rule or pinned here and compared exactly.
+#:
+#: Several of these strings belong to OTHER dispositions -- the frozen scientific
+#: purpose, G3 seed-family grants, calibration scope. Pinning them does not move
+#: their authority here: the pin is a TRIPWIRE asserting the text this stage was
+#: built against. A later authorised amendment to one of those dispositions must
+#: update its pin deliberately, which is the intended behaviour, not a conflict.
+CASE_PROSE_PINS = {
+    "C3_g5_block": {
+        "case_id": 'C3_g5_block',
+        "scientific_purpose": (
+            'Validate the actual G5 block from full generated observations: '
+            'sample-mean centring, A4-based leading-order variance, finite-sample '
+            'behaviour, correlation, the two-mode max statistic and its '
+            'interaction with the two-block gate'
+        ),
+        "v4_classification": 'NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION',
+        "authority": 'design section 15 item 8',
+        "truth_model": (
+            'true null; G5 computed from generated trajectories, never as an '
+            'independent companion variable'
+        ),
+        "geometry_truth": 'as declared per field',
+        "branch_a_uncertainty": (
+            'frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, '
+            'sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg '
+            'secondary and 1.0 deg stress, reported separately and never pooled '
+            '[disposition G3]'
+        ),
+        "branch_b_process": (
+            'declared correlated OU, exact transition, stationary initialisation '
+            'x0 ~ N(x*, Sigma_theta)'
+        ),
+        "expected_qualitative_outcome": (
+            'block-2 achieved size consistent with alpha_2 = 0.1%; delta-method '
+            'error quantified'
+        ),
+        "seed_family": 'validation',
+        "role": 'primary',
+        "v4_classification_note": '',
+        "allowed_seed_families_rationale": (
+            'REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / '
+            'Block-1 quantity and builds its own artifact per subcondition, '
+            'replicate and field. Branch-A measurement is realised per replicate '
+            'from its own family.'
+        ),
+        "allowed_seed_families_authority": (
+            'derived from the frozen generator design (generating_model.branch_a, '
+            'truth_visibility) and disposition G3; not invented for this repair'
+        ),
+        "branch_a_uncertainty_status": 'STOCHASTIC_PER_REPLICATE',
+        "calibration_scope": 'REPLICATE_CONDITIONAL',
+        "calibration_artifact_basis": (
+            '400 replicates x 4 subconditions x 4 fields requiring calibration = '
+            '6,400'
+        ),
+        "calibration_scope_rationale": (
+            'the declared Branch-A uncertainty scenario is REALISED per replicate '
+            'from the branch_a_measurement family, so H_A and therefore the '
+            'Block-1 null law differ between replicates. One nominal per-field '
+            'artifact would analyse independently realised conditions against a '
+            'null that belongs to none of them.'
+        ),
+    },
+    "C4_surrogate_validity": {
+        "case_id": 'C4_surrogate_validity',
+        "scientific_purpose": (
+            'Achieved Block-1 size when calibration uses the covariance-matched '
+            'surrogate but validation data come from the declared actual '
+            'correlated process; measure the OPERATING-QUANTILE discrepancy, not '
+            'covariance agreement'
+        ),
+        "v4_classification": 'NEWLY REQUIRED BY AN ADOPTED V4 CORRECTION',
+        "authority": (
+            'design section 15 item 5; design Appendix classification of the '
+            'surrogate as an APPROXIMATION'
+        ),
+        "truth_model": (
+            'calibration from the surrogate, validation from the declared OU '
+            'process'
+        ),
+        "geometry_truth": 'as declared per field',
+        "branch_a_uncertainty": (
+            'frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, '
+            'sigma_T = 0.1 K'
+        ),
+        "branch_b_process": (
+            'declared correlated OU, exact transition, stationary initialisation '
+            'x0 ~ N(x*, Sigma_theta)'
+        ),
+        "expected_qualitative_outcome": 'achieved Block-1 rejection rate close to alpha_1 = 0.4%',
+        "seed_family": 'calibration + validation',
+        "role": 'primary',
+        "v4_classification_note": '',
+        "allowed_seed_families_rationale": (
+            'REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / '
+            'Block-1 quantity and builds its own artifact per subcondition, '
+            'replicate and field. Branch-A measurement is realised per replicate '
+            'from its own family.'
+        ),
+        "allowed_seed_families_authority": (
+            'derived from the frozen generator design (generating_model.branch_a, '
+            'truth_visibility) and disposition G3; not invented for this repair'
+        ),
+        "branch_a_uncertainty_status": 'STOCHASTIC_PER_REPLICATE',
+        "calibration_scope": 'REPLICATE_CONDITIONAL',
+        "calibration_artifact_basis": (
+            '2000 replicates x 1 subconditions x 4 fields requiring calibration = '
+            '8,000'
+        ),
+        "calibration_scope_rationale": (
+            'the declared Branch-A uncertainty scenario is REALISED per replicate '
+            'from the branch_a_measurement family, so H_A and therefore the '
+            'Block-1 null law differ between replicates. One nominal per-field '
+            'artifact would analyse independently realised conditions against a '
+            'null that belongs to none of them.'
+        ),
+    },
+}
+
+
+#: Top-level `size_validation_semantics` prose. These two strings are SHARED by
+#: C2, C3 and C4, and `detector` states the size-detection rule itself, so leaving
+#: them editable would leave a rule-bearing free string reachable from the C3/C4
+#: surface.
+#:
+#: Pinning them is a tripwire on the text, nothing more. It changes no C2 science
+#: and it does NOT repair or mask the confirmed C2 residual, which is a different
+#: defect: `derived_boundaries.C2.pooling` carries no binding to a canonical
+#: pooling rule. That remains open and deferred to its own bounded task.
+SHARED_SIZE_SEMANTICS_PINS = {
+    "status": "FROZEN PROSPECTIVELY, before any random outcome exists",
+    "detector": ("STATISTICAL SIZE INFLATION is detected iff CP_lower(rejections, "
+                 "R) > nominal alpha"),
+}
+
+
 @dataclass(frozen=True)
 class NormativeSurface:
     """ONE authoritative C3/C4 statement and how it is held to the canonical rule.
@@ -1058,9 +1248,19 @@ FIELD_RULE_KEY_TOKENS = ("pool", "compensat", "reduction", "field_structure",
                          "any_field", "every_field", "elementary_event",
                          "release_rule", "field_condition")
 
-#: The same vocabulary in prose. Text classified NON_NORMATIVE_EXPLANATION may not
-#: contain it: an explanation that starts setting a field rule is no longer an
-#: explanation, and that is exactly how a rule would hide from this registry.
+#: SECONDARY DIAGNOSTIC ONLY -- NOT the safety guarantee.
+#:
+#: This list was once the guard on the single explanatory location, and the fourth
+#: independent audit defeated it in one sentence: "The full P1 verdict is the
+#: deciding condition for C3." states the rule and contains none of these words. No
+#: finite vocabulary can decide whether free prose has become rule-bearing, and
+#: lengthening the list only moves the boundary.
+#:
+#: The guarantee is now structural instead: no semantically free text exists in the
+#: controlled C3/C4 surface at all (`require_field_size_surface_totality`), so
+#: there is nothing left for a vocabulary check to protect. It is retained only as
+#: a cheap tripwire that would fire if some future entry were ever classified
+#: NON_NORMATIVE_EXPLANATION again.
 FIELD_RULE_PROSE_TOKENS = ("pool", "compensat", "reduction", "field",
                            "any one", "every one", "reference-field")
 
@@ -1112,10 +1312,13 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
                 ("replicate_count", STRICTLY_VERIFIED_DUPLICATE, rule.replicates)):
             add(_surface(short, key, cp, key, mode, "generated cases region",
                          expected, case))
-        if rule.secondary_diagnostic is not None:
-            add(_surface(short, "secondary diagnostic role", cp, "block1_role",
-                         GENERATED_FROM_CANONICAL, "generated cases region",
-                         rule.secondary_diagnostic, case))
+        add(_surface(short, "block-1 role", cp, "block1_role",
+                     GENERATED_FROM_CANONICAL, "generated cases region",
+                     render_field_size_block1_role(rule), case))
+        for key, expected in CASE_PROSE_PINS.get(rule.case_id, {}).items():
+            add(_surface(short, f"pinned case prose {key}", cp, key,
+                         STRICTLY_VERIFIED_DUPLICATE, "generated cases region",
+                         expected, case))
 
         # ------------------------------------------------- the semantics container
         sp = f"{cp}.{rule.semantics_key}"
@@ -1138,11 +1341,13 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
                          "generated cases region",
                          case.get("requires_block1_calibration"), semantics))
         if "why_calibration_is_retained" in semantics:
-            # Explanatory on purpose: it says WHY a diagnostic input is kept and
-            # sets no field rule. The prose guard below keeps it that way.
+            # GENERATED, not explanatory. See
+            # render_field_size_calibration_rationale for why free prose here was
+            # an escape and why a keyword guard could not have closed it.
             add(_surface(short, "calibration rationale", sp,
-                         "why_calibration_is_retained", NON_NORMATIVE_EXPLANATION,
-                         "generated cases region", None, semantics))
+                         "why_calibration_is_retained", GENERATED_FROM_CANONICAL,
+                         "generated cases region",
+                         render_field_size_calibration_rationale(rule), semantics))
 
         # ------------------------------------------------ the assurance container
         ap = f"assurance[{rule.case_id}]"
@@ -1197,6 +1402,13 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
             add(_surface(short, "derived boundary retention", bp, "retains",
                          GENERATED_FROM_CANONICAL, "section 12a boundary table",
                          rule.retention_statement, declared))
+
+    # ------------------------------- shared size-validation semantics (C2/C3/C4)
+    svs = plan["size_validation_semantics"]
+    for key, expected in SHARED_SIZE_SEMANTICS_PINS.items():
+        add(_surface("SHARED", f"size semantics {key}", "size_validation_semantics",
+                     key, STRICTLY_VERIFIED_DUPLICATE, "section 12 size semantics",
+                     expected, svs))
 
     # ------------------------------------------------ the final campaign container
     final = plan["final_campaign_classification"]
@@ -1257,15 +1469,18 @@ def _controlled_containers(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return out
 
 
-def _vocabulary_scoped(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    """Containers swept by KEY VOCABULARY rather than exhaustively.
+def _prose_controlled_records(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Records where every STRING is controlled, and non-strings are swept by key.
 
     A C3/C4 case record declares many things that are not field-size rules -- seed
     families, subconditions, calibration scope -- each governed by its own
-    authority. Sweeping every key there would claim authority this task does not
-    have. Sweeping the field-RULE vocabulary catches the thing that matters: a new
-    `pooling`, `field_reduction` or `compensation` attribute appearing beside the
-    registry instead of inside it.
+    authority. Claiming all of their structure would claim authority this stage
+    does not have, so numbers, flags and nested structures are only swept by
+    field-rule key vocabulary.
+
+    Their PROSE is different. Free text can state any rule whatever, which is
+    exactly how the fourth audit turned an explanatory sentence into a release
+    condition, so every string here must be generated or pinned.
     """
     out = {f"cases[{i}]": case for i, case in enumerate(plan["cases"])
            if case.get("case_id") in FIELD_SIZE_RULES_BY_CASE}
@@ -1273,13 +1488,28 @@ def _vocabulary_scoped(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return out
 
 
+def _container_of(plan: dict[str, Any], container: str) -> dict[str, Any]:
+    """The live dict a container name addresses, across both sweep kinds."""
+    both = {**_controlled_containers(plan), **_prose_controlled_records(plan)}
+    return both.get(container, {})
+
+
 def require_field_size_surface_totality(plan: dict[str, Any]) -> None:
     """No authoritative C3/C4 statement may exist outside the registry.
 
-    Two audits in a row found a DIFFERENT unbound rendering of the same approved
-    decision. Binding the named strings each time leaves the class open, so the
-    registry is made total instead: every key inside a controlled container, and
-    every field-rule-shaped key inside a controlled case, must be classified.
+    Three audits in a row found a DIFFERENT unbound rendering of the same approved
+    decision, so the registry is total rather than enumerated:
+
+    1. every key inside a controlled container must be classified;
+    2. every STRING inside a controlled C3/C4 record must be generated or pinned,
+       because free prose can state any rule at all;
+    3. no entry inside that surface may be classified NON_NORMATIVE_EXPLANATION,
+       since that classification is what bought the fourth audit's sentence its
+       freedom;
+    4. non-string keys are additionally swept by field-rule key vocabulary.
+
+    Rule 2 is the guarantee. The prose vocabulary check that follows is a
+    secondary tripwire and is deliberately NOT relied upon.
     """
     registry = normative_surface_registry(plan)
     for surface in registry:
@@ -1299,16 +1529,40 @@ def require_field_size_surface_totality(plan: dict[str, Any]) -> None:
                     "entry in the normative-surface registry: it is bound to nothing "
                     "and could contradict the approved per-field rule while Markdown "
                     "and JSON still agree")
-    for container, holder in _vocabulary_scoped(plan).items():
+    # NO FREE PROSE. Every string inside a controlled C3/C4 record must be
+    # generated or pinned. This, not a vocabulary list, is the guarantee: a
+    # sentence cannot smuggle a release rule into a location that has no editable
+    # text. Non-string keys stay vocabulary-swept below -- a number or a flag
+    # cannot state a rule in prose.
+    for container, holder in _prose_controlled_records(plan).items():
         known = registered.get(container, set())
-        for key in holder:
+        for key, value in holder.items():
             if key in known:
                 continue
+            if isinstance(value, str):
+                raise NormativeSurfaceUnclassified(
+                    f"{container}.{key} is free text inside a controlled C3/C4 "
+                    "record with no entry in the normative-surface registry: it "
+                    "could state a release, gating, pooling, reduction, field "
+                    "membership, primary/secondary or final-classification rule "
+                    "that nothing checks")
             if any(token in key.lower() for token in FIELD_RULE_KEY_TOKENS):
                 raise NormativeSurfaceUnclassified(
                     f"{container}.{key} names a field-structure rule but has no entry "
                     "in the normative-surface registry")
-    # An explanation may not quietly become a rule.
+    # An explanatory classification is not permitted inside the controlled
+    # surface at all. Marking text "explanatory" was precisely how the fourth
+    # audit's sentence escaped: the classification bought it freedom that no
+    # checker could then take away.
+    controlled = set(_controlled_containers(plan)) | set(_prose_controlled_records(plan))
+    for surface in registry:
+        if (surface.mode == NON_NORMATIVE_EXPLANATION
+                and surface.container in controlled):
+            raise NormativeSurfaceUnclassified(
+                f"{surface.path} is classified {NON_NORMATIVE_EXPLANATION} inside a "
+                "controlled C3/C4 container; semantically free text is not permitted "
+                "there -- generate it from the canonical rule or pin it exactly")
+    # Retained as a SECONDARY diagnostic only (see FIELD_RULE_PROSE_TOKENS).
     for surface in registry:
         if surface.mode != NON_NORMATIVE_EXPLANATION:
             continue
@@ -1351,12 +1605,28 @@ def field_size_amendment_counts(plan: dict[str, Any]) -> dict[str, int]:
         1 for container, holder in _controlled_containers(plan).items()
         for key in holder if key not in registered.get(container, set()))
     unclassified += sum(
-        1 for container, holder in _vocabulary_scoped(plan).items()
+        1 for container, holder in _prose_controlled_records(plan).items()
         for key in holder
         if key not in registered.get(container, set())
         and any(token in key.lower() for token in FIELD_RULE_KEY_TOKENS))
+    # The F1e-r5 metric: text inside the controlled surface that a person could
+    # rewrite into a different scientific rule. Counted, not asserted by eye --
+    # a string is free iff no registry entry generates or pins it.
+    controlled = set(_controlled_containers(plan)) | set(_prose_controlled_records(plan))
+    free_text = sum(
+        1 for container in controlled
+        for key, value in _container_of(plan, container).items()
+        if isinstance(value, str) and key not in registered.get(container, set()))
+    free_text += sum(1 for s in registry
+                     if s.mode == NON_NORMATIVE_EXPLANATION
+                     and s.container in controlled)
     return {
         "canonical_rule_fields": canonical,
+        "semantically_free_rule_bearing_locations": free_text,
+        "controlled_string_locations": sum(
+            1 for container in controlled
+            for value in _container_of(plan, container).values()
+            if isinstance(value, str)),
         "normative_surface_locations": len(registry),
         "generated_normative_fields": by_mode[GENERATED_FROM_CANONICAL],
         "strictly_verified_duplicate_fields": by_mode[STRICTLY_VERIFIED_DUPLICATE],

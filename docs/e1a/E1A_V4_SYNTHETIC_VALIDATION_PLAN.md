@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.12.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.13.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -420,7 +420,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
       "requires_block1_calibration": true,
       "status": "AMBIGUITY RESOLVED PROSPECTIVELY, before any random outcome exists",
       "what_is_forbidden": "pooling the four fields' rejection counts, reducing the four field decisions of a replicate to one replicate-level event, and releasing on the reference field alone",
-      "why_calibration_is_retained": "the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input."
+      "why_calibration_is_retained": "the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input. The full P1 result is the SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC and does NOT determine the C3 primary release verdict, which remains the PER_FIELD G5_BLOCK_SIZE assessment over theta0_circular, theta1_power, theta2_ellipse, theta3_temperature."
     },
     "cases.C3_g5_block.calibration_artifact_basis": "400 replicates x 4 subconditions x 4 fields requiring calibration = 6,400",
     "cases.C3_g5_block.calibration_artifact_count": 6400,
@@ -934,7 +934,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.12.0",
+    "plan_version": "1.13.0",
     "release_authority.absent_diagnostic_is": "RESULT_SCHEMA_INVALID",
     "release_authority.authority_rule": "FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.",
     "release_authority.complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",
@@ -1193,7 +1193,7 @@ used to exist only in the JSON, so a reader could not see them drift.
 | requires Block-1 calibration | `true` |
 | Block-1 role | SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC |
 | joint P1 result changes the C3 release verdict | `false` |
-| why calibration is retained | the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input. |
+| why calibration is retained | the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input. The full P1 result is the SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC and does NOT determine the C3 primary release verdict, which remains the PER_FIELD G5_BLOCK_SIZE assessment over theta0_circular, theta1_power, theta2_ellipse, theta3_temperature. |
 | field structure | PER_FIELD |
 | within-replicate field reduction | NONE |
 | pooling | FORBIDDEN |

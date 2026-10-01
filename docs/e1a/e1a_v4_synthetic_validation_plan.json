@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.12.0",
+  "plan_version": "1.13.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -319,7 +319,7 @@
         "requires_block1_calibration": true,
         "block1_role": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
         "joint_p1_result_changes_C3_release_verdict": false,
-        "why_calibration_is_retained": "the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input.",
+        "why_calibration_is_retained": "the frozen scientific purpose requires reporting the two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE. That interaction is a P1 quantity and needs a CalibrationArtifact, so calibration is retained as a diagnostic input. The full P1 result is the SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC and does NOT determine the C3 primary release verdict, which remains the PER_FIELD G5_BLOCK_SIZE assessment over theta0_circular, theta1_power, theta2_ellipse, theta3_temperature.",
         "what_is_forbidden": "pooling the four fields' rejection counts, reducing the four field decisions of a replicate to one replicate-level event, and releasing on the reference field alone",
         "field_structure": "PER_FIELD",
         "field_reduction": "NONE",

@@ -31,6 +31,7 @@ WHAT THIS SUITE EXISTS FOR
 from __future__ import annotations
 
 import copy
+import dataclasses
 import json
 import os
 import re
@@ -52,9 +53,13 @@ from e1a_v4.validation.contract_plan import (
 from e1a_v4.validation.dispositions import cp_lower, cp_upper
 from e1a_v4.validation.campaign_driver import replicate_level_rejections
 from e1a_v4.validation.plan import load_plan
+from e1a_v4.validation import release_authority
 from e1a_v4.validation.release_authority import (
-    CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER, NOT_APPLICABLE,
-    FIELD_SIZE_RULES, VERIFICATION_MODES, field_size_amendment_counts,
+    CASE_PROSE_PINS, CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER,
+    NON_NORMATIVE_EXPLANATION, NOT_APPLICABLE, SHARED_SIZE_SEMANTICS_PINS,
+    FIELD_SIZE_RULES, FIELD_SIZE_RULES_BY_CASE, VERIFICATION_MODES,
+    render_field_size_block1_role, render_field_size_calibration_rationale,
+    require_field_size_amendment, field_size_amendment_counts,
     normative_surface_registry, render_field_size_criterion,
     render_field_size_disposition, render_field_size_pooling_statement,
     render_field_size_semantics, render_final_campaign_rule,
@@ -1424,6 +1429,9 @@ def known_escape_classes(plan):
          [(f"assurance[{a3}].acceptance_rule",
            "PER FIELD; every declared field is assessed",
            "POOLED across fields; the campaign is assessed")]),
+        ("first repair inventory", "4b. assurance quantity contradicts",
+         [(f"assurance[{a3}].quantity", ", per field",
+           ", pooled over the four fields")]),
         ("first repair inventory", "5. section-12a boundary prose contradicts",
          [("size_validation_semantics.derived_boundaries.C3.rule", "PER FIELD",
            "over the POOLED four-field count")]),
@@ -1440,6 +1448,15 @@ def known_escape_classes(plan):
          [("final_campaign_classification.rule",
            "a case is clean only when all 4 are clean",
            "a case is clean when ANY ONE field is clean")]),
+        ("fourth audit",
+         "10. C3 explanatory text makes full P1 the release condition",
+         [(f"cases[{c3}].c3_semantics.why_calibration_is_retained",
+           path_get(load_plan(ROOT),
+                    f"cases[{c3}].c3_semantics.why_calibration_is_retained"),
+           "The full P1 verdict is the deciding condition for C3.")]),
+        ("fourth audit", "11. C4 Block-1 role demoted to secondary",
+         [(f"cases[{c4}].block1_role", "PRIMARY_RELEASE_ENDPOINT",
+           "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC")]),
     )
 
 
@@ -1665,6 +1682,241 @@ def test_c3_c4_normative_surface_totality() -> None:
               == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
 
 
+# ------------------------------------- 18. C3 explanatory semantics (F1e-r5)
+#: Coherent rewrites of the C3 calibration rationale. The first is the fourth
+#: audit's verbatim attack; the rest are paraphrases that state the same wrong
+#: rule while avoiding anything a keyword guard could plausibly list. The last is
+#: SEMANTICALLY CORRECT and must refuse anyway -- see the docstring.
+EXPLANATORY_ATTACKS = (
+    ("the auditor's exact attack",
+     "The full P1 verdict is the deciding condition for C3.", False),
+    ("paraphrase: outcome determines success",
+     "The outcome of the complete P1 procedure determines whether C3 succeeds.",
+     False),
+    ("paraphrase: succeeds according to",
+     "C3 succeeds according to the full P1 result.", False),
+    ("paraphrase: G5 merely informative",
+     "The G5 result is informative, while the complete P1 result governs C3.",
+     False),
+    ("paraphrase: only a successful P1 permits acceptance",
+     "Only a successful full P1 outcome permits C3 acceptance.", False),
+    ("paraphrase: follows the combined verdict",
+     "C3 follows the combined P1 verdict.", False),
+    ("paraphrase: secondary becomes primary without rule words",
+     "For C3 the complete two-block result carries the release; the block-2 "
+     "number is reported alongside it.", False),
+    ("SEMANTICALLY CORRECT manual paraphrase",
+     "Block-1 calibration is kept only as a diagnostic input; the full P1 result "
+     "is a secondary predeclared interaction diagnostic and does not decide C3, "
+     "whose primary release stays the per-field G5 block size assessment.", True),
+)
+
+
+def test_c3_explanatory_semantics() -> None:
+    """F1e-r4 BLOCKER. The last free sentence inside a controlled container.
+
+    `cases[2].c3_semantics.why_calibration_is_retained` was classified
+    NON_NORMATIVE_EXPLANATION and guarded by a seven-token vocabulary list. The
+    fourth independent audit rewrote it as
+
+        "The full P1 verdict is the deciding condition for C3."
+
+    which states the opposite of the approved science -- C3's primary release is
+    the per-field G5 / Block-2 size, full P1 is a SECONDARY predeclared
+    interaction diagnostic that does NOT feed primary release -- and full static
+    preflight ACCEPTED it, because that sentence contains none of the listed
+    words.
+
+    No finite vocabulary can decide whether prose has become rule-bearing. The
+    field is therefore GENERATED from the canonical rule, and the controlled
+    C3/C4 surface now permits no semantically free text at all. The consequence,
+    recorded deliberately: even a semantically CORRECT hand-paraphrase refuses.
+    For this surface canonical semantics outrank free editorial paraphrasing;
+    scientific authority does not need unrestricted prose editing.
+    """
+    plan = load_plan(ROOT)
+    c3 = FIELD_SIZE_RULES_BY_CASE["C3_g5_block"]
+    c4 = FIELD_SIZE_RULES_BY_CASE["C4_surrogate_validity"]
+    path = f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics." \
+           "why_calibration_is_retained"
+
+    # --- the location is GENERATED, and says the approved thing --------------
+    live = path_get(plan, path)
+    check("the C3 calibration rationale is the generated canonical text",
+          live == render_field_size_calibration_rationale(c3), repr(live))
+    check("it names full P1 as the SECONDARY predeclared interaction diagnostic",
+          "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC" in live)
+    check("it states that full P1 does NOT determine C3 primary release",
+          "does NOT determine the C3 primary release verdict" in live)
+    check("it states C3 primary release is the per-field G5 block size",
+          "PER_FIELD G5_BLOCK_SIZE assessment" in live)
+    check("no registered surface is classified explanatory any more",
+          not [s for s in normative_surface_registry(plan)
+               if s.mode == NON_NORMATIVE_EXPLANATION])
+
+    # --- the verb itself is derived, so the text cannot contradict the flag --
+    flipped = dataclasses.replace(c3, secondary_feeds_primary_release=True)
+    check("the rationale's verb is DERIVED from secondary_feeds_primary_release",
+          "does NOT determine" in render_field_size_calibration_rationale(c3)
+          and "does NOT determine"
+          not in render_field_size_calibration_rationale(flipped))
+
+    # --- every attack, through the WHOLE static preflight --------------------
+    survived = []
+    for label, text, correct in EXPLANATORY_ATTACKS:
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        before = path_get(mutant, path)
+        assert text != before, f"{label}: attack text equals the approved text"
+        path_set(mutant, path, text)
+        check(f"MUTATION LANDS: {label} at {path}",
+              path_get(mutant, path) == text)
+        wj(tmp, PLAN_JSON, mutant)
+        coherent = True
+        try:
+            regenerate(tmp)
+        except Refusal:
+            coherent = False
+        if coherent:
+            said = refusal_code(require_plan_authority_coherence, tmp,
+                                rj(tmp, PLAN_JSON))
+            check(f"COHERENT: {label}: Markdown and JSON still agree",
+                  said is None, f"coherence said {said!r}")
+        got = refusal_code(preflight, tmp)
+        if got is None:
+            survived.append(label)
+        tag = "CORRECT BUT NOT CANONICAL" if correct else "COHERENT BUT WRONG"
+        check(f"{tag}: {label} refuses", got == "PROSPECTIVE_AMENDMENT_MISMATCH",
+              f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"explanatory attack set: {len(EXPLANATORY_ATTACKS)} tested, 0 survive",
+          not survived, str(survived))
+
+    # --- THE REFUSAL IS NOT THE KEYWORD GUARD -------------------------------
+    # Proved two ways: the attacks contain no listed token at all, and the
+    # refusals persist with the list emptied.
+    for label, text, _c in EXPLANATORY_ATTACKS[:7]:
+        hits = [t for t in release_authority.FIELD_RULE_PROSE_TOKENS
+                if t in text.lower()]
+        check(f"the old keyword guard would NOT have fired on: {label}",
+              not hits, f"tokens {hits}")
+    saved = release_authority.FIELD_RULE_PROSE_TOKENS
+    try:
+        release_authority.FIELD_RULE_PROSE_TOKENS = ()
+        for label, text, _c in EXPLANATORY_ATTACKS:
+            mutant = copy.deepcopy(plan)
+            path_set(mutant, path, text)
+            check(f"with the keyword list EMPTIED, {label} still refuses",
+                  refusal_code(require_field_size_amendment, mutant)
+                  == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    finally:
+        release_authority.FIELD_RULE_PROSE_TOKENS = saved
+    check("the keyword list was restored",
+          release_authority.FIELD_RULE_PROSE_TOKENS == saved)
+
+    # --- NO FREE TEXT anywhere in the controlled C3/C4 surface --------------
+    counts = field_size_amendment_counts(plan)
+    check("SEMANTICALLY FREE RULE-BEARING TEXT = 0",
+          counts["semantically_free_rule_bearing_locations"] == 0, str(counts))
+    check("UNCLASSIFIED NORMATIVE C3/C4 LOCATIONS = 0",
+          counts["unclassified_normative_amendment_fields"] == 0, str(counts))
+    check("every controlled string location is generated or pinned",
+          counts["controlled_string_locations"] > 0
+          and counts["non_normative_explanatory_fields"] == 0, str(counts))
+
+    # no explanatory-SHAPED key survives unbound inside the controlled surface
+    shaped = re.compile(r"why|rationale|explan|note|comment|descript|interpret"
+                        r"|purpose|basis|reason", re.I)
+    registered = {(s.container, s.key) for s in normative_surface_registry(plan)}
+    unbound = []
+    for i in (_case_index(plan, "C3_g5_block"),
+              _case_index(plan, "C4_surrogate_validity")):
+        for key, value in plan["cases"][i].items():
+            if (isinstance(value, str) and shaped.search(key)
+                    and (f"cases[{i}]", key) not in registered):
+                unbound.append(f"cases[{i}].{key}")
+    check("no explanatory-shaped C3/C4 field is left unbound", not unbound,
+          str(unbound))
+
+    # --- a NEW free-text field cannot be added to a controlled case ---------
+    for key, text in (("release_note", "C3 releases on the full P1 verdict."),
+                      ("interpretation", "a single clean field suffices for C4."),
+                      ("c3_commentary", "G5 is advisory only.")):
+        for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+            mutant = copy.deepcopy(plan)
+            mutant["cases"][_case_index(plan, case_id)][key] = text
+            check(f"new free text cases[{case_id[:2]}].{key} refuses",
+                  refusal_code(require_field_size_surface_totality, mutant)
+                  == "NORMATIVE_SURFACE_UNCLASSIFIED")
+
+    # --- C4's Block-1 role was UNBOUND before this repair -------------------
+    c4_path = f"cases[{_case_index(plan, 'C4_surrogate_validity')}].block1_role"
+    check("C4 declares Block-1 as its PRIMARY_RELEASE_ENDPOINT",
+          path_get(plan, c4_path) == "PRIMARY_RELEASE_ENDPOINT")
+    check("C4's Block-1 role is the generated canonical value",
+          path_get(plan, c4_path) == render_field_size_block1_role(c4))
+    check("C3's Block-1 role is the secondary diagnostic",
+          render_field_size_block1_role(c3)
+          == "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC")
+    for case_id, wrong in (("C4_surrogate_validity",
+                            "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC"),
+                           ("C3_g5_block", "PRIMARY_RELEASE_ENDPOINT")):
+        mutant = copy.deepcopy(plan)
+        mutant["cases"][_case_index(plan, case_id)]["block1_role"] = wrong
+        check(f"{case_id[:2]} Block-1 role -> {wrong} refuses",
+              refusal_code(require_field_size_amendment, mutant)
+              == "PROSPECTIVE_AMENDMENT_MISMATCH")
+
+    # --- pinned prose cannot drift -----------------------------------------
+    pinned = 0
+    for case_id, pins in CASE_PROSE_PINS.items():
+        index = _case_index(plan, case_id)
+        for key, expected in pins.items():
+            check(f"pin holds: cases[{case_id[:2]}].{key}",
+                  plan["cases"][index][key] == expected)
+            pinned += 1
+    check(f"every pinned C3/C4 case string matches the plan ({pinned} pins)",
+          pinned == sum(len(v) for v in CASE_PROSE_PINS.values()))
+    for case_id, key in (("C3_g5_block", "scientific_purpose"),
+                         ("C3_g5_block", "calibration_scope_rationale"),
+                         ("C4_surrogate_validity", "scientific_purpose"),
+                         ("C4_surrogate_validity", "allowed_seed_families_rationale")):
+        mutant = copy.deepcopy(plan)
+        index = _case_index(plan, case_id)
+        mutant["cases"][index][key] = (
+            "C3 and C4 release on the full P1 verdict; a single clean field is "
+            "sufficient.")
+        check(f"smuggled rule in cases[{case_id[:2]}].{key} refuses",
+              refusal_code(require_field_size_amendment, mutant)
+              == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    for key in SHARED_SIZE_SEMANTICS_PINS:
+        mutant = copy.deepcopy(plan)
+        mutant["size_validation_semantics"][key] = (
+            "size inflation is detected only when all four fields pool above "
+            "nominal alpha")
+        check(f"smuggled rule in size_validation_semantics.{key} refuses",
+              refusal_code(require_field_size_amendment, mutant)
+              == "PROSPECTIVE_AMENDMENT_MISMATCH")
+
+    # --- the approved C3/C4 science is untouched ----------------------------
+    check("C3 primary release endpoint is still the G5 block",
+          c3.primary_endpoint == "G5_BLOCK_SIZE")
+    check("C3 secondary is still the full P1 interaction diagnostic, not release-"
+          "bearing",
+          c3.secondary_diagnostic == "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC"
+          and c3.secondary_feeds_primary_release is False)
+    check("C4 primary release endpoint is still the Block-1 achieved size",
+          c4.primary_endpoint == "BLOCK1_ACHIEVED_SIZE")
+    for rule in FIELD_SIZE_RULES:
+        check(f"{rule.case_id[:2]} scope/reduction/pooling unchanged",
+              (rule.evaluation_scope, rule.field_reduction, rule.pooling)
+              == ("PER_FIELD", "NONE", "FORBIDDEN"))
+    check("C3 R/alpha/boundary unchanged",
+          (c3.replicates, c3.nominal_alpha, c3.boundary) == (400, 0.001, 2))
+    check("C4 R/alpha/boundary unchanged",
+          (c4.replicates, c4.nominal_alpha, c4.boundary) == (2000, 0.004, 13))
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
@@ -1672,6 +1924,8 @@ GROUPS = (
      test_c3_c4_amendment_semantic_mutations),
     ("C3/C4 normative-surface totality",
      test_c3_c4_normative_surface_totality),
+    ("C3 explanatory semantics bound to canonical authority",
+     test_c3_explanatory_semantics),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),
