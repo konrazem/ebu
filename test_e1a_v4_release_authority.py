@@ -59,8 +59,12 @@ from e1a_v4.validation.release_authority import (
     CASE_PROSE_PINS, CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER,
     NON_NORMATIVE_EXPLANATION, NOT_APPLICABLE, SHARED_SIZE_SEMANTICS_PINS,
     FIELD_SIZE_RULES, FIELD_SIZE_RULES_BY_CASE, VERIFICATION_MODES,
-    DEFERRED_OUT_OF_SCOPE, TWO_QUESTIONS_COMPLETE_PIPELINE_PIN,
+    CASE_LIST_PINS, DEFERRED_C2_LEAF_PATHS, DEFERRED_C2_QUARANTINE,
+    DEFERRED_C2_TRACKER, DEFERRED_OUT_OF_SCOPE,
+    FINAL_CAMPAIGN_REQUIREMENT_PINS, TWO_QUESTIONS_COMPLETE_PIPELINE_PIN,
+    final_campaign_requirements,
     render_component_size_question, render_field_size_block1_role,
+    render_field_size_requirement,
     render_field_size_calibration_rationale, require_field_size_amendment,
     require_size_semantics_leaf_totality, size_semantics_leaf_counts,
     size_semantics_leaves, field_size_amendment_counts,
@@ -331,8 +335,12 @@ NAMED_PROBES = (
     ("C. C3 R = 400 -> 401, derived boundary recomputed", probe_c3_replicates,
      ("PROSPECTIVE_AMENDMENT_MISMATCH",
       "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH")),
+    # Probe D recomputes C8's final-campaign requirement line, which the complete
+    # canonical requirement sequence now pins, so the list check refuses before
+    # the replicate-count binding is reached. Both refusals are correct.
     ("D. C8 R = 200 -> 201", probe_c8_replicates,
-     "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH"),
+     ("PROSPECTIVE_AMENDMENT_MISMATCH",
+      "CONTRACT_RELEASE_REPLICATE_COUNT_MISMATCH")),
 )
 
 MARKDOWN_FIXUPS = {"C. C3 R = 400 -> 401, derived boundary recomputed": fix_c3_markdown}
@@ -1479,6 +1487,18 @@ def known_escape_classes(plan):
            "COMPONENT size test and never a familywise or pooled test",
            "FAMILYWISE test over the pooled four-field count, in which one clean "
            "field suffices")]),
+        ("sixth audit",
+         "14. an extra final-campaign requirement permitting compensation",
+         [("final_campaign_classification.requirements[10]",
+           "11. every MANDATORY CONTRACT DIAGNOSTIC",
+           "11. a failed field-level size condition may be offset by a clean size "
+           "condition in another field; every MANDATORY CONTRACT DIAGNOSTIC")]),
+        ("sixth audit",
+         "15. a new rule smuggled through a dynamically deferred C2 child",
+         [("size_validation_semantics.derived_boundaries.C2.pooling",
+           "FORBIDDEN - every field is reported separately",
+           "FORBIDDEN - every field is reported separately; C3 may pool its "
+           "field counts")]),
     )
 
 
@@ -2188,12 +2208,29 @@ def test_nested_semantic_leaf_totality() -> None:
     check("each deferred leaf names the task that owns it",
           all(l.deferred_to for l in deferred),
           str({l.deferred_to for l in deferred}))
+    # F1e-r9 CHANGES THIS DELIBERATELY. C2's unresolved leaves are now MUTATION-
+    # QUARANTINED: their text may not drift before D6a, so the contrary rewrite
+    # refuses. That is a tripwire on the bytes, NOT a scientific clearance -- the
+    # two claims are asserted separately below.
     c2 = copy.deepcopy(plan)
     c2["size_validation_semantics"]["derived_boundaries"]["C2"]["pooling"] = (
         "POOLED - all four field counts summed")
-    check("the C2 residual is STILL reachable: this repair did not mask it",
-          refusal_code(require_size_semantics_leaf_totality, c2) is None
-          and refusal_code(require_field_size_amendment, c2) is None)
+    check("MUTATION QUARANTINE closed: C2's unresolved text may not drift",
+          refusal_code(require_size_semantics_leaf_totality, c2)
+          == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    check("SCIENTIFIC C2 POOLING AUTHORITY still OPEN: C2 has no canonical rule",
+          "C2" not in FIELD_SIZE_RULES_BY_CASE
+          and "C2_geometry_false_rejection" not in FIELD_SIZE_RULES_BY_CASE,
+          str(sorted(FIELD_SIZE_RULES_BY_CASE)))
+    check("C2's leaves are classified DEFERRED and name the task that owns them",
+          all(leaf.deferred_to == DEFERRED_C2_TRACKER
+              for leaf in size_semantics_leaves(plan)
+              if leaf.mode == DEFERRED_OUT_OF_SCOPE)
+          and "D6a" in DEFERRED_C2_TRACKER, DEFERRED_C2_TRACKER)
+    check("the quarantine source says quarantine, not approval",
+          all("quarantine" in leaf.source.lower()
+              for leaf in size_semantics_leaves(plan)
+              if leaf.mode == DEFERRED_OUT_OF_SCOPE))
 
     # --- the earlier repairs still hold -------------------------------------
     c3_path = (f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics."
@@ -2236,6 +2273,317 @@ def test_nested_semantic_leaf_totality() -> None:
           and "positively associated" not in gap["resolution"])
 
 
+# ------------------- 20. list totality and fixed deferred scope (F1e-r9)
+REQUIREMENT_LIST_MUTATIONS = (
+    ("AUDIT: append cross-field compensation requirement",
+     lambda l: l.append("12. A failed field-level size condition may be offset by "
+                        "a clean size condition in another field.")),
+    ("append a harmless-looking requirement",
+     lambda l: l.append("12. the campaign report is archived after sign-off.")),
+    ("append a line naming no C3, C4, pooling or field",
+     lambda l: l.append("12. results are signed off by the release owner.")),
+    ("prepend a requirement", lambda l: l.insert(0, "0. preliminary check passes")),
+    ("insert a requirement in the middle",
+     lambda l: l.insert(5, "5b. an extra gate applies")),
+    ("remove a requirement", lambda l: l.pop(6)),
+    ("duplicate a requirement", lambda l: l.insert(3, l[3])),
+    ("replace a requirement",
+     lambda l: l.__setitem__(4, "5. C5 may be skipped this campaign")),
+    ("swap two requirements (order is normative)",
+     lambda l: (l.__setitem__(0, l[1]), l.__setitem__(1, l[0]))),
+    ("add a compensation rule",
+     lambda l: l.append("12. compensation between fields is allowed.")),
+    ("add a partial-pass rule",
+     lambda l: l.append("12. three of four clean fields suffice.")),
+)
+
+OTHER_CONTROLLED_LISTS = (
+    ("cases[C3].allowed_seed_families: add element",
+     lambda m: m["cases"][2]["allowed_seed_families"].append("branch_b_process")),
+    ("cases[C3].allowed_seed_families: remove element",
+     lambda m: m["cases"][2]["allowed_seed_families"].pop()),
+    ("cases[C4].allowed_seed_families: reorder",
+     lambda m: m["cases"][3]["allowed_seed_families"].reverse()),
+    ("cases[C3].subconditions: add element",
+     lambda m: m["cases"][2]["subconditions"].append({"subcondition_id": "x"})),
+    ("cases[C4].subconditions: add element",
+     lambda m: m["cases"][3]["subconditions"].append({"subcondition_id": "x"})),
+    ("cases[C3].subconditions: edit an element's feeds_primary_claim",
+     lambda m: m["cases"][2]["subconditions"][2]
+     .__setitem__("feeds_primary_claim", False)),
+    ("cases[C3].fields_affected: add element",
+     lambda m: m["cases"][2]["fields_affected"].append("theta4_invented")),
+    ("interpretation.forbidden_wording: remove element",
+     lambda m: m["size_validation_semantics"]["interpretation"]
+     ["forbidden_wording"].pop()),
+)
+
+
+def _c2_branch(plan):
+    return plan["size_validation_semantics"]["derived_boundaries"]["C2"]
+
+
+DEFERRED_PATH_ATTACKS = (
+    ("AUDIT: add a new deferred C2 leaf",
+     lambda m: _c2_branch(m).__setitem__("release_override",
+                                         "C3 may pool its field counts")),
+    ("add a nested child object under the deferred C2 branch",
+     lambda m: _c2_branch(m).__setitem__("nested", {"rule": "C3 pools its fields"})),
+    ("rename a deferred leaf",
+     lambda m: _c2_branch(m).__setitem__("pooling_rule",
+                                         _c2_branch(m).pop("pooling"))),
+    ("delete a deferred leaf", lambda m: _c2_branch(m).pop("pooling")),
+    ("change a deferred leaf's type to a list",
+     lambda m: _c2_branch(m).__setitem__("pooling", ["FORBIDDEN"])),
+    ("replace a deferred leaf with an object",
+     lambda m: _c2_branch(m).__setitem__("pooling", {"v": "FORBIDDEN"})),
+    ("mutate a quarantined deferred value",
+     lambda m: _c2_branch(m).__setitem__("pooling",
+                                         "POOLED - all four counts summed")),
+    ("smuggle a C3 rule through a new C2 child",
+     lambda m: _c2_branch(m).__setitem__("c3_note", "C3 pools its four fields")),
+)
+
+
+def _authority_code(mutant):
+    """The first refusal any C3/C4 authority checker raises, or None."""
+    for fn in (require_field_size_surface_totality,
+               require_size_semantics_leaf_totality, require_field_size_amendment):
+        got = refusal_code(fn, mutant)
+        if got is not None:
+            return got
+    return None
+
+
+def test_list_and_deferred_scope_totality() -> None:
+    """F1e-r8 BLOCKERS. A list checked selectively, and a self-expanding exception.
+
+    **A.** `final_campaign_classification.requirements` was secured by pinning the
+    two generated C3/C4 lines and counting how many lines mentioned C3 or C4. The
+    audit appended
+
+        "12. A failed field-level size condition may be offset by a clean size
+             condition in another field."
+
+    which names neither case, left the count at two, rendered into the Markdown,
+    and was ACCEPTED by coherence, release authority and full static preflight.
+    For an authoritative list MEMBERSHIP IS AUTHORITY, so the complete ordered
+    sequence is now compared against a canonical one.
+
+    **B.** The deferred C2 exception set was built by reading whichever keys the
+    candidate carried under `derived_boundaries.C2`. Adding
+    `release_override = "C3 may pool its field counts"` moved the deferred count
+    from 9 to 10, was classified DEFERRED_OUT_OF_SCOPE, still reported
+    `unknown_child_keys = 0`, and preflight accepted it. A candidate was
+    authorising its own exception. The deferred path set is now fixed
+    independently of the candidate.
+    """
+    plan = load_plan(ROOT)
+    reqs = plan["final_campaign_classification"]["requirements"]
+
+    # --- the canonical complete list ----------------------------------------
+    canonical = final_campaign_requirements()
+    check("the canonical requirement sequence matches the plan exactly",
+          list(canonical) == reqs, f"{len(canonical)} vs {len(reqs)}")
+    check("ORDER is normative: every line carries its own ordinal",
+          all(line.startswith(f"{i + 1}. ") for i, line in enumerate(canonical)))
+    check("the canonical list is built from pins plus the generated C3/C4 slots",
+          len(canonical) == len(FINAL_CAMPAIGN_REQUIREMENT_PINS) + len(FIELD_SIZE_RULES))
+    check("the C3 and C4 slots are GENERATED, not pinned",
+          2 not in FINAL_CAMPAIGN_REQUIREMENT_PINS
+          and 3 not in FINAL_CAMPAIGN_REQUIREMENT_PINS)
+    for rule in FIELD_SIZE_RULES:
+        position = 3 if rule.case_id.startswith("C3") else 4
+        check(f"slot {position} is the generated {rule.case_id[:2]} line",
+              canonical[position - 1] == render_field_size_requirement(rule, position))
+
+    # --- NO SELF-VALIDATION: the canonical list ignores the candidate -------
+    mutant = copy.deepcopy(plan)
+    mutant["final_campaign_classification"]["requirements"].append("12. anything")
+    check("the canonical requirement list is INDEPENDENT of the candidate",
+          final_campaign_requirements() == canonical
+          and len(canonical) != len(
+              mutant["final_campaign_classification"]["requirements"]))
+
+    # --- every list mutation, through the WHOLE static preflight ------------
+    survived = []
+    for label, mutate in REQUIREMENT_LIST_MUTATIONS:
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        before = list(mutant["final_campaign_classification"]["requirements"])
+        mutate(mutant["final_campaign_classification"]["requirements"])
+        after = mutant["final_campaign_classification"]["requirements"]
+        assert after != before, f"{label}: list unchanged"
+        check(f"MUTATION LANDS: {label} ({len(before)} -> {len(after)} items)", True)
+        wj(tmp, PLAN_JSON, mutant)
+        coherent = True
+        try:
+            regenerate(tmp)
+        except Refusal:
+            coherent = False
+        if coherent:
+            said = refusal_code(require_plan_authority_coherence, tmp,
+                                rj(tmp, PLAN_JSON))
+            check(f"COHERENT: {label}: Markdown and JSON still agree",
+                  said is None, f"coherence said {said!r}")
+        got = refusal_code(preflight, tmp)
+        if got is None:
+            survived.append(label)
+        check(f"UNAUTHORIZED LIST MUTATION REFUSED: {label}",
+              got == "PROSPECTIVE_AMENDMENT_MISMATCH", f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"requirement-list audit: {len(REQUIREMENT_LIST_MUTATIONS)} tested, "
+          "0 unexpected passes", not survived, str(survived))
+
+    # --- every OTHER controlled list ---------------------------------------
+    loose = []
+    for label, mutate in OTHER_CONTROLLED_LISTS:
+        mutant = copy.deepcopy(plan)
+        mutate(mutant)
+        got = _authority_code(mutant)
+        if got is None:
+            loose.append(label)
+        check(f"CONTROLLED LIST REFUSED: {label}",
+              got == "PROSPECTIVE_AMENDMENT_MISMATCH", f"got {got!r}")
+    check(f"controlled-list audit: {len(OTHER_CONTROLLED_LISTS)} tested, "
+          "0 unexpected passes", not loose, str(loose))
+
+    # --- the deferred exception set is FIXED --------------------------------
+    check("the deferred C2 path set is declared independently of the candidate",
+          len(DEFERRED_C2_LEAF_PATHS) == len(DEFERRED_C2_QUARANTINE) == 9,
+          str(len(DEFERRED_C2_LEAF_PATHS)))
+    observed = {leaf.path for leaf in size_semantics_leaves(plan)
+                if leaf.mode == DEFERRED_OUT_OF_SCOPE}
+    check("the observed deferred set equals the fixed expected set",
+          observed == set(DEFERRED_C2_LEAF_PATHS), str(sorted(observed)))
+    for label, mutate in (("add a C2 child",
+                           lambda m: _c2_branch(m).__setitem__("extra", "x")),
+                          ("remove a C2 child",
+                           lambda m: _c2_branch(m).pop("per_field")),
+                          ("replace the whole C2 branch",
+                           lambda m: m["size_validation_semantics"]
+                           ["derived_boundaries"].__setitem__("C2", {"x": "y"}))):
+        mutant = copy.deepcopy(plan)
+        mutate(mutant)
+        rebuilt = {leaf.path for leaf in size_semantics_leaves(mutant)
+                   if leaf.mode == DEFERRED_OUT_OF_SCOPE}
+        check(f"the expected deferred set is UNCHANGED when the candidate does: "
+              f"{label}", rebuilt == set(DEFERRED_C2_LEAF_PATHS),
+              f"{len(rebuilt)} paths")
+
+    # --- every deferred-path structural attack ------------------------------
+    escaped = []
+    for label, mutate in DEFERRED_PATH_ATTACKS:
+        mutant = copy.deepcopy(plan)
+        mutate(mutant)
+        got = _authority_code(mutant)
+        if got is None:
+            escaped.append(label)
+        check(f"DEFERRED-SCOPE ATTACK REFUSED: {label}", got is not None,
+              f"got {got!r}")
+    check(f"deferred-scope audit: {len(DEFERRED_PATH_ATTACKS)} tested, "
+          "0 unexpected passes", not escaped, str(escaped))
+
+    # a deferred ancestor authorises no descendants
+    mutant = copy.deepcopy(plan)
+    _c2_branch(mutant)["pooling"] = {"nested": "anything at all"}
+    check("a deferred ancestor does NOT authorise arbitrary descendants",
+          _authority_code(mutant) is not None)
+
+    # --- declared keys must EXIST, not just be absent-and-ignored -----------
+    for label, mutate in (
+            ("c3_semantics.requires_block1_calibration",
+             lambda m: m["cases"][2]["c3_semantics"]
+             .pop("requires_block1_calibration")),
+            ("c3_semantics.why_calibration_is_retained",
+             lambda m: m["cases"][2]["c3_semantics"]
+             .pop("why_calibration_is_retained")),
+            ("cases[C3].allowed_seed_families",
+             lambda m: m["cases"][2].pop("allowed_seed_families"))):
+        mutant = copy.deepcopy(plan)
+        mutate(mutant)
+        check(f"DELETING a declared authority key refuses: {label}",
+              _authority_code(mutant) == "NORMATIVE_SURFACE_UNCLASSIFIED")
+
+    # --- machine-derived coverage -------------------------------------------
+    counts = field_size_amendment_counts(plan)
+    for key in ("unexpected_list_elements", "missing_list_elements",
+                "unexpected_deferred_paths", "missing_deferred_paths",
+                "unclassified_normative_amendment_fields",
+                "semantically_free_rule_bearing_locations"):
+        check(f"{key} = 0", counts[key] == 0, str(counts))
+    check("controlled normative lists are counted, not hand-listed",
+          counts["controlled_normative_lists"] >= 7
+          and counts["canonical_list_elements"] >= 30, str(counts))
+    check("deferred expected equals deferred observed",
+          counts["deferred_exception_paths_expected"]
+          == counts["deferred_exception_paths_observed"] == 9, str(counts))
+
+    # --- C2: quarantine CLOSED, science still OPEN --------------------------
+    quarantined = copy.deepcopy(plan)
+    _c2_branch(quarantined)["pooling"] = "POOLED - all four counts summed"
+    check("MUTATION QUARANTINE closed: the C2 pooling rewrite now refuses",
+          _authority_code(quarantined) == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    check("SCIENTIFIC C2 POOLING AUTHORITY still OPEN: no canonical C2 rule exists",
+          not any(key.startswith("C2") for key in FIELD_SIZE_RULES_BY_CASE),
+          str(sorted(FIELD_SIZE_RULES_BY_CASE)))
+    check("C2's pooling text is quarantined, NOT generated from a canonical rule",
+          all(leaf.mode == DEFERRED_OUT_OF_SCOPE
+              and "quarantine" in leaf.source.lower()
+              for leaf in size_semantics_leaves(plan)
+              if ".derived_boundaries.C2." in leaf.path))
+    check("D6a is named as the owner of the unresolved C2 authority",
+          "D6a" in DEFERRED_C2_TRACKER, DEFERRED_C2_TRACKER)
+
+    # --- earlier repairs still hold ----------------------------------------
+    c3_path = (f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics."
+               "why_calibration_is_retained")
+    for text in ("The full P1 verdict is the deciding condition for C3.",
+                 "C3 follows the combined P1 verdict."):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, c3_path, text)
+        check(f"F1e-r5 still holds: {text[:40]!r} refuses",
+              _authority_code(mutant) == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    for path, value in (
+            ("size_validation_semantics.interpretation.detector",
+             "inflation detected iff CP_lower(pooled rejections, 4R) > alpha"),
+            ("size_validation_semantics.two_questions.B_component_size_inflation",
+             "C3 and C4 are familywise tests over a pooled count.")):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, path, value)
+        check(f"F1e-r7 still holds: {path.split('.')[-1]} refuses",
+              _authority_code(mutant) == "PROSPECTIVE_AMENDMENT_MISMATCH")
+    for token, replacement in (("all 4 are clean", "ANY ONE field is clean"),
+                               ("all 4 are clean", "at least 3 of 4 are clean"),
+                               ("compensation is FORBIDDEN",
+                                "compensation is PERMITTED")):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, "final_campaign_classification.rule",
+                 _text_swap(path_get(mutant, "final_campaign_classification.rule"),
+                            token, replacement))
+        check(f"final rule {token!r} -> {replacement!r} refuses",
+              _authority_code(mutant) == "PROSPECTIVE_AMENDMENT_MISMATCH")
+
+    # --- approved science untouched -----------------------------------------
+    for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
+        row = plan["size_validation_semantics"]["derived_boundaries"][short]
+        check(f"{short} R, alpha and integer boundary unchanged",
+              (row["replicates"], row["nominal_alpha"], row["boundary"])
+              == (rule.replicates, rule.nominal_alpha, rule.boundary), str(row))
+        check(f"{short} scope/reduction/pooling unchanged",
+              (rule.evaluation_scope, rule.field_reduction, rule.pooling)
+              == ("PER_FIELD", "NONE", "FORBIDDEN"))
+    gap = plan["authority_gaps"][_gap_index(plan)]
+    check("the >= 0.90 target is still C1-only",
+          "remains C1-only" in gap["resolution"]
+          and FINAL_CAMPAIGN_REQUIREMENT_PINS[0].startswith("1. C1 ")
+          and "0.90" in FINAL_CAMPAIGN_REQUIREMENT_PINS[0])
+    check("the dependence wording still claims no direction",
+          "not simply be assumed" in gap["resolution"]
+          and "positively associated" not in gap["resolution"])
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
@@ -2247,6 +2595,8 @@ GROUPS = (
      test_c3_explanatory_semantics),
     ("nested size-validation semantic-leaf totality",
      test_nested_semantic_leaf_totality),
+    ("final-list totality and fixed deferred scope",
+     test_list_and_deferred_scope_totality),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),

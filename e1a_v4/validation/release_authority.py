@@ -590,6 +590,28 @@ def render_field_size_disposition() -> str:
     return " ".join(parts)
 
 
+def final_campaign_requirements() -> tuple[str, ...]:
+    """The COMPLETE canonical requirement sequence, in order.
+
+    Checking only the lines that mention C3 or C4 was the r8 blocker: a twelfth
+    requirement permitting one clean field to offset a failed one named neither
+    case and was accepted. For an authoritative list, MEMBERSHIP IS AUTHORITY, so
+    the whole sequence is compared -- length, order, every element -- against this
+    canonical one, which is never derived from the candidate.
+    """
+    out: list[str] = []
+    generated = {slot: rule for slot, rule in
+                 zip(_GENERATED_REQUIREMENT_SLOTS, FIELD_SIZE_RULES)}
+    size = len(FINAL_CAMPAIGN_REQUIREMENT_PINS) + len(_GENERATED_REQUIREMENT_SLOTS)
+    for position in range(size):
+        rule = generated.get(position)
+        if rule is not None:
+            out.append(render_field_size_requirement(rule, position + 1))
+        else:
+            out.append(FINAL_CAMPAIGN_REQUIREMENT_PINS[position])
+    return tuple(out)
+
+
 def render_field_size_requirement(rule: FieldSizeRule, index: int) -> str:
     """The case's numbered line in the final-campaign requirement list."""
     return (f"{index}. {rule.case_id[:2]} produces no STATISTICAL_SIZE_FAILURE in any "
@@ -1226,6 +1248,95 @@ SHARED_SIZE_SEMANTICS_PINS = {
 }
 
 
+#: The COMPLETE final-campaign requirement sequence. ORDER IS NORMATIVE:
+#: every line carries its own ordinal, and the Markdown renders them as a
+#: numbered list, so position is part of the statement. Slots 3 and 4 are
+#: GENERATED from the canonical C3/C4 rule; the rest are exact pins of other
+#: cases' approved text, held here as tripwires so the LIST ITSELF -- its
+#: length, membership and order -- is authority rather than a bag the
+#: candidate may add to.
+_GENERATED_REQUIREMENT_SLOTS = (2, 3)
+
+FINAL_CAMPAIGN_REQUIREMENT_PINS = {
+    0: (
+        '1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 '
+        '(>= 279/300)'
+    ),
+    1: '2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field',
+    # 2: GENERATED from FIELD_SIZE_RULES (render_field_size_requirement)
+    # 3: GENERATED from FIELD_SIZE_RULES (render_field_size_requirement)
+    4: '5. C5 satisfies its already-frozen plug-in Branch-A criterion',
+    5: '6. C6 satisfies its already-frozen mode-resolution criterion',
+    6: (
+        '7. EVERY C7 false-bridge alternative satisfies G2: CP upper <= '
+        '0.025 (<= 4/400)'
+    ),
+    7: '8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)',
+    8: (
+        '9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, '
+        'NUMERICAL_OR_PRECISION_FAILURE occurs'
+    ),
+    9: (
+        '10. structured refusals counted exactly per the already-frozen '
+        'unconditional denominator rule'
+    ),
+    10: (
+        '11. every MANDATORY CONTRACT DIAGNOSTIC declared in '
+        'release_authority.mandatory_diagnostics is present in the '
+        'campaign result and consistent with its own raw counts; an '
+        'absent or inconsistent mandatory diagnostic is '
+        'RESULT_SCHEMA_INVALID'
+    ),
+}
+
+#: Membership-bearing lists in the C3/C4 case records that no renderer
+#: generates. Owned by other dispositions (G3 seed grants, the declared
+#: subcondition set); pinned as tripwires so elements cannot be added,
+#: removed or reordered without an explicit authorised update here.
+CASE_LIST_PINS = {
+    "C3_g5_block": {
+        "allowed_seed_families": ['calibration', 'validation', 'branch_a_measurement'],
+        "subconditions": [
+            {'subcondition_id': 'sigma_psi_0p0', 'sigma_psi_deg': 0.0, 'g3_role': 'SECONDARY', 'feeds_primary_claim': False},
+            {'subcondition_id': 'sigma_psi_0p2', 'sigma_psi_deg': 0.2, 'g3_role': 'SECONDARY', 'feeds_primary_claim': False},
+            {'subcondition_id': 'sigma_psi_0p5', 'sigma_psi_deg': 0.5, 'g3_role': 'PRIMARY', 'feeds_primary_claim': True},
+            {'subcondition_id': 'sigma_psi_1p0', 'sigma_psi_deg': 1.0, 'g3_role': 'STRESS', 'feeds_primary_claim': False},
+        ],
+    },
+    "C4_surrogate_validity": {
+        "allowed_seed_families": ['calibration', 'validation', 'branch_a_measurement'],
+        "subconditions": [
+            {'subcondition_id': 'primary'},
+        ],
+    },
+}
+
+#: The EXACT nine pre-existing C2 derived-boundary leaves, enumerated here
+#: and NOT read from the candidate. The r8 audit added a tenth key under C2
+#: and the checker deferred it automatically, because the exception set was
+#: derived from whatever the candidate happened to carry -- a self-
+#: authorising exception.
+#:
+#: The pinned value is a MUTATION QUARANTINE, not a scientific endorsement.
+#: It says these unresolved bytes may not drift before D6a. It does NOT say
+#: C2's pooling semantics are correct, bound to any canonical rule, or
+#: validated. D6a remains REQUIRED.
+DEFERRED_C2_QUARANTINE = {
+    "replicates": 400,
+    "nominal_alpha": 0.005,
+    "boundary": 5,
+    "cp_lower_at_boundary": 0.004937934174346348,
+    "cp_lower_at_boundary_plus_1": 0.006552145786997754,
+    "rule": (
+        '0-5 rejections: no significant inflation detected; 6+ : '
+        'STATISTICAL_SIZE_FAILURE'
+    ),
+    "per_field": True,
+    "pooling": 'FORBIDDEN - every field is reported separately',
+    "replicate_reduction": 'NONE',
+}
+
+
 @dataclass(frozen=True)
 class NormativeSurface:
     """ONE authoritative C3/C4 statement and how it is held to the canonical rule.
@@ -1348,12 +1459,13 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
             add(_surface(short, "earlier disposition status", sp, "status",
                          STRICTLY_VERIFIED_DUPLICATE, "generated cases region",
                          rule.earlier_status, semantics))
-        if "requires_block1_calibration" in semantics:
+        # Driven by the CANONICAL rule, not by which keys the candidate happens
+        # to carry. Registering only what is present means deleting a key also
+        # deletes its check -- the mirror of the r8 deferred-scope escape.
+        if rule.secondary_diagnostic is not None:
             add(_surface(short, "block-1 calibration retained", sp,
                          "requires_block1_calibration", STRICTLY_VERIFIED_DUPLICATE,
-                         "generated cases region",
-                         case.get("requires_block1_calibration"), semantics))
-        if "why_calibration_is_retained" in semantics:
+                         "generated cases region", True, semantics))
             # GENERATED, not explanatory. See
             # render_field_size_calibration_rationale for why free prose here was
             # an escape and why a keyword guard could not have closed it.
@@ -1361,6 +1473,10 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
                          "why_calibration_is_retained", GENERATED_FROM_CANONICAL,
                          "generated cases region",
                          render_field_size_calibration_rationale(rule), semantics))
+        for key, expected in CASE_LIST_PINS.get(rule.case_id, {}).items():
+            add(_surface(short, f"pinned case list {key}", cp, key,
+                         STRICTLY_VERIFIED_DUPLICATE, "generated cases region",
+                         expected, case))
 
         # ------------------------------------------------ the assurance container
         ap = f"assurance[{rule.case_id}]"
@@ -1439,14 +1555,15 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
              FINAL_RELEASE_IMPLEMENTATION)):
         add(_surface("FINAL", key, fp, key, mode, "generated release-rules region",
                      expected, final))
-    # The requirement LIST as an object: exactly the two generated C3/C4 lines may
-    # speak for these cases, so a twelfth requirement weakening one is refused.
+    # MEMBERSHIP IS AUTHORITY. The COMPLETE ordered sequence is compared, so an
+    # appended, inserted, removed, duplicated or reordered requirement refuses --
+    # including one that names neither C3 nor C4. The previous check counted only
+    # the lines mentioning those cases, which is how the r8 audit appended a
+    # cross-field compensation rule and was accepted.
     add(NormativeSurface(
-        "FINAL", "requirement lines naming C3 or C4", fp, "requirements",
+        "FINAL", "the complete requirement sequence", fp, "requirements",
         STRICTLY_VERIFIED_DUPLICATE, "generated release-rules region",
-        len(FIELD_SIZE_RULES),
-        sum(1 for line in requirements
-            if any(rule.case_id[:2] in str(line) for rule in FIELD_SIZE_RULES))))
+        list(final_campaign_requirements()), requirements))
     for rule in FIELD_SIZE_RULES:
         position = 3 if rule.case_id.startswith("C3") else 4
         add(NormativeSurface(
@@ -1533,6 +1650,18 @@ def require_field_size_surface_totality(plan: dict[str, Any]) -> None:
     registered: dict[str, set[str]] = {}
     for surface in registry:
         registered.setdefault(surface.container, set()).add(surface.key)
+    # A DECLARED key must also EXIST. Registering only what the candidate carries
+    # means deleting a key deletes its check, which is the same self-authorising
+    # shape as a candidate-derived exception set.
+    swept = {**_controlled_containers(plan), **_prose_controlled_records(plan)}
+    for surface in registry:
+        if "[" in surface.key or surface.container not in swept:
+            continue
+        if surface.key not in swept[surface.container]:
+            raise NormativeSurfaceUnclassified(
+                f"{surface.path} is declared in the normative-surface registry but "
+                "absent from the plan; an authority statement may not be deleted to "
+                "escape its binding")
     for container, holder in _controlled_containers(plan).items():
         known = registered.get(container, set())
         for key in holder:
@@ -1633,8 +1762,28 @@ def field_size_amendment_counts(plan: dict[str, Any]) -> dict[str, int]:
     free_text += sum(1 for s in registry
                      if s.mode == NON_NORMATIVE_EXPLANATION
                      and s.container in controlled)
+    # Controlled normative LISTS: membership is authority, so each is compared
+    # whole. Counted from the registry rather than hand-listed.
+    list_rows = [s for s in registry if isinstance(s.expected, list)]
+    unexpected_items = sum(
+        max(0, len(s.actual) - len(s.expected))
+        for s in list_rows if isinstance(s.actual, list))
+    missing_items = sum(
+        max(0, len(s.expected) - len(s.actual))
+        for s in list_rows if isinstance(s.actual, list))
+    deferred_expected = set(DEFERRED_C2_LEAF_PATHS)
+    deferred_observed = {leaf.path for leaf in size_semantics_leaves(plan)
+                         if leaf.mode == DEFERRED_OUT_OF_SCOPE}
     return {
         "canonical_rule_fields": canonical,
+        "controlled_normative_lists": len(list_rows),
+        "canonical_list_elements": sum(len(s.expected) for s in list_rows),
+        "unexpected_list_elements": unexpected_items,
+        "missing_list_elements": missing_items,
+        "deferred_exception_paths_expected": len(deferred_expected),
+        "deferred_exception_paths_observed": len(deferred_observed),
+        "unexpected_deferred_paths": len(deferred_observed - deferred_expected),
+        "missing_deferred_paths": len(deferred_expected - deferred_observed),
         "semantically_free_rule_bearing_locations": free_text,
         "controlled_string_locations": sum(
             1 for container in controlled
@@ -1719,13 +1868,16 @@ SUPERSEDED_CRITERION_PINS = {
 #: authorises nothing below it.
 SIZE_SEMANTICS_ROOT = "size_validation_semantics"
 
-#: Cases whose derived-boundary leaves this stage deliberately does NOT bind.
-#: C2's pooling-authority text is a confirmed, separately tracked defect; binding
-#: it here would make its symptom disappear while its substance -- that C2 has no
-#: canonical pooling rule object -- remained. Enumerated and classified so the
-#: totality claim stays honest, and left contradictable so the open item stays
-#: visible.
-DEFERRED_BOUNDARY_CASES = {"C2": "D6a - C2 pooling authority-text binding"}
+#: The task that owns the unresolved C2 pooling authority.
+DEFERRED_C2_TRACKER = "D6a - C2 pooling authority-text binding"
+
+#: The EXACT deferred leaf paths, built from the fixed quarantine table above and
+#: NOT from the candidate. The candidate can therefore neither expand this set (a
+#: tenth C2 key is an undeclared leaf) nor shrink it silently (a declared leaf
+#: that disappears is refused) nor rename within it.
+DEFERRED_C2_LEAF_PATHS = tuple(
+    f"size_validation_semantics.derived_boundaries.C2.{key}"
+    for key in DEFERRED_C2_QUARANTINE)
 
 
 @dataclass(frozen=True)
@@ -1815,20 +1967,21 @@ def size_semantics_leaves(plan: dict[str, Any]) -> tuple[SemanticLeaf, ...]:
     # C3 and C4 are already generated/verified by the normative-surface registry;
     # their leaves are declared here so the recursive walk is TOTAL, and point at
     # that registry rather than restating it.
-    surface = {s.path: s for s in normative_surface_registry(plan)}
-    for rule in FIELD_SIZE_RULES:
-        short = rule.case_id[:2]
-        declared = plan[root]["derived_boundaries"].get(short) or {}
-        for key in declared:
-            entry = surface.get(f"derived_boundaries.{short}.{key}")
-            if entry is None:
-                continue          # the surface registry's own totality refuses it
-            add(SemanticLeaf(f"{root}.derived_boundaries.{short}.{key}", entry.mode,
-                             entry.expected, "normative_surface_registry"))
-    for short, tracker in DEFERRED_BOUNDARY_CASES.items():
-        for key in plan[root]["derived_boundaries"].get(short) or {}:
-            add(SemanticLeaf(f"{root}.derived_boundaries.{short}.{key}",
-                             DEFERRED_OUT_OF_SCOPE, None, "", tracker))
+    # Driven by the canonical surface registry, not by the candidate's keys.
+    for entry in normative_surface_registry(plan):
+        if not entry.container.startswith("derived_boundaries."):
+            continue
+        add(SemanticLeaf(f"{root}.{entry.path}", entry.mode, entry.expected,
+                         "normative_surface_registry"))
+    # C2: a FIXED path set with quarantine values, never read from the candidate.
+    # The quarantine pin says these unresolved bytes may not drift before D6a. It
+    # does NOT say C2's pooling semantics are correct, bound to a canonical rule,
+    # or validated -- D6a remains required.
+    for key, quarantined in DEFERRED_C2_QUARANTINE.items():
+        add(SemanticLeaf(f"{root}.derived_boundaries.C2.{key}",
+                         DEFERRED_OUT_OF_SCOPE, quarantined,
+                         "DEFERRED_C2_QUARANTINE (mutation quarantine only)",
+                         DEFERRED_C2_TRACKER))
     return tuple(out)
 
 
@@ -1903,8 +2056,6 @@ def require_size_semantics_leaf_totality(plan: dict[str, Any]) -> None:
             raise NormativeSurfaceUnclassified(
                 f"{path} is declared in the semantic-leaf registry but absent from "
                 "the plan; an authority leaf may not be silently dropped")
-        if leaf.mode == DEFERRED_OUT_OF_SCOPE:
-            continue
         value = actual[path]
         if leaf.expected != value or type(leaf.expected) is not type(value):
             raise ProspectiveAmendmentMismatch(
