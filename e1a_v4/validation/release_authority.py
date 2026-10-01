@@ -601,9 +601,12 @@ def final_campaign_requirements() -> tuple[str, ...]:
     """
     out: list[str] = []
     generated = {slot: rule for slot, rule in
-                 zip(_GENERATED_REQUIREMENT_SLOTS, FIELD_SIZE_RULES)}
+                 zip(_GENERATED_REQUIREMENT_SLOTS[1:], FIELD_SIZE_RULES)}
     size = len(FINAL_CAMPAIGN_REQUIREMENT_PINS) + len(_GENERATED_REQUIREMENT_SLOTS)
     for position in range(size):
+        if position == _GENERATED_REQUIREMENT_SLOTS[0]:
+            out.append(render_c2_requirement(index=position + 1))
+            continue
         rule = generated.get(position)
         if rule is not None:
             out.append(render_field_size_requirement(rule, position + 1))
@@ -697,6 +700,149 @@ def render_field_size_calibration_rationale(rule: FieldSizeRule) -> str:
         f"over {', '.join(rule.required_fields)}.")
 
 
+# ===================================================== the DERIVED C2 release rule
+#: C2's per-field release semantics, resolved by the D6a reconstruction
+#: (`docs/e1a/E1A_V4_C2_POOLING_AUTHORITY_RECONSTRUCTION.md`, report commit 91b21fa)
+#: and independently cleared. The rule is DERIVED, not EXACT: no controlling
+#: document states "pooling forbidden" literally. It is forced by three controlling
+#: facts, all predating the C3/C4 amendment:
+#:
+#:   1. contract `synthetic_validation_requirements[2]` requires the achieved joint
+#:      gate size AT EVERY DECLARED GEOMETRY, with R = 400;
+#:   2. prospective design section 12 makes `gate_pass` a PER-FIELD predicate inside
+#:      `AND over 4 fields`, so P1's elementary outcome is per field and its achieved
+#:      size is a per-field quantity;
+#:   3. that section's budget allocates `4 x alpha_geom = 0.02`, four separate
+#:      per-field P1 size events.
+#:
+#: A pooled assessment would still constrain an aggregate rejection rate. What it
+#: would NOT do is establish the contract's condition AT EVERY declared geometry:
+#: pooled over 4 x 400, the contract's own coarse ceiling admits 36 rejections while
+#: one declared geometry sits at 36/400 = 9.00%.
+#:
+#: "Four separate field-level rejection-count processes" is a bookkeeping statement.
+#: It asserts NO probabilistic independence between field outcomes, and the
+#: derivation needs none.
+C2_CASE_ID = "C2_geometry_false_rejection"
+C2_ELEMENTARY_EVENT = "P1_REJECTION_ONE_DECLARED_FIELD"
+C2_FINAL_COMBINATION = "ALL_REQUIRED_FIELD_CONDITIONS"
+C2_PRIMARY_ENDPOINT = "P1_FALSE_REJECTION_RATE_PER_FIELD"
+
+C2_DERIVATION_REASON = (
+    "DERIVED, not stated literally: contract synthetic_validation_requirements[2] "
+    "requires the achieved joint gate size AT EVERY DECLARED GEOMETRY with R = 400, "
+    "prospective design section 12 makes gate_pass a per-field predicate inside AND "
+    "over 4 fields, and that section's budget allocates 4 x alpha_geom. Together "
+    "these force four separate per-field release assessments; a pooled count would "
+    "constrain an aggregate rate but would not establish the required condition at "
+    "every declared geometry")
+
+#: The contract-facing trailing sentence C2's criterion has always carried.
+C2_CONTRACT_DIAGNOSTIC_SENTENCE = (
+    "MANDATORY CONTRACT DIAGNOSTIC [synthetic_validation_requirements[2]]: the "
+    "coarse one-sided 95% Clopper-Pearson UPPER bound MUST be reported per required "
+    "field and compared with the contract threshold 0.03, with an explicit PASS/FAIL. "
+    "It is not validation of alpha_geom and it is not the release gate; its absence "
+    "from a campaign result is RESULT_SCHEMA_INVALID.")
+
+C2_PURPOSE_COVERAGE = ("covering G1-G5, the two-block combination, mode resolution "
+                       "and structured refusals")
+
+
+@dataclass(frozen=True)
+class C2ReleaseRule:
+    """The complete C2 release semantics, in one canonical object."""
+
+    case_id: str
+    elementary_event: str
+    evaluation_scope: str
+    required_fields: tuple[str, ...]
+    replicates_per_field: int
+    nominal_alpha: float
+    alpha_name: str
+    boundary: int
+    field_reduction: str
+    pooling: str
+    final_combination: str
+    primary_endpoint: str
+    authority_relationship: str
+
+
+#: The declared-field roster is NOT duplicated here: per-field cases share one
+#: roster, and `require_c2_release_binding` checks it against the contract's own
+#: `fields` declaration, in declaration order.
+C2_RELEASE_RULE = C2ReleaseRule(
+    case_id=C2_CASE_ID,
+    elementary_event=C2_ELEMENTARY_EVENT,
+    evaluation_scope=EVALUATION_SCOPE_PER_FIELD,
+    required_fields=FIELD_SIZE_REQUIRED_FIELDS,
+    replicates_per_field=400,
+    nominal_alpha=0.005,
+    alpha_name="alpha_geom",
+    boundary=size_boundary(400, 0.005),
+    field_reduction=FIELD_REDUCTION_NONE,
+    pooling=POOLING_FORBIDDEN,
+    final_combination=C2_FINAL_COMBINATION,
+    primary_endpoint=C2_PRIMARY_ENDPOINT,
+    authority_relationship=DERIVED,
+)
+
+
+def render_c2_scientific_purpose(rule: C2ReleaseRule = C2_RELEASE_RULE) -> str:
+    """C2's purpose. GENERATED: the scope phrase comes from the canonical rule."""
+    scope = ("per declared field" if rule.evaluation_scope == EVALUATION_SCOPE_PER_FIELD
+             else rule.evaluation_scope)
+    return f"Achieved P1 false-rejection rate {scope}, {C2_PURPOSE_COVERAGE}"
+
+
+def render_c2_criterion(rule: C2ReleaseRule = C2_RELEASE_RULE) -> str:
+    """C2's complete formal pass/fail criterion. GENERATED, not hand-kept."""
+    pooled = "never pooled" if rule.pooling == POOLING_FORBIDDEN else "pooled"
+    return (
+        f"PER FIELD, {pooled}, R = {rule.replicates_per_field}, nominal "
+        f"{rule.alpha_name} = {rule.nominal_alpha}. Inflation is detected iff "
+        f"CP_lower(rejections, {rule.replicates_per_field}) > {rule.nominal_alpha}, "
+        f"i.e. {rule.boundary + 1} or more rejections -> STATISTICAL_SIZE_FAILURE. "
+        f"0-{rule.boundary} -> NO_SIGNIFICANT_SIZE_INFLATION_DETECTED, which means "
+        "this experiment did not establish excess size, NOT that nominal size is "
+        f"proved. {C2_CONTRACT_DIAGNOSTIC_SENTENCE}")
+
+
+def render_c2_assurance(rule: C2ReleaseRule = C2_RELEASE_RULE) -> dict[str, Any]:
+    """The GENERATED members of C2's assurance row."""
+    return {
+        "quantity": "P1 false-rejection rate, per field",
+        "unit": "per_field",
+        "pooling": rule.pooling,
+        "acceptance_rule": (
+            f"no inflation detected: CP_lower <= {rule.nominal_alpha}, i.e. <= "
+            f"{rule.boundary}/{rule.replicates_per_field}, per field"),
+    }
+
+
+def render_c2_boundary_rule(rule: C2ReleaseRule = C2_RELEASE_RULE) -> str:
+    """C2's section-12a derived-boundary prose. GENERATED."""
+    return (f"0-{rule.boundary} rejections: no significant inflation detected; "
+            f"{rule.boundary + 1}+ : STATISTICAL_SIZE_FAILURE")
+
+
+def render_c2_pooling_statement(rule: C2ReleaseRule = C2_RELEASE_RULE) -> str:
+    """C2's section-12a pooling sentence. GENERATED from the canonical rule."""
+    return f"{rule.pooling} - every field is reported separately"
+
+
+def render_c2_requirement(rule: C2ReleaseRule = C2_RELEASE_RULE,
+                          index: int = 2) -> str:
+    """C2's line in the final-campaign requirement list. GENERATED.
+
+    C2 contributes FOUR required field-level conditions to the conjunctive final
+    classification. That conjunction happens at CLASSIFICATION level and is NOT a
+    replicate-wide EVERY_FIELD event: the four field assessments stay separate.
+    """
+    return (f"{index}. {rule.case_id[:2]} produces no STATISTICAL_SIZE_FAILURE in any "
+            "required field")
+
+
 def case_release_specification(contract: dict[str, Any], root: str) -> tuple[CaseRelease, ...]:
     """Build the frozen per-case release rules from authoritative records only."""
     req2 = parse_requirement(_require_frozen_text(contract, 2),
@@ -756,8 +902,13 @@ def case_release_specification(contract: dict[str, Any], root: str) -> tuple[Cas
                           "an inflation test accepts while the bound stays within alpha"),
             target=_c(p1["alpha_geom"], EXACT, CONTRACT, "endpoints.P1_geometry.alpha_geom",
                       "the nominal geometry-gate size the test is about"),
-            pooling=_c(no_pool, EXACT, CONTRACT, r2,
-                       "'at every declared geometry' requires a per-field figure"),
+            # DERIVED, not EXACT. This repository defines EXACT as "the frozen
+            # authority states this value literally", and no controlling document
+            # states "pooling forbidden" for C2 -- the earlier validation plan does,
+            # but that is the MACHINE PLAN layer, below the contract, and cannot be
+            # the reason the rule derives from the contract. See
+            # docs/e1a/E1A_V4_C2_POOLING_AUTHORITY_RECONSTRUCTION.md.
+            pooling=_c(no_pool, DERIVED, CONTRACT, r2, C2_DERIVATION_REASON),
         ),
         CaseRelease(
             "C3_g5_block", 2, "per_field", "G5_BLOCK_SIZE",
@@ -1255,14 +1406,14 @@ SHARED_SIZE_SEMANTICS_PINS = {
 #: cases' approved text, held here as tripwires so the LIST ITSELF -- its
 #: length, membership and order -- is authority rather than a bag the
 #: candidate may add to.
-_GENERATED_REQUIREMENT_SLOTS = (2, 3)
+_GENERATED_REQUIREMENT_SLOTS = (1, 2, 3)
 
 FINAL_CAMPAIGN_REQUIREMENT_PINS = {
     0: (
         '1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 '
         '(>= 279/300)'
     ),
-    1: '2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field',
+    # 1: GENERATED from C2_RELEASE_RULE (render_c2_requirement)
     # 2: GENERATED from FIELD_SIZE_RULES (render_field_size_requirement)
     # 3: GENERATED from FIELD_SIZE_RULES (render_field_size_requirement)
     4: '5. C5 satisfies its already-frozen plug-in Branch-A criterion',
@@ -1311,29 +1462,66 @@ CASE_LIST_PINS = {
     },
 }
 
-#: The EXACT nine pre-existing C2 derived-boundary leaves, enumerated here
-#: and NOT read from the candidate. The r8 audit added a tenth key under C2
-#: and the checker deferred it automatically, because the exception set was
-#: derived from whatever the candidate happened to carry -- a self-
-#: authorising exception.
-#:
-#: The pinned value is a MUTATION QUARANTINE, not a scientific endorsement.
-#: It says these unresolved bytes may not drift before D6a. It does NOT say
-#: C2's pooling semantics are correct, bound to any canonical rule, or
-#: validated. D6a remains REQUIRED.
-DEFERRED_C2_QUARANTINE = {
-    "replicates": 400,
-    "nominal_alpha": 0.005,
-    "boundary": 5,
-    "cp_lower_at_boundary": 0.004937934174346348,
-    "cp_lower_at_boundary_plus_1": 0.006552145786997754,
-    "rule": (
-        '0-5 rejections: no significant inflation detected; 6+ : '
-        'STATISTICAL_SIZE_FAILURE'
+
+
+
+#: C2's remaining case strings and membership-bearing lists. Exact pins, the same
+#: tripwire treatment the C3/C4 records carry: they belong to other dispositions
+#: (the frozen purpose, G3 seed grants, calibration scope) and are frozen here so
+#: none can quietly acquire release semantics.
+C2_CASE_PROSE_PINS = {
+    "v4_classification": 'RETAINED BUT UPDATED FOR V4',
+    "authority": 'design section 15 item 3',
+    "truth_model": 'true null K_theta = H_theta',
+    "geometry_truth": 'as declared per field',
+    "branch_a_uncertainty": (
+        'frozen candidate scenario: sigma_k = 0.34%, sigma_cm = 1.15%, '
+        'sigma_T = 0.1 K; sigma_psi PRIMARY = 0.5 deg, with 0.0/0.2 deg '
+        'secondary and 1.0 deg stress, reported separately and never '
+        'pooled [disposition G3]'
     ),
-    "per_field": True,
-    "pooling": 'FORBIDDEN - every field is reported separately',
-    "replicate_reduction": 'NONE',
+    "branch_b_process": (
+        'declared correlated OU, exact transition, stationary '
+        'initialisation x0 ~ N(x*, Sigma_theta)'
+    ),
+    "expected_qualitative_outcome": 'false rejection at or below alpha_geom = 0.5%',
+    "seed_family": 'validation',
+    "role": 'primary',
+    "v4_classification_note": 'alpha_geom 1% -> 0.5%, two-block union rule',
+    "allowed_seed_families_rationale": (
+        'REPLICATE-CONDITIONAL CALIBRATION: this case evaluates a P1 / '
+        'Block-1 quantity and builds its own artifact per subcondition, '
+        'replicate and field. Branch-A measurement is realised per '
+        'replicate from its own family.'
+    ),
+    "allowed_seed_families_authority": (
+        'derived from the frozen generator design '
+        '(generating_model.branch_a, truth_visibility) and disposition '
+        'G3; not invented for this repair'
+    ),
+    "branch_a_uncertainty_status": 'STOCHASTIC_PER_REPLICATE',
+    "calibration_scope": 'REPLICATE_CONDITIONAL',
+    "calibration_artifact_basis": (
+        '400 replicates x 4 subconditions x 4 fields requiring '
+        'calibration = 6,400'
+    ),
+    "calibration_scope_rationale": (
+        'the declared Branch-A uncertainty scenario is REALISED per '
+        'replicate from the branch_a_measurement family, so H_A and '
+        'therefore the Block-1 null law differ between replicates. One '
+        'nominal per-field artifact would analyse independently realised '
+        'conditions against a null that belongs to none of them.'
+    ),
+}
+
+C2_CASE_LIST_PINS = {
+    "allowed_seed_families": ['calibration', 'validation', 'branch_a_measurement'],
+    "subconditions": [
+        {'subcondition_id': 'sigma_psi_0p0', 'sigma_psi_deg': 0.0, 'g3_role': 'SECONDARY', 'feeds_primary_claim': False},
+        {'subcondition_id': 'sigma_psi_0p2', 'sigma_psi_deg': 0.2, 'g3_role': 'SECONDARY', 'feeds_primary_claim': False},
+        {'subcondition_id': 'sigma_psi_0p5', 'sigma_psi_deg': 0.5, 'g3_role': 'PRIMARY', 'feeds_primary_claim': True},
+        {'subcondition_id': 'sigma_psi_1p0', 'sigma_psi_deg': 1.0, 'g3_role': 'STRESS', 'feeds_primary_claim': False},
+    ],
 }
 
 
@@ -1532,6 +1720,73 @@ def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, 
                          GENERATED_FROM_CANONICAL, "section 12a boundary table",
                          rule.retention_statement, declared))
 
+    # ------------------------------------------- C2, bound to its DERIVED rule
+    c2 = C2_RELEASE_RULE
+    c2_index, c2_case = cases.get(c2.case_id, (None, {}))
+    c2p = f"cases[{c2_index}]"
+    c2_row = assurance.get(c2.case_id) or {}
+    for key, mode, expected in (
+            ("case_id", STRICTLY_VERIFIED_DUPLICATE, c2.case_id),
+            ("scientific_purpose", GENERATED_FROM_CANONICAL,
+             render_c2_scientific_purpose()),
+            ("formal_pass_fail_criterion", GENERATED_FROM_CANONICAL,
+             render_c2_criterion()),
+            ("fields_affected", GENERATED_FROM_CANONICAL, list(c2.required_fields)),
+            ("primary_release_endpoint", GENERATED_FROM_CANONICAL,
+             c2.primary_endpoint),
+            ("replicate_count", STRICTLY_VERIFIED_DUPLICATE, c2.replicates_per_field),
+            ("block1_role", STRICTLY_VERIFIED_DUPLICATE, "PRIMARY_RELEASE_ENDPOINT")):
+        add(_surface("C2", key, c2p, key, mode, "generated cases region", expected,
+                     c2_case))
+    for key, expected in {**C2_CASE_PROSE_PINS, **C2_CASE_LIST_PINS}.items():
+        add(_surface("C2", f"pinned case {key}", c2p, key,
+                     STRICTLY_VERIFIED_DUPLICATE, "generated cases region", expected,
+                     c2_case))
+    c2a = f"assurance[{c2.case_id}]"
+    for key, expected in render_c2_assurance().items():
+        add(_surface("C2", f"assurance {key}", c2a, key, GENERATED_FROM_CANONICAL,
+                     "generated assurance region", expected, c2_row))
+    for key, mode, expected in (
+            ("case_id", STRICTLY_VERIFIED_DUPLICATE, c2.case_id),
+            ("target", GENERATED_FROM_CANONICAL,
+             f"{c2.alpha_name} = {c2.nominal_alpha}"),
+            ("target_value", STRICTLY_VERIFIED_DUPLICATE, c2.nominal_alpha),
+            ("comparison", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_COMPARISON),
+            ("confidence_level", STRICTLY_VERIFIED_DUPLICATE,
+             FIELD_SIZE_CONFIDENCE_LEVEL),
+            ("sided", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_SIDED),
+            ("method", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_METHOD),
+            ("bound_direction", STRICTLY_VERIFIED_DUPLICATE,
+             FIELD_SIZE_BOUND_DIRECTION),
+            ("estimator", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_ESTIMATOR),
+            ("bound", STRICTLY_VERIFIED_DUPLICATE,
+             "Clopper-Pearson one-sided LOWER (inflation test)"),
+            ("replicates", STRICTLY_VERIFIED_DUPLICATE, c2.replicates_per_field),
+            ("integer_boundary", STRICTLY_VERIFIED_DUPLICATE, c2.boundary),
+            ("boundary_derivation", STRICTLY_VERIFIED_DUPLICATE,
+             FIELD_SIZE_BOUNDARY_DERIVATION),
+            ("assurance_at_design_target", STRICTLY_VERIFIED_DUPLICATE,
+             "0.996 if the true rate is 0.005")):
+        add(_surface("C2", f"assurance {key}", c2a, key, mode,
+                     "generated assurance region", expected, c2_row))
+    c2b = "derived_boundaries.C2"
+    c2_declared = boundaries.get("C2") or {}
+    for key, mode, expected in (
+            ("replicates", STRICTLY_VERIFIED_DUPLICATE, c2.replicates_per_field),
+            ("nominal_alpha", STRICTLY_VERIFIED_DUPLICATE, c2.nominal_alpha),
+            ("boundary", STRICTLY_VERIFIED_DUPLICATE, c2.boundary),
+            ("cp_lower_at_boundary", STRICTLY_VERIFIED_DUPLICATE,
+             cp_lower(c2.boundary, c2.replicates_per_field)),
+            ("cp_lower_at_boundary_plus_1", STRICTLY_VERIFIED_DUPLICATE,
+             cp_lower(c2.boundary + 1, c2.replicates_per_field)),
+            ("rule", GENERATED_FROM_CANONICAL, render_c2_boundary_rule()),
+            ("per_field", GENERATED_FROM_CANONICAL,
+             c2.evaluation_scope == EVALUATION_SCOPE_PER_FIELD),
+            ("pooling", GENERATED_FROM_CANONICAL, render_c2_pooling_statement()),
+            ("replicate_reduction", GENERATED_FROM_CANONICAL, c2.field_reduction)):
+        add(_surface("C2", f"derived boundary {key}", c2b, key, mode,
+                     "section 12a boundary table", expected, c2_declared))
+
     # ------------------------------- shared size-validation semantics (C2/C3/C4)
     svs = plan["size_validation_semantics"]
     for key, expected in SHARED_SIZE_SEMANTICS_PINS.items():
@@ -1595,6 +1850,11 @@ def _controlled_containers(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
         out[f"assurance[{rule.case_id}]"] = assurance.get(rule.case_id) or {}
         out[f"derived_boundaries.{rule.case_id[:2]}"] = boundaries.get(
             rule.case_id[:2]) or {}
+    # C2 joins the exhaustively swept set now that its rule is bound: its assurance
+    # row and derived-boundary block are release semantics end to end.
+    out[f"assurance[{C2_RELEASE_RULE.case_id}]"] = assurance.get(
+        C2_RELEASE_RULE.case_id) or {}
+    out["derived_boundaries.C2"] = boundaries.get("C2") or {}
     out["final_campaign_classification"] = plan["final_campaign_classification"]
     return out
 
@@ -1612,8 +1872,9 @@ def _prose_controlled_records(plan: dict[str, Any]) -> dict[str, dict[str, Any]]
     exactly how the fourth audit turned an explanatory sentence into a release
     condition, so every string here must be generated or pinned.
     """
+    controlled = set(FIELD_SIZE_RULES_BY_CASE) | {C2_RELEASE_RULE.case_id}
     out = {f"cases[{i}]": case for i, case in enumerate(plan["cases"])
-           if case.get("case_id") in FIELD_SIZE_RULES_BY_CASE}
+           if case.get("case_id") in controlled}
     out["size_validation_semantics"] = plan["size_validation_semantics"]
     return out
 
@@ -1868,16 +2129,15 @@ SUPERSEDED_CRITERION_PINS = {
 #: authorises nothing below it.
 SIZE_SEMANTICS_ROOT = "size_validation_semantics"
 
-#: The task that owns the unresolved C2 pooling authority.
-DEFERRED_C2_TRACKER = "D6a - C2 pooling authority-text binding"
-
-#: The EXACT deferred leaf paths, built from the fixed quarantine table above and
-#: NOT from the candidate. The candidate can therefore neither expand this set (a
-#: tenth C2 key is an undeclared leaf) nor shrink it silently (a declared leaf
-#: that disappears is refused) nor rename within it.
-DEFERRED_C2_LEAF_PATHS = tuple(
-    f"size_validation_semantics.derived_boundaries.C2.{key}"
-    for key in DEFERRED_C2_QUARANTINE)
+#: RETIRED BY D6a3. C2's nine derived-boundary leaves were byte-quarantined while
+#: their science was unresolved; the D6a reconstruction resolved it, so they are now
+#: generated or strictly verified from `C2_RELEASE_RULE` like any other bound leaf.
+#:
+#: The mechanism itself is kept, empty: the deferred set must stay declared
+#: independently of the candidate, so that a future exception cannot be created by
+#: the document that would benefit from it. An empty expected set means every leaf
+#: under the controlled subtree must now carry a real classification.
+DEFERRED_C2_LEAF_PATHS: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -1973,15 +2233,10 @@ def size_semantics_leaves(plan: dict[str, Any]) -> tuple[SemanticLeaf, ...]:
             continue
         add(SemanticLeaf(f"{root}.{entry.path}", entry.mode, entry.expected,
                          "normative_surface_registry"))
-    # C2: a FIXED path set with quarantine values, never read from the candidate.
-    # The quarantine pin says these unresolved bytes may not drift before D6a. It
-    # does NOT say C2's pooling semantics are correct, bound to a canonical rule,
-    # or validated -- D6a remains required.
-    for key, quarantined in DEFERRED_C2_QUARANTINE.items():
-        add(SemanticLeaf(f"{root}.derived_boundaries.C2.{key}",
-                         DEFERRED_OUT_OF_SCOPE, quarantined,
-                         "DEFERRED_C2_QUARANTINE (mutation quarantine only)",
-                         DEFERRED_C2_TRACKER))
+    # C2's nine leaves were byte-quarantined by F1e because their science was
+    # unresolved. D6a resolved it, so they are carried by the loop above like C3's
+    # and C4's -- generated or strictly verified from the canonical rule -- and the
+    # quarantine is retired.
     return tuple(out)
 
 
@@ -2062,6 +2317,48 @@ def require_size_semantics_leaf_totality(plan: dict[str, Any]) -> None:
                 f"{path} does not express the approved authority: plan {value!r}, "
                 f"canonical {leaf.expected!r} (source: {leaf.source})")
 
+
+
+def require_c2_release_binding(contract: dict[str, Any],
+                               plan: dict[str, Any]) -> None:
+    """C2's per-field release rule, bound to the authority it is DERIVED from.
+
+    Two things are checked that the surface registry alone cannot:
+
+    1. the declared-field ROSTER the rule quantifies over is the contract's own
+       `fields` declaration, in declaration order -- the rule does not carry its
+       own copy of the field list;
+    2. the rule still says what the D6a reconstruction derived, so a later edit to
+       the canonical object itself is caught rather than silently re-generating a
+       different plan.
+    """
+    declared = tuple(field["id"] for field in contract["fields"])
+    if C2_RELEASE_RULE.required_fields != declared:
+        raise ProspectiveAmendmentMismatch(
+            "the C2 release rule quantifies over "
+            f"{C2_RELEASE_RULE.required_fields}, but the contract declares "
+            f"{declared}; the roster must be the contract's own field declaration")
+    for name, expected in (
+            ("elementary_event", C2_ELEMENTARY_EVENT),
+            ("evaluation_scope", EVALUATION_SCOPE_PER_FIELD),
+            ("field_reduction", FIELD_REDUCTION_NONE),
+            ("pooling", POOLING_FORBIDDEN),
+            ("final_combination", C2_FINAL_COMBINATION),
+            ("primary_endpoint", C2_PRIMARY_ENDPOINT),
+            ("authority_relationship", DERIVED),
+            ("replicates_per_field", 400),
+            ("nominal_alpha", 0.005)):
+        if getattr(C2_RELEASE_RULE, name) != expected:
+            raise ProspectiveAmendmentMismatch(
+                f"the canonical C2 release rule's {name} is "
+                f"{getattr(C2_RELEASE_RULE, name)!r}, not the derived {expected!r}")
+    # The integer boundary is DERIVED, never copied.
+    recomputed = size_boundary(C2_RELEASE_RULE.replicates_per_field,
+                               C2_RELEASE_RULE.nominal_alpha)
+    if C2_RELEASE_RULE.boundary != recomputed:
+        raise ProspectiveAmendmentMismatch(
+            f"the C2 integer boundary is DERIVED as {recomputed}, but the canonical "
+            f"rule carries {C2_RELEASE_RULE.boundary}")
 
 
 def require_field_size_amendment(plan: dict[str, Any]) -> None:
@@ -2493,6 +2790,7 @@ def require_release_authority_conformance(contract: dict[str, Any], plan: dict[s
             "the plan carries no release_authority block; release-bearing statistics "
             "would have no machine-readable binding to frozen authority")
     require_c2_implies_contract_diagnostic(contract)
+    require_c2_release_binding(contract, plan)
     require_field_size_surface_totality(plan)
     require_size_semantics_leaf_totality(plan)
     require_field_size_amendment(plan)

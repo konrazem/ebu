@@ -59,8 +59,14 @@ from e1a_v4.validation.release_authority import (
     CASE_PROSE_PINS, CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER,
     NON_NORMATIVE_EXPLANATION, NOT_APPLICABLE, SHARED_SIZE_SEMANTICS_PINS,
     FIELD_SIZE_RULES, FIELD_SIZE_RULES_BY_CASE, VERIFICATION_MODES,
-    CASE_LIST_PINS, DEFERRED_C2_LEAF_PATHS, DEFERRED_C2_QUARANTINE,
-    DEFERRED_C2_TRACKER, DEFERRED_OUT_OF_SCOPE,
+    C2_CASE_LIST_PINS, C2_CASE_PROSE_PINS, C2_RELEASE_RULE,
+    CASE_LIST_PINS, DEFERRED_C2_LEAF_PATHS, DEFERRED_OUT_OF_SCOPE,
+    render_c2_assurance, render_c2_boundary_rule, render_c2_criterion,
+    render_c2_pooling_statement, render_c2_requirement,
+    render_c2_scientific_purpose, require_c2_release_binding,
+    C2_DERIVATION_REASON, FIELD_SIZE_DISPOSITION_AFFECTS,
+    FIELD_SIZE_REQUIRED_FIELDS, GENERATED_FROM_CANONICAL,
+    STRICTLY_VERIFIED_DUPLICATE,
     FINAL_CAMPAIGN_REQUIREMENT_PINS, TWO_QUESTIONS_COMPLETE_PIPELINE_PIN,
     final_campaign_requirements,
     render_component_size_question, render_field_size_block1_role,
@@ -1539,7 +1545,7 @@ def test_c3_c4_normative_surface_totality() -> None:
     check("UNCLASSIFIED NORMATIVE C3/C4 LOCATIONS = 0",
           counts["unclassified_normative_amendment_fields"] == 0, str(counts))
     check("the registry covers every controlled container",
-          counts["controlled_containers"] == 8, str(counts))
+          counts["controlled_containers"] == 10, str(counts))
     check("the mode counts account for every registered location",
           counts["generated_normative_fields"]
           + counts["strictly_verified_duplicate_fields"]
@@ -2199,38 +2205,36 @@ def test_nested_semantic_leaf_totality() -> None:
     finally:
         release_authority.FIELD_RULE_PROSE_TOKENS = saved
 
-    # --- C2 is enumerated but DELIBERATELY NOT bound (tracked separately) ---
-    deferred = [l for l in size_semantics_leaves(plan)
-                if l.mode == DEFERRED_OUT_OF_SCOPE]
-    check("C2's derived-boundary leaves are enumerated and classified",
-          deferred and all(".derived_boundaries.C2." in l.path for l in deferred),
-          f"{len(deferred)} leaves")
-    check("each deferred leaf names the task that owns it",
-          all(l.deferred_to for l in deferred),
-          str({l.deferred_to for l in deferred}))
-    # F1e-r9 CHANGES THIS DELIBERATELY. C2's unresolved leaves are now MUTATION-
-    # QUARANTINED: their text may not drift before D6a, so the contrary rewrite
-    # refuses. That is a tripwire on the bytes, NOT a scientific clearance -- the
-    # two claims are asserted separately below.
+    # --- D6a3 REPLACES THE QUARANTINE WITH REAL AUTHORITY -------------------
+    # F1e-r9 byte-quarantined C2's nine leaves while their science was unresolved
+    # and asserted, correctly for that stage, that this was NOT a clearance. D6a
+    # resolved the science (DERIVED from the contract's "at every declared
+    # geometry" plus design section 12), so the leaves now carry real
+    # classifications and the quarantine is retired.
+    check("no leaf remains DEFERRED: the C2 quarantine is retired",
+          not [l for l in size_semantics_leaves(plan)
+               if l.mode == DEFERRED_OUT_OF_SCOPE])
+    check("the deferred path registry is empty and still candidate-independent",
+          DEFERRED_C2_LEAF_PATHS == ())
+    c2_leaves = [l for l in size_semantics_leaves(plan)
+                 if ".derived_boundaries.C2." in l.path]
+    check("C2's nine derived-boundary leaves are generated or strictly verified",
+          len(c2_leaves) == 9
+          and all(l.mode in (GENERATED_FROM_CANONICAL, STRICTLY_VERIFIED_DUPLICATE)
+                  for l in c2_leaves),
+          str(sorted({l.mode for l in c2_leaves})))
     c2 = copy.deepcopy(plan)
     c2["size_validation_semantics"]["derived_boundaries"]["C2"]["pooling"] = (
         "POOLED - all four field counts summed")
-    check("MUTATION QUARANTINE closed: C2's unresolved text may not drift",
+    check("the C2 pooling rewrite refuses against the DERIVED canonical rule",
           refusal_code(require_size_semantics_leaf_totality, c2)
           == "PROSPECTIVE_AMENDMENT_MISMATCH")
-    check("SCIENTIFIC C2 POOLING AUTHORITY still OPEN: C2 has no canonical rule",
-          "C2" not in FIELD_SIZE_RULES_BY_CASE
-          and "C2_geometry_false_rejection" not in FIELD_SIZE_RULES_BY_CASE,
+    check("C2 is bound by its OWN rule, not by the C3/C4 amendment",
+          not any(key.startswith("C2") for key in FIELD_SIZE_RULES_BY_CASE)
+          and C2_RELEASE_RULE.case_id == "C2_geometry_false_rejection",
           str(sorted(FIELD_SIZE_RULES_BY_CASE)))
-    check("C2's leaves are classified DEFERRED and name the task that owns them",
-          all(leaf.deferred_to == DEFERRED_C2_TRACKER
-              for leaf in size_semantics_leaves(plan)
-              if leaf.mode == DEFERRED_OUT_OF_SCOPE)
-          and "D6a" in DEFERRED_C2_TRACKER, DEFERRED_C2_TRACKER)
-    check("the quarantine source says quarantine, not approval",
-          all("quarantine" in leaf.source.lower()
-              for leaf in size_semantics_leaves(plan)
-              if leaf.mode == DEFERRED_OUT_OF_SCOPE))
+    check("C2's authority relationship is DERIVED, not EXACT",
+          C2_RELEASE_RULE.authority_relationship == DERIVED)
 
     # --- the earlier repairs still hold -------------------------------------
     c3_path = (f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics."
@@ -2387,11 +2391,13 @@ def test_list_and_deferred_scope_totality() -> None:
           list(canonical) == reqs, f"{len(canonical)} vs {len(reqs)}")
     check("ORDER is normative: every line carries its own ordinal",
           all(line.startswith(f"{i + 1}. ") for i, line in enumerate(canonical)))
-    check("the canonical list is built from pins plus the generated C3/C4 slots",
-          len(canonical) == len(FINAL_CAMPAIGN_REQUIREMENT_PINS) + len(FIELD_SIZE_RULES))
-    check("the C3 and C4 slots are GENERATED, not pinned",
-          2 not in FINAL_CAMPAIGN_REQUIREMENT_PINS
-          and 3 not in FINAL_CAMPAIGN_REQUIREMENT_PINS)
+    check("the canonical list is built from pins plus the generated C2/C3/C4 slots",
+          len(canonical) == len(FINAL_CAMPAIGN_REQUIREMENT_PINS)
+          + len(FIELD_SIZE_RULES) + 1)
+    check("the C2, C3 and C4 slots are GENERATED, not pinned",
+          not {1, 2, 3} & set(FINAL_CAMPAIGN_REQUIREMENT_PINS))
+    check("slot 2 is the generated C2 line",
+          canonical[1] == render_c2_requirement(index=2))
     for rule in FIELD_SIZE_RULES:
         position = 3 if rule.case_id.startswith("C3") else 4
         check(f"slot {position} is the generated {rule.case_id[:2]} line",
@@ -2449,9 +2455,10 @@ def test_list_and_deferred_scope_totality() -> None:
           "0 unexpected passes", not loose, str(loose))
 
     # --- the deferred exception set is FIXED --------------------------------
-    check("the deferred C2 path set is declared independently of the candidate",
-          len(DEFERRED_C2_LEAF_PATHS) == len(DEFERRED_C2_QUARANTINE) == 9,
-          str(len(DEFERRED_C2_LEAF_PATHS)))
+    # D6a3 retired the quarantine: the registry is empty, and the mechanism is
+    # kept so a future exception still could not be created by the candidate.
+    check("the deferred C2 path set is retired and declared independently",
+          DEFERRED_C2_LEAF_PATHS == (), str(DEFERRED_C2_LEAF_PATHS))
     observed = {leaf.path for leaf in size_semantics_leaves(plan)
                 if leaf.mode == DEFERRED_OUT_OF_SCOPE}
     check("the observed deferred set equals the fixed expected set",
@@ -2515,25 +2522,28 @@ def test_list_and_deferred_scope_totality() -> None:
     check("controlled normative lists are counted, not hand-listed",
           counts["controlled_normative_lists"] >= 7
           and counts["canonical_list_elements"] >= 30, str(counts))
-    check("deferred expected equals deferred observed",
+    check("deferred expected equals deferred observed, both now zero",
           counts["deferred_exception_paths_expected"]
-          == counts["deferred_exception_paths_observed"] == 9, str(counts))
+          == counts["deferred_exception_paths_observed"] == 0, str(counts))
 
     # --- C2: quarantine CLOSED, science still OPEN --------------------------
+    # D6a3: the quarantine is replaced by a real DERIVED binding.
     quarantined = copy.deepcopy(plan)
     _c2_branch(quarantined)["pooling"] = "POOLED - all four counts summed"
-    check("MUTATION QUARANTINE closed: the C2 pooling rewrite now refuses",
+    check("the C2 pooling rewrite refuses against the canonical DERIVED rule",
           _authority_code(quarantined) == "PROSPECTIVE_AMENDMENT_MISMATCH")
-    check("SCIENTIFIC C2 POOLING AUTHORITY still OPEN: no canonical C2 rule exists",
-          not any(key.startswith("C2") for key in FIELD_SIZE_RULES_BY_CASE),
-          str(sorted(FIELD_SIZE_RULES_BY_CASE)))
-    check("C2's pooling text is quarantined, NOT generated from a canonical rule",
-          all(leaf.mode == DEFERRED_OUT_OF_SCOPE
-              and "quarantine" in leaf.source.lower()
-              for leaf in size_semantics_leaves(plan)
-              if ".derived_boundaries.C2." in leaf.path))
-    check("D6a is named as the owner of the unresolved C2 authority",
-          "D6a" in DEFERRED_C2_TRACKER, DEFERRED_C2_TRACKER)
+    check("C2's pooling text is GENERATED from the canonical rule",
+          next(l for l in size_semantics_leaves(plan)
+               if l.path.endswith("derived_boundaries.C2.pooling")).mode
+          == GENERATED_FROM_CANONICAL)
+    check("no C2 leaf is deferred any more",
+          not [l for l in size_semantics_leaves(plan)
+               if ".derived_boundaries.C2." in l.path
+               and l.mode == DEFERRED_OUT_OF_SCOPE])
+    check("C2's pooling binding is now DERIVED with a derivation reason",
+          C2_RELEASE_RULE.authority_relationship == DERIVED
+          and "at every declared geometry" in C2_DERIVATION_REASON.lower()
+          .replace("AT EVERY DECLARED GEOMETRY".lower(), "at every declared geometry"))
 
     # --- earlier repairs still hold ----------------------------------------
     c3_path = (f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics."
@@ -2584,6 +2594,286 @@ def test_list_and_deferred_scope_totality() -> None:
           and "positively associated" not in gap["resolution"])
 
 
+# ------------------------- 21. C2 DERIVED per-field authority binding (D6a3)
+#: Wrong C2 semantics, in the five shapes the D6a reconstruction ruled out.
+C2_CONTRARY_TEXTS = (
+    ("pool all fields", "POOLED across all four fields into one count"),
+    ("ANY_FIELD event", "ANY_FIELD replicate event over the four fields"),
+    ("EVERY_FIELD event", "EVERY_FIELD replicate event over the four fields"),
+    ("reference-field-only",
+     "assessed on the reference field theta0_circular alone"),
+    ("single pooled 1600", "one pooled count over 1600 field observations"),
+)
+
+#: The four surfaces the D6a1 audit confirmed were unguarded.
+C2_PROSE_SURFACES = (
+    ("cases[C2].scientific_purpose", "cases", "scientific_purpose"),
+    ("cases[C2].formal_pass_fail_criterion", "cases", "formal_pass_fail_criterion"),
+    ("assurance[C2].quantity", "assurance", "quantity"),
+    ("assurance[C2].acceptance_rule", "assurance", "acceptance_rule"),
+)
+
+
+def _c2_case(plan):
+    return plan["cases"][_case_index(plan, "C2_geometry_false_rejection")]
+
+
+def _c2_assurance(plan):
+    return next(r for r in plan["assurance"]
+                if r["case_id"] == "C2_geometry_false_rejection")
+
+
+def _c2_boundary(plan):
+    return plan["size_validation_semantics"]["derived_boundaries"]["C2"]
+
+
+def test_c2_derived_authority_binding() -> None:
+    """D6a3. C2's per-field release rule, bound to the authority it derives from.
+
+    The D6a reconstruction established -- and an independent audit cleared -- that
+    C2's elementary event is a P1 rejection for ONE declared field, that the case
+    is four separate R = 400 rejection-count processes, that pooling is FORBIDDEN
+    and within-replicate field reduction is NONE, and that this is **DERIVED** from
+    higher authority rather than stated literally by it.
+
+    Before this repair four C2 normative surfaces were semantically free, and the
+    nine `derived_boundaries.C2.*` leaves were protected only by a byte quarantine
+    that explicitly did not validate their science. Both are now replaced by
+    generation from one canonical rule.
+
+    "Four separate field-level rejection-count processes" is bookkeeping. It
+    asserts no probabilistic independence between field outcomes, and the
+    derivation needs none.
+    """
+    plan = load_plan(ROOT)
+    contract = strict_load_file(os.path.join(ROOT, CONTRACT_JSON), "the contract")
+    rule = C2_RELEASE_RULE
+
+    # --- the canonical rule says what D6a derived ---------------------------
+    check("C2 elementary event is a P1 rejection for one declared field",
+          rule.elementary_event == "P1_REJECTION_ONE_DECLARED_FIELD")
+    check("C2 evaluation scope is PER_FIELD", rule.evaluation_scope == "PER_FIELD")
+    check("C2 within-replicate field reduction is NONE",
+          rule.field_reduction == "NONE")
+    check("C2 pooling is FORBIDDEN", rule.pooling == "FORBIDDEN")
+    check("C2 contributes ALL required field conditions to the final conjunction",
+          rule.final_combination == "ALL_REQUIRED_FIELD_CONDITIONS")
+    check("C2 authority relationship is DERIVED, not EXACT",
+          rule.authority_relationship == DERIVED)
+    check("the derivation reason names the controlling clause and the design budget",
+          "AT EVERY DECLARED GEOMETRY" in C2_DERIVATION_REASON
+          and "4 x alpha_geom" in C2_DERIVATION_REASON
+          and "per-field predicate" in C2_DERIVATION_REASON)
+    check("the reason states what a pooled count WOULD still do",
+          "constrain an aggregate rate" in C2_DERIVATION_REASON)
+    check("the live plan satisfies the C2 release binding",
+          refusal_code(require_c2_release_binding, contract, plan) is None)
+
+    # --- the numeric size rule is unchanged and DERIVED ----------------------
+    check("C2 R = 400 per field", rule.replicates_per_field == 400)
+    check("C2 nominal alpha_geom = 0.005",
+          rule.nominal_alpha == 0.005 and rule.alpha_name == "alpha_geom")
+    check("C2 integer boundary is RECOMPUTED as 5, never copied",
+          rule.boundary == size_boundary(400, 0.005) == 5)
+    check("CP lower at 5/400 and 6/400 are unchanged",
+          abs(cp_lower(5, 400) - 0.004937934174346348) < 1e-15
+          and abs(cp_lower(6, 400) - 0.006552145786997754) < 1e-15,
+          f"{cp_lower(5, 400):.8f} / {cp_lower(6, 400):.8f}")
+    check("5/400 is clean and 6/400 detects inflation",
+          cp_lower(5, 400) <= 0.005 < cp_lower(6, 400))
+
+    # --- the roster comes from the contract, not a private copy -------------
+    declared = tuple(f["id"] for f in contract["fields"])
+    check("the C2 roster IS the contract's declared field list, in order",
+          rule.required_fields == declared, str(declared))
+    check("the roster is the shared per-field roster, not a duplicate",
+          rule.required_fields is FIELD_SIZE_REQUIRED_FIELDS)
+
+    # --- every C2 surface is generated or strictly verified ------------------
+    case, row, boundary = _c2_case(plan), _c2_assurance(plan), _c2_boundary(plan)
+    check("scientific_purpose is the generated canonical text",
+          case["scientific_purpose"] == render_c2_scientific_purpose())
+    check("formal_pass_fail_criterion is the generated canonical text",
+          case["formal_pass_fail_criterion"] == render_c2_criterion())
+    for key, expected in render_c2_assurance().items():
+        check(f"assurance[C2].{key} is generated", row[key] == expected)
+    check("derived boundary rule is generated",
+          boundary["rule"] == render_c2_boundary_rule())
+    check("derived boundary pooling is generated and says FORBIDDEN",
+          boundary["pooling"] == render_c2_pooling_statement()
+          and boundary["pooling"].startswith("FORBIDDEN"))
+    check("derived boundary per_field is generated true", boundary["per_field"] is True)
+    check("derived boundary replicate_reduction is generated NONE",
+          boundary["replicate_reduction"] == "NONE")
+    check("the C2 final-campaign line is generated",
+          plan["final_campaign_classification"]["requirements"][1]
+          == render_c2_requirement(index=2))
+
+    surfaces = [s for s in normative_surface_registry(plan) if s.case == "C2"]
+    check("C2's whole normative surface is registered",
+          len(surfaces) >= 45, str(len(surfaces)))
+    check("UNBOUND C2 RULE-BEARING LOCATIONS = 0",
+          all(s.mode in (GENERATED_FROM_CANONICAL, STRICTLY_VERIFIED_DUPLICATE)
+              for s in surfaces),
+          str(sorted({s.mode for s in surfaces})))
+    check("no C2 surface is semantically free",
+          not [s for s in surfaces if s.mode == NON_NORMATIVE_EXPLANATION])
+
+    # --- NO SELF-VALIDATION -------------------------------------------------
+    for path, token, replacement in (
+            (f"cases[{_case_index(plan, 'C2_geometry_false_rejection')}]"
+             ".formal_pass_fail_criterion", "PER FIELD, never pooled", "POOLED"),
+            ("size_validation_semantics.derived_boundaries.C2.pooling",
+             "FORBIDDEN", "ALLOWED")):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, path, _text_swap(path_get(mutant, path), token, replacement))
+        honest = {s.path: s.expected for s in normative_surface_registry(plan)}
+        corrupt = {s.path: s.expected for s in normative_surface_registry(mutant)}
+        check(f"the expected value for {path.split('.')[-1]} is INDEPENDENT of the "
+              "plan text", honest == corrupt)
+
+    # --- the five alternative interpretations -------------------------------
+    alternatives = (
+        ("A. PER_FIELD / no pooling (canonical)", None, None),
+        ("B. ANY_FIELD replicate event",
+         "size_validation_semantics.derived_boundaries.C2.replicate_reduction",
+         "ANY_FIELD"),
+        ("C. EVERY_FIELD replicate event",
+         "size_validation_semantics.derived_boundaries.C2.replicate_reduction",
+         "EVERY_FIELD"),
+        ("D. pooled 1600 field observations",
+         "size_validation_semantics.derived_boundaries.C2.pooling",
+         "POOLED - all four field counts summed over 1600 observations"),
+        ("E. reference-field-only",
+         f"cases[{_case_index(plan, 'C2_geometry_false_rejection')}].fields_affected",
+         ["theta0_circular"]),
+    )
+    for label, path, value in alternatives:
+        mutant = copy.deepcopy(plan)
+        if path is None:
+            check(f"{label} is ACCEPTED",
+                  refusal_code(require_release_authority_conformance, contract,
+                               mutant, ROOT) is None)
+            continue
+        before = path_get(mutant, path)
+        assert before != value, f"{label}: mutation equals the approved value"
+        path_set(mutant, path, value)
+        check(f"{label} REFUSES",
+              refusal_code(require_release_authority_conformance, contract, mutant,
+                           ROOT) == "PROSPECTIVE_AMENDMENT_MISMATCH")
+
+    # --- the four formerly unguarded prose surfaces -------------------------
+    survived = []
+    for label, where, field in C2_PROSE_SURFACES:
+        for shape, text in C2_CONTRARY_TEXTS:
+            mutant = copy.deepcopy(plan)
+            holder = (_c2_case(mutant) if where == "cases"
+                      else _c2_assurance(mutant))
+            before = holder[field]
+            holder[field] = text
+            assert holder[field] != before, f"{label}: no change"
+            got = refusal_code(require_release_authority_conformance, contract,
+                               mutant, ROOT)
+            if got is None:
+                survived.append(f"{label} / {shape}")
+            check(f"COHERENT BUT WRONG: {label} -> {shape} refuses",
+                  got == "PROSPECTIVE_AMENDMENT_MISMATCH", f"got {got!r}")
+    check(f"C2 prose audit: {len(C2_PROSE_SURFACES) * len(C2_CONTRARY_TEXTS)} "
+          "tested, 0 unexpected passes", not survived, str(survived))
+
+    # --- the rest of the C2 normative surface --------------------------------
+    other = (
+        ("per_field true -> false",
+         lambda m: _c2_boundary(m).__setitem__("per_field", False)),
+        ("derived boundary prose -> pooled",
+         lambda m: _c2_boundary(m).__setitem__(
+             "rule", "0-36 pooled rejections: no significant inflation detected")),
+        ("assurance unit -> campaign",
+         lambda m: _c2_assurance(m).__setitem__("unit", "campaign")),
+        ("assurance pooling -> ALLOWED",
+         lambda m: _c2_assurance(m).__setitem__("pooling", "ALLOWED")),
+        ("R 400 -> 1600",
+         lambda m: (_c2_assurance(m).__setitem__("replicates", 1600),
+                    _c2_boundary(m).__setitem__("replicates", 1600))),
+        ("alpha 0.005 -> 0.02",
+         lambda m: _c2_assurance(m).__setitem__("target_value", 0.02)),
+        ("boundary 5 -> 36",
+         lambda m: _c2_assurance(m).__setitem__("integer_boundary", 36)),
+        ("bound direction LOWER -> UPPER",
+         lambda m: _c2_assurance(m).__setitem__("bound_direction", "UPPER")),
+        ("primary endpoint -> POOLED",
+         lambda m: _c2_case(m).__setitem__("primary_release_endpoint",
+                                           "P1_FALSE_REJECTION_RATE_POOLED")),
+        ("fields: remove",
+         lambda m: _c2_case(m).__setitem__("fields_affected",
+                                           ["theta0_circular", "theta1_power",
+                                            "theta2_ellipse"])),
+        ("fields: duplicate",
+         lambda m: _c2_case(m).__setitem__("fields_affected",
+                                           ["theta0_circular", "theta0_circular",
+                                            "theta2_ellipse", "theta3_temperature"])),
+        ("fields: replace",
+         lambda m: _c2_case(m).__setitem__("fields_affected",
+                                           ["theta0_circular", "theta1_power",
+                                            "theta2_ellipse", "theta9_invented"])),
+        ("fields: add",
+         lambda m: _c2_case(m).__setitem__(
+             "fields_affected", ["theta0_circular", "theta1_power", "theta2_ellipse",
+                                 "theta3_temperature", "theta4_extra"])),
+        ("final line -> reference field only",
+         lambda m: m["final_campaign_classification"]["requirements"].__setitem__(
+             1, "2. C2 produces no STATISTICAL_SIZE_FAILURE in the reference field")),
+        ("final line -> three of four",
+         lambda m: m["final_campaign_classification"]["requirements"].__setitem__(
+             1, "2. C2 produces no STATISTICAL_SIZE_FAILURE in at least three "
+                "required fields")),
+        ("block1_role demoted",
+         lambda m: _c2_case(m).__setitem__("block1_role", "SECONDARY_DIAGNOSTIC")),
+    )
+    loose = []
+    for label, mutate in other:
+        mutant = copy.deepcopy(plan)
+        mutate(mutant)
+        got = refusal_code(require_release_authority_conformance, contract, mutant,
+                           ROOT)
+        if got is None:
+            loose.append(label)
+        check(f"C2 SURFACE REFUSED: {label}", got is not None, f"got {got!r}")
+    check(f"C2 surface audit: {len(other)} tested, 0 unexpected passes",
+          not loose, str(loose))
+
+    # --- the canonical rule itself cannot drift ------------------------------
+    for name, wrong in (("pooling", "ALLOWED"), ("field_reduction", "ANY_FIELD"),
+                        ("evaluation_scope", "CAMPAIGN"),
+                        ("authority_relationship", EXACT),
+                        ("replicates_per_field", 1600), ("nominal_alpha", 0.02)):
+        broken = dataclasses.replace(rule, **{name: wrong})
+        saved = release_authority.C2_RELEASE_RULE
+        try:
+            release_authority.C2_RELEASE_RULE = broken
+            check(f"a drifted canonical rule refuses: {name} -> {wrong!r}",
+                  refusal_code(require_c2_release_binding, contract, plan)
+                  == "PROSPECTIVE_AMENDMENT_MISMATCH")
+        finally:
+            release_authority.C2_RELEASE_RULE = saved
+
+    # --- C3/C4 authority is untouched ---------------------------------------
+    for rule34 in FIELD_SIZE_RULES:
+        short = rule34.case_id[:2]
+        row34 = plan["size_validation_semantics"]["derived_boundaries"][short]
+        check(f"{short} R, alpha and boundary unchanged by the C2 repair",
+              (row34["replicates"], row34["nominal_alpha"], row34["boundary"])
+              == (rule34.replicates, rule34.nominal_alpha, rule34.boundary))
+        check(f"{short} scope/reduction/pooling unchanged by the C2 repair",
+              (rule34.evaluation_scope, rule34.field_reduction, rule34.pooling)
+              == ("PER_FIELD", "NONE", "FORBIDDEN"))
+    check("C3's secondary diagnostic is still non-release-bearing",
+          FIELD_SIZE_RULES_BY_CASE["C3_g5_block"]
+          .secondary_feeds_primary_release is False)
+    check("the C3/C4 G4 disposition still affects only C3 and C4",
+          FIELD_SIZE_DISPOSITION_AFFECTS == "C3, C4")
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
@@ -2597,6 +2887,8 @@ GROUPS = (
      test_nested_semantic_leaf_totality),
     ("final-list totality and fixed deferred scope",
      test_list_and_deferred_scope_totality),
+    ("C2 DERIVED per-field authority binding",
+     test_c2_derived_authority_binding),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),
