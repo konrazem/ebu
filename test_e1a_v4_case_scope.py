@@ -359,9 +359,22 @@ def test_c3_semantics() -> None:
     check("C3's frozen release criterion is unchanged",
           "alpha_2 = 0.001" in CASES["C3_g5_block"]["formal_pass_fail_criterion"]
           and "3 or more" in CASES["C3_g5_block"]["formal_pass_fail_criterion"])
-    check("adding a Block-1 release threshold to C3 is explicitly forbidden",
-          "forbidden" in c3["what_is_forbidden"] or "no new" in c3["what_is_forbidden"].lower()
-          or "adding any new" in c3["what_is_forbidden"])
+    # `what_is_forbidden` is now GENERATED from the canonical per-field rule
+    # (release_authority.FIELD_SIZE_RULES, disposition G4), so this checks the
+    # three reductions it actually names rather than the word "forbidden", which
+    # the generated wording does not use. That a Block-1 release threshold cannot
+    # be added to C3 is carried by the STRUCTURED facts asserted just above --
+    # block1_role SECONDARY and joint_p1_result_changes_C3_release_verdict False
+    # -- plus the release criterion below, all of which are canonical-bound.
+    forbidden = c3["what_is_forbidden"]
+    check("C3 forbids pooling, replicate-level reduction and reference-field-only "
+          "release",
+          "pooling the four fields" in forbidden
+          and "to one replicate-level event" in forbidden
+          and "releasing on the reference field alone" in forbidden, forbidden)
+    check("C3's release criterion states no Block-1 threshold",
+          "alpha_2 = 0.001" in c3["release_criterion"]
+          and "Block-1" not in c3["release_criterion"], c3["release_criterion"])
 
 
 def test_result_schema() -> None:
