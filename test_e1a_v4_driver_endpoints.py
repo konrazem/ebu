@@ -34,6 +34,7 @@ WHAT THIS SUITE PROVES
 
 from __future__ import annotations
 
+import copy
 import json
 import math
 import os
@@ -47,15 +48,16 @@ from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.calibrate import CalibrationRequest
 from e1a_v4.validation.campaign_driver import (
-    FIELD_LEVEL_EVENTS, REPLICATE_LEVEL_EVENTS, UNDECLARED_EVENT_REDUCTION,
+    FIELD_LEVEL_EVENTS, FORBIDDEN_EVENT_REDUCTION, REPLICATE_LEVEL_EVENTS,
     blinded_branch_a, campaign_shape, committed_publication, evaluate_replicate,
     evaluate_scale_control, field_event_count, job_execution, p1_block_decisions,
-    plan_campaign, replicate_level_rejections, require_endpoint_events,
-    require_plan_driver_agreement, required_endpoint_events,
-    required_result_fields, validate_job_record,
+    per_field_rejections, plan_campaign, replicate_level_rejections,
+    require_endpoint_events, require_plan_driver_agreement,
+    required_endpoint_events, required_result_fields, validate_job_record,
 )
 from e1a_v4.validation.classification import (
-    CampaignCounts, classify_campaign, classify_size,
+    PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS, CampaignCounts, classify_campaign,
+    classify_size,
 )
 from e1a_v4.effective_size import sigma_stat
 from e1a_v4.endpoints import UncertaintyModel
@@ -174,15 +176,24 @@ class Spec:
         self.scale_factors = scale_factors
 
 
-def replicate_outcome(case_id, subcondition_id, rejecting_fields=(), *, g5=0.0):
-    """Run the PRODUCTION endpoint assembly for one synthetic replicate."""
+def replicate_outcome(case_id, subcondition_id, rejecting_fields=(), *, g5=0.0,
+                      g5_fields=()):
+    """Run the PRODUCTION endpoint assembly for one synthetic replicate.
+
+    `rejecting_fields` drives BLOCK 1 (a large G1 makes that field's p_min cross
+    the artifact's stored critical value) and `g5_fields` drives BLOCK 2 (G5 far
+    in the tail) for named fields only. The two are deliberately independent: C3
+    releases on the actual Block-2 decision and C4 on the actual Block-1 decision,
+    and a fixture that could not separate them could not tell the two apart.
+    """
     conditions, artifacts, analyses, specs = {}, {}, {}, {}
     for field_id in FIELDS:
         condition = small_condition(field_id)
         conditions[field_id] = condition
         artifacts[field_id] = fixture_artifact(condition)
         analyses[field_id] = fixture_analysis(
-            field_id, g1=(9.9 if field_id in rejecting_fields else 0.0), g5=g5)
+            field_id, g1=(9.9 if field_id in rejecting_fields else 0.0),
+            g5=(400.0 if field_id in g5_fields else g5))
         specs[field_id] = Spec(field_of(field_id))
     return evaluate_replicate(BINDING, case_id, subcondition_id, specs, analyses,
                               conditions, artifacts)
@@ -372,23 +383,364 @@ def test_missing_decision_fails_closed() -> None:
           "complete_pass" in required_endpoint_events(PLAN, "C1_true_bridge_complete"))
 
 
-# ============================ C3/C4 replicate-level reduction is not invented
-def test_replicate_reduction_is_not_guessed() -> None:
-    """The 4-field -> 1-replicate reduction C3 and C4 need is UNDECLARED."""
-    for case_id, event in (("C3_g5_block", "g5_rejected"),
-                           ("C4_surrogate_validity", "block1_rejected")):
-        refuses_with_code(f"{case_id} replicate-level reduction",
-                          "ENDPOINT_EVENT_REDUCTION_UNDECLARED",
+# ============================ C3/C4 cross-field reduction is FORBIDDEN (F1f)
+#: The three per-field size cases and the ACTUAL endpoint decision each releases
+#: on. C3 releases on Block 2 and C4 on Block 1; neither releases on the combined
+#: P1 scalar, which for C3 is the SECONDARY predeclared interaction diagnostic.
+PER_FIELD_CASES = (
+    ("C2", "C2_geometry_false_rejection", C2_SUB, "p1_rejected"),
+    ("C3", "C3_g5_block", C2_SUB, "g5_rejected"),
+    ("C4", "C4_surrogate_validity", "primary", "block1_rejected"),
+)
+
+
+def test_cross_field_reduction_is_forbidden() -> None:
+    """The reduction is no longer UNDECLARED: authority forbids it outright.
+
+    Before the C3/C4 amendment the driver refused because frozen authority stated
+    no rule for turning four per-field decisions into one replicate-level event.
+    The amendment answered in the opposite direction from the obvious guess, so the
+    refusal is kept and strengthened rather than deleted: there is no replicate-
+    level event to compute, and asking for one asks for a statistic the release
+    rule does not contain.
+    """
+    for _short, case_id, _sub, event in PER_FIELD_CASES:
+        refuses_with_code(f"{case_id} cross-field reduction",
+                          "CROSS_FIELD_REDUCTION_FORBIDDEN",
                           replicate_level_rejections, PLAN, {}, case_id, event)
-    check("the refusal names the three candidate reductions it will not choose "
-          "between",
-          "any field rejects" in UNDECLARED_EVENT_REDUCTION
-          and "every field rejects" in UNDECLARED_EVENT_REDUCTION)
-    check("C6 declares ONE field, so its reduction is unambiguous",
+    check("the refusal names every reduction it rules out, not just the obvious one",
+          all(phrase in FORBIDDEN_EVENT_REDUCTION for phrase in
+              ("any field rejects", "every field rejects",
+               "the reference field rejects", "pooled count")),
+          FORBIDDEN_EVENT_REDUCTION[:60])
+    check("the refusal cites the authority that forbids it",
+          "per_field" in FORBIDDEN_EVENT_REDUCTION
+          and "NONE" in FORBIDDEN_EVENT_REDUCTION
+          and "FORBIDDEN" in FORBIDDEN_EVENT_REDUCTION)
+    check("even a single-field case may not be reduced, so a case that later "
+          "declared four fields cannot slip through",
+          refusal_code(replicate_level_rejections, PLAN, {},
+                       "C6_mode_resolution_boundary", "p1_rejected")
+          == "CROSS_FIELD_REDUCTION_FORBIDDEN")
+    check("C6 still declares ONE field and is counted by field, not reduced",
           len(required_result_fields(PLAN, "C6_mode_resolution_boundary")) == 1)
-    check("C3 and C4 declare four fields each, which is why the rule is needed",
-          len(required_result_fields(PLAN, "C3_g5_block")) == 4
-          and len(required_result_fields(PLAN, "C4_surrogate_validity")) == 4)
+    check("C2, C3 and C4 each declare the SAME four fields, from the frozen plan",
+          all(set(required_result_fields(PLAN, case_id)) == REQUIRED_SIZE_FIELDS
+              and len(required_result_fields(PLAN, case_id)) == 4
+              for _s, case_id, _sub, _e in PER_FIELD_CASES))
+
+    # the frozen authority this implementation now expresses, read back
+    boundaries = PLAN["size_validation_semantics"]["derived_boundaries"]
+    for short, _case_id, _sub, _event in PER_FIELD_CASES:
+        row = boundaries[short]
+        check(f"{short} authority: per field, no reduction, no pooling",
+              row["per_field"] is True and row["replicate_reduction"] == "NONE"
+              and row["pooling"].startswith("FORBIDDEN"), str(row["pooling"]))
+        check(f"{short} runtime R and alpha equal the frozen ones",
+              PER_FIELD_SIZE_CASES[short] == (row["replicates"], row["nominal_alpha"]),
+              str(PER_FIELD_SIZE_CASES[short]))
+
+
+# ===================== C2/C3/C4 are COUNTED per field, from the real decisions
+def plan_with_replicates(case_id, replicates):
+    """The frozen plan with ONE case's declared replicate count reduced.
+
+    `per_field_rejections` takes its denominator from the plan, and refuses unless
+    every declared replicate has a record -- which is the behaviour under test, not
+    something to bypass. A fixture that wrote 400 real replicates would be a
+    campaign, so the DENOMINATOR is made small instead of the guard being removed.
+    Nothing else in the plan is touched, and the frozen plan object is never
+    mutated.
+    """
+    plan = copy.deepcopy(PLAN)
+    for case in plan["cases"]:
+        if case["case_id"] == case_id:
+            case["replicate_count"] = replicates
+    return plan
+
+
+def deterministic_records(case_id, subcondition_id, per_replicate):
+    """Field records for a sequence of replicates. Pure dicts; nothing is drawn.
+
+    `per_replicate` is one (block1_rejecting_fields, g5_rejecting_fields) pair per
+    replicate, so a fixture can make Block 1 and Block 2 disagree on purpose.
+    """
+    records = {}
+    for index, (block1_fields, g5_fields) in enumerate(per_replicate):
+        outcome = replicate_outcome(case_id, subcondition_id, block1_fields,
+                                    g5_fields=g5_fields)
+        records.update(records_from(outcome, case_id, subcondition_id, index))
+    return records
+
+
+def test_per_field_counting() -> None:
+    """F1f. One field's event increments ONE field's count, for all three cases."""
+    # --- POSITIVE: exactly the field that failed is the field that counts ------
+    patterns = (
+        ("one field fails", ("theta1_power",), {"theta1_power": 1}),
+        ("two fields fail", ("theta0_circular", "theta2_ellipse"),
+         {"theta0_circular": 1, "theta2_ellipse": 1}),
+        ("no field fails", (), {}),
+    )
+    for short, case_id, sub, event in PER_FIELD_CASES:
+        for label, failing, expected_nonzero in patterns:
+            block1 = failing if event != "g5_rejected" else ()
+            g5 = failing if event == "g5_rejected" else ()
+            records = deterministic_records(case_id, sub, [(block1, g5)])
+            counts = per_field_rejections(plan_with_replicates(case_id, 1),
+                                          records, case_id, event)
+            expected = {f: expected_nonzero.get(f, 0) for f in FIELDS}
+            check(f"{short} {label} -> {sorted(expected_nonzero) or 'none'}",
+                  counts == expected, str(counts))
+            check(f"{short} {label}: no field absorbed another field's event",
+                  sum(counts.values()) == len(failing), str(sum(counts.values())))
+
+    # --- the two forbidden replicate-level reductions, computed and REJECTED ---
+    # A replicate in which ONE field rejects. ANY_FIELD would score 1, EVERY_FIELD
+    # would score 0, a pooled count would score 1 against a 4R denominator. The
+    # declared rule scores 1 for THAT field and 0 for the other three.
+    for short, case_id, sub, event in PER_FIELD_CASES:
+        failing = ("theta2_ellipse",)
+        block1 = failing if event != "g5_rejected" else ()
+        g5 = failing if event == "g5_rejected" else ()
+        records = deterministic_records(case_id, sub, [(block1, g5)])
+        counts = per_field_rejections(plan_with_replicates(case_id, 1), records,
+                                      case_id, event)
+        any_field = 1 if any(counts.values()) else 0
+        every_field = 1 if all(counts.values()) else 0
+        check(f"{short}: the declared rule is not ANY_FIELD",
+              counts != {f: any_field for f in FIELDS}, str(counts))
+        check(f"{short}: the declared rule is not EVERY_FIELD",
+              every_field == 0 and counts["theta2_ellipse"] == 1, str(counts))
+        check(f"{short}: the declared rule is not a pooled total",
+              sum(counts.values()) == 1 and len(counts) == 4, str(counts))
+        check(f"{short}: the declared rule is not reference-field-only",
+              counts["theta0_circular"] == 0 and counts["theta2_ellipse"] == 1,
+              str(counts))
+
+    # --- multiple replicates: totals stay independently identifiable -----------
+    sequence = [(("theta1_power",), ()), ((), ()), (("theta1_power",), ()),
+                (("theta3_temperature",), ())]
+    records = deterministic_records("C4_surrogate_validity", "primary", sequence)
+    counts = per_field_rejections(
+        plan_with_replicates("C4_surrogate_validity", len(sequence)), records,
+        "C4_surrogate_validity", "block1_rejected")
+    check("C4 over four replicates: per-field totals are independent",
+          counts == {"theta0_circular": 0, "theta1_power": 2,
+                     "theta2_ellipse": 0, "theta3_temperature": 1}, str(counts))
+
+
+def test_field_misattribution() -> None:
+    """F1f. The count follows the RECORDED field identity, and gaps refuse."""
+    case_id, sub_id = "C2_geometry_false_rejection", C2_SUB
+    plan = plan_with_replicates(case_id, 1)
+    records = deterministic_records(case_id, sub_id, [(("theta1_power",), ())])
+    truth = per_field_rejections(plan, records, case_id, "p1_rejected")
+    check("baseline: theta1_power is the only field counted",
+          truth["theta1_power"] == 1 and sum(truth.values()) == 1, str(truth))
+
+    # --- PERMUTED field identities: the count moves with the label -------------
+    swapped = {}
+    rename = {"theta1_power": "theta2_ellipse", "theta2_ellipse": "theta1_power"}
+    for key, record in records.items():
+        scope = record["coordinates"]["scope"]
+        moved = rename.get(scope, scope)
+        swapped[key] = {**record,
+                        "coordinates": {**record["coordinates"], "scope": moved}}
+    permuted = per_field_rejections(plan, swapped, case_id, "p1_rejected")
+    check("permuting two field labels moves the rejection to the other field",
+          permuted["theta2_ellipse"] == 1 and permuted["theta1_power"] == 0,
+          str(permuted))
+    check("a misattributed count is a DIFFERENT result, not an equivalent one",
+          permuted != truth)
+
+    # --- a field RENAMED to something undeclared leaves its denominator short --
+    orphaned = {}
+    for key, record in records.items():
+        scope = record["coordinates"]["scope"]
+        orphaned[key] = {**record, "coordinates": {
+            **record["coordinates"],
+            "scope": "theta9_invented" if scope == "theta0_circular" else scope}}
+    refuses_with_code("a record relabelled to an undeclared field",
+                      "CAMPAIGN_INCOMPLETE", per_field_rejections, plan, orphaned,
+                      case_id, "p1_rejected")
+
+    # --- one field's record REMOVED entirely ----------------------------------
+    for dropped in FIELDS:
+        short = {k: v for k, v in records.items()
+                 if v["coordinates"]["scope"] != dropped}
+        refuses_with_code(f"{dropped}'s record removed", "CAMPAIGN_INCOMPLETE",
+                          per_field_rejections, plan, short, case_id, "p1_rejected")
+
+    # --- an EXTRA replicate record inserted for one field ---------------------
+    extra = dict(records)
+    first = next(v for v in records.values()
+                 if v["coordinates"]["scope"] == "theta0_circular")
+    extra["injected"] = {**first, "coordinates": {**first["coordinates"],
+                                                  "replicate_id": 99}}
+    refuses_with_code("an extra replicate record for one field",
+                      "CAMPAIGN_INCOMPLETE", per_field_rejections, plan, extra,
+                      case_id, "p1_rejected")
+    check("the planner, not the counter, is what makes an extra record "
+          "unreachable in a real campaign",
+          "require_campaign_completeness" in dir(
+              __import__("e1a_v4.validation.campaign_driver",
+                         fromlist=["require_campaign_completeness"])))
+
+
+def test_block_distinction() -> None:
+    """F1f. C3 reads BLOCK 2 and C4 reads BLOCK 1, even when they disagree."""
+    # Block 1 rejects for theta1, Block 2 rejects for theta3. One replicate.
+    mixed = replicate_outcome("C3_g5_block", C2_SUB, ("theta1_power",),
+                              g5_fields=("theta3_temperature",))
+    per_field = mixed["per_field"]
+    check("the fixture really does separate the two blocks",
+          per_field["theta1_power"]["block1_rejected"] is True
+          and per_field["theta1_power"]["g5_rejected"] is False
+          and per_field["theta3_temperature"]["block1_rejected"] is False
+          and per_field["theta3_temperature"]["g5_rejected"] is True,
+          str({f: (r["block1_rejected"], r["g5_rejected"])
+               for f, r in per_field.items()}))
+
+    records = records_from(mixed, "C3_g5_block", C2_SUB, 0)
+    c3_plan = plan_with_replicates("C3_g5_block", 1)
+    c4_plan = plan_with_replicates("C4_surrogate_validity", 1)
+    c3 = per_field_rejections(c3_plan, records, "C3_g5_block", "g5_rejected")
+    check("C3 counts the Block-2 rejection and NOT the Block-1 one",
+          c3 == {"theta0_circular": 0, "theta1_power": 0, "theta2_ellipse": 0,
+                 "theta3_temperature": 1}, str(c3))
+
+    c4_records = records_from(
+        replicate_outcome("C4_surrogate_validity", "primary", ("theta1_power",),
+                          g5_fields=("theta3_temperature",)),
+        "C4_surrogate_validity", "primary", 0)
+    c4 = per_field_rejections(c4_plan, c4_records, "C4_surrogate_validity",
+                              "block1_rejected")
+    check("C4 counts the Block-1 rejection and NOT the Block-2 one",
+          c4 == {"theta0_circular": 0, "theta1_power": 1, "theta2_ellipse": 0,
+                 "theta3_temperature": 0}, str(c4))
+
+    # --- the SUBSTITUTION mutations, each producing a demonstrably wrong count --
+    # full P1 rejects wherever EITHER block rejects, so substituting it for the
+    # primary endpoint changes both cases' measured size.
+    p1 = per_field_rejections(c3_plan, records, "C3_g5_block", "p1_rejected")
+    check("substituting full P1 for the C3 primary endpoint changes the count",
+          p1 != c3 and p1["theta1_power"] == 1, str(p1))
+    check("the C3 primary count is unaffected by the Block-1 rejection it records",
+          c3["theta1_power"] == 0 and p1["theta1_power"] == 1)
+    c4_p1 = per_field_rejections(c4_plan, c4_records, "C4_surrogate_validity",
+                                 "p1_rejected")
+    check("substituting the combined P1 for C4's Block-1 endpoint changes the count",
+          c4_p1 != c4 and c4_p1["theta3_temperature"] == 1, str(c4_p1))
+
+    # --- C3's full P1 remains OBSERVABLE: it is recorded, just not released on --
+    check("every C3 field record still carries the full P1 result and its decision",
+          all("P1" in row and "p1_rejected" in row for row in per_field.values()))
+    check("the C3 secondary diagnostic is declared non-release-bearing",
+          classify_campaign(clean_counts())["endpoint_semantics"]["C3"]
+          ["secondary_diagnostic"]["release_bearing"] is False)
+
+
+def clean_counts(**over):
+    """A campaign that passes everything. Counts only; nothing is executed."""
+    base = dict(c1_successes=300,
+                c2_rejections_by_field={f: 0 for f in FIELDS},
+                c3_rejections_by_field={f: 0 for f in FIELDS},
+                c4_rejections_by_field={f: 0 for f in FIELDS},
+                c5_pass=True, c6_pass=True,
+                c7_false_acceptances_by_alternative={
+                    a: 0 for a in ("alt_1_06", "alt_0_93_1_05", "alt_1_10",
+                                   "hard_1_025")},
+                c8_successes=200)
+    base.update(over)
+    return CampaignCounts(**base)
+
+
+def test_counts_survive_serialisation() -> None:
+    """F1f. Field identity and the ACTUAL decisions survive a round trip to disk.
+
+    The restart path re-reads terminal job records from storage and recounts from
+    them, so recovered counts must equal fresh counts. They do here for a
+    structural reason worth stating: a job record is already PER FIELD -- its
+    coordinates carry `scope = field_id` and its result carries that field's own
+    decisions -- so nothing is ever reconstructed from an ambiguous case-level
+    scalar. There is no scalar to reconstruct from.
+    """
+    sequence = [(("theta1_power",), ()), ((), ()), (("theta1_power",), ()),
+                (("theta3_temperature",), ())]
+    case_id, sub_id = "C4_surrogate_validity", "primary"
+    plan = plan_with_replicates(case_id, len(sequence))
+    records = deterministic_records(case_id, sub_id, sequence)
+    fresh = per_field_rejections(plan, records, case_id, "block1_rejected")
+
+    # a genuine round trip through canonical JSON, exactly as publication does
+    restored = json.loads(json.dumps(records, sort_keys=True, allow_nan=False))
+    recovered = per_field_rejections(plan, restored, case_id, "block1_rejected")
+    check("recovered counts equal fresh counts", recovered == fresh, str(recovered))
+    check("the field identity survived serialisation",
+          all(r["coordinates"]["scope"] in FIELDS for r in restored.values())
+          and {r["coordinates"]["scope"] for r in restored.values()} == set(FIELDS))
+    check("the ACTUAL endpoint decisions survived as booleans, not nulls",
+          all(isinstance(r["result"]["block1_rejected"], bool)
+              and isinstance(r["result"]["g5_rejected"], bool)
+              for r in restored.values()))
+    check("a record whose decision was nulled in storage REFUSES rather than "
+          "counting zero",
+          refusal_code(per_field_rejections, plan,
+                       {k: ({**v, "result": {**v["result"], "block1_rejected": None}}
+                            if i == 0 else v)
+                        for i, (k, v) in enumerate(sorted(restored.items()))},
+                       case_id, "block1_rejected") == "ENDPOINT_EVENT_MISSING")
+    check("a record dropped from storage REFUSES rather than shrinking the "
+          "denominator",
+          refusal_code(per_field_rejections, plan,
+                       {k: v for k, v in sorted(restored.items())[1:]},
+                       case_id, "block1_rejected") == "CAMPAIGN_INCOMPLETE")
+
+    # --- the terminal surface carries everything needed to re-verify a verdict --
+    boundary = classify_size(0, *PER_FIELD_SIZE_CASES["C4"])["boundary"]
+    row = classify_campaign(clean_counts(
+        c4_rejections_by_field={**{f: 0 for f in FIELDS},
+                                "theta1_power": boundary + 1}))
+    reported = row["detail"]["C4"]["theta1_power"]
+    for key in ("rejections", "replicates", "observed_rate", "cp_lower",
+                "cp_upper", "boundary", "verdict"):
+        check(f"the C4 per-field result reports {key}", key in reported)
+    check("it reports which case, which field and which endpoint",
+          "C4" in str(row["endpoint_semantics"])
+          and "theta1_power" in row["detail"]["C4"]
+          and row["endpoint_semantics"]["C4"]["primary_endpoint"]
+          == "BLOCK1_ACHIEVED_SIZE")
+    check("the result is not an aggregate scalar: all four fields are reported",
+          len(row["detail"]["C4"]) == 4 and set(row["detail"]["C4"]) == set(FIELDS))
+
+
+def test_field_identity_survives_to_the_classifier() -> None:
+    """F1f. A failing field is named in the failures list, for all three cases."""
+    for short, _case_id, _sub, _event in PER_FIELD_CASES:
+        boundary = classify_size(0, *PER_FIELD_SIZE_CASES[short])["boundary"]
+        key = f"c{short[1]}_rejections_by_field"
+        for field_id in FIELDS:
+            counts = clean_counts(**{key: {**{f: 0 for f in FIELDS},
+                                           field_id: boundary + 1}})
+            result = classify_campaign(counts)
+            size_failures = [f for f in result["failures"]
+                             if "STATISTICAL_SIZE_FAILURE" in f]
+            check(f"{short}/{field_id} over boundary -> exactly one named failure",
+                  result["verdict"] == "VALIDATION_FAILURE"
+                  and len(size_failures) == 1 and field_id in size_failures[0]
+                  and f"({short} " in size_failures[0],
+                  "; ".join(result["failures"])[:80])
+            check(f"{short}/{field_id}: the other three conditions stay clean",
+                  all(result["detail"][short][f]["verdict"]
+                      == "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED"
+                      for f in FIELDS if f != field_id))
+        # at exactly the boundary in EVERY field the case is clean: a pooled
+        # implementation of the same counts would not be
+        counts = clean_counts(**{key: {f: boundary for f in FIELDS}})
+        check(f"{short} at exactly {boundary} in all four fields -> PASS",
+              classify_campaign(counts)["verdict"] == "VALIDATION_PASS",
+              f"pooled total would be {boundary * 4}")
 
 
 # ==================================== T5/T6. the C8 blinded Branch-A control
@@ -517,13 +869,7 @@ def test_c8_blinded_branch_a_control() -> None:
                           case_id, CONTRACT, unc, analyses, blinded, factors)
 
     # the FROZEN campaign classifier consumes the driver's recovery event
-    counts = CampaignCounts(
-        c1_successes=300, c2_rejections_by_field={f: 0 for f in FIELDS},
-        c3_rejections=0, c4_rejections=0, c5_pass=True, c6_pass=True,
-        c7_false_acceptances_by_alternative={
-            a: 0 for a in ("alt_1_06", "alt_0_93_1_05", "alt_1_10", "hard_1_025")},
-        c8_successes=200)
-    verdict = classify_campaign(counts)
+    verdict = classify_campaign(clean_counts())
     check("the frozen classifier owns the C8 campaign rule, not the driver",
           verdict["detail"]["C8"]["threshold"] == 188
           and verdict["detail"]["C8"]["target"] == 0.90,
@@ -746,8 +1092,14 @@ GROUPS = (
     ("T1  C2 counts PER FIELD", test_c2_counts_per_field),
     ("T2/T3  G5 and Block-1 decisions propagate", test_g5_and_block1_propagate),
     ("T4  a missing decision fails closed", test_missing_decision_fails_closed),
-    ("C3/C4 replicate reduction is not guessed",
-     test_replicate_reduction_is_not_guessed),
+    ("F1f  cross-field reduction is FORBIDDEN",
+     test_cross_field_reduction_is_forbidden),
+    ("F1f  C2/C3/C4 counted PER FIELD", test_per_field_counting),
+    ("F1f  field misattribution is visible and refused", test_field_misattribution),
+    ("F1f  Block-1 and Block-2 are distinguished", test_block_distinction),
+    ("F1f  counts survive serialisation/restart", test_counts_survive_serialisation),
+    ("F1f  the failing field reaches the classifier",
+     test_field_identity_survives_to_the_classifier),
     ("T5/T6  the C8 blinded Branch-A control", test_c8_blinded_branch_a_control),
     ("T7-T10  terminal provenance cross-links", test_terminal_provenance_cross_links),
     ("campaign structure unchanged", test_campaign_structure_unchanged),

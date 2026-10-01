@@ -17,7 +17,16 @@ MANIFEST_SCHEMA = "e1a_v4_validation_manifest/3"
 JOB_RECORD_SCHEMA = "e1a_v4_validation_job_record/1"
 #: The final campaign result: completeness, per-case aggregates and the frozen
 #: release classification. Written once, after every job has a terminal record.
-CAMPAIGN_RESULT_SCHEMA = "e1a_v4_campaign_result/1"
+#: Version 2 carries the PER-FIELD C3 and C4 size assessments. In version 1 the
+#: embedded classification held one scalar G5 rejection count and one scalar
+#: Block-1 rejection count, which implemented a replicate-level event frozen
+#: authority never declared; both cases are now scored per declared field, with no
+#: within-replicate reduction and no pooling. A version-1 result is therefore NOT
+#: convertible: `c3_rejections = N` cannot be resolved into four field counts, and
+#: reinterpreting it as "N replicates in which some field rejected" would assert a
+#: different statistic with a different null rate. No official result data exists
+#: at any version, so nothing is migrated and nothing is lost.
+CAMPAIGN_RESULT_SCHEMA = "e1a_v4_campaign_result/2"
 #: Record schema 2 adds `subcondition_id`. A record is reproducible from
 #: (case_id, subcondition_id, replicate_id, field/scope, seed family, seed identity).
 #: Manifest schema 3 adds `contract_diagnostics`: an aggregate that omits a

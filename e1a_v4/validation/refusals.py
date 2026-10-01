@@ -239,6 +239,40 @@ class EndpointEventReductionUndeclared(CodedRefusal):
     code = "ENDPOINT_EVENT_REDUCTION_UNDECLARED"
 
 
+class CrossFieldReductionForbidden(CodedRefusal):
+    """A within-replicate reduction across fields was attempted where authority
+    forbids one.
+
+    DISTINCT FROM `EndpointEventReductionUndeclared`, AND STRICTLY STRONGER.
+    That refusal says frozen authority is SILENT about how four per-field
+    decisions become one replicate-level event, so the driver will not guess.
+    This one says authority has SPOKEN: C2, C3 and C4 are scored PER FIELD, with
+    `replicate_reduction: NONE` and `pooling: FORBIDDEN`, so there is no
+    replicate-level event to compute at all. An any-field event, an every-field
+    event, a reference-field-only event and a pooled count are each a different
+    statistical object with a different null rate, and none of them is the
+    declared rule.
+    """
+
+    code = "CROSS_FIELD_REDUCTION_FORBIDDEN"
+
+
+class ImplementationAuthorityLag(CodedRefusal):
+    """The runtime implementation does not express the cleared frozen authority.
+
+    The driver used to refuse C3/C4 counting because authority had not declared the
+    field structure. That refusal was a placeholder for a missing DECISION, and
+    removing it was only half the repair: once authority declares PER FIELD with no
+    reduction and no pooling, something must refuse if the runtime still carries the
+    scalar, replicate-level shape. Preflight checks the implementation against the
+    frozen rule, so a correct per-field implementation is ACCEPTED and the old
+    scalar one is REFUSED -- rather than authority being quietly weakened to match
+    whatever the code happens to do.
+    """
+
+    code = "IMPLEMENTATION_AUTHORITY_LAG"
+
+
 class NormativeSurfaceUnclassified(CodedRefusal):
     """An authoritative C3/C4 statement exists outside the canonical surface registry.
 
@@ -614,6 +648,7 @@ ALL_REFUSAL_CLASSES = (
     ResultSchemaInvalid, CampaignIncomplete, CampaignPlanMismatch,
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
+    CrossFieldReductionForbidden, ImplementationAuthorityLag,
     NormativeSurfaceUnclassified,
     ProspectiveAmendmentMismatch,
     ScaleControlInvalid, TerminalProvenanceMismatch,

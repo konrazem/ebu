@@ -41,8 +41,9 @@ import tempfile
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.classification import (
-    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE, SIZE_FAILURE,
-    SIZE_INTERPRETATION, SIZE_NO_INFLATION, size_boundary,
+    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE, PER_FIELD_SIZE_CASES,
+    REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION,
+    size_boundary,
 )
 from e1a_v4.validation.coherence import (
     BLOCK_BEGIN, BLOCK_END, REGION_ANCHORS, SECTION_REGISTRY,
@@ -52,9 +53,11 @@ from e1a_v4.validation.contract_plan import (
     DELEGATED_TO_RELEASE_AUTHORITY, NOT_REPEATED_CONTRACT_LEAVES, binding_inventory,
 )
 from e1a_v4.validation.dispositions import cp_lower, cp_upper
-from e1a_v4.validation.campaign_driver import replicate_level_rejections
+from e1a_v4.validation.campaign_driver import (
+    per_field_rejections, replicate_level_rejections,
+)
 from e1a_v4.validation.plan import load_plan
-from e1a_v4.validation import release_authority
+from e1a_v4.validation import classification, release_authority
 from e1a_v4.validation.release_authority import (
     CASE_PROSE_PINS, CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER,
     NON_NORMATIVE_EXPLANATION, NOT_APPLICABLE, SHARED_SIZE_SEMANTICS_PINS,
@@ -1113,13 +1116,15 @@ def test_c3_c4_per_field_authority() -> None:
     check("the joint P1 result still does NOT change the C3 release verdict",
           c3["joint_p1_result_changes_C3_release_verdict"] is False)
 
-    # --- implementation is deliberately BEHIND authority --------------------
+    # --- F1f: the implementation now EXPRESSES the amendment -----------------
+    # It used to refuse because authority was silent. Authority spoke, and the
+    # refusal became the stronger one: there is no replicate-level event at all.
     for case_id, event in (("C3_g5_block", "g5_rejected"),
                            ("C4_surrogate_validity", "block1_rejected")):
-        check(f"the driver still REFUSES to reduce {case_id[:2]} across fields, "
-              "which is now authority-correct rather than a guess",
+        check(f"reducing {case_id[:2]} across fields is now FORBIDDEN, not merely "
+              "undeclared",
               refusal_code(replicate_level_rejections, plan, {}, case_id, event)
-              == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
+              == "CROSS_FIELD_REDUCTION_FORBIDDEN")
     check("execution is still not authorised", plan["execution_authorised"] is False)
 
 
@@ -1421,10 +1426,9 @@ def test_c3_c4_amendment_semantic_mutations() -> None:
           and "positively associated" not in gap["resolution"])
     for case_id, event in (("C3_g5_block", "g5_rejected"),
                            ("C4_surrogate_validity", "block1_rejected")):
-        check(f"the driver is STILL behind authority and still refuses for "
-              f"{case_id[:2]}",
+        check(f"a cross-field reduction of {case_id[:2]} is refused as FORBIDDEN",
               refusal_code(replicate_level_rejections, plan, {}, case_id, event)
-              == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
+              == "CROSS_FIELD_REDUCTION_FORBIDDEN")
 
 
 # ----------------------------------------- 16. normative-surface TOTALITY (F1e-r3)
@@ -1725,9 +1729,10 @@ def test_c3_c4_normative_surface_totality() -> None:
           and "positive association" not in gap["resolution"])
     for case_id in ("C3_g5_block", "C4_surrogate_validity"):
         event = "g5_rejected" if case_id.startswith("C3") else "block1_rejected"
-        check(f"the driver is STILL behind authority for {case_id[:2]} (pre-F1f)",
+        check(f"the driver implements {case_id[:2]} per field and forbids the "
+              "reduction (F1f)",
               refusal_code(replicate_level_rejections, plan, {}, case_id, event)
-              == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
+              == "CROSS_FIELD_REDUCTION_FORBIDDEN")
 
 
 # ------------------------------------- 18. C3 explanatory semantics (F1e-r5)
@@ -2874,6 +2879,164 @@ def test_c2_derived_authority_binding() -> None:
           FIELD_SIZE_DISPOSITION_AFFECTS == "C3, C4")
 
 
+# ------------------------ 22. F1f implementation conformance (runtime vs authority)
+#: Implementation shapes that would LAG the cleared authority. Each is a complete
+#: statement of how the runtime could still express the pre-amendment rule, and
+#: each must be REFUSED by preflight rather than tolerated. The names are the ones
+#: the amendment rules out by name.
+IMPLEMENTATION_LAGS = (
+    # the exact pre-F1f shape: one scalar case count instead of four field counts
+    ("C3 scalar case count restored",
+     {"c3_rejections_by_field": None, "c3_rejections": 0}),
+    ("C4 scalar case count restored",
+     {"c4_rejections_by_field": None, "c4_rejections": 0}),
+    ("C2 scalar case count restored",
+     {"c2_rejections_by_field": None, "c2_rejections": 0}),
+    # the per-field counts simply missing
+    ("C3 per-field counts dropped entirely", {"c3_rejections_by_field": None}),
+    ("C4 per-field counts dropped entirely", {"c4_rejections_by_field": None}),
+    # and the "harmless convenience" form: the scalar kept BESIDE the field map,
+    # which is the ambiguity the amendment removed rather than a second opinion
+    ("C3 scalar kept alongside the per-field map", {"c3_rejections": 0}),
+    ("C4 scalar kept alongside the per-field map", {"c4_rejections": 0}),
+    ("C2 scalar kept alongside the per-field map", {"c2_rejections": 0}),
+)
+
+
+def _counts_class(changes):
+    """A CampaignCounts-shaped class with fields added or removed. TEST ONLY."""
+    base = [(f.name, f.type)
+            for f in dataclasses.fields(release_authority.CampaignCounts)]
+    kept = [(name, typ) for name, typ in base if changes.get(name, "keep") is not None]
+    added = [(name, int) for name, value in changes.items()
+             if value is not None and name not in dict(base)]
+    return dataclasses.make_dataclass("ProbeCounts", kept + added, frozen=True)
+
+
+def _drifting_classifier(real, key, wrong):
+    """The real classifier with ONE reported semantic value changed. TEST ONLY."""
+    def drifted(counts):
+        result = real(counts)
+        result["endpoint_semantics"]["C3"][key] = wrong
+        return result
+    return drifted
+
+
+def test_f1f_implementation_conformance() -> None:
+    """The obsolete refusal was replaced by a POSITIVE proof, and it bites.
+
+    F1f removed the driver's `ENDPOINT_EVENT_REDUCTION_UNDECLARED` placeholder for
+    C3 and C4. Deleting a refusal is only half a repair: preflight must now REFUSE
+    an implementation that still carries the scalar, replicate-level shape, so the
+    runtime is held to authority rather than authority drifting to the runtime.
+    """
+    plan = load_plan(ROOT)
+    check("the cleared per-field implementation is ACCEPTED",
+          refusal_code(release_authority
+                       .require_per_field_implementation_conformance, plan) is None)
+
+    # --- the runtime SHAPE, mutated back to each lagging form ------------------
+    saved = release_authority.CampaignCounts
+    try:
+        for label, changes in IMPLEMENTATION_LAGS:
+            release_authority.CampaignCounts = _counts_class(changes)
+            check(f"implementation lag REFUSED: {label}",
+                  refusal_code(release_authority
+                               .require_per_field_implementation_conformance, plan)
+                  == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.CampaignCounts = saved
+    check("the real counts class is restored",
+          refusal_code(release_authority
+                       .require_per_field_implementation_conformance, plan) is None)
+
+    # --- the runtime PARAMETERS, drifted from the frozen boundary table --------
+    saved_rules = dict(release_authority.PER_FIELD_SIZE_CASES)
+    drifts = (("C2", (400, 0.01)), ("C3", (300, 0.001)), ("C4", (2000, 0.005)))
+    try:
+        for case, wrong in drifts:
+            release_authority.PER_FIELD_SIZE_CASES[case] = wrong
+            check(f"{case} runtime R/alpha drift REFUSED: {wrong}",
+                  refusal_code(release_authority
+                               .require_per_field_implementation_conformance, plan)
+                  == "IMPLEMENTATION_AUTHORITY_LAG")
+            release_authority.PER_FIELD_SIZE_CASES[case] = saved_rules[case]
+    finally:
+        release_authority.PER_FIELD_SIZE_CASES.clear()
+        release_authority.PER_FIELD_SIZE_CASES.update(saved_rules)
+    check("the frozen R/alpha table is restored and accepted",
+          refusal_code(release_authority
+                       .require_per_field_implementation_conformance, plan) is None)
+
+    # --- the C3 SECONDARY diagnostic may not be promoted to release-bearing ---
+    # Authority states that the joint P1 result does not change the C3 release
+    # verdict. An implementation that reported it as release-bearing would be
+    # asserting a second C3 release condition that no frozen document declares.
+    # `classify_campaign` reads this table from its own module globals, so the
+    # mutation must land there rather than in the release_authority namespace.
+    endpoints = classification.PER_FIELD_ENDPOINTS
+    saved_secondary = dict(endpoints["C3"]["secondary_diagnostic"])
+    try:
+        endpoints["C3"]["secondary_diagnostic"]["release_bearing"] = True
+        check("promoting the C3 full-P1 diagnostic to release-bearing is REFUSED",
+              refusal_code(release_authority
+                           .require_per_field_implementation_conformance, plan)
+              == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        endpoints["C3"]["secondary_diagnostic"].clear()
+        endpoints["C3"]["secondary_diagnostic"].update(saved_secondary)
+    check("the C3 secondary diagnostic is restored to non-release-bearing",
+          refusal_code(release_authority
+                       .require_per_field_implementation_conformance, plan) is None)
+    check("frozen authority still says the joint P1 result does not change the "
+          "C3 verdict",
+          _case(plan, "C3_g5_block")["c3_semantics"]
+          ["joint_p1_result_changes_C3_release_verdict"] is False)
+
+    # --- the reported scope/reduction/pooling may not drift from authority ----
+    for key, wrong in (("field_scope", "PER_REPLICATE"),
+                       ("pooling", "PERMITTED"),
+                       ("within_replicate_field_reduction", "ANY_FIELD")):
+        saved_rule = classification.classify_campaign
+        try:
+            classification.classify_campaign = _drifting_classifier(saved_rule,
+                                                                    key, wrong)
+            release_authority.classify_campaign = classification.classify_campaign
+            check(f"a classifier reporting {key} = {wrong!r} is REFUSED",
+                  refusal_code(release_authority
+                               .require_per_field_implementation_conformance, plan)
+                  == "IMPLEMENTATION_AUTHORITY_LAG")
+        finally:
+            classification.classify_campaign = saved_rule
+            release_authority.classify_campaign = saved_rule
+
+    # --- the conformance check reaches the FULL preflight ---------------------
+    check("full preflight runs the per-field implementation conformance check",
+          "require_per_field_implementation_conformance" in
+          release_authority.require_release_authority_conformance.__code__.co_names)
+
+    # --- the boundaries it enforces are RECOMPUTED, never copied --------------
+    boundaries = plan["size_validation_semantics"]["derived_boundaries"]
+    for case, (replicates, nominal) in PER_FIELD_SIZE_CASES.items():
+        check(f"{case} boundary recomputed from the runtime parameters matches "
+              "frozen authority",
+              size_boundary(replicates, nominal) == boundaries[case]["boundary"],
+              str(size_boundary(replicates, nominal)))
+
+    # --- the driver counts per field and refuses every reduction --------------
+    for case_id, event in (("C2_geometry_false_rejection", "p1_rejected"),
+                           ("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        check(f"{case_id[:2]}: a cross-field reduction is FORBIDDEN",
+              refusal_code(replicate_level_rejections, plan, {}, case_id, event)
+              == "CROSS_FIELD_REDUCTION_FORBIDDEN")
+        check(f"{case_id[:2]}: the per-field counter derives its roster from the "
+              "frozen plan",
+              set(_case(plan, case_id)["fields_affected"]) == REQUIRED_SIZE_FIELDS)
+    check("the per-field counter exists and is what the driver calls",
+          callable(per_field_rejections))
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
@@ -2887,6 +3050,8 @@ GROUPS = (
      test_nested_semantic_leaf_totality),
     ("final-list totality and fixed deferred scope",
      test_list_and_deferred_scope_totality),
+    ("F1f runtime implementation conformance",
+     test_f1f_implementation_conformance),
     ("C2 DERIVED per-field authority binding",
      test_c2_derived_authority_binding),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),

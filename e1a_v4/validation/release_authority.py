@@ -55,12 +55,13 @@ import functools
 import os
 import re
 import dataclasses
-from dataclasses import dataclass
+from dataclasses import dataclass, fields as dataclass_fields
 from typing import Any
 
 from .classification import (
-    GROSS_INFLATION_TOLERANCE, SIZE_FAILURE, SIZE_INTERPRETATION,
-    SIZE_NO_INFLATION, size_boundary,
+    GROSS_INFLATION_TOLERANCE, PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS,
+    SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, CampaignCounts,
+    classify_campaign, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
 from .refusals import (
@@ -69,6 +70,7 @@ from .refusals import (
     ContractReleaseConfidenceRuleMismatch, ContractReleaseDerivedThresholdMismatch,
     ContractReleaseEndpointMismatch, ContractReleaseImplicationBroken,
     ContractReleaseReplicateCountMismatch, ContractReleaseTargetMismatch,
+    ImplementationAuthorityLag,
     NormativeSurfaceUnclassified, ProspectiveAmendmentMismatch,
     ResultSchemaInvalid,
 )
@@ -2380,6 +2382,156 @@ def require_field_size_amendment(plan: dict[str, Any]) -> None:
                 f"amendment: plan {actual!r}, canonical {expected!r}")
 
 
+#: The cases whose RUNTIME implementation is held to the per-field rule. Nothing
+#: here is a threshold: every R, alpha and boundary the check compares against is
+#: read from `size_validation_semantics.derived_boundaries`, so a runtime table
+#: that drifted from frozen authority refuses instead of being believed.
+PER_FIELD_IMPLEMENTATION_CASES = ("C2", "C3", "C4")
+#: The counts attribute each case must supply, and the scalar it must NOT supply.
+PER_FIELD_COUNTS_ATTRIBUTES = {
+    "C2": ("c2_rejections_by_field", "c2_rejections"),
+    "C3": ("c3_rejections_by_field", "c3_rejections"),
+    "C4": ("c4_rejections_by_field", "c4_rejections"),
+}
+
+
+def _clean_counts(per_case: dict[str, dict[str, int]]) -> CampaignCounts:
+    """A campaign that passes everything except what the caller sets. Pure."""
+    return CampaignCounts(
+        c1_successes=300,
+        c2_rejections_by_field=per_case["C2"],
+        c3_rejections_by_field=per_case["C3"],
+        c4_rejections_by_field=per_case["C4"],
+        c5_pass=True, c6_pass=True,
+        c7_false_acceptances_by_alternative={
+            "alt_1_06": 0, "alt_0_93_1_05": 0, "alt_1_10": 0, "hard_1_025": 0},
+        c8_successes=200)
+
+
+def require_per_field_implementation_conformance(plan: dict[str, Any]) -> None:
+    """POSITIVE PROOF that the runtime release classifier implements the per-field rule.
+
+    This replaces a refusal rather than merely deleting one. Before the C3/C4
+    amendment the driver refused to count C3 and C4 at all, because frozen
+    authority had not declared how four per-field decisions become one
+    replicate-level event. The amendment declared the answer -- PER FIELD,
+    `replicate_reduction: NONE`, `pooling: FORBIDDEN` -- so the placeholder refusal
+    is obsolete, and what takes its place has to be an assertion that the
+    implementation now expresses that rule, not silence.
+
+    Three independent things are checked, and all three are required:
+
+        SHAPE       the classifier's input declares four field counts for each of
+                    C2, C3 and C4, and declares no scalar case count that could
+                    carry a pooled or any-field total instead
+        PARAMETERS  the R and nominal alpha the runtime uses for each case equal
+                    the frozen `derived_boundaries` values, and the integer
+                    boundary RECOMPUTED from them equals the frozen one
+        BEHAVIOUR   one field over its boundary fails that case, names that field
+                    and leaves the case's other three conditions clean; and every
+                    field of every case sitting at EXACTLY its boundary is clean.
+                    A pooled or any-field implementation cannot do both.
+
+    Pure arithmetic over synthetic counts. No RNG, no records, no execution.
+    """
+    boundaries = plan["size_validation_semantics"]["derived_boundaries"]
+    declared = {f.name for f in dataclass_fields(CampaignCounts)}
+    for case in PER_FIELD_IMPLEMENTATION_CASES:
+        per_field_attribute, scalar_attribute = PER_FIELD_COUNTS_ATTRIBUTES[case]
+        if per_field_attribute not in declared:
+            raise ImplementationAuthorityLag(
+                f"the campaign classifier input declares no {per_field_attribute!r}. "
+                f"{case} is scored PER FIELD and its four field counts are the "
+                "scientific result; a case-level total cannot say which field "
+                "inflated")
+        if scalar_attribute in declared:
+            raise ImplementationAuthorityLag(
+                f"the campaign classifier input still declares the scalar "
+                f"{scalar_attribute!r}. {case} declares replicate_reduction "
+                f"{boundaries[case]['replicate_reduction']!r} and pooling "
+                f"{boundaries[case]['pooling']!r}, so a single case count is a "
+                "statistic the release rule does not contain")
+        replicates, nominal = PER_FIELD_SIZE_CASES[case]
+        row = boundaries[case]
+        if (replicates, nominal) != (row["replicates"], row["nominal_alpha"]):
+            raise ImplementationAuthorityLag(
+                f"the runtime scores {case} at R = {replicates}, alpha = {nominal} "
+                f"while frozen authority declares R = {row['replicates']}, alpha = "
+                f"{row['nominal_alpha']}")
+        recomputed = size_boundary(replicates, nominal)
+        if recomputed != row["boundary"]:
+            raise ImplementationAuthorityLag(
+                f"{case}: the boundary recomputed from the runtime parameters is "
+                f"{recomputed}, but frozen authority declares {row['boundary']}")
+
+    # --- BEHAVIOUR. Two classifications decide it, and the exhaustive
+    # field-by-field enumeration lives in the test suites rather than here: this
+    # runs inside every preflight, and a Clopper-Pearson bound is not cheap.
+    #
+    # PROBE 1. A DIFFERENT field is pushed one over its boundary in each of the
+    # three cases at once. Exactly three size failures must come back, each naming
+    # its own case and its own field, with the other nine field conditions clean.
+    # A pooled or reduced implementation cannot produce that.
+    roster = sorted(REQUIRED_SIZE_FIELDS)
+    probe_field = {case: roster[index] for index, case
+                   in enumerate(PER_FIELD_IMPLEMENTATION_CASES)}
+    over = {case: {f: 0 for f in REQUIRED_SIZE_FIELDS}
+            for case in PER_FIELD_IMPLEMENTATION_CASES}
+    for case, field_id in probe_field.items():
+        over[case][field_id] = boundaries[case]["boundary"] + 1
+    result = classify_campaign(_clean_counts(over))
+    size_failures = [f for f in result["failures"] if SIZE_FAILURE in f]
+    if result["verdict"] != "VALIDATION_FAILURE" or len(size_failures) != 3:
+        raise ImplementationAuthorityLag(
+            "one field over its boundary in each of C2, C3 and C4 must produce "
+            f"exactly three field-identified release failures; got {size_failures}")
+    for case, field_id in probe_field.items():
+        named = [f for f in size_failures if field_id in f and f"({case} " in f]
+        if len(named) != 1:
+            raise ImplementationAuthorityLag(
+                f"{case} field {field_id} over its boundary produced no uniquely "
+                f"identified failure naming that case and that field: {size_failures}")
+        contaminated = sorted(
+            f for f in REQUIRED_SIZE_FIELDS
+            if f != field_id
+            and result["detail"][case][f]["verdict"] != SIZE_NO_INFLATION)
+        if contaminated:
+            raise ImplementationAuthorityLag(
+                f"{case} field {field_id} over its boundary also failed "
+                f"{contaminated}; a field's condition is its own")
+
+    # PROBE 2. Every field of every case sits at EXACTLY its boundary. Under the
+    # declared per-field rule that is clean; any pooled or any-field reduction of
+    # the same counts is not. This is the difference the amendment preserved.
+    spread = {case: {f: boundaries[case]["boundary"] for f in REQUIRED_SIZE_FIELDS}
+              for case in PER_FIELD_IMPLEMENTATION_CASES}
+    clean = classify_campaign(_clean_counts(spread))
+    if any(SIZE_FAILURE in f for f in clean["failures"]):
+        raise ImplementationAuthorityLag(
+            "every field at exactly its boundary is clean under the declared "
+            f"per-field rule, but the implementation reported {clean['failures']}; "
+            "that is a pooled or reduced count")
+
+    # --- the result says which endpoint released, and which did not -----------
+    semantics = clean["endpoint_semantics"]
+    for case in PER_FIELD_IMPLEMENTATION_CASES:
+        row, stated = boundaries[case], semantics[case]
+        if (stated["pooling"] != "FORBIDDEN"
+                or stated["within_replicate_field_reduction"] != row["replicate_reduction"]
+                or stated["field_scope"] != "PER_FIELD"):
+            raise ImplementationAuthorityLag(
+                f"{case}: the classifier reports field scope "
+                f"{stated['field_scope']!r}, reduction "
+                f"{stated['within_replicate_field_reduction']!r} and pooling "
+                f"{stated['pooling']!r}, which does not restate frozen authority")
+    c3_secondary = semantics["C3"]["secondary_diagnostic"]
+    if c3_secondary["release_bearing"] is not False:
+        raise ImplementationAuthorityLag(
+            "the C3 full-P1 interaction diagnostic is reported as release-bearing; "
+            "frozen authority declares it SECONDARY and states that the joint P1 "
+            "result does not change the C3 release verdict")
+
+
 def release_binding_specification(contract: dict[str, Any], plan: dict[str, Any],
                                   root: str = ".") -> tuple[ReleaseBinding, ...]:
     """Every release-bearing frozen quantity and the plan value that restates it."""
@@ -2794,6 +2946,7 @@ def require_release_authority_conformance(contract: dict[str, Any], plan: dict[s
     require_field_size_surface_totality(plan)
     require_size_semantics_leaf_totality(plan)
     require_field_size_amendment(plan)
+    require_per_field_implementation_conformance(plan)
     rows = release_binding_specification(contract, plan, root)
     inventory = release_inventory(contract, plan, root, rows)
     if inventory["unclassified"]:

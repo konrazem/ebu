@@ -43,6 +43,7 @@ NO RNG. Nothing here draws.
 
 from __future__ import annotations
 
+import functools
 from dataclasses import dataclass, field
 from typing import Mapping, Sequence
 
@@ -74,6 +75,14 @@ GROSS_INFLATION_LABEL = ("MANDATORY CONTRACT DIAGNOSTIC [synthetic_validation_"
                          "validation of the nominal alpha and NOT the release gate")
 
 
+#: MEMOISED, not changed. `size_boundary` is a pure function of (n, nominal) and
+#: `classify_size` calls it on every per-field assessment, so scoring three cases
+#: PER FIELD evaluates the same three boundaries twelve times per classification
+#: and many times again inside preflight. The cache returns the identical derived
+#: integer; it exists so that counting four fields instead of one does not make
+#: the frozen boundary derivation quadratically expensive. Three entries is the
+#: whole working set.
+@functools.lru_cache(maxsize=None)
 def size_boundary(n: int, nominal: float) -> int:
     """Largest rejection count whose one-sided 95% CP LOWER bound stays <= nominal.
 
@@ -125,22 +134,78 @@ RELEASE_FAILING_CLASSIFICATIONS = (
 )
 
 # A missing row is not a successful zero-rejection row.
-REQUIRED_C2_FIELDS = frozenset((
+#: THE canonical four-field roster, typed ONCE. C2, C3 and C4 are all scored PER
+#: FIELD over exactly these fields. `plan.bind_execution` refuses unless every one
+#: of those cases declares this set in `fields_affected` and the adopted contract
+#: carries it too, so a missing, duplicated, extra, unknown or reference-field-only
+#: set cannot reach the classifier.
+REQUIRED_SIZE_FIELDS = frozenset((
     "theta0_circular", "theta1_power", "theta2_ellipse", "theta3_temperature",
 ))
 REQUIRED_C7_ALTERNATIVES = frozenset((
     "alt_1_06", "alt_0_93_1_05", "alt_1_10", "hard_1_025",
 ))
 
+#: The three PER-FIELD size cases: (replicates PER FIELD, nominal alpha). Each
+#: declared field keeps its OWN R-replicate sequence of decisions, so there is no
+#: within-replicate cross-field reduction and no pooling of counts. The integer
+#: boundary is deliberately NOT written here: `classify_size` derives it with
+#: `size_boundary(R, alpha)`, which is the one canonical computation.
+PER_FIELD_SIZE_CASES = {
+    "C2": (400, 0.005),       # P1 rejection per field,          alpha_geom
+    "C3": (400, 0.001),       # G5 / Block-2 rejection per field, alpha_2
+    "C4": (2000, 0.004),      # Block-1 rejection per field,      alpha_1
+}
+
+#: What each per-field size case RELEASES on, and -- for C3 -- what it explicitly
+#: does not. Reported beside the counts so no reader of a result has to infer
+#: which endpoint carried the release decision.
+PER_FIELD_ENDPOINTS = {
+    "C2": {
+        "primary_endpoint": "P1_FALSE_REJECTION_RATE_PER_FIELD",
+        "elementary_event": "P1 rejection for ONE declared field",
+    },
+    "C3": {
+        "primary_endpoint": "G5_BLOCK_SIZE",
+        "elementary_event": "actual G5 / Block-2 rejection for ONE declared field",
+        "secondary_diagnostic": {
+            "label": "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
+            "quantity": "the full two-block P1 result, recorded per field",
+            "release_bearing": False,
+            "note": ("reported because the frozen scientific purpose requires the "
+                     "two-mode max statistic's INTERACTION WITH THE TWO-BLOCK GATE; "
+                     "it never enters the C3 primary rejection count and cannot "
+                     "fail the C3 release on its own"),
+        },
+    },
+    "C4": {
+        "primary_endpoint": "BLOCK1_ACHIEVED_SIZE",
+        "elementary_event": "actual Block-1 rejection for ONE declared field",
+    },
+}
+
 
 @dataclass(frozen=True)
 class CampaignCounts:
-    """Frozen shape of the counts the campaign will produce. No values are supplied here."""
+    """Frozen shape of the counts the campaign will produce. No values are supplied here.
+
+    C3 AND C4 CARRY FOUR FIELD COUNTS, NOT A SCALAR
+        They used to carry `c3_rejections: int` and `c4_rejections: int`, which was
+        the implementation of a replicate-level event the frozen authority never
+        declared. The authority now declares both cases PER FIELD with no
+        within-replicate reduction and no pooling, so a single scalar can no longer
+        express the scientific result: it cannot say WHICH field inflated, and the
+        count it would hold -- replicates in which ANY field rejected -- is a
+        different statistical object with a different null rate. No ambiguous
+        scalar is retained, because no official result data exists to be
+        reinterpreted and an unused convenience field would be the exact ambiguity
+        the amendment removed.
+    """
 
     c1_successes: int                              # of 300
     c2_rejections_by_field: Mapping[str, int]      # of 400 each
-    c3_rejections: int                             # of 400
-    c4_rejections: int                             # of 2000
+    c3_rejections_by_field: Mapping[str, int]      # of 400 each
+    c4_rejections_by_field: Mapping[str, int]      # of 2000 each
     c5_pass: bool
     c6_pass: bool
     c7_false_acceptances_by_alternative: Mapping[str, int]   # of 400 each
@@ -155,8 +220,21 @@ def classify_campaign(counts: CampaignCounts) -> dict:
     Every required case must pass on its own terms. There is NO weighted score and NO
     compensation: one case cannot make up for another's failure.
     """
-    if set(counts.c2_rejections_by_field) != REQUIRED_C2_FIELDS:
-        raise Refusal("C2 requires exactly the four declared field counts")
+    per_field = {"C2": counts.c2_rejections_by_field,
+                 "C3": counts.c3_rejections_by_field,
+                 "C4": counts.c4_rejections_by_field}
+    for case, supplied in per_field.items():
+        replicates, _nominal = PER_FIELD_SIZE_CASES[case]
+        if set(supplied) != REQUIRED_SIZE_FIELDS:
+            raise Refusal(
+                f"{case} requires exactly the four declared field counts. A missing "
+                "field, an extra field, a reference-field-only set and a single "
+                "pooled scalar are each a DIFFERENT statistical object from the "
+                "declared per-field rule, not a convenience")
+        if any(not 0 <= k <= replicates for k in supplied.values()):
+            raise Refusal(
+                f"{case} field rejection count exceeds its declared {replicates} "
+                "per-field replicates")
     if set(counts.c7_false_acceptances_by_alternative) != REQUIRED_C7_ALTERNATIVES:
         raise Refusal("C7 requires exactly the four declared alternative counts")
     if not 0 <= counts.c1_successes <= 300 or not 0 <= counts.c8_successes <= 200:
@@ -177,23 +255,24 @@ def classify_campaign(counts: CampaignCounts) -> dict:
     if not c1_ok:
         failures.append("TRUE_BRIDGE_POWER_FAILURE (C1 complete-pipeline success)")
 
-    # 2. C2 per field, never pooled
-    detail["C2"] = {}
-    for fid, k in counts.c2_rejections_by_field.items():
-        res = classify_size(k, 400, 0.005)
-        detail["C2"][fid] = res
-        if res["verdict"] == SIZE_FAILURE:
-            failures.append(f"STATISTICAL_SIZE_FAILURE (C2 field {fid})")
-
-    # 3. C3 G5 block
-    detail["C3"] = classify_size(counts.c3_rejections, 400, 0.001)
-    if detail["C3"]["verdict"] == SIZE_FAILURE:
-        failures.append("STATISTICAL_SIZE_FAILURE (C3 G5 block)")
-
-    # 4. C4 Block-1 under the surrogate
-    detail["C4"] = classify_size(counts.c4_rejections, 2000, 0.004)
-    if detail["C4"]["verdict"] == SIZE_FAILURE:
-        failures.append("STATISTICAL_SIZE_FAILURE (C4 Block-1 surrogate)")
+    # 2, 3, 4. C2, C3 and C4 PER FIELD, never pooled. Each declared field is its
+    # own R-replicate size assessment against its own boundary and contributes its
+    # own release condition, so a failing field stays identifiable in `failures`.
+    # There is NO within-replicate any-field event, NO every-field event, NO
+    # reference-field-only event and NO pooled count: each of those is a different
+    # statistical object with a different null rate. Four field conditions entering
+    # the conjunction below is an intersection-union test, not a reduction of the
+    # replicate-level event -- the same shape C7 already uses per alternative.
+    for case, endpoint in (("C2", "P1 geometry"), ("C3", "G5 block"),
+                           ("C4", "Block-1 surrogate")):
+        replicates, nominal = PER_FIELD_SIZE_CASES[case]
+        detail[case] = {}
+        for fid in sorted(per_field[case]):
+            res = classify_size(per_field[case][fid], replicates, nominal)
+            detail[case][fid] = res
+            if res["verdict"] == SIZE_FAILURE:
+                failures.append(
+                    f"STATISTICAL_SIZE_FAILURE ({case} {endpoint}, field {fid})")
 
     # 5, 6. already-frozen criteria
     detail["C5"] = {"passed": counts.c5_pass}
@@ -236,6 +315,19 @@ def classify_campaign(counts: CampaignCounts) -> dict:
         "detail": detail,
         "rule": ("conjunctive: every required case must pass on its own terms; no weighted "
                  "score, no compensation between cases"),
+        # C2, C3 and C4 each contribute FOUR field conditions. Stated explicitly so
+        # a reader never has to infer which endpoint carried the release decision,
+        # and so C3's full-P1 diagnostic is visibly NOT one of them.
+        "endpoint_semantics": {
+            case: dict(PER_FIELD_ENDPOINTS[case],
+                       field_scope="PER_FIELD",
+                       replicates_per_field=PER_FIELD_SIZE_CASES[case][0],
+                       nominal_alpha=PER_FIELD_SIZE_CASES[case][1],
+                       within_replicate_field_reduction="NONE",
+                       pooling="FORBIDDEN",
+                       required_field_conditions=sorted(REQUIRED_SIZE_FIELDS))
+            for case in PER_FIELD_SIZE_CASES
+        },
         "independent_facts": {
             "complete_pipeline_met": c1_ok,
             "component_size_clean": not any(f.startswith("STATISTICAL_SIZE_FAILURE") for f in failures),

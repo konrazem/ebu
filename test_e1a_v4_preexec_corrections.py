@@ -106,22 +106,36 @@ def check_incomplete_counts() -> None:
     verify(len(fields) == len(alternatives) == 4,
            "the campaign declares exactly four fields and four alternatives")
     base = dict(c1_successes=290, c2_rejections_by_field={f: 1 for f in fields},
-                c3_rejections=0, c4_rejections=0, c5_pass=True, c6_pass=True,
+                c3_rejections_by_field={f: 0 for f in fields},
+                c4_rejections_by_field={f: 0 for f in fields},
+                c5_pass=True, c6_pass=True,
                 c7_false_acceptances_by_alternative={a: 0 for a in alternatives},
                 c8_successes=195)
     verify(classify_campaign(CampaignCounts(**base))["verdict"] == "VALIDATION_PASS",
            "a complete count map classifies normally")
     for missing, what in (("c2_rejections_by_field", "C2 field"),
+                          ("c3_rejections_by_field", "C3 field"),
+                          ("c4_rejections_by_field", "C4 field"),
                           ("c7_false_acceptances_by_alternative", "C7 alternative")):
         incomplete = dict(base)
         incomplete[missing] = {}
         verify(refuses(classify_campaign, CampaignCounts(**incomplete)),
                f"an empty {what} map is REFUSED by the campaign classifier")
-    for drop in fields:
-        partial = dict(base)
-        partial["c2_rejections_by_field"] = {f: 1 for f in fields if f != drop}
-        verify(refuses(classify_campaign, CampaignCounts(**partial)),
-               f"a C2 map missing {drop} is REFUSED")
+    # EVERY per-field size case, not only C2: a missing field is a missing release
+    # condition, and C3 and C4 are now scored per field exactly as C2 is.
+    for case, key in (("C2", "c2_rejections_by_field"),
+                      ("C3", "c3_rejections_by_field"),
+                      ("C4", "c4_rejections_by_field")):
+        for drop in fields:
+            partial = dict(base)
+            partial[key] = {f: base[key][f] for f in fields if f != drop}
+            verify(refuses(classify_campaign, CampaignCounts(**partial)),
+                   f"a {case} map missing {drop} is REFUSED")
+        # a REFERENCE-FIELD-ONLY implementation is the same defect, stated shorter
+        reference_only = dict(base)
+        reference_only[key] = {fields[0]: base[key][fields[0]]}
+        verify(refuses(classify_campaign, CampaignCounts(**reference_only)),
+               f"a {case} reference-field-only map is REFUSED")
     for drop in alternatives:
         partial = dict(base)
         partial["c7_false_acceptances_by_alternative"] = {
@@ -133,10 +147,12 @@ def check_incomplete_counts() -> None:
                f"the direct G2 helper REFUSES a map missing {drop}")
     verify(refuses(g2_campaign_pass, {}),
            "the direct G2 helper REFUSES an empty alternative map")
-    verify(refuses(classify_campaign, CampaignCounts(
-        **{**base, "c2_rejections_by_field": {**base["c2_rejections_by_field"],
-                                              "theta9_invented": 0}})),
-        "an EXTRA unknown C2 field is REFUSED")
+    for case, key in (("C2", "c2_rejections_by_field"),
+                      ("C3", "c3_rejections_by_field"),
+                      ("C4", "c4_rejections_by_field")):
+        verify(refuses(classify_campaign, CampaignCounts(
+            **{**base, key: {**base[key], "theta9_invented": 0}})),
+            f"an EXTRA unknown {case} field is REFUSED")
     verify(refuses(classify_campaign, CampaignCounts(
         **{**base, "c7_false_acceptances_by_alternative": {
             **base["c7_false_acceptances_by_alternative"], "alt_invented": 0}})),

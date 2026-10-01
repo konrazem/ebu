@@ -102,8 +102,9 @@ from .refusals import (
     CalibrationLockProvenanceMismatch, CalibrationLockUnplanned,
     CalibrationLockWithoutPublication, CampaignIncomplete,
     CampaignManifestInvalid, CampaignPlanMismatch,
-    ContractMandatoryDiagnosticMissing, EndpointEventMissing,
-    EndpointEventReductionUndeclared, ExecutionAuthorisationMissing,
+    ContractMandatoryDiagnosticMissing, CrossFieldReductionForbidden,
+    EndpointEventMissing, EndpointEventReductionUndeclared,
+    ExecutionAuthorisationMissing,
     JobStateInvalid, PublicationDigestMismatch, PublicationIncomplete,
     RestartInventoryMismatch, ResultCaseMismatch, ResultFieldSetMismatch,
     ResultSchemaInvalid, ScaleControlInvalid, StochasticProviderRefused,
@@ -3626,47 +3627,81 @@ def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
     return out
 
 
-#: C3 and C4 are scored over REPLICATES -- `unit: campaign`, R = 400 and R = 2000 --
-#: while the events they score, the Block-2 (G5) and Block-1 decisions, are
-#: produced PER FIELD by the two-block gate. Both cases declare four fields, so a
-#: rule is needed to turn four per-field decisions into the one replicate-level
-#: event their denominators count. Frozen authority does not state one:
-#: `size_validation_semantics.derived_boundaries` marks C2 `per_field: true` and
-#: says nothing of the kind for C3 or C4, and neither case's criterion, endpoint
-#: nor assurance row defines the reduction. Disjunction ("any field rejects") is
-#: the obvious guess and it is still a guess: it changes the measured size, so it
-#: is a scientific decision, not an implementation detail.
-UNDECLARED_EVENT_REDUCTION = (
-    "frozen authority does not declare how the four PER-FIELD decisions of a "
-    "replicate combine into the ONE replicate-level event this case's denominator "
-    "counts. The case is scored over replicates (assurance unit 'campaign') while "
-    "the two-block gate decides per field, and no frozen document states the "
-    "reduction. The driver refuses rather than choosing between 'any field "
-    "rejects', 'the reference field rejects' and 'every field rejects', which are "
-    "different measured sizes. This must be declared in frozen authority BEFORE "
-    "the seal is frozen."
+#: C2, C3 and C4 are each scored PER FIELD -- all three assurance rows carry
+#: `unit: per_field`, and `size_validation_semantics.derived_boundaries` marks all
+#: three `per_field: true`, `pooling: "FORBIDDEN - every field is reported
+#: separately"` and `replicate_reduction: "NONE"`. The two-block gate decides per
+#: field, every field keeps its own R-replicate sequence of those decisions, and
+#: there is NOTHING to reduce: no replicate-level event is defined, so none is
+#: computed. An any-field event, an every-field event, a reference-field-only
+#: event and a pooled count are four different statistical objects with four
+#: different null rates, and authority declares none of them.
+FORBIDDEN_EVENT_REDUCTION = (
+    "frozen authority FORBIDS reducing the four PER-FIELD decisions of a replicate "
+    "into one replicate-level event for this case. The assurance row's unit is "
+    "'per_field', the derived boundary declares replicate_reduction 'NONE' and "
+    "pooling 'FORBIDDEN', and the case criterion states that each declared field "
+    "keeps its OWN R-replicate sequence of decisions. 'any field rejects', 'the "
+    "reference field rejects', 'every field rejects' and a pooled count are "
+    "different measured sizes, and none of them is the declared rule. Count each "
+    "field separately with `per_field_rejections`."
 )
+
+
+def per_field_rejections(plan: Mapping[str, Any],
+                         records: Mapping[str, Mapping[str, Any]],
+                         case_id: str, event: str) -> dict[str, int]:
+    """One rejection count PER DECLARED FIELD. The positive per-field implementation.
+
+    This is what replaced the refusal the driver used to raise for C3 and C4. The
+    reduction is not chosen here and is not chosen anywhere: each declared field is
+    counted over its OWN R replicates, exactly as C2 already was, and the four
+    counts stay four counts all the way into the conjunctive release classifier.
+
+    The field roster is the FROZEN PLAN'S OWN `fields_affected` for this case --
+    never a list typed here -- so a missing, extra, duplicated or renamed field
+    refuses upstream rather than silently changing which conditions are required.
+    The release unit must be a single subcondition: where a case marks one
+    `feeds_primary_claim`, that one carries the release claim, and a case that
+    marked none would need a declared rule for combining several release units per
+    field, which frozen authority does not state.
+    """
+    fields = required_result_fields(plan, case_id)
+    subconditions = release_subconditions(plan, case_id)
+    declared = case_entry(plan, case_id)["replicate_count"]
+    if len(subconditions) != 1:
+        raise EndpointEventReductionUndeclared(
+            f"{case_id} has {len(subconditions)} release subconditions "
+            f"{list(subconditions)}; frozen authority declares no rule for "
+            "combining several release units into one per-field size assessment, "
+            "and silently counting the first would be that rule")
+    return {field_id: field_event_count(records, case_id, subconditions[0],
+                                        field_id, event, declared)
+            for field_id in fields}
 
 
 def replicate_level_rejections(plan: Mapping[str, Any],
                                records: Mapping[str, Mapping[str, Any]],
                                case_id: str, event: str) -> int:
-    """The replicate-level rejection count for a case scored over replicates.
+    """THE STRUCTURAL BAN on a within-replicate cross-field reduction.
 
-    Implemented where the reduction is unambiguous (a single declared field) and
-    REFUSED, by name, where frozen authority leaves it open. The per-field
-    decisions themselves are recorded faithfully either way, so the eventual
-    authorised reduction has genuine events to consume.
+    It used to refuse because frozen authority was SILENT about the reduction. The
+    authority amendment resolved that silence in the opposite direction from the
+    obvious guess -- PER FIELD, `replicate_reduction: NONE`, `pooling: FORBIDDEN`
+    -- so this function is kept and its refusal is now the stronger one: there is
+    no replicate-level event to compute, and a caller asking for one is asking for
+    a statistic the release rule does not contain.
+
+    The single-field case is refused too. C6 declares one field and reaches
+    `field_event_count` directly, so permitting a "trivial" reduction here would
+    only leave a path by which a case that later declared four fields could be
+    reduced without anyone re-reading this rule.
     """
     fields = required_result_fields(plan, case_id)
-    subcondition = release_subconditions(plan, case_id)[0]
     declared = case_entry(plan, case_id)["replicate_count"]
-    if len(fields) == 1:
-        return field_event_count(records, case_id, subcondition, fields[0], event,
-                                 declared)
-    raise EndpointEventReductionUndeclared(
-        f"{case_id}: {UNDECLARED_EVENT_REDUCTION} It declares {len(fields)} fields "
-        f"and scores {event!r} over {declared} replicates.")
+    raise CrossFieldReductionForbidden(
+        f"{case_id}: {FORBIDDEN_EVENT_REDUCTION} It declares {len(fields)} fields "
+        f"and {declared} replicates per field for {event!r}.")
 
 
 def campaign_counts_from_records(plan: Mapping[str, Any],
@@ -3697,13 +3732,14 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
     # own R replicates -- `size_validation_semantics.derived_boundaries.C2`
     # carries `per_field: true` and `pooling: FORBIDDEN`.
     c2_case = "C2_geometry_false_rejection"
-    c2_sub = release_subconditions(plan, c2_case)[0]
-    c2 = {field_id: field_event_count(records, c2_case, c2_sub, field_id,
-                                      "p1_rejected", replicates(c2_case))
-          for field_id in required_result_fields(plan, c2_case)}
-    c3 = replicate_level_rejections(plan, records, "C3_g5_block", "g5_rejected")
-    c4 = replicate_level_rejections(plan, records, "C4_surrogate_validity",
-                                    "block1_rejected")
+    c2 = per_field_rejections(plan, records, c2_case, "p1_rejected")
+    # C3 and C4: PER FIELD, exactly as C2 above, and for the same reason. C3 counts
+    # the ACTUAL G5 / Block-2 decision and C4 the ACTUAL Block-1 decision -- never
+    # the combined P1 scalar, which for C3 is the SECONDARY predeclared interaction
+    # diagnostic and carries no release weight.
+    c3 = per_field_rejections(plan, records, "C3_g5_block", "g5_rejected")
+    c4 = per_field_rejections(plan, records, "C4_surrogate_validity",
+                              "block1_rejected")
     # C5 is REPORT ONLY in frozen authority: the criterion is that every declared
     # cell is reported, not that any cell clears a threshold. Completeness IS the
     # criterion, and dropping a cell after inspection is the failure it guards.
@@ -3734,8 +3770,8 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
     c8 = sum(1 for v in verdicts("C8_blinded_scale_control", c8_sub).values()
              if v["scale_recovered"] is True)
     return CampaignCounts(
-        c1_successes=c1, c2_rejections_by_field=c2, c3_rejections=c3,
-        c4_rejections=c4, c5_pass=bool(c5_pass), c6_pass=bool(c6_pass),
+        c1_successes=c1, c2_rejections_by_field=c2, c3_rejections_by_field=c3,
+        c4_rejections_by_field=c4, c5_pass=bool(c5_pass), c6_pass=bool(c6_pass),
         c7_false_acceptances_by_alternative=c7, c8_successes=c8)
 
 

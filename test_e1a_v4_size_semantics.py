@@ -14,7 +14,8 @@ import os
 from e1a_v4.contract import load_contract, sha256_file
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation.classification import (
-    GROSS_INFLATION_TOLERANCE, RELEASE_FAILING_CLASSIFICATIONS, SIZE_FAILURE,
+    GROSS_INFLATION_TOLERANCE, PER_FIELD_ENDPOINTS, PER_FIELD_SIZE_CASES,
+    RELEASE_FAILING_CLASSIFICATIONS, REQUIRED_SIZE_FIELDS, SIZE_FAILURE,
     SIZE_INTERPRETATION, SIZE_NO_INFLATION, CampaignCounts, classify_campaign,
     classify_size, size_boundary, size_inflation_detected,
 )
@@ -130,7 +131,8 @@ def test_interpretation() -> None:
 def counts(**over) -> CampaignCounts:
     base = dict(c1_successes=290,
                 c2_rejections_by_field={f: 2 for f in FIELDS},
-                c3_rejections=1, c4_rejections=8,
+                c3_rejections_by_field={f: 1 for f in FIELDS},
+                c4_rejections_by_field={f: 8 for f in FIELDS},
                 c5_pass=True, c6_pass=True,
                 c7_false_acceptances_by_alternative={a: 1 for a in ALTS},
                 c8_successes=195, hard_failures=(), refusal_accounting_ok=True)
@@ -150,8 +152,12 @@ def test_campaign() -> None:
         ("C1 fails alone", dict(c1_successes=278), "TRUE_BRIDGE_POWER_FAILURE"),
         ("C2 fails alone", dict(c2_rejections_by_field={**{f: 2 for f in FIELDS}, FIELDS[2]: 6}),
          "STATISTICAL_SIZE_FAILURE"),
-        ("C3 fails alone", dict(c3_rejections=3), "STATISTICAL_SIZE_FAILURE"),
-        ("C4 fails alone", dict(c4_rejections=14), "STATISTICAL_SIZE_FAILURE"),
+        ("C3 fails alone in one field",
+         dict(c3_rejections_by_field={**{f: 1 for f in FIELDS}, FIELDS[1]: 3}),
+         "STATISTICAL_SIZE_FAILURE"),
+        ("C4 fails alone in one field",
+         dict(c4_rejections_by_field={**{f: 8 for f in FIELDS}, FIELDS[3]: 14}),
+         "STATISTICAL_SIZE_FAILURE"),
         ("C5 fails alone", dict(c5_pass=False), "STATISTICAL_SIZE_FAILURE"),
         ("C6 fails alone", dict(c6_pass=False), "MODE_RESOLUTION_FAILURE"),
         ("C7 hard alternative fails alone",
@@ -174,17 +180,21 @@ def test_campaign() -> None:
     check("C2 at exactly 5 per field passes",
           classify_campaign(counts(c2_rejections_by_field={f: 5 for f in FIELDS}))["verdict"]
           == "VALIDATION_PASS")
-    check("C3 at exactly 2 passes", classify_campaign(counts(c3_rejections=2))["verdict"]
-          == "VALIDATION_PASS")
-    check("C4 at exactly 13 passes", classify_campaign(counts(c4_rejections=13))["verdict"]
-          == "VALIDATION_PASS")
+    check("C3 at exactly 2 per field passes",
+          classify_campaign(counts(c3_rejections_by_field={f: 2 for f in FIELDS}))
+          ["verdict"] == "VALIDATION_PASS")
+    check("C4 at exactly 13 per field passes",
+          classify_campaign(counts(c4_rejections_by_field={f: 13 for f in FIELDS}))
+          ["verdict"] == "VALIDATION_PASS")
     check("C7 at exactly 4 per alternative passes",
           classify_campaign(counts(c7_false_acceptances_by_alternative={a: 4 for a in ALTS}))
           ["verdict"] == "VALIDATION_PASS")
     check("C8 at exactly 188 passes", classify_campaign(counts(c8_successes=188))["verdict"]
           == "VALIDATION_PASS")
 
-    mixed = classify_campaign(counts(c1_successes=295, c3_rejections=3))
+    mixed = classify_campaign(counts(
+        c1_successes=295,
+        c3_rejections_by_field={**{f: 1 for f in FIELDS}, FIELDS[1]: 3}))
     check("C1 meeting the target does NOT rescue a size failure",
           mixed["verdict"] == "VALIDATION_FAILURE"
           and mixed["independent_facts"]["complete_pipeline_met"] is True
@@ -198,11 +208,16 @@ def test_campaign() -> None:
     check("no weighted score and no compensation",
           "no weighted" in classify_campaign(counts())["rule"]
           and "no compensation" in classify_campaign(counts())["rule"])
-    multi = classify_campaign(counts(c1_successes=270, c3_rejections=3, c8_successes=180))
+    multi = classify_campaign(counts(
+        c1_successes=270, c8_successes=180,
+        c3_rejections_by_field={**{f: 1 for f in FIELDS}, FIELDS[1]: 3}))
     check("multiple failures are all listed, none swallowed", len(multi["failures"]) == 3,
           "; ".join(multi["failures"])[:80])
-    check("C2 is evaluated per field, all four reported",
-          len(classify_campaign(counts())["detail"]["C2"]) == 4)
+    for case in ("C2", "C3", "C4"):
+        check(f"{case} is evaluated per field, all four reported",
+              len(classify_campaign(counts())["detail"][case]) == 4
+              and set(classify_campaign(counts())["detail"][case])
+              == REQUIRED_SIZE_FIELDS)
     check("release-failing classifications are exactly the three declared",
           RELEASE_FAILING_CLASSIFICATIONS ==
           ("SOFTWARE_OR_INVARIANT_FAILURE", "CALIBRATION_FAILURE", "NUMERICAL_OR_PRECISION_FAILURE"))
@@ -219,6 +234,79 @@ def test_campaign() -> None:
           and "RESULT_SCHEMA_INVALID"
           in PLAN["final_campaign_classification"]["requirements"][10])
     check("out-of-range counts are refused", refuses(size_inflation_detected, 401, 400, 0.005))
+
+
+def test_per_field_release_semantics() -> None:
+    """F1f. C2, C3 and C4 each contribute FOUR field conditions, and say so."""
+    semantics = classify_campaign(counts())["endpoint_semantics"]
+    boundaries = PLAN["size_validation_semantics"]["derived_boundaries"]
+    for case in ("C2", "C3", "C4"):
+        stated, frozen_row = semantics[case], boundaries[case]
+        check(f"{case} reports PER_FIELD scope, no reduction, no pooling",
+              stated["field_scope"] == "PER_FIELD"
+              and stated["within_replicate_field_reduction"] == "NONE"
+              and stated["pooling"] == "FORBIDDEN")
+        check(f"{case} restates the frozen R and alpha, never its own",
+              (stated["replicates_per_field"], stated["nominal_alpha"])
+              == (frozen_row["replicates"], frozen_row["nominal_alpha"]),
+              str((stated["replicates_per_field"], stated["nominal_alpha"])))
+        check(f"{case} names exactly the four required field conditions",
+              set(stated["required_field_conditions"]) == REQUIRED_SIZE_FIELDS
+              and len(stated["required_field_conditions"]) == 4)
+        check(f"{case} reports the endpoint it releases on",
+              stated["primary_endpoint"]
+              == PER_FIELD_ENDPOINTS[case]["primary_endpoint"])
+    check("C3's primary endpoint is the G5 block, not the full P1 result",
+          semantics["C3"]["primary_endpoint"] == "G5_BLOCK_SIZE")
+    check("C3's full-P1 interaction diagnostic is SECONDARY and non-release-bearing",
+          semantics["C3"]["secondary_diagnostic"]["release_bearing"] is False
+          and semantics["C3"]["secondary_diagnostic"]["label"]
+          == "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC")
+    check("C4's primary endpoint is the achieved Block-1 size",
+          semantics["C4"]["primary_endpoint"] == "BLOCK1_ACHIEVED_SIZE")
+
+    # --- NO POOLING: the same total, scored two ways, is two different verdicts -
+    # C3's boundary is 2 per field. Four fields at 2 is a total of 8 and PASSES;
+    # the same 8 concentrated in one field is 8 > 2 and FAILS. A pooled rule could
+    # not tell these apart -- which is exactly why pooling is forbidden.
+    spread = classify_campaign(counts(
+        c3_rejections_by_field={f: 2 for f in FIELDS}))
+    concentrated = classify_campaign(counts(
+        c3_rejections_by_field={**{f: 0 for f in FIELDS}, FIELDS[0]: 8}))
+    check("C3: 8 rejections spread 2/2/2/2 is CLEAN",
+          spread["verdict"] == "VALIDATION_PASS")
+    check("C3: the SAME 8 rejections in one field is a SIZE FAILURE",
+          concentrated["verdict"] == "VALIDATION_FAILURE"
+          and any(FIELDS[0] in f for f in concentrated["failures"]),
+          "; ".join(concentrated["failures"])[:70])
+    check("the two differ, so the implemented rule is not a pooled count",
+          spread["verdict"] != concentrated["verdict"])
+
+    # --- NO MULTIPLICITY CORRECTION. Four conditions, each at its own nominal. --
+    for case in ("C2", "C3", "C4"):
+        replicates, nominal = PER_FIELD_SIZE_CASES[case]
+        row = classify_campaign(counts())["detail"][case][FIELDS[0]]
+        check(f"{case} scores each field at the UNADJUSTED nominal alpha",
+              row["nominal_alpha"] == nominal
+              and row["replicates"] == replicates, str(row["nominal_alpha"]))
+        check(f"{case}'s boundary is the one derived from that alpha, unadjusted",
+              row["boundary"] == size_boundary(replicates, nominal),
+              str(row["boundary"]))
+    check("no familywise or Bonferroni adjustment appears in the campaign rule",
+          not any(word in classify_campaign(counts())["rule"].lower()
+                  for word in ("bonferroni", "familywise", "adjusted", "pooled")))
+
+    # --- >= 0.90 REMAINS C1-ONLY ----------------------------------------------
+    everything = classify_campaign(counts())
+    for case in ("C2", "C3", "C4"):
+        check(f"{case} carries no >= 0.90 complete-pipeline target",
+              all("target" not in row or row.get("target") != 0.90
+                  for row in everything["detail"][case].values()))
+        check(f"{case}'s endpoint semantics carry no 0.90 target",
+              0.90 not in everything["endpoint_semantics"][case].values())
+    check("0.90 is C1's target and C8's, and belongs to neither size case",
+          everything["detail"]["C1"]["target"] == 0.90
+          and everything["detail"]["C8"]["target"] == 0.90)
 
 
 def test_nothing_else_moved() -> None:
@@ -251,6 +339,7 @@ def main() -> int:
               ("C4 Block-1 surrogate", test_c4),
               ("interpretation of a pass", test_interpretation),
               ("final campaign classification", test_campaign),
+              ("per-field release semantics (F1f)", test_per_field_release_semantics),
               ("nothing else moved", test_nothing_else_moved))
     for label, fn in groups:
         print(f"\n{label}")

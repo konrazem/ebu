@@ -48,7 +48,9 @@ from .scope import (
 from .seeds import (
     ALLOWED_FAMILIES_KEY, CaseSeedAccess, FrozenSeedMap, ValidationSeedFamily,
 )
-from .classification import REQUIRED_C2_FIELDS, REQUIRED_C7_ALTERNATIVES
+from .classification import (
+    PER_FIELD_SIZE_CASES, REQUIRED_C7_ALTERNATIVES, REQUIRED_SIZE_FIELDS,
+)
 
 #: Validation modules whose content can change an execution. Sorted on use.
 VALIDATION_MODULES = (
@@ -76,6 +78,17 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/seeds.py",
     "e1a_v4/validation/strict_json.py",
 )
+
+#: The frozen case ids of the three PER-FIELD size cases, in `PER_FIELD_SIZE_CASES`
+#: order. The classifier keys those rules by short name; the plan keys its cases by
+#: full id, and this is the only place the two namings meet.
+PER_FIELD_SIZE_CASE_IDS = {
+    "C2": "C2_geometry_false_rejection",
+    "C3": "C3_g5_block",
+    "C4": "C4_surrogate_validity",
+}
+if set(PER_FIELD_SIZE_CASE_IDS) != set(PER_FIELD_SIZE_CASES):
+    raise Refusal("the per-field size case map and the classifier rules disagree")
 
 REQUIRED_PLAN_KEYS = (
     "plan_id", "plan_version", "frozen_identities", "cases", "generating_model",
@@ -249,11 +262,20 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     require_release_authority_conformance(binding.data, plan, root)
     require_seal_plan_agreement(plan, load_seal(root))
     cases = {case["case_id"]: case for case in plan["cases"]}
-    if (set(cases["C2_geometry_false_rejection"]["fields_affected"]) != REQUIRED_C2_FIELDS
-            or {s["subcondition_id"] for s in cases["C7_false_bridge"]["subconditions"]}
+    # EVERY per-field size case, not just C2. C3 and C4 are scored per field too,
+    # so each one's declared roster is a release-bearing list: a missing, extra,
+    # duplicated or reference-field-only `fields_affected` would silently change
+    # which conditions the conjunctive classifier requires.
+    for case_id in PER_FIELD_SIZE_CASE_IDS.values():
+        declared = cases[case_id]["fields_affected"]
+        if len(declared) != len(set(declared)) or set(declared) != REQUIRED_SIZE_FIELDS:
+            raise Refusal(
+                f"{case_id} declares per-field rows {declared}, which is not the "
+                "canonical four-field roster the campaign classifier scores")
+    if ({s["subcondition_id"] for s in cases["C7_false_bridge"]["subconditions"]}
             != REQUIRED_C7_ALTERNATIVES):
         raise Refusal("campaign classifier rows disagree with contract/plan declarations")
-    if {f["id"] for f in binding.fields} != REQUIRED_C2_FIELDS:
+    if {f["id"] for f in binding.fields} != REQUIRED_SIZE_FIELDS:
         raise Refusal("campaign classifier fields disagree with the adopted contract")
     frozen = plan["frozen_identities"]
 
