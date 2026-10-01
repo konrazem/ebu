@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.11.0",
+  "plan_version": "1.12.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -1623,7 +1623,7 @@
   },
   "final_campaign_classification": {
     "verdict_on_success": "VALIDATION_PASS",
-    "rule": "CONJUNCTIVE. Every required case must pass on its own terms.",
+    "rule": "CONJUNCTIVE. Every required case must pass on its own terms. C3 and C4 each contribute 4 required field-level conditions, one per declared field; a case is clean only when all 4 are clean, NO required condition may fail, a single clean field is NEVER sufficient, and compensation is FORBIDDEN both between fields and between cases.",
     "no_weighted_score": true,
     "no_compensation_between_cases": true,
     "requirements": [

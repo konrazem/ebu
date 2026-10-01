@@ -239,6 +239,26 @@ class EndpointEventReductionUndeclared(CodedRefusal):
     code = "ENDPOINT_EVENT_REDUCTION_UNDECLARED"
 
 
+class NormativeSurfaceUnclassified(CodedRefusal):
+    """An authoritative C3/C4 statement exists outside the canonical surface registry.
+
+    Binding the normative statements that are KNOWN is not enough. Two independent
+    audits in a row found a different unbound rendering of the same approved
+    decision -- a derived-boundary pooling sentence and the final campaign rule --
+    each of which could be edited to contradict the canonical rule while Markdown
+    and JSON still agreed and full static preflight still passed.
+
+    The defect is therefore structural: one scientific decision has several
+    normative representations and nothing guaranteed the set of them was complete.
+    This refusal makes the registry TOTAL. Every key inside a controlled C3/C4
+    container must carry an explicit classification -- generated from the canonical
+    rule, strictly verified against it, or deliberately marked non-normative -- so a
+    new authoritative field cannot appear silently and go unchecked.
+    """
+
+    code = "NORMATIVE_SURFACE_UNCLASSIFIED"
+
+
 class ProspectiveAmendmentMismatch(CodedRefusal):
     """A normative rendering of a prospective amendment contradicts the canonical
     rule it is supposed to express.
@@ -594,6 +614,7 @@ ALL_REFUSAL_CLASSES = (
     ResultSchemaInvalid, CampaignIncomplete, CampaignPlanMismatch,
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
+    NormativeSurfaceUnclassified,
     ProspectiveAmendmentMismatch,
     ScaleControlInvalid, TerminalProvenanceMismatch,
     BranchAMeasurementInvalid,

@@ -66,7 +66,8 @@ from .refusals import (
     ContractReleaseConfidenceRuleMismatch, ContractReleaseDerivedThresholdMismatch,
     ContractReleaseEndpointMismatch, ContractReleaseImplicationBroken,
     ContractReleaseReplicateCountMismatch, ContractReleaseTargetMismatch,
-    ProspectiveAmendmentMismatch, ResultSchemaInvalid,
+    NormativeSurfaceUnclassified, ProspectiveAmendmentMismatch,
+    ResultSchemaInvalid,
 )
 
 EXACT = "EXACT"
@@ -78,6 +79,16 @@ NOT_APPLICABLE = "NOT_APPLICABLE"
 
 RELATIONSHIPS = (EXACT, DERIVED, IMPLIED_STRONGER, CASE_SPECIFIC,
                  REPORT_ONLY_MANDATORY, NOT_APPLICABLE)
+
+#: How a normative C3/C4 statement is held to the canonical rule. Every statement
+#: inside a controlled container must carry exactly one of these.
+CANONICAL_SOURCE = "CANONICAL_SOURCE"
+GENERATED_FROM_CANONICAL = "GENERATED_FROM_CANONICAL"
+STRICTLY_VERIFIED_DUPLICATE = "STRICTLY_VERIFIED_DUPLICATE"
+NON_NORMATIVE_EXPLANATION = "NON_NORMATIVE_EXPLANATION"
+
+VERIFICATION_MODES = (CANONICAL_SOURCE, GENERATED_FROM_CANONICAL,
+                      STRICTLY_VERIFIED_DUPLICATE, NON_NORMATIVE_EXPLANATION)
 
 #: Authority sources, most authoritative first.
 CONTRACT = "design_contract"
@@ -299,6 +310,29 @@ POOLING_FORBIDDEN = "FORBIDDEN"
 FINAL_RELEASE_REPRESENTATION = "FIELD_CONDITION_VECTOR"
 FINAL_RELEASE_COMPENSATION = "FORBIDDEN"
 
+#: The final campaign rule, the derived-boundary pooling sentence and the
+#: assurance confidence vocabulary. The second independent audit found the first
+#: two could be edited to contradict the rule above while Markdown and JSON still
+#: agreed, so they are canonical here and GENERATED into the plan.
+FINAL_RELEASE_CONJUNCTION = "CONJUNCTIVE"
+FINAL_RELEASE_VERDICT = "VALIDATION_PASS"
+FINAL_RELEASE_IMPLEMENTATION = "e1a_v4.validation.classification.classify_campaign"
+FINAL_RELEASE_INDEPENDENT_FACTS = (
+    "complete-pipeline achievement and component size cleanliness are REPORTED "
+    "SEPARATELY and never collapsed. A campaign may fail because complete-pipeline "
+    "success < target even with no significant size-inflation diagnostic: a valid "
+    "scientific failure. Conversely C1 may reach >= 0.90 while a component case "
+    "detects significant size inflation: also a validation failure, because the "
+    "implemented calibration is not behaving according to its declared nominal "
+    "structure. Both facts are reported.")
+FIELD_SIZE_ESTIMATOR = "rejection proportion"
+FIELD_SIZE_COMPARISON = "<="
+FIELD_SIZE_CONFIDENCE_LEVEL = 0.95
+FIELD_SIZE_SIDED = "one-sided"
+FIELD_SIZE_METHOD = "Clopper-Pearson"
+FIELD_SIZE_BOUND_DIRECTION = "LOWER"
+FIELD_SIZE_BOUNDARY_DERIVATION = "largest k with cp_lower(k, R) <= target"
+
 #: The declared physical fields, in declaration order. Order, membership and
 #: multiplicity are all load-bearing: a removed, duplicated, replaced or extra
 #: field changes which conditions the conjunction requires.
@@ -337,6 +371,14 @@ class FieldSizeRule:
     status_key: str = "status"
     secondary_diagnostic: str | None = None
     secondary_feeds_primary_release: bool | None = None
+    #: The assurance row's confidence-bound sentence. C4 additionally names the
+    #: two-sided interval as a mandatory diagnostic rather than the release gate.
+    bound_statement: str = "Clopper-Pearson one-sided LOWER (inflation test)"
+    #: Section 12a's retention sentence, where the case has one.
+    retention_statement: str | None = None
+    #: Where a case's `status` key records an EARLIER disposition, that status.
+    #: C3's does (Block-1 versus G5); C4's carries the field-structure status.
+    earlier_status: str | None = None
 
 
 FIELD_SIZE_RULES = (
@@ -353,7 +395,9 @@ FIELD_SIZE_RULES = (
         all_clean_lower="0.9684663", all_clean_upper="0.9921166",
         status_key="field_structure_status",
         secondary_diagnostic="SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC",
-        secondary_feeds_primary_release=False),
+        secondary_feeds_primary_release=False,
+        earlier_status=("AMBIGUITY RESOLVED PROSPECTIVELY, before any random outcome "
+                        "exists")),
     FieldSizeRule(
         case_id="C4_surrogate_validity", semantics_key="c4_semantics",
         evaluation_scope=EVALUATION_SCOPE_PER_FIELD,
@@ -366,7 +410,13 @@ FIELD_SIZE_RULES = (
                               "operating-quantile discrepancy; the binary diagnostic "
                               "does not replace the discrepancy report."),
         false_flag_probability="0.033884449548367356",
-        all_clean_lower="0.8644622", all_clean_upper="0.9661156"),
+        all_clean_lower="0.8644622", all_clean_upper="0.9661156",
+        bound_statement=("Clopper-Pearson one-sided LOWER (inflation test); the "
+                         "two-sided interval is a MANDATORY CONTRACT DIAGNOSTIC, not "
+                         "the release gate"),
+        retention_statement=("the full two-sided interval and the observed "
+                             "operating-quantile discrepancy are STILL reported; this "
+                             "binary diagnostic does not replace them")),
 )
 
 FIELD_SIZE_RULES_BY_CASE = {rule.case_id: rule for rule in FIELD_SIZE_RULES}
@@ -531,6 +581,40 @@ def render_field_size_requirement(rule: FieldSizeRule, index: int) -> str:
     """The case's numbered line in the final-campaign requirement list."""
     return (f"{index}. {rule.case_id[:2]} produces no STATISTICAL_SIZE_FAILURE in any "
             "required field")
+
+
+def render_field_size_pooling_statement(rule: FieldSizeRule) -> str:
+    """Section 12a's derived-boundary pooling sentence. GENERATED.
+
+    The second independent audit changed this one string to "pool all four field
+    counts" in a fully coherent Markdown+JSON copy and full static preflight still
+    accepted it, because the derived-boundary rows bound `per_field`,
+    `replicate_reduction` and the boundary prose but not this sentence.
+    """
+    return f"{rule.pooling} - every field is reported separately"
+
+
+def render_final_campaign_rule() -> str:
+    """The final campaign rule. GENERATED from the canonical per-field amendment.
+
+    The same audit changed this to "C3/C4 pass when any one field is clean" and
+    preflight accepted it: the requirement LINES were generated but the rule that
+    governs how they combine was free text bound to nothing.
+    """
+    cases = " and ".join(rule.case_id[:2] for rule in FIELD_SIZE_RULES)
+    count = len(FIELD_SIZE_REQUIRED_FIELDS)
+    return (
+        f"{FINAL_RELEASE_CONJUNCTION}. Every required case must pass on its own "
+        f"terms. {cases} each contribute {count} required field-level conditions, one "
+        f"per declared field; a case is clean only when all {count} are clean, NO "
+        "required condition may fail, a single clean field is NEVER sufficient, and "
+        f"compensation is {FINAL_RELEASE_COMPENSATION} both between fields and "
+        "between cases.")
+
+
+def render_field_size_target(rule: FieldSizeRule) -> str:
+    """The assurance row's human target statement. GENERATED."""
+    return f"{rule.alpha_name} = {rule.nominal_alpha}"
 
 
 def case_release_specification(contract: dict[str, Any], root: str) -> tuple[CaseRelease, ...]:
@@ -939,105 +1023,346 @@ def _numbers_in(text: str) -> list[float]:
 
 
 
-def _amendment_rows(plan: dict[str, Any]) -> list[tuple[str, Any, Any]]:
-    """Every (path, expected, actual) the canonical amendment determines.
+@dataclass(frozen=True)
+class NormativeSurface:
+    """ONE authoritative C3/C4 statement and how it is held to the canonical rule.
+
+    The registry of these is TOTAL over the controlled containers: every key the
+    plan carries inside one of them must appear here with a classification, so a
+    new authoritative field cannot be added silently and go unchecked. That
+    totality is the actual repair; binding individual strings as each audit names
+    them has now failed twice.
+    """
+
+    case: str
+    component: str
+    container: str
+    key: str
+    mode: str
+    #: Where the Markdown renders it. Every region listed here is a byte-exact
+    #: re-render of the JSON, so a contradicting edit must appear in both.
+    markdown: str
+    expected: Any = None
+    actual: Any = None
+
+    @property
+    def path(self) -> str:
+        return f"{self.container}.{self.key}"
+
+
+#: Key-name fragments that mark a field-structure RULE rather than some other
+#: declaration. A key carrying one of these inside a C3/C4 case must be
+#: registered: this is what stops a future `field_reduction` or `pooling`
+#: attribute from appearing beside the registry instead of inside it.
+FIELD_RULE_KEY_TOKENS = ("pool", "compensat", "reduction", "field_structure",
+                         "any_field", "every_field", "elementary_event",
+                         "release_rule", "field_condition")
+
+#: The same vocabulary in prose. Text classified NON_NORMATIVE_EXPLANATION may not
+#: contain it: an explanation that starts setting a field rule is no longer an
+#: explanation, and that is exactly how a rule would hide from this registry.
+FIELD_RULE_PROSE_TOKENS = ("pool", "compensat", "reduction", "field",
+                           "any one", "every one", "reference-field")
+
+
+def _surface(case, component, container, key, mode, markdown, expected, holder):
+    return NormativeSurface(case, component, container, key, mode, markdown,
+                            expected, (holder or {}).get(key))
+
+
+def normative_surface_registry(plan: dict[str, Any]) -> tuple[NormativeSurface, ...]:
+    """EVERY authoritative C3/C4 statement, each bound to the canonical rule.
 
     Built from `FIELD_SIZE_RULES` and the renderers above -- never from the plan
     text being checked -- so a contradicting edit cannot justify itself.
     """
-    rows: list[tuple[str, Any, Any]] = []
-    gaps = {gap["id"]: gap for gap in plan.get("authority_gaps", [])}
+    out: list[NormativeSurface] = []
+    add = out.append
+
+    # ------------------------------------------------- the G4 disposition record
+    gaps = {gap.get("id"): gap for gap in plan.get("authority_gaps", [])}
     gap = gaps.get(FIELD_SIZE_DISPOSITION_ID) or {}
     gid = f"authority_gaps.{FIELD_SIZE_DISPOSITION_ID}"
-    rows.append((f"{gid}.status", FIELD_SIZE_DISPOSITION_STATUS, gap.get("status")))
-    rows.append((f"{gid}.affects", FIELD_SIZE_DISPOSITION_AFFECTS, gap.get("affects")))
-    rows.append((f"{gid}.resolution", render_field_size_disposition(),
-                 gap.get("resolution")))
-    rows.append((f"{gid}.gap", render_field_size_gap_statement(), gap.get("gap")))
+    for key, mode, expected in (
+            ("id", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_DISPOSITION_ID),
+            ("status", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_DISPOSITION_STATUS),
+            ("affects", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_DISPOSITION_AFFECTS),
+            ("gap", GENERATED_FROM_CANONICAL, render_field_size_gap_statement()),
+            ("resolution", GENERATED_FROM_CANONICAL, render_field_size_disposition())):
+        add(_surface("G4", f"disposition {key}", gid, key, mode,
+                     "generated release-rules region", expected, gap))
 
-    cases = {case["case_id"]: (index, case) for index, case in enumerate(plan["cases"])}
-    assurance = {row["case_id"]: row for row in plan["assurance"]}
+    cases = {case.get("case_id"): (i, case) for i, case in enumerate(plan["cases"])}
+    assurance = {row.get("case_id"): row for row in plan["assurance"]}
     boundaries = plan["size_validation_semantics"]["derived_boundaries"]
-    requirements = plan["final_campaign_classification"]["requirements"]
+
     for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
         index, case = cases.get(rule.case_id, (None, {}))
+
+        # --------------------------------------- case-level field-size statements
         cp = f"cases[{index}]"
-        rows.append((f"{cp}.fields_affected", list(rule.required_fields),
-                     case.get("fields_affected")))
-        rows.append((f"{cp}.primary_release_endpoint", rule.primary_endpoint,
-                     case.get("primary_release_endpoint")))
-        rows.append((f"{cp}.formal_pass_fail_criterion",
-                     render_field_size_criterion(rule),
-                     case.get("formal_pass_fail_criterion")))
+        for key, mode, expected in (
+                ("fields_affected", GENERATED_FROM_CANONICAL,
+                 list(rule.required_fields)),
+                ("primary_release_endpoint", GENERATED_FROM_CANONICAL,
+                 rule.primary_endpoint),
+                ("formal_pass_fail_criterion", GENERATED_FROM_CANONICAL,
+                 render_field_size_criterion(rule)),
+                ("replicate_count", STRICTLY_VERIFIED_DUPLICATE, rule.replicates)):
+            add(_surface(short, key, cp, key, mode, "generated cases region",
+                         expected, case))
+        if rule.secondary_diagnostic is not None:
+            add(_surface(short, "secondary diagnostic role", cp, "block1_role",
+                         GENERATED_FROM_CANONICAL, "generated cases region",
+                         rule.secondary_diagnostic, case))
+
+        # ------------------------------------------------- the semantics container
+        sp = f"{cp}.{rule.semantics_key}"
         semantics = case.get(rule.semantics_key) or {}
         for key, expected in render_field_size_semantics(rule).items():
-            rows.append((f"{cp}.{rule.semantics_key}.{key}", expected,
-                         semantics.get(key)))
+            add(_surface(short, key, sp, key, GENERATED_FROM_CANONICAL,
+                         "generated cases region", expected, semantics))
         if rule.secondary_feeds_primary_release is not None:
-            rows.append((f"{cp}.{rule.semantics_key}."
+            add(_surface(short, "secondary feeds primary release", sp,
                          "joint_p1_result_changes_C3_release_verdict",
-                         rule.secondary_feeds_primary_release,
-                         semantics.get("joint_p1_result_changes_C3_release_verdict")))
+                         GENERATED_FROM_CANONICAL, "generated cases region",
+                         rule.secondary_feeds_primary_release, semantics))
+        if rule.earlier_status is not None:
+            add(_surface(short, "earlier disposition status", sp, "status",
+                         STRICTLY_VERIFIED_DUPLICATE, "generated cases region",
+                         rule.earlier_status, semantics))
+        if "requires_block1_calibration" in semantics:
+            add(_surface(short, "block-1 calibration retained", sp,
+                         "requires_block1_calibration", STRICTLY_VERIFIED_DUPLICATE,
+                         "generated cases region",
+                         case.get("requires_block1_calibration"), semantics))
+        if "why_calibration_is_retained" in semantics:
+            # Explanatory on purpose: it says WHY a diagnostic input is kept and
+            # sets no field rule. The prose guard below keeps it that way.
+            add(_surface(short, "calibration rationale", sp,
+                         "why_calibration_is_retained", NON_NORMATIVE_EXPLANATION,
+                         "generated cases region", None, semantics))
+
+        # ------------------------------------------------ the assurance container
+        ap = f"assurance[{rule.case_id}]"
         row = assurance.get(rule.case_id) or {}
         for key, expected in render_field_size_assurance(rule).items():
-            rows.append((f"assurance[{rule.case_id}].{key}", expected, row.get(key)))
-        short = rule.case_id[:2]
+            add(_surface(short, f"assurance {key}", ap, key,
+                         GENERATED_FROM_CANONICAL, "generated assurance region",
+                         expected, row))
+        for key, mode, expected in (
+                ("case_id", STRICTLY_VERIFIED_DUPLICATE, rule.case_id),
+                ("target", GENERATED_FROM_CANONICAL, render_field_size_target(rule)),
+                ("target_value", STRICTLY_VERIFIED_DUPLICATE, rule.nominal_alpha),
+                ("comparison", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_COMPARISON),
+                ("confidence_level", STRICTLY_VERIFIED_DUPLICATE,
+                 FIELD_SIZE_CONFIDENCE_LEVEL),
+                ("sided", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_SIDED),
+                ("method", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_METHOD),
+                ("bound_direction", STRICTLY_VERIFIED_DUPLICATE,
+                 FIELD_SIZE_BOUND_DIRECTION),
+                ("estimator", STRICTLY_VERIFIED_DUPLICATE, FIELD_SIZE_ESTIMATOR),
+                ("bound", STRICTLY_VERIFIED_DUPLICATE, rule.bound_statement),
+                ("replicates", STRICTLY_VERIFIED_DUPLICATE, rule.replicates),
+                ("integer_boundary", STRICTLY_VERIFIED_DUPLICATE, rule.boundary),
+                ("boundary_derivation", STRICTLY_VERIFIED_DUPLICATE,
+                 FIELD_SIZE_BOUNDARY_DERIVATION),
+                ("assurance_at_design_target", STRICTLY_VERIFIED_DUPLICATE, None)):
+            add(_surface(short, f"assurance {key}", ap, key, mode,
+                         "generated assurance region", expected, row))
+
+        # ----------------------------------------- the derived-boundary container
+        bp = f"derived_boundaries.{short}"
         declared = boundaries.get(short) or {}
-        rows.append((f"derived_boundaries.{short}.per_field", True,
-                     declared.get("per_field")))
-        rows.append((f"derived_boundaries.{short}.rule",
-                     render_field_size_boundary_rule(rule), declared.get("rule")))
-        rows.append((f"derived_boundaries.{short}.replicate_reduction",
-                     rule.field_reduction, declared.get("replicate_reduction")))
-        rows.append((f"derived_boundaries.{short}.replicates", rule.replicates,
-                     declared.get("replicates")))
-        rows.append((f"derived_boundaries.{short}.nominal_alpha", rule.nominal_alpha,
-                     declared.get("nominal_alpha")))
-        rows.append((f"derived_boundaries.{short}.boundary", rule.boundary,
-                     declared.get("boundary")))
-        position = 3 if rule.case_id.startswith("C3") else 4
-        rows.append((f"final_campaign_classification.requirements[{position - 1}]",
-                     render_field_size_requirement(rule, position),
-                     requirements[position - 1] if len(requirements) >= position
-                     else None))
+        for key, mode, expected in (
+                ("replicates", STRICTLY_VERIFIED_DUPLICATE, rule.replicates),
+                ("nominal_alpha", STRICTLY_VERIFIED_DUPLICATE, rule.nominal_alpha),
+                ("boundary", STRICTLY_VERIFIED_DUPLICATE, rule.boundary),
+                ("cp_lower_at_boundary", STRICTLY_VERIFIED_DUPLICATE,
+                 cp_lower(rule.boundary, rule.replicates)),
+                ("cp_lower_at_boundary_plus_1", STRICTLY_VERIFIED_DUPLICATE,
+                 cp_lower(rule.boundary + 1, rule.replicates)),
+                ("rule", GENERATED_FROM_CANONICAL,
+                 render_field_size_boundary_rule(rule)),
+                ("per_field", GENERATED_FROM_CANONICAL,
+                 rule.evaluation_scope == EVALUATION_SCOPE_PER_FIELD),
+                ("pooling", GENERATED_FROM_CANONICAL,
+                 render_field_size_pooling_statement(rule)),
+                ("replicate_reduction", GENERATED_FROM_CANONICAL,
+                 rule.field_reduction)):
+            add(_surface(short, f"derived boundary {key}", bp, key, mode,
+                         "section 12a boundary table", expected, declared))
+        if rule.retention_statement is not None:
+            add(_surface(short, "derived boundary retention", bp, "retains",
+                         GENERATED_FROM_CANONICAL, "section 12a boundary table",
+                         rule.retention_statement, declared))
+
+    # ------------------------------------------------ the final campaign container
     final = plan["final_campaign_classification"]
-    rows.append(("final_campaign_classification.no_compensation_between_cases", True,
-                 final.get("no_compensation_between_cases")))
-    rows.append(("final_campaign_classification.no_weighted_score", True,
-                 final.get("no_weighted_score")))
-    return rows
+    fp = "final_campaign_classification"
+    requirements = final.get("requirements") or []
+    for key, mode, expected in (
+            ("verdict_on_success", STRICTLY_VERIFIED_DUPLICATE,
+             FINAL_RELEASE_VERDICT),
+            ("rule", GENERATED_FROM_CANONICAL, render_final_campaign_rule()),
+            ("no_weighted_score", STRICTLY_VERIFIED_DUPLICATE, True),
+            ("no_compensation_between_cases", STRICTLY_VERIFIED_DUPLICATE, True),
+            ("independent_facts_rule", STRICTLY_VERIFIED_DUPLICATE,
+             FINAL_RELEASE_INDEPENDENT_FACTS),
+            ("implementation", STRICTLY_VERIFIED_DUPLICATE,
+             FINAL_RELEASE_IMPLEMENTATION)):
+        add(_surface("FINAL", key, fp, key, mode, "generated release-rules region",
+                     expected, final))
+    # The requirement LIST as an object: exactly the two generated C3/C4 lines may
+    # speak for these cases, so a twelfth requirement weakening one is refused.
+    add(NormativeSurface(
+        "FINAL", "requirement lines naming C3 or C4", fp, "requirements",
+        STRICTLY_VERIFIED_DUPLICATE, "generated release-rules region",
+        len(FIELD_SIZE_RULES),
+        sum(1 for line in requirements
+            if any(rule.case_id[:2] in str(line) for rule in FIELD_SIZE_RULES))))
+    for rule in FIELD_SIZE_RULES:
+        position = 3 if rule.case_id.startswith("C3") else 4
+        add(NormativeSurface(
+            rule.case_id[:2], "final campaign requirement line", fp,
+            f"requirements[{position - 1}]", GENERATED_FROM_CANONICAL,
+            "generated release-rules region",
+            render_field_size_requirement(rule, position),
+            requirements[position - 1] if len(requirements) >= position else None))
+    return tuple(out)
+
+
+def _controlled_containers(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Containers whose EVERY key must be registered.
+
+    These are the plan regions that exist to state C3/C4 size semantics, so an
+    unregistered key in one of them is an unbound authoritative statement by
+    construction -- which is exactly what both audits found.
+    """
+    cases = {case.get("case_id"): (i, case) for i, case in enumerate(plan["cases"])}
+    boundaries = plan["size_validation_semantics"]["derived_boundaries"]
+    assurance = {row.get("case_id"): row for row in plan["assurance"]}
+    out: dict[str, dict[str, Any]] = {}
+    for gap in plan.get("authority_gaps", []):
+        if gap.get("id") == FIELD_SIZE_DISPOSITION_ID:
+            out[f"authority_gaps.{FIELD_SIZE_DISPOSITION_ID}"] = gap
+    for rule in FIELD_SIZE_RULES:
+        index, case = cases.get(rule.case_id, (None, {}))
+        out[f"cases[{index}].{rule.semantics_key}"] = case.get(rule.semantics_key) or {}
+        out[f"assurance[{rule.case_id}]"] = assurance.get(rule.case_id) or {}
+        out[f"derived_boundaries.{rule.case_id[:2]}"] = boundaries.get(
+            rule.case_id[:2]) or {}
+    out["final_campaign_classification"] = plan["final_campaign_classification"]
+    return out
+
+
+def _vocabulary_scoped(plan: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Containers swept by KEY VOCABULARY rather than exhaustively.
+
+    A C3/C4 case record declares many things that are not field-size rules -- seed
+    families, subconditions, calibration scope -- each governed by its own
+    authority. Sweeping every key there would claim authority this task does not
+    have. Sweeping the field-RULE vocabulary catches the thing that matters: a new
+    `pooling`, `field_reduction` or `compensation` attribute appearing beside the
+    registry instead of inside it.
+    """
+    out = {f"cases[{i}]": case for i, case in enumerate(plan["cases"])
+           if case.get("case_id") in FIELD_SIZE_RULES_BY_CASE}
+    out["size_validation_semantics"] = plan["size_validation_semantics"]
+    return out
+
+
+def require_field_size_surface_totality(plan: dict[str, Any]) -> None:
+    """No authoritative C3/C4 statement may exist outside the registry.
+
+    Two audits in a row found a DIFFERENT unbound rendering of the same approved
+    decision. Binding the named strings each time leaves the class open, so the
+    registry is made total instead: every key inside a controlled container, and
+    every field-rule-shaped key inside a controlled case, must be classified.
+    """
+    registry = normative_surface_registry(plan)
+    for surface in registry:
+        if surface.mode not in VERIFICATION_MODES:
+            raise NormativeSurfaceUnclassified(
+                f"{surface.path} carries verification mode {surface.mode!r}, which is "
+                f"not one of {VERIFICATION_MODES}")
+    registered: dict[str, set[str]] = {}
+    for surface in registry:
+        registered.setdefault(surface.container, set()).add(surface.key)
+    for container, holder in _controlled_containers(plan).items():
+        known = registered.get(container, set())
+        for key in holder:
+            if key not in known:
+                raise NormativeSurfaceUnclassified(
+                    f"{container}.{key} is an authoritative C3/C4 statement with no "
+                    "entry in the normative-surface registry: it is bound to nothing "
+                    "and could contradict the approved per-field rule while Markdown "
+                    "and JSON still agree")
+    for container, holder in _vocabulary_scoped(plan).items():
+        known = registered.get(container, set())
+        for key in holder:
+            if key in known:
+                continue
+            if any(token in key.lower() for token in FIELD_RULE_KEY_TOKENS):
+                raise NormativeSurfaceUnclassified(
+                    f"{container}.{key} names a field-structure rule but has no entry "
+                    "in the normative-surface registry")
+    # An explanation may not quietly become a rule.
+    for surface in registry:
+        if surface.mode != NON_NORMATIVE_EXPLANATION:
+            continue
+        text = str(surface.actual or "").lower()
+        hit = [token for token in FIELD_RULE_PROSE_TOKENS if token in text]
+        if hit:
+            raise NormativeSurfaceUnclassified(
+                f"{surface.path} is classified {NON_NORMATIVE_EXPLANATION} but states "
+                f"field-structure rule vocabulary {hit}; an explanatory field may not "
+                "carry a normative field rule")
+
+
+def _amendment_rows(plan: dict[str, Any]) -> list[tuple[str, Any, Any]]:
+    """Every (path, expected, actual) the canonical amendment determines."""
+    return [(s.path, s.expected, s.actual) for s in normative_surface_registry(plan)
+            if s.mode != NON_NORMATIVE_EXPLANATION]
 
 
 def field_size_amendment_counts(plan: dict[str, Any]) -> dict[str, int]:
     """Machine-derived totality counts for the amendment. Nothing hand-counted."""
-    rows = _amendment_rows(plan)
-    generated = sum(1 for path, _e, _a in rows
-                    if path.endswith((".resolution", ".formal_pass_fail_criterion"))
-                    or ".c3_semantics." in path or ".c4_semantics." in path
-                    or "requirements[" in path)
+    registry = normative_surface_registry(plan)
+    by_mode = {mode: sum(1 for s in registry if s.mode == mode)
+               for mode in VERIFICATION_MODES}
     # Derived from the dataclass itself plus the module-level canonical constants,
     # so the figure cannot drift from the object it describes.
     canonical = len(FIELD_SIZE_RULES) * len(dataclasses.fields(FieldSizeRule)) + len(
         (FIELD_SIZE_DISPOSITION_ID, FIELD_SIZE_DISPOSITION_TYPE,
          FIELD_SIZE_DISPOSITION_STATUS, FIELD_SIZE_DISPOSITION_AFFECTS,
          FIELD_SIZE_REQUIRED_FIELDS, FINAL_RELEASE_REPRESENTATION,
-         FINAL_RELEASE_COMPENSATION))
-    # A normative amendment field is UNCLASSIFIED if the plan carries it under a
-    # checked semantics block but the canonical rule does not determine it.
-    unclassified = 0
-    for rule in FIELD_SIZE_RULES:
-        case = next((c for c in plan["cases"] if c["case_id"] == rule.case_id), {})
-        determined = set(render_field_size_semantics(rule)) | {
-            "status", "primary_release_endpoint", "release_criterion",
-            "requires_block1_calibration", "why_calibration_is_retained",
-            "field_structure_status",
-            "joint_p1_result_changes_C3_release_verdict"}
-        unclassified += len(set(case.get(rule.semantics_key) or {}) - determined)
+         FINAL_RELEASE_COMPENSATION, FINAL_RELEASE_CONJUNCTION,
+         FINAL_RELEASE_VERDICT, FINAL_RELEASE_IMPLEMENTATION,
+         FINAL_RELEASE_INDEPENDENT_FACTS, FIELD_SIZE_ESTIMATOR,
+         FIELD_SIZE_COMPARISON, FIELD_SIZE_CONFIDENCE_LEVEL, FIELD_SIZE_SIDED,
+         FIELD_SIZE_METHOD, FIELD_SIZE_BOUND_DIRECTION,
+         FIELD_SIZE_BOUNDARY_DERIVATION))
+    registered: dict[str, set[str]] = {}
+    for surface in registry:
+        registered.setdefault(surface.container, set()).add(surface.key)
+    unclassified = sum(
+        1 for container, holder in _controlled_containers(plan).items()
+        for key in holder if key not in registered.get(container, set()))
+    unclassified += sum(
+        1 for container, holder in _vocabulary_scoped(plan).items()
+        for key in holder
+        if key not in registered.get(container, set())
+        and any(token in key.lower() for token in FIELD_RULE_KEY_TOKENS))
     return {
         "canonical_rule_fields": canonical,
-        "generated_normative_fields": generated,
-        "strictly_verified_duplicate_fields": len(rows) - generated,
-        "checked_total": len(rows),
+        "normative_surface_locations": len(registry),
+        "generated_normative_fields": by_mode[GENERATED_FROM_CANONICAL],
+        "strictly_verified_duplicate_fields": by_mode[STRICTLY_VERIFIED_DUPLICATE],
+        "non_normative_explanatory_fields": by_mode[NON_NORMATIVE_EXPLANATION],
+        "controlled_containers": len(_controlled_containers(plan)),
+        "checked_total": len(_amendment_rows(plan)),
         "unclassified_normative_amendment_fields": unclassified,
     }
 
@@ -1471,6 +1796,7 @@ def require_release_authority_conformance(contract: dict[str, Any], plan: dict[s
             "the plan carries no release_authority block; release-bearing statistics "
             "would have no machine-readable binding to frozen authority")
     require_c2_implies_contract_diagnostic(contract)
+    require_field_size_surface_totality(plan)
     require_field_size_amendment(plan)
     rows = release_binding_specification(contract, plan, root)
     inventory = release_inventory(contract, plan, root, rows)

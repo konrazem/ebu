@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.11.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.12.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -821,7 +821,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "final_campaign.requirements.7": "8. C8 satisfies G1: CP lower >= 0.90 over R = 200 (>= 188/200)",
     "final_campaign.requirements.8": "9. no SOFTWARE_OR_INVARIANT_FAILURE, CALIBRATION_FAILURE, NUMERICAL_OR_PRECISION_FAILURE occurs",
     "final_campaign.requirements.9": "10. structured refusals counted exactly per the already-frozen unconditional denominator rule",
-    "final_campaign.rule": "CONJUNCTIVE. Every required case must pass on its own terms.",
+    "final_campaign.rule": "CONJUNCTIVE. Every required case must pass on its own terms. C3 and C4 each contribute 4 required field-level conditions, one per declared field; a case is clean only when all 4 are clean, NO required condition may fail, a single clean field is NEVER sufficient, and compensation is FORBIDDEN both between fields and between cases.",
     "final_campaign.verdict_on_success": "VALIDATION_PASS",
     "frozen_identities.analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
     "frozen_identities.baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
@@ -934,7 +934,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.11.0",
+    "plan_version": "1.12.0",
     "release_authority.absent_diagnostic_is": "RESULT_SCHEMA_INVALID",
     "release_authority.authority_rule": "FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.",
     "release_authority.complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",
@@ -1976,7 +1976,7 @@ redesign the E1a bridge.
 
 **Verdict on success.** `VALIDATION_PASS`
 
-**Rule.** CONJUNCTIVE. Every required case must pass on its own terms.
+**Rule.** CONJUNCTIVE. Every required case must pass on its own terms. C3 and C4 each contribute 4 required field-level conditions, one per declared field; a case is clean only when all 4 are clean, NO required condition may fail, a single clean field is NEVER sufficient, and compensation is FORBIDDEN both between fields and between cases.
 
 1. 1. C1 complete-pipeline success: CP lower >= 0.90 over R = 300 (>= 279/300)
 2. 2. C2 produces no STATISTICAL_SIZE_FAILURE in any required field

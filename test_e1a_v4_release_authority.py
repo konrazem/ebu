@@ -54,8 +54,11 @@ from e1a_v4.validation.campaign_driver import replicate_level_rejections
 from e1a_v4.validation.plan import load_plan
 from e1a_v4.validation.release_authority import (
     CASE_SPECIFIC, CONTRACT, DERIVED, EXACT, IMPLIED_STRONGER, NOT_APPLICABLE,
-    FIELD_SIZE_RULES, field_size_amendment_counts, render_field_size_criterion,
-    render_field_size_disposition, render_field_size_semantics,
+    FIELD_SIZE_RULES, VERIFICATION_MODES, field_size_amendment_counts,
+    normative_surface_registry, render_field_size_criterion,
+    render_field_size_disposition, render_field_size_pooling_statement,
+    render_field_size_semantics, render_final_campaign_rule,
+    require_field_size_surface_totality,
     RELEASE_AUTHORITY_SECTIONS, RELEASE_NOT_APPLICABLE, REPORT_ONLY_MANDATORY,
     c2_implication_range, case_release_specification, derived_boundary,
     mandatory_diagnostics, release_binding_specification, release_inventory,
@@ -1216,6 +1219,61 @@ def semantic_mutations(plan):
     add("final release requirement C4",
         "final_campaign_classification.requirements[3]",
         "in any required field", "in at least three required fields")
+
+    # ---- SECOND AUDIT: the two surfaces that were bound to nothing ---------
+    for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+        short = case_id[:2]
+        bp = f"size_validation_semantics.derived_boundaries.{short}"
+        add(f"{short} derived boundary pooling -> ALLOWED", f"{bp}.pooling",
+            "FORBIDDEN", "ALLOWED")
+        add(f"{short} derived boundary pooling -> POOL_ALL_FIELDS", f"{bp}.pooling",
+            "FORBIDDEN - every field is reported separately",
+            "POOLED - pool all four field counts into one campaign count")
+        add(f"{short} derived boundary per-field counts -> pooled", f"{bp}.rule",
+            "PER FIELD", "over the POOLED four-field count")
+        add(f"{short} derived boundary per_field flag",
+            f"{bp}.per_field", True, False)
+        index = next(i for i, r in enumerate(plan["assurance"])
+                     if r["case_id"] == case_id)
+        add(f"{short} assurance target", f"assurance[{index}].target", "=", ">=")
+        add(f"{short} assurance estimator", f"assurance[{index}].estimator",
+            "rejection proportion", "pooled rejection proportion")
+        add(f"{short} assurance bound statement", f"assurance[{index}].bound",
+            "one-sided LOWER", "one-sided UPPER")
+    add("C4 derived boundary retention dropped",
+        "size_validation_semantics.derived_boundaries.C4.retains",
+        "are STILL reported", "need NOT be reported")
+    add("C3 earlier disposition status",
+        f"cases[{_case_index(plan, 'C3_g5_block')}].c3_semantics.status",
+        "AMBIGUITY RESOLVED PROSPECTIVELY", "AMBIGUITY STILL OPEN")
+
+    # ---- the final campaign rule itself ------------------------------------
+    rule_path = "final_campaign_classification.rule"
+    add("final campaign rule -> any one field is enough", rule_path,
+        "a case is clean only when all 4 are clean",
+        "a case is clean when ANY ONE field is clean")
+    add("final campaign rule -> three of four", rule_path,
+        "all 4 are clean", "at least 3 of 4 are clean")
+    add("final campaign rule -> compensation permitted", rule_path,
+        "compensation is FORBIDDEN", "compensation is PERMITTED")
+    add("final campaign rule -> one clean field sufficient", rule_path,
+        "a single clean field is NEVER sufficient",
+        "a single clean field is sufficient")
+    add("final campaign rule -> disjunctive", rule_path,
+        "CONJUNCTIVE", "DISJUNCTIVE")
+    add("final campaign rule -> condition may fail", rule_path,
+        "NO required condition may fail", "a required condition MAY fail")
+    add("final campaign facts collapsed",
+        "final_campaign_classification.independent_facts_rule",
+        "REPORTED SEPARATELY and never collapsed",
+        "COLLAPSED into a single weighted score")
+    add("final campaign >= 0.90 extended to C3/C4",
+        "final_campaign_classification.independent_facts_rule",
+        "Conversely C1 may reach >= 0.90",
+        "C3 and C4 carry the same >= 0.90 familywise target. Conversely C1 may "
+        "reach >= 0.90")
+    add("final campaign verdict", "final_campaign_classification.verdict_on_success",
+        "VALIDATION_PASS", "VALIDATION_PASS_WITH_RESERVATION")
     return out
 
 
@@ -1339,11 +1397,281 @@ def test_c3_c4_amendment_semantic_mutations() -> None:
               == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
 
 
+# ----------------------------------------- 16. normative-surface TOTALITY (F1e-r3)
+def known_escape_classes(plan):
+    """EVERY coherent-but-wrong escape any audit has demonstrated, in order.
+
+    Each entry is (audit, label, [(path, old_token, new_token), ...]). The token
+    swaps name the exact authoritative location, so a mutation that silently fails
+    to land is an assertion error rather than a false pass.
+    """
+    g4 = f"authority_gaps[{_gap_index(plan)}]"
+    c3 = _case_index(plan, "C3_g5_block")
+    c4 = _case_index(plan, "C4_surrogate_validity")
+    a3 = next(i for i, r in enumerate(plan["assurance"])
+              if r["case_id"] == "C3_g5_block")
+    return (
+        ("first audit", "1. G4 resolution declares ANY_FIELD and pooling",
+         [(f"{g4}.resolution", "PER FIELD", "ANY FIELD"),
+          (f"{g4}.resolution", "pooling FORBIDDEN", "pooling ALLOWED")]),
+        ("first audit", "2. C3 formal criterion defines a replicate-wide event",
+         [(f"cases[{c3}].formal_pass_fail_criterion", "PER FIELD, never pooled",
+           "ANY FIELD within a replicate, counts pooled")]),
+        ("first audit", "3. C4 formal criterion pools the four field counts",
+         [(f"cases[{c4}].formal_pass_fail_criterion", "NO pooling of counts",
+           "counts POOLED across the four fields")]),
+        ("first repair inventory", "4. assurance acceptance_rule contradicts",
+         [(f"assurance[{a3}].acceptance_rule",
+           "PER FIELD; every declared field is assessed",
+           "POOLED across fields; the campaign is assessed")]),
+        ("first repair inventory", "5. section-12a boundary prose contradicts",
+         [("size_validation_semantics.derived_boundaries.C3.rule", "PER FIELD",
+           "over the POOLED four-field count")]),
+        ("first repair inventory", "6. semantics release_criterion contradicts",
+         [(f"cases[{c3}].c3_semantics.release_criterion", "stated per field",
+           "stated over one pooled campaign count")]),
+        ("first repair inventory", "7. G4 gap statement contradicts",
+         [(f"{g4}.gap", "decides PER FIELD", "decides once per replicate")]),
+        ("second audit", "8. derived-boundary pooling says pool all four counts",
+         [("size_validation_semantics.derived_boundaries.C3.pooling",
+           "FORBIDDEN - every field is reported separately",
+           "POOLED - pool all four field counts into one campaign count")]),
+        ("second audit", "9. final campaign rule: one clean field is enough",
+         [("final_campaign_classification.rule",
+           "a case is clean only when all 4 are clean",
+           "a case is clean when ANY ONE field is clean")]),
+    )
+
+
+def apply_swaps(mutant, swaps):
+    """Apply each token swap to its own named field. Never document-wide."""
+    for path, old_token, new_token in swaps:
+        before = path_get(mutant, path)
+        after = (_text_swap(before, old_token, new_token)
+                 if isinstance(before, str) else new_token)
+        assert after != before, f"{path}: swap did not change the value"
+        path_set(mutant, path, after)
+    for path, _old, new_token in swaps:
+        assert str(new_token) in str(path_get(mutant, path)), \
+            f"{path}: the intended authoritative representation was not changed"
+
+
+def test_c3_c4_normative_surface_totality() -> None:
+    """SECOND AUDIT BLOCKER. Two more normative surfaces were bound to nothing.
+
+    A derived-boundary pooling sentence and the final campaign rule could each be
+    edited to contradict the approved per-field amendment while Markdown and JSON
+    agreed and full static preflight still ACCEPTED the package. Binding the two
+    named strings would leave the class open a third time, so the registry of
+    normative surfaces is made TOTAL instead: every key inside a controlled C3/C4
+    container carries an explicit classification, and an unregistered one refuses.
+    """
+    plan = load_plan(ROOT)
+
+    # --- the registry is well-formed and total ------------------------------
+    registry = normative_surface_registry(plan)
+    check("every normative surface carries a declared verification mode",
+          all(s.mode in VERIFICATION_MODES for s in registry), str(len(registry)))
+    check("every normative surface names a machine path and a Markdown rendering",
+          all(s.path and s.container and s.markdown for s in registry))
+    check("no normative surface is registered twice",
+          len({s.path for s in registry}) == len(registry), str(len(registry)))
+    counts = field_size_amendment_counts(plan)
+    check("UNCLASSIFIED NORMATIVE C3/C4 LOCATIONS = 0",
+          counts["unclassified_normative_amendment_fields"] == 0, str(counts))
+    check("the registry covers every controlled container",
+          counts["controlled_containers"] == 8, str(counts))
+    check("the mode counts account for every registered location",
+          counts["generated_normative_fields"]
+          + counts["strictly_verified_duplicate_fields"]
+          + counts["non_normative_explanatory_fields"]
+          == counts["normative_surface_locations"], str(counts))
+    check("generated plus strictly-verified is exactly the checked set",
+          counts["generated_normative_fields"]
+          + counts["strictly_verified_duplicate_fields"]
+          == counts["checked_total"], str(counts))
+    check("the live plan satisfies surface totality",
+          refusal_code(require_field_size_surface_totality, plan) is None)
+
+    # --- the two newly bound surfaces ARE the canonical text ----------------
+    final = plan["final_campaign_classification"]
+    check("the final campaign rule is the generated canonical text",
+          final["rule"] == render_final_campaign_rule(), repr(final["rule"]))
+    check("the final campaign rule states the per-field conjunction",
+          "all 4 are clean" in final["rule"]
+          and "a single clean field is NEVER sufficient" in final["rule"]
+          and "compensation is FORBIDDEN" in final["rule"])
+    for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
+        row = plan["size_validation_semantics"]["derived_boundaries"][short]
+        check(f"{short} derived-boundary pooling is the generated canonical text",
+              row["pooling"] == render_field_size_pooling_statement(rule),
+              repr(row["pooling"]))
+        check(f"{short} derived-boundary pooling states FORBIDDEN",
+              row["pooling"].startswith("FORBIDDEN"))
+
+    # --- NO SELF-VALIDATION: expectations do not come from the plan ---------
+    for path, surface_path, token, replacement in (
+            ("final_campaign_classification.rule",
+             "final_campaign_classification.rule", "all 4 are clean",
+             "ANY ONE field is clean"),
+            ("size_validation_semantics.derived_boundaries.C3.pooling",
+             "derived_boundaries.C3.pooling", "FORBIDDEN", "ALLOWED")):
+        mutant = copy.deepcopy(plan)
+        path_set(mutant, path,
+                 _text_swap(path_get(mutant, path), token, replacement))
+        honest = {s.path: s.expected for s in registry}
+        corrupt = {s.path: s.expected for s in normative_surface_registry(mutant)}
+        check(f"the expected value for {path} is INDEPENDENT of the plan text",
+              honest == corrupt
+              and honest[surface_path] != path_get(mutant, path),
+              f"expected stayed {honest[surface_path]!r}")
+
+    # --- EVERY known escape class, through the WHOLE static preflight -------
+    escapes = known_escape_classes(plan)
+    survived = []
+    for audit, label, swaps in escapes:
+        tmp = sandbox()
+        mutant = rj(tmp, PLAN_JSON)
+        apply_swaps(mutant, swaps)
+        check(f"MUTATION LANDS [{audit}]: {label}", True,
+              f"{len(swaps)} authoritative location(s)")
+        wj(tmp, PLAN_JSON, mutant)
+        coherent = True
+        try:
+            regenerate(tmp)          # Markdown made COHERENT with the mutated JSON
+        except Refusal:
+            coherent = False
+        if coherent:
+            said = refusal_code(require_plan_authority_coherence, tmp,
+                                rj(tmp, PLAN_JSON))
+            check(f"COHERENT [{audit}]: {label}: Markdown and JSON still agree",
+                  said is None, f"coherence said {said!r}")
+        got = refusal_code(preflight, tmp)
+        if got is None:
+            survived.append(label)
+        check(f"REFUSED [{audit}]: {label}", got is not None, f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"known escape regression set: {len(escapes)} classes, 0 survive",
+          not survived, str(survived))
+
+    # --- a NEW authoritative field cannot appear silently -------------------
+    injections = (
+        ("cases[C3].c3_semantics.field_compensation",
+         lambda p: p["cases"][_case_index(p, "C3_g5_block")]["c3_semantics"]
+         .__setitem__("field_compensation", "ALLOWED")),
+        ("cases[C4].c4_semantics.elementary_event",
+         lambda p: p["cases"][_case_index(p, "C4_surrogate_validity")]["c4_semantics"]
+         .__setitem__("elementary_event", "ANY_FIELD")),
+        ("derived_boundaries.C3.pooling_override",
+         lambda p: p["size_validation_semantics"]["derived_boundaries"]["C3"]
+         .__setitem__("pooling_override", "POOL_ALL_FIELDS")),
+        ("derived_boundaries.C4.field_reduction",
+         lambda p: p["size_validation_semantics"]["derived_boundaries"]["C4"]
+         .__setitem__("field_reduction", "ANY_FIELD")),
+        ("final_campaign_classification.field_compensation_rule",
+         lambda p: p["final_campaign_classification"]
+         .__setitem__("field_compensation_rule", "three of four fields suffice")),
+        ("assurance[C3].field_reduction",
+         lambda p: next(r for r in p["assurance"]
+                        if r["case_id"] == "C3_g5_block")
+         .__setitem__("field_reduction", "ANY_FIELD")),
+        ("assurance[C4].pooling_rule",
+         lambda p: next(r for r in p["assurance"]
+                        if r["case_id"] == "C4_surrogate_validity")
+         .__setitem__("pooling_rule", "POOL_ALL")),
+        ("authority_gaps.G4.pooling",
+         lambda p: p["authority_gaps"][_gap_index(p)]
+         .__setitem__("pooling", "ALLOWED")),
+        ("cases[C3].field_reduction (key-vocabulary sweep)",
+         lambda p: p["cases"][_case_index(p, "C3_g5_block")]
+         .__setitem__("field_reduction", "EVERY_FIELD")),
+        ("cases[C4].pooling (key-vocabulary sweep)",
+         lambda p: p["cases"][_case_index(p, "C4_surrogate_validity")]
+         .__setitem__("pooling", "ALLOWED")),
+        ("size_validation_semantics.field_compensation (key-vocabulary sweep)",
+         lambda p: p["size_validation_semantics"]
+         .__setitem__("field_compensation", "ALLOWED")),
+        ("a 12th requirement weakening C3",
+         lambda p: p["final_campaign_classification"]["requirements"].append(
+             "12. C3 alternatively passes when any one declared field is clean")),
+        ("an EXPLANATORY field that starts stating a field rule",
+         lambda p: p["cases"][_case_index(p, "C3_g5_block")]["c3_semantics"]
+         .__setitem__("why_calibration_is_retained",
+                      "calibration is a diagnostic input; releasing on the "
+                      "reference field alone is permitted")),
+    )
+    unguarded = []
+    for label, inject in injections:
+        mutant = copy.deepcopy(plan)
+        before = json.dumps(mutant, sort_keys=True)
+        inject(mutant)
+        assert json.dumps(mutant, sort_keys=True) != before, f"{label}: no change"
+        tmp = sandbox()
+        wj(tmp, PLAN_JSON, mutant)
+        try:
+            regenerate(tmp)
+            got = refusal_code(preflight, tmp)
+        except Refusal as exc:
+            got = getattr(type(exc), "code", "UNCODED")
+        if got is None:
+            unguarded.append(label)
+        check(f"NEW AUTHORITATIVE FIELD REFUSED: {label}", got is not None,
+              f"got {got!r}")
+        shutil.rmtree(tmp)
+    check(f"new-normative-field audit: {len(injections)} injected, 0 accepted",
+          not unguarded, str(unguarded))
+
+    # --- and the approved SCIENCE is untouched by this repair ---------------
+    for rule in FIELD_SIZE_RULES:
+        short = rule.case_id[:2]
+        row = plan["size_validation_semantics"]["derived_boundaries"][short]
+        check(f"{short} R, nominal alpha and integer boundary are unchanged",
+              (row["replicates"], row["nominal_alpha"], row["boundary"])
+              == (rule.replicates, rule.nominal_alpha, rule.boundary), str(row))
+        check(f"{short} Clopper-Pearson rule is unchanged",
+              abs(row["cp_lower_at_boundary"]
+                  - cp_lower(rule.boundary, rule.replicates)) < 1e-15
+              and abs(row["cp_lower_at_boundary_plus_1"]
+                      - cp_lower(rule.boundary + 1, rule.replicates)) < 1e-15)
+    check("C3 R = 400 at alpha_2 = 0.001, clean 0-2",
+          (FIELD_SIZE_RULES[0].replicates, FIELD_SIZE_RULES[0].nominal_alpha,
+           FIELD_SIZE_RULES[0].boundary) == (400, 0.001, 2))
+    check("C4 R = 2000 at alpha_1 = 0.004, clean 0-13",
+          (FIELD_SIZE_RULES[1].replicates, FIELD_SIZE_RULES[1].nominal_alpha,
+           FIELD_SIZE_RULES[1].boundary) == (2000, 0.004, 13))
+    check("C3's primary endpoint is still the G5 block",
+          FIELD_SIZE_RULES[0].primary_endpoint == "G5_BLOCK_SIZE")
+    check("C3's full P1 result is still the SECONDARY diagnostic and does not "
+          "feed primary release",
+          FIELD_SIZE_RULES[0].secondary_diagnostic
+          == "SECONDARY_PREDECLARED_INTERACTION_DIAGNOSTIC"
+          and FIELD_SIZE_RULES[0].secondary_feeds_primary_release is False)
+    check("C4's primary endpoint is still the Block-1 achieved size",
+          FIELD_SIZE_RULES[1].primary_endpoint == "BLOCK1_ACHIEVED_SIZE")
+    gap = plan["authority_gaps"][_gap_index(plan)]
+    check("the >= 0.90 target is still C1-only and not a C3/C4 familywise target",
+          "remains C1-only" in gap["resolution"]
+          and "familywise" not in final["rule"]
+          and "0.90" not in final["rule"])
+    check("the dependence wording still claims no direction",
+          "not simply be assumed" in gap["resolution"]
+          and "positively associated" not in gap["resolution"]
+          and "positive association" not in gap["resolution"])
+    for case_id in ("C3_g5_block", "C4_surrogate_validity"):
+        event = "g5_rejected" if case_id.startswith("C3") else "block1_rejected"
+        check(f"the driver is STILL behind authority for {case_id[:2]} (pre-F1f)",
+              refusal_code(replicate_level_rejections, plan, {}, case_id, event)
+              == "ENDPOINT_EVENT_REDUCTION_UNDECLARED")
+
+
 GROUPS = (
     ("the auditor's four named release escape routes", test_named_release_probes),
     ("C3/C4 per-field authority (G4)", test_c3_c4_per_field_authority),
     ("C3/C4 amendment semantic mutations",
      test_c3_c4_amendment_semantic_mutations),
+    ("C3/C4 normative-surface totality",
+     test_c3_c4_normative_surface_totality),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),
     ("CASE_SPECIFIC pins", test_case_specific_bindings_refuse),
     ("DERIVED release quantities", test_derived_bindings),

@@ -707,14 +707,16 @@ def test_frozen_authority_unchanged() -> None:
              "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b"),
             ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
              "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495"),
-            # Plan 1.10.0 -> 1.11.0: the PROSPECTIVE C3/C4 per-field amendment,
-            # authority_gaps G4. The frozen sources ABOVE and the seed map BELOW are
-            # deliberately unmoved by it -- the amendment resolves field structure in
-            # the validation package and changes no adopted decision rule.
+            # Plan 1.11.0 -> 1.12.0: NORMATIVE-SURFACE TOTALITY for the approved
+            # C3/C4 per-field amendment. The only content change is the final campaign
+            # rule, which now STATES the per-field conjunction it always implied; a
+            # second independent audit showed that string was bound to nothing. The
+            # frozen sources ABOVE and the seed map BELOW are deliberately unmoved --
+            # no adopted decision rule, replicate count, alpha or boundary changed.
             ("JSON plan", PLAN_JSON,
-             "dc2442dd34dca69330575e2ad9a8c647f72ad47a4ba6bb77311d6933bb0d6f0c"),
+             "2239b14f1cbd7303319999af9bfaf42fc69a1f0ae4e4153533eb59f81feec7f2"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "28ad45fb00598a7857ca78bbe9878d57fd3fd614d9cff8e379b0d796e2d89304"),
+             "f426d1c0bf35f704dc6f6234b2c701f358f9eed0159bb8aec21fb58baca3da0e"),
             ("seed map", SEED_MAP_JSON,
              "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
         check(f"the {label} is BYTE-unchanged",
