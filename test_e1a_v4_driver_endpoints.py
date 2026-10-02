@@ -49,7 +49,8 @@ from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.calibrate import CalibrationRequest
 from e1a_v4.validation.campaign_driver import (
     BLOCK_DECISION_EVENTS, FIELD_LEVEL_EVENTS, FORBIDDEN_EVENT_REDUCTION,
-    REPLICATE_LEVEL_EVENTS, require_consistent_record,
+    REPLICATE_LEVEL_EVENTS, endpoint_decision, replicate_outcomes,
+    require_consistent_record,
     campaign_counts_from_records, field_primary_outcome, is_structured_refusal,
     per_field_primary_outcomes, structured_refusal_reason,
     blinded_branch_a, campaign_shape, committed_publication, evaluate_replicate,
@@ -66,7 +67,8 @@ from e1a_v4.validation.classification import (
     BLOCK_DECISION_FIELDS, P1_DECISION_FIELDS, RECORD_ESTIMATED,
     RECORD_NO_P1_GROUP, RECORD_STRUCTURED_REFUSAL, CampaignCounts, FieldSizeOutcome,
     classify_campaign, classify_field_size, classify_record, classify_size,
-    composite_p1_from_blocks, is_strict_bool, record_consistency_failure,
+    composite_p1_from_blocks, complete_pass_from_components,
+    false_acceptance_from_components, is_strict_bool, record_consistency_failure,
     record_state,
 )
 from e1a_v4.effective_size import sigma_stat
@@ -942,8 +944,12 @@ def published_terminal_record(case_id: str = "C7_false_bridge"):
         generator_identity="PURE-FIXTURE-NO-DRAW")
     execution.publish_branch_a()
     execution.unblind()
+    # `false_acceptance` is DERIVED from P2 and P3, both of which RESULT_FIELDS
+    # declares mandatory, so a record carrying the derived event without its
+    # constituents is incomplete and F1f-k refuses it.
     outcome = {"analysis_status": "ESTIMATED", "beta_hat": 1.0,
-               "false_acceptance": False}
+               "P2": False, "P3": False,
+               "false_acceptance": false_acceptance_from_components(False, False)}
     execution.analyse(outcome)
     record = execution.record(aggregate_skeleton(case_id))
     publication = committed_publication(out, job.coordinates)
@@ -1128,16 +1134,27 @@ REFUSED_REASON = "REFUSED_ACCESSIBLE_SPACE"
 
 
 def result_row(*, refused: bool, g5: bool = False, block1: bool = False,
-               complete: bool = True, accepted: bool = False,
+               p2: bool = True, p3: bool = True, p4: bool = True,
                recovered: bool = True) -> dict:
     """One field record's `result`. A refusal leaves the BLOCK decisions null.
 
-    The composite P1 fields are DERIVED from the two block decisions with the same
-    helper terminal-record validation uses, exactly as `evaluate_replicate` derives
-    them from `p1_geometry`'s own `passed`. They used to be an independent `p1`
-    argument defaulting to True, which silently produced records the frozen gate
-    cannot produce -- a rejecting block beside a passing composite P1 -- and F1f-i
-    now refuses those. A fixture that cannot model the pipeline is not a fixture.
+    EVERY derived decision is computed from its own components with the same
+    helpers terminal-record validation uses, exactly as `evaluate_replicate`
+    derives them:
+
+        P1, p1_rejected   from the two block decisions
+        false_acceptance  from P2 and P3
+        complete_pass     from P1 over the replicate's fields, with P2, P3, P4
+
+    `complete_pass` uses THIS field's P1 as `p1_all`, which is the right value
+    whenever a fixture gives every field of a replicate the same row -- the only
+    shape the replicate-level counters are given here.
+
+    The independent decisions these replaced (`p1`, then `complete` and
+    `accepted`) silently produced records the frozen pipeline cannot produce: a
+    rejecting block beside a passing P1, and P2 and P3 both passing beside
+    `false_acceptance = False`. F1f-i and F1f-k refuse both. A fixture that cannot
+    model the producer is not a fixture.
     """
     if refused:
         return {"analysis_status": REFUSED_STATUS, "refusal_reason": REFUSED_REASON,
@@ -1145,11 +1162,14 @@ def result_row(*, refused: bool, g5: bool = False, block1: bool = False,
                 "block1_rejected": None, "g5_rejected": None,
                 "P2": False, "P3": False, "P4": True, "complete_pass": False,
                 "false_acceptance": False, "scale_recovered": False}
-    return {"analysis_status": "ESTIMATED",
-            **composite_p1_from_blocks(block1, g5),
+    composite = composite_p1_from_blocks(block1, g5)
+    return {"analysis_status": "ESTIMATED", **composite,
             "block1_rejected": block1, "g5_rejected": g5,
-            "P2": True, "P3": True, "P4": True, "complete_pass": complete,
-            "false_acceptance": accepted, "scale_recovered": recovered}
+            "P2": p2, "P3": p3, "P4": p4,
+            "false_acceptance": false_acceptance_from_components(p2, p3),
+            "complete_pass": complete_pass_from_components(
+                composite["P1"], p2, p3, p4),
+            "scale_recovered": recovered}
 
 
 def case_records(plan, case_id, rows):
@@ -1954,6 +1974,194 @@ def test_endpoint_decision_domain() -> None:
                   got == int(expected), f"got {got}")
 
 
+def replicate_records(plan, case_id, rows, subcondition_id=None):
+    """Field records for one replicate of one subcondition. `rows` is per field."""
+    sub = subcondition_id or release_subconditions(plan, case_id)[0]
+    return {f"{case_id}/{sub}/0/{f}": {
+        "coordinates": {"case_id": case_id, "subcondition_id": sub,
+                        "replicate_id": 0, "scope": f},
+        "result": copy.deepcopy(rows[f])} for f in FIELDS}
+
+
+def test_replicate_decision_composition() -> None:
+    """F1f-k. A derived replicate decision must follow from its own components.
+
+    The defect class: the producer writes the components AND a derived boolean,
+    and the consumer trusted the derived boolean. Reproduced before repair:
+
+      A  P1 = False (Block-1 rejected) with complete_pass = True was accepted by
+         validation and C1 counted a complete-pipeline SUCCESS for a replicate
+         whose own gate had rejected.
+      A2 a C1 record missing its ENTIRE required P1 group was refused by
+         validation and still counted as a success by direct aggregation.
+      B  P2 = True, P3 = True, false_acceptance = False was accepted, and C7
+         counted ZERO false acceptances.
+      B2 false_acceptance = "true" was accepted and counted as zero, because the
+         counter tested `is True` -- a silent miscount, not an error.
+    """
+    C1 = "C1_true_bridge_complete"
+    C7 = "C7_false_bridge"
+    c1_sub = release_subconditions(PLAN, C1)[0]
+    c7_sub = release_subconditions(PLAN, C7)[0]
+
+    # --- the canonical C7 truth table, all four combinations ----------------
+    for p2 in (False, True):
+        for p3 in (False, True):
+            expected = false_acceptance_from_components(p2, p3)
+            check(f"C7 TRUTH TABLE P2={p2} P3={p3} -> false_acceptance={expected}",
+                  expected is (p2 and p3))
+            row = result_row(refused=False, p2=p2, p3=p3)
+            check(f"C7 P2={p2} P3={p3}: the correct value is SOUND",
+                  row["false_acceptance"] is expected
+                  and record_consistency_failure(row) is None)
+            check(f"C7 P2={p2} P3={p3}: the OPPOSITE value REFUSES",
+                  record_consistency_failure(
+                      dict(row, false_acceptance=not expected)) is not None)
+            plan = plan_with_replicates(C7, 1)
+            recs = replicate_records(plan, C7, {f: row for f in FIELDS}, c7_sub)
+            found = replicate_outcomes(plan, recs, C7, c7_sub)
+            counted = sum(1 for v in found.values()
+                          if endpoint_decision(v, "false_acceptance", "probe"))
+            check(f"C7 P2={p2} P3={p3}: aggregation counts {int(expected)}",
+                  counted == int(expected), f"counted {counted}")
+
+    # --- the canonical C1 composition ---------------------------------------
+    for p1_all in (False, True, None):
+        for p2 in (False, True):
+            expected = complete_pass_from_components(p1_all, p2, True, True)
+            check(f"C1 COMPOSITION p1_all={p1_all} P2={p2} -> {expected}",
+                  expected is (None if p1_all is None
+                               else bool(p1_all and p2)))
+
+    # --- the auditor's C1 record, through BOTH layers ------------------------
+    plan1 = plan_with_replicates(C1, 1)
+    clean = result_row(refused=False)
+    rejecting = result_row(refused=False, block1=True)
+    impossible = dict(rejecting, complete_pass=True)
+    check("C1 the auditor's record is impossible",
+          record_consistency_failure(impossible) is not None)
+    for label, row, valid in (
+            ("a genuine complete-pipeline success", clean, True),
+            ("a genuine failure because Block-1 rejected", rejecting, True),
+            ("complete_pass TRUE while P1 fails", impossible, False),
+            ("complete_pass TRUE while P2 fails",
+             dict(result_row(refused=False, p2=False), complete_pass=True), False),
+            ("complete_pass TRUE while P4 fails",
+             dict(result_row(refused=False, p4=False), complete_pass=True), False),
+            ("the required P1 group absent",
+             {k: v for k, v in clean.items() if k not in P1_DECISION_FIELDS}, False),
+            ("complete_pass non-Boolean", dict(clean, complete_pass="true"), False),
+            ("a constituent non-Boolean", dict(clean, P4="true"), False),
+            ("complete_pass absent entirely",
+             {k: v for k, v in clean.items() if k != "complete_pass"}, False),
+    ):
+        persisted = json.loads(json.dumps(row))
+        check(f"C1 JSON round trip preserves {label}", persisted == row)
+        recs = replicate_records(plan1, C1, {f: persisted for f in FIELDS}, c1_sub)
+        validated = refusal_code(require_endpoint_events, plan1, C1, persisted, "probe")
+        aggregated = refusal_code(replicate_outcomes, plan1, recs, C1, c1_sub)
+        if valid:
+            check(f"C1 PARITY accepts: {label}",
+                  validated is None and aggregated is None,
+                  f"validator={validated} aggregator={aggregated}")
+            found = replicate_outcomes(plan1, recs, C1, c1_sub)
+            counted = sum(1 for v in found.values()
+                          if endpoint_decision(v, "complete_pass", "probe"))
+            check(f"C1 counts {int(bool(persisted['complete_pass']))} for: {label}",
+                  counted == int(bool(persisted["complete_pass"])))
+        else:
+            check(f"C1 PARITY refuses: {label}",
+                  validated is not None and aggregated is not None,
+                  f"validator={validated} aggregator={aggregated}")
+
+    # A single record CANNOT decide `complete_pass = False` while its own
+    # constituents all pass: another field's P1 may have failed. The validator
+    # therefore accepts it and the replicate-level view, which sees every field,
+    # refuses it. That is the division of labour, not a parity violation.
+    understated = dict(clean, complete_pass=False)
+    recs = replicate_records(plan1, C1, {f: understated for f in FIELDS}, c1_sub)
+    check("C1 complete_pass FALSE with all constituents passing: one record "
+          "cannot decide it",
+          refusal_code(require_endpoint_events, plan1, C1, understated, "probe")
+          is None)
+    check("C1 complete_pass FALSE with all constituents passing: the REPLICATE "
+          "view refuses it",
+          refusal_code(replicate_outcomes, plan1, recs, C1, c1_sub)
+          == "TERMINAL_RECORD_INCONSISTENT")
+
+    # --- the CROSS-FIELD part: p1_all ranges over every field ---------------
+    # One field rejects, the others pass. The replicate did NOT complete, and a
+    # record claiming otherwise is only detectable with all the field records.
+    mixed = {f: (rejecting if f == FIELDS[0] else clean) for f in FIELDS}
+    recs = replicate_records(plan1, C1, mixed, c1_sub)
+    check("C1 one field rejecting makes the replicate-level records DISAGREE",
+          refusal_code(replicate_outcomes, plan1, recs, C1, c1_sub) is not None)
+    all_true = {f: dict(clean, complete_pass=True) for f in FIELDS}
+    all_true[FIELDS[0]] = dict(rejecting, complete_pass=True)
+    recs = replicate_records(plan1, C1, all_true, c1_sub)
+    check("C1 a unanimous complete_pass=True with one field rejecting REFUSES",
+          refusal_code(replicate_outcomes, plan1, recs, C1, c1_sub) is not None)
+
+    # --- the C7 parity matrix ------------------------------------------------
+    plan7 = plan_with_replicates(C7, 1)
+    accepting = result_row(refused=False)            # P2 and P3 both pass
+    for label, row, valid in (
+            ("a genuine false acceptance", accepting, True),
+            ("a genuine non-acceptance", result_row(refused=False, p2=False), True),
+            ("false_acceptance FALSE while P2 and P3 pass",
+             dict(accepting, false_acceptance=False), False),
+            ("false_acceptance TRUE while P3 fails",
+             dict(result_row(refused=False, p3=False), false_acceptance=True), False),
+            ("false_acceptance as the string 'true'",
+             dict(accepting, false_acceptance="true"), False),
+            ("false_acceptance as the integer 1",
+             dict(accepting, false_acceptance=1), False),
+            ("P2 as the string 'true'", dict(accepting, P2="true"), False),
+            ("P2 absent", {k: v for k, v in accepting.items() if k != "P2"}, False),
+            ("P3 absent", {k: v for k, v in accepting.items() if k != "P3"}, False),
+    ):
+        persisted = json.loads(json.dumps(row))
+        recs = replicate_records(plan7, C7, {f: persisted for f in FIELDS}, c7_sub)
+        validated = refusal_code(require_endpoint_events, plan7, C7, persisted, "probe")
+        aggregated = refusal_code(replicate_outcomes, plan7, recs, C7, c7_sub)
+        if valid:
+            check(f"C7 PARITY accepts: {label}",
+                  validated is None and aggregated is None,
+                  f"validator={validated} aggregator={aggregated}")
+        else:
+            check(f"C7 PARITY refuses: {label}",
+                  validated is not None and aggregated is not None,
+                  f"validator={validated} aggregator={aggregated}")
+
+    # --- C7 and C8 keep their legitimate NO_P1_DECISION_GROUP state ---------
+    # With no P1 recorded anywhere, `p1_all` is None and the producer writes
+    # `complete_pass = None`. That is exactly what a C7 or C8 record carries.
+    no_group = dict({k: v for k, v in accepting.items()
+                     if k not in P1_DECISION_FIELDS}, complete_pass=None)
+    check("C7/C8 records with NO composite-P1 group remain valid",
+          record_state(no_group) == RECORD_NO_P1_GROUP
+          and refusal_code(require_endpoint_events, plan7, C7, no_group, "probe")
+          is None)
+    recs = replicate_records(plan7, C7, {f: no_group for f in FIELDS}, c7_sub)
+    check("C7 aggregation accepts a record with no P1 group",
+          refusal_code(replicate_outcomes, plan7, recs, C7, c7_sub) is None)
+
+    # --- C8's scale_recovered is the same derived class ----------------------
+    branched = dict(no_group, scale_recovered=True,
+                    scale_control={"branches": {"1.07": {"p3_passed": True},
+                                                "0.9": {"p3_passed": True}}})
+    check("C8 scale_recovered agreeing with every recorded p3_passed is SOUND",
+          record_consistency_failure(branched) is None)
+    check("C8 scale_recovered TRUE while a factor did not recover REFUSES",
+          record_consistency_failure(
+              dict(branched, scale_control={"branches": {
+                  "1.07": {"p3_passed": True},
+                  "0.9": {"p3_passed": False}}})) is not None)
+    check("C8 scale_recovered FALSE while every factor recovered REFUSES",
+          record_consistency_failure(dict(branched, scale_recovered=False))
+          is not None)
+
+
 GROUPS = (
     ("T1  C2 counts PER FIELD", test_c2_counts_per_field),
     ("T2/T3  G5 and Block-1 decisions propagate", test_g5_and_block1_propagate),
@@ -1974,6 +2182,7 @@ GROUPS = (
      test_structured_refusal_record_integrity),
     ("F1f-i whole-record consistency", test_whole_record_consistency),
     ("F1f-i endpoint decision domain", test_endpoint_decision_domain),
+    ("F1f-k replicate decision composition", test_replicate_decision_composition),
     ("T5/T6  the C8 blinded Branch-A control", test_c8_blinded_branch_a_control),
     ("T7-T10  terminal provenance cross-links", test_terminal_provenance_cross_links),
     ("campaign structure unchanged", test_campaign_structure_unchanged),

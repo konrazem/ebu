@@ -482,7 +482,11 @@ def test_non_calibrating_cases_unchanged() -> None:
         job = campaign.job(case_id)
         check(f"{case_id}: the frozen plan requires no calibration",
               job.requires_calibration is False)
+        # C7's `false_acceptance` is DERIVED from P2 and P3, both of which
+        # RESULT_FIELDS declares mandatory, so the derived event cannot be
+        # recorded without them (F1f-k).
         outcome = {"analysis_status": "ESTIMATED", "beta_hat": 1.0,
+                   "P2": False, "P3": False,
                    "false_acceptance": False} if case_id == C7 else {
             "analysis_status": "ESTIMATED", "beta_hat": 1.0,
             "scale_recovered": True}

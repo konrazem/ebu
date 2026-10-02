@@ -47,7 +47,8 @@ from e1a_v4.validation.classification import (
     INCOMPLETE_EVIDENCE_CLASSIFICATION, NON_FAIL_CLOSED_STATUSES,
     PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, classify_field_size,
-    composite_p1_from_blocks, size_boundary,
+    complete_pass_from_components, composite_p1_from_blocks,
+    false_acceptance_from_components, size_boundary,
 )
 from e1a_v4.validation.coherence import (
     BLOCK_BEGIN, BLOCK_END, REGION_ANCHORS, SECTION_REGISTRY,
@@ -3543,6 +3544,42 @@ def test_f1f_e_runtime_conformance() -> None:
           all(composite_p1_from_blocks(b, g)
               == {"P1": not (b or g), "p1_rejected": b or g}
               for b in (False, True) for g in (False, True)))
+
+    # --- F1f-k: preflight must DETECT a weakened COMPOSITION rule -----------
+    saved_fa = release_authority.false_acceptance_from_components
+    saved_cp = release_authority.complete_pass_from_components
+    saved_rule = release_authority.record_consistency_failure
+    try:
+        release_authority.false_acceptance_from_components = (
+            lambda p2, p3: bool(p2 or p3))
+        check("REFUSED: a C7 composition that accepts on EITHER endpoint",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+        release_authority.false_acceptance_from_components = saved_fa
+        release_authority.complete_pass_from_components = (
+            lambda p1_all, p2, p3, p4: bool(p2 and p3 and p4))
+        check("REFUSED: a C1 composition that ignores P1 entirely",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+        release_authority.complete_pass_from_components = saved_cp
+        release_authority.record_consistency_failure = lambda outcome: None
+        check("REFUSED: a record rule that never binds a derived decision",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.false_acceptance_from_components = saved_fa
+        release_authority.complete_pass_from_components = saved_cp
+        release_authority.record_consistency_failure = saved_rule
+    check("the real composition rules are restored and accepted",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+    check("the canonical C7 composition is the P2/P3 conjunction",
+          all(false_acceptance_from_components(a, b) is (a and b)
+              for a in (False, True) for b in (False, True)))
+    check("the canonical C1 composition is undefined when no P1 was recorded",
+          complete_pass_from_components(None, True, True, True) is None
+          and complete_pass_from_components(True, True, True, True) is True
+          and complete_pass_from_components(False, True, True, True) is False)
 
     # the same for the evidence type's own accounting invariants
     saved_outcome = release_authority.FieldSizeOutcome

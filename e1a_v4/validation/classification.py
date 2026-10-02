@@ -198,8 +198,8 @@ def composite_p1_from_blocks(block1_rejected: bool, g5_rejected: bool) -> dict[s
     return {"P1": not rejected, "p1_rejected": rejected}
 
 
-def classify_record(outcome: Mapping[str, Any]) -> tuple[str | None, str | None]:
-    """THE one terminal-record invariant. Returns `(state, failure)`.
+def _classify_p1_group(outcome: Mapping[str, Any]) -> tuple[str | None, str | None]:
+    """The ANALYSIS-STATUS and composite-P1 layer of `classify_record`.
 
     Exactly one of the two is not None: a record is in one of the legitimate
     states, or it is impossible and the reason says why. Validation and every
@@ -327,6 +327,158 @@ def classify_record(outcome: Mapping[str, Any]) -> tuple[str | None, str | None]
             "frozen gate passes P1 only when NEITHER block rejects, under a union "
             "bound valid at arbitrary dependence between them")
     return RECORD_ESTIMATED, None
+
+
+#: The REPLICATE-level decisions `evaluate_replicate` writes in one dict literal.
+#: `complete_pass` and `scale_recovered` are legitimately None -- the first when the
+#: replicate recorded no per-field P1 at all, the second for every case but C8 --
+#: so only the first four are unconditionally boolean when present.
+REPLICATE_BOOLEAN_FIELDS = ("P2", "P3", "P4", "false_acceptance")
+
+
+def false_acceptance_from_components(p2: bool, p3: bool) -> bool:
+    """C7's replicate-level event, restated ONCE for validation.
+
+    `campaign_driver.evaluate_replicate` produces it verbatim as
+
+        "false_acceptance": bool(p2.passed and p3.passed)
+
+    A false bridge is ACCEPTED exactly when the cross-field equivalence endpoint
+    and the absolute endpoint both passed on data generated under a bridge that
+    is not true. Like `composite_p1_from_blocks` this never produces a record; it
+    exists so a recorded value can be checked against its own constituents.
+    """
+    return bool(p2 and p3)
+
+
+def complete_pass_from_components(p1_all: bool | None, p2: bool, p3: bool,
+                                  p4: bool) -> bool | None:
+    """C1's complete-pipeline event, restated ONCE for validation.
+
+    `campaign_driver.evaluate_replicate` produces it verbatim as
+
+        p1_all = all(P1 across the replicate's fields) if any were recorded
+        "complete_pass": bool(p1_all and p2 and p3 and p4) if p1_all is not None
+                         else None
+
+    `p1_all` is a CROSS-FIELD quantity: it ranges over every field record of the
+    replicate, so a single record can only establish the necessary condition that
+    its own P1 passed. The exact equality is checked by `replicate_outcomes`,
+    which sees all of a replicate's records at once.
+    """
+    if p1_all is None:
+        return None
+    return bool(p1_all and p2 and p3 and p4)
+
+
+def _classify_replicate_decisions(outcome: Mapping[str, Any]) -> str | None:
+    """The REPLICATE-level derived decisions. Returns a failure reason or None.
+
+    THE DEFECT CLASS THIS CLOSES (independent audit, F1f-k)
+        The producer writes components AND a derived boolean; the consumer trusted
+        the derived boolean without ever checking the composition. Reproduced:
+
+            P2 = True, P3 = True, false_acceptance = False
+                accepted by validation, and C7 counted ZERO false acceptances
+                although its producer defines acceptance as P2 AND P3.
+            false_acceptance = "true"
+                accepted, and counted as zero, because the counter tests
+                `is True` -- a silent miscount rather than a crash.
+            P1 = False (Block-1 rejected) with complete_pass = True
+                accepted, and C1 counted a complete-pipeline SUCCESS for a
+                replicate whose own gate had rejected.
+    """
+    if "false_acceptance" in outcome:
+        missing = [name for name in ("P2", "P3") if name not in outcome]
+        if missing:
+            return (
+                f"the record carries `false_acceptance` but not {missing}; the C7 "
+                "event is DERIVED from the cross-field and absolute endpoints, and "
+                "a derived decision without its constituents cannot be checked")
+        untyped = [f"{name}={outcome[name]!r} ({type(outcome[name]).__name__})"
+                   for name in ("P2", "P3", "false_acceptance")
+                   if not is_strict_bool(outcome[name])]
+        if untyped:
+            return (f"the C7 composition fields {untyped} are not booleans; a "
+                    "truthy value here is counted by `is True` as NO false "
+                    "acceptance, which is a silent miscount rather than an error")
+        expected = false_acceptance_from_components(outcome["P2"], outcome["P3"])
+        if outcome["false_acceptance"] is not expected:
+            return (f"false_acceptance={outcome['false_acceptance']!r} does not "
+                    f"follow from P2={outcome['P2']!r} and P3={outcome['P3']!r}, "
+                    f"which require {expected!r}. C7 counts the recorded event, so "
+                    "a contradictory value silently changes the false-acceptance "
+                    "rate the case releases on")
+
+    complete = outcome.get("complete_pass", None)
+    if "complete_pass" in outcome and complete is not None:
+        if not is_strict_bool(complete):
+            return (f"complete_pass={complete!r} ({type(complete).__name__}) is not "
+                    "a boolean; C1 counts it with `is True`, so a truthy value is "
+                    "silently counted as a FAILURE")
+        missing = [name for name in ("P2", "P3", "P4") if name not in outcome]
+        if missing:
+            return (f"the record carries `complete_pass` but not {missing}; the C1 "
+                    "complete-pipeline event is DERIVED from P1, P2, P3 and P4")
+        untyped = [f"{name}={outcome[name]!r} ({type(outcome[name]).__name__})"
+                   for name in ("P2", "P3", "P4") if not is_strict_bool(outcome[name])]
+        if untyped:
+            return (f"the C1 composition fields {untyped} are not booleans")
+        if complete is True:
+            # p1_all ranges over the whole replicate, so only the NECESSARY
+            # condition is decidable here: every component this record carries
+            # must have passed. `replicate_outcomes` checks the exact equality.
+            failing = [name for name in ("P2", "P3", "P4")
+                       if outcome[name] is not True]
+            if "P1" in outcome and outcome["P1"] is not True:
+                failing.append("P1")
+            if failing:
+                return (f"complete_pass is True while {sorted(failing)} did not "
+                        "pass. The complete-pipeline event is the CONJUNCTION of "
+                        "P1 over every field with P2, P3 and P4; a replicate whose "
+                        "own gate rejected did not complete the pipeline")
+
+    recovered = outcome.get("scale_recovered", None)
+    branches = ((outcome.get("scale_control") or {}).get("branches")
+                if isinstance(outcome.get("scale_control"), Mapping) else None)
+    if recovered is not None and isinstance(branches, Mapping) and branches:
+        if not is_strict_bool(recovered):
+            return (f"scale_recovered={recovered!r} is not a boolean")
+        passed = [branch.get("p3_passed") for branch in branches.values()
+                  if isinstance(branch, Mapping)]
+        if len(passed) == len(branches) and all(is_strict_bool(v) for v in passed):
+            expected = all(passed)
+            if recovered is not expected:
+                return (f"scale_recovered={recovered!r} does not follow from the "
+                        f"recorded per-factor p3_passed {passed}, which require "
+                        f"{expected!r}. The blinded control succeeds only when "
+                        "EVERY declared scale factor recovers")
+    return None
+
+
+def classify_record(outcome: Mapping[str, Any]) -> tuple[str | None, str | None]:
+    """THE one terminal-record invariant. Returns `(state, failure)`.
+
+    Exactly one of the two is not None. Validation and every aggregator ask THIS
+    function, so no layer can carry a partial truth table of its own -- which is
+    how each of the earlier defects arose.
+
+    Two layers, in order:
+
+        the ANALYSIS STATUS and the composite-P1 group   `_classify_p1_group`
+        the REPLICATE-level derived decisions            `_classify_replicate_decisions`
+
+    The second layer closes a defect class the first did not reach: a producer
+    that writes both the components and a derived boolean, and a consumer that
+    trusts the derived boolean without checking it follows from them.
+    """
+    state, failure = _classify_p1_group(outcome)
+    if failure is not None:
+        return None, failure
+    failure = _classify_replicate_decisions(outcome)
+    if failure is not None:
+        return None, failure
+    return state, None
 
 
 def record_consistency_failure(outcome: Mapping[str, Any]) -> str | None:

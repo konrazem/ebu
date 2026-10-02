@@ -66,7 +66,8 @@ from .classification import (
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
     RECORD_ESTIMATED, RECORD_NO_P1_GROUP, CampaignCounts, FieldSizeOutcome,
     authorises_undefined_block_decision, classify_campaign, classify_record,
-    composite_p1_from_blocks, record_consistency_failure, size_boundary,
+    complete_pass_from_components, composite_p1_from_blocks,
+    false_acceptance_from_components, record_consistency_failure, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
 from .refusals import (
@@ -2968,6 +2969,61 @@ def require_per_field_implementation_conformance(plan: dict[str, Any],
         raise ImplementationAuthorityLag(
             "a record from a field the driver gave no calibration condition, and so "
             "carries no composite-P1 group at all, must remain a recognised state")
+
+    # The REPLICATE-LEVEL derived decisions (F1f-k). Same defect class as above,
+    # one level up: the producer writes the components AND a derived boolean, and
+    # the consumer trusted the boolean. C1 counted an impossible complete-pipeline
+    # success and C7 counted zero false acceptances against its own P2/P3.
+    for p2 in (False, True):
+        for p3 in (False, True):
+            if false_acceptance_from_components(p2, p3) is not (p2 and p3):
+                raise ImplementationAuthorityLag(
+                    f"the runtime composes false_acceptance from P2={p2}, P3={p3} "
+                    "as something other than their conjunction; C7 releases on that "
+                    "event")
+            sound = dict(estimated, P2=p2, P3=p3,
+                         false_acceptance=false_acceptance_from_components(p2, p3),
+                         complete_pass=complete_pass_from_components(True, p2, p3, True),
+                         P4=True)
+            if record_consistency_failure(sound) is not None:
+                raise ImplementationAuthorityLag(
+                    f"a correctly composed record with P2={p2}, P3={p3} was refused: "
+                    f"{record_consistency_failure(sound)}")
+            if record_consistency_failure(
+                    dict(sound, false_acceptance=not sound["false_acceptance"])) is None:
+                raise ImplementationAuthorityLag(
+                    f"a record whose false_acceptance contradicts P2={p2}, P3={p3} "
+                    "was accepted; C7 counts the recorded event, so a contradictory "
+                    "value silently changes the false-acceptance rate")
+    for p1_all in (False, True, None):
+        expected = complete_pass_from_components(p1_all, True, True, True)
+        if expected is not (None if p1_all is None else bool(p1_all)):
+            raise ImplementationAuthorityLag(
+                f"the runtime composes complete_pass from p1_all={p1_all} as "
+                f"{expected!r}; the complete-pipeline event is the conjunction of "
+                "P1 over every field with P2, P3 and P4")
+    impossible_replicate = (
+        ("complete_pass TRUE while the record's own P1 failed",
+         dict(estimated, block1_rejected=True, g5_rejected=False, P1=False,
+              p1_rejected=True, P2=True, P3=True, P4=True, false_acceptance=True,
+              complete_pass=True)),
+        ("complete_pass TRUE while P4 failed",
+         dict(estimated, P2=True, P3=True, P4=False, false_acceptance=True,
+              complete_pass=True)),
+        ("a non-boolean complete_pass",
+         dict(estimated, P2=True, P3=True, P4=True, false_acceptance=True,
+              complete_pass="true")),
+        ("a non-boolean false_acceptance",
+         dict(estimated, P2=True, P3=True, P4=True, false_acceptance="true")),
+        ("false_acceptance without its constituents",
+         dict(estimated, false_acceptance=True)),
+    )
+    for label, record in impossible_replicate:
+        if record_consistency_failure(record) is None:
+            raise ImplementationAuthorityLag(
+                f"a terminal record with {label} was accepted. A derived replicate "
+                "decision is counted as recorded, so it must follow from the "
+                "components recorded beside it")
 
     # Refusal-reason accounting. A field reported NOT_EVALUABLE must be able to say
     # WHY, and the arithmetic that says so must be sound.

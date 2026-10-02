@@ -79,7 +79,8 @@ from ..numerics import Refusal
 from .calibrate import CalibrationRequest, generate_block1_artifact
 from .classification import (
     CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
-    classify_campaign, is_strict_bool, record_consistency_failure,
+    classify_campaign, complete_pass_from_components, is_strict_bool,
+    record_consistency_failure,
 )
 from .coherence import derived_n_samples
 from .dispositions import cp_upper
@@ -3787,7 +3788,8 @@ def per_field_primary_outcomes(plan: Mapping[str, Any],
             for field_id in fields}
 
 
-def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
+def replicate_outcomes(plan: Mapping[str, Any],
+                       records: Mapping[str, Mapping[str, Any]], case_id: str,
                        subcondition_id: str) -> dict[int, Mapping[str, Any]]:
     """One outcome per REPLICATE of one subcondition, from the per-field records.
 
@@ -3796,8 +3798,22 @@ def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
     between the fields of one replicate and are counted by
     `field_event_count` instead; requiring them to agree here was part of the
     same conflation the audit found.
+
+    THE DEFECT THIS CLOSES (independent audit, F1f-k)
+        This counter TRUSTED upstream validation. `campaign_counts_from_records`
+        never calls `require_endpoint_events`, so a C1 record missing its entire
+        required P1 group was refused by validation and still counted here as a
+        complete-pipeline SUCCESS. It now runs the SAME validator the official
+        orchestration runs, per record, so the two cannot disagree.
+
+        It also checks the one composition a single record cannot: `complete_pass`
+        is `p1_all AND P2 AND P3 AND P4`, and `p1_all` ranges over EVERY field of
+        the replicate. `classify_record` establishes the necessary condition per
+        record; the exact equality is decidable only here, where all of a
+        replicate's records are in hand.
     """
     out: dict[int, Mapping[str, Any]] = {}
+    p1_by_replicate: dict[int, list[Any]] = {}
     for record in records.values():
         coordinates = record.get("coordinates") or {}
         if (coordinates.get("case_id") != case_id
@@ -3805,6 +3821,14 @@ def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
             continue
         replicate = coordinates.get("replicate_id")
         result = record.get("result") or {}
+        # The SAME check the official orchestration performs. Presence of every
+        # required endpoint, and the whole-record invariant, before any counting.
+        require_endpoint_events(
+            plan, case_id, result,
+            f"{case_id}/{subcondition_id} replicate {replicate} "
+            f"field {coordinates.get('scope')}")
+        if "P1" in result:
+            p1_by_replicate.setdefault(replicate, []).append(result["P1"])
         verdict = {k: result.get(k) for k in REPLICATE_LEVEL_EVENTS}
         previous = out.get(replicate)
         if previous is not None and previous != verdict:
@@ -3813,6 +3837,19 @@ def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
                 "records disagree about a REPLICATE-LEVEL endpoint; the fields of "
                 "one replicate are one experiment and have one such outcome")
         out[replicate] = verdict
+    for replicate, verdict in sorted(out.items()):
+        p1_values = p1_by_replicate.get(replicate, [])
+        p1_all = all(p1_values) if p1_values else None
+        expected = complete_pass_from_components(
+            p1_all, verdict["P2"], verdict["P3"], verdict["P4"])
+        if verdict["complete_pass"] is not expected:
+            raise TerminalRecordInconsistent(
+                f"{case_id}/{subcondition_id} replicate {replicate}: "
+                f"complete_pass={verdict['complete_pass']!r} does not follow from "
+                f"P1 over the replicate's fields ({p1_values} -> {p1_all!r}), "
+                f"P2={verdict['P2']!r}, P3={verdict['P3']!r}, P4={verdict['P4']!r}, "
+                f"which require {expected!r}. The complete-pipeline event is that "
+                "conjunction and C1 counts the recorded value.")
     return out
 
 
@@ -3906,7 +3943,7 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
         return case_entry(plan, case_id)["replicate_count"]
 
     def verdicts(case_id: str, subcondition_id: str) -> dict[int, Mapping[str, Any]]:
-        found = replicate_outcomes(records, case_id, subcondition_id)
+        found = replicate_outcomes(plan, records, case_id, subcondition_id)
         if len(found) != replicates(case_id):
             raise CampaignIncomplete(
                 f"{case_id}/{subcondition_id}: {len(found)} replicate outcomes for a "
@@ -3916,7 +3953,8 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
 
     c1_sub = release_subconditions(plan, "C1_true_bridge_complete")[0]
     c1 = sum(1 for v in verdicts("C1_true_bridge_complete", c1_sub).values()
-             if v["complete_pass"] is True)
+             if endpoint_decision(v, "complete_pass",
+                                  f"C1_true_bridge_complete/{c1_sub}"))
     # C2: PER FIELD, never pooled. Each field's own P1 decision, counted over its
     # own R replicates -- `size_validation_semantics.derived_boundaries.C2`
     # carries `per_field: true` and `pooling: FORBIDDEN`.
@@ -3936,7 +3974,7 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
     # cell is reported, not that any cell clears a threshold. Completeness IS the
     # criterion, and dropping a cell after inspection is the failure it guards.
     c5_cells = release_subconditions(plan, "C5_plug_in_branch_a")
-    c5_pass = all(len(replicate_outcomes(records, "C5_plug_in_branch_a", cell))
+    c5_pass = all(len(replicate_outcomes(plan, records, "C5_plug_in_branch_a", cell))
                   == replicates("C5_plug_in_branch_a") for cell in c5_cells)
     # C6 has a frozen upper-bound criterion at EACH declared rho.
     # C6 declares exactly ONE field, so its per-field and per-replicate counts
@@ -3956,11 +3994,13 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
         if cp_upper(rejections, c6_row["replicates"]) > c6_row["target_value"]:
             c6_pass = False
     c7 = {alt: sum(1 for v in verdicts("C7_false_bridge", alt).values()
-                   if v["false_acceptance"] is True)
+                   if endpoint_decision(v, "false_acceptance",
+                                        f"C7_false_bridge/{alt}"))
           for alt in release_subconditions(plan, "C7_false_bridge")}
     c8_sub = release_subconditions(plan, "C8_blinded_scale_control")[0]
     c8 = sum(1 for v in verdicts("C8_blinded_scale_control", c8_sub).values()
-             if v["scale_recovered"] is True)
+             if endpoint_decision(v, "scale_recovered",
+                                  f"C8_blinded_scale_control/{c8_sub}"))
     return CampaignCounts(
         c1_successes=c1, c2_rejections_by_field=c2, c3_rejections_by_field=c3,
         c4_rejections_by_field=c4, c5_pass=bool(c5_pass), c6_pass=bool(c6_pass),
