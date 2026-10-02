@@ -47,7 +47,7 @@ from e1a_v4.validation.classification import (
     INCOMPLETE_EVIDENCE_CLASSIFICATION, NON_FAIL_CLOSED_STATUSES,
     PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, classify_field_size,
-    size_boundary,
+    composite_p1_from_blocks, size_boundary,
 )
 from e1a_v4.validation.coherence import (
     BLOCK_BEGIN, BLOCK_END, REGION_ANCHORS, SECTION_REGISTRY,
@@ -3507,6 +3507,42 @@ def test_f1f_e_runtime_conformance() -> None:
     check("the real whole-record rule is restored and accepted",
           refusal_code(require_per_field_implementation_conformance, plan, ROOT)
           is None)
+
+    # --- F1f-i: preflight must DETECT a weakened DECISION DOMAIN ------------
+    saved_record = release_authority.record_consistency_failure
+    saved_classify = release_authority.classify_record
+    saved_compose = release_authority.composite_p1_from_blocks
+    try:
+        release_authority.record_consistency_failure = (
+            lambda outcome: None if all(
+                isinstance(outcome.get(n), bool) for n in BLOCK_DECISION_FIELDS)
+            else "not a bool")
+        check("REFUSED: a rule that admits a truthy non-boolean decision",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+        release_authority.record_consistency_failure = saved_record
+        release_authority.composite_p1_from_blocks = (
+            lambda block1, g5: {"P1": not (block1 and g5),
+                                "p1_rejected": bool(block1 and g5)})
+        check("REFUSED: a composition that passes P1 unless BOTH blocks reject",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+        release_authority.composite_p1_from_blocks = saved_compose
+        release_authority.classify_record = lambda outcome: (None, None)
+        check("REFUSED: a record classifier that recognises no state",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.record_consistency_failure = saved_record
+        release_authority.classify_record = saved_classify
+        release_authority.composite_p1_from_blocks = saved_compose
+    check("the real decision-domain rules are restored and accepted",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+    check("the canonical truth table is the frozen union-bound composition",
+          all(composite_p1_from_blocks(b, g)
+              == {"P1": not (b or g), "p1_rejected": b or g}
+              for b in (False, True) for g in (False, True)))
 
     # the same for the evidence type's own accounting invariants
     saved_outcome = release_authority.FieldSizeOutcome

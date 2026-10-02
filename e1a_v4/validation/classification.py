@@ -146,80 +146,197 @@ def authorises_undefined_block_decision(outcome: Mapping[str, Any]) -> bool:
 #: either produced or did not, and returns `(None, None)` or `(bool, bool)`. It has
 #: no branch that defines one and leaves the other undefined.
 BLOCK_DECISION_FIELDS = ("block1_rejected", "g5_rejected")
+#: The whole composite-P1 group, which `campaign_driver.evaluate_replicate` writes
+#: in ONE `row.update(...)` or not at all. A record therefore carries all four or
+#: none of them; a PARTIAL group is not something the frozen pipeline produces.
+P1_DECISION_FIELDS = ("P1", "p1_rejected", "block1_rejected", "g5_rejected")
+
+#: The legitimate terminal-record states. There is no third.
+RECORD_ESTIMATED = "ESTIMATED_RECORD"
+RECORD_STRUCTURED_REFUSAL = "STRUCTURED_REFUSAL_RECORD"
+#: A record from a field the frozen driver never gave a calibration condition, so
+#: `evaluate_replicate` wrote no composite-P1 group at all.
+RECORD_NO_P1_GROUP = "NO_P1_DECISION_GROUP"
 
 
-def record_consistency_failure(outcome: Mapping[str, Any]) -> str | None:
-    """Why this terminal record is internally IMPOSSIBLE, or None if it is sound.
+def is_strict_bool(value: Any) -> bool:
+    """`True` or `False` themselves -- nothing that merely behaves like them.
 
-    WHOLE-RECORD, where `authorises_undefined_block_decision` is per-event. That
-    difference is the defect this closes (independent runtime audit, F1f-i). The
-    per-event question was asked only when a decision was `None`, so a record could
-    pass it twice over and still describe no possible analysis:
+    Identity, not `isinstance`: `bool` is a subclass of `int`, so `isinstance(1,
+    bool)` is False but `1 == True` is True, and an `isinstance(value, int)` guard
+    would admit `True`. Identity against the two singletons admits exactly them.
 
-        block1_rejected = null  beside  g5_rejected = false
-            on one fail-closed status. The per-event rule authorised the null
-            block-1 decision and never examined g5, so C4 read the record as a
-            structured refusal and scored the field NOT_EVALUABLE while C3 read the
-            SAME record as a defined non-rejection and scored it clean. The gate
-            cannot both have run and not run.
+    THE DEFECT THIS CLOSES
+        `g5_rejected = "false"` was accepted and then consumed as
+        `bool("false")`, which is `True`: a non-empty string spelling the word
+        false was counted as a G5 REJECTION. `0` and `1` would have passed as
+        decisions for the same reason.
+    """
+    return value is True or value is False
 
-        analysis_status = "NOT_A_REAL_STATUS"  with BOTH decisions defined
-            Nothing consulted the status at all, because no decision was null, so
-            an undeclared status flowed through to a clean verdict.
 
-    Three conditions, checked over the record as a whole:
+def composite_p1_from_blocks(block1_rejected: bool, g5_rejected: bool) -> dict[str, bool]:
+    """The frozen two-block composition, restated ONCE for validation.
 
-        DECLARED   `analysis_status` is a string in the canonical roster, whatever
-                   the block decisions say. An unrecognised status describes no
-                   analysis the frozen pipeline can perform.
-        TOGETHER   the block decisions the record carries are either ALL undefined
-                   or ALL defined, never a mixture.
-        AGREEING   all undefined requires a status that fails the gate closed, plus
-                   the frozen fail-closed composite P1 state; all defined requires a
-                   status that does NOT fail it closed, because a gate that returned
-                   before computing a p-value decided neither block.
+    `e1a_v4.endpoints.p1_geometry` computes it as
 
-    A record carrying no block decisions at all -- a case that does not use the
-    two-block gate -- is sound as far as this rule is concerned, and only the
-    DECLARED condition applies to it.
+        passed = not (block1_reject or block2_reject)
+
+    and `campaign_driver.evaluate_replicate` records `P1 = bool(result.passed)`
+    and `p1_rejected = bool(not result.passed)`. The union bound is valid under
+    arbitrary dependence between the blocks, so a rejection in EITHER block
+    rejects the composite.
+
+    This does NOT replace that computation and is never used to produce a record:
+    `evaluate_replicate` still records what the frozen endpoint itself returned.
+    This exists so terminal-record validation can check that a record's composite
+    fields follow from its own block decisions. `endpoints.py` is deliberately not
+    extended to expose the relation, because it is an analysis-bound SCIENTIFIC
+    MODULE and editing it would move the frozen analysis procedure identity.
+    """
+    rejected = bool(block1_rejected or g5_rejected)
+    return {"P1": not rejected, "p1_rejected": rejected}
+
+
+def classify_record(outcome: Mapping[str, Any]) -> tuple[str | None, str | None]:
+    """THE one terminal-record invariant. Returns `(state, failure)`.
+
+    Exactly one of the two is not None: a record is in one of the legitimate
+    states, or it is impossible and the reason says why. Validation and every
+    aggregator ask THIS function, so no layer can implement a partial truth table
+    of its own -- which is precisely how the earlier defects arose.
+
+    THE STATE MACHINE. A record that CARRIES the composite-P1 group is in one of
+    exactly two states; a record that carries none of it is in the third, which is
+    the driver's own and not an invention -- `evaluate_replicate` writes the group
+    only for a field with a calibration condition, and the frozen plan declares
+    `uses_p1_block1 = false` for C7 and C8, so their records legitimately have no
+    group at all. Refusing that would refuse every valid C7 and C8 record.
+
+        STATE A  ESTIMATED_RECORD
+            analysis_status      a declared status that does NOT fail the gate
+                                 closed, so the gate produced its p-value rows
+            block1_rejected      strict bool
+            g5_rejected          strict bool
+            P1, p1_rejected      strict bools, EXACTLY as the frozen two-block
+                                 composition derives them from the two above
+
+        STATE B  STRUCTURED_REFUSAL_RECORD
+            analysis_status      a declared status that fails the gate closed
+            block1_rejected      None
+            g5_rejected          None
+            P1, p1_rejected      the frozen fail-closed state, False and True
+            the C3/C4 primary endpoint is UNDEFINED, which is what makes the
+            field NOT_EVALUABLE
+
+        STATE C  NO_P1_DECISION_GROUP
+            the record carries none of the four fields, because the driver gave
+            that field no calibration condition and wrote no composite-P1 group.
+            Whether a case REQUIRES the group is a separate question, answered by
+            `required_endpoint_events` from the frozen plan.
+
+    Any hybrid refuses. The defects this closes, each reproduced before repair:
+
+        PARTIAL GROUP      `block1_rejected` omitted beside `g5_rejected = False`
+                           was refused by validation and ACCEPTED by aggregation,
+                           which counted a clean G5 non-rejection. With both
+                           omitted, C2 counted the record as well.
+        NON-BOOLEAN        `g5_rejected = "false"` was accepted by both layers and
+                           consumed as `bool("false")`, recording a REJECTION.
+                           `1` and `0` behaved the same way.
+        CONTRADICTORY P1   an ESTIMATED record with `block1_rejected = True` and
+                           `P1 = True` was accepted by both layers, although the
+                           frozen gate passes P1 only when NEITHER block rejects.
     """
     status = outcome.get("analysis_status")
     if not isinstance(status, str):
-        return (f"analysis_status is {status!r}, which is not a declared status "
-                "name; a terminal record states the analysis it records")
+        return None, (f"analysis_status is {status!r}, which is not a declared "
+                      "status name; a terminal record states the analysis it records")
     if status not in DECLARED_ANALYSIS_STATUSES:
-        return (f"analysis_status {status!r} is not one of the declared statuses "
-                f"{sorted(DECLARED_ANALYSIS_STATUSES)}; an unrecognised status "
-                "describes no analysis the frozen pipeline can perform")
-    present = tuple(name for name in BLOCK_DECISION_FIELDS if name in outcome)
+        return None, (f"analysis_status {status!r} is not one of the declared "
+                      f"statuses {sorted(DECLARED_ANALYSIS_STATUSES)}; an "
+                      "unrecognised status describes no analysis the frozen "
+                      "pipeline can perform")
+    present = sorted(name for name in P1_DECISION_FIELDS if name in outcome)
     if not present:
-        return None
-    undefined = tuple(name for name in present if outcome[name] is None)
-    if undefined and len(undefined) != len(present):
-        defined = tuple(name for name in present if outcome[name] is not None)
-        return (f"{list(undefined)} undefined while {list(defined)} defined. The "
-                "two-block gate decides BOTH blocks from the same p-value rows: it "
-                "either produced them and decided both, or produced none and decided "
-                "neither. A record saying the gate both ran and did not run describes "
-                "no possible analysis, and the two cases reading it would disagree "
-                "about whether the same replicate is evaluable")
+        return RECORD_NO_P1_GROUP, None
+    if len(present) != len(P1_DECISION_FIELDS):
+        absent = sorted(set(P1_DECISION_FIELDS) - set(present))
+        return None, (
+            f"the composite P1 decision group is incomplete: {absent} absent while "
+            f"{present} are present. `evaluate_replicate` writes all four in ONE "
+            "update or writes none of them, so a partial group is not a record the "
+            "frozen pipeline produces. A merely ABSENT block decision was being "
+            "refused by validation and read by aggregation as a clean non-rejection")
+
+    refusing = status in REFUSAL_AUTHORISING_STATUSES
+    blocks = {name: outcome[name] for name in BLOCK_DECISION_FIELDS}
+    undefined = sorted(name for name, value in blocks.items() if value is None)
+    defined = sorted(name for name, value in blocks.items() if value is not None)
+    if undefined and defined:
+        return None, (
+            f"{undefined} undefined while {defined} defined. The two-block gate "
+            "decides BOTH blocks from the same p-value rows: it either produced "
+            "them and decided both, or produced none and decided neither. A record "
+            "saying the gate both ran and did not run describes no possible "
+            "analysis, and the two cases reading it would disagree about whether "
+            "the same replicate is evaluable")
+
     if undefined:
-        if status not in REFUSAL_AUTHORISING_STATUSES:
-            return (f"both block decisions are undefined while analysis_status is "
-                    f"{status!r}, which does not fail the gate closed; the gate "
-                    "produced its rows, so both decisions exist")
+        if not refusing:
+            return None, (
+                f"both block decisions are undefined while analysis_status is "
+                f"{status!r}, which does not fail the gate closed; the gate produced "
+                "its rows, so both decisions exist")
         disagreeing = [f"{name}={outcome.get(name)!r}"
                        for name, expected in FAIL_CLOSED_P1_STATE
                        if outcome.get(name) is not expected]
         if disagreeing:
-            return (f"analysis_status {status!r} fails the composite P1 gate closed, "
-                    f"but the record carries {disagreeing}; an authorised structured "
-                    "refusal states the fail-closed P1 result it necessarily produced")
-    elif status in REFUSAL_AUTHORISING_STATUSES:
-        return (f"both block decisions are DEFINED while analysis_status is "
-                f"{status!r}, which fails the gate closed before any p-value is "
-                "computed; a gate that never ran decided neither block")
-    return None
+            return None, (
+                f"analysis_status {status!r} fails the composite P1 gate closed, but "
+                f"the record carries {disagreeing}; an authorised structured refusal "
+                "states the fail-closed P1 result it necessarily produced")
+        return RECORD_STRUCTURED_REFUSAL, None
+
+    if refusing:
+        return None, (
+            f"both block decisions are DEFINED while analysis_status is {status!r}, "
+            "which fails the gate closed before any p-value is computed; a gate that "
+            "never ran decided neither block")
+    untyped = [f"{name}={value!r} ({type(value).__name__})"
+               for name, value in sorted(blocks.items()) if not is_strict_bool(value)]
+    if untyped:
+        return None, (
+            f"the block decisions {untyped} are not booleans. A defined block "
+            "decision is True or False and nothing else: coercing it would make the "
+            "non-empty string 'false', and the integer 1, into a REJECTION")
+    composite = {name: outcome[name] for name in ("P1", "p1_rejected")}
+    untyped = [f"{name}={value!r} ({type(value).__name__})"
+               for name, value in sorted(composite.items()) if not is_strict_bool(value)]
+    if untyped:
+        return None, (
+            f"the composite P1 fields {untyped} are not booleans; P1 is a scientific "
+            "decision, not a truthy value")
+    expected = composite_p1_from_blocks(blocks["block1_rejected"],
+                                        blocks["g5_rejected"])
+    if composite != expected:
+        return None, (
+            f"the composite P1 fields {composite} do not follow from "
+            f"block1_rejected={blocks['block1_rejected']!r} and "
+            f"g5_rejected={blocks['g5_rejected']!r}, which require {expected}. The "
+            "frozen gate passes P1 only when NEITHER block rejects, under a union "
+            "bound valid at arbitrary dependence between them")
+    return RECORD_ESTIMATED, None
+
+
+def record_consistency_failure(outcome: Mapping[str, Any]) -> str | None:
+    """Why this terminal record is internally IMPOSSIBLE, or None if it is sound."""
+    return classify_record(outcome)[1]
+
+
+def record_state(outcome: Mapping[str, Any]) -> str | None:
+    """Which legitimate state this record is in, or None if it is impossible."""
+    return classify_record(outcome)[0]
 
 
 #: Machine-readable statement of what a pass does and does not mean.

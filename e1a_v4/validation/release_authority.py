@@ -64,8 +64,9 @@ from .classification import (
     INCOMPLETE_EVIDENCE_CLASSIFICATION, NON_FAIL_CLOSED_STATUSES,
     PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
-    CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
-    classify_campaign, record_consistency_failure, size_boundary,
+    RECORD_ESTIMATED, RECORD_NO_P1_GROUP, CampaignCounts, FieldSizeOutcome,
+    authorises_undefined_block_decision, classify_campaign, classify_record,
+    composite_p1_from_blocks, record_consistency_failure, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
 from .refusals import (
@@ -2729,6 +2730,7 @@ def _clean_counts(per_case: dict[str, dict[str, int]],
 REFUSAL_AWARE_DRIVER_SURFACE = (
     "is_structured_refusal",
     "require_consistent_record",
+    "endpoint_decision",
     "structured_refusal_reason",
     "field_primary_outcome",
     "per_field_primary_outcomes",
@@ -2915,6 +2917,57 @@ def require_per_field_implementation_conformance(plan: dict[str, Any],
                 "consistent. The two-block gate decides BOTH blocks from the same "
                 "p-value rows, so they are undefined together or defined together, "
                 "and every terminal record states a DECLARED analysis status")
+
+    # The DECISION DOMAIN and the composite P1 truth table (F1f-i). The rules above
+    # say which records may leave an endpoint undefined; these say what a DEFINED
+    # endpoint may be, and that the composite follows from its own blocks.
+    estimated = {"analysis_status": ESTIMATED_STATUS, "block1_rejected": False,
+                 "g5_rejected": False, "P1": True, "p1_rejected": False}
+    for block1 in (False, True):
+        for g5 in (False, True):
+            composite = composite_p1_from_blocks(block1, g5)
+            if composite["P1"] is not (not (block1 or g5)):
+                raise ImplementationAuthorityLag(
+                    f"the runtime composes P1 from block1={block1}, g5={g5} as "
+                    f"{composite}; the frozen gate passes P1 only when NEITHER "
+                    "block rejects")
+            row = dict(estimated, block1_rejected=block1, g5_rejected=g5, **composite)
+            state, failure = classify_record(row)
+            if state != RECORD_ESTIMATED or failure is not None:
+                raise ImplementationAuthorityLag(
+                    f"a correctly composed estimated record with block1={block1} "
+                    f"and g5={g5} was not accepted as an estimated record: {failure}")
+            contradiction = dict(row, P1=not composite["P1"],
+                                 p1_rejected=not composite["p1_rejected"])
+            if record_consistency_failure(contradiction) is None:
+                raise ImplementationAuthorityLag(
+                    f"an estimated record whose composite P1 contradicts "
+                    f"block1={block1}, g5={g5} was accepted; the two block "
+                    "decisions determine the composite under the frozen union bound")
+    domain_violations = [
+        (f"{name}={value!r}", dict(estimated, **{name: value}))
+        for name in ("block1_rejected", "g5_rejected", "P1", "p1_rejected")
+        for value in ("false", 1, 0, 1.0, [])]
+    domain_violations += [
+        ("one block decision omitted",
+         {k: v for k, v in estimated.items() if k != "block1_rejected"}),
+        ("both block decisions omitted under an estimated status",
+         {k: v for k, v in estimated.items()
+          if k not in ("block1_rejected", "g5_rejected")}),
+        ("the composite P1 fields omitted",
+         {k: v for k, v in estimated.items() if k not in ("P1", "p1_rejected")}),
+    ]
+    for label, record in domain_violations:
+        if record_consistency_failure(record) is None:
+            raise ImplementationAuthorityLag(
+                f"a terminal record with {label} was accepted. A defined endpoint "
+                "decision is a strict boolean and the composite-P1 group is written "
+                "whole or not at all; a truthy value counted as a rejection, and an "
+                "absent block decision was read as a clean non-rejection")
+    if classify_record({"analysis_status": ESTIMATED_STATUS})[0] != RECORD_NO_P1_GROUP:
+        raise ImplementationAuthorityLag(
+            "a record from a field the driver gave no calibration condition, and so "
+            "carries no composite-P1 group at all, must remain a recognised state")
 
     # Refusal-reason accounting. A field reported NOT_EVALUABLE must be able to say
     # WHY, and the arithmetic that says so must be sound.

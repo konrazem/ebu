@@ -172,7 +172,12 @@ def c2_aggregate(subcondition_id: str) -> dict:
     return aggregate
 
 
-C2_OUTCOME = {"analysis_status": "ESTIMATED", "beta_hat": 1.0, "P1": False,
+#: A clean ESTIMATED field outcome. The composite P1 fields follow from the two
+#: block decisions, as `evaluate_replicate` records them: neither block rejects, so
+#: P1 passes. This fixture previously carried `P1: False` beside `p1_rejected:
+#: False` with both blocks clean -- impossible twice over, and a record the frozen
+#: gate cannot produce. F1f-i refuses it.
+C2_OUTCOME = {"analysis_status": "ESTIMATED", "beta_hat": 1.0, "P1": True,
               "p1_rejected": False, "block1_rejected": False, "g5_rejected": False}
 
 
@@ -363,7 +368,7 @@ def test_every_required_case() -> None:
     _e5, _r5, other_case_digest = campaign.run(
         other_case, aggregate=aggregate_skeleton(
             "C1_true_bridge_complete", other_case.coordinates.subcondition_id),
-        outcome={"analysis_status": "ESTIMATED", "beta_hat": 1.0, "P1": False,
+        outcome={"analysis_status": "ESTIMATED", "beta_hat": 1.0, "P1": True,
                  "P2": True, "P3": True, "P4": True, "complete_pass": True,
                  "p1_rejected": False, "block1_rejected": False,
                  "g5_rejected": False})

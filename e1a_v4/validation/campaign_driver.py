@@ -79,7 +79,7 @@ from ..numerics import Refusal
 from .calibrate import CalibrationRequest, generate_block1_artifact
 from .classification import (
     CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
-    classify_campaign, record_consistency_failure,
+    classify_campaign, is_strict_bool, record_consistency_failure,
 )
 from .coherence import derived_n_samples
 from .dispositions import cp_upper
@@ -3563,6 +3563,30 @@ def require_consistent_record(outcome: Mapping[str, Any], where: str) -> None:
         raise TerminalRecordInconsistent(f"{where}: {failure}")
 
 
+def endpoint_decision(result: Mapping[str, Any], event: str, where: str) -> bool:
+    """Read a per-field endpoint decision WITHOUT coercing it.
+
+    THE DEFECT THIS CLOSES
+        Both counters read `bool(result[event])`. `bool("false")` is True, so a
+        record carrying the non-empty STRING "false" was counted as a G5
+        REJECTION, and `0` / `1` were accepted as decisions for the same reason.
+        A scientific decision is CONSUMED, never coerced: a value that is not
+        already the boolean the frozen gate recorded is a malformed record, and
+        guessing what it meant is how a data defect becomes a result.
+
+    `classify_record` already rejects a non-boolean inside the composite-P1 group.
+    This is the guarantee at the point of USE, and it also covers per-field events
+    outside that group, about which the whole-record rule says nothing.
+    """
+    value = result[event]
+    if is_strict_bool(value):
+        return value
+    raise TerminalRecordInconsistent(
+        f"{where}: {event!r} is {value!r} ({type(value).__name__}), not a boolean "
+        "decision. It is consumed as recorded and never coerced -- `bool(...)` "
+        "would make the non-empty string 'false', and the integer 1, a REJECTION.")
+
+
 def structured_refusal_reason(outcome: Mapping[str, Any]) -> str:
     """The recorded provenance for why this replicate was not evaluable.
 
@@ -3659,10 +3683,10 @@ def field_event_count(records: Mapping[str, Mapping[str, Any]], case_id: str,
         # structured refusal, so they never take the NOT_EVALUABLE path. They can
         # still be handed an impossible record, and counting one would put a
         # rejection into a frozen denominator on evidence that cannot exist.
-        require_consistent_record(
-            result, f"{case_id}/{subcondition_id}/{field_id} replicate "
-            f"{coordinates.get('replicate_id')}")
-        seen[coordinates.get("replicate_id")] = bool(result[event])
+        where = (f"{case_id}/{subcondition_id}/{field_id} replicate "
+                 f"{coordinates.get('replicate_id')}")
+        require_consistent_record(result, where)
+        seen[coordinates.get("replicate_id")] = endpoint_decision(result, event, where)
     if len(seen) != declared_replicates:
         raise CampaignIncomplete(
             f"{case_id}/{subcondition_id}/{field_id}: {len(seen)} replicate records "
@@ -3713,13 +3737,13 @@ def field_primary_outcome(records: Mapping[str, Mapping[str, Any]], case_id: str
         # records` never calls `require_endpoint_events` -- so the whole-record rule
         # is applied here too rather than assumed to have run upstream. That
         # asymmetry is what let the two layers disagree in the first place.
-        require_consistent_record(
-            result, f"{case_id}/{subcondition_id}/{field_id} replicate {replicate}")
+        where = f"{case_id}/{subcondition_id}/{field_id} replicate {replicate}"
+        require_consistent_record(result, where)
         if refused:
             seen[replicate] = None
             reasons[replicate] = structured_refusal_reason(result)
             continue
-        seen[replicate] = bool(result[event])
+        seen[replicate] = endpoint_decision(result, event, where)
     if len(seen) != declared_replicates:
         raise CampaignIncomplete(
             f"{case_id}/{subcondition_id}/{field_id}: {len(seen)} replicate records "

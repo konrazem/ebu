@@ -63,8 +63,11 @@ from e1a_v4.validation.classification import (
     DECLARED_ANALYSIS_STATUSES, INCOMPLETE_EVIDENCE_CLASSIFICATION,
     NON_FAIL_CLOSED_STATUSES, PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES,
     REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
-    BLOCK_DECISION_FIELDS, CampaignCounts, FieldSizeOutcome, classify_campaign,
-    classify_field_size, classify_size, record_consistency_failure,
+    BLOCK_DECISION_FIELDS, P1_DECISION_FIELDS, RECORD_ESTIMATED,
+    RECORD_NO_P1_GROUP, RECORD_STRUCTURED_REFUSAL, CampaignCounts, FieldSizeOutcome,
+    classify_campaign, classify_field_size, classify_record, classify_size,
+    composite_p1_from_blocks, is_strict_bool, record_consistency_failure,
+    record_state,
 )
 from e1a_v4.effective_size import sigma_stat
 from e1a_v4.endpoints import UncertaintyModel, p1_geometry
@@ -1125,16 +1128,25 @@ REFUSED_REASON = "REFUSED_ACCESSIBLE_SPACE"
 
 
 def result_row(*, refused: bool, g5: bool = False, block1: bool = False,
-               p1: bool = True, complete: bool = True, accepted: bool = False,
+               complete: bool = True, accepted: bool = False,
                recovered: bool = True) -> dict:
-    """One field record's `result`. A refusal leaves the BLOCK decisions null."""
+    """One field record's `result`. A refusal leaves the BLOCK decisions null.
+
+    The composite P1 fields are DERIVED from the two block decisions with the same
+    helper terminal-record validation uses, exactly as `evaluate_replicate` derives
+    them from `p1_geometry`'s own `passed`. They used to be an independent `p1`
+    argument defaulting to True, which silently produced records the frozen gate
+    cannot produce -- a rejecting block beside a passing composite P1 -- and F1f-i
+    now refuses those. A fixture that cannot model the pipeline is not a fixture.
+    """
     if refused:
         return {"analysis_status": REFUSED_STATUS, "refusal_reason": REFUSED_REASON,
                 "P1": False, "p1_rejected": True,
                 "block1_rejected": None, "g5_rejected": None,
                 "P2": False, "P3": False, "P4": True, "complete_pass": False,
                 "false_acceptance": False, "scale_recovered": False}
-    return {"analysis_status": "ESTIMATED", "P1": p1, "p1_rejected": not p1,
+    return {"analysis_status": "ESTIMATED",
+            **composite_p1_from_blocks(block1, g5),
             "block1_rejected": block1, "g5_rejected": g5,
             "P2": True, "P3": True, "P4": True, "complete_pass": complete,
             "false_acceptance": accepted, "scale_recovered": recovered}
@@ -1704,9 +1716,13 @@ def test_whole_record_consistency() -> None:
         ("a valid structured refusal: both decisions undefined", refused),
         ("a fully estimated record: both decisions defined", estimated),
         ("an estimated record whose blocks both rejected",
-         dict(estimated, block1_rejected=True, g5_rejected=True)),
-        ("a record carrying no block decisions at all",
-         drop(drop(refused, "block1_rejected"), "g5_rejected")),
+         result_row(refused=False, block1=True, g5=True)),
+        ("an estimated record whose Block-1 alone rejected",
+         result_row(refused=False, block1=True)),
+        ("an estimated record whose G5 alone rejected",
+         result_row(refused=False, g5=True)),
+        ("a record carrying no composite-P1 group at all",
+         {k: v for k, v in refused.items() if k not in P1_DECISION_FIELDS}),
     )
     for label, row in sound:
         check(f"SOUND: {label}", record_consistency_failure(row) is None,
@@ -1794,6 +1810,150 @@ def test_whole_record_consistency() -> None:
           and all(e in BLOCK_DECISION_FIELDS for e in BLOCK_DECISION_EVENTS))
 
 
+def test_endpoint_decision_domain() -> None:
+    """F1f-i. The endpoint decision DOMAIN, and the composite P1 truth table.
+
+    Three further defects, each reproduced before the repair:
+
+      A  PARTIAL GROUP. `block1_rejected` omitted beside `g5_rejected = False` was
+         REFUSED by validation and ACCEPTED by aggregation, which counted a clean
+         G5 non-rejection. With both omitted, C2's counter accepted it too.
+      B  NON-BOOLEAN. `g5_rejected = "false"` passed both layers and was consumed
+         as `bool("false")`, which is True, so a string spelling the word false
+         was counted as a G5 REJECTION. `1` and `0` behaved the same way.
+      C  CONTRADICTORY P1. An ESTIMATED record with `block1_rejected = True` and
+         `P1 = True` passed both layers, although `p1_geometry` passes P1 only
+         when NEITHER block rejects.
+    """
+    # --- the canonical truth table, all four defined combinations -----------
+    for block1 in (False, True):
+        for g5 in (False, True):
+            row = result_row(refused=False, block1=block1, g5=g5)
+            expected = composite_p1_from_blocks(block1, g5)
+            check(f"TRUTH TABLE block1={block1} g5={g5} -> P1={expected['P1']}",
+                  row["P1"] is expected["P1"]
+                  and row["p1_rejected"] is expected["p1_rejected"]
+                  and record_state(row) == RECORD_ESTIMATED)
+            check(f"TRUTH TABLE block1={block1} g5={g5}: P1 passes iff NEITHER "
+                  "block rejects",
+                  expected["P1"] is (not (block1 or g5))
+                  and expected["p1_rejected"] is (block1 or g5))
+            # every contradictory composite for this pair must refuse
+            for bad_p1, bad_rej in ((True, True), (False, False),
+                                    (not expected["P1"], not expected["p1_rejected"])):
+                if (bad_p1, bad_rej) == (expected["P1"], expected["p1_rejected"]):
+                    continue
+                check(f"CONTRADICTION block1={block1} g5={g5} with P1={bad_p1}, "
+                      f"p1_rejected={bad_rej} REFUSES",
+                      record_consistency_failure(
+                          dict(row, P1=bad_p1, p1_rejected=bad_rej)) is not None)
+
+    # --- the three legitimate states ---------------------------------------
+    estimated = result_row(refused=False)
+    refused = result_row(refused=True)
+    check("STATE A: an estimated record", record_state(estimated) == RECORD_ESTIMATED)
+    check("STATE B: a valid structured refusal",
+          record_state(refused) == RECORD_STRUCTURED_REFUSAL)
+    check("STATE C: a field the driver gave no calibration condition",
+          record_state({k: v for k, v in estimated.items()
+                        if k not in P1_DECISION_FIELDS}) == RECORD_NO_P1_GROUP)
+    check("an impossible record has NO state",
+          record_state(dict(estimated, g5_rejected="false")) is None
+          and classify_record(dict(estimated, g5_rejected="false"))[1] is not None)
+
+    # --- STRICT BOOLEAN DOMAIN ---------------------------------------------
+    check("strict booleans are exactly True and False",
+          is_strict_bool(True) and is_strict_bool(False)
+          and not any(is_strict_bool(v) for v in
+                      ("false", "true", "0", "1", "", 0, 1, 0.0, 1.0, [], {}, None,
+                       object())))
+    for field_name in BLOCK_DECISION_FIELDS:
+        for value in ("false", "true", "0", "1", "", 0, 1, 0.0, 1.0, [], {}, object()):
+            check(f"NON-BOOLEAN {field_name}={value!r} REFUSES",
+                  record_consistency_failure(
+                      dict(estimated, **{field_name: value})) is not None)
+    for field_name in ("P1", "p1_rejected"):
+        for value in ("false", 0, 1, 1.0, [], None):
+            check(f"NON-BOOLEAN {field_name}={value!r} REFUSES",
+                  record_consistency_failure(
+                      dict(estimated, **{field_name: value})) is not None)
+
+    # --- PARTIAL GROUP: all four written together, or none -----------------
+    for absent in P1_DECISION_FIELDS:
+        partial = {k: v for k, v in estimated.items() if k != absent}
+        check(f"PARTIAL GROUP without {absent!r} REFUSES",
+              record_consistency_failure(partial) is not None)
+    check("BOTH block decisions omitted under ESTIMATED REFUSES",
+          record_consistency_failure(
+              {k: v for k, v in estimated.items()
+               if k not in BLOCK_DECISION_FIELDS}) is not None)
+
+    # --- VALIDATION / AGGREGATION PARITY MATRIX ----------------------------
+    # The invariant: if validation refuses a record, no aggregator may count it;
+    # if validation accepts, every aggregator accepts and sees the same state.
+    matrix = (
+        ("valid estimated clean", result_row(refused=False), True),
+        ("valid estimated Block-1 reject", result_row(refused=False, block1=True), True),
+        ("valid estimated G5 reject", result_row(refused=False, g5=True), True),
+        ("valid estimated both reject",
+         result_row(refused=False, block1=True, g5=True), True),
+        ("valid structured refusal", result_row(refused=True), True),
+        ("one block omitted",
+         {k: v for k, v in estimated.items() if k != "block1_rejected"}, False),
+        ("both blocks omitted under ESTIMATED",
+         {k: v for k, v in estimated.items() if k not in BLOCK_DECISION_FIELDS}, False),
+        ("one block None, one bool", dict(estimated, block1_rejected=None), False),
+        ("string boolean", dict(estimated, g5_rejected="false"), False),
+        ("integer boolean substitute", dict(estimated, g5_rejected=1), False),
+        ("contradictory P1", dict(estimated, block1_rejected=True), False),
+        ("unknown status", dict(estimated, analysis_status="NOT_A_REAL_STATUS"), False),
+        ("missing status",
+         {k: v for k, v in estimated.items() if k != "analysis_status"}, False),
+    )
+    for case_id, event, short in (("C3_g5_block", "g5_rejected", "C3"),
+                                  ("C4_surrogate_validity", "block1_rejected", "C4"),
+                                  (C2, "p1_rejected", "C2")):
+        plan = plan_with_replicates(case_id, 1)
+        aggregate = (per_field_rejections if short == "C2"
+                     else per_field_primary_outcomes)
+        for label, row, valid in matrix:
+            persisted = json.loads(json.dumps(row))      # a genuine round trip
+            check(f"{short} JSON round trip preserves the record exactly",
+                  persisted == row)
+            recs = case_records(plan, case_id, [{f: persisted for f in FIELDS}])
+            validated = refusal_code(require_endpoint_events, plan, case_id,
+                                     persisted, "probe")
+            aggregated = refusal_code(aggregate, plan, recs, case_id, event)
+            if valid:
+                check(f"{short} PARITY accepts: {label}",
+                      validated is None and aggregated is None,
+                      f"validator={validated} aggregator={aggregated}")
+            else:
+                check(f"{short} PARITY refuses: {label}",
+                      validated is not None and aggregated is not None,
+                      f"validator={validated} aggregator={aggregated}")
+
+    # --- the hardening does not OVER-refuse: counts are still correct -------
+    for short, case_id, sub, event in PER_FIELD_CASES:
+        plan = plan_with_replicates(case_id, 1)
+        for label, block1, g5 in (("clean", False, False),
+                                  ("Block-1 rejects", True, False),
+                                  ("G5 rejects", False, True),
+                                  ("both reject", True, True)):
+            row = result_row(refused=False, block1=block1, g5=g5)
+            recs = case_records(plan, case_id, [{f: row for f in FIELDS}])
+            expected = {"p1_rejected": block1 or g5, "block1_rejected": block1,
+                        "g5_rejected": g5}[event]
+            if short == "C2":
+                counts = per_field_rejections(plan, recs, case_id, event)
+                got = counts["theta0_circular"]
+            else:
+                got = per_field_primary_outcomes(
+                    plan, recs, case_id, event)["theta0_circular"].rejections
+            check(f"{short} {label}: counts {int(expected)}, not coerced",
+                  got == int(expected), f"got {got}")
+
+
 GROUPS = (
     ("T1  C2 counts PER FIELD", test_c2_counts_per_field),
     ("T2/T3  G5 and Block-1 decisions propagate", test_g5_and_block1_propagate),
@@ -1813,6 +1973,7 @@ GROUPS = (
     ("F1f-g structured-refusal record integrity",
      test_structured_refusal_record_integrity),
     ("F1f-i whole-record consistency", test_whole_record_consistency),
+    ("F1f-i endpoint decision domain", test_endpoint_decision_domain),
     ("T5/T6  the C8 blinded Branch-A control", test_c8_blinded_branch_a_control),
     ("T7-T10  terminal provenance cross-links", test_terminal_provenance_cross_links),
     ("campaign structure unchanged", test_campaign_structure_unchanged),
