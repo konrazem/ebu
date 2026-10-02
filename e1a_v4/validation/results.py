@@ -26,7 +26,15 @@ JOB_RECORD_SCHEMA = "e1a_v4_validation_job_record/1"
 #: reinterpreting it as "N replicates in which some field rejected" would assert a
 #: different statistic with a different null rate. No official result data exists
 #: at any version, so nothing is migrated and nothing is lost.
-CAMPAIGN_RESULT_SCHEMA = "e1a_v4_campaign_result/2"
+#: Version 3 carries the THREE-STATE C3/C4 per-field primary assessment: each
+#: field reports its planned R, its evaluable count, its structured-refusal count
+#: with reasons, its rejection count among the defined endpoints, and a verdict
+#: that may be NOT_EVALUABLE. A version-2 result cannot be converted either: it
+#: holds one rejection count per field and cannot say whether the remaining
+#: replicates were defined non-rejections or undefined endpoints, which is exactly
+#: the distinction the release rule turns on. No official result data exists at any
+#: version, so nothing is migrated and nothing is reinterpreted.
+CAMPAIGN_RESULT_SCHEMA = "e1a_v4_campaign_result/3"
 #: Record schema 2 adds `subcondition_id`. A record is reproducible from
 #: (case_id, subcondition_id, replicate_id, field/scope, seed family, seed identity).
 #: Manifest schema 3 adds `contract_diagnostics`: an aggregate that omits a

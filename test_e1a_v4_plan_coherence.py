@@ -36,6 +36,9 @@ from e1a_v4.validation.coherence import (
     render_region, require_plan_authority_coherence, specification_counts,
 )
 from e1a_v4.validation.strict_json import strict_load_file
+from e1a_v4.validation.release_authority import (
+    REFUSAL_AWARE_DRIVER_SURFACE,
+)
 from e1a_v4.validation.plan import (
     VALIDATION_MODULES, bind_execution, execution_identity, load_plan,
 )
@@ -590,6 +593,18 @@ def test_seal_distinguishes_forgotten_from_not_frozen() -> None:
 
 
 # ------------------------------------------------- 6. the identity lifecycle (§18)
+def driver_surface_stub() -> str:
+    """The refusal-aware aggregation surface a stand-in driver must declare.
+
+    A sandbox stub replaces the real driver to exercise gates beyond "absent", and
+    the package requires that driver to have a defined aggregation path for a valid
+    structured refusal -- just as it already requires a `run_campaign` entry point.
+    The stub declares the names; it implements nothing.
+    """
+    return "".join(f"\n\ndef {name}():\n    raise NotImplementedError\n"
+                   for name in REFUSAL_AWARE_DRIVER_SURFACE)
+
+
 def freeze_sandbox(authorised: bool) -> tuple[str, str]:
     """Build a sandbox with the driver PRESENT and the seal FROZEN, correctly.
 
@@ -604,7 +619,8 @@ def freeze_sandbox(authorised: bool) -> tuple[str, str]:
               encoding="utf-8") as handle:
         handle.write('"""SANDBOX FIXTURE ONLY. Never committed."""\n\n\n'
                      f"def {OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT}():\n"
-                     '    raise NotImplementedError("fixture")\n')
+                     '    raise NotImplementedError("fixture")\n'
+                     + driver_surface_stub())
     plan = read_json(tmp, PLAN_JSON)
     plan["execution_seal"]["state"] = STATE_FROZEN
     plan["execution_authorised"] = authorised

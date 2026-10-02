@@ -17,7 +17,9 @@ from e1a_v4.contract import load_contract
 from e1a_v4.identity import procedure_identity
 from e1a_v4.numerics import Refusal, TT, mm
 from e1a_v4.validation.calibrate import CalibrationRequest
-from e1a_v4.validation.classification import CampaignCounts, classify_campaign
+from e1a_v4.validation.classification import (
+    CampaignCounts, FieldSizeOutcome, classify_campaign,
+)
 from e1a_v4.validation.dispositions import g2_campaign_pass
 from e1a_v4.validation.generate import modal_ou_parameters, truth_from_field
 from e1a_v4.validation.plan import load_plan, require_output_schema_agreement
@@ -105,9 +107,13 @@ def check_incomplete_counts() -> None:
                          if c["case_id"] == "C7_false_bridge" for s in c["subconditions"])
     verify(len(fields) == len(alternatives) == 4,
            "the campaign declares exactly four fields and four alternatives")
+    def evid(case, planned):
+        return {f: FieldSizeOutcome(field_id=f, planned_replicates=planned,
+                                    evaluable=planned, structured_refusals=0,
+                                    rejections=0) for f in fields}
     base = dict(c1_successes=290, c2_rejections_by_field={f: 1 for f in fields},
-                c3_rejections_by_field={f: 0 for f in fields},
-                c4_rejections_by_field={f: 0 for f in fields},
+                c3_rejections_by_field=evid("C3", 400),
+                c4_rejections_by_field=evid("C4", 2000),
                 c5_pass=True, c6_pass=True,
                 c7_false_acceptances_by_alternative={a: 0 for a in alternatives},
                 c8_successes=195)

@@ -41,8 +41,9 @@ import tempfile
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.classification import (
-    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE, PER_FIELD_SIZE_CASES,
-    REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION,
+    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE,
+    INCOMPLETE_EVIDENCE_CLASSIFICATION, PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS,
+    SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, classify_field_size,
     size_boundary,
 )
 from e1a_v4.validation.coherence import (
@@ -54,11 +55,13 @@ from e1a_v4.validation.contract_plan import (
 )
 from e1a_v4.validation.dispositions import cp_lower, cp_upper
 from e1a_v4.validation.campaign_driver import (
-    per_field_rejections, replicate_level_rejections,
+    per_field_primary_outcomes, per_field_rejections, replicate_level_rejections,
 )
 from e1a_v4.validation.plan import load_plan
 from e1a_v4.validation import classification, release_authority
 from e1a_v4.validation.release_authority import (
+    REFUSAL_AWARE_DRIVER_SURFACE, _driver_declares,
+    require_per_field_implementation_conformance,
     NOT_EVALUABLE, PRIMARY_ENDPOINT_UNDEFINABLE, REFUSAL_DISPOSITION_AFFECTS,
     REFUSAL_DISPOSITION_ID, STRUCTURED_REFUSAL_RULE, render_refusal_disposition,
     render_refusal_gap_statement, render_refusal_semantics,
@@ -3301,11 +3304,10 @@ def test_structured_refusal_authority() -> None:
     check(f"structured-refusal mutation audit: {len(mutations)} tested, "
           "0 unexpected passes", not unexpected, str(unexpected))
 
-    # --- the RUNTIME is deliberately still behind this authority (F1f-e) ----
-    # The amendment is authority only. `per_field_rejections` still raises
-    # ENDPOINT_EVENT_MISSING on a refused record, so the terminal report the
-    # contract requires is still not produced. F1f-e repairs that; recording the
-    # lag here stops it from being forgotten or silently papered over.
+    # --- the RUNTIME now implements this authority (closed by F1f-e) --------
+    # When the amendment landed, `per_field_rejections` still raised
+    # ENDPOINT_EVENT_MISSING on a refused record and the lag was recorded here.
+    # F1f-e closed it; the assertions below are the repaired behaviour.
     refused = {"job": {"coordinates": {"case_id": "C3_g5_block",
                                        "subcondition_id": "sigma_psi_0p5",
                                        "replicate_id": 0,
@@ -3318,13 +3320,150 @@ def test_structured_refusal_authority() -> None:
         if case["case_id"] == "C3_g5_block":
             case["replicate_count"] = 1
             case["fields_affected"] = ["theta0_circular"]
-    check("KNOWN LAG: the runtime still refuses to aggregate a valid structured "
-          "refusal, which F1f-e must repair",
-          refusal_code(per_field_rejections, small, refused, "C3_g5_block",
-                       "g5_rejected") == "ENDPOINT_EVENT_MISSING")
+    # F1f-e CLOSED the lag this assertion used to record. The aggregator now has a
+    # defined path for a valid structured refusal and returns three-state evidence
+    # instead of raising, so the terminal report the contract requires is produced.
+    outcome = per_field_primary_outcomes(small, refused, "C3_g5_block",
+                                         "g5_rejected")["theta0_circular"]
+    check("the runtime now AGGREGATES a valid structured refusal (F1f-e)",
+          outcome.structured_refusals == 1 and outcome.evaluable == 0
+          and outcome.planned_replicates == 1, str(outcome))
+    check("and resolves it to the authority verdict, not to a boolean",
+          classify_field_size(outcome, 0.001)["verdict"] == NOT_EVALUABLE)
     check("authority now REQUIRES the terminal report under all refusals",
           svs["structured_refusal"]["terminal_report_required_under_all_refusals"]
           is True)
+    check("execution is still not authorised", plan["execution_authorised"] is False)
+
+
+# ------------------- 24. F1f-e refusal-aware RUNTIME conformance
+def _patched_classifier(real, mutate):
+    """The real classifier with one reported row rewritten. TEST ONLY."""
+    def patched(counts):
+        result = real(counts)
+        mutate(result)
+        return patched_fix(result)
+    def patched_fix(result):
+        # the failures list is rebuilt from the mutated detail, so the probe sees
+        # a self-consistent -- and wrong -- implementation rather than a mismatch
+        rebuilt = [f for f in result["failures"]
+                   if not f.startswith(INCOMPLETE_EVIDENCE_CLASSIFICATION)]
+        result["failures"] = rebuilt
+        result["verdict"] = ("VALIDATION_PASS" if not rebuilt
+                             else "VALIDATION_FAILURE")
+        return result
+    return patched
+
+
+def test_f1f_e_runtime_conformance() -> None:
+    """F1f-e. Preflight now REFUSES a runtime that is not refusal-aware.
+
+    The G5 amendment deliberately left the runtime behind, and the lag was carried
+    as a known-failing assertion. The runtime has now been repaired, so preflight
+    asserts the three-state behaviour instead: a structured refusal resolved first,
+    the planned denominator preserved, and NOT_EVALUABLE blocking release under a
+    reason that is not a statistical rejection.
+    """
+    plan = load_plan(ROOT)
+    check("the repaired runtime is ACCEPTED",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+
+    # --- the per-field evidence SHAPE --------------------------------------
+    saved_outcome = release_authority.FieldSizeOutcome
+    required = ("evaluable", "structured_refusals", "planned_replicates",
+                "refusal_reasons")
+    try:
+        for dropped in required:
+            kept = [(f.name, f.type) for f in dataclasses.fields(saved_outcome)
+                    if f.name != dropped]
+            release_authority.FieldSizeOutcome = dataclasses.make_dataclass(
+                "ProbeOutcome", kept, frozen=True)
+            check(f"evidence without {dropped!r} is REFUSED",
+                  refusal_code(require_per_field_implementation_conformance,
+                               plan, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.FieldSizeOutcome = saved_outcome
+    check("the real evidence class is restored",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+
+    # --- the three-state BEHAVIOUR -----------------------------------------
+    def to_clean(result):
+        for case in ("C3", "C4"):
+            for row in result["detail"][case].values():
+                if row["verdict"] == NOT_EVALUABLE:
+                    row["verdict"] = SIZE_NO_INFLATION
+
+    def to_size_failure(result):
+        for case in ("C3", "C4"):
+            for row in result["detail"][case].values():
+                if row["verdict"] == NOT_EVALUABLE:
+                    row["verdict"] = SIZE_FAILURE
+
+    def shrink_denominator(result):
+        for case in ("C3", "C4"):
+            for row in result["detail"][case].values():
+                if row["verdict"] == NOT_EVALUABLE:
+                    row["planned_replicates"] = row["evaluable"]
+
+    saved_classifier = release_authority.classify_campaign
+    probes = (
+        ("a structured refusal resolved to an ordinary CLEAN verdict", to_clean),
+        ("a structured refusal resolved to a STATISTICAL size failure",
+         to_size_failure),
+        ("the planned denominator replaced by the evaluable count",
+         shrink_denominator),
+    )
+    try:
+        for label, mutate in probes:
+            release_authority.classify_campaign = _patched_classifier(
+                saved_classifier, mutate)
+            check(f"REFUSED: {label}",
+                  refusal_code(require_per_field_implementation_conformance,
+                               plan, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+        # NOT_EVALUABLE allowed to pass: drop the incomplete-evidence failures
+        release_authority.classify_campaign = _patched_classifier(
+            saved_classifier, lambda result: None)
+        check("REFUSED: a NOT_EVALUABLE field allowed to pass release",
+              refusal_code(require_per_field_implementation_conformance,
+                           plan, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.classify_campaign = saved_classifier
+    check("the real classifier is restored and accepted",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+
+    # --- the DRIVER must have a defined aggregation path -------------------
+    check("the canonical driver declares the refusal-aware surface",
+          set(REFUSAL_AWARE_DRIVER_SURFACE) <= _driver_declares(ROOT),
+          str(sorted(set(REFUSAL_AWARE_DRIVER_SURFACE) - _driver_declares(ROOT))))
+    for dropped in REFUSAL_AWARE_DRIVER_SURFACE:
+        tmp = sandbox()
+        path = os.path.join(tmp, "e1a_v4/validation/campaign_driver.py")
+        with open(path, encoding="utf-8") as handle:
+            source = handle.read()
+        # remove ONE top-level definition, leaving the file parseable
+        source = source.replace(f"\ndef {dropped}(", f"\ndef _removed_{dropped}(", 1)
+        with open(path, "w", encoding="utf-8") as handle:
+            handle.write(source)
+        check(f"REFUSED: a driver declaring no {dropped!r}",
+              refusal_code(require_per_field_implementation_conformance, plan, tmp)
+              == "IMPLEMENTATION_AUTHORITY_LAG")
+        shutil.rmtree(tmp)
+
+    # --- the authority this conformance check is held to --------------------
+    refusal = plan["size_validation_semantics"]["structured_refusal"]
+    check("the check compares against the FROZEN authority, not its own opinion",
+          refusal["primary_verdict_on_any_structured_refusal"] == NOT_EVALUABLE
+          and refusal["primary_denominator"] == "PLANNED_R_PRESERVED"
+          and refusal["release_requires"] == "EVALUABLE_AND_CLEAN"
+          and refusal["campaign_failure_classification"]
+          == INCOMPLETE_EVIDENCE_CLASSIFICATION)
+    check("the amendment is still C3/C4 only and C2 keeps its scope-out",
+          refusal["applies_to"] == "C3, C4"
+          and plan["size_validation_semantics"]["derived_boundaries"]["C2"]
+          ["undefined_primary_endpoint_possible"] is False)
     check("execution is still not authorised", plan["execution_authorised"] is False)
 
 
@@ -3344,6 +3483,7 @@ GROUPS = (
     ("F1f runtime implementation conformance",
      test_f1f_implementation_conformance),
     ("F1f-d G5 structured-refusal authority", test_structured_refusal_authority),
+    ("F1f-e refusal-aware runtime conformance", test_f1f_e_runtime_conformance),
     ("C2 DERIVED per-field authority binding",
      test_c2_derived_authority_binding),
     ("EXACT release bindings: complete mutation audit", test_exact_mutation_audit),

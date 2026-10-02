@@ -14,10 +14,11 @@ import os
 from e1a_v4.contract import load_contract, sha256_file
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation.classification import (
-    GROSS_INFLATION_TOLERANCE, PER_FIELD_ENDPOINTS, PER_FIELD_SIZE_CASES,
-    RELEASE_FAILING_CLASSIFICATIONS, REQUIRED_SIZE_FIELDS, SIZE_FAILURE,
-    SIZE_INTERPRETATION, SIZE_NO_INFLATION, CampaignCounts, classify_campaign,
-    classify_size, size_boundary, size_inflation_detected,
+    GROSS_INFLATION_TOLERANCE, INCOMPLETE_EVIDENCE_CLASSIFICATION,
+    PER_FIELD_ENDPOINTS, PER_FIELD_SIZE_CASES, RELEASE_FAILING_CLASSIFICATIONS,
+    REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NOT_EVALUABLE,
+    SIZE_NO_INFLATION, CampaignCounts, FieldSizeOutcome, classify_campaign,
+    classify_field_size, classify_size, size_boundary, size_inflation_detected,
 )
 from e1a_v4.validation.dispositions import cp_lower, cp_upper
 from e1a_v4.validation.plan import VALIDATION_MODULES, load_plan
@@ -128,11 +129,26 @@ def test_interpretation() -> None:
 
 
 # ------------------------------------------------------------------ campaign
+def evidence(case, rejections, refusals=None):
+    """Three-state per-field evidence from plain numbers. C3/C4 only."""
+    planned, _nominal = PER_FIELD_SIZE_CASES[case]
+    refused = refusals or {}
+    return {f: FieldSizeOutcome(
+                field_id=f, planned_replicates=planned,
+                evaluable=planned - refused.get(f, 0),
+                structured_refusals=refused.get(f, 0),
+                rejections=(rejections.get(f, 0) if isinstance(rejections, dict)
+                            else rejections),
+                refusal_reasons=({"REFUSED_ACCESSIBLE_SPACE": refused[f]}
+                                 if refused.get(f) else {}))
+            for f in FIELDS}
+
+
 def counts(**over) -> CampaignCounts:
     base = dict(c1_successes=290,
                 c2_rejections_by_field={f: 2 for f in FIELDS},
-                c3_rejections_by_field={f: 1 for f in FIELDS},
-                c4_rejections_by_field={f: 8 for f in FIELDS},
+                c3_rejections_by_field=evidence("C3", 1),
+                c4_rejections_by_field=evidence("C4", 8),
                 c5_pass=True, c6_pass=True,
                 c7_false_acceptances_by_alternative={a: 1 for a in ALTS},
                 c8_successes=195, hard_failures=(), refusal_accounting_ok=True)
@@ -153,10 +169,12 @@ def test_campaign() -> None:
         ("C2 fails alone", dict(c2_rejections_by_field={**{f: 2 for f in FIELDS}, FIELDS[2]: 6}),
          "STATISTICAL_SIZE_FAILURE"),
         ("C3 fails alone in one field",
-         dict(c3_rejections_by_field={**{f: 1 for f in FIELDS}, FIELDS[1]: 3}),
+         dict(c3_rejections_by_field=evidence(
+             "C3", {**{f: 1 for f in FIELDS}, FIELDS[1]: 3})),
          "STATISTICAL_SIZE_FAILURE"),
         ("C4 fails alone in one field",
-         dict(c4_rejections_by_field={**{f: 8 for f in FIELDS}, FIELDS[3]: 14}),
+         dict(c4_rejections_by_field=evidence(
+             "C4", {**{f: 8 for f in FIELDS}, FIELDS[3]: 14})),
          "STATISTICAL_SIZE_FAILURE"),
         ("C5 fails alone", dict(c5_pass=False), "STATISTICAL_SIZE_FAILURE"),
         ("C6 fails alone", dict(c6_pass=False), "MODE_RESOLUTION_FAILURE"),
@@ -181,10 +199,10 @@ def test_campaign() -> None:
           classify_campaign(counts(c2_rejections_by_field={f: 5 for f in FIELDS}))["verdict"]
           == "VALIDATION_PASS")
     check("C3 at exactly 2 per field passes",
-          classify_campaign(counts(c3_rejections_by_field={f: 2 for f in FIELDS}))
+          classify_campaign(counts(c3_rejections_by_field=evidence("C3", 2)))
           ["verdict"] == "VALIDATION_PASS")
     check("C4 at exactly 13 per field passes",
-          classify_campaign(counts(c4_rejections_by_field={f: 13 for f in FIELDS}))
+          classify_campaign(counts(c4_rejections_by_field=evidence("C4", 13)))
           ["verdict"] == "VALIDATION_PASS")
     check("C7 at exactly 4 per alternative passes",
           classify_campaign(counts(c7_false_acceptances_by_alternative={a: 4 for a in ALTS}))
@@ -194,7 +212,8 @@ def test_campaign() -> None:
 
     mixed = classify_campaign(counts(
         c1_successes=295,
-        c3_rejections_by_field={**{f: 1 for f in FIELDS}, FIELDS[1]: 3}))
+        c3_rejections_by_field=evidence(
+            "C3", {**{f: 1 for f in FIELDS}, FIELDS[1]: 3})))
     check("C1 meeting the target does NOT rescue a size failure",
           mixed["verdict"] == "VALIDATION_FAILURE"
           and mixed["independent_facts"]["complete_pipeline_met"] is True
@@ -210,7 +229,8 @@ def test_campaign() -> None:
           and "no compensation" in classify_campaign(counts())["rule"])
     multi = classify_campaign(counts(
         c1_successes=270, c8_successes=180,
-        c3_rejections_by_field={**{f: 1 for f in FIELDS}, FIELDS[1]: 3}))
+        c3_rejections_by_field=evidence(
+            "C3", {**{f: 1 for f in FIELDS}, FIELDS[1]: 3})))
     check("multiple failures are all listed, none swallowed", len(multi["failures"]) == 3,
           "; ".join(multi["failures"])[:80])
     for case in ("C2", "C3", "C4"):
@@ -270,9 +290,10 @@ def test_per_field_release_semantics() -> None:
     # the same 8 concentrated in one field is 8 > 2 and FAILS. A pooled rule could
     # not tell these apart -- which is exactly why pooling is forbidden.
     spread = classify_campaign(counts(
-        c3_rejections_by_field={f: 2 for f in FIELDS}))
+        c3_rejections_by_field=evidence("C3", 2)))
     concentrated = classify_campaign(counts(
-        c3_rejections_by_field={**{f: 0 for f in FIELDS}, FIELDS[0]: 8}))
+        c3_rejections_by_field=evidence(
+            "C3", {**{f: 0 for f in FIELDS}, FIELDS[0]: 8})))
     check("C3: 8 rejections spread 2/2/2/2 is CLEAN",
           spread["verdict"] == "VALIDATION_PASS")
     check("C3: the SAME 8 rejections in one field is a SIZE FAILURE",

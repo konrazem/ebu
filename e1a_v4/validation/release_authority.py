@@ -59,8 +59,9 @@ from dataclasses import dataclass, fields as dataclass_fields
 from typing import Any
 
 from .classification import (
-    GROSS_INFLATION_TOLERANCE, PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS,
-    SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, CampaignCounts,
+    GROSS_INFLATION_TOLERANCE, INCOMPLETE_EVIDENCE_CLASSIFICATION,
+    PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_INTERPRETATION,
+    SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION, CampaignCounts, FieldSizeOutcome,
     classify_campaign, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
@@ -2682,20 +2683,83 @@ PER_FIELD_COUNTS_ATTRIBUTES = {
 }
 
 
-def _clean_counts(per_case: dict[str, dict[str, int]]) -> CampaignCounts:
+def _field_evidence(case: str, rejections: dict[str, int],
+                    refusals: dict[str, int] | None = None
+                    ) -> dict[str, FieldSizeOutcome]:
+    """Three-state evidence for one case, from plain per-field numbers. Pure."""
+    planned, _nominal = PER_FIELD_SIZE_CASES[case]
+    refused = refusals or {}
+    return {
+        field_id: FieldSizeOutcome(
+            field_id=field_id, planned_replicates=planned,
+            evaluable=planned - refused.get(field_id, 0),
+            structured_refusals=refused.get(field_id, 0),
+            rejections=rejections.get(field_id, 0),
+            refusal_reasons=({"REFUSED_ACCESSIBLE_SPACE": refused[field_id]}
+                             if refused.get(field_id) else {}))
+        for field_id in sorted(REQUIRED_SIZE_FIELDS)}
+
+
+def _clean_counts(per_case: dict[str, dict[str, int]],
+                  refusals: dict[str, dict[str, int]] | None = None
+                  ) -> CampaignCounts:
     """A campaign that passes everything except what the caller sets. Pure."""
+    refused = refusals or {}
     return CampaignCounts(
         c1_successes=300,
         c2_rejections_by_field=per_case["C2"],
-        c3_rejections_by_field=per_case["C3"],
-        c4_rejections_by_field=per_case["C4"],
+        c3_rejections_by_field=_field_evidence("C3", per_case["C3"],
+                                               refused.get("C3")),
+        c4_rejections_by_field=_field_evidence("C4", per_case["C4"],
+                                               refused.get("C4")),
         c5_pass=True, c6_pass=True,
         c7_false_acceptances_by_alternative={
             "alt_1_06": 0, "alt_0_93_1_05": 0, "alt_1_10": 0, "hard_1_025": 0},
         c8_successes=200)
 
 
-def require_per_field_implementation_conformance(plan: dict[str, Any]) -> None:
+#: The refusal-aware aggregation surface the canonical driver must declare. Checked
+#: by PARSING the driver's AST, never by importing it: importing would execute
+#: driver code, which this stage forbids and which `e1a_v4/validation/driver.py`
+#: avoids for the same reason. A driver that still answers "how many times did this
+#: event occur" for C3/C4 declares none of these.
+REFUSAL_AWARE_DRIVER_SURFACE = (
+    "is_structured_refusal",
+    "structured_refusal_reason",
+    "field_primary_outcome",
+    "per_field_primary_outcomes",
+)
+
+
+@functools.lru_cache(maxsize=None)
+def _parse_driver_names(path: str, _mtime_ns: int, _size: int) -> frozenset[str]:
+    """Parse one driver file's top-level names. MEMOISED on file IDENTITY.
+
+    The canonical driver is a large module and preflight runs on every bind, so
+    re-parsing it for each call is pure waste. The cache key carries the file's
+    mtime and size, so an edited or substituted driver -- which is exactly what the
+    negative tests install -- is re-parsed rather than served from the cache.
+    """
+    import ast
+    with open(path, encoding="utf-8") as handle:
+        tree = ast.parse(handle.read(), filename=path)
+    return frozenset(node.name for node in tree.body
+                     if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef,
+                                          ast.ClassDef)))
+
+
+def _driver_declares(root: str) -> frozenset[str]:
+    """Top-level names the canonical driver defines. Parsed; nothing is executed."""
+    from .driver import OFFICIAL_CAMPAIGN_DRIVER_PATH
+    path = os.path.join(root, OFFICIAL_CAMPAIGN_DRIVER_PATH)
+    if not os.path.isfile(path):
+        return frozenset()
+    stat = os.stat(path)
+    return _parse_driver_names(path, stat.st_mtime_ns, stat.st_size)
+
+
+def require_per_field_implementation_conformance(plan: dict[str, Any],
+                                                 root: str = ".") -> None:
     """POSITIVE PROOF that the runtime release classifier implements the per-field rule.
 
     This replaces a refusal rather than merely deleting one. Before the C3/C4
@@ -2722,6 +2786,7 @@ def require_per_field_implementation_conformance(plan: dict[str, Any]) -> None:
     Pure arithmetic over synthetic counts. No RNG, no records, no execution.
     """
     boundaries = plan["size_validation_semantics"]["derived_boundaries"]
+    roster = sorted(REQUIRED_SIZE_FIELDS)
     declared = {f.name for f in dataclass_fields(CampaignCounts)}
     for case in PER_FIELD_IMPLEMENTATION_CASES:
         per_field_attribute, scalar_attribute = PER_FIELD_COUNTS_ATTRIBUTES[case]
@@ -2751,6 +2816,19 @@ def require_per_field_implementation_conformance(plan: dict[str, Any]) -> None:
                 f"{case}: the boundary recomputed from the runtime parameters is "
                 f"{recomputed}, but frozen authority declares {row['boundary']}")
 
+    # --- THE G5 STRUCTURED-REFUSAL RULE, as the runtime actually implements it --
+    refusal = plan["size_validation_semantics"]["structured_refusal"]
+    declared = {f.name for f in dataclass_fields(FieldSizeOutcome)}
+    required_shape = {"field_id", "planned_replicates", "evaluable",
+                      "structured_refusals", "rejections", "refusal_reasons"}
+    missing_shape = sorted(required_shape - declared)
+    if missing_shape:
+        raise ImplementationAuthorityLag(
+            f"the per-field primary evidence declares no {missing_shape}; frozen "
+            f"authority requires {refusal['required_terminal_counts']} to be "
+            "retained per field, and a bare rejection count cannot distinguish a "
+            "defined non-rejection from an undefined primary endpoint")
+
     # --- BEHAVIOUR. Two classifications decide it, and the exhaustive
     # field-by-field enumeration lives in the test suites rather than here: this
     # runs inside every preflight, and a Clopper-Pearson bound is not cheap.
@@ -2759,7 +2837,6 @@ def require_per_field_implementation_conformance(plan: dict[str, Any]) -> None:
     # three cases at once. Exactly three size failures must come back, each naming
     # its own case and its own field, with the other nine field conditions clean.
     # A pooled or reduced implementation cannot produce that.
-    roster = sorted(REQUIRED_SIZE_FIELDS)
     probe_field = {case: roster[index] for index, case
                    in enumerate(PER_FIELD_IMPLEMENTATION_CASES)}
     over = {case: {f: 0 for f in REQUIRED_SIZE_FIELDS}
@@ -2817,6 +2894,67 @@ def require_per_field_implementation_conformance(plan: dict[str, Any]) -> None:
             "the C3 full-P1 interaction diagnostic is reported as release-bearing; "
             "frozen authority declares it SECONDARY and states that the joint P1 "
             "result does not change the C3 release verdict")
+
+    # ONE refused classification and ONE fully evaluable classification decide it
+    # for both cases at once. Each is a Clopper-Pearson sweep over twelve fields,
+    # and this runs on every bind, so the probes are combined deliberately.
+    probe = roster[0]
+    at_boundary = {c: {f: 0 for f in REQUIRED_SIZE_FIELDS}
+                   for c in PER_FIELD_IMPLEMENTATION_CASES}
+    for case in ("C3", "C4"):
+        at_boundary[case][probe] = boundaries[case]["boundary"]
+    refused = classify_campaign(
+        _clean_counts(at_boundary, {case: {probe: 1} for case in ("C3", "C4")}))
+    for case in ("C3", "C4"):
+        planned, _nominal = PER_FIELD_SIZE_CASES[case]
+        row = refused["detail"][case][probe]
+        if row["verdict"] != SIZE_NOT_EVALUABLE:
+            raise ImplementationAuthorityLag(
+                f"{case} field {probe} with 1 structured refusal reported "
+                f"{row['verdict']!r}; frozen authority declares "
+                f"{refusal['primary_verdict_on_any_structured_refusal']!r} and "
+                "the detector is NOT run on an incomplete primary sequence")
+        if row["planned_replicates"] != planned:
+            raise ImplementationAuthorityLag(
+                f"{case} field {probe} reports a planned denominator of "
+                f"{row['planned_replicates']}; frozen authority declares "
+                f"{refusal['primary_denominator']} at {planned}")
+        named = [f for f in refused["failures"]
+                 if f.startswith(INCOMPLETE_EVIDENCE_CLASSIFICATION)
+                 and probe in f and f"({case} " in f]
+        if len(named) != 1:
+            raise ImplementationAuthorityLag(
+                f"{case} field {probe} produced no uniquely identified "
+                f"{INCOMPLETE_EVIDENCE_CLASSIFICATION} failure: "
+                f"{refused['failures']}")
+    if refused["verdict"] != "VALIDATION_FAILURE":
+        raise ImplementationAuthorityLag(
+            f"a {SIZE_NOT_EVALUABLE} field did not prevent the campaign from "
+            f"passing; frozen authority requires {refusal['release_requires']}")
+    if any(f.startswith(SIZE_FAILURE) for f in refused["failures"]):
+        raise ImplementationAuthorityLag(
+            f"a structured refusal was reported as a statistical size failure: "
+            f"{refused['failures']}. A refusal is neither a rejection nor a "
+            "non-rejection")
+    # The SAME counts with nothing refused must reach the ordinary verdict, so the
+    # precedence is doing the work rather than a blanket override.
+    evaluable = classify_campaign(_clean_counts(at_boundary))
+    for case in ("C3", "C4"):
+        if evaluable["detail"][case][probe]["verdict"] != SIZE_NO_INFLATION:
+            raise ImplementationAuthorityLag(
+                f"{case} field {probe} at exactly its boundary with NO refusals "
+                f"reported {evaluable['detail'][case][probe]['verdict']!r}; the "
+                "ordinary frozen rules must be unchanged when fully evaluable")
+
+    # --- the aggregator must have a defined path for a valid refusal ----------
+    absent = sorted(set(REFUSAL_AWARE_DRIVER_SURFACE) - _driver_declares(root))
+    if absent and _driver_declares(root):
+        raise ImplementationAuthorityLag(
+            f"the canonical campaign driver declares no {absent}. A driver that "
+            "only counts occurrences of a per-field event has no defined "
+            "aggregation path for a valid structured refusal, so it raises "
+            "ENDPOINT_EVENT_MISSING and the terminal report frozen authority "
+            "requires is never produced")
 
 
 def release_binding_specification(contract: dict[str, Any], plan: dict[str, Any],
@@ -3233,7 +3371,7 @@ def require_release_authority_conformance(contract: dict[str, Any], plan: dict[s
     require_field_size_surface_totality(plan)
     require_size_semantics_leaf_totality(plan)
     require_field_size_amendment(plan)
-    require_per_field_implementation_conformance(plan)
+    require_per_field_implementation_conformance(plan, root)
     rows = release_binding_specification(contract, plan, root)
     inventory = release_inventory(contract, plan, root, rows)
     if inventory["unclassified"]:

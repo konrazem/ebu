@@ -49,15 +49,19 @@ from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.calibrate import CalibrationRequest
 from e1a_v4.validation.campaign_driver import (
     FIELD_LEVEL_EVENTS, FORBIDDEN_EVENT_REDUCTION, REPLICATE_LEVEL_EVENTS,
+    campaign_counts_from_records, field_primary_outcome, is_structured_refusal,
+    per_field_primary_outcomes, structured_refusal_reason,
     blinded_branch_a, campaign_shape, committed_publication, evaluate_replicate,
     evaluate_scale_control, field_event_count, job_execution, p1_block_decisions,
-    per_field_rejections, plan_campaign, replicate_level_rejections,
-    require_endpoint_events, require_plan_driver_agreement,
-    required_endpoint_events, required_result_fields, validate_job_record,
+    per_field_rejections, plan_campaign, release_subconditions,
+    replicate_level_rejections, require_endpoint_events,
+    require_plan_driver_agreement, required_endpoint_events,
+    required_result_fields, validate_job_record,
 )
 from e1a_v4.validation.classification import (
-    PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS, CampaignCounts, classify_campaign,
-    classify_size,
+    INCOMPLETE_EVIDENCE_CLASSIFICATION, PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS,
+    SIZE_FAILURE, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION, CampaignCounts,
+    FieldSizeOutcome, classify_campaign, classify_field_size, classify_size,
 )
 from e1a_v4.effective_size import sigma_stat
 from e1a_v4.endpoints import UncertaintyModel
@@ -641,12 +645,27 @@ def test_block_distinction() -> None:
           ["secondary_diagnostic"]["release_bearing"] is False)
 
 
+def evidence(case, rejections=0, refusals=None):
+    """Three-state per-field evidence from plain numbers. C3 and C4 only."""
+    planned, _nominal = PER_FIELD_SIZE_CASES[case]
+    refused = refusals or {}
+    return {f: FieldSizeOutcome(
+                field_id=f, planned_replicates=planned,
+                evaluable=planned - refused.get(f, 0),
+                structured_refusals=refused.get(f, 0),
+                rejections=(rejections.get(f, 0) if isinstance(rejections, dict)
+                            else rejections),
+                refusal_reasons=({"REFUSED_ACCESSIBLE_SPACE": refused[f]}
+                                 if refused.get(f) else {}))
+            for f in FIELDS}
+
+
 def clean_counts(**over):
     """A campaign that passes everything. Counts only; nothing is executed."""
     base = dict(c1_successes=300,
                 c2_rejections_by_field={f: 0 for f in FIELDS},
-                c3_rejections_by_field={f: 0 for f in FIELDS},
-                c4_rejections_by_field={f: 0 for f in FIELDS},
+                c3_rejections_by_field=evidence("C3"),
+                c4_rejections_by_field=evidence("C4"),
                 c5_pass=True, c6_pass=True,
                 c7_false_acceptances_by_alternative={
                     a: 0 for a in ("alt_1_06", "alt_0_93_1_05", "alt_1_10",
@@ -700,8 +719,8 @@ def test_counts_survive_serialisation() -> None:
     # --- the terminal surface carries everything needed to re-verify a verdict --
     boundary = classify_size(0, *PER_FIELD_SIZE_CASES["C4"])["boundary"]
     row = classify_campaign(clean_counts(
-        c4_rejections_by_field={**{f: 0 for f in FIELDS},
-                                "theta1_power": boundary + 1}))
+        c4_rejections_by_field=evidence("C4", {**{f: 0 for f in FIELDS},
+                                               "theta1_power": boundary + 1})))
     reported = row["detail"]["C4"]["theta1_power"]
     for key in ("rejections", "replicates", "observed_rate", "cp_lower",
                 "cp_upper", "boundary", "verdict"):
@@ -720,9 +739,11 @@ def test_field_identity_survives_to_the_classifier() -> None:
     for short, _case_id, _sub, _event in PER_FIELD_CASES:
         boundary = classify_size(0, *PER_FIELD_SIZE_CASES[short])["boundary"]
         key = f"c{short[1]}_rejections_by_field"
+        def built(mapping, case=short):
+            return (mapping if case == "C2" else evidence(case, mapping))
         for field_id in FIELDS:
-            counts = clean_counts(**{key: {**{f: 0 for f in FIELDS},
-                                           field_id: boundary + 1}})
+            counts = clean_counts(**{key: built({**{f: 0 for f in FIELDS},
+                                                 field_id: boundary + 1})})
             result = classify_campaign(counts)
             size_failures = [f for f in result["failures"]
                              if "STATISTICAL_SIZE_FAILURE" in f]
@@ -737,7 +758,7 @@ def test_field_identity_survives_to_the_classifier() -> None:
                       for f in FIELDS if f != field_id))
         # at exactly the boundary in EVERY field the case is clean: a pooled
         # implementation of the same counts would not be
-        counts = clean_counts(**{key: {f: boundary for f in FIELDS}})
+        counts = clean_counts(**{key: built({f: boundary for f in FIELDS})})
         check(f"{short} at exactly {boundary} in all four fields -> PASS",
               classify_campaign(counts)["verdict"] == "VALIDATION_PASS",
               f"pooled total would be {boundary * 4}")
@@ -1089,6 +1110,436 @@ def test_execution_remains_blocked() -> None:
     check("NO REAL RANDOM NUMBER WAS DRAWN", RealRNGSentinel.DRAWS == 0)
 
 
+
+
+# ================================================ F1f-e refusal-aware aggregation
+#: The authorised terminal status used by every refused fixture below. It is the
+#: contract's own `REFUSED_ACCESSIBLE_SPACE` branch -- "rank guard failed on S",
+#: rank_tol = 1e-12 -- reached through the analysis status the record carries. No
+#: new refusal category is invented here.
+REFUSED_STATUS = "RANK_GUARD_FAIL"
+REFUSED_REASON = "REFUSED_ACCESSIBLE_SPACE"
+
+
+def result_row(*, refused: bool, g5: bool = False, block1: bool = False,
+               p1: bool = True, complete: bool = True, accepted: bool = False,
+               recovered: bool = True) -> dict:
+    """One field record's `result`. A refusal leaves the BLOCK decisions null."""
+    if refused:
+        return {"analysis_status": REFUSED_STATUS, "refusal_reason": REFUSED_REASON,
+                "P1": False, "p1_rejected": True,
+                "block1_rejected": None, "g5_rejected": None,
+                "P2": False, "P3": False, "P4": True, "complete_pass": False,
+                "false_acceptance": False, "scale_recovered": False}
+    return {"analysis_status": "ESTIMATED", "P1": p1, "p1_rejected": not p1,
+            "block1_rejected": block1, "g5_rejected": g5,
+            "P2": True, "P3": True, "P4": True, "complete_pass": complete,
+            "false_acceptance": accepted, "scale_recovered": recovered}
+
+
+def case_records(plan, case_id, rows):
+    """Records for ONE case over its RELEASE subcondition. `rows` is per replicate.
+
+    Each entry of `rows` maps field_id -> result dict for that replicate.
+    """
+    sub = release_subconditions(plan, case_id)[0]
+    out = {}
+    for index, row in enumerate(rows):
+        for field_id, result in row.items():
+            key = f"{case_id}|{sub}|{index:06d}|{field_id}"
+            out[key] = {"coordinates": {"case_id": case_id, "subcondition_id": sub,
+                                        "replicate_id": index, "scope": field_id},
+                        "result": result}
+    return out
+
+
+#: C3 and C4 keep their FROZEN replicate counts in the miniature campaign. The
+#: classifier refuses evidence whose planned denominator differs from the frozen
+#: one -- that guard is exactly what stops a denominator shrinking to the
+#: survivors -- so shrinking them would test nothing. Every OTHER case is reduced,
+#: because writing 53,200 real jobs would be a campaign.
+FULL_DENOMINATOR_CASES = ("C3_g5_block", "C4_surrogate_validity")
+
+
+def shrunk_plan(replicates=1):
+    """The frozen plan with the NON-size cases' replicate counts reduced."""
+    plan = copy.deepcopy(PLAN)
+    for case in plan["cases"]:
+        if case["case_id"] not in FULL_DENOMINATOR_CASES:
+            case["replicate_count"] = replicates
+    return plan
+
+
+def miniature_campaign(plan, c3_refused=(), c4_refused=(), c3_g5=None,
+                       c4_block1=None):
+    """A COMPLETE record set for every planned job of the fixture plan. Pure dicts.
+
+    `c3_refused` / `c4_refused` name fields whose EVERY replicate is a valid
+    structured refusal. `c3_g5` / `c4_block1` map a field to HOW MANY of its
+    replicates carry a real block rejection, so a fixture can sit just over a
+    boundary rather than rejecting on every replicate -- `cp_lower` is an exact
+    binomial sum and k near n is both unrealistic and arithmetically extreme.
+    """
+    rejecting = {"C3_g5_block": dict(c3_g5 or {}),
+                 "C4_surrogate_validity": dict(c4_block1 or {})}
+    refusing = {"C3_g5_block": set(c3_refused),
+                "C4_surrogate_validity": set(c4_refused)}
+    records = {}
+    for case in plan["cases"]:
+        cid = case["case_id"]
+        fields = required_result_fields(plan, cid)
+        for sub in release_subconditions(plan, cid):
+            for index in range(case["replicate_count"]):
+                for field_id in fields:
+                    refused = field_id in refusing.get(cid, ())
+                    rejects = index < rejecting.get(cid, {}).get(field_id, 0)
+                    result = result_row(
+                        refused=refused,
+                        g5=(cid == "C3_g5_block" and rejects),
+                        block1=(cid == "C4_surrogate_validity" and rejects))
+                    key = f"{cid}|{sub}|{index:06d}|{field_id}"
+                    records[key] = {
+                        "coordinates": {"case_id": cid, "subcondition_id": sub,
+                                        "replicate_id": index, "scope": field_id},
+                        "result": result}
+    return records
+
+
+def test_refusal_aware_aggregation() -> None:
+    """F1f-e. A valid structured refusal no longer aborts aggregation.
+
+    THE DEFECT THIS CLOSES
+        `require_endpoint_events` granted an explicit exemption for a null block
+        decision on a non-ESTIMATED record, and `field_event_count` then raised
+        ENDPOINT_EVENT_MISSING on exactly that record. One layer accepted what the
+        next rejected, so the terminal campaign report the contract requires --
+        "the report must finish even when every job refuses" -- was never produced.
+    """
+    # --- the ORIGINAL counterexample, now a permanent regression -------------
+    for case_id, event, planned in (("C3_g5_block", "g5_rejected", 400),
+                                    ("C4_surrogate_validity", "block1_rejected",
+                                     2000)):
+        plan = plan_with_replicates(case_id, 1)
+        refused = case_records(plan, case_id,
+                               [{f: result_row(refused=True) for f in FIELDS}])
+        one = next(iter(refused.values()))["result"]
+        check(f"{case_id[:2]}: the endpoint validator still ACCEPTS the refusal",
+              refusal_code(require_endpoint_events, plan, case_id, one, "probe")
+              is None)
+        outcomes = per_field_primary_outcomes(plan, refused, case_id, event)
+        o = outcomes["theta0_circular"]
+        check(f"{case_id[:2]}: the AGGREGATOR now accepts the same record",
+              o.planned_replicates == 1 and o.structured_refusals == 1
+              and o.evaluable == 0 and o.rejections == 0, str(o))
+        check(f"{case_id[:2]}: the refusal reason is preserved, not just counted",
+              o.refusal_reasons == {REFUSED_REASON: 1}, str(o.refusal_reasons))
+        nominal = PER_FIELD_SIZE_CASES[case_id[:2]][1]
+        check(f"{case_id[:2]}: the primary status is NOT_EVALUABLE",
+              classify_field_size(o, nominal)["verdict"] == SIZE_NOT_EVALUABLE)
+
+    # --- ALL-REFUSED and PARTIAL, at the real planned denominators ----------
+    for case_id, event, planned, nominal, rejections in (
+            ("C3_g5_block", "g5_rejected", 400, 0.001, 2),
+            ("C4_surrogate_validity", "block1_rejected", 2000, 0.004, 13)):
+        short = case_id[:2]
+        plan = plan_with_replicates(case_id, planned)
+        # all refused
+        rows = [{f: result_row(refused=True) for f in FIELDS} for _ in range(planned)]
+        out = per_field_primary_outcomes(plan, case_records(plan, case_id, rows),
+                                         case_id, event)["theta0_circular"]
+        res = classify_field_size(out, nominal)
+        check(f"{short} ALL {planned} refused -> NOT_EVALUABLE",
+              res["verdict"] == SIZE_NOT_EVALUABLE
+              and out.evaluable == 0 and out.structured_refusals == planned
+              and out.planned_replicates == planned, str(out))
+        check(f"{short} all-refused is NOT reported clean",
+              res["verdict"] != SIZE_NO_INFLATION)
+        check(f"{short} all-refused does NOT fabricate size inflation",
+              res["verdict"] != SIZE_FAILURE and res["rejections"] == 0)
+        # one refusal among otherwise clean-looking evidence
+        rows = [{f: result_row(refused=False,
+                               g5=(short == "C3" and i < rejections
+                                   and f == "theta0_circular"),
+                               block1=(short == "C4" and i < rejections
+                                       and f == "theta0_circular"))
+                 for f in FIELDS} for i in range(planned)]
+        rows[planned - 1] = {f: result_row(refused=(f == "theta0_circular"))
+                             for f in FIELDS}
+        out = per_field_primary_outcomes(plan, case_records(plan, case_id, rows),
+                                         case_id, event)["theta0_circular"]
+        res = classify_field_size(out, nominal)
+        check(f"{short} {planned - 1} evaluable + 1 refusal -> NOT_EVALUABLE",
+              res["verdict"] == SIZE_NOT_EVALUABLE
+              and out.evaluable == planned - 1 and out.structured_refusals == 1,
+              str(out))
+        check(f"{short}: the planned denominator is PRESERVED, not {planned - 1}",
+              out.planned_replicates == planned
+              and res["planned_replicates"] == planned)
+        check(f"{short}: the defined rejections are retained, not discarded",
+              out.rejections == rejections, str(out.rejections))
+        # the SAME field with nothing refused reaches the ordinary verdict
+        rows = [{f: result_row(refused=False,
+                               g5=(short == "C3" and i < rejections
+                                   and f == "theta0_circular"),
+                               block1=(short == "C4" and i < rejections
+                                       and f == "theta0_circular"))
+                 for f in FIELDS} for i in range(planned)]
+        out = per_field_primary_outcomes(plan, case_records(plan, case_id, rows),
+                                         case_id, event)["theta0_circular"]
+        boundary = classify_size(0, planned, nominal)["boundary"]
+        check(f"{short} fully evaluable at {rejections} -> the ordinary verdict",
+              classify_field_size(out, nominal)["verdict"]
+              == (SIZE_NO_INFLATION if rejections <= boundary else SIZE_FAILURE),
+              str(out))
+        check(f"{short} fully evaluable: evaluable == planned, refusals 0",
+              out.evaluable == planned and out.structured_refusals == 0)
+
+
+def test_cross_layer_refusal_invariant() -> None:
+    """F1f-e. What the validator accepts, the aggregator can always aggregate."""
+    estimated = result_row(refused=False)
+    refused = result_row(refused=True)
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        plan = plan_with_replicates(case_id, 1)
+        for label, row in (("valid structured refusal", refused),
+                           ("fully estimated record", estimated)):
+            accepted = refusal_code(require_endpoint_events, plan, case_id, row,
+                                    "probe") is None
+            recs = case_records(plan, case_id, [{f: row for f in FIELDS}])
+            aggregated = refusal_code(per_field_primary_outcomes, plan, recs,
+                                      case_id, event) is None
+            check(f"{case_id[:2]} {label}: validator and aggregator AGREE",
+                  accepted and aggregated, f"accepted={accepted} "
+                  f"aggregated={aggregated}")
+    check("both layers ask ONE predicate, so they cannot drift apart",
+          is_structured_refusal(refused, "g5_rejected") is True
+          and is_structured_refusal(estimated, "g5_rejected") is False)
+
+    # --- INVALID absences must still refuse ---------------------------------
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        plan = plan_with_replicates(case_id, 1)
+        malformed = (
+            ("null decision while analysis_status is ESTIMATED",
+             dict(estimated, **{event: None})),
+            ("the decision key removed entirely",
+             {k: v for k, v in refused.items() if k != event}),
+            ("null decision with NO analysis_status at all",
+             {k: v for k, v in dict(estimated, **{event: None}).items()
+              if k != "analysis_status"}),
+        )
+        for label, row in malformed:
+            recs = case_records(plan, case_id, [{f: row for f in FIELDS}])
+            check(f"{case_id[:2]} {label} STILL refuses",
+                  refusal_code(per_field_primary_outcomes, plan, recs, case_id,
+                               event) == "ENDPOINT_EVENT_MISSING")
+            check(f"{case_id[:2]} {label}: the validator refuses it too",
+                  refusal_code(require_endpoint_events, plan, case_id, row,
+                               "probe") == "ENDPOINT_EVENT_MISSING")
+    check("a refusal reason is recovered from the record's own provenance",
+          structured_refusal_reason(refused) == REFUSED_REASON
+          and structured_refusal_reason({"analysis_status": "N_EFF_UNSUPPORTED"})
+          == "N_EFF_UNSUPPORTED")
+
+    # --- the FULL P1 result must not stand in for the missing block decision --
+    # Under a structured refusal P1 is DEFINED -- it fails closed -- while the two
+    # block decisions are not. Substituting it would silently turn a NOT_EVALUABLE
+    # field into an evaluable one carrying a rejection that never happened.
+    check("under a refusal P1 is defined while both block decisions are not",
+          refused["p1_rejected"] is True and refused["block1_rejected"] is None
+          and refused["g5_rejected"] is None)
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        plan = plan_with_replicates(case_id, 1)
+        recs = case_records(plan, case_id, [{f: refused for f in FIELDS}])
+        primary = per_field_primary_outcomes(plan, recs, case_id,
+                                             event)["theta0_circular"]
+        substituted = per_field_primary_outcomes(plan, recs, case_id,
+                                                 "p1_rejected")["theta0_circular"]
+        check(f"{case_id[:2]}: the ACTUAL endpoint gives 0 evaluable, 0 rejections",
+              primary.evaluable == 0 and primary.rejections == 0
+              and primary.structured_refusals == 1)
+        check(f"{case_id[:2]}: substituting full P1 would fabricate a rejection",
+              substituted.evaluable == 1 and substituted.rejections == 1
+              and substituted.structured_refusals == 0)
+        check(f"{case_id[:2]}: the two are demonstrably different results",
+              primary != substituted)
+        nominal = PER_FIELD_SIZE_CASES[case_id[:2]][1]
+        check(f"{case_id[:2]}: only the ACTUAL endpoint yields NOT_EVALUABLE",
+              classify_field_size(primary, nominal)["verdict"] == SIZE_NOT_EVALUABLE
+              and classify_field_size(substituted, nominal)["verdict"]
+              != SIZE_NOT_EVALUABLE)
+
+
+def test_terminal_result_materialises() -> None:
+    """F1f-e. The CORE contract regression: the report finishes under refusal.
+
+    A complete miniature campaign is assembled from pure records and taken through
+    the real chain -- records, counts, classification, terminal result -- with no
+    RNG, no trajectory and no campaign job. Before the repair this raised
+    ENDPOINT_EVENT_MISSING inside `campaign_counts_from_records` and no campaign
+    result object ever existed.
+    """
+    plan = shrunk_plan(1)
+    clean = campaign_counts_from_records(plan, miniature_campaign(plan))
+    check("C3 and C4 keep their FROZEN planned denominators in the fixture",
+          clean.c3_rejections_by_field[FIELDS[0]].planned_replicates == 400
+          and clean.c4_rejections_by_field[FIELDS[0]].planned_replicates == 2000)
+    verdict = classify_campaign(clean)
+    # C1, C7 and C8 are deliberately undersized in this fixture, so the OVERALL
+    # verdict is not the subject here; what is asserted is that C3 and C4 reach a
+    # terminal assessment and contribute nothing.
+    check("a clean fixture: C3 and C4 contribute NO failure",
+          not [f for f in verdict["failures"] if "(C3 " in f or "(C4 " in f],
+          "; ".join(verdict["failures"])[:70])
+    check("a clean fixture: every C3 and C4 field is fully evaluable and clean",
+          all(verdict["detail"][case][f]["verdict"] == SIZE_NO_INFLATION
+              and verdict["detail"][case][f]["structured_refusals"] == 0
+              for case in ("C3", "C4") for f in FIELDS))
+
+    # --- EVERY C3 and C4 job refuses --------------------------------------
+    allref = miniature_campaign(plan, c3_refused=FIELDS, c4_refused=FIELDS)
+    counts = campaign_counts_from_records(plan, allref)
+    result = classify_campaign(counts)
+    check("ALL-REFUSED: aggregation COMPLETES instead of raising",
+          counts is not None)
+    check("ALL-REFUSED: the terminal campaign result EXISTS",
+          isinstance(result, dict) and "verdict" in result and "detail" in result)
+    check("ALL-REFUSED: the campaign cannot PASS",
+          result["verdict"] == "VALIDATION_FAILURE")
+    for case in ("C3", "C4"):
+        statuses = {f: result["detail"][case][f]["verdict"] for f in FIELDS}
+        check(f"ALL-REFUSED: every {case} field is NOT_EVALUABLE",
+              set(statuses.values()) == {SIZE_NOT_EVALUABLE}, str(statuses))
+    check("ALL-REFUSED: no statistical size failure is fabricated",
+          not any(f.startswith(SIZE_FAILURE) for f in result["failures"]),
+          "; ".join(result["failures"])[:80])
+    check("ALL-REFUSED: each not-evaluable field reports 0 evaluable of its planned R",
+          all(result["detail"][case][f]["evaluable"] == 0
+              and result["detail"][case][f]["planned_replicates"] == planned
+              for case, planned in (("C3", 400), ("C4", 2000)) for f in FIELDS))
+    size_related = [f for f in result["failures"] if "(C3 " in f or "(C4 " in f]
+    check("ALL-REFUSED: every C3/C4 failure reason is incomplete evidence",
+          size_related and all(f.startswith(INCOMPLETE_EVIDENCE_CLASSIFICATION)
+                               for f in size_related),
+          "; ".join(size_related)[:80])
+    check("ALL-REFUSED: the refusal reason survives into the terminal detail",
+          result["detail"]["C3"][FIELDS[0]]["refusal_reasons"] == {REFUSED_REASON: 400}
+          and result["detail"]["C4"][FIELDS[0]]["refusal_reasons"]
+          == {REFUSED_REASON: 2000},
+          str(result["detail"]["C3"][FIELDS[0]]["refusal_reasons"]))
+    check("ALL-REFUSED: C2 is untouched and still counted normally",
+          set(result["detail"]["C2"]) == set(FIELDS)
+          and all(r["verdict"] == SIZE_NO_INFLATION
+                  for r in result["detail"]["C2"].values()))
+
+    # --- MIXED: one field not evaluable, another a real size failure --------
+    plan3 = shrunk_plan(1)
+    # one over each frozen boundary: C3 clean 0-2, C4 clean 0-13
+    mixed = miniature_campaign(plan3, c3_refused=("theta0_circular",),
+                               c3_g5={"theta1_power": 3},
+                               c4_refused=("theta1_power",),
+                               c4_block1={"theta3_temperature": 14})
+    result = classify_campaign(campaign_counts_from_records(plan3, mixed))
+    check("MIXED: the campaign cannot PASS", result["verdict"] == "VALIDATION_FAILURE")
+    check("MIXED: theta0 of C3 is NOT_EVALUABLE",
+          result["detail"]["C3"]["theta0_circular"]["verdict"] == SIZE_NOT_EVALUABLE)
+    check("MIXED: theta1 of C3 is a STATISTICAL size failure",
+          result["detail"]["C3"]["theta1_power"]["verdict"] == SIZE_FAILURE)
+    check("MIXED: theta1 of C4 is NOT_EVALUABLE",
+          result["detail"]["C4"]["theta1_power"]["verdict"] == SIZE_NOT_EVALUABLE)
+    check("MIXED: theta3 of C4 is a STATISTICAL size failure",
+          result["detail"]["C4"]["theta3_temperature"]["verdict"] == SIZE_FAILURE)
+    incomplete = [f for f in result["failures"]
+                  if f.startswith(INCOMPLETE_EVIDENCE_CLASSIFICATION)]
+    statistical = [f for f in result["failures"] if f.startswith(SIZE_FAILURE)]
+    check("MIXED: BOTH scientific reasons survive, neither erases the other",
+          len(incomplete) == 2 and len(statistical) == 2,
+          f"{len(incomplete)} incomplete, {len(statistical)} statistical")
+    check("MIXED: each failure names its own case and field",
+          any("theta0_circular" in f and "(C3 " in f for f in incomplete)
+          and any("theta1_power" in f and "(C3 " in f for f in statistical)
+          and any("theta1_power" in f and "(C4 " in f for f in incomplete)
+          and any("theta3_temperature" in f and "(C4 " in f for f in statistical))
+    check("MIXED: the clean fields stay clean",
+          result["detail"]["C3"]["theta2_ellipse"]["verdict"] == SIZE_NO_INFLATION
+          and result["detail"]["C4"]["theta0_circular"]["verdict"]
+          == SIZE_NO_INFLATION)
+    check("MIXED: the two facts are reported separately",
+          result["independent_facts"]["component_size_clean"] is False
+          and result["independent_facts"]["component_size_evaluable"] is False)
+
+    # --- restart: recovered aggregation equals fresh aggregation ------------
+    restored = json.loads(json.dumps(allref, sort_keys=True, allow_nan=False))
+    recovered = campaign_counts_from_records(plan, restored)
+    fresh = campaign_counts_from_records(plan, allref)
+    check("RESTART: recovered C3 evidence equals fresh C3 evidence",
+          recovered.c3_rejections_by_field == fresh.c3_rejections_by_field)
+    check("RESTART: recovered C4 evidence equals fresh C4 evidence",
+          recovered.c4_rejections_by_field == fresh.c4_rejections_by_field)
+    check("RESTART: an undefined endpoint is NOT reconstructed as a boolean",
+          all(r["result"]["g5_rejected"] is None
+              for r in restored.values()
+              if r["coordinates"]["case_id"] == "C3_g5_block"))
+    check("RESTART: the campaign verdict survives the round trip",
+          classify_campaign(recovered)["verdict"]
+          == classify_campaign(fresh)["verdict"])
+
+
+def test_refusal_count_invariants() -> None:
+    """F1f-e. An inconsistent per-field evidence object is REFUSED, not believed."""
+    bad = (
+        ("evaluable + refusals != planned", dict(evaluable=398, structured_refusals=1)),
+        ("more rejections than evaluable", dict(evaluable=2, structured_refusals=398,
+                                                rejections=3)),
+        ("negative evaluable", dict(evaluable=-1, structured_refusals=401)),
+        ("refusals exceed planned", dict(evaluable=0, structured_refusals=401)),
+        ("rejections exceed planned", dict(evaluable=400, structured_refusals=0,
+                                           rejections=401)),
+    )
+    for label, over in bad:
+        kwargs = dict(field_id="theta0_circular", planned_replicates=400,
+                      evaluable=400, structured_refusals=0, rejections=0)
+        kwargs.update(over)
+        check(f"REFUSED: {label}", refuses(FieldSizeOutcome, **kwargs))
+    check("REFUSED: refusal reasons that do not account for the refusals",
+          refuses(FieldSizeOutcome, field_id="theta0_circular",
+                  planned_replicates=400, evaluable=399, structured_refusals=1,
+                  rejections=0, refusal_reasons={REFUSED_REASON: 5}))
+    ok = FieldSizeOutcome(field_id="theta0_circular", planned_replicates=400,
+                          evaluable=399, structured_refusals=1, rejections=2,
+                          refusal_reasons={REFUSED_REASON: 1})
+    check("ACCEPTED: a consistent object, with the invariant holding",
+          ok.evaluable + ok.structured_refusals == ok.planned_replicates
+          and ok.rejections <= ok.evaluable and not ok.fully_evaluable)
+
+    # --- the classifier refuses evidence that is not three-state ------------
+    check("REFUSED: a bare count supplied for C3",
+          refuses(classify_campaign,
+                  clean_counts(c3_rejections_by_field={f: 0 for f in FIELDS})))
+    swapped = evidence("C3")
+    swapped["theta0_circular"] = FieldSizeOutcome(
+        field_id="theta1_power", planned_replicates=400, evaluable=400,
+        structured_refusals=0, rejections=0)
+    check("REFUSED: evidence whose field identity drifted",
+          refuses(classify_campaign, clean_counts(c3_rejections_by_field=swapped)))
+    shrunk = evidence("C3")
+    shrunk["theta0_circular"] = FieldSizeOutcome(
+        field_id="theta0_circular", planned_replicates=399, evaluable=399,
+        structured_refusals=0, rejections=0)
+    check("REFUSED: evidence whose planned denominator shrank to the survivors",
+          refuses(classify_campaign, clean_counts(c3_rejections_by_field=shrunk)))
+
+
+def refuses(fn, *args, **kwargs) -> bool:
+    try:
+        fn(*args, **kwargs)
+    except Refusal:
+        return True
+    return False
+
+
 GROUPS = (
     ("T1  C2 counts PER FIELD", test_c2_counts_per_field),
     ("T2/T3  G5 and Block-1 decisions propagate", test_g5_and_block1_propagate),
@@ -1101,6 +1552,10 @@ GROUPS = (
     ("F1f  counts survive serialisation/restart", test_counts_survive_serialisation),
     ("F1f  the failing field reaches the classifier",
      test_field_identity_survives_to_the_classifier),
+    ("F1f-e refusal-aware aggregation", test_refusal_aware_aggregation),
+    ("F1f-e validator and aggregator agree", test_cross_layer_refusal_invariant),
+    ("F1f-e the terminal result materialises", test_terminal_result_materialises),
+    ("F1f-e per-field count invariants", test_refusal_count_invariants),
     ("T5/T6  the C8 blinded Branch-A control", test_c8_blinded_branch_a_control),
     ("T7-T10  terminal provenance cross-links", test_terminal_provenance_cross_links),
     ("campaign structure unchanged", test_campaign_structure_unchanged),

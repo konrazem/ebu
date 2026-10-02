@@ -48,6 +48,9 @@ from e1a_v4.validation.coherence import (
     specification_counts,
 )
 from e1a_v4.validation.dispositions import cp_lower
+from e1a_v4.validation.release_authority import (
+    REFUSAL_AWARE_DRIVER_SURFACE,
+)
 from e1a_v4.validation.plan import execution_identity, load_plan
 from e1a_v4.validation.runner import preflight, run
 from e1a_v4.validation.seal import (
@@ -473,7 +476,20 @@ def install_driver_fixture(tmp: str) -> None:
               encoding="utf-8") as handle:
         handle.write('"""SANDBOX FIXTURE ONLY. Never committed."""\n\n\n'
                      f"def {OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT}():\n"
-                     "    raise NotImplementedError\n")
+                     "    raise NotImplementedError\n"
+                     + driver_surface_stub())
+
+
+def driver_surface_stub() -> str:
+    """The refusal-aware aggregation surface a stand-in driver must declare.
+
+    A sandbox stub replaces the real driver to exercise gates beyond "absent", and
+    the package requires that driver to have a defined aggregation path for a valid
+    structured refusal -- just as it already requires a `run_campaign` entry point.
+    The stub declares the names; it implements nothing.
+    """
+    return "".join(f"\n\ndef {name}():\n    raise NotImplementedError\n"
+                   for name in REFUSAL_AWARE_DRIVER_SURFACE)
 
 
 def test_seal_ordering() -> None:

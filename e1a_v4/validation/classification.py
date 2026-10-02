@@ -50,9 +50,19 @@ from typing import Mapping, Sequence
 from ..numerics import Refusal
 from .dispositions import cp_lower, cp_upper
 
-#: The only two verdicts a size diagnostic may produce.
+#: The two STATISTICAL verdicts a size diagnostic may produce.
 SIZE_FAILURE = "STATISTICAL_SIZE_FAILURE"
 SIZE_NO_INFLATION = "NO_SIGNIFICANT_SIZE_INFLATION_DETECTED"
+#: The THIRD primary state, from the G5 structured-refusal amendment. It is NOT a
+#: statistical verdict: it says the preregistered evidence was not fully observed
+#: because a valid structured refusal left a required primary endpoint undefined.
+#: Only C3 and C4 can reach it -- C2's composite P1 endpoint fails closed, so its
+#: elementary event is defined for every replicate.
+SIZE_NOT_EVALUABLE = "NOT_EVALUABLE"
+#: The campaign-level classification a NOT_EVALUABLE field contributes. Distinct
+#: from SIZE_FAILURE on purpose: "the size test could not be validly evaluated as
+#: preregistered" is not "the size test rejected".
+INCOMPLETE_EVIDENCE_CLASSIFICATION = "VALIDATION_INCONCLUSIVE"
 
 #: Machine-readable statement of what a pass does and does not mean.
 SIZE_INTERPRETATION = {
@@ -124,6 +134,116 @@ def classify_size(rejections: int, n: int, nominal: float) -> dict:
         "interpretation": SIZE_INTERPRETATION["means"] if not detected else
                           "excess size established at the chosen confidence level",
     }
+
+
+@dataclass(frozen=True)
+class FieldSizeOutcome:
+    """One field's PRIMARY size evidence, in THREE states rather than two.
+
+    WHY THIS IS NOT A COUNT
+        A per-field rejection count cannot express the amendment. `rejections = 2`
+        over a planned 400 is a different scientific object depending on whether
+        the other 398 endpoint decisions exist. The three counts are therefore
+        carried together and never collapsed:
+
+            evaluable       replicates whose required primary endpoint EXISTS
+            structured_refusals  replicates whose primary endpoint is UNDEFINED
+                            because of a valid structured refusal
+            rejections      TRUE decisions AMONG THE EVALUABLE ones only
+
+        `planned_replicates` is the frozen prospective R and remains the primary
+        denominator whatever the other two are: an undefined endpoint never
+        shrinks the declared experiment to its survivors.
+    """
+
+    field_id: str
+    planned_replicates: int
+    evaluable: int
+    structured_refusals: int
+    rejections: int
+    #: Structured-refusal reason -> how many replicates carried it. Kept so a
+    #: reader can tell WHY a field was not evaluable, which frozen authority
+    #: requires (`required_terminal_counts` names `refusal_reasons`).
+    refusal_reasons: Mapping[str, int] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if self.planned_replicates < 1:
+            raise Refusal(f"{self.field_id}: planned replicates must be >= 1")
+        for name, value in (("evaluable", self.evaluable),
+                            ("structured_refusals", self.structured_refusals),
+                            ("rejections", self.rejections)):
+            if not 0 <= value <= self.planned_replicates:
+                raise Refusal(
+                    f"{self.field_id}: {name} = {value} lies outside "
+                    f"[0, {self.planned_replicates}]")
+        if self.rejections > self.evaluable:
+            raise Refusal(
+                f"{self.field_id}: {self.rejections} rejections among "
+                f"{self.evaluable} evaluable endpoints; a rejection is a DEFINED "
+                "decision and cannot exceed the decisions that exist")
+        if self.evaluable + self.structured_refusals != self.planned_replicates:
+            raise Refusal(
+                f"{self.field_id}: {self.evaluable} evaluable + "
+                f"{self.structured_refusals} structured refusals != the planned "
+                f"{self.planned_replicates}. Every planned replicate is accounted "
+                "for exactly once; a silently discarded record is the defect this "
+                "refuses.")
+        total = sum(self.refusal_reasons.values())
+        if total and total != self.structured_refusals:
+            raise Refusal(
+                f"{self.field_id}: refusal reasons account for {total} replicates "
+                f"but {self.structured_refusals} refused")
+
+    @property
+    def fully_evaluable(self) -> bool:
+        """True iff every planned primary endpoint decision exists."""
+        return self.structured_refusals == 0
+
+
+def classify_field_size(outcome: FieldSizeOutcome, nominal: float) -> dict:
+    """One field's PRIMARY size assessment. THE PRECEDENCE IS NORMATIVE.
+
+    `size_validation_semantics.verdicts.evaluation_order` states it: a structured
+    refusal is resolved FIRST, and the detector is NOT run on an incomplete
+    primary sequence. The order is not a convenience. The two statistical verdicts
+    partition every (rejections, R) pair between them -- `otherwise` catches
+    everything that is not a detection -- so computing the detector first and then
+    overriding it would already have claimed a clean field, and an all-refused
+    field would report NO_SIGNIFICANT_SIZE_INFLATION_DETECTED on zero observations.
+    """
+    if not outcome.fully_evaluable:
+        return {
+            "field_id": outcome.field_id,
+            "verdict": SIZE_NOT_EVALUABLE,
+            "planned_replicates": outcome.planned_replicates,
+            "evaluable": outcome.evaluable,
+            "structured_refusals": outcome.structured_refusals,
+            "rejections": outcome.rejections,
+            "refusal_reasons": dict(outcome.refusal_reasons),
+            "nominal_alpha": nominal,
+            "boundary": size_boundary(outcome.planned_replicates, nominal),
+            "primary_rule": ("a structured refusal is resolved FIRST: the "
+                             "preregistered detector is NOT run on an incomplete "
+                             "primary endpoint sequence"),
+            "means": ("required primary evidence was not fully observed because "
+                      "one or more valid structured refusals left the primary "
+                      "endpoint undefined"),
+            "does_not_mean": ("neither that excess size was established nor that "
+                              "nominal size behaviour was established"),
+            "campaign_classification": INCOMPLETE_EVIDENCE_CLASSIFICATION,
+        }
+    # Fully evaluable: the frozen rules are untouched, scored against the PLANNED
+    # denominator, which equals `evaluable` precisely because nothing refused.
+    result = dict(classify_size(outcome.rejections, outcome.planned_replicates,
+                                nominal))
+    result.update({
+        "field_id": outcome.field_id,
+        "planned_replicates": outcome.planned_replicates,
+        "evaluable": outcome.evaluable,
+        "structured_refusals": 0,
+        "refusal_reasons": {},
+    })
+    return result
 
 
 # ------------------------------------------------------------------ campaign
@@ -204,14 +324,49 @@ class CampaignCounts:
 
     c1_successes: int                              # of 300
     c2_rejections_by_field: Mapping[str, int]      # of 400 each
-    c3_rejections_by_field: Mapping[str, int]      # of 400 each
-    c4_rejections_by_field: Mapping[str, int]      # of 2000 each
+    #: C3 and C4 carry a FieldSizeOutcome per field, not a count. Their primary
+    #: endpoint is ONE BLOCK of the two-block gate and a valid structured refusal
+    #: can leave it undefined, so the evaluable count, the refusal count and the
+    #: rejection count must travel together. C2 keeps plain counts BY DESIGN: its
+    #: composite P1 endpoint fails closed, its elementary event is defined for
+    #: every replicate, and giving it the richer type would create a
+    #: NOT_EVALUABLE path that frozen authority marks NOT_APPLICABLE for it.
+    c3_rejections_by_field: Mapping[str, "FieldSizeOutcome"]   # planned 400 each
+    c4_rejections_by_field: Mapping[str, "FieldSizeOutcome"]   # planned 2000 each
     c5_pass: bool
     c6_pass: bool
     c7_false_acceptances_by_alternative: Mapping[str, int]   # of 400 each
     c8_successes: int                              # of 200
     hard_failures: Sequence[str] = ()
     refusal_accounting_ok: bool = True
+
+
+def _refusal_semantics(case: str) -> dict:
+    """What a valid structured refusal means for this case. From the G5 amendment.
+
+    C2 is scoped OUT explicitly rather than by silence: its composite P1 endpoint
+    fails closed, so its primary decision is defined for every replicate and it has
+    no NOT_EVALUABLE path at all.
+    """
+    if case == "C2":
+        return {
+            "undefined_primary_endpoint_possible": False,
+            "verdict_on_structured_refusal": "NOT_APPLICABLE",
+            "structured_refusal_note": (
+                "the composite P1 decision FAILS CLOSED, so this case's elementary "
+                "event is defined for every replicate including a structured "
+                "refusal"),
+        }
+    return {
+        "undefined_primary_endpoint_possible": True,
+        "verdict_on_structured_refusal": SIZE_NOT_EVALUABLE,
+        "refusal_is_statistical_rejection": False,
+        "refusal_is_statistical_non_rejection": False,
+        "primary_denominator": "PLANNED_R_PRESERVED",
+        "release_requires": "EVALUABLE_AND_CLEAN",
+        "campaign_failure_classification": INCOMPLETE_EVIDENCE_CLASSIFICATION,
+        "tolerated_structured_refusal_fraction": "NONE",
+    }
 
 
 def classify_campaign(counts: CampaignCounts) -> dict:
@@ -231,10 +386,33 @@ def classify_campaign(counts: CampaignCounts) -> dict:
                 "field, an extra field, a reference-field-only set and a single "
                 "pooled scalar are each a DIFFERENT statistical object from the "
                 "declared per-field rule, not a convenience")
-        if any(not 0 <= k <= replicates for k in supplied.values()):
-            raise Refusal(
-                f"{case} field rejection count exceeds its declared {replicates} "
-                "per-field replicates")
+        if case == "C2":
+            if any(not isinstance(k, int) or isinstance(k, bool)
+                   or not 0 <= k <= replicates for k in supplied.values()):
+                raise Refusal(
+                    f"{case} field rejection count exceeds its declared "
+                    f"{replicates} per-field replicates")
+            continue
+        # C3 and C4 must arrive as THREE-STATE evidence. A bare count here would
+        # be the pre-amendment shape, in which an undefined endpoint has already
+        # been silently resolved into a rejection or a non-rejection.
+        for fid, outcome in supplied.items():
+            if not isinstance(outcome, FieldSizeOutcome):
+                raise Refusal(
+                    f"{case} field {fid} supplied {type(outcome).__name__}, not a "
+                    "FieldSizeOutcome. A bare count cannot distinguish a defined "
+                    "non-rejection from an undefined primary endpoint, and that "
+                    "distinction is the release rule")
+            if outcome.field_id != fid:
+                raise Refusal(
+                    f"{case} field {fid} carries evidence labelled "
+                    f"{outcome.field_id!r}; field identity may not drift")
+            if outcome.planned_replicates != replicates:
+                raise Refusal(
+                    f"{case} field {fid} declares a planned denominator of "
+                    f"{outcome.planned_replicates}, but the frozen plan declares "
+                    f"{replicates}. The planned R is the primary denominator and "
+                    "never shrinks to the surviving replicates")
     if set(counts.c7_false_acceptances_by_alternative) != REQUIRED_C7_ALTERNATIVES:
         raise Refusal("C7 requires exactly the four declared alternative counts")
     if not 0 <= counts.c1_successes <= 300 or not 0 <= counts.c8_successes <= 200:
@@ -268,11 +446,22 @@ def classify_campaign(counts: CampaignCounts) -> dict:
         replicates, nominal = PER_FIELD_SIZE_CASES[case]
         detail[case] = {}
         for fid in sorted(per_field[case]):
-            res = classify_size(per_field[case][fid], replicates, nominal)
+            supplied = per_field[case][fid]
+            res = (classify_size(supplied, replicates, nominal) if case == "C2"
+                   else classify_field_size(supplied, nominal))
             detail[case][fid] = res
+            # The two non-clean states are DIFFERENT scientific reasons and are
+            # never collapsed: one says the size test rejected, the other says it
+            # could not be validly evaluated as preregistered. Both block release.
             if res["verdict"] == SIZE_FAILURE:
                 failures.append(
-                    f"STATISTICAL_SIZE_FAILURE ({case} {endpoint}, field {fid})")
+                    f"{SIZE_FAILURE} ({case} {endpoint}, field {fid})")
+            elif res["verdict"] == SIZE_NOT_EVALUABLE:
+                failures.append(
+                    f"{INCOMPLETE_EVIDENCE_CLASSIFICATION} ({case} {endpoint}, "
+                    f"field {fid}: required validation evidence incomplete, "
+                    f"{res['structured_refusals']} structured refusal(s) of a "
+                    f"planned {res['planned_replicates']})")
 
     # 5, 6. already-frozen criteria
     detail["C5"] = {"passed": counts.c5_pass}
@@ -325,12 +514,22 @@ def classify_campaign(counts: CampaignCounts) -> dict:
                        nominal_alpha=PER_FIELD_SIZE_CASES[case][1],
                        within_replicate_field_reduction="NONE",
                        pooling="FORBIDDEN",
-                       required_field_conditions=sorted(REQUIRED_SIZE_FIELDS))
+                       required_field_conditions=sorted(REQUIRED_SIZE_FIELDS),
+                       **_refusal_semantics(case))
             for case in PER_FIELD_SIZE_CASES
         },
         "independent_facts": {
             "complete_pipeline_met": c1_ok,
-            "component_size_clean": not any(f.startswith("STATISTICAL_SIZE_FAILURE") for f in failures),
+            "component_size_clean": not any(f.startswith(SIZE_FAILURE) for f in failures),
+            # Separate from `component_size_clean` DELIBERATELY. A campaign with a
+            # NOT_EVALUABLE field has no size-inflation finding, so the clean flag
+            # above is True; reporting only that would read as "the components
+            # behaved" when a required assessment was never made.
+            "component_size_evaluable": not any(
+                f.startswith(INCOMPLETE_EVIDENCE_CLASSIFICATION) for f in failures),
+            "incomplete_evidence_fields": [
+                f for f in failures
+                if f.startswith(INCOMPLETE_EVIDENCE_CLASSIFICATION)],
             "note": ("these are reported separately and never collapsed. C1 may meet >= 0.90 while a "
                      "component case detects significant size inflation; that is still a validation "
                      "failure, because the implemented calibration is not behaving according to its "

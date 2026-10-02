@@ -77,7 +77,7 @@ from ..endpoints import (
 from ..geometry import analyse_field
 from ..numerics import Refusal
 from .calibrate import CalibrationRequest, generate_block1_artifact
-from .classification import CampaignCounts, classify_campaign
+from .classification import CampaignCounts, FieldSizeOutcome, classify_campaign
 from .coherence import derived_n_samples
 from .dispositions import cp_upper
 from .driver import (
@@ -3510,6 +3510,57 @@ REPLICATE_LEVEL_EVENTS = ("P2", "P3", "P4", "complete_pass", "false_acceptance",
                           "scale_recovered")
 
 
+#: The two PER-FIELD events a valid structured refusal can legitimately leave
+#: undefined. Each is ONE BLOCK of the two-block P1 gate, and a gate that produced
+#: no p-values at all decided neither. `p1_rejected` is NOT here: the composite P1
+#: decision FAILS CLOSED, so it exists for every replicate, which is why C2 has no
+#: undefined-endpoint path.
+BLOCK_DECISION_EVENTS = ("block1_rejected", "g5_rejected")
+#: The analysis status that means the frozen gate actually produced its rows.
+ESTIMATED_STATUS = "ESTIMATED"
+
+
+def is_structured_refusal(outcome: Mapping[str, Any], event: str) -> bool:
+    """Is `event` UNDEFINED for an AUTHORISED reason? THE single definition.
+
+    THE DEFECT THIS CLOSES
+        The endpoint validator granted an explicit exemption for a null block
+        decision on a non-ESTIMATED record, and the aggregator then raised
+        ENDPOINT_EVENT_MISSING on exactly that record -- so a valid structured
+        refusal was accepted by one layer and rejected by the next, and the
+        terminal campaign report the contract requires was never produced. Both
+        layers now ask THIS function, so they cannot drift apart again.
+
+    FOUR conditions, all required. The event must be one the two-block gate
+    decides per field; the key must be PRESENT and null, because an absent key is
+    a malformed record rather than a refusal; the record must CARRY an
+    `analysis_status`, because authorisation has to be stated rather than inferred
+    from a missing field; and that status must say the analysis never reached
+    ESTIMATED, which is what makes the absence authorised rather than arbitrary.
+
+    The third condition is not redundant. `outcome.get("analysis_status") !=
+    ESTIMATED` is also true when the key is ABSENT, so without it a record that
+    simply failed to record its status would have been read as an authorised
+    refusal -- silence granting the exemption.
+    """
+    return (event in BLOCK_DECISION_EVENTS
+            and event in outcome
+            and outcome[event] is None
+            and outcome.get("analysis_status") is not None
+            and outcome["analysis_status"] != ESTIMATED_STATUS)
+
+
+def structured_refusal_reason(outcome: Mapping[str, Any]) -> str:
+    """The recorded provenance for why this replicate was not evaluable.
+
+    The frozen record schema carries `refusal_reason`; `analysis_status` is the
+    fallback and is always present because `require_endpoint_events` requires it.
+    No new refusal category is invented here.
+    """
+    return str(outcome.get("refusal_reason")
+               or outcome.get("analysis_status") or "UNRECORDED_REFUSAL")
+
+
 def required_endpoint_events(plan: Mapping[str, Any], case_id: str) -> tuple[str, ...]:
     """The endpoint decisions a case's record MUST carry, derived from the plan.
 
@@ -3544,7 +3595,6 @@ def require_endpoint_events(plan: Mapping[str, Any], case_id: str,
     closed. That exemption is explicit, is justified by the record's own
     `analysis_status`, and is the only one.
     """
-    estimated = outcome.get("analysis_status") == "ESTIMATED"
     for event in required_endpoint_events(plan, case_id):
         if event not in outcome:
             raise EndpointEventMissing(
@@ -3552,7 +3602,7 @@ def require_endpoint_events(plan: Mapping[str, Any], case_id: str,
                 "requires. A missing decision is not a pass and not a "
                 "zero-rejection.")
         if outcome[event] is None:
-            if event in ("block1_rejected", "g5_rejected") and not estimated:
+            if is_structured_refusal(outcome, event):
                 continue          # structured refusal: the gate produced no rows
             raise EndpointEventMissing(
                 f"{job_id}: {event!r} is null while analysis_status is "
@@ -3596,6 +3646,91 @@ def field_event_count(records: Mapping[str, Mapping[str, Any]], case_id: str,
             f"for a declared {declared_replicates}. Structured refusals COUNT in "
             "the denominator; a missing replicate does not.")
     return sum(1 for value in seen.values() if value)
+
+
+def field_primary_outcome(records: Mapping[str, Mapping[str, Any]], case_id: str,
+                          subcondition_id: str, field_id: str, event: str,
+                          declared_replicates: int) -> FieldSizeOutcome:
+    """THE field's primary evidence, in three states. Nothing is coerced.
+
+    `field_event_count` answers "how many times did this event occur", which has
+    no answer when the event has no value. This returns the three counts the G5
+    amendment requires instead -- evaluable, structured refusals, and rejections
+    among the evaluable -- with the PLANNED denominator preserved whatever they
+    are. A null decision is never read as False and never as True.
+
+    The protection against a MALFORMED record is unchanged: an absent key, or a
+    null decision on a record whose own `analysis_status` says the analysis DID
+    reach ESTIMATED, is still `ENDPOINT_EVENT_MISSING`. Only an authorised refusal
+    takes the not-evaluable path.
+    """
+    if event not in FIELD_LEVEL_EVENTS:
+        raise ResultSchemaInvalid(
+            f"{event!r} is not a per-field endpoint event; per-field counting of a "
+            "replicate-level value is exactly the defect this function exists to "
+            "prevent")
+    seen: dict[int, bool | None] = {}
+    reasons: dict[int, str] = {}
+    for record in records.values():
+        coordinates = record.get("coordinates") or {}
+        if (coordinates.get("case_id") != case_id
+                or coordinates.get("subcondition_id") != subcondition_id
+                or coordinates.get("scope") != field_id):
+            continue
+        replicate = coordinates.get("replicate_id")
+        result = record.get("result") or {}
+        if is_structured_refusal(result, event):
+            seen[replicate] = None
+            reasons[replicate] = structured_refusal_reason(result)
+            continue
+        if event not in result or result[event] is None:
+            raise EndpointEventMissing(
+                f"{case_id}/{subcondition_id}/{field_id} replicate {replicate}: "
+                f"{event!r} is absent or null while analysis_status is "
+                f"{result.get('analysis_status')!r}. That is not an authorised "
+                "structured refusal, and it may not be counted as a non-event.")
+        seen[replicate] = bool(result[event])
+    if len(seen) != declared_replicates:
+        raise CampaignIncomplete(
+            f"{case_id}/{subcondition_id}/{field_id}: {len(seen)} replicate records "
+            f"for a declared {declared_replicates}. Structured refusals COUNT in "
+            "the denominator; a missing replicate does not.")
+    refusals = sum(1 for value in seen.values() if value is None)
+    by_reason: dict[str, int] = {}
+    for reason in reasons.values():
+        by_reason[reason] = by_reason.get(reason, 0) + 1
+    return FieldSizeOutcome(
+        field_id=field_id,
+        planned_replicates=declared_replicates,
+        evaluable=len(seen) - refusals,
+        structured_refusals=refusals,
+        rejections=sum(1 for value in seen.values() if value is True),
+        refusal_reasons=dict(sorted(by_reason.items())))
+
+
+def per_field_primary_outcomes(plan: Mapping[str, Any],
+                               records: Mapping[str, Mapping[str, Any]],
+                               case_id: str, event: str
+                               ) -> dict[str, FieldSizeOutcome]:
+    """One three-state primary outcome PER DECLARED FIELD. No reduction anywhere.
+
+    The same shape as `per_field_rejections` and the same roster rule -- the
+    frozen plan's own `fields_affected`, never a list typed here -- but carrying
+    evidence a count cannot express. Field statuses combine only at final campaign
+    classification; nothing here computes any(...) or all(...) across fields.
+    """
+    fields = required_result_fields(plan, case_id)
+    subconditions = release_subconditions(plan, case_id)
+    declared = case_entry(plan, case_id)["replicate_count"]
+    if len(subconditions) != 1:
+        raise EndpointEventReductionUndeclared(
+            f"{case_id} has {len(subconditions)} release subconditions "
+            f"{list(subconditions)}; frozen authority declares no rule for "
+            "combining several release units into one per-field size assessment, "
+            "and silently counting the first would be that rule")
+    return {field_id: field_primary_outcome(records, case_id, subconditions[0],
+                                            field_id, event, declared)
+            for field_id in fields}
 
 
 def replicate_outcomes(records: Mapping[str, Mapping[str, Any]], case_id: str,
@@ -3733,13 +3868,16 @@ def campaign_counts_from_records(plan: Mapping[str, Any],
     # carries `per_field: true` and `pooling: FORBIDDEN`.
     c2_case = "C2_geometry_false_rejection"
     c2 = per_field_rejections(plan, records, c2_case, "p1_rejected")
-    # C3 and C4: PER FIELD, exactly as C2 above, and for the same reason. C3 counts
+    # C3 and C4: PER FIELD, exactly as C2 above, and for the same reason. C3 reads
     # the ACTUAL G5 / Block-2 decision and C4 the ACTUAL Block-1 decision -- never
     # the combined P1 scalar, which for C3 is the SECONDARY predeclared interaction
-    # diagnostic and carries no release weight.
-    c3 = per_field_rejections(plan, records, "C3_g5_block", "g5_rejected")
-    c4 = per_field_rejections(plan, records, "C4_surrogate_validity",
-                              "block1_rejected")
+    # diagnostic and carries no release weight. Unlike C2 these endpoints can be
+    # UNDEFINED under a valid structured refusal, so they carry three-state
+    # evidence rather than a count; the planned denominator is preserved and the
+    # NOT_EVALUABLE precedence is applied by the classifier.
+    c3 = per_field_primary_outcomes(plan, records, "C3_g5_block", "g5_rejected")
+    c4 = per_field_primary_outcomes(plan, records, "C4_surrogate_validity",
+                                    "block1_rejected")
     # C5 is REPORT ONLY in frozen authority: the criterion is that every declared
     # cell is reported, not that any cell clears a threshold. Completeness IS the
     # criterion, and dropping a cell after inspection is the failure it guards.

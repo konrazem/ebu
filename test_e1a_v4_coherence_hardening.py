@@ -56,6 +56,9 @@ from e1a_v4.validation.driver import (
     OFFICIAL_CAMPAIGN_DRIVER_PATH, DRIVER_ABSENT_SENTINEL, declared_entry_points,
     driver_exists, driver_identity_component, driver_state, require_canonical_driver,
 )
+from e1a_v4.validation.release_authority import (
+    REFUSAL_AWARE_DRIVER_SURFACE,
+)
 from e1a_v4.validation.plan import VALIDATION_MODULES, execution_identity, load_plan
 from e1a_v4.validation.refusals import ALL_REFUSAL_CLASSES, REFUSAL_CODES, CodedRefusal
 from e1a_v4.validation.runner import preflight, run
@@ -158,11 +161,25 @@ def regenerate(tmp) -> None:
     wmd(tmp, text[:a] + render_authority_block(plan, tmp) + text[z:])
 
 
+
+
+def driver_surface_stub() -> str:
+    """The refusal-aware aggregation surface a stand-in driver must declare.
+
+    A sandbox stub replaces the real driver to exercise gates beyond "absent", and
+    the package requires that driver to have a defined aggregation path for a valid
+    structured refusal -- just as it already requires a `run_campaign` entry point.
+    The stub declares the names; it implements nothing.
+    """
+    return "".join(f"\n\ndef {name}():\n    raise NotImplementedError\n"
+                   for name in REFUSAL_AWARE_DRIVER_SURFACE)
+
 def install_driver_fixture(tmp: str, entry_point: bool = True) -> None:
     """A throwaway SANDBOX driver. Never created in the repository."""
     body = '"""SANDBOX FIXTURE ONLY. Never committed."""\n'
     if entry_point:
         body += f"\n\ndef {OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT}():\n    raise NotImplementedError\n"
+    body += driver_surface_stub()
     with open(os.path.join(tmp, OFFICIAL_CAMPAIGN_DRIVER_PATH), "w",
               encoding="utf-8") as handle:
         handle.write(body)
@@ -494,8 +511,14 @@ def test_blocker_c_driver_cannot_be_substituted() -> None:
     refuses_with_code("driver present WITHOUT the declared entry point",
                       "DRIVER_IDENTITY_MISMATCH", run, tmp, rng_factory=rng_factory,
                       execute=True)
+    # The fixture declares the refusal-aware aggregation surface but NOT the entry
+    # point, so the names recovered prove the AST was really parsed while the
+    # entry-point check still refuses. Asserting an EMPTY tuple here would only
+    # have held because the old fixture defined nothing at all.
+    parsed = declared_entry_points(tmp)
     check("the interface check parses the AST and imports nothing",
-          declared_entry_points(tmp) == (),
+          OFFICIAL_CAMPAIGN_DRIVER_ENTRY_POINT not in parsed
+          and set(REFUSAL_AWARE_DRIVER_SURFACE) <= set(parsed),
           "importing would execute driver code, which this stage forbids")
     install_driver_fixture(tmp, entry_point=True)
     check("a driver declaring the entry point satisfies the interface check",
