@@ -1232,6 +1232,18 @@ def miniature_campaign(plan, c3_refused=(), c4_refused=(), c3_g5=None,
                         refused=refused,
                         g5=(cid == "C3_g5_block" and rejects),
                         block1=(cid == "C4_surrogate_validity" and rejects))
+                    if cid in ("C7_false_bridge", "C8_blinded_scale_control"):
+                        for event in P1_DECISION_FIELDS:
+                            result.pop(event)
+                        result["complete_pass"] = None
+                    if cid == "C8_blinded_scale_control":
+                        factors = next(s["scale_factors"] for s in case["subconditions"]
+                                       if s["subcondition_id"] == sub)
+                        result["scale_factors"] = [float(f) for f in factors]
+                        result["scale_control"] = {
+                            "branches": {repr(float(f)): {
+                                "c": float(f), "p3_passed": True}
+                                         for f in factors}}
                     key = f"{cid}|{sub}|{index:06d}|{field_id}"
                     records[key] = {
                         "coordinates": {"case_id": cid, "subcondition_id": sub,
@@ -2148,18 +2160,114 @@ def test_replicate_decision_composition() -> None:
 
     # --- C8's scale_recovered is the same derived class ----------------------
     branched = dict(no_group, scale_recovered=True,
-                    scale_control={"branches": {"1.07": {"p3_passed": True},
-                                                "0.9": {"p3_passed": True}}})
+                    scale_factors=[1.07, 0.9],
+                    scale_control={"branches": {
+                        "1.07": {"c": 1.07, "p3_passed": True},
+                        "0.9": {"c": 0.9, "p3_passed": True}}})
     check("C8 scale_recovered agreeing with every recorded p3_passed is SOUND",
           record_consistency_failure(branched) is None)
     check("C8 scale_recovered TRUE while a factor did not recover REFUSES",
           record_consistency_failure(
               dict(branched, scale_control={"branches": {
-                  "1.07": {"p3_passed": True},
-                  "0.9": {"p3_passed": False}}})) is not None)
+                  "1.07": {"c": 1.07, "p3_passed": True},
+                  "0.9": {"c": 0.9, "p3_passed": False}}})) is not None)
     check("C8 scale_recovered FALSE while every factor recovered REFUSES",
           record_consistency_failure(dict(branched, scale_recovered=False))
           is not None)
+
+    # The case-aware validator must require BOTH factors from the frozen plan.
+    # One clean branch is not evidence that its paired branch recovered.
+    C8 = "C8_blinded_scale_control"
+    plan8 = plan_with_replicates(C8, 1)
+    c8_sub = release_subconditions(plan8, C8)[0]
+    one_failed = dict(branched, scale_recovered=False,
+                      scale_control={"branches": {
+                          "1.07": {"c": 1.07, "p3_passed": True},
+                          "0.9": {"c": 0.9, "p3_passed": False}}})
+    for label, row, expected_code in (
+            ("both factors passed", branched, None),
+            ("one factor failed and recovery failed", one_failed, None),
+            ("the whole control is absent",
+             {k: v for k, v in branched.items() if k != "scale_control"},
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("the branch map is empty",
+             dict(branched, scale_control={"branches": {}}),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("the second declared factor is absent",
+             dict(branched, scale_control={"branches": {
+                 "1.07": {"c": 1.07, "p3_passed": True}}}),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("an undeclared factor replaces the second",
+             dict(branched, scale_control={"branches": {
+                 "1.07": {"c": 1.07, "p3_passed": True},
+                 "1.0": {"c": 1.0, "p3_passed": True}}}),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("one factor failed and the other has no decision",
+             dict(branched, scale_control={"branches": {
+                 "1.07": {"c": 1.07, "p3_passed": False},
+                 "0.9": {"c": 0.9}}}),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("a factor decision is a string",
+             dict(branched, scale_control={"branches": {
+                 "1.07": {"c": 1.07, "p3_passed": True},
+                 "0.9": {"c": 0.9, "p3_passed": "true"}}}),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("the recorded factor list omits the second factor",
+             dict(branched, scale_factors=[1.07]),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("a branch is relabeled with the other factor",
+             dict(branched, scale_control={"branches": {
+                 "1.07": {"c": 0.9, "p3_passed": True},
+                 "0.9": {"c": 0.9, "p3_passed": True}}}),
+             "TERMINAL_RECORD_INCONSISTENT"),
+            ("the recovery decision is a string and the control is absent",
+             dict(no_group, scale_recovered="true"),
+             "TERMINAL_RECORD_INCONSISTENT"),
+    ):
+        persisted = json.loads(json.dumps(row))
+        recs = replicate_records(plan8, C8,
+                                 {f: persisted for f in FIELDS}, c8_sub)
+        validated = refusal_code(require_endpoint_events, plan8, C8,
+                                 persisted, "probe")
+        aggregated = refusal_code(replicate_outcomes, plan8, recs, C8, c8_sub)
+        check(f"C8 factor evidence: {label}; validation and aggregation agree",
+              validated == aggregated == expected_code,
+              f"validator={validated} aggregator={aggregated}")
+
+    # The exact C1 conjunction requires every planned field, not only every
+    # field still present in an incomplete archive handed to the counter.
+    full = replicate_records(plan1, C1, {f: clean for f in FIELDS}, c1_sub)
+    partial = {k: v for k, v in full.items()
+               if v["coordinates"]["scope"] == FIELDS[0]}
+    check("C1 replicate view refuses one of four planned field records",
+          refusal_code(replicate_outcomes, plan1, partial, C1, c1_sub)
+          == "RESULT_FIELD_SET_MISMATCH")
+    duplicate = copy.deepcopy(full)
+    next(v for v in duplicate.values()
+         if v["coordinates"]["scope"] == FIELDS[1])["coordinates"]["scope"] = FIELDS[0]
+    check("C1 replicate view refuses a duplicated field in place of another",
+          refusal_code(replicate_outcomes, plan1, duplicate, C1, c1_sub)
+          == "RESULT_FIELD_SET_MISMATCH")
+
+    small = shrunk_plan(1)
+    campaign = miniature_campaign(small)
+    counts = campaign_counts_from_records(small, campaign)
+    check("a complete pure miniature still counts C1 and C8 successes",
+          counts.c1_successes == 1 and counts.c8_successes == 1)
+    for key in list(campaign):
+        if (campaign[key]["coordinates"]["case_id"] == C1
+                and campaign[key]["coordinates"]["scope"] != FIELDS[0]):
+            del campaign[key]
+    check("full campaign counter refuses C1 success with three fields absent",
+          refusal_code(campaign_counts_from_records, small, campaign)
+          == "RESULT_FIELD_SET_MISMATCH")
+    campaign = miniature_campaign(small)
+    for record in campaign.values():
+        if record["coordinates"]["case_id"] == C8:
+            del record["result"]["scale_control"]["branches"]["0.9"]
+    check("full campaign counter refuses C8 success with one factor absent",
+          refusal_code(campaign_counts_from_records, small, campaign)
+          == "TERMINAL_RECORD_INCONSISTENT")
 
 
 GROUPS = (

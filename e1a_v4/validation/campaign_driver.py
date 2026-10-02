@@ -80,7 +80,7 @@ from .calibrate import CalibrationRequest, generate_block1_artifact
 from .classification import (
     CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
     classify_campaign, complete_pass_from_components, is_strict_bool,
-    record_consistency_failure,
+    record_consistency_failure, scale_recovery_failure,
 )
 from .coherence import derived_n_samples
 from .dispositions import cp_upper
@@ -3649,6 +3649,19 @@ def require_endpoint_events(plan: Mapping[str, Any], case_id: str,
     # Every required decision is PRESENT and individually accounted for. The record
     # as a whole must still describe an analysis the frozen gate can perform.
     require_consistent_record(outcome, job_id)
+    if case_id == SCALE_CONTROL_CASE:
+        # Only the plan can identify EVERY factor required by the paired control.
+        # A branch map containing one clean branch is not evidence that the other
+        # declared branch passed (or even ran).
+        subconditions = case_entry(plan, case_id)["subconditions"]
+        if len(subconditions) != 1:
+            raise ResultSchemaInvalid(
+                f"{case_id}: the paired scale control requires one subcondition, "
+                f"not {len(subconditions)}")
+        failure = scale_recovery_failure(
+            outcome, subconditions[0].get("scale_factors", ()))
+        if failure is not None:
+            raise TerminalRecordInconsistent(f"{job_id}: {failure}")
 
 
 def field_event_count(records: Mapping[str, Mapping[str, Any]], case_id: str,
@@ -3814,12 +3827,20 @@ def replicate_outcomes(plan: Mapping[str, Any],
     """
     out: dict[int, Mapping[str, Any]] = {}
     p1_by_replicate: dict[int, list[Any]] = {}
+    fields_by_replicate: dict[int, list[str]] = {}
+    required_fields = required_result_fields(plan, case_id)
     for record in records.values():
         coordinates = record.get("coordinates") or {}
         if (coordinates.get("case_id") != case_id
                 or coordinates.get("subcondition_id") != subcondition_id):
             continue
         replicate = coordinates.get("replicate_id")
+        field_id = coordinates.get("scope")
+        if not isinstance(field_id, str):
+            raise ResultFieldSetMismatch(
+                f"{case_id}/{subcondition_id} replicate {replicate}: "
+                f"field scope {field_id!r} is not a declared field ID")
+        fields_by_replicate.setdefault(replicate, []).append(field_id)
         result = record.get("result") or {}
         # The SAME check the official orchestration performs. Presence of every
         # required endpoint, and the whole-record invariant, before any counting.
@@ -3838,6 +3859,9 @@ def replicate_outcomes(plan: Mapping[str, Any],
                 "one replicate are one experiment and have one such outcome")
         out[replicate] = verdict
     for replicate, verdict in sorted(out.items()):
+        canonical_result_fields(
+            f"{case_id}/{subcondition_id} replicate {replicate}",
+            required_fields, fields_by_replicate[replicate])
         p1_values = p1_by_replicate.get(replicate, [])
         p1_all = all(p1_values) if p1_values else None
         expected = complete_pass_from_components(

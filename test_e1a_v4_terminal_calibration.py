@@ -489,7 +489,11 @@ def test_non_calibrating_cases_unchanged() -> None:
                    "P2": False, "P3": False,
                    "false_acceptance": False} if case_id == C7 else {
             "analysis_status": "ESTIMATED", "beta_hat": 1.0,
-            "scale_recovered": True}
+            "scale_recovered": True,
+            "scale_factors": [1.07, 0.9],
+            "scale_control": {"branches": {
+                "1.07": {"c": 1.07, "p3_passed": True},
+                "0.9": {"c": 0.9, "p3_passed": True}}}}
         _execution, record, digest = campaign.run(
             job, aggregate=aggregate_skeleton(case_id,
                                               job.coordinates.subcondition_id),

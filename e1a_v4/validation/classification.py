@@ -371,6 +371,71 @@ def complete_pass_from_components(p1_all: bool | None, p2: bool, p3: bool,
     return bool(p1_all and p2 and p3 and p4)
 
 
+def scale_recovery_failure(outcome: Mapping[str, Any],
+                           expected_factors: Sequence[float] | None = None
+                           ) -> str | None:
+    """Check the recorded C8 conjunction, against the plan when supplied.
+
+    Other cases legitimately record ``scale_recovered=None`` and no control.
+    The plan-aware endpoint validator supplies C8's exact factor roster; a
+    present but incomplete branch map may never be treated as a clean result.
+    """
+    recovered = outcome.get("scale_recovered")
+    if recovered is None:
+        return None
+    if not is_strict_bool(recovered):
+        return f"scale_recovered={recovered!r} is not a boolean"
+
+    control = outcome.get("scale_control")
+    if control is None and expected_factors is None:
+        return None
+    if not isinstance(control, Mapping):
+        return "scale_recovered is defined without a scale_control mapping"
+    branches = control.get("branches")
+    if not isinstance(branches, Mapping) or not branches:
+        return "scale_recovered is defined without nonempty scale_control.branches"
+
+    if expected_factors is not None:
+        factor_values = tuple(float(factor) for factor in expected_factors)
+        expected_keys = tuple(repr(factor) for factor in factor_values)
+        if (not expected_keys or len(branches) != len(expected_keys)
+                or any(key not in branches for key in expected_keys)
+                or any(key not in expected_keys for key in branches)):
+            return (f"scale_control.branches has factors {list(branches)!r}, "
+                    f"but the plan requires {list(expected_keys)!r}")
+        recorded_factors = outcome.get("scale_factors")
+        if (not isinstance(recorded_factors, list)
+                or len(recorded_factors) != len(factor_values)
+                or any(type(value) is not float for value in recorded_factors)
+                or tuple(recorded_factors) != factor_values):
+            return (f"scale_factors={recorded_factors!r} does not match the "
+                    f"planned ordered factors {list(factor_values)!r}")
+        for key, factor in zip(expected_keys, factor_values):
+            branch = branches[key]
+            if (not isinstance(branch, Mapping)
+                    or type(branch.get("c")) is not float
+                    or branch["c"] != factor):
+                return (f"scale_control.branches[{key!r}].c does not identify "
+                        f"the planned factor {factor!r}")
+
+    passed = []
+    for factor, branch in branches.items():
+        if not isinstance(branch, Mapping):
+            return f"scale_control.branches[{factor!r}] is not a mapping"
+        decision = branch.get("p3_passed")
+        if not is_strict_bool(decision):
+            return (f"scale_control.branches[{factor!r}].p3_passed="
+                    f"{decision!r} is not a boolean decision")
+        passed.append(decision)
+    expected = all(passed)
+    if recovered is not expected:
+        return (f"scale_recovered={recovered!r} does not follow from the "
+                f"recorded per-factor p3_passed {passed}, which require "
+                f"{expected!r}. The blinded control succeeds only when "
+                "EVERY declared scale factor recovers")
+    return None
+
+
 def _classify_replicate_decisions(outcome: Mapping[str, Any]) -> str | None:
     """The REPLICATE-level derived decisions. Returns a failure reason or None.
 
@@ -438,22 +503,7 @@ def _classify_replicate_decisions(outcome: Mapping[str, Any]) -> str | None:
                         "P1 over every field with P2, P3 and P4; a replicate whose "
                         "own gate rejected did not complete the pipeline")
 
-    recovered = outcome.get("scale_recovered", None)
-    branches = ((outcome.get("scale_control") or {}).get("branches")
-                if isinstance(outcome.get("scale_control"), Mapping) else None)
-    if recovered is not None and isinstance(branches, Mapping) and branches:
-        if not is_strict_bool(recovered):
-            return (f"scale_recovered={recovered!r} is not a boolean")
-        passed = [branch.get("p3_passed") for branch in branches.values()
-                  if isinstance(branch, Mapping)]
-        if len(passed) == len(branches) and all(is_strict_bool(v) for v in passed):
-            expected = all(passed)
-            if recovered is not expected:
-                return (f"scale_recovered={recovered!r} does not follow from the "
-                        f"recorded per-factor p3_passed {passed}, which require "
-                        f"{expected!r}. The blinded control succeeds only when "
-                        "EVERY declared scale factor recovers")
-    return None
+    return scale_recovery_failure(outcome)
 
 
 def classify_record(outcome: Mapping[str, Any]) -> tuple[str | None, str | None]:
