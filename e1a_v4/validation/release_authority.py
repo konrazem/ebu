@@ -67,7 +67,8 @@ from .classification import (
     RECORD_ESTIMATED, RECORD_NO_P1_GROUP, CampaignCounts, FieldSizeOutcome,
     authorises_undefined_block_decision, classify_campaign, classify_record,
     complete_pass_from_components, composite_p1_from_blocks,
-    false_acceptance_from_components, record_consistency_failure, size_boundary,
+    false_acceptance_from_components, record_consistency_failure,
+    scale_recovery_failure, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
 from .refusals import (
@@ -3024,6 +3025,66 @@ def require_per_field_implementation_conformance(plan: dict[str, Any],
                 f"a terminal record with {label} was accepted. A derived replicate "
                 "decision is counted as recorded, so it must follow from the "
                 "components recorded beside it")
+
+    # C8's factor roster is available only with the frozen plan. Probe the SAME
+    # pure rule the endpoint validator calls with those factors; generic record
+    # consistency alone cannot tell that the second paired branch is missing.
+    c8 = next((case for case in plan.get("cases", ())
+               if isinstance(case, dict)
+               and case.get("case_id") == "C8_blinded_scale_control"), None)
+    subconditions = c8.get("subconditions") if c8 is not None else None
+    if (not isinstance(subconditions, list) or len(subconditions) != 1
+            or not isinstance(subconditions[0], dict)):
+        raise ImplementationAuthorityLag(
+            "C8 has no single paired subcondition with declared scale factors")
+    declared_factors = subconditions[0].get("scale_factors")
+    if (not isinstance(declared_factors, list) or len(declared_factors) != 2
+            or any(type(factor) is not float for factor in declared_factors)):
+        raise ImplementationAuthorityLag(
+            "C8's paired scale factors must be the two plan-declared numbers")
+    factors = tuple(declared_factors)
+    keys = tuple(repr(factor) for factor in factors)
+    branches = {key: {"c": factor, "p3_passed": True}
+                for key, factor in zip(keys, factors)}
+    recovered = {"scale_recovered": True, "scale_factors": list(factors),
+                 "scale_control": {"branches": branches}}
+    if scale_recovery_failure(recovered, factors) is not None:
+        raise ImplementationAuthorityLag(
+            "the C8 rule rejects a paired control whose declared factors both pass")
+    one_failed = dict(recovered, scale_recovered=False,
+                      scale_control={"branches": {
+                          **branches, keys[-1]: {"c": factors[-1],
+                                                 "p3_passed": False}}})
+    if scale_recovery_failure(one_failed, factors) is not None:
+        raise ImplementationAuthorityLag(
+            "the C8 rule rejects a paired control whose recorded failure follows "
+            "from one failed factor")
+    malformed_scale = (
+        ("no scale control", dict(recovered, scale_control=None)),
+        ("no factor branches", dict(recovered, scale_control={"branches": {}})),
+        ("one paired factor missing",
+         dict(recovered, scale_control={"branches": {keys[0]: branches[keys[0]]}})),
+        ("one factor decision missing",
+         dict(recovered, scale_control={"branches": {
+             **branches, keys[-1]: {"c": factors[-1]}}})),
+        ("a non-boolean factor decision",
+         dict(recovered, scale_control={"branches": {
+             **branches, keys[-1]: {"c": factors[-1], "p3_passed": "true"}}})),
+        ("a missing factor in the recorded list",
+         dict(recovered, scale_factors=list(factors[:-1]))),
+        ("the recorded factors in the wrong order",
+         dict(recovered, scale_factors=list(reversed(factors)))),
+        ("a branch labeled with the wrong factor",
+         dict(recovered, scale_control={"branches": {
+             **branches, keys[0]: {"c": factors[-1], "p3_passed": True}}})),
+        ("a recovered claim despite a failed factor",
+         dict(one_failed, scale_recovered=True)),
+    )
+    for label, record in malformed_scale:
+        if scale_recovery_failure(record, factors) is None:
+            raise ImplementationAuthorityLag(
+                f"the C8 rule accepts {label}; a paired-control success requires "
+                "the complete plan-declared factor evidence")
 
     # Refusal-reason accounting. A field reported NOT_EVALUABLE must be able to say
     # WHY, and the arithmetic that says so must be sound.

@@ -3581,6 +3581,44 @@ def test_f1f_e_runtime_conformance() -> None:
           and complete_pass_from_components(True, True, True, True) is True
           and complete_pass_from_components(False, True, True, True) is False)
 
+    # C8's plan-aware rule belongs in preflight too. A check over whatever
+    # branches happen to be supplied cannot establish that BOTH planned factors
+    # were evaluated, and a key-only check cannot establish their decisions.
+    saved_scale = release_authority.scale_recovery_failure
+
+    def only_conjunction(outcome, _factors):
+        control = outcome.get("scale_control") or {}
+        branches = control.get("branches") or {}
+        return (None if outcome.get("scale_recovered") is
+                all(branch.get("p3_passed") for branch in branches.values())
+                else "wrong conjunction")
+
+    weakened_scale = (
+        ("never checks C8", lambda outcome, factors: None),
+        ("checks only the supplied branches", only_conjunction),
+        ("checks only the factor keys",
+         lambda outcome, factors: None if (
+             isinstance(outcome.get("scale_control"), dict)
+             and set(outcome["scale_control"].get("branches", {}))
+             == {repr(float(factor)) for factor in factors}) else "wrong keys"),
+        ("refuses even sound paired evidence",
+         lambda outcome, factors: "always refuses"),
+    )
+    try:
+        for label, rule in weakened_scale:
+            release_authority.scale_recovery_failure = rule
+            check(f"REFUSED: a C8 rule that {label}",
+                  refusal_code(require_per_field_implementation_conformance,
+                               plan, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+        release_authority.scale_recovery_failure = weakened_scale[0][1]
+        check("full preflight detects a C8 rule that never checks factor evidence",
+              refusal_code(preflight, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.scale_recovery_failure = saved_scale
+    check("the real plan-aware C8 rule is restored and accepted",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+
     # the same for the evidence type's own accounting invariants
     saved_outcome = release_authority.FieldSizeOutcome
     try:
