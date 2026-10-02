@@ -48,7 +48,8 @@ from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.calibrate import CalibrationRequest
 from e1a_v4.validation.campaign_driver import (
-    FIELD_LEVEL_EVENTS, FORBIDDEN_EVENT_REDUCTION, REPLICATE_LEVEL_EVENTS,
+    BLOCK_DECISION_EVENTS, FIELD_LEVEL_EVENTS, FORBIDDEN_EVENT_REDUCTION,
+    REPLICATE_LEVEL_EVENTS, require_consistent_record,
     campaign_counts_from_records, field_primary_outcome, is_structured_refusal,
     per_field_primary_outcomes, structured_refusal_reason,
     blinded_branch_a, campaign_shape, committed_publication, evaluate_replicate,
@@ -62,8 +63,8 @@ from e1a_v4.validation.classification import (
     DECLARED_ANALYSIS_STATUSES, INCOMPLETE_EVIDENCE_CLASSIFICATION,
     NON_FAIL_CLOSED_STATUSES, PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES,
     REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
-    CampaignCounts, FieldSizeOutcome, classify_campaign, classify_field_size,
-    classify_size,
+    BLOCK_DECISION_FIELDS, CampaignCounts, FieldSizeOutcome, classify_campaign,
+    classify_field_size, classify_size, record_consistency_failure,
 )
 from e1a_v4.effective_size import sigma_stat
 from e1a_v4.endpoints import UncertaintyModel, p1_geometry
@@ -1675,6 +1676,124 @@ def test_structured_refusal_record_integrity() -> None:
               == "ENDPOINT_EVENT_MISSING")
 
 
+def test_whole_record_consistency() -> None:
+    """F1f-i. A record whose own fields contradict each other is IMPOSSIBLE.
+
+    The F1f-g authorisation rule is asked PER EVENT, and only when a decision is
+    null. A later independent audit showed that leaves two holes:
+
+      1  `block1_rejected = null` beside `g5_rejected = false` on one fail-closed
+         status passes the per-event rule twice -- the null block-1 decision is
+         authorised, and g5 is never examined because it is not null. Reproduced
+         before the repair: the validator accepted it, and the SAME record made C4
+         report NOT_EVALUABLE while C3 reported
+         NO_SIGNIFICANT_SIZE_INFLATION_DETECTED. One record, two cases, opposite
+         answers about whether the replicate is evaluable.
+      2  an undeclared `analysis_status` with BOTH decisions defined was never
+         examined at all, because nothing was null, and reached a clean verdict.
+
+    The frozen gate decides both blocks from the same p-value rows:
+    `p1_block_decisions` returns `(None, None)` or `(bool, bool)` and has no branch
+    that defines one and not the other.
+    """
+    refused = result_row(refused=True)
+    estimated = result_row(refused=False)
+    drop = lambda row, key: {k: v for k, v in row.items() if k != key}
+
+    sound = (
+        ("a valid structured refusal: both decisions undefined", refused),
+        ("a fully estimated record: both decisions defined", estimated),
+        ("an estimated record whose blocks both rejected",
+         dict(estimated, block1_rejected=True, g5_rejected=True)),
+        ("a record carrying no block decisions at all",
+         drop(drop(refused, "block1_rejected"), "g5_rejected")),
+    )
+    for label, row in sound:
+        check(f"SOUND: {label}", record_consistency_failure(row) is None,
+              str(record_consistency_failure(row))[:80])
+
+    impossible = (
+        ("block-1 undefined while G5 is defined",
+         dict(refused, g5_rejected=False)),
+        ("block-1 undefined while G5 rejected",
+         dict(refused, g5_rejected=True)),
+        ("G5 undefined while block-1 is defined",
+         dict(refused, block1_rejected=False)),
+        ("an undeclared status with BOTH decisions defined",
+         dict(estimated, analysis_status="NOT_A_REAL_STATUS")),
+        ("an undeclared status differing only in case",
+         dict(estimated, analysis_status="estimated")),
+        ("a non-string status with BOTH decisions defined",
+         dict(estimated, analysis_status=None)),
+        ("a fail-closed status with BOTH decisions defined",
+         dict(refused, block1_rejected=False, g5_rejected=False)),
+        ("an ESTIMATED status with BOTH decisions undefined",
+         dict(refused, analysis_status="ESTIMATED")),
+        ("a refusal whose composite P1 did not fail closed",
+         dict(refused, P1=True, p1_rejected=False)),
+        ("a status the frozen gate does not fail closed on, both undefined",
+         dict(refused, analysis_status=sorted(NON_FAIL_CLOSED_STATUSES)[0])),
+    )
+    for label, row in impossible:
+        check(f"IMPOSSIBLE: {label}", record_consistency_failure(row) is not None)
+
+    # --- THE AUDITOR'S RECORD, through BOTH layers, for BOTH cases ----------
+    mixed = dict(refused, g5_rejected=False)
+    invented = dict(estimated, analysis_status="NOT_A_REAL_STATUS")
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        plan = plan_with_replicates(case_id, 1)
+        short = case_id[:2]
+        for label, row in (("the mixed block decisions", mixed),
+                           ("an invented analysis status", invented)):
+            persisted = json.loads(json.dumps(row))       # a genuine round trip
+            recs = case_records(plan, case_id, [{f: persisted for f in FIELDS}])
+            check(f"{short} VALIDATION refuses {label}",
+                  refusal_code(require_endpoint_events, plan, case_id, persisted,
+                               "probe") == "TERMINAL_RECORD_INCONSISTENT")
+            check(f"{short} AGGREGATION refuses {label}",
+                  refusal_code(per_field_primary_outcomes, plan, recs, case_id,
+                               event) == "TERMINAL_RECORD_INCONSISTENT")
+        # the sound records still pass BOTH layers for this case
+        for label, row in (("a valid refusal", refused),
+                           ("a fully estimated record", estimated)):
+            recs = case_records(plan, case_id, [{f: row for f in FIELDS}])
+            check(f"{short} both layers still accept {label}",
+                  refusal_code(require_endpoint_events, plan, case_id, row,
+                               "probe") is None
+                  and refusal_code(per_field_primary_outcomes, plan, recs,
+                                   case_id, event) is None)
+
+    # --- C2 aggregates on a SEPARATE path and must refuse it too ------------
+    # `campaign_counts_from_records` never calls the endpoint validator, so a
+    # counter that trusted upstream validation would score an impossible record.
+    plan = plan_with_replicates(C2, 1)
+    for label, row in (("the mixed block decisions", mixed),
+                       ("an invented analysis status", invented)):
+        recs = case_records(plan, C2, [{f: row for f in FIELDS}])
+        check(f"C2 AGGREGATION refuses {label}",
+              refusal_code(per_field_rejections, plan, recs, C2, "p1_rejected")
+              == "TERMINAL_RECORD_INCONSISTENT")
+    recs = case_records(plan, C2, [{f: estimated for f in FIELDS}])
+    check("C2 still counts a sound record unchanged",
+          per_field_rejections(plan, recs, C2, "p1_rejected")
+          == {f: 0 for f in FIELDS})
+
+    # --- ONE raise site, so every layer reports the same finding ------------
+    check("the single raise site refuses the mixed record, and accepts a sound one",
+          refusal_code(require_consistent_record, mixed, "probe")
+          == "TERMINAL_RECORD_INCONSISTENT"
+          and refusal_code(require_consistent_record, invented, "probe")
+          == "TERMINAL_RECORD_INCONSISTENT"
+          and refusal_code(require_consistent_record, refused, "probe") is None
+          and refusal_code(require_consistent_record, estimated, "probe") is None)
+
+    # --- the two-block fact this rests on ----------------------------------
+    check("the gate decides both blocks together, or neither",
+          BLOCK_DECISION_FIELDS == ("block1_rejected", "g5_rejected")
+          and all(e in BLOCK_DECISION_FIELDS for e in BLOCK_DECISION_EVENTS))
+
+
 GROUPS = (
     ("T1  C2 counts PER FIELD", test_c2_counts_per_field),
     ("T2/T3  G5 and Block-1 decisions propagate", test_g5_and_block1_propagate),
@@ -1693,6 +1812,7 @@ GROUPS = (
     ("F1f-e per-field count invariants", test_refusal_count_invariants),
     ("F1f-g structured-refusal record integrity",
      test_structured_refusal_record_integrity),
+    ("F1f-i whole-record consistency", test_whole_record_consistency),
     ("T5/T6  the C8 blinded Branch-A control", test_c8_blinded_branch_a_control),
     ("T7-T10  terminal provenance cross-links", test_terminal_provenance_cross_links),
     ("campaign structure unchanged", test_campaign_structure_unchanged),

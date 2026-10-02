@@ -232,6 +232,24 @@ class EndpointEventMissing(CodedRefusal):
     code = "ENDPOINT_EVENT_MISSING"
 
 
+class TerminalRecordInconsistent(CodedRefusal):
+    """A terminal record whose own fields contradict each other.
+
+    Distinct from `ENDPOINT_EVENT_MISSING`, which says a required decision is
+    absent. This says every required decision is PRESENT and the combination
+    describes no analysis the frozen pipeline can perform. An independent audit
+    found a record carrying `block1_rejected = null` beside `g5_rejected = false`
+    on one fail-closed status: the two-block gate decides both blocks from the
+    same p-value rows, so the record asserted that the gate both ran and did not
+    run, and the two cases reading it disagreed -- C4 scored it NOT_EVALUABLE
+    while C3 scored it a clean defined non-rejection. The same audit found an
+    undeclared `analysis_status` passing unexamined whenever both block decisions
+    happened to be defined.
+    """
+
+    code = "TERMINAL_RECORD_INCONSISTENT"
+
+
 class EndpointEventReductionUndeclared(CodedRefusal):
     """Frozen authority does not declare how per-field events become one
     replicate-level event for this case, so the driver refuses to choose."""
@@ -649,6 +667,7 @@ ALL_REFUSAL_CLASSES = (
     CampaignManifestInvalid, StochasticProviderRefused,
     EndpointEventMissing, EndpointEventReductionUndeclared,
     CrossFieldReductionForbidden, ImplementationAuthorityLag,
+    TerminalRecordInconsistent,
     NormativeSurfaceUnclassified,
     ProspectiveAmendmentMismatch,
     ScaleControlInvalid, TerminalProvenanceMismatch,

@@ -141,6 +141,87 @@ def authorises_undefined_block_decision(outcome: Mapping[str, Any]) -> bool:
     return all(outcome.get(name) is expected for name, expected in FAIL_CLOSED_P1_STATE)
 
 
+#: The two per-field decisions the two-block P1 gate makes TOGETHER.
+#: `campaign_driver.p1_block_decisions` reads BOTH from the same `rows` the gate
+#: either produced or did not, and returns `(None, None)` or `(bool, bool)`. It has
+#: no branch that defines one and leaves the other undefined.
+BLOCK_DECISION_FIELDS = ("block1_rejected", "g5_rejected")
+
+
+def record_consistency_failure(outcome: Mapping[str, Any]) -> str | None:
+    """Why this terminal record is internally IMPOSSIBLE, or None if it is sound.
+
+    WHOLE-RECORD, where `authorises_undefined_block_decision` is per-event. That
+    difference is the defect this closes (independent runtime audit, F1f-i). The
+    per-event question was asked only when a decision was `None`, so a record could
+    pass it twice over and still describe no possible analysis:
+
+        block1_rejected = null  beside  g5_rejected = false
+            on one fail-closed status. The per-event rule authorised the null
+            block-1 decision and never examined g5, so C4 read the record as a
+            structured refusal and scored the field NOT_EVALUABLE while C3 read the
+            SAME record as a defined non-rejection and scored it clean. The gate
+            cannot both have run and not run.
+
+        analysis_status = "NOT_A_REAL_STATUS"  with BOTH decisions defined
+            Nothing consulted the status at all, because no decision was null, so
+            an undeclared status flowed through to a clean verdict.
+
+    Three conditions, checked over the record as a whole:
+
+        DECLARED   `analysis_status` is a string in the canonical roster, whatever
+                   the block decisions say. An unrecognised status describes no
+                   analysis the frozen pipeline can perform.
+        TOGETHER   the block decisions the record carries are either ALL undefined
+                   or ALL defined, never a mixture.
+        AGREEING   all undefined requires a status that fails the gate closed, plus
+                   the frozen fail-closed composite P1 state; all defined requires a
+                   status that does NOT fail it closed, because a gate that returned
+                   before computing a p-value decided neither block.
+
+    A record carrying no block decisions at all -- a case that does not use the
+    two-block gate -- is sound as far as this rule is concerned, and only the
+    DECLARED condition applies to it.
+    """
+    status = outcome.get("analysis_status")
+    if not isinstance(status, str):
+        return (f"analysis_status is {status!r}, which is not a declared status "
+                "name; a terminal record states the analysis it records")
+    if status not in DECLARED_ANALYSIS_STATUSES:
+        return (f"analysis_status {status!r} is not one of the declared statuses "
+                f"{sorted(DECLARED_ANALYSIS_STATUSES)}; an unrecognised status "
+                "describes no analysis the frozen pipeline can perform")
+    present = tuple(name for name in BLOCK_DECISION_FIELDS if name in outcome)
+    if not present:
+        return None
+    undefined = tuple(name for name in present if outcome[name] is None)
+    if undefined and len(undefined) != len(present):
+        defined = tuple(name for name in present if outcome[name] is not None)
+        return (f"{list(undefined)} undefined while {list(defined)} defined. The "
+                "two-block gate decides BOTH blocks from the same p-value rows: it "
+                "either produced them and decided both, or produced none and decided "
+                "neither. A record saying the gate both ran and did not run describes "
+                "no possible analysis, and the two cases reading it would disagree "
+                "about whether the same replicate is evaluable")
+    if undefined:
+        if status not in REFUSAL_AUTHORISING_STATUSES:
+            return (f"both block decisions are undefined while analysis_status is "
+                    f"{status!r}, which does not fail the gate closed; the gate "
+                    "produced its rows, so both decisions exist")
+        disagreeing = [f"{name}={outcome.get(name)!r}"
+                       for name, expected in FAIL_CLOSED_P1_STATE
+                       if outcome.get(name) is not expected]
+        if disagreeing:
+            return (f"analysis_status {status!r} fails the composite P1 gate closed, "
+                    f"but the record carries {disagreeing}; an authorised structured "
+                    "refusal states the fail-closed P1 result it necessarily produced")
+    elif status in REFUSAL_AUTHORISING_STATUSES:
+        return (f"both block decisions are DEFINED while analysis_status is "
+                f"{status!r}, which fails the gate closed before any p-value is "
+                "computed; a gate that never ran decided neither block")
+    return None
+
+
 #: Machine-readable statement of what a pass does and does not mean.
 SIZE_INTERPRETATION = {
     "verdict_on_pass": SIZE_NO_INFLATION,

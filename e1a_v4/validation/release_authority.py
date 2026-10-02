@@ -65,7 +65,7 @@ from .classification import (
     PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
     CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
-    classify_campaign, size_boundary,
+    classify_campaign, record_consistency_failure, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
 from .refusals import (
@@ -2728,6 +2728,7 @@ def _clean_counts(per_case: dict[str, dict[str, int]],
 #: event occur" for C3/C4 declares none of these.
 REFUSAL_AWARE_DRIVER_SURFACE = (
     "is_structured_refusal",
+    "require_consistent_record",
     "structured_refusal_reason",
     "field_primary_outcome",
     "per_field_primary_outcomes",
@@ -2870,6 +2871,50 @@ def require_per_field_implementation_conformance(plan: dict[str, Any],
                 "the absence or malformation of data: an undefined block decision "
                 "is authorised only by an explicit, recognised status whose record "
                 "also expresses the frozen fail-closed composite P1 state")
+
+    # The WHOLE-RECORD rule. The per-event rule above is asked only when a decision
+    # is null, so on its own it cannot see a record that contradicts itself ACROSS
+    # the two block decisions, nor an undeclared status on a record whose decisions
+    # all happen to be defined.
+    sound = (
+        ("a valid structured refusal, both decisions undefined",
+         dict(valid, block1_rejected=None, g5_rejected=None)),
+        ("a fully estimated record, both decisions defined",
+         {"analysis_status": ESTIMATED_STATUS, "P1": True, "p1_rejected": False,
+          "block1_rejected": False, "g5_rejected": False}),
+        ("a record from a case that carries no block decisions at all",
+         {"analysis_status": ESTIMATED_STATUS}),
+    )
+    for label, record in sound:
+        why = record_consistency_failure(record)
+        if why is not None:
+            raise ImplementationAuthorityLag(
+                f"{label} is a record the frozen pipeline produces, but the runtime "
+                f"whole-record rule rejects it: {why}")
+    impossible = (
+        ("block-1 undefined while G5 is defined",
+         dict(valid, block1_rejected=None, g5_rejected=False)),
+        ("G5 undefined while block-1 is defined",
+         dict(valid, block1_rejected=False, g5_rejected=None)),
+        ("an undeclared analysis status with BOTH decisions defined",
+         {"analysis_status": "NOT_A_REAL_STATUS", "P1": True, "p1_rejected": False,
+          "block1_rejected": False, "g5_rejected": False}),
+        ("a fail-closed status with BOTH decisions defined",
+         dict(valid, block1_rejected=False, g5_rejected=False)),
+        ("an ESTIMATED status with BOTH decisions undefined",
+         {"analysis_status": ESTIMATED_STATUS, "P1": False, "p1_rejected": True,
+          "block1_rejected": None, "g5_rejected": None}),
+        ("a refusal whose composite P1 did not fail closed",
+         dict(valid, P1=True, p1_rejected=False, block1_rejected=None,
+              g5_rejected=None)),
+    )
+    for label, record in impossible:
+        if record_consistency_failure(record) is None:
+            raise ImplementationAuthorityLag(
+                f"a terminal record with {label} was accepted as internally "
+                "consistent. The two-block gate decides BOTH blocks from the same "
+                "p-value rows, so they are undefined together or defined together, "
+                "and every terminal record states a DECLARED analysis status")
 
     # Refusal-reason accounting. A field reported NOT_EVALUABLE must be able to say
     # WHY, and the arithmetic that says so must be sound.

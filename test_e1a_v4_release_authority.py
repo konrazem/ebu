@@ -42,7 +42,8 @@ from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.status import AnalysisStatus
 from e1a_v4.validation.classification import (
-    ESTIMATED_STATUS, GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE,
+    BLOCK_DECISION_FIELDS, DECLARED_ANALYSIS_STATUSES, ESTIMATED_STATUS,
+    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE,
     INCOMPLETE_EVIDENCE_CLASSIFICATION, NON_FAIL_CLOSED_STATUSES,
     PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, classify_field_size,
@@ -3479,6 +3480,31 @@ def test_f1f_e_runtime_conformance() -> None:
     finally:
         release_authority.authorises_undefined_block_decision = saved_rule
     check("the real authorisation rule is restored and accepted",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+
+    # --- F1f-i: preflight must DETECT a weakened WHOLE-RECORD rule ----------
+    saved_record = release_authority.record_consistency_failure
+    blunted = (
+        ("never finds a record impossible", lambda outcome: None),
+        ("checks the status but not the two decisions together",
+         lambda outcome: None if outcome.get("analysis_status")
+         in DECLARED_ANALYSIS_STATUSES else "undeclared status"),
+        ("checks the two decisions but not the status",
+         lambda outcome: None if len({outcome.get(n) is None
+                                      for n in BLOCK_DECISION_FIELDS
+                                      if n in outcome}) <= 1 else "mixed"),
+        ("refuses even a sound record", lambda outcome: "always"),
+    )
+    try:
+        for label, rule in blunted:
+            release_authority.record_consistency_failure = rule
+            check(f"REFUSED: a whole-record rule that {label}",
+                  refusal_code(require_per_field_implementation_conformance,
+                               plan, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.record_consistency_failure = saved_record
+    check("the real whole-record rule is restored and accepted",
           refusal_code(require_per_field_implementation_conformance, plan, ROOT)
           is None)
 

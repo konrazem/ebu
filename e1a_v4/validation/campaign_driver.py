@@ -79,7 +79,7 @@ from ..numerics import Refusal
 from .calibrate import CalibrationRequest, generate_block1_artifact
 from .classification import (
     CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
-    classify_campaign,
+    classify_campaign, record_consistency_failure,
 )
 from .coherence import derived_n_samples
 from .dispositions import cp_upper
@@ -111,7 +111,7 @@ from .refusals import (
     JobStateInvalid, PublicationDigestMismatch, PublicationIncomplete,
     RestartInventoryMismatch, ResultCaseMismatch, ResultFieldSetMismatch,
     ResultSchemaInvalid, ScaleControlInvalid, StochasticProviderRefused,
-    TerminalProvenanceMismatch,
+    TerminalProvenanceMismatch, TerminalRecordInconsistent,
 )
 from .release_authority import (
     mandatory_diagnostics_for, require_mandatory_diagnostics,
@@ -3546,6 +3546,23 @@ def is_structured_refusal(outcome: Mapping[str, Any], event: str) -> bool:
             and authorises_undefined_block_decision(outcome))
 
 
+def require_consistent_record(outcome: Mapping[str, Any], where: str) -> None:
+    """Refuse a terminal record whose own fields contradict each other.
+
+    THE single raise site for the whole-record rule, so the endpoint VALIDATOR and
+    both AGGREGATORS report the same finding in the same words. The rule itself is
+    `classification.record_consistency_failure`, which preflight probes directly.
+
+    Deliberately ordered AFTER the per-event absence checks at every call site: a
+    record that is simply MISSING a decision is `ENDPOINT_EVENT_MISSING`, and that
+    distinction is worth keeping. This fires only when every required decision is
+    present and the combination is still impossible.
+    """
+    failure = record_consistency_failure(outcome)
+    if failure is not None:
+        raise TerminalRecordInconsistent(f"{where}: {failure}")
+
+
 def structured_refusal_reason(outcome: Mapping[str, Any]) -> str:
     """The recorded provenance for why this replicate was not evaluable.
 
@@ -3604,6 +3621,9 @@ def require_endpoint_events(plan: Mapping[str, Any], case_id: str,
                 f"{job_id}: {event!r} is null while analysis_status is "
                 f"{outcome.get('analysis_status')!r}. A null decision may not be "
                 "counted as zero rejections.")
+    # Every required decision is PRESENT and individually accounted for. The record
+    # as a whole must still describe an analysis the frozen gate can perform.
+    require_consistent_record(outcome, job_id)
 
 
 def field_event_count(records: Mapping[str, Mapping[str, Any]], case_id: str,
@@ -3635,6 +3655,13 @@ def field_event_count(records: Mapping[str, Mapping[str, Any]], case_id: str,
                 f"{case_id}/{subcondition_id}/{field_id} replicate "
                 f"{coordinates.get('replicate_id')}: {event!r} is absent or null; "
                 "it may not be counted as a non-event")
+        # C2 and C6 aggregate here, and read a decision that is defined under a
+        # structured refusal, so they never take the NOT_EVALUABLE path. They can
+        # still be handed an impossible record, and counting one would put a
+        # rejection into a frozen denominator on evidence that cannot exist.
+        require_consistent_record(
+            result, f"{case_id}/{subcondition_id}/{field_id} replicate "
+            f"{coordinates.get('replicate_id')}")
         seen[coordinates.get("replicate_id")] = bool(result[event])
     if len(seen) != declared_replicates:
         raise CampaignIncomplete(
@@ -3675,16 +3702,23 @@ def field_primary_outcome(records: Mapping[str, Mapping[str, Any]], case_id: str
             continue
         replicate = coordinates.get("replicate_id")
         result = record.get("result") or {}
-        if is_structured_refusal(result, event):
-            seen[replicate] = None
-            reasons[replicate] = structured_refusal_reason(result)
-            continue
-        if event not in result or result[event] is None:
+        refused = is_structured_refusal(result, event)
+        if not refused and (event not in result or result[event] is None):
             raise EndpointEventMissing(
                 f"{case_id}/{subcondition_id}/{field_id} replicate {replicate}: "
                 f"{event!r} is absent or null while analysis_status is "
                 f"{result.get('analysis_status')!r}. That is not an authorised "
                 "structured refusal, and it may not be counted as a non-event.")
+        # Aggregation is a SEPARATE path from validation -- `campaign_counts_from_
+        # records` never calls `require_endpoint_events` -- so the whole-record rule
+        # is applied here too rather than assumed to have run upstream. That
+        # asymmetry is what let the two layers disagree in the first place.
+        require_consistent_record(
+            result, f"{case_id}/{subcondition_id}/{field_id} replicate {replicate}")
+        if refused:
+            seen[replicate] = None
+            reasons[replicate] = structured_refusal_reason(result)
+            continue
         seen[replicate] = bool(result[event])
     if len(seen) != declared_replicates:
         raise CampaignIncomplete(
