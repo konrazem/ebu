@@ -59,12 +59,14 @@ from e1a_v4.validation.campaign_driver import (
     required_result_fields, validate_job_record,
 )
 from e1a_v4.validation.classification import (
-    INCOMPLETE_EVIDENCE_CLASSIFICATION, PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS,
-    SIZE_FAILURE, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION, CampaignCounts,
-    FieldSizeOutcome, classify_campaign, classify_field_size, classify_size,
+    DECLARED_ANALYSIS_STATUSES, INCOMPLETE_EVIDENCE_CLASSIFICATION,
+    NON_FAIL_CLOSED_STATUSES, PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES,
+    REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
+    CampaignCounts, FieldSizeOutcome, classify_campaign, classify_field_size,
+    classify_size,
 )
 from e1a_v4.effective_size import sigma_stat
-from e1a_v4.endpoints import UncertaintyModel
+from e1a_v4.endpoints import UncertaintyModel, p1_geometry
 from e1a_v4.validation.plan import bind_execution
 from e1a_v4.validation.publication import sealed_digest
 from e1a_v4.validation.results import aggregate_skeleton
@@ -1540,6 +1542,139 @@ def refuses(fn, *args, **kwargs) -> bool:
     return False
 
 
+def p1_fails_closed(status) -> bool:
+    """Does `p1_geometry` fail closed on THIS status, before reading any statistic?
+
+    Behavioural, not source-text: the frozen endpoint is CALLED with an analysis
+    carrying the status and no gate statistics at all. A status it fails closed on
+    returns the no-rows `passed = False` result before it touches the calibration
+    condition; a status it carries past that return reaches the condition and
+    raises instead. Nothing is drawn and no world state advances -- the
+    fail-closed branch is the first statement in the function.
+    """
+    try:
+        result = p1_geometry(FieldAnalysis(FIELDS[0], status, "probe"), CONTRACT,
+                             procedure_identity="probe", condition=None,
+                             artifact=None)
+    except Exception:
+        return False
+    return result.passed is False and result.rows == ()
+
+
+def test_structured_refusal_record_integrity() -> None:
+    """F1f-g. Only AFFIRMATIVE, consistent evidence authorises an undefined endpoint.
+
+    An independent runtime audit found that the F1f-e predicate accepted records
+    no part of the frozen pipeline can produce:
+
+      A  `analysis_status = "NOT_A_REAL_STATUS"`, because the test was
+         `status != "ESTIMATED"` and EVERY other string satisfies that;
+      B  `RANK_GUARD_FAIL` with `P1 = True, p1_rejected = False` -- a record
+         asserting both that the analysis never ran and that the gate passed --
+         because nothing looked at the composite P1 state at all.
+
+    Each is a permanent counterexample below, together with the already-closed
+    case where the status key is absent entirely.
+    """
+    refused = result_row(refused=True)
+    estimated = result_row(refused=False)
+    check("the CANONICAL refusal record is accepted, in BOTH block events",
+          all(is_structured_refusal(refused, e) is True
+              for e in ("g5_rejected", "block1_rejected")))
+    check("its status is one the canonical roster declares and authorises",
+          refused["analysis_status"] in DECLARED_ANALYSIS_STATUSES
+          and refused["analysis_status"] in REFUSAL_AUTHORISING_STATUSES)
+
+    # --- the authorising set is DERIVED, never retyped -----------------------
+    check("the declared roster is e1a_v4.status.AnalysisStatus itself",
+          DECLARED_ANALYSIS_STATUSES == {s.value for s in AnalysisStatus})
+    check("ESTIMATED never authorises an undefined endpoint",
+          "ESTIMATED" not in REFUSAL_AUTHORISING_STATUSES)
+    check("the authorising set is the canonical NON_ESTIMATED set, less the "
+          "statuses the frozen gate does not fail closed on",
+          REFUSAL_AUTHORISING_STATUSES
+          == {s.value for s in AnalysisStatus if s is not AnalysisStatus.ESTIMATED}
+          - NON_FAIL_CLOSED_STATUSES)
+    # THE REASON FOR THAT EXCLUSION, proved against the frozen endpoint rather
+    # than asserted: `p1_geometry` carries GEOMETRY_FAIL past its fail-closed
+    # return and scores it against real gate statistics, so it yields DEFINED
+    # block decisions or refuses outright -- it never leaves one undefined.
+    check("the exclusion matches what p1_geometry ACTUALLY does, status by status",
+          {s.value for s in AnalysisStatus
+           if s is not AnalysisStatus.ESTIMATED and p1_fails_closed(s)}
+          == set(REFUSAL_AUTHORISING_STATUSES),
+          f"excluded: {sorted(NON_FAIL_CLOSED_STATUSES)}")
+
+    # --- §20 / §21 / §19: every malformed authorisation claim REFUSES --------
+    drop = lambda row, key: {k: v for k, v in row.items() if k != key}
+    malformed = (
+        ("an analysis status outside the declared roster",
+         dict(refused, analysis_status="NOT_A_REAL_STATUS")),
+        ("a status differing from a declared one only in case",
+         dict(refused, analysis_status=REFUSED_STATUS.lower())),
+        ("a whitespace-padded status", dict(refused, analysis_status=f" {REFUSED_STATUS}")),
+        ("NO analysis status at all", drop(refused, "analysis_status")),
+        ("a null analysis status", dict(refused, analysis_status=None)),
+        ("a non-string analysis status", dict(refused, analysis_status=3)),
+        ("an ESTIMATED analysis status", dict(refused, analysis_status="ESTIMATED")),
+        ("a status the frozen gate does not fail closed on",
+         dict(refused, analysis_status=sorted(NON_FAIL_CLOSED_STATUSES)[0])),
+        ("a composite P1 that PASSED", dict(refused, P1=True, p1_rejected=False)),
+        ("P1 passed while p1_rejected still says rejected", dict(refused, P1=True)),
+        ("p1_rejected cleared while P1 still says failed",
+         dict(refused, p1_rejected=False)),
+        ("no composite P1 field at all", drop(refused, "P1")),
+        ("no p1_rejected field at all", drop(refused, "p1_rejected")),
+        ("integers 0/1 standing in for the frozen booleans",
+         dict(refused, P1=0, p1_rejected=1)),
+    )
+    for label, row in malformed:
+        for event in ("g5_rejected", "block1_rejected"):
+            short = "C3" if event == "g5_rejected" else "C4"
+            check(f"REFUSED ({short}): {label}",
+                  is_structured_refusal(row, event) is False,
+                  repr(row.get("analysis_status")))
+
+    # --- §26: BOTH layers refuse a malformed record, through the real plan ---
+    # These records are what a RESTART reads back off disk, so the recovery path
+    # refuses them rather than silently normalising them into a refusal.
+    audited = (
+        ("an unknown analysis status",
+         dict(refused, analysis_status="NOT_A_REAL_STATUS")),
+        ("no analysis status at all", drop(refused, "analysis_status")),
+        ("a recognised refusal status with a PASSED composite P1",
+         dict(refused, P1=True, p1_rejected=False)),
+    )
+    for case_id, event in (("C3_g5_block", "g5_rejected"),
+                           ("C4_surrogate_validity", "block1_rejected")):
+        plan = plan_with_replicates(case_id, 1)
+        short = case_id[:2]
+        for label, row in audited:
+            persisted = json.loads(json.dumps(row))      # a genuine round trip
+            recs = case_records(plan, case_id, [{f: persisted for f in FIELDS}])
+            check(f"{short} {label}: the AGGREGATOR refuses on recovery",
+                  refusal_code(per_field_primary_outcomes, plan, recs, case_id,
+                               event) == "ENDPOINT_EVENT_MISSING")
+            check(f"{short} {label}: the VALIDATOR refuses it too",
+                  refusal_code(require_endpoint_events, plan, case_id, persisted,
+                               "probe") == "ENDPOINT_EVENT_MISSING")
+        # --- §16 / §17, both directions, on the SAME plan --------------------
+        valid = json.loads(json.dumps(refused))
+        recs = case_records(plan, case_id, [{f: valid for f in FIELDS}])
+        outcome = per_field_primary_outcomes(plan, recs, case_id, event)[FIELDS[0]]
+        check(f"{short} a VALID refusal survives the round trip and both layers",
+              refusal_code(require_endpoint_events, plan, case_id, valid, "probe")
+              is None and outcome.structured_refusals == 1
+              and outcome.evaluable == 0 and outcome.rejections == 0)
+        check(f"{short} its reason attribution balances the refusal count",
+              sum(outcome.refusal_reasons.values()) == outcome.structured_refusals
+              and outcome.refusal_reasons == {REFUSED_REASON: 1})
+        check(f"{short} an ESTIMATED record owes its block decision",
+              refusal_code(require_endpoint_events, plan, case_id,
+                           dict(estimated, **{event: None}), "probe")
+              == "ENDPOINT_EVENT_MISSING")
+
+
 GROUPS = (
     ("T1  C2 counts PER FIELD", test_c2_counts_per_field),
     ("T2/T3  G5 and Block-1 decisions propagate", test_g5_and_block1_propagate),
@@ -1556,6 +1691,8 @@ GROUPS = (
     ("F1f-e validator and aggregator agree", test_cross_layer_refusal_invariant),
     ("F1f-e the terminal result materialises", test_terminal_result_materialises),
     ("F1f-e per-field count invariants", test_refusal_count_invariants),
+    ("F1f-g structured-refusal record integrity",
+     test_structured_refusal_record_integrity),
     ("T5/T6  the C8 blinded Branch-A control", test_c8_blinded_branch_a_control),
     ("T7-T10  terminal provenance cross-links", test_terminal_provenance_cross_links),
     ("campaign structure unchanged", test_campaign_structure_unchanged),

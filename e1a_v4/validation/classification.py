@@ -45,9 +45,10 @@ from __future__ import annotations
 
 import functools
 from dataclasses import dataclass, field
-from typing import Mapping, Sequence
+from typing import Any, Mapping, Sequence
 
 from ..numerics import Refusal
+from ..status import NON_ESTIMATED, AnalysisStatus
 from .dispositions import cp_lower, cp_upper
 
 #: The two STATISTICAL verdicts a size diagnostic may produce.
@@ -63,6 +64,82 @@ SIZE_NOT_EVALUABLE = "NOT_EVALUABLE"
 #: from SIZE_FAILURE on purpose: "the size test could not be validly evaluated as
 #: preregistered" is not "the size test rejected".
 INCOMPLETE_EVIDENCE_CLASSIFICATION = "VALIDATION_INCONCLUSIVE"
+
+
+# ---------------------------------------- structured-refusal AUTHORISATION ---
+# F1f-g. An independent runtime audit showed that "the primary endpoint is
+# undefined" was being granted on evidence that did not establish it. The rule
+# below is THE single source of truth for whether a terminal record may leave a
+# C3/C4 block decision undefined. `campaign_driver.is_structured_refusal` -- which
+# both the endpoint VALIDATOR and the per-field AGGREGATOR call -- delegates here,
+# and preflight probes this function directly, so no layer carries its own copy.
+
+#: Every analysis status the repository DECLARES, read from the canonical roster
+#: in `e1a_v4.status` rather than retyped here. A record carrying a value outside
+#: this set is MALFORMED, not refused-for-cause: the status is the thing that
+#: authorises an undefined endpoint, so an unrecognised one authorises nothing.
+DECLARED_ANALYSIS_STATUSES = frozenset(status.value for status in AnalysisStatus)
+#: The status that means the frozen gate actually produced its rows.
+ESTIMATED_STATUS = AnalysisStatus.ESTIMATED.value
+#: The one DECLARED non-ESTIMATED status that `e1a_v4.endpoints.p1_geometry` does
+#: NOT fail closed on. Its guard reads
+#:     if not analysis.is_estimated and analysis.status not in (GEOMETRY_FAIL,)
+#: so a GEOMETRY_FAIL analysis is carried PAST the fail-closed return and scored
+#: against real gate statistics: it either yields DEFINED block decisions or
+#: refuses outright, and `p1_block_decisions` documents that `(None, None)` arises
+#: "exactly when the analysis was not ESTIMATED and P1 failed closed". It
+#: therefore never authorises an undefined block decision. Treating every
+#: non-ESTIMATED status alike would have let it.
+NON_FAIL_CLOSED_STATUSES = frozenset({AnalysisStatus.GEOMETRY_FAIL.value})
+#: The statuses that AUTHORISE an undefined per-field block decision: DERIVED from
+#: the canonical `NON_ESTIMATED` frozenset, never enumerated by hand, less the
+#: statuses the frozen gate does not fail closed on.
+REFUSAL_AUTHORISING_STATUSES = frozenset(
+    status.value for status in NON_ESTIMATED) - NON_FAIL_CLOSED_STATUSES
+#: The composite P1 state such a record MUST express, read off the frozen record
+#: assembly in `campaign_driver.evaluate_replicate`:
+#:     P1          = bool(result.passed)
+#:     p1_rejected = bool(not result.passed)
+#: and `p1_geometry` returns `passed = False` for exactly the statuses above. A
+#: record claiming an authorised refusal while reporting a PASSED composite P1 is
+#: internally inconsistent, and no part of the frozen pipeline can produce it.
+#: This is NOT a new P1 semantic; it is the existing one, now checked.
+FAIL_CLOSED_P1_STATE = (("P1", False), ("p1_rejected", True))
+
+
+def authorises_undefined_block_decision(outcome: Mapping[str, Any]) -> bool:
+    """May THIS record leave a C3/C4 primary block decision undefined?
+
+    Validity is never inferred from the ABSENCE of data. Two affirmative things
+    must both be present and agree, and either one missing refuses:
+
+        STATUS    `analysis_status` is present, is a string, and is one of the
+                  DECLARED statuses that authorise an undefined block decision.
+                  An unknown value -- a typo, a renamed status, a status from
+                  another pipeline -- is malformed, not authorised.
+        P1        the record's own composite P1 fields express the frozen
+                  FAIL-CLOSED state. The statuses above are precisely the ones
+                  `p1_geometry` fails closed on, so a record that claims one of
+                  them while reporting a PASSED P1 contradicts itself, and the
+                  contradiction must refuse rather than be resolved in favour of
+                  the convenient half.
+
+    THE DEFECTS THIS CLOSES (independent runtime audit, F1f-g)
+        `analysis_status != "ESTIMATED"` accepted ANY string that was not that one
+        literal, so `"NOT_A_REAL_STATUS"` authorised a refusal. And nothing looked
+        at P1 at all, so `RANK_GUARD_FAIL` with `P1=True, p1_rejected=False` --
+        a record asserting both that the analysis never ran and that the gate
+        passed -- was accepted as valid refusal evidence.
+
+    `is` comparison, not `==`: a `1` or a `0` arriving from a loosely typed
+    producer is not the frozen boolean state, and `1 == True` would have hidden
+    that.
+    """
+    status = outcome.get("analysis_status")
+    if not isinstance(status, str) or status not in REFUSAL_AUTHORISING_STATUSES:
+        return False
+    return all(outcome.get(name) is expected for name, expected in FAIL_CLOSED_P1_STATE)
+
 
 #: Machine-readable statement of what a pass does and does not mean.
 SIZE_INTERPRETATION = {
@@ -136,6 +213,26 @@ def classify_size(rejections: int, n: int, nominal: float) -> dict:
     }
 
 
+def _strict_count(field_id: str, what: str, value: Any) -> int:
+    """A count of replicates is a NON-NEGATIVE int. Nothing else is accepted.
+
+    `bool` is excluded explicitly. Python makes `True` an `int` worth 1, so an
+    unguarded `isinstance(value, int)` would accept `{reason: True}` as "one
+    refusal" and `{reason: False}` as "zero", which is an accident of the type
+    system rather than a recorded count. A float is refused for the same reason a
+    fractional replicate is meaningless, not because it cannot be summed.
+    """
+    if isinstance(value, bool) or not isinstance(value, int):
+        raise Refusal(
+            f"{field_id}: {what} = {value!r} is a {type(value).__name__}, not an "
+            "integer count of replicates")
+    if value < 0:
+        raise Refusal(
+            f"{field_id}: {what} = {value} is negative; a count of replicates "
+            "cannot be less than zero")
+    return value
+
+
 @dataclass(frozen=True)
 class FieldSizeOutcome:
     """One field's PRIMARY size evidence, in THREE states rather than two.
@@ -167,11 +264,13 @@ class FieldSizeOutcome:
     refusal_reasons: Mapping[str, int] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
+        _strict_count(self.field_id, "planned_replicates", self.planned_replicates)
         if self.planned_replicates < 1:
             raise Refusal(f"{self.field_id}: planned replicates must be >= 1")
         for name, value in (("evaluable", self.evaluable),
                             ("structured_refusals", self.structured_refusals),
                             ("rejections", self.rejections)):
+            _strict_count(self.field_id, name, value)
             if not 0 <= value <= self.planned_replicates:
                 raise Refusal(
                     f"{self.field_id}: {name} = {value} lies outside "
@@ -188,11 +287,40 @@ class FieldSizeOutcome:
                 f"{self.planned_replicates}. Every planned replicate is accounted "
                 "for exactly once; a silently discarded record is the defect this "
                 "refuses.")
+        # --- REFUSAL-REASON ACCOUNTING (F1f-g) ------------------------------
+        # The previous guard was `if total and total != refusals`, which skipped
+        # itself whenever the reasons summed to ZERO -- so one refusal with NO
+        # reason attribution at all was accepted, and the terminal report frozen
+        # authority requires could name a field NOT_EVALUABLE without saying why.
+        # The arithmetic is now unconditional, and the counts are type-checked
+        # before they are summed, because `{A: 2, B: -1}` also sums to one.
+        if not isinstance(self.refusal_reasons, Mapping):
+            raise Refusal(
+                f"{self.field_id}: refusal reasons must be a mapping of reason -> "
+                f"count, not {type(self.refusal_reasons).__name__}")
+        for reason, count in self.refusal_reasons.items():
+            if not isinstance(reason, str) or not reason:
+                raise Refusal(
+                    f"{self.field_id}: refusal reason key {reason!r} is not a "
+                    "non-empty string; a reason has to be nameable to be reported")
+            _strict_count(self.field_id, f"refusal reason {reason!r}", count)
         total = sum(self.refusal_reasons.values())
-        if total and total != self.structured_refusals:
+        if total != self.structured_refusals:
             raise Refusal(
                 f"{self.field_id}: refusal reasons account for {total} replicates "
-                f"but {self.structured_refusals} refused")
+                f"but {self.structured_refusals} refused. Every structured refusal "
+                "carries a recorded reason and no reason counts a replicate that "
+                "did not refuse.")
+        # The canonical zero form is the EMPTY mapping, which is what both
+        # producers emit -- `field_primary_outcome` builds the map from the
+        # refusals it actually saw, and `classify_field_size` writes `{}` on the
+        # fully evaluable branch. A key counting its reason zero times passes the
+        # arithmetic above while naming a reason that never occurred, so it is not
+        # an alternative spelling of "nothing refused".
+        if not self.structured_refusals and self.refusal_reasons:
+            raise Refusal(
+                f"{self.field_id}: no replicate refused, so the reason accounting "
+                f"is the empty mapping, not {dict(self.refusal_reasons)!r}")
 
     @property
     def fully_evaluable(self) -> bool:

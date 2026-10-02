@@ -77,7 +77,10 @@ from ..endpoints import (
 from ..geometry import analyse_field
 from ..numerics import Refusal
 from .calibrate import CalibrationRequest, generate_block1_artifact
-from .classification import CampaignCounts, FieldSizeOutcome, classify_campaign
+from .classification import (
+    CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
+    classify_campaign,
+)
 from .coherence import derived_n_samples
 from .dispositions import cp_upper
 from .driver import (
@@ -3516,8 +3519,6 @@ REPLICATE_LEVEL_EVENTS = ("P2", "P3", "P4", "complete_pass", "false_acceptance",
 #: decision FAILS CLOSED, so it exists for every replicate, which is why C2 has no
 #: undefined-endpoint path.
 BLOCK_DECISION_EVENTS = ("block1_rejected", "g5_rejected")
-#: The analysis status that means the frozen gate actually produced its rows.
-ESTIMATED_STATUS = "ESTIMATED"
 
 
 def is_structured_refusal(outcome: Mapping[str, Any], event: str) -> bool:
@@ -3531,23 +3532,18 @@ def is_structured_refusal(outcome: Mapping[str, Any], event: str) -> bool:
         terminal campaign report the contract requires was never produced. Both
         layers now ask THIS function, so they cannot drift apart again.
 
-    FOUR conditions, all required. The event must be one the two-block gate
-    decides per field; the key must be PRESENT and null, because an absent key is
-    a malformed record rather than a refusal; the record must CARRY an
-    `analysis_status`, because authorisation has to be stated rather than inferred
-    from a missing field; and that status must say the analysis never reached
-    ESTIMATED, which is what makes the absence authorised rather than arbitrary.
-
-    The third condition is not redundant. `outcome.get("analysis_status") !=
-    ESTIMATED` is also true when the key is ABSENT, so without it a record that
-    simply failed to record its status would have been read as an authorised
-    refusal -- silence granting the exemption.
+    Two independent questions, deliberately split (F1f-g). THIS function answers
+    the SHAPE question -- is `event` one the two-block gate decides per field, and
+    is its key PRESENT and null, an absent key being a malformed record rather
+    than a refusal. `classification.authorises_undefined_block_decision` answers
+    the AUTHORISATION question, and is the single place that decides it: preflight
+    probes that function directly, which it could not do here, because importing
+    this module would execute driver code the pre-execution stage forbids.
     """
     return (event in BLOCK_DECISION_EVENTS
             and event in outcome
             and outcome[event] is None
-            and outcome.get("analysis_status") is not None
-            and outcome["analysis_status"] != ESTIMATED_STATUS)
+            and authorises_undefined_block_decision(outcome))
 
 
 def structured_refusal_reason(outcome: Mapping[str, Any]) -> str:

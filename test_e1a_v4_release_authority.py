@@ -40,9 +40,11 @@ import tempfile
 
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
+from e1a_v4.status import AnalysisStatus
 from e1a_v4.validation.classification import (
-    GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE,
-    INCOMPLETE_EVIDENCE_CLASSIFICATION, PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS,
+    ESTIMATED_STATUS, GROSS_INFLATION_LABEL, GROSS_INFLATION_TOLERANCE,
+    INCOMPLETE_EVIDENCE_CLASSIFICATION, NON_FAIL_CLOSED_STATUSES,
+    PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
     SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NO_INFLATION, classify_field_size,
     size_boundary,
 )
@@ -3451,6 +3453,56 @@ def test_f1f_e_runtime_conformance() -> None:
               refusal_code(require_per_field_implementation_conformance, plan, tmp)
               == "IMPLEMENTATION_AUTHORITY_LAG")
         shutil.rmtree(tmp)
+
+    # --- F1f-g: preflight must DETECT a weakened record-integrity rule -------
+    # Each substitution below is a rule that was ACTUALLY in place, or a plausible
+    # half-repair of it. Preflight has to refuse all of them, or the conformance
+    # check is decoration.
+    saved_rule = release_authority.authorises_undefined_block_decision
+    weakened = (
+        ("accepts ANY status that is not the ESTIMATED literal",
+         lambda outcome: outcome.get("analysis_status") is not None
+         and outcome.get("analysis_status") != ESTIMATED_STATUS),
+        ("checks the status but ignores the fail-closed composite P1 state",
+         lambda outcome: outcome.get("analysis_status")
+         in REFUSAL_AUTHORISING_STATUSES),
+        ("lets a MISSING status authorise an undefined endpoint",
+         lambda outcome: outcome.get("analysis_status") != ESTIMATED_STATUS),
+        ("denies even a VALID structured refusal", lambda outcome: False),
+    )
+    try:
+        for label, rule in weakened:
+            release_authority.authorises_undefined_block_decision = rule
+            check(f"REFUSED: an authorisation rule that {label}",
+                  refusal_code(require_per_field_implementation_conformance,
+                               plan, ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.authorises_undefined_block_decision = saved_rule
+    check("the real authorisation rule is restored and accepted",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+
+    # the same for the evidence type's own accounting invariants
+    saved_outcome = release_authority.FieldSizeOutcome
+    try:
+        release_authority.FieldSizeOutcome = dataclasses.make_dataclass(
+            "PermissiveOutcome",
+            [(f.name, f.type) if f.default is dataclasses.MISSING
+             else (f.name, f.type, dataclasses.field(default_factory=dict))
+             for f in dataclasses.fields(saved_outcome)], frozen=True)
+        check("REFUSED: per-field evidence that validates nothing on construction",
+              refusal_code(require_per_field_implementation_conformance, plan,
+                           ROOT) == "IMPLEMENTATION_AUTHORITY_LAG")
+    finally:
+        release_authority.FieldSizeOutcome = saved_outcome
+    check("the real evidence class is restored and accepted once more",
+          refusal_code(require_per_field_implementation_conformance, plan, ROOT)
+          is None)
+    check("the canonical status roster is READ, not retyped in the release layer",
+          REFUSAL_AUTHORISING_STATUSES
+          == {s.value for s in AnalysisStatus if s is not AnalysisStatus.ESTIMATED}
+          - NON_FAIL_CLOSED_STATUSES
+          and ESTIMATED_STATUS == AnalysisStatus.ESTIMATED.value)
 
     # --- the authority this conformance check is held to --------------------
     refusal = plan["size_validation_semantics"]["structured_refusal"]

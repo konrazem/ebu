@@ -354,6 +354,101 @@ def test_nothing_else_moved() -> None:
     check("execution remains unauthorised", PLAN["execution_authorised"] is False)
 
 
+def test_refusal_reason_accounting() -> None:
+    """F1f-g. Per-field evidence cannot be CONSTRUCTED in an unsound state.
+
+    An independent runtime audit found `FieldSizeOutcome` accepted a field
+    reported as carrying one structured refusal with NO reason attributed, and
+    accepted reason counts whose arithmetic balanced only because a negative
+    cancelled a positive. The guard was `if total and total != refusals`, which
+    skipped itself whenever the reasons summed to zero. Frozen authority names
+    `refusal_reasons` among the counts that must be retained per field, so a
+    field reported NOT_EVALUABLE has to be able to say WHY.
+    """
+    planned, nominal = PER_FIELD_SIZE_CASES["C3"]
+    probe = sorted(REQUIRED_SIZE_FIELDS)[0]
+
+    def evidence(**over):
+        kwargs = dict(field_id=probe, planned_replicates=planned,
+                      evaluable=planned - 1, structured_refusals=1, rejections=0,
+                      refusal_reasons={"REFUSED_ACCESSIBLE_SPACE": 1})
+        kwargs.update(over)
+        return kwargs
+
+    sound = (
+        ("one refusal attributed to one reason", evidence()),
+        ("two refusals attributed to two distinct reasons",
+         evidence(evaluable=planned - 2, structured_refusals=2,
+                  refusal_reasons={"RANK_GUARD_FAIL": 1, "N_EFF_UNSUPPORTED": 1})),
+        ("two refusals attributed to ONE repeated reason",
+         evidence(evaluable=planned - 2, structured_refusals=2,
+                  refusal_reasons={"RANK_GUARD_FAIL": 2})),
+        ("no refusals and no reasons: the canonical zero form",
+         evidence(evaluable=planned, structured_refusals=0, refusal_reasons={})),
+    )
+    for label, kwargs in sound:
+        built = None
+        try:
+            built = FieldSizeOutcome(**kwargs)
+        except Refusal:
+            pass
+        check(f"ACCEPTED: {label}",
+              built is not None
+              and sum(built.refusal_reasons.values()) == built.structured_refusals)
+
+    unsound = (
+        ("a refusal with NO reason attributed", evidence(refusal_reasons={})),
+        ("reasons balancing only because a NEGATIVE cancels a positive",
+         evidence(refusal_reasons={"A": 2, "B": -1})),
+        ("a negative count even where the total is right",
+         evidence(refusal_reasons={"A": -1, "B": 2})),
+        ("a reason attributed where NOTHING refused",
+         evidence(evaluable=planned, structured_refusals=0,
+                  refusal_reasons={"A": 1})),
+        ("reasons that over-account the refusals", evidence(refusal_reasons={"A": 2})),
+        ("a float reason count", evidence(refusal_reasons={"A": 1.0})),
+        ("a bool reason count", evidence(refusal_reasons={"A": True})),
+        ("a string reason count", evidence(refusal_reasons={"A": "1"})),
+        ("an empty reason key", evidence(refusal_reasons={"": 1})),
+        ("a non-string reason key", evidence(refusal_reasons={7: 1})),
+        ("a zero-valued reason key standing in for the empty mapping",
+         evidence(evaluable=planned, structured_refusals=0,
+                  refusal_reasons={"A": 0})),
+        ("reason counts that are not a mapping at all",
+         evidence(refusal_reasons=[("A", 1)])),
+        ("a bool structured-refusal count",
+         evidence(structured_refusals=True, refusal_reasons={"A": 1})),
+        ("a float planned denominator",
+         evidence(planned_replicates=float(planned))),
+        ("a float rejection count", evidence(rejections=0.0)),
+    )
+    for label, kwargs in unsound:
+        check(f"REFUSED: {label}", refuses(FieldSizeOutcome, **kwargs))
+
+    # --- the refusal count and the PRIMARY VERDICT agree, in both directions --
+    refused_one = FieldSizeOutcome(**evidence())
+    assessed = classify_field_size(refused_one, nominal)
+    check("structured_refusals > 0 -> the primary verdict is NOT_EVALUABLE",
+          assessed["verdict"] == SIZE_NOT_EVALUABLE)
+    check("a NOT_EVALUABLE field reports the reason attribution it was given",
+          assessed["refusal_reasons"] == {"REFUSED_ACCESSIBLE_SPACE": 1}
+          and sum(assessed["refusal_reasons"].values())
+          == assessed["structured_refusals"])
+    check("a NOT_EVALUABLE field keeps the PLANNED denominator, not the survivors",
+          assessed["planned_replicates"] == planned and assessed["evaluable"]
+          == planned - 1)
+    boundary = size_boundary(planned, nominal)
+    for rejections in (0, boundary, boundary + 1):
+        clean = FieldSizeOutcome(field_id=probe, planned_replicates=planned,
+                                 evaluable=planned, structured_refusals=0,
+                                 rejections=rejections, refusal_reasons={})
+        verdict = classify_field_size(clean, nominal)["verdict"]
+        check(f"structured_refusals == 0 at {rejections} rejections is NEVER "
+              "NOT_EVALUABLE",
+              verdict == (SIZE_NO_INFLATION if rejections <= boundary
+                          else SIZE_FAILURE))
+
+
 def main() -> int:
     groups = (("C2 whole P1 geometry gate", test_c2),
               ("C3 G5 block", test_c3),
@@ -361,6 +456,7 @@ def main() -> int:
               ("interpretation of a pass", test_interpretation),
               ("final campaign classification", test_campaign),
               ("per-field release semantics (F1f)", test_per_field_release_semantics),
+              ("refusal-reason accounting (F1f-g)", test_refusal_reason_accounting),
               ("nothing else moved", test_nothing_else_moved))
     for label, fn in groups:
         print(f"\n{label}")

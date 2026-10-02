@@ -58,10 +58,13 @@ import dataclasses
 from dataclasses import dataclass, fields as dataclass_fields
 from typing import Any
 
+from ..numerics import Refusal
 from .classification import (
-    GROSS_INFLATION_TOLERANCE, INCOMPLETE_EVIDENCE_CLASSIFICATION,
-    PER_FIELD_SIZE_CASES, REQUIRED_SIZE_FIELDS, SIZE_FAILURE, SIZE_INTERPRETATION,
-    SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION, CampaignCounts, FieldSizeOutcome,
+    ESTIMATED_STATUS, GROSS_INFLATION_TOLERANCE,
+    INCOMPLETE_EVIDENCE_CLASSIFICATION, NON_FAIL_CLOSED_STATUSES,
+    PER_FIELD_SIZE_CASES, REFUSAL_AUTHORISING_STATUSES, REQUIRED_SIZE_FIELDS,
+    SIZE_FAILURE, SIZE_INTERPRETATION, SIZE_NOT_EVALUABLE, SIZE_NO_INFLATION,
+    CampaignCounts, FieldSizeOutcome, authorises_undefined_block_decision,
     classify_campaign, size_boundary,
 )
 from .dispositions import cp_lower, cp_upper, g1_success_threshold, g2_max_false_acceptances
@@ -2828,6 +2831,85 @@ def require_per_field_implementation_conformance(plan: dict[str, Any],
             f"authority requires {refusal['required_terminal_counts']} to be "
             "retained per field, and a bare rejection count cannot distinguish a "
             "defined non-rejection from an undefined primary endpoint")
+
+    # --- RECORD INTEGRITY: only AFFIRMATIVE, consistent evidence authorises ---
+    # F1f-g. The verdict machinery above is only as good as the records it is fed.
+    # These probes are pure dictionary and dataclass work -- no Clopper-Pearson, no
+    # records on disk -- so they are cheap enough to run on every bind, and they
+    # test observable BEHAVIOUR of the one authorisation rule rather than the
+    # driver's source text. The driver cannot be imported here (that would execute
+    # driver code this stage forbids), which is precisely why the rule lives in the
+    # classifier and the driver delegates to it.
+    authorised_status = sorted(REFUSAL_AUTHORISING_STATUSES)[0]
+    valid = {"analysis_status": authorised_status, "P1": False, "p1_rejected": True}
+    if not authorises_undefined_block_decision(valid):
+        raise ImplementationAuthorityLag(
+            f"a terminal record carrying the declared status {authorised_status!r} "
+            "with a fail-closed composite P1 is a VALID structured refusal, but the "
+            "runtime rule rejects it; the terminal report frozen authority requires "
+            f"({refusal['required_terminal_counts']}) could then never be produced")
+    malformed = (
+        ("an analysis status outside the declared roster",
+         dict(valid, analysis_status="NOT_A_REAL_STATUS")),
+        ("no analysis status at all",
+         {k: v for k, v in valid.items() if k != "analysis_status"}),
+        ("a non-string analysis status", dict(valid, analysis_status=None)),
+        ("an ESTIMATED analysis status", dict(valid, analysis_status=ESTIMATED_STATUS)),
+        ("a status the frozen gate does not fail closed on",
+         dict(valid, analysis_status=sorted(NON_FAIL_CLOSED_STATUSES)[0])),
+        ("a composite P1 that did NOT fail closed",
+         dict(valid, P1=True, p1_rejected=False)),
+        ("a composite P1 absent from the record",
+         {k: v for k, v in valid.items() if k != "P1"}),
+    )
+    for label, record in malformed:
+        if authorises_undefined_block_decision(record):
+            raise ImplementationAuthorityLag(
+                f"a terminal record with {label} was accepted as authorising an "
+                "undefined C3/C4 primary endpoint. Validity is never inferred from "
+                "the absence or malformation of data: an undefined block decision "
+                "is authorised only by an explicit, recognised status whose record "
+                "also expresses the frozen fail-closed composite P1 state")
+
+    # Refusal-reason accounting. A field reported NOT_EVALUABLE must be able to say
+    # WHY, and the arithmetic that says so must be sound.
+    planned, _nominal = PER_FIELD_SIZE_CASES["C3"]
+    probe_field = sorted(REQUIRED_SIZE_FIELDS)[0]
+
+    def _evidence(**over: Any) -> dict[str, Any]:
+        base = dict(field_id=probe_field, planned_replicates=planned,
+                    evaluable=planned - 1, structured_refusals=1, rejections=0,
+                    refusal_reasons={"REFUSED_ACCESSIBLE_SPACE": 1})
+        base.update(over)
+        return base
+
+    FieldSizeOutcome(**_evidence())            # the canonical valid shape
+    FieldSizeOutcome(**_evidence(evaluable=planned, structured_refusals=0,
+                                 refusal_reasons={}))
+    unsound = (
+        ("a refusal with no reason attributed", _evidence(refusal_reasons={})),
+        ("reason counts that sum by cancelling a negative one",
+         _evidence(refusal_reasons={"A": 2, "B": -1})),
+        ("a reason attributed where nothing refused",
+         _evidence(evaluable=planned, structured_refusals=0,
+                   refusal_reasons={"A": 1})),
+        ("a zero-valued reason key in place of the canonical empty mapping",
+         _evidence(evaluable=planned, structured_refusals=0,
+                   refusal_reasons={"A": 0})),
+        ("a non-integer reason count", _evidence(refusal_reasons={"A": 1.0})),
+        ("a boolean reason count", _evidence(refusal_reasons={"A": True})),
+        ("an unnameable reason key", _evidence(refusal_reasons={"": 1})),
+    )
+    for label, kwargs in unsound:
+        try:
+            FieldSizeOutcome(**kwargs)
+        except Refusal:
+            continue
+        raise ImplementationAuthorityLag(
+            f"per-field primary evidence with {label} was constructed without "
+            "refusing. Frozen authority requires the structured-refusal count and "
+            "its reason attribution to be retained per field, which a count that "
+            "does not balance cannot do")
 
     # --- BEHAVIOUR. Two classifications decide it, and the exhaustive
     # field-by-field enumeration lives in the test suites rather than here: this
