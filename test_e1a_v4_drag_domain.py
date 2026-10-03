@@ -343,6 +343,18 @@ def test_contract_mutations() -> None:
                        "scope", "the declared E1a passive equilibrium optical-trap "
                                 "benchmark and comparable systems."), SCOPE)
 
+    # A NESTED addition escapes the top-level totality check; the exact comparison
+    # against the generated block is what catches it, at every depth.
+    contract_probe("contract: an unclassified key is added inside a primitive",
+                   lambda b: b["primitive_inputs"]["viscosity"].__setitem__(
+                       "note", "see the lab notebook"))
+    contract_probe("contract: an unclassified key is added inside a domain",
+                   lambda b: b["primitive_inputs"]["bead_radius"]["domain"].__setitem__(
+                       "tolerance", "loose"))
+    contract_probe("contract: an unclassified key is added inside a disposition",
+                   lambda b: b["dispositions"]["present_but_inadmissible_input"]
+                   .__setitem__("override", "permitted in development"))
+
     contract = copy.deepcopy(load_contract(ROOT).data)
     contract.pop(SECTION)
     refuses("contract: the whole domain section is removed", AUTHORITY,
