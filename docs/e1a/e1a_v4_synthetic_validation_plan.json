@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.16.0",
+  "plan_version": "1.17.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -61,7 +61,7 @@
     "implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
     "implementation_file_hashes": {
       "e1a_v4/__init__.py": "0b67a89c562d82eb1f4a03603e075d66e0f70826ab7a848e57f4518bd12bdca4",
-      "e1a_v4/branch_a.py": "748c2e86e59d3ed6638147aa322cdf113636e8aa5c9c2b93ec8d4b0a9ec0461f",
+      "e1a_v4/branch_a.py": "8a1a66abd7b8ab105bbe56739f455f8ab7706c434ad5136a18f2930f75389912",
       "e1a_v4/calibration.py": "1400e79f00429dc2c72b715d2d03b9bebb4242d044557bce02301f3ac3b22c42",
       "e1a_v4/contract.py": "b43b85a4626aa25bcd9bf2bfe7e209f99e1a87950d6957afc890d0fa6b493c41",
       "e1a_v4/effective_size.py": "88030960ecc9260fb19a44afbbc8116c212bf35addb5ed0d036af751a079a164",
@@ -73,7 +73,7 @@
       "e1a_v4/status.py": "853a4cf9c602ee4fdc28391969eb7a7ea7157cc71316cf3c86e003d5777ecc8f",
       "e1a_v4/world.py": "64a27ca9cb95b09333ca65aa0eecebeb80f9573d06cd8d08c188668eb7cbc033"
     },
-    "analysis_procedure_identity": "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d",
+    "analysis_procedure_identity": "60122602528f7e89ae3aa6716a20db5a0bf6e89ad52bc7b1e031318327add527",
     "final_expected_execution_identity": null,
     "final_expected_execution_identity_state": "NOT_FROZEN_PRE_DRIVER",
     "final_expected_execution_identity_semantics": "null means DELIBERATELY NOT YET FROZEN, which is correct while the official campaign driver is absent. An ABSENT key is treated as FORGOTTEN and refuses: the superseded slot held the empty string \"\", which could not distinguish the two and which preflight silently skipped.",

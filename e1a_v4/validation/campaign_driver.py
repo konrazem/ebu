@@ -65,7 +65,7 @@ import struct
 from dataclasses import dataclass
 from typing import Any, Mapping, Protocol, Sequence
 
-from ..branch_a import BranchAField, stiffness_matrix
+from ..branch_a import admissible_primitive, BranchAField, stiffness_matrix
 from ..contract import sha256_file
 from ..calibration import (
     BLOCK1_GATES, CalibrationArtifact, CalibrationCondition, canonical_float,
@@ -133,7 +133,18 @@ from .seeds import EXPERIMENT_SCOPE, ValidationSeedFamily
 #: evidence hash alone, accepted a record whose execution identity,
 #: calibration-condition hash or publication state had been edited. No official
 #: publication exists, so the break is free to make explicit now.
-BRANCH_A_PUBLICATION_SCHEMA = "e1a_v4_branch_a_publication/2"
+#: Version 3 adds the Branch-A MEASURED primitive drag inputs `viscosity` and
+#: `bead_radius` to the evidence, inside the hashing preimage. Version 2 omitted
+#: them, so a version-2 artifact cannot say which primitives produced its gamma:
+#: eta < 0 with a < 0 gives the same positive gamma and the same relaxation times
+#: as a legitimate pair, and nothing downstream can tell them apart. That makes a
+#: version-2 record SCIENTIFICALLY AMBIGUOUS under the G6 domain, and no lossless
+#: migration exists -- recovering eta and a from gamma alone is not a function.
+#: A version-2 artifact is therefore REFUSED, never reinterpreted. No official
+#: artifact of either version exists: the campaign has not run.
+BRANCH_A_PUBLICATION_SCHEMA = "e1a_v4_branch_a_publication/3"
+SUPERSEDED_BRANCH_A_PUBLICATION_SCHEMAS = ("e1a_v4_branch_a_publication/1",
+                                          "e1a_v4_branch_a_publication/2")
 
 #: The Branch-A measurement generator, named by the frozen plan itself
 #: (`generating_model.branch_a`, "generate.BranchAErrorModel.measure"). Recorded
@@ -399,6 +410,12 @@ class BranchARealisation:
     T_measured: float
     k_modes_measured: tuple[float, ...]
     rot_deg_measured: float
+    #: The Branch-A MEASURED primitive drag inputs. Persisted because gamma alone
+    #: cannot identify them: eta < 0 with a < 0 yields the same positive gamma as
+    #: a legitimate pair. Their ADMISSIBLE DOMAIN is frozen (disposition G6);
+    #: their actual experimental VALUES remain F4, still undeclared.
+    viscosity: float
+    bead_radius: float
     tau_modes: tuple[float, ...]
     scale_factor: float
     n_samples: int
@@ -444,6 +461,8 @@ class BranchARealisation:
             T_measured=float(field.T),
             k_modes_measured=tuple(float(k) for k in field.k_modes),
             rot_deg_measured=float(field.rot_deg),
+            viscosity=float(field.viscosity),
+            bead_radius=float(field.bead_radius),
             tau_modes=paired,
             scale_factor=float(field.scale_factor),
             n_samples=int(n_samples),
@@ -468,6 +487,8 @@ class BranchARealisation:
             "T_measured": canonical_float(self.T_measured),
             "k_modes_measured": [canonical_float(k) for k in self.k_modes_measured],
             "rot_deg_measured": canonical_float(self.rot_deg_measured),
+            "viscosity": canonical_float(self.viscosity),
+            "bead_radius": canonical_float(self.bead_radius),
             "tau_modes": [canonical_float(t) for t in self.tau_modes],
             "scale_factor": canonical_float(self.scale_factor),
             "n_samples": self.n_samples,
@@ -500,6 +521,21 @@ class BranchARealisation:
         plan = binding.plan
         calibration = plan["calibration"]
         rules = plan["adopted_rules_unchanged"]
+        # A relaxation time that is zero, negative or nonfinite cannot enter the
+        # modal decay phi = exp(-dt/tau). Before F2e this raised a raw
+        # ZeroDivisionError for eta = 0 or a = 0, and an UNCODED Refusal from the
+        # calibration layer for the negative and nonfinite cases -- a DERIVED
+        # quantity standing in for the primitive-domain rule that now exists. The
+        # primitive check is upstream; this stays as a coded guard so no caller
+        # ever sees a bare arithmetic error from a scientific boundary.
+        for index, tau in enumerate(self.tau_modes):
+            if not (_finite(tau) and tau > 0.0):
+                raise BranchAMeasurementInvalid(
+                    f"{self.field_id}: relaxation time {index} is {tau!r}; a "
+                    "calibration condition needs one finite positive tau per "
+                    "mode. Under the approved domain this record's measured "
+                    "viscosity or bead radius was inadmissible, or its derived "
+                    "drag coefficient was not representable.")
         request = CalibrationRequest(
             field_id=self.field_id,
             H_A=[list(row) for row in self.H_A],
@@ -1084,6 +1120,27 @@ BRANCH_A_FIELD_AUTHORITY = (
         "rot_deg_measured", "the measured trap-axis orientation",
         AUTHORITY_MEASURED, "realised measurement", "FLOAT"),
     EmbeddedFieldAuthority(
+        "viscosity",
+        "the measured dynamic viscosity eta(T_theta) of the suspending medium at "
+        "this field's temperature -- a Branch-A MEASURED PRIMITIVE, bound to this "
+        "field and never shared across fields",
+        AUTHORITY_MEASURED,
+        "realised measurement. Its ADMISSIBLE DOMAIN is frozen by disposition G6 "
+        "-- finite and strictly positive -- and is enforced here and by "
+        "BranchAField.__post_init__. Its experimental VALUE remains the OPEN F4 "
+        "field-construction input and is NOT fixed by any authority",
+        "POSITIVE_FLOAT"),
+    EmbeddedFieldAuthority(
+        "bead_radius",
+        "the measured bead radius a -- a Branch-A MEASURED PRIMITIVE. Authority "
+        "writes `a` without a field index while writing eta(T_theta) with one, so "
+        "it is not a per-field quantity scientifically; it is persisted per "
+        "package because it is an input to THIS package's gamma",
+        AUTHORITY_MEASURED,
+        "realised measurement. Domain frozen by G6 -- finite and strictly "
+        "positive -- value still OPEN as F4",
+        "POSITIVE_FLOAT"),
+    EmbeddedFieldAuthority(
         "scale_factor",
         "the declared scale factor AFTER the common-mode perturbation "
         "scale_factor * (1 + sigma_cm * common_mode); it is realised, not fixed",
@@ -1479,6 +1536,30 @@ BRANCH_A_MEASUREMENT_INVARIANTS = (
         "BRANCH_A_MEASUREMENT_INVALID on read and never a raw ZeroDivisionError, "
         "OverflowError or uncoded Refusal"),
     BranchAInvariant(
+        "PRIMITIVE_DRAG_DOMAIN", ("viscosity", "bead_radius"),
+        ("viscosity", "bead_radius"),
+        "BranchAField.__post_init__ records BRANCH_A_INVALID when the measured "
+        "eta or a is not a finite real strictly greater than zero (disposition "
+        "G6, design section 3.1), checked on each primitive INDIVIDUALLY",
+        "the persisted primitives are re-tested against the approved domain "
+        "before anything derived from them is examined, so a positive gamma can "
+        "never certify the pair that produced it. eta < 0 together with a < 0 "
+        "gives gamma > 0 and positive relaxation times; only the primitives "
+        "themselves distinguish that record from a legitimate measurement, which "
+        "is why schema 3 persists them"),
+    BranchAInvariant(
+        "TAU_FROM_PRIMITIVES", ("tau_modes",),
+        ("viscosity", "bead_radius", "k_modes_measured"),
+        "tau_r = gamma / k_r with gamma = 6 pi eta a, carried with ASCENDING k, "
+        "exactly as BranchARealisation.from_branch_a_field pairs them",
+        "recomputed by reading the reconstructed production field's own .gamma "
+        "and .tau_modes properties and comparing the canonical encodings "
+        "exactly. This is strictly stronger than the shared-gamma feasibility "
+        "test, which asks only that SOME gamma exists: here the actual recorded "
+        "primitives must produce the actual recorded relaxation times. Both are "
+        "kept -- the feasibility test remains the previously cleared "
+        "representability check and is not weakened"),
+    BranchAInvariant(
         "PRODUCTION_DOMAIN",
         ("T_measured", "scale_factor", "H_A"),
         ("T_measured", "scale_factor", "k_modes_measured", "rot_deg_measured"),
@@ -1544,16 +1625,19 @@ def reconstructed_branch_a_field(evidence: Mapping[str, Any],
     every domain rule `BranchAField.__post_init__` enforces, and its `.H` and
     `.status` properties ARE the expected derived values.
 
-    `viscosity` and `bead_radius` are not persisted -- they are the acknowledged
-    OPEN field-construction inputs -- and they enter only `gamma`, which is never
-    recomputed here. Neutral positive placeholders keep the constructor's own
-    checks meaningful without inventing a drag coefficient; nothing derived from
-    them is compared against anything.
+    THE PLACEHOLDER IS GONE. This helper used to substitute `viscosity = 1.0`
+    and `bead_radius = 1.0` because the primitives were not persisted, which left
+    exactly one path by which a record whose real primitives were inadmissible
+    could be reconstructed as a field whose primitives were fine. Schema 3
+    persists them, so the reconstruction now uses the ACTUAL recorded values and
+    re-applies the G6 domain rule through the production constructor itself.
     """
     k_modes = _persisted_float_list(evidence, "k_modes_measured", where)
     rot_deg = _persisted_float(evidence, "rot_deg_measured", where)
     temperature = _persisted_float(evidence, "T_measured", where)
     scale_factor = _persisted_float(evidence, "scale_factor", where)
+    viscosity = _persisted_float(evidence, "viscosity", where)
+    bead_radius = _persisted_float(evidence, "bead_radius", where)
     try:
         return BranchAField(
             field_id=str(evidence.get("field_id")),
@@ -1562,8 +1646,8 @@ def reconstructed_branch_a_field(evidence: Mapping[str, Any],
             x_star=[0.0] * len(k_modes),
             k_modes=k_modes,
             rot_deg=rot_deg,
-            viscosity=1.0,
-            bead_radius=1.0,
+            viscosity=viscosity,
+            bead_radius=bead_radius,
             calibration_route=str(evidence.get("calibration_route")),
             scale_factor=scale_factor,
         )
@@ -1835,6 +1919,20 @@ def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
     nominal plan value, so the measurement stays free to vary.
     """
     field = reconstructed_branch_a_field(evidence, where)
+    # --- PRIMITIVE_DRAG_DOMAIN: the approved G6 rule, before anything derived -
+    # Order is the whole point. A positive gamma must never be what certifies the
+    # primitives that produced it, because eta < 0 with a < 0 produces one.
+    for name in ("viscosity", "bead_radius"):
+        value = _persisted_float(evidence, name, where)
+        if not admissible_primitive(value):
+            raise BranchAMeasurementInvalid(
+                f"{where}: the recorded {name} {value!r} is outside the approved "
+                "Branch-A measured-input domain, which requires a finite real "
+                "strictly greater than zero (disposition G6). A derived gamma or "
+                "relaxation time cannot rescue it: eta < 0 together with a < 0 "
+                "yields a positive gamma and positive relaxation times, so the "
+                "primitives are the only evidence that distinguishes this record "
+                "from a legitimate measurement.")
     # --- H_A_FROM_PRIMITIVES: recomputed by production, compared exactly ------
     # Production evaluates H = H_U * scale / (K_B * T) and then serializes it, and
     # BOTH steps can fail on primitives that are individually finite and well
@@ -1868,6 +1966,34 @@ def require_branch_a_measurement_invariants(evidence: Mapping[str, Any],
             f"{evidence.get('branch_a_status')!r} is not the status these "
             f"primitives yield ({field.status!r}); the status is derived from the "
             "eigenvalues of H_U, not declared")
+    # --- TAU_FROM_PRIMITIVES -------------------------------------------------
+    # The primitives are admissible, so gamma and every tau are now EXACTLY
+    # recomputable through the production object's own properties. A failure here
+    # is NUMERICAL -- the physically admissible primitives did not yield a
+    # representable derived quantity -- and is reported as such, never as an
+    # invalid eta or a. The primitive-domain check above has already passed.
+    try:
+        expected_tau = [canonical_float(t) for _, t in
+                        sorted(zip(field.k_modes, field.tau_modes))]
+    except CodedRefusal:
+        raise
+    except (Refusal, ZeroDivisionError, OverflowError) as exc:
+        raise BranchAMeasurementInvalid(
+            f"{where}: the recorded primitives are physically admissible but do "
+            f"not yield representable relaxation times ({exc}). Production "
+            "evaluates gamma = 6 pi eta a and tau_r = gamma / k_r in binary64 and "
+            "then serializes the result, so it could never have written this "
+            "record. This is a NUMERICAL representability failure, not a "
+            "statement that the measured eta or a was outside its domain."
+        ) from exc
+    if evidence.get("tau_modes") != expected_tau:
+        raise BranchAMeasurementInvalid(
+            f"{where}: the published relaxation times are not the ones the "
+            "recorded viscosity, bead radius and stiffnesses produce. tau is "
+            "DERIVED -- gamma = 6 pi eta a, tau_r = gamma / k_r, carried with "
+            "ascending k -- so it is not independently choosable once the "
+            "primitives are recorded, however consistently the digests are "
+            "recomputed.")
     # --- TAU_SINGLE_GAMMA ----------------------------------------------------
     taus = _persisted_float_list(evidence, "tau_modes", where)
     k_modes = _persisted_float_list(evidence, "k_modes_measured", where)
@@ -2426,6 +2552,28 @@ class JobExecution:
                          generator_identity: str) -> BranchARealisation:
         """Bind the realised Branch-A measurement to these exact coordinates."""
         self._require_transition(BRANCH_A_REALIZED)
+        # THE PRIMITIVE PHYSICAL DOMAIN, at the boundary of the official chain and
+        # BEFORE anything derived from it is computed. `field.status` already
+        # carries the verdict -- the production constructor applies the approved
+        # G6 rule to eta and a individually, exactly as it applies the existing
+        # positive-definite rule to the stiffness -- so this gate names the cause
+        # and refuses with a code instead of letting a downstream relaxation-time
+        # complaint stand in for a measurement that was never admissible.
+        if not field.is_valid:
+            reasons = [f"{name}={value!r}" for name, value in
+                       (("viscosity", field.viscosity),
+                        ("bead_radius", field.bead_radius))
+                       if not admissible_primitive(value)]
+            detail = ("; inadmissible measured primitive(s): " + ", ".join(reasons)
+                      if reasons else
+                      "; the measured stiffness is not positive definite")
+            raise BranchAMeasurementInvalid(
+                f"{self.job.job_id}: the realised Branch-A field for "
+                f"{field.field_id!r} is {field.status}, so it cannot enter the "
+                f"official chain{detail}. A derived drag coefficient or relaxation "
+                "time cannot rescue an inadmissible measured primitive: eta < 0 "
+                "together with a < 0 yields a positive gamma and positive "
+                "relaxation times.")
         plan_branch_b = self.binding.plan["generating_model"]["branch_b"]
         realisation = BranchARealisation.from_branch_a_field(
             self.coordinates, field, branch_a_seed=branch_a_seed,
@@ -3143,6 +3291,8 @@ def realisation_from_record(record: Mapping[str, Any]) -> BranchARealisation:
         T_measured=number(evidence["T_measured"]),
         k_modes_measured=tuple(number(k) for k in evidence["k_modes_measured"]),
         rot_deg_measured=number(evidence["rot_deg_measured"]),
+        viscosity=number(evidence["viscosity"]),
+        bead_radius=number(evidence["bead_radius"]),
         tau_modes=tuple(number(t) for t in evidence["tau_modes"]),
         scale_factor=number(evidence["scale_factor"]),
         n_samples=evidence["n_samples"],

@@ -60,6 +60,7 @@ import os
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from ..numerics import Refusal
 from .refusals import (
     BranchADomainAuthorityMismatch, BranchADomainScopeViolation,
     BranchADomainUnclassified,
@@ -714,6 +715,73 @@ def require_benchmark_scope(block: Mapping[str, Any]) -> None:
             "benchmark; E1a does not deny that they exist.")
 
 
+# ------------------------------------------ the RUNTIME conforms to the rule
+#: What the runtime must demonstrate at preflight. Each row is (label, eta, a,
+#: must production call this field VALID?). The seven inadmissible pairs are the
+#: ones the F2 authority stage recorded as production-accepted; proving they are
+#: now refused is how the closure of that lag is asserted rather than claimed.
+RUNTIME_CONFORMANCE_PROBES = (
+    ("eta < 0", -8.9e-4, 1e-6, False),
+    ("a < 0", 8.9e-4, -1e-6, False),
+    ("eta < 0 and a < 0 (gamma > 0)", -8.9e-4, -1e-6, False),
+    ("eta = 0", 0.0, 1e-6, False),
+    ("a = 0", 8.9e-4, 0.0, False),
+    ("eta = +infinity", math.inf, 1e-6, False),
+    ("eta = NaN", math.nan, 1e-6, False),
+    ("a = -infinity", 8.9e-4, -math.inf, False),
+    ("eta is a bool", True, 1e-6, False),
+    ("a is a bool", 8.9e-4, True, False),
+    ("admissible TEST-FIXTURE pair", 8.9e-4, 1e-6, True),
+)
+
+
+def require_runtime_conformance(root: str = ".") -> None:
+    """Refuse at preflight if production does not implement the approved domain.
+
+    POSITIVE PROOF, not silence. The F2 authority stage shipped with production
+    knowingly behind this rule and said so; F2e closed it. What replaces that
+    disclosure has to be an assertion that the implementation now expresses the
+    rule -- including the double-negative pair, which a gamma-only implementation
+    would still accept.
+
+    The expectations come from the pinned rule, NOT from the runtime, so an
+    implementation edited to admit eta <= 0 disagrees with the authority rather
+    than redefining it. Pure construction: no RNG, no record, no execution.
+    """
+    from ..branch_a import BranchAField
+
+    def produced_status(viscosity: Any, bead_radius: Any) -> str:
+        return BranchAField(
+            field_id="preflight_probe", H_U=[[1e-4, 0.0], [0.0, 1e-4]], T=298.0,
+            x_star=[0.0, 0.0], k_modes=(1e-4, 1e-4), rot_deg=0.0,
+            viscosity=viscosity, bead_radius=bead_radius,
+            calibration_route="force_displacement_with_stokes_drag").status
+
+    for label, viscosity, bead_radius, expect_valid in RUNTIME_CONFORMANCE_PROBES:
+        approved = classify_drag_inputs(
+            {"viscosity": viscosity, "bead_radius": bead_radius}) == ADMISSIBLE
+        if approved is not expect_valid:
+            raise BranchADomainAuthorityMismatch(
+                f"the pinned rule no longer classifies {label!r} as the approved "
+                "domain requires; the authority itself has drifted")
+        try:
+            status = produced_status(viscosity, bead_radius)
+        except Refusal as exc:
+            if expect_valid:
+                raise BranchADomainAuthorityMismatch(
+                    f"production refuses to construct the admissible pair "
+                    f"{label!r} ({exc}); the runtime fails closed on a valid "
+                    "measurement") from exc
+            continue
+        if (status == "VALID") is not expect_valid:
+            raise BranchADomainAuthorityMismatch(
+                f"IMPLEMENTATION BEHIND AUTHORITY: for {label!r} production "
+                f"records status {status!r} while the approved domain says "
+                f"{'admissible' if expect_valid else 'REFUSED_BRANCH_A_INVALID'}. "
+                "A derived gamma or relaxation time cannot stand in for the "
+                "primitive rule: eta < 0 with a < 0 yields gamma > 0.")
+
+
 # ----------------------------------------------------------- the entry point
 def require_passive_drag_domain_authority(
         contract: Mapping[str, Any],
@@ -728,6 +796,7 @@ def require_passive_drag_domain_authority(
     recorded prospective disposition.
     """
     require_approved_rule(rule)
+    require_runtime_conformance(root)
 
     if CONTRACT_SECTION not in contract:
         raise BranchADomainAuthorityMismatch(

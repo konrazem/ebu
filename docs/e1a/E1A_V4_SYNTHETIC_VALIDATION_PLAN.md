@@ -2,7 +2,7 @@
 
 **PRE-EXECUTION FROZEN PACKAGE, REPAIRED. NOTHING IN THIS PLAN HAS BEEN EXECUTED.**
 
-Plan version **1.16.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
+Plan version **1.17.0**. Calibration scope frozen as **`REPLICATE_CONDITIONAL`** for the six
 cases that evaluate a P1 / Block-1 quantity — section 5.3. Declared subconditions are
 independently random by default — section 7.2. An independent audit found three pre-execution defects in the
 package that had been described as ready for execution; all three were reproduced and
@@ -32,7 +32,7 @@ The official runner refuses to execute if any of these differs.
 | prospective design | `25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6` |
 | frozen foundation | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
 | working baseline | `0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa` |
-| analysis procedure identity | `8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d` |
+| analysis procedure identity | `60122602528f7e89ae3aa6716a20db5a0bf6e89ad52bc7b1e031318327add527` |
 | calibration artifact schema | `e1a_v4_block1_calibration/2` |
 | implementation work commit | `e4b73d7fbd84d329f4326af443fd1918bc44a874` |
 
@@ -871,14 +871,14 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     "final_campaign.requirements.9": "10. structured refusals counted exactly per the already-frozen unconditional denominator rule",
     "final_campaign.rule": "CONJUNCTIVE. Every required case must pass on its own terms. C3 and C4 each contribute 4 required field-level conditions, one per declared field; a case is clean only when all 4 are clean, NO required condition may fail, a single clean field is NEVER sufficient, and compensation is FORBIDDEN both between fields and between cases. A required field satisfies its condition only when it is EVALUABLE_AND_CLEAN: a field whose primary size assessment is NOT_EVALUABLE has NOT satisfied it, and prevents the campaign from passing under VALIDATION_INCONCLUSIVE rather than under STATISTICAL_SIZE_FAILURE.",
     "final_campaign.verdict_on_success": "VALIDATION_PASS",
-    "frozen_identities.analysis_procedure_identity": "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d",
+    "frozen_identities.analysis_procedure_identity": "60122602528f7e89ae3aa6716a20db5a0bf6e89ad52bc7b1e031318327add527",
     "frozen_identities.baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
     "frozen_identities.calibration_artifact_schema": "e1a_v4_block1_calibration/2",
     "frozen_identities.contract_sha256": "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4",
     "frozen_identities.contract_version": "1.2.0",
     "frozen_identities.design_sha256": "25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6",
     "frozen_identities.foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
-    "frozen_identities.implementation_file_hashes_digest": "d746a739c81aec9ab66ae8a5e34f15dfced2b1cb0827ea5b1541feab0f38ec26",
+    "frozen_identities.implementation_file_hashes_digest": "76766083daa3acdaa8fc1aef4b7a4254391bcb73d08d46de614297330a70be19",
     "frozen_identities.implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
     "generating_model.branch_a.common_mode": "ONE draw per experiment, shared across every field, so it cancels in the P2 ratio and not in P3",
     "generating_model.branch_a.independence": "Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory",
@@ -983,7 +983,7 @@ ambiguous match is a **refusal**, never a silent skip. Free prose is never compa
     ],
     "output_schema.record_schema": "e1a_v4_validation_result/2",
     "plan_id": "e1a_v4_synthetic_validation",
-    "plan_version": "1.16.0",
+    "plan_version": "1.17.0",
     "release_authority.absent_diagnostic_is": "RESULT_SCHEMA_INVALID",
     "release_authority.authority_rule": "FROZEN DESIGN / VALIDATION AUTHORITY -> CASE RELEASE SPECIFICATION -> MACHINE PLAN -> MARKDOWN PLAN -> CLASSIFIER / REPORTER. Agreement between the two plan renderings is NOT authority to change a replicate count, confidence rule, confidence level, target probability, integer boundary, denominator rule, release endpoint or mandatory contract diagnostic.",
     "release_authority.complete_pass_event": "all 4 fields: BranchA_valid AND rank_ok AND Neff_ok AND mode_rule_ok AND gate_pass; AND P2_accept AND P3_accept AND P4_verified",

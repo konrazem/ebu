@@ -740,9 +740,9 @@ def test_no_scientific_rule_changed() -> None:
           == "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")
     check("the analysis identity is the one the amended authority yields",
           plan["frozen_identities"]["analysis_procedure_identity"]
-          == "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d",
-          "e1a_v4/contract.py accepts contract minor 1.2; the contract and design "
-          "digests are in the preimage, so this identity moves with them")
+          == "60122602528f7e89ae3aa6716a20db5a0bf6e89ad52bc7b1e031318327add527",
+          "F2e implemented the approved eta/a domain in e1a_v4/branch_a.py, one of "
+          "the twelve SCIENTIFIC_MODULES, so this identity moved by construction")
 
 
 # ============================================================================

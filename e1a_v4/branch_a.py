@@ -58,6 +58,29 @@ def stiffness_matrix(k_modes: Sequence[float], rot_deg: float) -> Matrix:
     return hu
 
 
+#: The APPROVED admissible domain of the Branch-A measured primitives, adopted
+#: prospectively as disposition G6 and stated by design section 3.1:
+#:
+#:     For every E1a field, the Branch-A dynamic-viscosity input eta(T_theta)
+#:     must be a finite real number strictly greater than zero. The bead-radius
+#:     input a must be a finite real number strictly greater than zero.
+#:
+#: Checked on each primitive INDIVIDUALLY and BEFORE anything derived. A rule
+#: stated on the product is insufficient: eta < 0 together with a < 0 gives
+#: gamma = 6 pi eta a > 0 and a positive relaxation time, so a derived-quantity
+#: check cannot tell that pair from a legitimate measurement.
+def admissible_primitive(value: Any) -> bool:
+    """Is `value` an admissible Branch-A measured primitive input?
+
+    `bool` subclasses `int`, so `True` would otherwise pass as 1.0. A flag is
+    not a physical measurement and is refused by identity, not by truthiness.
+    """
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        return False
+    number = float(value)
+    return math.isfinite(number) and number > 0.0
+
+
 @dataclass(frozen=True)
 class BranchAField:
     """One declared field, measured independently of the position histogram."""
@@ -85,6 +108,16 @@ class BranchAField:
             raise Refusal(f"{self.field_id}: temperature must be positive")
         if len(self.x_star) != len(self.H_U):
             raise Refusal(f"{self.field_id}: x_star dimension mismatch")
+        # PRIMITIVE PHYSICAL DOMAIN, before anything derived. A present but
+        # inadmissible eta or a is a MEASUREMENT outcome, not a construction
+        # error, so it takes the same disposition the measured stiffness takes:
+        # the field is recorded BRANCH_A_INVALID rather than refusing to exist.
+        # An ABSENT input never reaches here -- it is caught upstream by the
+        # field-construction resolver and keeps its own undeclared-input
+        # lifecycle, which is a different scientific state.
+        if not (admissible_primitive(self.viscosity)
+                and admissible_primitive(self.bead_radius)):
+            object.__setattr__(self, "status", "BRANCH_A_INVALID")
         lam, _ = jacobi(self.H_U)
         if min(lam) <= 0.0:
             object.__setattr__(self, "status", "BRANCH_A_INVALID")

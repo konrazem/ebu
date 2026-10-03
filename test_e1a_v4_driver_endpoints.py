@@ -1086,6 +1086,15 @@ def test_frozen_authority_unchanged() -> None:
              "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4"),
             ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
              "25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6"),
+            # Plan 1.16.0 -> 1.17.0: F2e, the passive-drag RUNTIME reconciliation.
+            # It changed NO scientific authority -- the contract, design,
+            # foundation, baseline and seed map are all byte-identical -- but it
+            # implemented the approved G6 domain in `e1a_v4/branch_a.py`, which is
+            # one of the twelve SCIENTIFIC_MODULES. The analysis procedure identity
+            # therefore moved by construction, and the plan's frozen_identities
+            # record of it was rebound mechanically. That is the ONLY reason the
+            # plan digests below differ from the F2c values.
+            #
             # Plan 1.15.0 -> 1.16.0: the G6 PASSIVE-DRAG-DOMAIN amendment, and the
             # first amendment since adoption to move the design contract (1.1.0 ->
             # 1.2.0), the prospective design and therefore the seed map. It declares
@@ -1106,9 +1115,9 @@ def test_frozen_authority_unchanged() -> None:
             # BELOW are deliberately unmoved -- no alpha, replicate count, integer
             # boundary or endpoint definition changed, and C2 is untouched.
             ("JSON plan", PLAN_JSON,
-             "c213b5d393422aad5fddb7cb3e482eab9ac10e0cfdca33cc3f91eb3c55e5bb8b"),
+             "fbe1877826a3947399065451b9bfa3fba730243c144d33648bf05b631a7ba9e4"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "dcbff1b7dc5af127e333b21d1a92de36420158ae2f1a53f26064a698fa1731cb"),
+             "2d40781593c607de31e68f42e713641a97335e198ed3453bbe677e76682f0d93"),
             ("seed map", SEED_MAP_JSON,
              "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")):
         check(f"the {label} is the exact frozen one",

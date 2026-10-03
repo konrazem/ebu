@@ -1655,9 +1655,14 @@ def test_embedded_field_authority() -> None:
     campaign = Campaign()
     measured = tuple(row.field for row in BRANCH_A_FIELD_AUTHORITY
                      if row.authority_class == AUTHORITY_MEASURED)
+    # F2e adds the two measured primitive drag inputs. They are MEASURED like
+    # every other realised observation -- their VALUES remain the open F4 input --
+    # but schema 3 persists them, because gamma alone cannot identify the pair
+    # that produced it.
     check("the MEASURED set is exactly the realised Branch-A observations",
           measured == ("H_A", "T_measured", "k_modes_measured",
-                       "rot_deg_measured", "scale_factor"), str(measured))
+                       "rot_deg_measured", "viscosity", "bead_radius",
+                       "scale_factor"), str(measured))
     check("no MEASURED field has an expectation derived for it -- none is "
           "compared with a predetermined number",
           all(f not in embedded_authority_expectations(
@@ -1771,25 +1776,35 @@ def forge_evidence(campaign, job, mutate):
 def valid_measurement(job, k_modes, rot_deg, temperature, scale, gamma):
     """A COMPLETE, internally consistent, NON-NOMINAL Branch-A measurement.
 
-    Built the way production builds one: H_A and the status come from a real
-    `BranchAField`, and the relaxation times come from one shared gamma carried
-    with ascending stiffness. `gamma` here is an arbitrary positive fixture
-    value, never frozen authority -- the verifier only asks that ONE exists.
+    Built the way production builds one: H_A, the status, the drag coefficient
+    and the relaxation times all come from a real `BranchAField`.
+
+    `gamma` here is an arbitrary positive fixture value, never frozen authority.
+    Since F2e the record must also carry the MEASURED PRIMITIVES that produce it,
+    so the fixture realises the requested gamma as a TEST-ONLY admissible pair --
+    bead radius 1 m and viscosity gamma / 6 pi, both finite and strictly
+    positive. These are FIXTURE values and are NOT field-construction inputs:
+    F4 remains open. The relaxation times are then read back from the production
+    object rather than recomputed here, so the record is exactly one production
+    could have written.
     """
+    bead_radius = 1.0
+    viscosity = gamma / (6.0 * math.pi * bead_radius)
     field = BranchAField(
         field_id=job.coordinates.scope, H_U=stiffness_matrix(k_modes, rot_deg),
         T=temperature, x_star=[0.0] * len(k_modes), k_modes=k_modes,
-        rot_deg=rot_deg, viscosity=1.0, bead_radius=1.0,
+        rot_deg=rot_deg, viscosity=viscosity, bead_radius=bead_radius,
         calibration_route="force_displacement_with_stokes_drag",
         scale_factor=scale)
-    taus = tuple(gamma / k for k in k_modes)
-    paired = tuple(t for _, t in sorted(zip(k_modes, taus)))
+    paired = tuple(t for _, t in sorted(zip(field.k_modes, field.tau_modes)))
 
     def mutate(evidence):
         evidence["k_modes_measured"] = [canonical_float(v) for v in k_modes]
         evidence["rot_deg_measured"] = canonical_float(rot_deg)
         evidence["T_measured"] = canonical_float(temperature)
         evidence["scale_factor"] = canonical_float(scale)
+        evidence["viscosity"] = canonical_float(viscosity)
+        evidence["bead_radius"] = canonical_float(bead_radius)
         evidence["H_A"] = [[canonical_float(v) for v in row] for row in field.H]
         evidence["branch_a_status"] = field.status
         evidence["tau_modes"] = [canonical_float(t) for t in paired]
@@ -1819,8 +1834,9 @@ def test_branch_a_measurement_invariants() -> None:
     bytes; it does not prove they form a measurement.
     """
     # --- §26: the invariant inventory, and what each one covers --------------
+    # F2e adds PRIMITIVE_DRAG_DOMAIN and TAU_FROM_PRIMITIVES.
     check("the invariant inventory declares every joint constraint",
-          len(BRANCH_A_MEASUREMENT_INVARIANTS) == 5,
+          len(BRANCH_A_MEASUREMENT_INVARIANTS) == 7,
           str([i.invariant_id for i in BRANCH_A_MEASUREMENT_INVARIANTS]))
     dependents = {f for i in BRANCH_A_MEASUREMENT_INVARIANTS
                   for f in i.dependent_fields}
@@ -2142,6 +2158,8 @@ def production_record(k_modes, *, gamma=FIXTURE_GAMMA, temperature=300.0,
             "rot_deg_measured": canonical_float(rot_deg),
             "T_measured": canonical_float(temperature),
             "scale_factor": canonical_float(scale),
+            "viscosity": canonical_float(gamma / (6.0 * math.pi)),
+            "bead_radius": canonical_float(1.0),
             "H_A": [[canonical_float(v) for v in row] for row in field.H],
             "branch_a_status": field.status,
             "tau_modes": [canonical_float(t) for t in paired],
@@ -2151,18 +2169,27 @@ def production_record(k_modes, *, gamma=FIXTURE_GAMMA, temperature=300.0,
         return None, None, f"{type(exc).__name__}: {exc}"
 
 
-def forced_measurement(k_modes, taus, *, temperature=300.0, scale=1.0, rot_deg=0.0):
+def forced_measurement(k_modes, taus, *, temperature=300.0, scale=1.0, rot_deg=0.0,
+                       gamma=FIXTURE_GAMMA):
     """Set the primitives AND everything derived from them, leaving the
     relaxation tuple free.
 
     `valid_measurement` cannot express these cases: it computes tau from a shared
     gamma, so by construction it can only ever build a POSSIBLE record. An
     impossible one has to be stated directly.
+
+    Since F2e the record also carries its MEASURED PRIMITIVES, realised as a
+    TEST-ONLY admissible pair for the requested `gamma`. A caller who forces a
+    relaxation tuple that those primitives do not produce is now refused twice
+    over -- by the shared-gamma feasibility test as before, and by the exact
+    reconstruction of tau from the recorded eta and a.
     """
+    bead_radius = 1.0
+    viscosity = gamma / (6.0 * math.pi * bead_radius)
     field = BranchAField(
         field_id="forced", H_U=stiffness_matrix(k_modes, rot_deg), T=temperature,
         x_star=[0.0] * len(k_modes), k_modes=tuple(k_modes), rot_deg=rot_deg,
-        viscosity=1.0, bead_radius=1.0,
+        viscosity=viscosity, bead_radius=bead_radius,
         calibration_route="force_displacement_with_stokes_drag",
         scale_factor=scale)
 
@@ -2171,6 +2198,8 @@ def forced_measurement(k_modes, taus, *, temperature=300.0, scale=1.0, rot_deg=0
         evidence["rot_deg_measured"] = canonical_float(rot_deg)
         evidence["T_measured"] = canonical_float(temperature)
         evidence["scale_factor"] = canonical_float(scale)
+        evidence["viscosity"] = canonical_float(viscosity)
+        evidence["bead_radius"] = canonical_float(bead_radius)
         evidence["H_A"] = [[canonical_float(v) for v in row] for row in field.H]
         evidence["branch_a_status"] = field.status
         evidence["tau_modes"] = [canonical_float(t) for t in taus]
@@ -2216,7 +2245,7 @@ def test_branch_a_relaxation_domain() -> None:
     """
     # --- §28: the invariant inventory records the realizability constraint ----
     ids = [i.invariant_id for i in BRANCH_A_MEASUREMENT_INVARIANTS]
-    check("the invariant inventory declares the relaxation domain", len(ids) == 5,
+    check("the invariant inventory declares the relaxation domain", len(ids) == 7,
           str(ids))
     check("RELAXATION_DOMAIN is one of them", "RELAXATION_DOMAIN" in ids, str(ids))
 
@@ -2327,7 +2356,8 @@ def test_branch_a_relaxation_domain() -> None:
     job = campaign.job(C2, field_id="theta2_ellipse")
     campaign.run(job, terminal=False)
     forge_evidence(campaign, job,
-                   forced_measurement((1.0, 2.0), (MAX_FINITE, MAX_FINITE / 2.0)))
+                   forced_measurement((1.0, 2.0), (MAX_FINITE, MAX_FINITE / 2.0),
+                                      gamma=MAX_FINITE))
     outcome = read_outcome(committed_publication(
         campaign.out, job.coordinates)["branch_a_evidence"])
     check("tau = MAX raises NO uncoded exception (it used to be OverflowError)",
@@ -2357,6 +2387,8 @@ def test_branch_a_relaxation_domain() -> None:
             "rot_deg_measured": canonical_float(0.0),
             "T_measured": canonical_float(temperature),
             "scale_factor": canonical_float(scale),
+            "viscosity": canonical_float(FIXTURE_GAMMA / (6.0 * math.pi)),
+            "bead_radius": canonical_float(1.0),
             "H_A": [[canonical_float(0.0)] * len(k_modes)] * len(k_modes),
             "branch_a_status": "VALID",
             "tau_modes": [canonical_float(t) for t in taus],
@@ -2381,6 +2413,8 @@ def test_branch_a_relaxation_domain() -> None:
                 rot_deg_measured=canonical_float(0.0),
                 T_measured=canonical_float(300.0),
                 scale_factor=canonical_float(1.0),
+                viscosity=canonical_float(FIXTURE_GAMMA / (6.0 * math.pi)),
+                bead_radius=canonical_float(1.0),
                 H_A=[[canonical_float(0.0)] * len(k_modes)] * len(k_modes),
                 branch_a_status="BRANCH_A_INVALID",
                 tau_modes=[canonical_float(1.0) for _ in k_modes])
@@ -2393,11 +2427,13 @@ def test_branch_a_relaxation_domain() -> None:
               not outcome.startswith("UNCODED"), outcome)
         if outcome != "ACCEPT":
             divergences.append((label, outcome))
-    # The ONLY tolerated divergence is the negative-stiffness class, which the
-    # verifier refuses because it requires a positive relaxation time -- i.e.
-    # because it assumes gamma > 0. That assumption is NOT resolved here: eta and
-    # a are undeclared in frozen authority, so the sign of gamma is an open
-    # field-construction question and this check is left exactly as it was.
+    # The ONLY tolerated divergence remains the negative-stiffness class. Its
+    # REASON has changed since F2e: the verifier no longer refuses it because it
+    # merely assumes gamma > 0. The eta/a DOMAIN is now declared (disposition G6)
+    # and gamma > 0 is DERIVED from admissible primitives, so these records are
+    # refused on the already-explicit positive-definite stiffness rule. The
+    # divergence SET is unchanged, which is what this check asserts: F2e closed
+    # the drag-domain question without altering established stiffness science.
     check("the only production/read divergence is the negative-stiffness class",
           {label for label, _ in divergences}
           == {"one negative stiffness", "both stiffnesses negative"},

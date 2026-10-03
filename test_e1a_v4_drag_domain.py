@@ -524,9 +524,21 @@ def test_stiffness_unchanged() -> None:
 
 
 # ------------------------------------- the runtime is knowingly behind this
-def test_runtime_lag_is_disclosed_not_hidden() -> None:
-    """F2e is NOT implemented here. This records exactly how far behind it is."""
-    from e1a_v4.branch_a import BranchAField
+#: The SEVEN inadmissible primitive inputs the F2 authority stage recorded as
+#: production-accepted. They are kept here verbatim, in the same order, because
+#: the historical report's claim that production was behind authority is evidence
+#: and this is where it is shown closed.
+SEVEN_INADMISSIBLE = (("eta < 0", -8.9e-4, 1e-6), ("a < 0", 8.9e-4, -1e-6),
+                      ("eta < 0 and a < 0", -8.9e-4, -1e-6),
+                      ("eta = 0", 0.0, 1e-6), ("a = 0", 8.9e-4, 0.0),
+                      ("eta = inf", math.inf, 1e-6),
+                      ("eta = nan", math.nan, 1e-6))
+
+
+def test_runtime_conforms_to_the_approved_domain() -> None:
+    """F2e CLOSED the lag this test used to record. It is not deleted: the same
+    seven inputs are checked, and the assertion is now conformance."""
+    from e1a_v4.branch_a import BranchAField, admissible_primitive
     def built(eta, a):
         return BranchAField(
             field_id="probe", H_U=[[1e-4, 0.0], [0.0, 1e-4]], T=298.0,
@@ -534,33 +546,45 @@ def test_runtime_lag_is_disclosed_not_hidden() -> None:
             viscosity=eta, bead_radius=a,
             calibration_route="force_displacement_with_stokes_drag")
     lagging = []
-    for label, eta, a in (("eta < 0", -8.9e-4, 1e-6), ("a < 0", 8.9e-4, -1e-6),
-                          ("eta < 0 and a < 0", -8.9e-4, -1e-6),
-                          ("eta = 0", 0.0, 1e-6), ("a = 0", 8.9e-4, 0.0),
-                          ("eta = inf", math.inf, 1e-6),
-                          ("eta = nan", math.nan, 1e-6)):
+    for label, eta, a in SEVEN_INADMISSIBLE:
         field = built(eta, a)
         authority = classify_drag_inputs({"viscosity": eta, "bead_radius": a})
+        check(f"production refuses {label}",
+              field.status == "BRANCH_A_INVALID" and authority != ADMISSIBLE,
+              f"status {field.status}, authority {authority}")
         if field.status == "VALID" and authority != ADMISSIBLE:
             lagging.append(label)
-    check("production still accepts EVERY inadmissible drag input as VALID",
-          len(lagging) == 7, f"{len(lagging)}/7 behind authority: {lagging}")
+    check("production is behind authority on NONE of the seven",
+          not lagging, f"{len(lagging)}/7 behind: {lagging}")
     check("the authority refuses all seven",
           all(classify_drag_inputs({"viscosity": e, "bead_radius": a})
-              == "REFUSED_BRANCH_A_INVALID"
-              for e, a in ((-8.9e-4, 1e-6), (8.9e-4, -1e-6), (-8.9e-4, -1e-6),
-                           (0.0, 1e-6), (8.9e-4, 0.0), (math.inf, 1e-6),
-                           (math.nan, 1e-6))))
+              == "REFUSED_BRANCH_A_INVALID" for _, e, a in SEVEN_INADMISSIBLE))
+    check("production and authority agree on every one of the seven",
+          all((built(e, a).status == "VALID")
+              == (classify_drag_inputs({"viscosity": e, "bead_radius": a}) == ADMISSIBLE)
+              for _, e, a in SEVEN_INADMISSIBLE))
+
     source = open(os.path.join(ROOT, "e1a_v4/branch_a.py"), encoding="utf-8").read()
-    check("branch_a.py still applies NO validation to viscosity or bead_radius",
-          "viscosity" not in source.split("def __post_init__")[1].split("@property")[0]
-          and "bead_radius" not in source.split("def __post_init__")[1].split("@property")[0],
-          "F2e is the authorised stage that closes this; it is NOT done here")
-    check("no production or recovery module imports the new authority module",
-          all("drag_domain" not in open(os.path.join(ROOT, p), encoding="utf-8").read()
-              for p in ("e1a_v4/branch_a.py", "e1a_v4/validation/campaign_driver.py",
-                        "e1a_v4/validation/calibrate.py",
-                        "e1a_v4/validation/generate.py")))
+    post_init = source.split("def __post_init__")[1].split("@property")[0]
+    check("branch_a.py NOW validates viscosity and bead_radius at construction",
+          "viscosity" in post_init and "bead_radius" in post_init,
+          "the approved rule lives where its sibling stiffness rule lives")
+    check("production rejects a bool masquerading as a measurement",
+          built(True, 1e-6).status == "BRANCH_A_INVALID"
+          and built(8.9e-4, True).status == "BRANCH_A_INVALID",
+          "bool subclasses int; a flag is not a physical measurement")
+    check("a legitimate measurement is still VALID",
+          built(8.9e-4, 1e-6).status == "VALID",
+          "TEST FIXTURE values, not F4 field-construction inputs")
+    check("production does NOT import the authority module",
+          "drag_domain" not in source,
+          "the rule is implemented from the design, not by calling the verifier")
+    check("production and the authority predicate agree on the domain",
+          all(admissible_primitive(v)
+              == (classify_drag_inputs({"viscosity": v, "bead_radius": 1e-6})
+                  == ADMISSIBLE)
+              for v in (8.9e-4, 1.0, 1e-300, 0.0, -1.0, math.inf, math.nan, True)),
+          "two independent implementations of one approved rule")
 
 
 
@@ -679,8 +703,8 @@ def main() -> int:
     test_stiffness_unchanged()
     print("\nthe G6 record's own shape")
     test_g6_record_totality()
-    print("\nthe runtime lag, disclosed")
-    test_runtime_lag_is_disclosed_not_hidden()
+    print("\nthe runtime now conforms to the approved domain")
+    test_runtime_conforms_to_the_approved_domain()
     print("\nhygiene")
     test_hygiene()
     print(f"\nRESULT: {PASSED} passed, {FAILED} failed")

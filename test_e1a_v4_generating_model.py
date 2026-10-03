@@ -600,7 +600,7 @@ def test_no_scientific_rule_changed() -> None:
           == "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507")
     check("the analysis identity is the one the amended authority yields",
           plan["frozen_identities"]["analysis_procedure_identity"]
-          == "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d")
+          == "60122602528f7e89ae3aa6716a20db5a0bf6e89ad52bc7b1e031318327add527")
     check("the seed map identity is the one the amended contract derives",
           sha256_file(os.path.join(ROOT, SEED_MAP_JSON))
           == "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")
