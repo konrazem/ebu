@@ -15,7 +15,9 @@ from .classification import size_boundary
 from .dispositions import cp_upper
 from .release_authority import CONTRACT as RELEASE_CONTRACT
 from .release_authority import release_binding_specification
+from .drag_domain import CONTRACT_SECTION as DRAG_DOMAIN_SECTION
 from .refusals import (
+    BranchADomainAuthorityMismatch,
     ContractBindingUnclassified, ContractFieldDuplicate, ContractFieldSetMismatch,
     ContractGeneratingParameterMismatch, ContractReferenceFieldMismatch,
     ContractRelaxationRuleMismatch, ContractTrueBridgeBetaMismatch,
@@ -28,6 +30,16 @@ NOT_APPLICABLE = "NOT_APPLICABLE"
 #: Bound, but by the RELEASE-AUTHORITY layer rather than here. Named
 #: explicitly so a release-bearing leaf can never read as "not applicable".
 DELEGATED_TO_RELEASE_AUTHORITY = "DELEGATED_TO_RELEASE_AUTHORITY"
+#: Bound, but by the DRAG-DOMAIN layer. Same reasoning: the Branch-A measured
+#: input domain is checked leaf by leaf against a rule pinned ABOVE this contract,
+#: so its leaves are bound authority, never unbound text.
+DELEGATED_TO_DRAG_DOMAIN_AUTHORITY = "DELEGATED_TO_DRAG_DOMAIN_AUTHORITY"
+
+DRAG_DOMAIN_DELEGATION = (
+    "Branch-A measured-input-domain authority. Every leaf is compared against the "
+    "approved rule pinned in e1a_v4.validation.drag_domain, which is upstream of this "
+    "contract, so the contract cannot define its own expected eta/a domain. The plan "
+    "restates one derived rendering, bound EXACTly by its own row.")
 
 
 @dataclass(frozen=True)
@@ -107,6 +119,20 @@ def binding_specification(contract: dict[str, Any], plan: dict[str, Any],
         add("relaxation_time_rule", f"generating_model.per_field[{i}].tau_rule",
             DERIVED, "Compact rendering of the same per-mode Stokes-drag law.",
             tau, target.get("tau_rule"))
+
+    domain = contract.get(DRAG_DOMAIN_SECTION)
+    if not isinstance(domain, dict) or "plan_rendering" not in domain:
+        raise BranchADomainAuthorityMismatch(
+            f"the design contract carries no usable {DRAG_DOMAIN_SECTION}.plan_rendering; "
+            "the plan's restatement of the Branch-A measured input domain would then "
+            "have no upstream authority to conform to")
+    add(f"{DRAG_DOMAIN_SECTION}.plan_rendering",
+        "generating_model.branch_a.measured_input_domain", EXACT,
+        "The execution-facing plan restates the approved admissible domain of the "
+        "Branch-A measured primitives eta and a verbatim. The contract is upstream: a "
+        "plan rendering may restate the domain, never weaken it.",
+        domain["plan_rendering"],
+        plan["generating_model"]["branch_a"].get("measured_input_domain"))
 
     direct = (
         ("hypothetical_uncertainty_scenario.dt_s", "generating_model.branch_b.dt_s"),
@@ -303,6 +329,11 @@ def binding_specification(contract: dict[str, Any], plan: dict[str, Any],
         for path in _leaf_paths(contract[section], section):
             if _covered(path, represented):
                 continue
+            if path.split(".", 1)[0] == DRAG_DOMAIN_SECTION:
+                add(path, "(bound by e1a_v4.validation.drag_domain)",
+                    DELEGATED_TO_DRAG_DOMAIN_AUTHORITY, DRAG_DOMAIN_DELEGATION,
+                    None, None)
+                continue
             reason = _not_repeated_reason(path)
             if reason is None:
                 raise ContractBindingUnclassified(
@@ -315,7 +346,8 @@ def binding_specification(contract: dict[str, Any], plan: dict[str, Any],
 
 EXECUTION_CONTRACT_SECTIONS = (
     "scientific_target", "information_separation", "fields",
-    "relaxation_time_rule", "endpoints", "entropy_semantics", "mode_resolution",
+    "relaxation_time_rule", "branch_a_measured_input_domain",
+    "endpoints", "entropy_semantics", "mode_resolution",
     "hypothetical_uncertainty_scenario", "complete_pipeline",
     "false_bridge_controls", "refusal_semantics",
     "synthetic_validation_requirements", "synthetic_validation_release_criteria",
@@ -505,10 +537,12 @@ def binding_inventory(contract: dict[str, Any], plan: dict[str, Any],
     rows = binding_specification(contract, plan, root)
     result = {name: sum(row.relationship == name for row in rows)
               for name in (EXACT, DERIVED, CASE_SPECIFIC_ALLOWED_OVERRIDE,
-                           DELEGATED_TO_RELEASE_AUTHORITY, NOT_APPLICABLE)}
+                           DELEGATED_TO_RELEASE_AUTHORITY,
+                           DELEGATED_TO_DRAG_DOMAIN_AUTHORITY, NOT_APPLICABLE)}
     result["execution_relevant_contract_bindings"] = len(rows)
     result["plan_bound_bindings"] = sum(
-        row.relationship not in (NOT_APPLICABLE, DELEGATED_TO_RELEASE_AUTHORITY)
+        row.relationship not in (NOT_APPLICABLE, DELEGATED_TO_RELEASE_AUTHORITY,
+                                 DELEGATED_TO_DRAG_DOMAIN_AUTHORITY)
         for row in rows)
     leaves = [path for section in EXECUTION_CONTRACT_SECTIONS
               for path in _leaf_paths(contract[section], section)]
@@ -542,7 +576,8 @@ def require_contract_plan_conformance(contract: dict[str, Any],
     if binding_inventory(contract, plan, root)["unclassified_execution_relevant"]:
         raise ContractBindingUnclassified("contract->plan binding specification is incomplete")
     for row in rows:
-        if row.relationship in (NOT_APPLICABLE, DELEGATED_TO_RELEASE_AUTHORITY):
+        if row.relationship in (NOT_APPLICABLE, DELEGATED_TO_RELEASE_AUTHORITY,
+                                DELEGATED_TO_DRAG_DOMAIN_AUTHORITY):
             continue
         if row.expected != row.actual or type(row.expected) is not type(row.actual):
             detail = (f"{row.plan_path} != {row.contract_path}: "
@@ -551,4 +586,6 @@ def require_contract_plan_conformance(contract: dict[str, Any],
                 raise ContractTrueBridgeBetaMismatch(detail)
             if row.plan_path.endswith(".tau_rule"):
                 raise ContractRelaxationRuleMismatch(detail)
+            if row.plan_path.endswith(".measured_input_domain"):
+                raise BranchADomainAuthorityMismatch(detail)
             raise ContractGeneratingParameterMismatch(detail)

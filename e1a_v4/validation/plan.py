@@ -31,6 +31,7 @@ from ..numerics import Refusal
 from . import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON, VALIDATION_IDENTITY
 from .coherence import require_plan_authority_coherence
 from .contract_plan import require_contract_plan_conformance
+from .drag_domain import require_passive_drag_domain_authority
 from .release_authority import require_release_authority_conformance
 from .driver import driver_identity_component
 from .refusals import (
@@ -60,6 +61,7 @@ VALIDATION_MODULES = (
     "e1a_v4/validation/coherence.py",
     "e1a_v4/validation/contract_plan.py",
     "e1a_v4/validation/dispositions.py",
+    "e1a_v4/validation/drag_domain.py",
     "e1a_v4/validation/driver.py",
     "e1a_v4/validation/generate.py",
     "e1a_v4/validation/plan.py",
@@ -255,6 +257,10 @@ def bind_execution(root: str = ".", output_dir: str | None = None) -> ExecutionB
     require_output_schema_agreement(root, plan)
     require_plan_authority_coherence(root, plan)
     require_contract_plan_conformance(binding.data, plan, root)
+    # The approved Branch-A measured-input domain, bound against a rule pinned ABOVE
+    # the contract. A contract may not define its own expected eta/a domain, and a
+    # design document edited to agree with a weakened contract is still refused.
+    require_passive_drag_domain_authority(binding.data, plan, root)
     # Agreement between two renderings of the plan cannot amend the frozen release
     # authority upstream of it. This edge is separate from the generating-model
     # conformance above and refuses a coherently-drifted replicate count, target,

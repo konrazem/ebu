@@ -399,11 +399,12 @@ def test_hygiene() -> None:
     check("every replicate count unchanged",
           [c["replicate_count"] for c in PLAN["cases"]]
           == [300, 400, 400, 2000, 400, 400, 400, 200])
-    check("the design contract did NOT change",
-          BINDING.sha256 == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b")
-    check("master and family seed values unchanged",
-          EX.seed_map.master == 13785910525869478477
-          and EX.seed_map.families["calibration"] == 6644164099584621674)
+    # Repointed by the G6 passive-drag-domain amendment; no scientific rule moved.
+    check("the design contract is the G6-amended one and nothing else",
+          BINDING.sha256 == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4")
+    check("master and family seeds are the ones the current contract derives",
+          EX.seed_map.master == 4447657248690327258
+          and EX.seed_map.families["calibration"] == 8836406515865678278)
     check("primary sigma_psi still 0.5 degrees",
           BINDING.data["hypothetical_uncertainty_scenario"]["sigma_psi_deg"] == 0.5)
     check("G1/G2 thresholds recompute unchanged",

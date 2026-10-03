@@ -592,17 +592,18 @@ def test_no_scientific_rule_changed() -> None:
         check(f"{label} unchanged", got == want, str(want))
     check("primary sigma_psi is still 0.5 deg",
           binding.data["hypothetical_uncertainty_scenario"]["sigma_psi_deg"] == 0.5)
-    check("contract identity unchanged",
-          binding.sha256 == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b")
+    # Repointed by the G6 passive-drag-domain amendment; no generating parameter moved.
+    check("contract identity is the G6-amended one",
+          binding.sha256 == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4")
     check("foundation identity unchanged",
           binding.foundation_sha256
           == "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507")
-    check("the analysis identity is unchanged",
+    check("the analysis identity is the one the amended authority yields",
           plan["frozen_identities"]["analysis_procedure_identity"]
-          == "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f")
-    check("the seed map identity is unchanged",
+          == "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d")
+    check("the seed map identity is the one the amended contract derives",
           sha256_file(os.path.join(ROOT, SEED_MAP_JSON))
-          == "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")
+          == "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")
     check("the generating model itself is unchanged",
           plan["generating_model"]["branch_b"]["dt_s"] == 0.00012
           and plan["generating_model"]["branch_b"]["T_total_s"] == 240.0

@@ -462,13 +462,16 @@ def test_scientific_rules_unchanged() -> None:
                      "C3_g5_block": 400, "C4_surrogate_validity": 2000,
                      "C5_plug_in_branch_a": 400, "C6_mode_resolution_boundary": 400,
                      "C7_false_bridge": 400, "C8_blinded_scale_control": 200})
-    check("the design contract did NOT change",
-          BINDING.sha256 == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b")
-    check("the seed map did NOT change and every seed value is identical",
+    # Repointed by the G6 passive-drag-domain amendment (contract 1.1.0 -> 1.2.0),
+    # which moved the contract identity and, through it, the seed map. The adopted
+    # rules, replicate counts and sigma_psi asserted above did NOT move.
+    check("the design contract is the G6-amended one and nothing else",
+          BINDING.sha256 == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4")
+    check("the seed map rederives from the current contract identity",
           FrozenSeedMap.derive(BINDING.sha256).as_json()["families"]
           == json.load(open(os.path.join(ROOT, "docs/e1a/e1a_v4_seed_map.json"),
                             encoding="utf-8"))["families"],
-          "seeds bind to the contract identity, which did not move")
+          "seeds bind to the contract identity, and are never hand-edited")
     check("the repair records that NO scientific rule changed",
           PLAN["preexecution_repair"]["scientific_rules_changed"] == "NONE")
     check("the superseded package is recorded, not erased",

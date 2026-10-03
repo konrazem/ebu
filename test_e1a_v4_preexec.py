@@ -351,11 +351,14 @@ def test_plan() -> None:
           "Bonferroni correction" in PLAN["adopted_rules_unchanged"]["forbidden"]
           and "fixed-B0 normalisation" in PLAN["adopted_rules_unchanged"]["forbidden"])
     # G4 closes the C3/C4 field-to-replicate reduction, prospectively, at plan
-    # 1.11.0; G5 closes their structured-refusal semantics at 1.15.0. The list is
-    # asserted exactly so a gap cannot be added or dropped silently.
-    check("five author dispositions are recorded",
-          [g["id"] for g in PLAN["authority_gaps"]] == ["G1", "G2", "G3", "G4", "G5"])
-    check("all five are CLOSED PROSPECTIVELY",
+    # 1.11.0; G5 closes their structured-refusal semantics at 1.15.0; G6 closes the
+    # Branch-A measured-input domain -- the admissible domain of eta and a -- at
+    # 1.16.0. The list is asserted exactly so a gap cannot be added or dropped
+    # silently.
+    check("six author dispositions are recorded",
+          [g["id"] for g in PLAN["authority_gaps"]]
+          == ["G1", "G2", "G3", "G4", "G5", "G6"])
+    check("all six are CLOSED PROSPECTIVELY",
           all(g["status"] == "CLOSED PROSPECTIVELY" for g in PLAN["authority_gaps"]))
     check("no assurance row still says the criterion is undeclared",
           not any("NOT DECLARED IN ADOPTED AUTHORITY" in a["acceptance_rule"]
@@ -430,7 +433,8 @@ def test_identities() -> None:
     check("a changed plan changes the execution identity",
           execution_identity(BINDING, "0" * 64, seed_sha, ROOT) != e1)
     check("every validation module enters the execution identity",
-          len(VALIDATION_MODULES) == 18
+          len(VALIDATION_MODULES) == 19
+          and "e1a_v4/validation/drag_domain.py" in VALIDATION_MODULES
           and "e1a_v4/validation/release_authority.py" in VALIDATION_MODULES
           and "e1a_v4/validation/publication.py" in VALIDATION_MODULES
           # the canonical driver is bound SEPARATELY, as its own preimage field

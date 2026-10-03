@@ -79,14 +79,15 @@ print(f"  seed map           : {binding.seed_map_sha256}")
 print(f"  analysis identity  : {binding.analysis_identity}")
 print(f"  execution identity : {binding.execution_identity}")
 check(binding.binding.sha256
-      == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
-      "the design contract did NOT move in the repair")
-check(binding.seed_map.master == 13785910525869478477
-      and binding.seed_map.families["calibration"] == 6644164099584621674
-      and binding.seed_map.families["validation"] == 5088042359768187837
-      and binding.seed_map.families["branch_a_measurement"] == 62746336670861162,
-      "every seed VALUE is unchanged; the seed-map FILE hash moved because its "
-      "derivation documentation gained the job level")
+      == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4",
+      "the design contract is the G6 passive-drag-domain amendment, version 1.2.0")
+check(binding.seed_map.master == 4447657248690327258
+      and binding.seed_map.families["calibration"] == 8836406515865678278
+      and binding.seed_map.families["validation"] == 1626264448266406929
+      and binding.seed_map.families["branch_a_measurement"] == 1811775803831601789,
+      "every seed value REDERIVES from the amended contract identity; the G6 "
+      "amendment moved the contract hash, so the whole seed map moved with it. "
+      "No seed was ever drawn, from these values or the previous ones")
 check(binding.analysis_identity
       != "af1177a9d3220f60f78ef738bbee6c925da3ed632b68a9f51830fffe5e985eb4",
       "the analysis identity DID move: calibration.py and endpoints.py changed")

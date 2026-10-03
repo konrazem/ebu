@@ -919,8 +919,11 @@ def test_no_scientific_rule_changed() -> None:
     check("C8's paired scale factors are unchanged",
           c(plan, "C8_blinded_scale_control")["subconditions"][0]["scale_factors"]
           == [1.07, 0.9])
-    check("the frozen design contract itself is untouched",
-          contract["contract_version"] == "1.1.0")
+    # The G6 passive-drag-domain amendment moved the contract to 1.2.0. It added the
+    # Branch-A measured-input domain and changed NO release-bearing value: every
+    # threshold, replicate count and alternative asserted above is unmoved.
+    check("the frozen design contract carries no release change beyond G6",
+          contract["contract_version"] == "1.2.0")
 
 
 def test_prior_conformance_preserved() -> None:

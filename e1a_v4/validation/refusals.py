@@ -105,6 +105,34 @@ class ContractRelaxationRuleMismatch(CodedRefusal):
     code = "CONTRACT_RELAXATION_RULE_MISMATCH"
 
 
+class BranchADomainAuthorityMismatch(CodedRefusal):
+    """A representation of the approved Branch-A input domain disagrees.
+
+    Raised when the pinned rule, the design contract, the normative design
+    document, the validation plan's restatement or its recorded prospective
+    disposition no longer state the approved eta/a domain.
+    """
+
+    code = "BRANCH_A_DOMAIN_AUTHORITY_MISMATCH"
+
+
+class BranchADomainUnclassified(CodedRefusal):
+    """The input-domain authority carries a key nothing classifies."""
+
+    code = "BRANCH_A_DOMAIN_UNCLASSIFIED"
+
+
+class BranchADomainScopeViolation(CodedRefusal):
+    """The input-domain authority has overstepped what it was approved to say.
+
+    Either it has started to supply the actual field-construction values that
+    remain OPEN as F4, or its benchmark-domain scope has become a universal
+    physical claim.
+    """
+
+    code = "BRANCH_A_DOMAIN_SCOPE_VIOLATION"
+
+
 class ContractTrueBridgeBetaMismatch(CodedRefusal):
     code = "CONTRACT_TRUE_BRIDGE_BETA_MISMATCH"
 
@@ -677,6 +705,8 @@ ALL_REFUSAL_CLASSES = (
     CalibrationLockUnplanned, CalibrationLockWithoutPublication,
     CalibrationLockProvenanceMismatch,
     ContractMandatoryDiagnosticMissing, ContractMandatoryDiagnosticMismatch,
+    BranchADomainAuthorityMismatch, BranchADomainUnclassified,
+    BranchADomainScopeViolation,
     PlanVersionMismatch, PlanAnalysisIdentityMismatch, PlanIdentityMismatch,
     PlanCaseMismatch, PlanSubconditionMismatch, PlanReleaseRuleMismatch,
     PlanAdoptedRuleMismatch, PlanSurfaceMismatch, PlanSurfaceUndeclared,

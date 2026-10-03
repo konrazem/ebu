@@ -86,11 +86,11 @@
   },
   "e1a_v4_design": {
     "design_document": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
-    "design_sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
-    "design_byte_count": 29330,
+    "design_sha256": "25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6",
+    "design_byte_count": 34799,
     "contract": "docs/e1a/e1a_v4_design_contract.json",
-    "status": "PROSPECTIVE DESIGN ADOPTED; validation dispositions G1-G3 closed prospectively; not implemented-validated, not preregistered",
+    "status": "PROSPECTIVE DESIGN ADOPTED; validation dispositions G1-G3 closed prospectively; Branch-A measured-input domain G6 closed prospectively; not implemented-validated, not preregistered",
     "authority": "authoritative prospective source for E1a decision rules; ranks below the frozen foundation and below this baseline on scientific content",
-    "contract_version": "1.1.0"
+    "contract_version": "1.2.0"
   }
 }

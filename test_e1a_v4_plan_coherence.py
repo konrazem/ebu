@@ -790,8 +790,9 @@ def test_no_scientific_rule_changed() -> None:
             ("rank_tol", binding.rank_tol, 1e-12),
             ("pipeline_target", binding.pipeline_target, 0.9)):
         check(f"{label} unchanged", got == want, str(want))
-    check("contract identity unchanged",
-          binding.sha256 == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b")
+    # Repointed by the G6 passive-drag-domain amendment; no adopted rule moved.
+    check("contract identity is the G6-amended one",
+          binding.sha256 == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4")
     check("foundation identity unchanged",
           binding.foundation_sha256
           == "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507")
@@ -808,10 +809,10 @@ def test_no_scientific_rule_changed() -> None:
               if c["case_id"] in ("C7_false_bridge", "C8_blinded_scale_control")))
     check("execution is still NOT authorised", plan["execution_authorised"] is False)
     seeds = json.load(open(os.path.join(ROOT, SEED_MAP_JSON), encoding="utf-8"))
-    check("the master seed is unchanged", seeds["master_seed"] == 13785910525869478477)
-    check("the seed map identity is unchanged",
+    check("the master seed is the one the amended contract derives", seeds["master_seed"] == 4447657248690327258)
+    check("the seed map identity is the one the amended contract derives",
           sha256_file(os.path.join(ROOT, SEED_MAP_JSON))
-          == "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")
+          == "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")
 
 
 if __name__ == "__main__":

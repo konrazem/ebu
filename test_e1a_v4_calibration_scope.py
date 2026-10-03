@@ -389,8 +389,9 @@ def test_hygiene() -> None:
     check("execution remains unauthorised", PLAN["execution_authorised"] is False)
     check("no random draw occurred in this suite", SentinelRNG.CALLS == 0,
           f"RNG_CALL_COUNT = {SentinelRNG.CALLS}")
-    check("the design contract did NOT change",
-          BINDING.sha256 == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b")
+    # Repointed by the G6 passive-drag-domain amendment; no scientific rule moved.
+    check("the design contract is the G6-amended one and nothing else",
+          BINDING.sha256 == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4")
     a = PLAN["adopted_rules_unchanged"]
     check("no scientific rule moved",
           (a["delta_cross"], a["delta_abs"], a["alpha_geom"], a["alpha_1"], a["alpha_2"],

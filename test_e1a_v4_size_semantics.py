@@ -345,10 +345,10 @@ def test_nothing_else_moved() -> None:
           classify_campaign(counts())["detail"]["C8"]["threshold"] == 188)
     check("G2 threshold unchanged: 4/400",
           classify_campaign(counts())["detail"]["C7"][ALTS[0]]["threshold"] == 4)
-    check("the design contract was NOT changed by this task",
+    check("the plan is frozen against the G6-amended contract, version 1.2.0",
           PLAN["frozen_identities"]["contract_sha256"] == BINDING.sha256
-          and BINDING.data["contract_version"] == "1.1.0",
-          f"contract still {BINDING.sha256[:12]}, version 1.1.0")
+          and BINDING.data["contract_version"] == "1.2.0",
+          f"contract {BINDING.sha256[:12]}, version 1.2.0")
     check("classification.py is registered in the execution identity",
           "e1a_v4/validation/classification.py" in VALIDATION_MODULES)
     check("execution remains unauthorised", PLAN["execution_authorised"] is False)

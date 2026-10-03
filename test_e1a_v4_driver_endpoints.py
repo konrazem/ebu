@@ -1083,9 +1083,18 @@ def test_frozen_authority_unchanged() -> None:
             ("theory baseline", "docs/theory/EBU_THEORY_BASELINE.md",
              "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa"),
             ("design contract", "docs/e1a/e1a_v4_design_contract.json",
-             "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b"),
+             "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4"),
             ("prospective design", "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
-             "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495"),
+             "25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6"),
+            # Plan 1.15.0 -> 1.16.0: the G6 PASSIVE-DRAG-DOMAIN amendment, and the
+            # first amendment since adoption to move the design contract (1.1.0 ->
+            # 1.2.0), the prospective design and therefore the seed map. It declares
+            # the admissible domain of the Branch-A MEASURED primitives eta and a:
+            # each finite and strictly greater than zero, bound INDIVIDUALLY rather
+            # than through the derived gamma. No alpha, replicate count, integer
+            # boundary, margin, coverage factor or endpoint definition moved; the
+            # foundation and baseline digests ABOVE are deliberately unmoved.
+            #
             # Plan 1.14.0 -> 1.15.0: the G5 STRUCTURED-REFUSAL amendment. A valid
             # structured refusal can leave a C3 G5 / C4 Block-1 decision undefined,
             # and frozen authority defined refusal treatment for complete-pipeline
@@ -1097,12 +1106,12 @@ def test_frozen_authority_unchanged() -> None:
             # BELOW are deliberately unmoved -- no alpha, replicate count, integer
             # boundary or endpoint definition changed, and C2 is untouched.
             ("JSON plan", PLAN_JSON,
-             "dcf0c575a048ceebfcd3deb261d1a76ff269bfb16178a531b8911b5bdf8808ec"),
+             "c213b5d393422aad5fddb7cb3e482eab9ac10e0cfdca33cc3f91eb3c55e5bb8b"),
             ("Markdown plan", PLAN_MARKDOWN,
-             "5b76c3095ecbf5bc0f0273f2b83da8fab2d0c51154efc7628031b6445a4fbb18"),
+             "dcbff1b7dc5af127e333b21d1a92de36420158ae2f1a53f26064a698fa1731cb"),
             ("seed map", SEED_MAP_JSON,
-             "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")):
-        check(f"the {label} is BYTE-unchanged",
+             "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")):
+        check(f"the {label} is the exact frozen one",
               sha256_file(os.path.join(ROOT, path)) == digest)
     for key, expected in (("alpha_geom", 0.005), ("alpha_1", 0.004),
                           ("alpha_2", 0.001), ("delta_abs", 0.05),

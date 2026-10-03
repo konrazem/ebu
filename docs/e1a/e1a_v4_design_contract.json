@@ -1,6 +1,6 @@
 {
   "contract_id": "e1a_v4_prospective_design",
-  "contract_version": "1.1.0",
+  "contract_version": "1.2.0",
   "created": "2026-09-28",
   "experiment": "E1a - canonical Einstein-EBU benchmark realisation",
   "status": "PROSPECTIVE DESIGN ONLY. Implementation, pre-execution validation, the synthetic validation campaign, preregistration and physical execution each require separate authorization. Adoption of these rules is not evidence that they perform as intended.",
@@ -22,8 +22,8 @@
       },
       "design_document": {
         "path": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md",
-        "sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
-        "byte_count": 29330
+        "sha256": "25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6",
+        "byte_count": 34799
       }
     }
   },
@@ -94,6 +94,110 @@
     }
   ],
   "relaxation_time_rule": "tau_r = gamma(T)/k_r with gamma = 6 pi eta(T) a; a single tau_c for all fields is WRONG and is not used",
+  "branch_a_measured_input_domain": {
+    "disposition": "G6, closed prospectively before execution",
+    "scope": "the declared E1a passive equilibrium optical-trap benchmark ONLY. This is NOT a universal physical assertion: negative effective viscosity, negative effective transport coefficients and active-matter effective parameters are OUTSIDE this benchmark, not denied by it.",
+    "rule": "For every E1a field, the Branch-A dynamic-viscosity input eta(T_theta) must be a finite real number strictly greater than zero. The bead-radius input a must be a finite real number strictly greater than zero.",
+    "finite_real_meaning": "of the declared real numeric representation, and not NaN, not +infinity and not -infinity. A truthy or non-numeric representation is not a number and is never admissible.",
+    "primitive_inputs": {
+      "viscosity": {
+        "symbol": "eta(T_theta)",
+        "meaning": "dynamic viscosity of the suspending medium at the field temperature",
+        "unit": "Pa s",
+        "role": "BRANCH_A_MEASURED_PRIMITIVE",
+        "required": true,
+        "domain": {
+          "finite": true,
+          "lower_bound": 0,
+          "lower_bound_inclusive": false,
+          "upper_bound": null
+        }
+      },
+      "bead_radius": {
+        "symbol": "a",
+        "meaning": "radius of the trapped bead",
+        "unit": "m",
+        "role": "BRANCH_A_MEASURED_PRIMITIVE",
+        "required": true,
+        "domain": {
+          "finite": true,
+          "lower_bound": 0,
+          "lower_bound_inclusive": false,
+          "upper_bound": null
+        }
+      }
+    },
+    "individually_binding": "eta and a are each authoritative domain objects and are validated INDIVIDUALLY. A rule stated only on the product gamma is INSUFFICIENT: eta < 0 together with a < 0 gives gamma = 6 pi eta a > 0 and would masquerade as an admissible passive-drag construction. Neither eta nor a is persisted in the Branch-A publication preimage, so no downstream check can recover them.",
+    "insufficient_rules": [
+      "gamma > 0 alone, with the primitive eta and a domains unrestricted",
+      "tau_r > 0 alone, with the primitive eta and a domains unrestricted"
+    ],
+    "derived_quantities": {
+      "gamma": {
+        "relation": "gamma(T_theta) = 6 pi eta(T_theta) a",
+        "status": "DERIVED",
+        "physical_domain": "finite and strictly positive FOR ADMISSIBLE PRIMITIVES. This positivity is a mathematical CONSEQUENCE of the primitive domains and the frozen Stokes relation, not an independent physical sign convention.",
+        "independent_rule": false
+      },
+      "tau": {
+        "relation": "tau_r = gamma(T_theta)/k_r",
+        "status": "DERIVED",
+        "physical_domain": "finite and strictly positive FOR ADMISSIBLE PRIMITIVES AND ADMISSIBLE STIFFNESS. It follows from gamma > 0 together with the already-explicit lambda_r > 0 requirement, and is not an independent free scientific choice.",
+        "independent_rule": false
+      }
+    },
+    "stiffness_precondition": {
+      "source": "docs/e1a/E1A_V4_PROSPECTIVE_DESIGN.md section 14, UNCHANGED BY THIS AMENDMENT",
+      "requirement": "H not symmetric / not positive definite / dimension mismatch -> REFUSED_BRANCH_A_INVALID",
+      "consequence": "Every retained mode satisfies lambda_r > 0; lambda_r < 0 and lambda_r = 0 were already invalid and are NOT reopened by this amendment."
+    },
+    "dispositions": {
+      "missing_or_undeclared_input": {
+        "meaning": "we do not possess the required physical input",
+        "trigger": "eta or a absent, undeclared, or not supplied through the authorised field-construction source",
+        "verdict": "UNDECLARED_FIELD_INPUTS",
+        "is_not": "REFUSED_BRANCH_A_INVALID",
+        "lifecycle": "the existing input-availability refusal: the Branch-A field construction inputs must be declared in frozen authority, and thereby enter the execution identity, BEFORE the seal is frozen"
+      },
+      "present_but_inadmissible_input": {
+        "meaning": "we possess a value, but the value is outside the admissible physical domain",
+        "trigger": "eta or a present and nonfinite, zero or negative",
+        "verdict": "REFUSED_BRANCH_A_INVALID",
+        "is_not": "UNDECLARED_FIELD_INPUTS",
+        "lifecycle": "the existing Branch-A-invalid refusal; no new refusal category is created"
+      },
+      "numerical_representability_failure": {
+        "meaning": "the primitive inputs are physically admissible but the required binary64 representation of a derived quantity is not obtainable",
+        "trigger": "underflow, overflow or any already-cleared representability failure of the computed gamma or tau",
+        "verdict": "BRANCH_A_MEASUREMENT_INVALID",
+        "is_not": "REFUSED_BRANCH_A_INVALID",
+        "lifecycle": "the existing Branch-A numerical and representability rules, UNCHANGED by this amendment"
+      }
+    },
+    "precedence": "the PHYSICAL-DOMAIN check on eta and a PRECEDES the numerical representability checks on the derived gamma and tau. The two are never conflated and neither is ever substituted for the other.",
+    "branch_a_consequence": "A present but inadmissible primitive drag input can NEVER yield a VALID Branch-A status, a valid Branch-A publication, a valid calibration condition, a valid calibration lock or a valid Branch-B input. This is DERIVED from the existing REFUSED_BRANCH_A_INVALID lifecycle and introduces no second lifecycle.",
+    "placeholder_substitution": "A neutral placeholder value MAY NOT substitute for the actual required measured field-construction input in any path that can produce an official valid Branch-A package. The existing UNDECLARED_FIELD_INPUTS lifecycle is preserved.",
+    "values_not_set": {
+      "declared_here": "the ADMISSIBLE DOMAIN only",
+      "not_declared_here": [
+        "the actual dynamic viscosity values",
+        "the viscosity model eta(T)",
+        "the actual bead radius",
+        "measurement uncertainty for eta",
+        "measurement uncertainty for a",
+        "hardware provenance for those values"
+      ],
+      "remaining_open_item": "F4 - field construction / absolute drag inputs",
+      "status": "OPEN"
+    },
+    "timing": {
+      "decided": "prospectively, before execution",
+      "official_campaign_results_observed": false,
+      "final_execution_seal_frozen": false,
+      "execution_authorised": false
+    },
+    "plan_rendering": "For every E1a field, the Branch-A dynamic-viscosity input eta(T_theta) must be a finite real number strictly greater than zero. The bead-radius input a must be a finite real number strictly greater than zero. The rule binds eta and a INDIVIDUALLY, never only their product: eta < 0 with a < 0 gives gamma > 0 and would otherwise masquerade as an admissible passive-drag construction. A MISSING or undeclared input is UNDECLARED_FIELD_INPUTS; a PRESENT but nonfinite, zero or negative input is REFUSED_BRANCH_A_INVALID; a physically admissible input whose derived gamma or tau is not representable keeps the existing BRANCH_A_MEASUREMENT_INVALID semantics. gamma and tau are DERIVED and their positivity follows; it is not an independent rule. Domain only -- actual eta and a values remain OPEN (F4 - field construction / absolute drag inputs)."
+  },
   "endpoints": {
     "P1_geometry": {
       "mandatory": true,

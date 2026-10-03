@@ -165,9 +165,16 @@ def test_every_exact_binding(contract, plan):
         def change(p, path=row.plan_path, replacement=new):
             set_path(p, path, replacement)
             assert access(p, path) == replacement, path
-        expected = ("CONTRACT_REFERENCE_FIELD_MISMATCH"
-                    if row.plan_path.endswith(".reference") else
-                    "CONTRACT_GENERATING_PARAMETER_MISMATCH")
+        # Each row carries the most specific code its own authority edge raises.
+        # The Branch-A measured-input domain is bound against a rule pinned ABOVE
+        # the contract, so a plan rendering that drifts from it is a domain
+        # authority mismatch, not a generic generating-parameter mismatch.
+        if row.plan_path.endswith(".reference"):
+            expected = "CONTRACT_REFERENCE_FIELD_MISMATCH"
+        elif row.plan_path.endswith(".measured_input_domain"):
+            expected = "BRANCH_A_DOMAIN_AUTHORITY_MISMATCH"
+        else:
+            expected = "CONTRACT_GENERATING_PARAMETER_MISMATCH"
         coherent, actual, _ = propagated(contract, change, expected)
         good = coherent == "ACCEPTED" and actual == expected
         check(f"EXACT {row.plan_path}", good, f"{old!r} -> {new!r}; {coherent}/{actual}")

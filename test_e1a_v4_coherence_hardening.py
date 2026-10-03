@@ -707,8 +707,10 @@ def test_no_scientific_rule_changed() -> None:
                              ("rank_tol", binding.rank_tol, 1e-12),
                              ("pipeline_target", binding.pipeline_target, 0.9)):
         check(f"{label} unchanged", got == want, str(want))
-    check("contract identity unchanged",
-          binding.sha256 == "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b")
+    # Repointed by the G6 passive-drag-domain amendment; the adopted rules asserted
+    # immediately above are UNCHANGED, which is the point of keeping both here.
+    check("contract identity is the G6-amended one",
+          binding.sha256 == "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4")
     check("foundation identity unchanged",
           binding.foundation_sha256
           == "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507")
@@ -730,14 +732,15 @@ def test_no_scientific_rule_changed() -> None:
           plan["cases"][7]["subconditions"][0]["scale_factors"] == [1.07, 0.90])
     check("execution is still NOT authorised", plan["execution_authorised"] is False)
     seeds = strict_load_file(os.path.join(ROOT, SEED_MAP_JSON), "seed map")
-    check("the master seed is unchanged", seeds["master_seed"] == 13785910525869478477)
-    check("the seed map identity is unchanged",
+    check("the master seed is the one the amended contract derives", seeds["master_seed"] == 4447657248690327258)
+    check("the seed map identity is the one the amended contract derives",
           sha256_file(os.path.join(ROOT, SEED_MAP_JSON))
-          == "95870d7d33c256c4bd30118e13278a600271531fd945d12687a828de902e91ce")
-    check("the analysis identity is unchanged",
+          == "c25f2da8ab9a465ae588d7beeeb8ecd6ed0bd70174badeea98985255a58d28af")
+    check("the analysis identity is the one the amended authority yields",
           plan["frozen_identities"]["analysis_procedure_identity"]
-          == "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
-          "no analysis-layer module was touched")
+          == "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d",
+          "e1a_v4/contract.py accepts contract minor 1.2; the contract and design "
+          "digests are in the preimage, so this identity moves with them")
 
 
 if __name__ == "__main__":

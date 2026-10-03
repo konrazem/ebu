@@ -1,6 +1,6 @@
 {
   "plan_id": "e1a_v4_synthetic_validation",
-  "plan_version": "1.15.0",
+  "plan_version": "1.16.0",
   "created": "2026-09-28",
   "execution_stage": "synthetic_validation",
   "execution_authorised": false,
@@ -54,8 +54,8 @@
     "rule": "Any mismatch between the two is an integrity failure requiring fail-closed refusal."
   },
   "frozen_identities": {
-    "contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
-    "design_sha256": "e59dcff6b363e6ba59222b06867973703fd429f1223452cdfa2a4d47fadca495",
+    "contract_sha256": "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4",
+    "design_sha256": "25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6",
     "foundation_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
     "baseline_sha256": "0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa",
     "implementation_work_commit": "e4b73d7fbd84d329f4326af443fd1918bc44a874",
@@ -63,7 +63,7 @@
       "e1a_v4/__init__.py": "0b67a89c562d82eb1f4a03603e075d66e0f70826ab7a848e57f4518bd12bdca4",
       "e1a_v4/branch_a.py": "748c2e86e59d3ed6638147aa322cdf113636e8aa5c9c2b93ec8d4b0a9ec0461f",
       "e1a_v4/calibration.py": "1400e79f00429dc2c72b715d2d03b9bebb4242d044557bce02301f3ac3b22c42",
-      "e1a_v4/contract.py": "4e1b595ebaf73bd8d1e723201d05c10ad23b4ab8a6faf02b7d89842e682d0465",
+      "e1a_v4/contract.py": "b43b85a4626aa25bcd9bf2bfe7e209f99e1a87950d6957afc890d0fa6b493c41",
       "e1a_v4/effective_size.py": "88030960ecc9260fb19a44afbbc8116c212bf35addb5ed0d036af751a079a164",
       "e1a_v4/endpoints.py": "c8def27939ae101fba9b25a129337893d9d35180f7182d342ef69bc1733b760e",
       "e1a_v4/geometry.py": "959b446b01d96a7c5243e65876970d78c57e1e8150298204a35429040f62967f",
@@ -73,7 +73,7 @@
       "e1a_v4/status.py": "853a4cf9c602ee4fdc28391969eb7a7ea7157cc71316cf3c86e003d5777ecc8f",
       "e1a_v4/world.py": "64a27ca9cb95b09333ca65aa0eecebeb80f9573d06cd8d08c188668eb7cbc033"
     },
-    "analysis_procedure_identity": "dd2ed732db4348b0b25ce5fe83096d38f5b9c1748ee5916eecaf2c1aef2e2e1f",
+    "analysis_procedure_identity": "8cf86c96f12d762985f5104f44e8fc2010d61de48858a373ac78d6901e4eef9d",
     "final_expected_execution_identity": null,
     "final_expected_execution_identity_state": "NOT_FROZEN_PRE_DRIVER",
     "final_expected_execution_identity_semantics": "null means DELIBERATELY NOT YET FROZEN, which is correct while the official campaign driver is absent. An ABSENT key is treated as FORGOTTEN and refuses: the superseded slot held the empty string \"\", which could not distinguish the two and which preflight silently skipped.",
@@ -88,7 +88,7 @@
     "execution_identity_preimage_note": "Derived at preflight, never stored in the plan. The normative Markdown joined the preimage in plan version 1.7.0: it is normative authority, not commentary, so a stale Markdown must move the identity rather than sit outside the seal. docs/e1a/e1a_v4_execution_seal.json is deliberately EXCLUDED.",
     "analysis_procedure_identity_configuration": {},
     "analysis_procedure_identity_note": "procedure_identity(binding, configuration={}, root). The configuration mapping is part of the identity, so a different configuration yields a different digest by design: the implementation report quoted the {'stage': 'bounded_implementation'} variant 8dd48f42f7ccd259a76e50ef4e1ee4c0a3c5b43986bc54d75438b1acdf15dbe0. The EMPTY configuration is the one frozen for official execution, and preflight recomputes exactly that.",
-    "contract_version": "1.1.0",
+    "contract_version": "1.2.0",
     "calibration_artifact_schema": "e1a_v4_block1_calibration/2"
   },
   "adopted_rules_unchanged": {
@@ -734,7 +734,8 @@
       "per_mode_stiffness": "independent per mode",
       "orientation": "trap-axis psi",
       "thermometry": "T measured with sigma_T",
-      "independence": "Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory"
+      "independence": "Branch-A measurement randomness is exogenous and never a function of the Branch-B trajectory",
+      "measured_input_domain": "For every E1a field, the Branch-A dynamic-viscosity input eta(T_theta) must be a finite real number strictly greater than zero. The bead-radius input a must be a finite real number strictly greater than zero. The rule binds eta and a INDIVIDUALLY, never only their product: eta < 0 with a < 0 gives gamma > 0 and would otherwise masquerade as an admissible passive-drag construction. A MISSING or undeclared input is UNDECLARED_FIELD_INPUTS; a PRESENT but nonfinite, zero or negative input is REFUSED_BRANCH_A_INVALID; a physically admissible input whose derived gamma or tau is not representable keeps the existing BRANCH_A_MEASUREMENT_INVALID semantics. gamma and tau are DERIVED and their positivity follows; it is not an independent rule. Domain only -- actual eta and a values remain OPEN (F4 - field construction / absolute drag inputs)."
     },
     "truth_visibility": "H_true and tau_true are known to the SCORING layer only. The analysis pipeline receives only the Branch-A measured field, exactly as in the real experiment.",
     "per_field": [
@@ -1482,6 +1483,13 @@
       "affects": "C3, C4",
       "status": "CLOSED PROSPECTIVELY",
       "resolution": "A valid structured refusal that leaves a C3 or C4 PRIMARY endpoint decision undefined is encoded NEITHER_REJECTION_NOR_NONREJECTION: it is NOT a statistical rejection and it is NOT a statistical non-rejection. The prospectively declared primary denominator is PLANNED_R_PRESERVED -- R stays at its planned value per field and is never silently reduced to the surviving replicates. If a required field carries one or more structured refusals affecting its primary endpoint, that field's PRIMARY size assessment is NOT_EVALUABLE, and the frozen two-way detector is NOT run on the incomplete sequence. NOT_EVALUABLE is neither STATISTICAL_SIZE_FAILURE nor NO_SIGNIFICANT_SIZE_INFLATION_DETECTED: missing evidence neither establishes excess size nor establishes nominal size behaviour. Because C3 and C4 are mandatory validation conditions, release requires every required field to be EVALUABLE_AND_CLEAN, so a NOT_EVALUABLE field prevents the campaign from passing; the campaign failure is classified VALIDATION_INCONCLUSIVE and names incomplete required validation evidence, never statistical size inflation. The tolerated structured-refusal fraction is NONE: one refusal affecting a required primary endpoint is sufficient, and no refusal threshold, Bonferroni correction, familywise correction, new alpha or new integer boundary is introduced. The terminal campaign report MUST still be produced when one, some or every C3/C4 job is a valid structured refusal, as the contract's refusal reconciliation already requires. Each required field must separately retain planned_R, evaluable_primary_endpoint_count, structured_refusal_count, defined_rejection_count, primary_size_status, refusal_reasons. A survivor-conditioned rejection rate or confidence bound is SECONDARY_DIAGNOSTIC_ONLY and SHALL NEVER substitute for the frozen primary planned-R assessment. Per-field scope, pooling FORBIDDEN and within-replicate cross-field reduction NONE are unchanged, NOT_EVALUABLE applies independently by field and one field's evaluability never rescues another's, and the C3/C4 primary endpoint definitions, the nominal alphas and the integer boundaries are unchanged. C2 is NOT affected: its composite P1 endpoint fails closed, so its elementary event is defined even under a structured refusal. Decided before any official campaign job, trajectory or outcome existed."
+    },
+    {
+      "id": "G6",
+      "gap": "the frozen design fixed the FORM of the Branch-A drag coefficient -- tau_r = gamma(T)/k_r with gamma = 6 pi eta(T) a -- and the admissible domain of the measured STIFFNESS, but never the admissible domain of the two measured quantities that relation consumes. eta and a could therefore be nonfinite, zero or negative with no declared verdict, and because neither is persisted in the Branch-A publication preimage, eta < 0 together with a < 0 yields gamma > 0, positive relaxation times and a record byte-identical to a legitimate measurement. The gap was recorded twice by the implementation -- as the driver's coded UNDECLARED_FIELD_INPUTS refusal and as the relaxation-domain report's SHARED-DRAG DOMAIN AUTHORITY REQUIRED section -- and the F2 authority reconstruction established that no existing authority closed it.",
+      "affects": "Branch-A field construction, every case",
+      "status": "CLOSED PROSPECTIVELY",
+      "resolution": "For every E1a field, the Branch-A dynamic-viscosity input eta(T_theta) must be a finite real number strictly greater than zero. The bead-radius input a must be a finite real number strictly greater than zero. Formally, for every declared field: eta(T_theta) in R with 0 < eta(T_theta) < infinity, and a in R with 0 < a < infinity. Finite real means of the declared real numeric representation, and not NaN, not +infinity and not -infinity. A truthy or non-numeric representation is not a number and is never admissible. eta and a are each authoritative domain objects and are validated INDIVIDUALLY. A rule stated only on the product gamma is INSUFFICIENT: eta < 0 together with a < 0 gives gamma = 6 pi eta a > 0 and would masquerade as an admissible passive-drag construction. Neither eta nor a is persisted in the Branch-A publication preimage, so no downstream check can recover them. MISSING INPUT AND INVALID INPUT ARE DIFFERENT STATES: an absent, undeclared or unsourced eta or a means we do not possess the required physical input and keeps the existing UNDECLARED_FIELD_INPUTS lifecycle, while a present nonfinite, zero or negative eta or a means we possess a value outside the admissible physical domain and is REFUSED_BRANCH_A_INVALID. The two are never conflated and a placeholder may not substitute for a required measured input in any path that can produce an official valid Branch-A package. DERIVED, NOT INDEPENDENT: gamma(T_theta) = 6 pi eta(T_theta) a and tau_r = gamma(T_theta)/k_r, so for admissible primitives gamma is finite and strictly positive, and together with the already-explicit lambda_r > 0 requirement of design section 14 every tau_r is finite and strictly positive. These are consequences of one decision and one existing rule, not four unrelated positivity choices. PHYSICAL DOMAIN AND NUMERICAL REPRESENTABILITY REMAIN DISTINCT: physically admissible primitives whose computed gamma or tau underflows, overflows or is otherwise unrepresentable keep the existing BRANCH_A_MEASUREMENT_INVALID semantics and are NEVER relabelled as an invalid eta or a; the PHYSICAL-DOMAIN check on eta and a PRECEDES the numerical representability checks on the derived gamma and tau. The two are never conflated and neither is ever substituted for the other. CONSEQUENCE: A present but inadmissible primitive drag input can NEVER yield a VALID Branch-A status, a valid Branch-A publication, a valid calibration condition, a valid calibration lock or a valid Branch-B input. This is DERIVED from the existing REFUSED_BRANCH_A_INVALID lifecycle and introduces no second lifecycle. STIFFNESS IS UNCHANGED: H not symmetric / not positive definite / dimension mismatch -> REFUSED_BRANCH_A_INVALID remains exactly as design section 14 states it. Every retained mode satisfies lambda_r > 0; lambda_r < 0 and lambda_r = 0 were already invalid and are NOT reopened by this amendment. SCOPE: the declared E1a passive equilibrium optical-trap benchmark ONLY. This is NOT a universal physical assertion: negative effective viscosity, negative effective transport coefficients and active-matter effective parameters are OUTSIDE this benchmark, not denied by it. WHAT THIS DOES NOT DECLARE: the actual viscosity values, the viscosity model eta(T), the actual bead radius, measurement uncertainty for either, and their hardware provenance. Those remain F4 - field construction / absolute drag inputs, which is OPEN. Decided before any official campaign job, trajectory or outcome existed."
     }
   ],
   "execution_command": "python3 -m e1a_v4.validation.runner --execute --i-have-execution-authorisation",
@@ -1493,6 +1501,7 @@
     "Markdown section 4 equals the JSON generating model path by path",
     "n_samples is recomputed from T_total and dt rather than trusted",
     "the plan's generating model does not contradict the frozen design contract",
+    "the approved Branch-A measured-input domain (eta, a) is stated identically by the pinned rule, the design contract, the normative design document, the plan restatement and disposition G6",
     "the section-12a size boundaries are recomputed by size_boundary and cp_lower",
     "every generated Markdown region is a byte-exact re-render of this JSON",
     "the generated authority block equals the complete JSON normative view",
@@ -1933,7 +1942,7 @@
     "official_campaign_driver_path": "e1a_v4/validation/campaign_driver.py",
     "official_campaign_driver_entry_point": "run_campaign",
     "declaration_is_identity_bound": "The declaration lives in e1a_v4/validation/driver.py, which is one of the VALIDATION_MODULES hashed into the execution identity, so changing the declared module or path changes the pre-driver execution identity. The execution seal may only RESTATE it; a seal that names anything else is refused, and an authoritative driver key in the seal is refused outright.",
-    "driver_file_hash_in_identity": "The canonical driver’s own file sha256 enters the execution-identity preimage, or the sentinel \"ABSENT\" while it does not exist. The identity therefore moves the moment a real driver appears, which is why today’s value is a PRE-DRIVER diagnostic and not a seal.",
+    "driver_file_hash_in_identity": "The canonical driver\u2019s own file sha256 enters the execution-identity preimage, or the sentinel \"ABSENT\" while it does not exist. The identity therefore moves the moment a real driver appears, which is why today\u2019s value is a PRE-DRIVER diagnostic and not a seal.",
     "this_is_not_execution_authorisation": true
   }
 }

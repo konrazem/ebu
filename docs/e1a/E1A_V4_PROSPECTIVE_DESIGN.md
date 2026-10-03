@@ -99,6 +99,68 @@ Per-field Branch-A relaxation times are `tau_r = gamma(T)/k_r` with `gamma = 6 p
 A single `tau_c` for all fields is **wrong** and is not used: `tau` depends on `k` and, through
 `eta(T)`, on temperature.
 
+### 3.1 Branch-A measured input domain — ADOPTED PROSPECTIVELY (disposition G6)
+
+The relation above fixes the **form** of the drag coefficient. It never stated the admissible
+domain of the two measured quantities that relation consumes, while §14 already fixed the
+admissible domain of the measured stiffness. That asymmetry is closed here, **before any
+official campaign job, trajectory or outcome existed**.
+
+**The rule.**
+For every E1a field, the Branch-A dynamic-viscosity input eta(T_theta) must be a finite real number strictly greater than zero. The bead-radius input a must be a finite real number strictly greater than zero.
+
+```
+eta(T_theta) in R ,   0 < eta(T_theta) < infinity        Pa s
+a            in R ,   0 < a            < infinity        m
+```
+
+**"Finite real"** means of the declared real numeric representation, and not NaN, not +infinity and not -infinity. A truthy or non-numeric representation is not a number and is never admissible.
+
+**The rule binds each primitive individually.**
+eta and a are each authoritative domain objects and are validated INDIVIDUALLY. A rule stated only on the product gamma is INSUFFICIENT: eta < 0 together with a < 0 gives gamma = 6 pi eta a > 0 and would masquerade as an admissible passive-drag construction. Neither eta nor a is persisted in the Branch-A publication preimage, so no downstream check can recover them.
+
+A rule stated only as `gamma > 0`, or only as `tau_r > 0`, is therefore recorded as
+**insufficient** rather than as an alternative formulation of this one.
+
+**Missing input and inadmissible input are different states.**
+
+| state | meaning | verdict |
+|---|---|---|
+| `eta` or `a` absent, undeclared, or not supplied through the authorised field-construction source | we do not possess the required physical input | `UNDECLARED_FIELD_INPUTS` |
+| `eta` or `a` present and nonfinite, zero or negative | we possess a value, but it is outside the admissible physical domain | `REFUSED_BRANCH_A_INVALID` |
+
+The two are never conflated: an absent input is not a value that failed a domain test.
+A neutral placeholder value MAY NOT substitute for the actual required measured field-construction input in any path that can produce an official valid Branch-A package. The existing UNDECLARED_FIELD_INPUTS lifecycle is preserved.
+
+**`gamma` and `tau` are DERIVED.** With `gamma(T_theta) = 6 pi eta(T_theta) a` and `tau_r = gamma(T_theta)/k_r` unchanged,
+admissible primitives give a finite, strictly positive `gamma`; together with the
+already-explicit `lambda_r > 0` requirement of §14 every `tau_r` is then finite and strictly
+positive. These are **consequences of one decision and one existing rule**, not four unrelated
+positivity choices, and neither is an independent physical sign convention.
+
+**Physical admissibility and executable representability are distinct.** Primitives may be
+physically admissible while the computed binary64 `gamma` or `tau` underflows, overflows or is
+otherwise unrepresentable. That case keeps the existing `BRANCH_A_MEASUREMENT_INVALID` semantics
+and is **never** relabelled as an invalid `eta` or `a` measurement; the PHYSICAL-DOMAIN check on eta and a PRECEDES the numerical representability checks on the derived gamma and tau. The two are never conflated and neither is ever substituted for the other.
+The previously cleared binary64 drag-representability, common-representable-`gamma`,
+underflow/overflow, ties-to-even and relaxation-representability rules are **unchanged** by this
+amendment.
+
+**Consequence.**
+A present but inadmissible primitive drag input can NEVER yield a VALID Branch-A status, a valid Branch-A publication, a valid calibration condition, a valid calibration lock or a valid Branch-B input. This is DERIVED from the existing REFUSED_BRANCH_A_INVALID lifecycle and introduces no second lifecycle.
+
+**Stiffness is not reopened.** `H not symmetric / not positive definite / dimension mismatch -> REFUSED_BRANCH_A_INVALID` remains exactly as §14 states it.
+Every retained mode satisfies lambda_r > 0; lambda_r < 0 and lambda_r = 0 were already invalid and are NOT reopened by this amendment. No negative-stiffness category and no "valid unstable trap" branch is
+created here.
+
+**Scope.** This is a statement about the declared E1a passive equilibrium optical-trap benchmark ONLY. This is NOT a universal physical assertion: negative effective viscosity, negative effective transport coefficients and active-matter effective parameters are OUTSIDE this benchmark, not denied by it.
+
+**What this does not declare.** The actual dynamic viscosity values, the viscosity model
+`eta(T)`, the actual bead radius, measurement uncertainty for either, and their hardware
+provenance. Those remain **F4 - field construction / absolute drag inputs**, which is **OPEN**. This amendment
+supplies an admissible domain and nothing else, and does not make field construction
+execution-ready.
+
 ---
 
 ## 4. Beta target and estimator
@@ -460,6 +522,14 @@ BETA_NOT_ESTIMATED          umbrella for every branch above
 COMPARISON_NOT_EVALUABLE    reference or target field has no beta
 EXECUTION_ERROR             exception; traceback hash recorded, job not lost
 ```
+
+`REFUSED_BRANCH_A_INVALID` covers the stiffness conditions listed above **and**, under
+§3.1, a Branch-A measured `eta` or `a` that is present but nonfinite, zero or negative. An
+`eta` or `a` that is absent or undeclared is **not** that refusal: it keeps the separate
+input-availability lifecycle, because we do not possess the input rather than possess an
+inadmissible one. A derived `gamma` or `tau` that is physically admissible but numerically
+unrepresentable keeps the existing Branch-A measurement/representability semantics, which
+§3.1 does not alter.
 
 The release report must reconcile: **jobs declared = jobs completed + jobs refused**, with a
 per-status count, and must finish even when every job refuses.

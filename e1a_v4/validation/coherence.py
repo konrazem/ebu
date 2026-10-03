@@ -246,6 +246,11 @@ GENERATING_MODEL_SPEC = {
     "branch_a.orientation": (BOTH, "trap-axis psi"),
     "branch_a.thermometry": (BOTH, "temperature measurement"),
     "branch_a.independence": (BOTH, "Branch-A randomness is exogenous"),
+    "branch_a.measured_input_domain": (
+        BOTH, "the approved admissible domain of the MEASURED primitives eta and a "
+              "(disposition G6), restated from the frozen design contract. It decides "
+              "which Branch-A field constructions are admissible at all, so it is "
+              "normative and is rendered in section 4"),
     "truth_visibility": (BOTH, "what the analysis layer may see"),
     "per_field.id": (BOTH, "field identifier"),
     "per_field.k_uN_per_m": (BOTH, "modal stiffnesses, micronewton per metre -- defines H"),
@@ -749,6 +754,7 @@ BRANCH_A_ROWS = (
     ("orientation", "orientation"),
     ("thermometry", "thermometry"),
     ("independence", "independence"),
+    ("measured input domain", "measured_input_domain"),
 )
 
 FIELD_ROWS = (

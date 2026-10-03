@@ -2,7 +2,7 @@
   "schema": "e1a_v4_seed_map/3",
   "domain": "EBU-E1A-V4-SYNTHETIC-VALIDATION",
   "campaign": "v4.0",
-  "contract_sha256": "91d6ae76ccb6fdbeb7f926722433c574c30b7c0b6105c7c1ec20436fa2ec431b",
+  "contract_sha256": "d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4",
   "derivation": {
     "hash": "first 8 bytes of sha256(text), big-endian unsigned",
     "master": "DOMAIN|master|contract_sha256|campaign",
@@ -18,13 +18,13 @@
     },
     "extension_note": "The subcondition and scope levels supersede the schema/2 'job' level. They change none of master, family or replicate: master_seed and every family seed below are bit-identical to schema/1. The subcondition level is required because a case declares several distinct synthetic scenarios (4 sigma_psi scenarios for C1/C2/C3, 12 cells for C5, 3 rho for C6, 4 alternatives for C7) which would otherwise silently share random numbers. The scope level is required because randomness scope is a property of the quantity, not of the loop: the Branch-A common-mode error is drawn ONCE per experiment and SHARED across fields, which is what makes it cancel in the P2 ratio and not in P3."
   },
-  "master_seed": 13785910525869478477,
+  "master_seed": 4447657248690327258,
   "families": {
-    "blinded_scale_control": 11987123625083329897,
-    "branch_a_measurement": 62746336670861162,
-    "calibration": 6644164099584621674,
-    "confirmatory": 9827224290341944517,
-    "validation": 5088042359768187837
+    "blinded_scale_control": 4960422446143947757,
+    "branch_a_measurement": 1811775803831601789,
+    "calibration": 8836406515865678278,
+    "confirmatory": 5546981702450283376,
+    "validation": 1626264448266406929
   },
   "analysis_layer_families": [
     "calibration",

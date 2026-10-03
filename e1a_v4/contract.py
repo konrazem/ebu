@@ -21,10 +21,16 @@ from . import DESIGN_CONTRACT, DESIGN_DOCUMENT, FROZEN_FOUNDATION, WORKING_BASEL
 from .numerics import Refusal
 
 SUPPORTED_CONTRACT_IDS = ("e1a_v4_prospective_design",)
-SUPPORTED_MAJOR_MINOR = ("1.0", "1.1")
+SUPPORTED_MAJOR_MINOR = ("1.0", "1.1", "1.2")
 #: 1.1 adds the synthetic-validation release criteria (dispositions G1/G2) and a numeric
 #: sigma_psi (disposition G3). It changes NO analysis decision rule; the coherence checks
 #: below are unchanged and still enforced.
+#: 1.2 adds branch_a_measured_input_domain: the admissible domain of the Branch-A MEASURED
+#: primitives eta and a (disposition G6). It changes no statistical decision rule, no
+#: threshold and no endpoint, and it does not alter the Stokes or relaxation relations; it
+#: supplies the domain those relations always presupposed. The rule's content is bound by
+#: e1a_v4.validation.drag_domain, not here: this module only refuses a contract that omits
+#: the section, because an absent domain is the gap the amendment closes.
 
 #: Keys whose absence makes the contract unusable. Fail closed, never default.
 REQUIRED_TOP_LEVEL = (
@@ -32,6 +38,7 @@ REQUIRED_TOP_LEVEL = (
     "information_separation", "fields", "endpoints", "entropy_semantics",
     "mode_resolution", "complete_pipeline", "refusal_semantics",
     "forbidden_mechanisms", "authorization_boundaries",
+    "branch_a_measured_input_domain",
 )
 REQUIRED_ENDPOINTS = ("P1_geometry", "P2_cross_field", "P3_absolute", "P4_entropy")
 
