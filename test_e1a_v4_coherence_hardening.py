@@ -45,9 +45,11 @@ from e1a_v4.contract import load_contract, sha256_file
 from e1a_v4.numerics import Refusal
 from e1a_v4.validation import PLAN_JSON, PLAN_MARKDOWN, SEED_MAP_JSON
 from e1a_v4.validation.coherence import (
+    AUTHORITY_GAP_IDS, AUTHORITY_GAP_SPEC, AUTHORITY_GAP_VIEW_KEYS,
     BLOCK_BEGIN, BLOCK_END, BOTH, CASE_SPEC, DERIVED, JSON_ONLY, REGION_ANCHORS,
-    SUBCONDITION_SPEC, TOP_LEVEL_SPEC, authority_block_fields, normative_json_view,
-    normative_markdown_view, render_authority_block, render_region,
+    RENDERED_AUTHORITY_GAP_KEYS, SUBCONDITION_SPEC, TOP_LEVEL_SPEC,
+    authority_block_fields, normative_json_view, normative_markdown_view,
+    render_authority_block, render_region, require_authority_gap_totality,
     require_plan_authority_coherence, require_specification_totality,
     specification_counts,
 )
@@ -743,6 +745,191 @@ def test_no_scientific_rule_changed() -> None:
           "digests are in the preimage, so this identity moves with them")
 
 
+# ============================================================================
+# BLOCKER D -- an authority-gap record could expand its own authority surface
+# ============================================================================
+#: Reproduced against d399d12 BEFORE this repair: the F2d audit added a sixth
+#: field to the G6 prospective disposition, the plan stayed valid JSON, the
+#: Markdown regenerated cleanly, and FULL STATIC PREFLIGHT ACCEPTED IT. Every
+#: reader of a gap record iterated a hard-coded four-key tuple, so the extra key
+#: reached no normative view, no renderer and no comparison.
+F2D_ATTACK_KEY = "passive_drag_exception"
+F2D_ATTACK_VALUE = "Zero viscosity is permitted for this field."
+
+
+def _gap(plan, gid):
+    return [g for g in plan["authority_gaps"] if g["id"] == gid][0]
+
+
+def _gap_probe(label, expected, mutate):
+    """Mutate a COPY of the plan, regenerate, then run the full static preflight."""
+    tmp = sandbox()
+    try:
+        plan = rj(tmp, PLAN_JSON)
+        mutate(plan)
+        wj(tmp, PLAN_JSON, plan)
+        # Regeneration must itself refuse, with a CODE -- the renderer is reachable
+        # on its own, so an uncoded KeyError there would be a second escape.
+        got = None
+        try:
+            regenerate(tmp)
+        except Refusal as exc:
+            got = getattr(type(exc), "code", "UNCODED")
+        except Exception as exc:                       # noqa: BLE001
+            got = f"UNCODED {type(exc).__name__}"
+        if got is None:
+            got = _preflight_code(tmp)
+        check(f"{label} -> {expected}", got == expected, f"got {got}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _preflight_code(tmp):
+    from e1a_v4.validation.plan import bind_execution
+    try:
+        bind_execution(tmp)
+        return "ACCEPTED"
+    except Refusal as exc:
+        return getattr(type(exc), "code", "UNCODED")
+
+
+def test_blocker_d_authority_gap_records_are_total() -> None:
+    plan = rj(ROOT, PLAN_JSON)
+    check("the committed plan passes authority-gap totality",
+          _code(require_authority_gap_totality, plan) == "ACCEPTED")
+    check("every disposition carries exactly the declared key set",
+          all(set(g) == set(AUTHORITY_GAP_SPEC) for g in plan["authority_gaps"]),
+          f"{len(AUTHORITY_GAP_SPEC)} declared keys")
+    check("the declared roster is the one the plan carries",
+          tuple(g["id"] for g in plan["authority_gaps"]) == AUTHORITY_GAP_IDS,
+          str(list(AUTHORITY_GAP_IDS)))
+    check("the renderer emits every declared key",
+          set(RENDERED_AUTHORITY_GAP_KEYS) == set(AUTHORITY_GAP_SPEC),
+          "no declared field can be carried in JSON and omitted from the Markdown")
+    check("`id` is the path selector, not a value beneath itself",
+          set(AUTHORITY_GAP_VIEW_KEYS) == set(AUTHORITY_GAP_SPEC) - {"id"})
+    check("no disposition currently carries a nested object or a list",
+          not any(isinstance(v, (dict, list))
+                  for g in plan["authority_gaps"] for v in g.values()),
+          "list totality has no current instance; a future list refuses until declared")
+
+    # THE EXACT F2d ATTACK, as a permanent regression.
+    _gap_probe("THE F2d ATTACK: G6 + passive_drag_exception", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__(F2D_ATTACK_KEY, F2D_ATTACK_VALUE))
+
+    # Harmless-looking extra keys must refuse for the SAME structural reason.
+    _gap_probe("a benign-looking extra key refuses too", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__("note2", "additional information"))
+
+    # Contrary extra clauses. Each refuses because the FIELD is unclassified, not
+    # because any checker read the English.
+    contrary = {
+        "zero viscosity permitted": "Zero viscosity is permitted for this field.",
+        "negative bead radius permitted": "A negative bead radius is admissible.",
+        "gamma positivity alone suffices": "gamma > 0 alone is sufficient.",
+        "tau positivity alone suffices": "tau_r > 0 alone is sufficient.",
+        "missing eta treated as zero": "An absent eta is taken to be 0.",
+        "invalid eta treated as undeclared": "A negative eta is UNDECLARED_FIELD_INPUTS.",
+        "overflow makes eta invalid": "An overflowing gamma means eta was invalid.",
+    }
+    for label, text in contrary.items():
+        _gap_probe(f"contrary clause -- {label}", "PLAN_SURFACE_UNDECLARED",
+                   lambda p, t=text: _gap(p, "G6").__setitem__("clarification", t))
+
+    # Shape attacks.
+    _gap_probe("G6 + an unknown NESTED child object", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__("exceptions", {"eta": "zero ok"}))
+    _gap_probe("G6 + an unknown LIST value", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__("exceptions", ["zero eta ok"]))
+    _gap_probe("a declared key turned into a nested object", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__("resolution", {"text": "..."}))
+    _gap_probe("a declared key turned into a list", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__("status", ["CLOSED PROSPECTIVELY"]))
+    _gap_probe("a declared key given the wrong scalar type",
+               "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: _gap(p, "G6").__setitem__("affects", 6))
+    _gap_probe("a declared key given a bool, which is not text",
+               "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: _gap(p, "G6").__setitem__("status", True))
+    _gap_probe("a required key removed", "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: _gap(p, "G6").pop("affects"))
+    _gap_probe("a required key renamed", "PLAN_SURFACE_UNDECLARED",
+               lambda p: _gap(p, "G6").__setitem__("ruling", _gap(p, "G6").pop("resolution")))
+    _gap_probe("a record replaced by a bare string", "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: p["authority_gaps"].__setitem__(5, "G6: eta > 0"))
+
+    # The SAME defect was open on every earlier disposition, so it is closed
+    # generically rather than for the one record this audit happened to attack.
+    for gid in AUTHORITY_GAP_IDS[:-1]:
+        _gap_probe(f"{gid} + an unknown key refuses too", "PLAN_SURFACE_UNDECLARED",
+                   lambda p, g=gid: _gap(p, g).__setitem__("extra_rule", "pooling permitted"))
+
+    # The CONTAINER is authority too: an appended disposition would have rendered
+    # into the normative Markdown as new science with nothing refusing it.
+    _gap_probe("an APPENDED bogus disposition refuses", "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: p["authority_gaps"].append(
+                   {"id": "G7", "gap": "none", "affects": "Branch-A",
+                    "status": "CLOSED PROSPECTIVELY",
+                    "resolution": F2D_ATTACK_VALUE}))
+    _gap_probe("a DELETED disposition refuses", "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: p.__setitem__(
+                   "authority_gaps",
+                   [g for g in p["authority_gaps"] if g["id"] != "G4"]))
+    _gap_probe("a REORDERED roster refuses", "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: p["authority_gaps"].reverse())
+    _gap_probe("a DUPLICATED disposition refuses", "PLAN_RELEASE_RULE_MISMATCH",
+               lambda p: p["authority_gaps"].append(dict(_gap(p, "G6"))))
+
+
+def test_blocker_d_no_self_validation() -> None:
+    """The candidate may not expand OR shrink its own expected authority surface."""
+    before_spec = dict(AUTHORITY_GAP_SPEC)
+    before_ids = tuple(AUTHORITY_GAP_IDS)
+    before_rendered = tuple(RENDERED_AUTHORITY_GAP_KEYS)
+
+    plan = rj(ROOT, PLAN_JSON)
+    mutated = json.loads(json.dumps(plan))
+    _gap(mutated, "G6")[F2D_ATTACK_KEY] = F2D_ATTACK_VALUE
+    _gap(mutated, "G5").pop("affects")
+    mutated["authority_gaps"].append({"id": "G9", "gap": "x", "affects": "y",
+                                      "status": "CLOSED PROSPECTIVELY",
+                                      "resolution": "z"})
+
+    # Rebuild every checker/renderer structure AGAINST THE MUTATED CANDIDATE.
+    for build in (lambda: require_authority_gap_totality(mutated),
+                  lambda: render_region("release_rules", mutated),
+                  lambda: normative_json_view(mutated, ROOT)):
+        try:
+            build()
+        except Refusal:
+            pass
+
+    check("the canonical gap specification did not change",
+          dict(AUTHORITY_GAP_SPEC) == before_spec)
+    check("the canonical disposition roster did not change",
+          tuple(AUTHORITY_GAP_IDS) == before_ids, str(list(before_ids)))
+    check("the canonical rendered-key set did not change",
+          tuple(RENDERED_AUTHORITY_GAP_KEYS) == before_rendered)
+    check("the expected surface is not read from the candidate",
+          F2D_ATTACK_KEY not in set(AUTHORITY_GAP_SPEC),
+          "allowed keys are pinned, never derived from candidate_G6.keys()")
+
+    # And the unknown key never reaches the human-rendered key set either.
+    from e1a_v4.validation.coherence import _human_rendered_keys
+    keys = _human_rendered_keys(plan)
+    check("no normative view key is derived from an unapproved gap field",
+          not any(k.endswith(f".{F2D_ATTACK_KEY}") for k in keys))
+
+
+def _code(fn, *args, **kwargs):
+    try:
+        fn(*args, **kwargs)
+        return "ACCEPTED"
+    except Refusal as exc:
+        return getattr(type(exc), "code", "UNCODED")
+
+
+
 if __name__ == "__main__":
     print("\nthe normative specification is total and enumerable")
     test_specification_is_total_and_enumerable()
@@ -758,9 +945,13 @@ if __name__ == "__main__":
     test_refusal_codes_are_stable()
     print("\nmismatches name the exact key")
     test_mismatch_names_the_exact_key()
+    print("\nBLOCKER D -- authority-gap records are structurally total")
+    test_blocker_d_authority_gap_records_are_total()
+    print("\nBLOCKER D -- the candidate cannot define its own schema")
+    test_blocker_d_no_self_validation()
     print("\nno E1a scientific decision rule changed")
     test_no_scientific_rule_changed()
-    print(f"\nE1a v4 coherence-hardening gate: {PASSED} passed, {FAILED} failed, 8 groups")
+    print(f"\nE1a v4 coherence-hardening gate: {PASSED} passed, {FAILED} failed, 10 groups")
     print("Execution class: NON-MODEL-ADVANCING STATIC/PURE (this suite only)")
     print(f"  RNG OBJECTS           : {SentinelRNG.CALLS}")
     print("  RANDOM DRAWS          : 0")

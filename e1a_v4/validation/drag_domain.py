@@ -78,6 +78,18 @@ DISPOSITION_STATUS = "CLOSED PROSPECTIVELY"
 DISPOSITION_AFFECTS = "Branch-A field construction, every case"
 DISPOSITION_NOTE = "G6, closed prospectively before execution"
 
+#: The COMPLETE key set the G6 disposition record may carry, pinned here and
+#: independently of the candidate plan. `e1a_v4.validation.coherence` enforces the
+#: same totality generically for every disposition; this is the second, independent
+#: layer, because G6 is the record that carries THIS decision and its shape should
+#: not depend on another module still being wired in.
+#:
+#: An F2d audit added a sixth field stating "Zero viscosity is permitted for this
+#: field." The five legitimate fields still matched their approved text exactly, so
+#: every value comparison below passed and the extra clause rode along unexamined.
+#: Key-set equality is what refuses it -- not a reading of the English.
+DISPOSITION_RECORD_KEYS = ("affects", "gap", "id", "resolution", "status")
+
 #: ---------------------------------------------------------------------------
 #: THE APPROVED DOMAIN. Strictly positive, finite, and REQUIRED, for each
 #: primitive INDIVIDUALLY. These four facts are the whole scientific decision;
@@ -755,13 +767,36 @@ def require_passive_drag_domain_authority(
             f"{PLAN_PATH} does not restate the approved domain: plan {actual!r}, "
             f"frozen authority {expected['plan_rendering']!r}")
 
-    gaps = {gap.get("id"): gap for gap in plan.get("authority_gaps", ())}
+    records = plan.get("authority_gaps")
+    if not isinstance(records, (list, tuple)):
+        raise BranchADomainAuthorityMismatch(
+            "the validation plan carries no authority_gaps list, so no prospective "
+            "disposition could be recorded for the Branch-A measured input domain")
+    gaps = {r.get("id"): r for r in records if isinstance(r, Mapping)}
     if DISPOSITION_ID not in gaps:
         raise BranchADomainAuthorityMismatch(
             f"the validation plan records no {DISPOSITION_ID} disposition for the "
             "Branch-A measured input domain; a prospective decision that is not "
             "recorded as one cannot be audited as one")
     gap = gaps[DISPOSITION_ID]
+    # KEY-SET EQUALITY FIRST. Every value comparison below can pass while the
+    # record carries an EXTRA field, and that field is an extra clause of this
+    # decision which no renderer shows and nothing else compares.
+    if tuple(sorted(gap)) != DISPOSITION_RECORD_KEYS:
+        raise BranchADomainAuthorityMismatch(
+            f"the {DISPOSITION_ID} disposition record carries the key set "
+            f"{tuple(sorted(gap))}; the approved record is exactly "
+            f"{DISPOSITION_RECORD_KEYS}. An added field is an unapproved clause of "
+            "the passive-drag decision and a missing one is an approved clause "
+            "deleted; both are refused rather than interpreted.")
+    for key in DISPOSITION_RECORD_KEYS:
+        value = gap[key]
+        if type(value) is not str:
+            raise BranchADomainAuthorityMismatch(
+                f"authority_gaps.{DISPOSITION_ID}.{key} is "
+                f"{type(value).__name__}; every clause of this disposition is text. "
+                "A nested object or list here would be authority with no declared "
+                "specification.")
     for key, want in (("affects", DISPOSITION_AFFECTS),
                       ("status", DISPOSITION_STATUS),
                       ("gap", render_disposition_gap()),

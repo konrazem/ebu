@@ -35,10 +35,11 @@ from e1a_v4.validation import PLAN_JSON
 from e1a_v4.validation import drag_domain as dd
 from e1a_v4.validation.contract_plan import require_contract_plan_conformance
 from e1a_v4.validation.drag_domain import (
-    ADMISSIBLE, PASSIVE_DRAG_DOMAIN_RULE, classify_drag_inputs, gamma_of,
-    gamma_only_admits, is_admissible_primitive, render_contract_block,
-    require_approved_rule, require_benchmark_scope, require_domain_specification_totality,
-    require_f4_remains_open, require_passive_drag_domain_authority,
+    ADMISSIBLE, DISPOSITION_RECORD_KEYS, PASSIVE_DRAG_DOMAIN_RULE,
+    classify_drag_inputs, gamma_of, gamma_only_admits, is_admissible_primitive,
+    render_contract_block, require_approved_rule, require_benchmark_scope,
+    require_domain_specification_totality, require_f4_remains_open,
+    require_passive_drag_domain_authority,
 )
 from e1a_v4.validation.plan import bind_execution
 from test_e1a_v4_generating_model import ROOT, rj, wj, regenerate, sandbox
@@ -562,6 +563,75 @@ def test_runtime_lag_is_disclosed_not_hidden() -> None:
                         "e1a_v4/validation/generate.py")))
 
 
+
+# ------------------------------ the G6 record's own shape, independently bound
+#: The F2d audit's blocker. The five legitimate G6 fields still matched their
+#: approved text EXACTLY, so every value comparison in this module passed; the
+#: sixth field was simply never looked at. Key-set equality is what refuses it,
+#: and this layer is independent of the generic totality in `coherence` so that
+#: neither check is load-bearing alone.
+F2D_ATTACK = ("passive_drag_exception", "Zero viscosity is permitted for this field.")
+
+
+def g6_probe(label, mutate, expected=AUTHORITY) -> None:
+    contract = load_contract(ROOT).data
+    plan = copy.deepcopy(rj(ROOT, PLAN_JSON))
+    record = [g for g in plan["authority_gaps"] if g["id"] == "G6"][0]
+    mutate(record, plan)
+    refuses(label, expected, require_passive_drag_domain_authority,
+            contract, plan, ROOT)
+
+
+def test_g6_record_totality() -> None:
+    plan = rj(ROOT, PLAN_JSON)
+    record = [g for g in plan["authority_gaps"] if g["id"] == "G6"][0]
+    check("the committed G6 record carries exactly the approved key set",
+          tuple(sorted(record)) == DISPOSITION_RECORD_KEYS,
+          str(DISPOSITION_RECORD_KEYS))
+    check("every G6 clause is text",
+          all(type(v) is str for v in record.values()))
+
+    key, value = F2D_ATTACK
+    g6_probe("THE F2d ATTACK: G6 + passive_drag_exception",
+             lambda r, p: r.__setitem__(key, value))
+    g6_probe("G6 + a benign-looking extra key",
+             lambda r, p: r.__setitem__("note2", "additional information"))
+    g6_probe("G6 + an unknown nested child object",
+             lambda r, p: r.__setitem__("exceptions", {"eta": "zero permitted"}))
+    g6_probe("G6 + an unknown list value",
+             lambda r, p: r.__setitem__("exceptions", ["zero eta permitted"]))
+    g6_probe("G6 missing a required key",
+             lambda r, p: r.pop("affects"))
+    g6_probe("G6 key renamed",
+             lambda r, p: r.__setitem__("ruling", r.pop("resolution")))
+    g6_probe("G6 clause given a non-text type",
+             lambda r, p: r.__setitem__("status", ["CLOSED PROSPECTIVELY"]))
+    g6_probe("G6 record replaced by a bare string",
+             lambda r, p: p["authority_gaps"].__setitem__(
+                 p["authority_gaps"].index(r), "G6: eta > 0"))
+    g6_probe("authority_gaps replaced by a mapping",
+             lambda r, p: p.__setitem__("authority_gaps", {"G6": r}))
+
+    # Contrary clauses, each refused because the FIELD is unapproved -- no checker
+    # reads the English, and a benign key above refuses identically.
+    for label, text in (
+            ("zero viscosity permitted", "Zero viscosity is permitted for this field."),
+            ("negative bead radius permitted", "A negative bead radius is admissible."),
+            ("gamma-only suffices", "gamma > 0 alone is sufficient."),
+            ("tau-only suffices", "tau_r > 0 alone is sufficient."),
+            ("missing eta treated as zero", "An absent eta is taken to be 0."),
+            ("invalid eta treated as undeclared",
+             "A negative eta is UNDECLARED_FIELD_INPUTS."),
+            ("overflow makes eta invalid",
+             "An overflowing gamma means eta was physically invalid.")):
+        g6_probe(f"G6 + contrary clause -- {label}",
+                 lambda r, p, t=text: r.__setitem__("clarification", t))
+
+    check("the approved key set is pinned, not read from the candidate",
+          key not in DISPOSITION_RECORD_KEYS
+          and DISPOSITION_RECORD_KEYS == ("affects", "gap", "id", "resolution", "status"))
+
+
 def test_hygiene() -> None:
     plan = rj(ROOT, PLAN_JSON)
     check("execution remains unauthorised", plan["execution_authorised"] is False)
@@ -607,6 +677,8 @@ def main() -> int:
     test_fully_propagated_contract_weakening()
     print("\nstiffness is not reopened")
     test_stiffness_unchanged()
+    print("\nthe G6 record's own shape")
+    test_g6_record_totality()
     print("\nthe runtime lag, disclosed")
     test_runtime_lag_is_disclosed_not_hidden()
     print("\nhygiene")

@@ -331,12 +331,126 @@ def _digest(obj: Any) -> str:
 
 
 # --------------------------------------------------------------- specification
+#: EVERY key an authority-gap (prospective-disposition) record may carry, with the
+#: leaf type it must hold and why it is there. Pinned HERE, never derived from the
+#: candidate plan: a record that defined its own permitted key set would be
+#: self-authorising authority.
+#:
+#: WHY THIS EXISTS. An independent F2d audit inserted
+#:     "passive_drag_exception": "Zero viscosity is permitted for this field."
+#: into the G6 disposition. The record kept its five legitimate fields, the plan
+#: stayed valid JSON, Markdown regenerated cleanly, and full static preflight
+#: ACCEPTED it -- because every reader of a gap record iterated a hard-coded
+#: four-key tuple, so the sixth key reached no view, no renderer and no comparison.
+#: A candidate could therefore add a clause contradicting an approved prospective
+#: scientific decision and have it sit in frozen authority, unrendered and
+#: unchecked. The same hole was open on G1-G5.
+AUTHORITY_GAP_SPEC = {
+    "id": (str, "the disposition identifier; selects the record and is its dotted path"),
+    "gap": (str, "what frozen authority failed to state, before the decision"),
+    "affects": (str, "which cases or construction the gap touches"),
+    "status": (str, "the disposition status"),
+    "resolution": (str, "the approved prospective decision, in full"),
+}
+
+#: The gap keys that enter the normative view. `id` selects the record, so it is
+#: not also carried as a value beneath itself. Derived from the specification so
+#: a key cannot be declared and then quietly left out of the comparison.
+AUTHORITY_GAP_VIEW_KEYS = tuple(sorted(set(AUTHORITY_GAP_SPEC) - {"id"}))
+
+#: The per-gap keys `render_release_rules_region` actually emits. Checked against
+#: the specification, so a declared field can never be carried in JSON while the
+#: normative Markdown silently omits it -- the second half of the same defect.
+RENDERED_AUTHORITY_GAP_KEYS = ("id", "affects", "status", "gap", "resolution")
+
+#: The approved dispositions, in declaration order. A disposition is a human
+#: scientific decision taken before execution; one cannot be added, removed,
+#: renamed or reordered by editing the plan, and an appended record would
+#: otherwise render into the normative Markdown as new science with nothing
+#: refusing it.
+AUTHORITY_GAP_IDS = ("G1", "G2", "G3", "G4", "G5", "G6")
+
+
+def _require_record_totality(record: Any, spec: dict[str, Any], path: str) -> None:
+    """Refuse a record carrying anything the specification does not classify.
+
+    RECURSIVE BY CONSTRUCTION. A specification entry is either a LEAF TYPE or a
+    nested specification. A value that is a container where a leaf is declared is
+    an unclassified descendant, so a classified parent never authorises arbitrary
+    children. Earlier F1 hardening found that same defect one nesting level deeper
+    three separate times; it is closed here before it can appear.
+    """
+    if not isinstance(record, dict):
+        raise PlanReleaseRuleMismatch(
+            f"{path} must be a JSON object, not {type(record).__name__}")
+    unknown = sorted(set(record) - set(spec))
+    if unknown:
+        raise PlanSurfaceUndeclared(
+            f"{path} carries unclassified authority key(s) {unknown}. An authority "
+            "record may not acquire a field merely because JSON permits one: such a "
+            "value is normative text that no renderer shows and no check compares, "
+            "which is how a clause contradicting an approved decision gets in.")
+    absent = sorted(set(spec) - set(record))
+    if absent:
+        raise PlanReleaseRuleMismatch(
+            f"{path} omits required authority key(s) {absent}")
+    for key, (declared, _reason) in spec.items():
+        value = record[key]
+        if isinstance(declared, dict):
+            _require_record_totality(value, declared, f"{path}.{key}")
+            continue
+        if isinstance(value, (dict, list)):
+            raise PlanSurfaceUndeclared(
+                f"{path}.{key} is a {type(value).__name__} where the specification "
+                f"declares a {declared.__name__} leaf. Nested or list authority must "
+                "be given its own specification before it can be carried; a "
+                "classified parent does not authorise its descendants.")
+        if type(value) is not declared:
+            raise PlanReleaseRuleMismatch(
+                f"{path}.{key} is {type(value).__name__}; the specification declares "
+                f"{declared.__name__}")
+
+
+def require_authority_gap_totality(plan: dict[str, Any]) -> None:
+    """Make the prospective-disposition records structurally total.
+
+    Three properties, each fail-closed:
+        1. the renderer and the specification agree on which keys exist, so a
+           declared field cannot be carried in JSON and omitted from the Markdown;
+        2. every record carries EXACTLY the declared keys, at the declared types,
+           with no unclassified descendant at any depth;
+        3. the roster of dispositions is the approved one -- membership and order.
+    """
+    if set(RENDERED_AUTHORITY_GAP_KEYS) != set(AUTHORITY_GAP_SPEC):
+        raise PlanReleaseRuleMismatch(
+            "the release-rules renderer and the authority-gap specification disagree "
+            f"about which keys a disposition has: rendered "
+            f"{sorted(RENDERED_AUTHORITY_GAP_KEYS)}, declared "
+            f"{sorted(AUTHORITY_GAP_SPEC)}. A declared-but-unrendered key would be "
+            "authority the normative Markdown never shows.")
+    gaps = plan.get("authority_gaps")
+    if not isinstance(gaps, list):
+        raise PlanReleaseRuleMismatch(
+            "authority_gaps must be a list of prospective-disposition records")
+    ids = []
+    for index, record in enumerate(gaps):
+        _require_record_totality(record, AUTHORITY_GAP_SPEC,
+                                 f"authority_gaps[{index}]")
+        ids.append(record["id"])
+    if tuple(ids) != AUTHORITY_GAP_IDS:
+        raise PlanReleaseRuleMismatch(
+            f"authority_gaps declares the dispositions {ids}; the approved roster is "
+            f"{list(AUTHORITY_GAP_IDS)}. Each one is a human scientific decision "
+            "taken before execution, so the roster is not editable from the plan.")
+
+
 def require_specification_totality(plan: dict[str, Any]) -> None:
     """Refuse if the plan carries any key the specification does not classify.
 
     This is what makes the surface a SPECIFICATION rather than a hand-counted
     list: authority cannot be added to the plan and silently go unchecked.
     """
+    require_authority_gap_totality(plan)
     unknown = sorted(set(plan) - set(TOP_LEVEL_SPEC))
     if unknown:
         raise PlanSurfaceUndeclared(
@@ -380,7 +494,9 @@ def specification_counts(plan: dict[str, Any], root: str = ".") -> dict[str, int
                     + len(set(plan) - set(TOP_LEVEL_SPEC))
                     + sum(len(set(c) - set(CASE_SPEC)) for c in plan["cases"])
                     + sum(len(set(x) - set(SUBCONDITION_SPEC))
-                          for c in plan["cases"] for x in c["subconditions"]))
+                          for c in plan["cases"] for x in c["subconditions"])
+                    + sum(len(set(g) - set(AUTHORITY_GAP_SPEC))
+                          for g in plan["authority_gaps"]))
     return {
         "duplicated_normative_keys": len(view),
         "human_rendered_keys": len(human),
@@ -400,6 +516,8 @@ def specification_counts(plan: dict[str, Any], root: str = ".") -> dict[str, int
                                       if o == DERIVED)
                                  + sum(1 for o, _ in TOP_LEVEL_SPEC.values()
                                        if o == DERIVED),
+        "authority_gap_records": len(plan["authority_gaps"]),
+        "authority_gap_declared_keys": len(AUTHORITY_GAP_SPEC),
         "registered_normative_sections": len(SECTION_REGISTRY),
         "generated_sections": sum(1 for o, _ in SECTION_REGISTRY.values()
                                   if o == GENERATED),
@@ -497,7 +615,7 @@ def normative_json_view(plan: dict[str, Any], root: str = ".") -> dict[str, Any]
                  f"{row['diagnostic_id']}.{key}"] = row[key]
 
     for gap in plan["authority_gaps"]:
-        for key in ("gap", "affects", "status", "resolution"):
+        for key in AUTHORITY_GAP_VIEW_KEYS:
             view[f"authority_gaps.{gap['id']}.{key}"] = gap[key]
 
     final = plan["final_campaign_classification"]
@@ -1212,6 +1330,11 @@ def require_derived_boundaries(plan: dict[str, Any], text: str) -> None:
 
 # --------------------------------------------- generated region: release rules
 def render_release_rules_region(plan: dict[str, Any]) -> str:
+    # REJECT BEFORE RENDERING. The renderer is reachable on its own -- the
+    # regeneration path calls it directly -- so it must not be the one place a
+    # malformed disposition turns into an uncoded KeyError, nor the place an
+    # unapproved extra clause is quietly dropped on the floor.
+    require_authority_gap_totality(plan)
     out: list[str] = []
     for gap in plan["authority_gaps"]:
         out.append(f"#### {gap['id']} — affects `{gap['affects']}` — **{gap['status']}**")
@@ -1315,7 +1438,7 @@ def _human_rendered_keys(plan: dict[str, Any]) -> tuple[str, ...]:
             keys.add(f"release_authority.mandatory_diagnostics."
                      f"{row['diagnostic_id']}.{key}")
     for gap in plan["authority_gaps"]:
-        for key in ("gap", "affects", "status", "resolution"):
+        for key in AUTHORITY_GAP_VIEW_KEYS:
             keys.add(f"authority_gaps.{gap['id']}.{key}")
     keys.add("final_campaign.verdict_on_success")
     keys.add("final_campaign.rule")
