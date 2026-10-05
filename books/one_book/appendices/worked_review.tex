@@ -1,5 +1,8 @@
 \chapter{Following one claim all the way through}\label{app:worked-review}
 
+One complete example now follows the argument from endpoints through interactions, calculus and conditional probability. A dynamic realization then connects it to the feedback distinction. The purpose is to show how the theoretical pieces can be used together in a single reproducible calculation.
+
+
 \section{A declaration small enough to inspect}
 Use three dimensionless binary controls and the scalar response
 \begin{equation}
@@ -45,12 +48,12 @@ If, separately, these scalar states are evaluated under the normalized Gaussian 
 \end{equation}
 The normalizers cancel. The density readings are at response endpoints; they are not probabilities that each coalition will be selected.
 
-This calculation is conditional algebra because the density was stipulated. An experiment would have to obtain its physical potential and density estimates independently enough to make agreement informative. The table itself contains no evidence of stationarity or detailed balance.
+The stipulated density makes this equality exact. It supplies a probability interpretation of the same coefficient, while a law of motion would separately determine stationarity and detailed balance.
 
 \section{The entropy check needs still more}
 If every entry were realized by a process satisfying the full fixed conservative overdamped single-reservoir P4 conditions, the medium-entropy coefficient would be $-k_B$. That conclusion does not follow merely because a Gaussian density was written down.
 
-The response law above does not specify heat, work, a reservoir, or how controls are applied. Therefore the example as declared does not claim that any actual entropy was produced or measured. It illustrates exactly where the thermal premise would enter and what additional evidence would be needed.
+The response law above does not specify heat, work, a reservoir, or how controls are applied. Therefore the example as declared does not claim that any actual entropy was produced or measured. It illustrates exactly where the thermal premise would enter and which additional physical assumptions complete the connection.
 
 \section{A joint outcome still leaves attribution open}
 The full group has value minus eight. Many triples of signed numbers sum to minus eight. None is selected by the Möbius decomposition as a unique owner payment. The dividends describe subset interactions; an allocation rule may use them, but must state how and why.
@@ -62,6 +65,15 @@ If the eight potential values were independently estimated with common variance 
 
 Thus a complete empirical report would append the calibration and covariance model, not simply say that the coefficient is exactly minus one. Exactness describes the constructed mathematics here. Measurements would need their own uncertainty and possible bias assessment.
 
+\section{A monotone dynamic realization}
+The response table also arises at horizon $T_f=1$ from
+\begin{equation}
+ \dot x=z_1+z_2+z_3+z_1z_2,\qquad x(0)=0.
+\end{equation}
+Each Boolean control produces a constant or increasing trajectory. The endpoint is exactly the table's $x(z)$, so the quadratic potential still gives a triple of minus one. No oscillation is present.
+
+Compare this with the admissible pending-tank example: its nonempty response has damped oscillatory modes, yet its quadratic coalition table has an exact zero triple. The two examples establish both directions of the distinction between temporal behaviour and interaction order. They also show why the composite endpoint, rather than a visual impression of complexity, determines the required EBU hierarchy.
+
 \section{The claim ledger}
 \begin{longtable}{P{.36\linewidth}P{.54\linewidth}}
 \toprule Claim & What supports it\\\midrule
@@ -71,8 +83,8 @@ Triple under quadratic $V$ & Nonlinear response and the composite derivative.\\
 Log-density equality & An additionally stipulated canonical density and measure.\\
 Thermal entropy interpretation & Not established by this response declaration; full P4 premises would be needed.\\
 Owner entitlement & Not defined by the table.\\
-Social improvement & Not established by constructed arithmetic.\\
+System capability & Exact reconstruction, explicit response dependence and a transparent basis for a separately chosen allocation.\\
 \bottomrule
 \end{longtable}
 
-This sequence is the book's method in miniature. Start from a clear physical comparison, derive what follows, and name every additional premise when moving to a stronger interpretation. The result is a more useful foundation for future work because it tells readers both what they can rely on and what they still need to learn.
+This sequence is the book's method in miniature. Start from a clear physical comparison, derive what follows, and name every additional premise when moving to a stronger interpretation. The result is a coherent theoretical specification: each equality is established under its premises, and each additional interpretation names the structure that supplies it.

@@ -1,9 +1,29 @@
 \chapter{Which connections matter for interaction?}\label{ch:topology}
 
+Not every connection is a pipe, and not every interaction follows geographical proximity. We distinguish the physical network, potential factors, feasible groups and response dependencies. Exact structural ceilings then show when EBU can simplify a coalition account and when the full combinatorial burden remains.
+
+
 \section{A pipe drawing is only one map}
 A network diagram can show where water may flow without showing which measurements a potential reads, which actions share a machine, or which combinations are feasible. These are different structures. Confusing them can make an account appear local while it omits a remote dependency, or make two actions appear independent while they compete for one capacity.
 
 The physical graph lists transformations. The factor graph lists dependencies of the valuation. The feasible-action poset records which subsets are permitted. The value-interaction hypergraph records which sets have nonzero coefficients. A hyperedge can join three or more actions; it is not necessarily a pipe, a causal link or a contractual group.
+
+\section{Four structures in one water account}
+It helps to follow the same delivery through four mathematical structures. Here ``topology'' includes the connectivity and composition structures used by the account; it does not mean that a combinatorial subset lattice is the same object as a topological state space.
+
+\textbf{State topology} concerns the admissible states and the transitions that connect them. A tank with nonnegative stock and a capacity ceiling has a restricted domain. A pipe makes certain changes possible. A supplied single-valued potential assigns a value throughout the compared part of that domain; the path theorem does not additionally require that the domain be simply connected.
+
+\textbf{Path composition} concerns a history through that domain. Replenish the tank, serve the clinic, then replenish again: the endpoint of each transition is the start of the next. Joined receipts telescope. A complete loop under one field has zero net value. The order can alter intermediate conditions and service even when the final potential difference is unchanged.
+
+\textbf{Coalition topology} concerns alternatives from a common baseline. With actions A and B, the four corners are neither, A, B and AB. Inclusion relates the action sets. An arrow from A to AB means adding B to that alternative, not necessarily executing B after A in physical time. A complete Boolean lattice permits the familiar inclusion--exclusion formulas; a restricted feasible family has its own order structure.
+
+\textbf{Interaction topology} is extracted from that table. A nonzero pair coefficient joins A and B in the interaction representation. A nonzero triple joins three actions through a dependence that singleton and pair terms do not exhaust. The coefficients carry sign and magnitude; a drawing of the hyperedges alone loses that information.
+
+These four structures answer successive questions: which states are possible, how a history joins them, which action alternatives are compared, and where their joint value fails to decompose. The physical network is another structure: its vertices may be places or machines, while a state-space point describes the whole represented system at once.
+
+For the town's water service, this distinction prevents a common mistake. Two pumps can be far apart in the pipe network yet interact because both deplete one reserve. Conversely, a complicated delivery history can have an affine endpoint response and therefore no interaction above pairs under a quadratic potential. Distance, sequence length and coalition order are not interchangeable measures of complexity.
+
+The gain is a more useful map of cooperation. The account can identify the shared reserve that needs coordination without treating every physical connection as a financial relationship or every statistical coefficient as proof of responsibility.
 
 \section{Factor support can impose an exact ceiling}
 Suppose the composite landscape has a declared decomposition
@@ -43,11 +63,13 @@ The same issue appears in interaction tables. A region summarized only by its to
 There is a useful exact criterion. If a summary map $r(x)$ and coarse potential $\bar V$ satisfy $V(x)=\bar V(r(x))+c$ on all compared states, then every endpoint difference is preserved. If not, a residual must be retained or the claim narrowed. This statement does not require a particular compression algorithm; it gives a test that any proposed one must meet.
 
 \section{The exponential burden is real}
-An arbitrary order-$k$ coefficient contains $2^k$ table entries, each with a nonzero sign. Without extra assumptions, omitting one leaves the coefficient unidentified: changing that missing entry changes the answer while preserving every observed row. This is an information requirement, not merely a slow implementation.
+A general table of $n$ Boolean actions contains $2^n$ rows. Möbius inversion reorganises those rows without losing information; it does not make arbitrary missing rows known. A short-looking formula can still require a large family of alternatives.
 
-Known low degree, verified factor support, symmetry or a certified reusable motif can reduce the necessary work. An assumed low-order model can also reduce work, but then its error needs testing. A large system cannot be declared scalable simply because the transform has an elegant formula.
+Structure supplies real reductions. If the composite value decomposes into factors involving at most $r$ action labels, all coefficients above order $r$ vanish. If the response is affine and the potential quadratic, the ceiling is two. Both are mathematical reasons for a smaller representation. Sparsity guessed from a diagram is not the same reason.
 
-A sensible EBU programme begins with small, physically meaningful motifs and a question that justifies the measurement burden. It may then extend only where the extra order resolves a consequential uncertainty. This approach could support more accountable infrastructure decisions while avoiding a costly collection of high-order numbers with no clear service meaning.
+Dynamics must be included when identifying support. An action can propagate through a common linear network to many endpoint coordinates while preserving a low degree. A nonlinear bottleneck can create higher-order dependence in a small physical region. Reach, temporal complexity and coalition order are therefore three different measures of complexity.
+
+An EBU system can use these distinctions to spend its effort well. It can separate independent components, retain shared constraints and compute only the interaction orders justified by the composed model. For a community, the benefit is an account that explains consequential dependencies without requiring every local service decision to enumerate the whole economy.
 
 \section{From topology to a physical probability interpretation}
 Everything so far has concerned states, responses and finite values. None of it has required an equilibrium distribution. That is deliberate: a coalition table can be useful in a deterministic or driven setting without claiming canonical physics.

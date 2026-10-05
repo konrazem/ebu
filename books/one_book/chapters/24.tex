@@ -1,5 +1,8 @@
 \chapter{Beyond isolated coordinates}\label{ch:factors}
 
+Many useful functions depend on combinations of physical conditions. A factorized potential represents those combinations while retaining exact local cancellation. It also shows why shared valuation, shared equipment and causal influence are separate kinds of dependence, each with a different role in coordinating EBU actions.
+
+
 \section{What the simple field has taught us}
 The two-stock examples made one fact unusually clear: an action is valued by what it does to a declared physical state, not by the name of the action or the intention of its actor. In a real service network, however, an energy carrier can support a water transfer, a store can protect a medicine shipment, and a damaged route can change the meaning of available stock. We need a way to keep those relationships visible without calculating the condition of the entire planet after every action.
 
@@ -50,7 +53,13 @@ Coupling also changes the reading neighbourhood. An action may write one coordin
 This distinction matters for governance. A mathematical proof that unaffected factors cancel is not a proof that every participant has access to the required measurements, that private data should be disclosed, or that a distributed network will reach agreement. The data protocol and the institution each require their own design.
 
 \section{Coupling prepares the joint-action question}
-When several actions share a factor, their joint value must be evaluated on the complete combined endpoint. Later chapters construct the coalition table and separate its interactions before considering any division among actors. For now the important lesson is that a factor's complete dependencies determine what must be read.
+Suppose a potential factor reads both a water reserve and the electrical reserve needed to deliver it. An action on either reserve can alter that factor. Two actions with disjoint direct coordinate supports can therefore interact through the same coupled valuation.
+
+For a quadratic potential with symmetric Hessian $H$, the pair term is $-h_i^{\mathsf T}Hh_j$. Off-diagonal entries allow this product to be nonzero even when $h_i$ and $h_j$ change different coordinates. Conversely, a diagonal $H$ still gives interaction when both actions touch the same coordinate. The formula identifies the actual dependency without requiring a metaphor about distance.
+
+A shared pump can also couple \emph{feasibility} without adding a cross term to the potential. A nonlinear controller can couple \emph{response}, changing the endpoint produced by an action when another is present. The later composite theorem puts response dependence and valuation dependence into one exact calculation.
+
+These distinctions make coordination more selective. EBU can group actions that share a physical limit, reevaluate factors whose inputs change, and leave independent components separate when the equations permit it. This directs collective effort to the places where it can change the outcome, instead of requiring every participant to negotiate with the entire system.
 
 \section{The limit of a single number}
 A physical system may carry water, energy, medicine and ecological function in unlike units. Declaring a scalar $V$ requires a scientifically and institutionally justified relation among represented effects. Where that relation is not justified, a vector of separate accounts is more honest. One can still ask whether each physical balance closes and whether each service requirement is met. What one cannot do is add unlike consequences under an unstated exchange rate and call the result a law of nature.

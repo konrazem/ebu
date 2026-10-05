@@ -100,6 +100,18 @@
 
 \textbf{Entropy tables.} Medium, stochastic-system and total entropy changes have separate meanings. Their EBU scaling holds only under the stated P4 physical conditions for every compared process.
 
+\textbf{Pending stock, $Q$.} Material dispatched but not yet available at the receiver. Its deviation $q=Q-Q_*$ can be negative while physical pending stock remains nonnegative. In earlier transfer chapters, $q$ denotes a finite action quantity; the context identifies the use.
+
+\textbf{Residence time, $\tau$, and horizon, $T_f$.} The first is a parameter of the pending-stock arrival law. The second is the duration at which a response is evaluated. Changing either can change an endpoint, but they are different declarations.
+
+\textbf{Native burden, $V_B$, and storage, $\mathcal E_B$.} $V_B$ carries the historical burden unit $B$. The feedback storage $\mathcal E_B$ proves a stability property. Neither is automatically the normalized potential $V$ or its finite EBU difference.
+
+\textbf{Memory kernel, $K$.} The causal weighting of earlier visible states obtained by eliminating hidden dynamics. The accompanying initial-condition term preserves the hidden initial state. The restoring tank kernel is not a probability density.
+
+\textbf{Temporal mode.} A component of the response described by a root or eigenvalue of the declared dynamics. Decay and oscillation classify time behaviour, independently of coalition interaction order.
+
+\textbf{Affine feedback response.} A common linear operator with additive action inputs produces an endpoint affine in coalition indicators. With a fixed quadratic potential, this implies an exact zero at every interaction order above two, for every admitted horizon.
+
 \section*{The compact symbol card}
 \begingroup\small
 \begin{longtable}{P{0.16\linewidth}P{0.38\linewidth}P{0.34\linewidth}}\toprule
@@ -126,7 +138,12 @@ $m_E(T)$ & Interaction coefficient & Same units as $E$\\
 $p, Z$ & Density and normalizer & Relative to declared measure\\
 $J_{\mathrm{prob}}$ & Negative log density & Declared density convention\\
 $\beta_{\mathrm{bridge}}$ & Bridge coefficient & Dimensionless\\
-$k_B$ & Boltzmann constant & Entropy units\\\bottomrule
+$k_B$ & Boltzmann constant & Entropy units\\
+$Q,q=Q-Q_*$ & Pending stock and deviation & Stock units in the feedback model\\
+$\tau,T_f$ & Residence parameter and horizon & Time\\
+$\nu$ & Tank response coefficient $2wM$ & Inverse time\\
+$V_B,\mathcal E_B$ & Native burden and stability storage & Native burden units $B$\\
+$F,\lambda$ & Linear response matrix and mode rate & Rates; distinct from interaction order\\\bottomrule
 \end{longtable}
 \endgroup
 

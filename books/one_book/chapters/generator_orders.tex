@@ -1,9 +1,217 @@
-\chapter{Why time can create higher-order interaction}\label{ch:generator-orders}
+\chapter{Feedback, memory and interaction through time}\label{ch:generator-orders}
 
-\section{A simple input can have a nonlinear accumulated effect}
-Turning a control on twice as strongly need not double the endpoint after a finite time. The state changes while the law acts on it, and that changed state affects later response. This feedback through time can create a nonlinear control-to-endpoint map even when the vector field is affine in the controls.
+A delivery changes the future as well as the present. This chapter derives how pending stock creates memory, when correction oscillates, and which joint values remain exactly pairwise despite that temporal behaviour. It then identifies the nonlinear response that can create higher-order interaction, connecting physical dynamics to the finite accounting laws.
 
-The lesson is closely related to finite curvature. An initial local description can be exact at the instant it is written and still fail to describe the whole finite interval by simple multiplication. The generator makes that time dependence explicit.
+\section{Water in the pipe is part of the present}
+A reservoir can be low even while a large delivery is already on its way. A controller that sees only the reservoir may order more water, then receive both deliveries after the shortage has passed. The response can overshoot and settle through diminishing corrections. Pending stock makes that response a property of the present state, rather than an unexplained surprise.
+
+We now give the generator a concrete physical form. One stock-and-pipeline model supplies exact statements about its operating point, memory and temporal modes. Its coalition table then supplies another exact result: damped oscillation can coexist with zero three-way interaction. A monotone response can, conversely, have a nonzero triple. The two classifications answer different questions.
+
+The model and its historical native units are reconstructed in the feedback reconciliation \cite{feedback-report}. We retain its explicit response assumptions and use a separate dimensionless example to connect it to finite EBU. This lets the reader follow the complete theoretical bridge in Book 1; later volumes develop applications, designs and results.
+
+\section{Declare the stocks, the rule and the unit}
+Let $X$ be usable receiver stock, $Q$ pending stock, and $L$ a declared receiver target. Constant consumption is $h>0$. A maintained source dispatches material into the pipeline at rate $D$, and arrival transfers pending material into the receiver at rate $A$. On one lossless, unconstrained deficit branch, declare
+\begin{align}\label{eq:tank-laws}
+ V_B(X)&=w(L-X)^2,\qquad D=\nu(L-X),\nonumber\\
+ \nu&=2wM,\qquad A=Q/\tau,
+ \qquad w,M,\tau>0.
+\end{align}
+The resulting balances are
+\begin{equation}\label{eq:tank-generator}
+ \dot X=Q/\tau-h,\qquad
+ \dot Q=\nu(L-X)-Q/\tau.
+\end{equation}
+The first says that arrival replenishes the receiver while consumption empties it. The second says that dispatch fills the pipeline while arrival empties it. Together they show why the pending stock carries information about the future.
+
+These balances do not derive the dispatch policy. That policy uses the shortage signal of a completed delivery, $-V_B'(X)=2w(L-X)$, and a separately declared response coefficient $M$. Nor do they derive the residence law $A=Q/\tau$. Both are additional modelling choices. A maintained source means that its supply conditions are assumed; it does not mean that water, replenishment or pumping is free.
+
+The subscript on $V_B$ matters. The historical potential has a native burden unit $\mathrm B$. With resource unit $\mathrm U$ and time unit $\mathrm T$, $w$ has units $\mathrm B/\mathrm U^2$, $M$ has $\mathrm U^2/(\mathrm B\,\mathrm T)$, and $\nu$ has $1/\mathrm T$. The residence parameter $\tau$ has units of time. We use $T_f$ for the observation horizon, keeping it distinct from $\tau$.
+
+Native burden and normalized EBU retain distinct units. As Chapter~\ref{ch:reference} explained, a conversion $V=(V_B-c_B)/B_0$ requires a declared fixed burden scale $B_0$. The roots of this controller identify response timescales, not that denomination. They depend on the product $\nu=2wM$, so they also cannot separate burden weight from mobility.
+
+The physical branch also matters: $0<X<L$, nonnegative pending stock, a maintained source and no active capacity switch. The affine equations exist mathematically outside that branch, but a physical interpretation must establish that the states used remain admissible. These are the assumptions under which the following statements have their physical meaning.
+
+\section{Steady stocks can retain a shortage}
+At an operating point, arrival and dispatch must both match consumption. Setting the two derivatives in Equation~\ref{eq:tank-generator} to zero gives
+\begin{equation}\label{eq:tank-operating}
+ Q_*=\tau h,\qquad X_*=L-h/\nu.
+\end{equation}
+The point lies on the interior branch when $L>h/\nu$. Its receiver burden is
+\begin{equation}
+ V_B(X_*)=w(h/\nu)^2>0.
+\end{equation}
+A continuing shortage is what keeps this particular proportional controller dispatching enough to replace consumption. The stock is steady because flows balance, not because the receiver has reached the minimum of $V_B$.
+
+This is an operating equilibrium of the declared deterministic equations. It is not automatically thermodynamic equilibrium, zero burden or an optimum. For an EBU service design, reliability and adequacy therefore have separate, useful indicators. The operating point describes what this controller sustains; the reference describes the condition against which shortage is valued. Improving a reliable but inadequate service means changing its physical capacity or response, not merely relabelling stability as zero burden.
+
+\section{Two stocks become two temporal modes}
+Define deviations $x=X-X_*$ and $q=Q-Q_*$. Subtracting the operating balances yields exactly
+\begin{equation}\label{eq:tank-deviation}
+ \dot x=q/\tau,\qquad \dot q=-\nu x-q/\tau.
+\end{equation}
+There is no linearization error on the stated affine branch. A negative $q$ means less pending stock than usual; it does not mean negative physical inventory.
+
+\begin{theorem}{Modes of the declared pipeline model}\label{thm:tank-modes}
+For $\nu,\tau>0$, the deviation matrix and its characteristic equation are
+\begin{equation}
+ F=\begin{pmatrix}0&1/\tau\\-\nu&-1/\tau\end{pmatrix},
+ \qquad \tau\lambda^2+\lambda+\nu=0.
+\end{equation}
+The roots are
+\begin{equation}\label{eq:tank-roots}
+ \lambda_\pm=\frac{-1\pm\sqrt{1-4\nu\tau}}{2\tau}.
+\end{equation}
+All modes decay. They are complex precisely when $4\nu\tau>1$.
+\end{theorem}
+\begin{proof}
+The determinant of $\lambda I-F$ is $\lambda^2+\lambda/\tau+\nu/\tau$. Completing the square gives $(2\tau\lambda+1)^2=1-4\nu\tau$. If the discriminant is nonnegative, its square root is less than one, so both roots are negative. Otherwise their common real part is $-1/(2\tau)<0$.
+\end{proof}
+
+For $4\nu\tau<1$ there are two distinct real decaying modes. Equality gives the repeated critical rate and solutions of the form $(C_1+C_2t)e^{-t/(2\tau)}$. Above one, the free response has an exponentially shrinking sinusoidal component. An observed oscillation still requires excitation of the mode and a quantity in which it is visible; the unperturbed operating point does not start moving merely because its matrix has complex roots.
+
+The threshold is exact for this model. Changing how dispatch uses pending stock, imposing a capacity constraint or introducing a true transport delay changes the model and requires a new analysis. Damped-oscillator roots are standard dynamics, not a new EBU law \cite{feynman-transients}.
+
+\section{A period is not a price}
+In the complex-mode regime, write
+\begin{equation}\label{eq:tank-frequency}
+ \lambda_\pm=-\alpha\pm i\omega,
+ \qquad \alpha=\frac1{2\tau},
+ \qquad \omega=\frac{\sqrt{4\nu\tau-1}}{2\tau}.
+\end{equation}
+The amplitude envelope decays as $e^{-\alpha t}$. The angular frequency is $\omega$, the ordinary frequency is $\omega/(2\pi)$, and the period is $2\pi/\omega$. These quantities describe how the declared model responds over time. None is an EBU price.
+
+For infrastructure coordination, these timescales distinguish an outstanding correction from a new shortage. A response-aware scheduler can use pending deliveries and settling time to avoid repeated orders against the same deficit. EBU then values the complete accepted consequence, including the source and process boundary. The feature supports more reliable service with less avoidable corrective throughput.
+
+\section{Removing a stock does not remove its memory}
+Suppose an observer wants an equation for the receiver alone. Multiply $\dot q+q/\tau=-\nu x$ by the integrating factor $e^{t/\tau}$ and integrate. The hidden stock becomes
+\begin{equation}\label{eq:tank-hidden}
+ q(t)=e^{-t/\tau}q_0-\nu\int_0^t e^{-(t-s)/\tau}x(s)\,ds.
+\end{equation}
+Substituting into $\dot x=q/\tau$ gives
+\begin{align}\label{eq:tank-memory}
+ \dot x(t)&=\frac{q_0}{\tau}e^{-t/\tau}
+      +\int_0^t\mathcal K(t-s)x(s)\,ds,\\
+ \mathcal K(r)&=-\frac\nu\tau e^{-r/\tau}\chi_{[0,\infty)}(r).
+ \nonumber
+\end{align}
+The present rate remembers previous receiver deviations because they changed dispatch and therefore the pending stock. The kernel is causal and restoring. It has units $1/\mathrm T^2$; integration against stock and time produces a stock rate. Its integral is $-\nu$, so the full kernel is not a probability density.
+
+The initial term cannot be discarded. Here $q_0=Q(0)-Q_*$; choosing $q_0=0$ means the pipeline initially has its operating stock, not that the pipeline is empty. An empty pipeline instead gives $q_0=-\tau h$. Two receivers with the same current stock but different pending stocks can have different immediate rates and different futures.
+
+\diagram{feedback_memory}{The pending stock is an explicit state in the two-variable model. Eliminating it replaces that state by a memory integral and its initial-condition term. The diagram describes a declared response model, not measured flow data.}{fig:feedback-memory}
+
+This is a first-order lag or residence model. A pure travel time would instead require dispatch history and a different delay equation. An added dispatch input also contributes its own convolution; Appendix~\ref{app:generators} derives that term. One exponential compartment gives no universal memory kernel for every supply network.
+
+The representation rule gives EBU a concrete feature: retain pending commitments either as explicit state or as equivalent memory with its initial condition. Both descriptions preserve the same response information. Omitting both would invite duplicate interventions, while retaining them supports reliable scheduling and a clearer account of what remains to be delivered.
+
+\section{A stable controller can move burden upward}
+The historical stability argument introduces another quantity,
+\begin{equation}\label{eq:tank-storage}
+ \mathcal E_B(x,q)=wx^2+\frac{q^2}{2M\tau}.
+\end{equation}
+It is positive definite in the deviations. Using $\nu=2wM$ gives
+\begin{align}\label{eq:tank-storage-rate}
+ \dot{\mathcal E}_B
+ &=2wx\frac q\tau+\frac q{M\tau}
+       \left(-2wMx-\frac q\tau\right)\nonumber\\
+ &=-\frac{q^2}{M\tau^2}\leq0.
+\end{align}
+The chosen pending term cancels a dynamical cross term. It has not thereby been established as the economic or physical value of pending inventory. Nor is a momentary zero derivative proof of rest: at $q=0$ and $x\ne0$, the second equation immediately changes $q$.
+
+Keep three objects separate. $V_B$ measures the native receiver burden. $\mathcal E_B$ measures deviation for this stability proof. Canonical $E$ is a finite difference of an independently declared normalized potential. The shared appearance of a quadratic does not identify them.
+
+For an exact single-state example, use compatible units with $w=1$, $M=1/2$, $\tau=2$, $\nu=1$, $L=10$ and $h=2$. The operating point is $(X_*,Q_*)=(8,4)$. At $(X,Q)=(9,3)$, direct substitution gives
+\begin{equation}\label{eq:tank-state-counterexample}
+ \dot V_B=+1\,\mathrm B/\mathrm T,
+ \qquad \dot{\mathcal E}_B=-\tfrac12\,\mathrm B/\mathrm T.
+\end{equation}
+Receiver burden is increasing while the stability measure decreases. The system is moving toward an operating point that retains a larger shortage. The difference follows directly from the vector field at the stated point.
+
+The stability function is a mathematical instrument for this response law. Its receiver term is the quadratic remainder of $V_B$ about the operating point: $V_B(X)-V_B(X_*)-V_B^\prime(X_*)(X-X_*)=wx^2$. Its pending term was chosen to cancel the cross term in the derivative. It therefore serves a different purpose from valuing pending inventory. An EBU service record can report both reliability and burden without replacing one by the other, making persistent shortage visible even in an orderly controller.
+
+\section{Linear feedback preserves an affine coalition response}
+Return now to the coalition question. A feedback system may have many hidden modes, including oscillatory ones. If every action enters through a fixed additive input to the same linear system, the endpoint still has the affine form required by the degree theorem.
+
+\begin{theorem}{Common linear feedback and affine endpoints}\label{thm:feedback-affine}
+Let every required coalition share an initial state $y_0$, horizon $T_f$, field, comparison protocol and well-posed linear dynamics
+\begin{equation}\label{eq:feedback-affine-law}
+ \dot y=F(t)y+g_0(t)+\sum_{i\in S}g_i(t).
+\end{equation}
+Assume integrable coefficients and admissibility throughout the common horizon. Then
+\begin{equation}\label{eq:feedback-affine-endpoint}
+ y_S(T_f)=y_\varnothing(T_f)+\sum_{i\in S}h_i(T_f).
+\end{equation}
+\end{theorem}
+\begin{proof}
+For the common state-transition matrix $\mathsf U(t,s)$, variation of constants gives the empty-input endpoint and each action response as
+\begin{align}
+ y_\varnothing(T_f)&=\mathsf U(T_f,0)y_0+
+  \int_0^{T_f}\mathsf U(T_f,s)g_0(s)\,ds,\nonumber\\
+ h_i(T_f)&=\int_0^{T_f}\mathsf U(T_f,s)g_i(s)\,ds.
+\end{align}
+Linearity of integration and uniqueness prove the decomposition.
+\end{proof}
+
+This is standard linear-systems mathematics \cite{sontag,feedback-systems}. A fixed feedback gain can be part of $F$. A coalition-dependent gain generally cannot. Stability is not needed for the finite-horizon identity if the required endpoints exist and remain admissible. Saturation or switching must not silently replace the common affine model for some rows of the table.
+
+\begin{corollary}{Oscillatory modes do not raise the quadratic ceiling}\label{cor:feedback-pair-only}
+Under Theorem~\ref{thm:feedback-affine}, let the fixed potential be
+$V(y)=c+\ell^{\mathsf T}y+\tfrac12y^{\mathsf T}Hy$, with $H=H^{\mathsf T}$. For the empty-evolution-relative table,
+\begin{equation}\label{eq:feedback-pair-only}
+ m_E(i)=-(\ell+H\bar y)^{\mathsf T}h_i-\tfrac12h_i^{\mathsf T}Hh_i,
+\end{equation}
+where $\bar y=y_\varnothing(T_f)$, while
+\begin{equation}
+ m_E(ij)=-h_i^{\mathsf T}Hh_j,
+ \qquad m_E(T)=0\quad\text{for }|T|\geq3.
+\end{equation}
+\end{corollary}
+\begin{proof}
+Substitute the affine endpoint into the quadratic. On Boolean indicators the result has degree at most two; Theorem~\ref{thm:degree} applies. A constant raw drift offset changes only the empty coefficient.
+\end{proof}
+
+The result gives EBU an exact economical representation even when deliveries oscillate. A common linear response and quadratic valuation require only singleton and pair terms; higher temporal complexity does not add higher coalition orders. A fixed gain belongs inside the common operator. If a coalition changes that gain, a different endpoint map must be analysed.
+
+\section{An oscillatory response with an exact zero triple}
+To make the corollary tangible, use a separately declared dimensionless teaching example. This is not a calibration of the historical unit $\mathrm B$. Take $\nu=\tau=1$, $L=3$, $h=1$, common initial state $(X,Q)=(2,1)$ and potential $V(X,Q)=(3-X)^2/2$. Each of three action labels adds constant dispatch $\epsilon=1/100$ over the same horizon.
+
+For a coalition of size $m$, the deviations obey $\dot x=q$ and $\dot q=-x-q+m\epsilon$. Their exact solution can be written $x=m\epsilon g(t)$ and $q=m\epsilon\dot g(t)$, where
+\begin{equation}\label{eq:feedback-response}
+ g(t)=1-e^{-t/2}\left[\cos\frac{\sqrt3t}{2}
+       +\frac1{\sqrt3}\sin\frac{\sqrt3t}{2}\right].
+\end{equation}
+Direct differentiation verifies the equation and zero initial deviations. The nonempty responses oscillate about their input-shifted operating points. Appendix~\ref{app:generators} checks that all eight coalitions stay on the declared physical branch by elementary inequalities, without producing a time series.
+
+At any fixed $T_f$, put $r=\epsilon g(T_f)$. The complete value table is summarized by its four distinct rows:
+\begin{center}
+\begin{tabular}{@{}cc@{}}\toprule
+Coalition size & Endpoint EBU\\\midrule
+0 & $0$\\
+1 & $r-r^2/2$\\
+2 & $2r-2r^2$\\
+3 & $3r-9r^2/2$\\\bottomrule
+\end{tabular}
+\end{center}
+Every singleton and every pair has its corresponding row. Subtraction gives
+\begin{equation}\label{eq:oscillatory-zero-triple}
+ m_E(AB)=-r^2,\qquad
+ m_E(ABC)=E_3-3E_2+3E_1-E_0=0.
+\end{equation}
+Thus a nonzero pair may coexist with a zero triple despite damped oscillation. If the same dynamics is valued with the linear supplied potential $V=X$, the table is $E_m=-mr$ and even the pair vanishes. The zero triple is an exact identity at every admissible horizon. A nonzero pair additionally requires $r
+e0$.
+
+\section{Temporal modes and interaction order ask different questions}
+\begin{lawbox}{Dynamics, value and interaction}
+A \textbf{generator or feedback law} supplies a trajectory and its endpoint. A \textbf{potential} values the endpoint. \textbf{Möbius differences} compare coalition values. \textbf{Eigenvalues or poles} describe temporal modes of the declared dynamics. The number or kind of those modes does not determine the order of a coalition interaction.
+\end{lawbox}
+
+The converse example is just as simple. With fixed Boolean controls $a_i$, let $\dot y=a_1a_2a_3$, $y(0)=0$ and $V(y)=y$. Each response is constant or monotone, yet $m_E(ABC)=-T_f\ne0$ for $T_f>0$. The action inputs combine nonadditively. No oscillation is needed.
+
+The two remaining combinations are equally explicit. A linear input law $\dot y=\sum_i a_i$ with linear $V=y$ has only singleton values and no oscillation. In the pending tank, replacing the additive input by $u=\epsilon a_1a_2a_3$ leaves every proper coalition at the original operating point, while the full coalition has the same oscillatory response $\epsilon g(t)$. With $V=X$, its triple is $-\epsilon g(T_f)$, nonzero whenever $g(T_f)\ne0$. The earlier admissibility bound still applies because this input is no larger than the three-action additive case.
+
+\diagram{modes_and_interaction}{Temporal behavior and coalition order are independent classifications. These four algebraic examples compare different declared models; they are not simulated outcomes or a performance ranking.}{fig:modes-interaction}
+
+This separation supports two distinct EBU design features. A response display can identify timing and reliability, while an interaction display explains the dependence of joint intervention values. A service can need less oscillation without needing a higher-order valuation model, or need joint coordination without oscillating at all. The distinction directs effort toward the actual problem.
 
 \section{The first few time terms}
 For one fixed $z$, write at $x_0$
@@ -12,14 +220,14 @@ For one fixed $z$, write at $x_0$
 \]
 Under the smoothness and bounded-neighbourhood assumptions detailed in Appendix~\ref{app:generators},
 \begin{align}\label{eq:short-time}
- E_z(\tau)={}&-\tau DV[v]\nonumber\\
- &-\frac{\tau^2}{2}\{D^2V[v,v]+DV[Av]\}\nonumber\\
- &-\frac{\tau^3}{6}\{D^3V[v,v,v]+3D^2V[v,Av]\nonumber\\
- &\hspace{56pt}+DV[B[v,v]+A^2v]\}+O(\tau^4).
+ E_z({T_f})={}&-{T_f} DV[v]\nonumber\\
+ &-\frac{{T_f}^2}{2}\{D^2V[v,v]+DV[Av]\}\nonumber\\
+ &-\frac{{T_f}^3}{6}\{D^3V[v,v,v]+3D^2V[v,Av]\nonumber\\
+ &\hspace{56pt}+DV[B[v,v]+A^2v]\}+O({T_f}^4).
 \end{align}
 The first term evaluates the starting velocity. The next terms account for curvature of $V$ and change in the velocity as the state moves. The expression concerns one declared flow; taking its coalition differences then reveals interaction orders.
 
-The remainder requires more than the existence of the printed derivatives at one point. A convenient sufficient condition is a $C^3$ vector field and $C^4$ potential on a neighbourhood containing the short trajectories, with the needed bounds. This is an asymptotic statement as duration shrinks, not a promise that three terms describe a long experiment accurately.
+The remainder requires more than the existence of the printed derivatives at one point. A convenient sufficient condition is a $C^3$ vector field and $C^4$ potential on a neighbourhood containing the short trajectories, with the needed bounds. This is an asymptotic statement as duration shrinks, not a promise that three terms describe a long interval accurately.
 
 \section{Control-affine does give a short-time order rule}
 Suppose
@@ -28,56 +236,40 @@ Suppose
 \end{equation}
 with adequate smoothness and common admissible short-time solutions. For $|T|=k$, the leading result is
 \begin{equation}\label{eq:lie-order}
- m_{E_\tau}(T)=-\frac{\tau^k}{k!}
+ m_{E_{T_f}}(T)=-\frac{{T_f}^k}{k!}
  \sum_{\pi\in\mathrm{Perm}(T)}
  L_{f_{\pi_1}}\cdots L_{f_{\pi_k}}V(x_0)
- +O(\tau^{k+1}).
+ +O({T_f}^{k+1}).
 \end{equation}
 A sufficient regularity choice is $C^k$ fields and $V\in C^{k+1}$ on a suitable common neighbourhood. Appendix~\ref{app:generators} proves the result by expanding iterated generators.
 
 Why can no lower time order contain all $k$ actions? A product of fewer than $k$ control-affine generator factors cannot contain every one of the $k$ distinct control labels. The $k$-fold Boolean difference removes those lower-degree terms. At order $k$, every surviving word contains each action field once, in some order. Drift words enter at later orders because including drift would use a place needed for one of those action labels.
 
-This is useful for designing a local diagnostic. It does not say that high-order coefficients stay zero at a finite duration. Nor does it promise a nonzero leading coefficient: Lie-word contributions can cancel.
+This is a local order statement. Higher coefficients can become nonzero over a finite interval, and the displayed leading coefficient can itself vanish through cancellation. Its value for EBU is to identify which time orders can first contain a specified combination of controls, with a controlled remainder.
 
 \section{An exact counterexample at every order}
 Take the scalar controlled equation
 \begin{equation}
  \dot x=u x,\qquad u=\sum_{i\in S}1=|S|,
- \qquad x_0=1,qquad V(x)=\tfrac12x^2.
+ \qquad x_0=1,\qquad V(x)=\tfrac12x^2.
 \end{equation}
-The generator is affine in the controls and the potential is quadratic. Nevertheless the endpoint is $x_S(\tau)=e^{|S|\tau}$, so
+The generator is affine in the controls and the potential is quadratic. Nevertheless the endpoint is $x_S({T_f})=e^{|S|{T_f}}$, so
 \begin{equation}
- E_\tau(S)=\tfrac12\bigl(1-e^{2|S|\tau}\bigr).
+ E_{T_f}(S)=\tfrac12\bigl(1-e^{2|S|{T_f}}\bigr).
 \end{equation}
 For every nonempty $T$ of size $k$, binomial expansion gives
 \begin{equation}\label{eq:bilinear-all-orders}
- m_{E_\tau}(T)=-\tfrac12\bigl(e^{2\tau}-1\bigr)^k.
+ m_{E_{T_f}}(T)=-\tfrac12\bigl(e^{2{T_f}}-1\bigr)^k.
 \end{equation}
-At every positive duration this is nonzero at all available orders. As $\tau\to0$, it is $O(\tau^k)$, exactly consistent with the short-time theorem.
+At every positive duration this is nonzero at all available orders. As ${T_f}\to0$, it is $O({T_f}^k)$, exactly consistent with the short-time theorem.
 
 The coefficient does not contradict the quadratic pair-only result: the endpoint map is exponential, not affine in the controls. The example is an exact analytic response illustration, with no claim that uncontrolled exponential growth describes a viable EBU economy.
 
-\section{What really suffices for pair-only structure at all times}
-A stronger condition is a common linear state operator with affine control inputs:
-\begin{equation}\label{eq:joint-affine-dynamics}
- \dot x=A(t)x+b_0(t)+\sum_i z_i b_i(t).
-\end{equation}
-The operator $A(t)$ must be the same for every coalition. Variation of constants gives
-\begin{equation}
- x_z(\tau)=\bar x(\tau)+\sum_i z_i h_i(\tau),
-\end{equation}
-where $\bar x$ includes the initial state and the common drift, and each $h_i$ is the response to input $b_i$. Thus the endpoint map is affine in the controls at every admitted horizon. A fixed quadratic potential then gives no coefficients above order two.
+\section{Where nonlinear response changes the account}
+The bilinear example keeps a quadratic potential but creates all interaction orders because the common-operator assumption fails. Saturation, switching, thresholds, shared constraints and coalition-dependent gains can likewise make endpoint increments depend on the group. Higher-order terms then become possible, although cancellation can still remove them.
 
-This conclusion needs existence and admissibility for the required coalitions. A coalition-dependent matrix $A_z$, saturation, projection or changing boundary rule can destroy the affine endpoint structure. Describing a system as ``linear'' without specifying what is linear in which variables is insufficient.
+For example, $\dot y=u/(2y)$ from $y(0)=1$ gives $y(T_f)=\sqrt{1+uT_f}$ for $u\geq0$. With $u=|S|$ and $V=y^2/2$, the nonlinear response is cancelled by the valuation and $E(S)=-T_f|S|/2$ has only singleton terms. The relevant object is always the composite endpoint function.
 
-\section{Nonlinear control dependence can appear immediately}
-Consider $\dot x=z_1z_2z_3$, starting at zero, with $V(x)=x$. The full group reaches $\tau$ while every proper subset remains at zero. Its triple coefficient is $-\tau$, not $O(\tau^3)$.
+The complete theory now offers a useful design sequence. Include the pending state needed for a well-posed response. Determine its temporal behaviour and physical admissibility. Evaluate its complete endpoints under one field and horizon. Then use the interaction coefficients to decide how much of the coalition hierarchy is required. This can reduce duplicate dispatch, distinguish persistent shortage from transient correction, and reserve complex coordination for the dependencies that actually require it.
 
-The control-affine assumption has failed, so its short-time order theorem does not apply. This example helps interpret a time-scaling experiment: unexpectedly low-order scaling can indicate a direct joint control term, but measurement, baseline and model alternatives still need checking. Scaling is a diagnostic, not a unique mechanism identifier.
-
-\section{What time-aware interaction could do for a system}
-A future EBU system may need to distinguish an immediate delivery from an intervention that changes the response over hours or months. The generator framework can state those differences without changing the endpoint definition. It can also warn against extrapolating a short-duration calibration to a long intervention with accumulated nonlinear effects.
-
-The potential social gain is better planning of coordinated work: identifying when a combination's value depends on timing, or when a response that looks additive locally becomes coupled over time. This requires a validated response law and a relevant service boundary. Neither a small-time theorem nor a closed-form example proves that the resulting institutional choices will be fair or effective.
-
-Before probability enters the argument, we return to structure. A physical network, a dependency graph and a coalition interaction table each describe a different kind of connection. Their relation determines how much of the landscape can be studied locally.
+The generator has supplied dynamics, not a thermodynamic probability law. Canonical density and entropy enter under their own assumptions in Chapters~\ref{ch:equilibrium-bridge}--\ref{ch:entropy}. We first finish the general response argument: the next chapter studies $V(x(z))$ when action endpoints no longer superpose.

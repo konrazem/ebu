@@ -1,5 +1,8 @@
 \chapter{Homeostasis as a Gaussian landscape}\label{ch:potential}
 
+The Gaussian construction turns reference and scale into a transparent state potential. Its quadratic form gives more than a convenient drawing: exact finite quotes, explicit overlap between actions and a rigorous upper limit on interaction order whenever the endpoint response is affine. Those properties make the simplest model a useful foundation for a much broader theory.
+
+
 \section{From comparison to a function}
 A function is a repeatable rule that maps an input to an output. Our input is a physical state. The output will be a nonnegative number measuring standardized deviation from the declared reference. Calling this number a potential gives it a mathematical role: its differences and derivatives can be evaluated consistently across actions.
 
@@ -26,7 +29,7 @@ Consider the unnormalized shape
 \end{equation}
 It has the familiar Gaussian bell shape, with its highest value at the reference. Taking the negative logarithm gives \(-\log g_i(x_i)=V_i(x_i)\). The potential is therefore the relative negative-log geometry of that shape, with its minimum set to zero.
 
-This construction is a definition, not a claim that nature universally follows a Gaussian law. No probability density has yet been fitted to stock observations. No random mechanism has been specified that makes the system's stationary distribution equal to \(g_i\). The name explains the shape used for deviation; it does not supply missing dynamics or evidence.
+The construction fixes the relative negative-log geometry. A probability interpretation requires a domain, a reference measure and a normalization, which we supply in Chapter~\ref{ch:equilibrium-bridge}. For now the shape gives a smooth and explicit way to compare states. Its value, gradient and curvature can be calculated exactly without first specifying a random mechanism.
 
 On the fixed-mass nonnegative domain, coordinates are also constrained together. Even though the quadratic is a sum of one-coordinate terms, the actual stocks cannot vary independently: their sum is fixed. A product of Gaussian shapes in an unconstrained mathematical space is not automatically a product probability law for the physical system.
 
@@ -118,21 +121,23 @@ The physical fixed-mass states occupy only a slice of this drawing. For two cell
 The quantity \(\sqrt{2V}\) is the Euclidean length of the standardized deviation vector. It can be described as a distance in these standardized coordinates. It is not geographical distance, and it is not itself the signed action value. Taking its square root changes finite differences and derivatives. We retain \(V\) as the declared potential even when the distance picture helps intuition.
 
 \section{Diagonal geometry does not mean independent outcomes}
-The absence of off-diagonal Hessian entries says that the declared local marginal of one coordinate does not directly depend on another coordinate in the unrestricted function. Physical conservation still couples stocks, and the graph couples possible actions. If A sends to B, both coordinates change together.
+The diagonal Hessian says that each local marginal depends on its own coordinate. Conservation and shared action support still connect changes. If two actions withdraw from A, both alter the same squared deviation there. The joint value therefore contains a pair contribution even though the potential has no cross-coordinate terms.
 
-Two actions that share A can therefore interact in their combined value. Their increments overlap in A's squared deviation. This does not require a correlated multivariate Gaussian or a non-separable potential. It follows from applying a separable nonlinear function to a sum of increments.
+For a quadratic potential with Hessian $H$, and additive increments $h_i,h_j$, that contribution is exactly $-h_i^{\mathsf T}Hh_j$. The weighted overlap determines its sign. No third derivative of $V$ is present, and every interaction involving three or more distinct actions is zero when the endpoint is affine in their membership indicators. Chapter~\ref{ch:degree} proves this degree bound.
 
-A richer potential might use a symmetric positive-definite matrix with off-diagonal entries to represent declared cross-coordinate dependence. That would be another model. Its affected-factor neighbourhood, calibration, and interpretation would require review. We do not introduce it merely to obtain an attractive interaction effect. The diagonal model already has enough structure to distinguish local potential geometry from action overlap.
+The same conclusion applies when a common linear feedback law generates the increments over a finite horizon. Pending stock and decaying oscillations do not change it: a linear system superposes its responses, and a quadratic reads that superposition with degree at most two. Nonlinear response changes the conclusion, because the composed endpoint value can then have higher degree even when $V$ remains quadratic.
+
+This yields an efficient EBU feature. A system whose assumptions satisfy the degree bound can represent a joint value by its single-action and pair terms exactly. It need not invent or calculate higher-order corrections. The saved effort can instead support a larger, more complete physical boundary. A richer nonseparable quadratic changes which pairs interact, but by itself still does not create a third-order term under affine response.
 
 \section{A bounded domain gives a bound before any experiment}
-Because nonnegative stocks sum to \(M\), every coordinate lies between zero and \(M\). Its absolute deviation from a fixed reference cannot exceed the larger of \(x_i^*\) and \(|M-x_i^*|\). Hence
+Because nonnegative stocks sum to $M$, every coordinate lies between zero and $M$. Its squared departure is bounded by the larger endpoint departure. Thus
 \begin{equation}
  V(x)\leq\frac12\sum_i
  \frac{\max\{(x_i^*)^2,(M-x_i^*)^2\}}{\sigma_i^2}.
 \end{equation}
-For finitely many cells and fixed positive scales, the right-hand side is finite. It is a convenient bound, not necessarily the tight maximum because each coordinate cannot attain its individual extreme simultaneously under the common total.
+For finitely many cells and fixed positive scales this is finite. It is a convenient bound, although not generally the tight maximum because all coordinates cannot reach their separate extremes simultaneously.
 
-This distinction matters to scientific interpretation. If a future comparison asks whether EBU prevents unbounded growth of this potential, the physical domain has already answered that question for every admissible policy. A meaningful study must ask something that the domain has not guaranteed: recovery after a shock, frequency of substantial deviation, distribution across cells, cycling, or refusal. The theorem is useful because it narrows the question honestly.
+The bound is an established property of the domain and potential. It applies to every admissible policy, including a poor one. Its practical use is to delimit the accounting range and to separate boundedness from better questions about function: closeness to the reference, persistence of a shortage, recovery and the resources required to maintain service. An EBU design can use the bound in its theoretical specification without treating it as a special achievement of its controller.
 
 \section{Convexity without mystery}
 A quadratic bowl with positive curvature is convex. Geometrically, the straight chord joining two points on its graph lies on or above the graph. Algebraically, the tangent at a starting point underestimates the potential at a finite displaced point by a nonnegative quadratic amount.
@@ -142,11 +147,11 @@ This will matter for valuation. If the initial slope predicts an improvement, mu
 Convexity is a property of the potential, not a promise about action choices. A random actor can choose a direction that raises a convex potential. A capacity rule can permit cycles. A graph can block a path toward the minimum. A simple bowl is mathematically helpful precisely because these separate mechanisms remain visible; the shape does not decide them by itself.
 
 \section{Why the potential is not a controller}
-Imagine drawing this landscape on paper and placing a marker at \((18,2)\). The drawing tells us the value at every admissible state. It does not move the marker. To move it, one must specify a physical action and an actor or dynamic rule that chooses that action.
+Drawing the landscape tells us the value at every state. Moving through it requires a law of response. A gradient rule, a constrained valve controller and a rule for selecting human actions can all use the same potential while generating different paths.
 
-A gradient-flow law would be one possible added rule. A largest-value selector would be another. An earlier research proposal asked what happens under a separately declared random choice among feasible and affordable options; that proposal is not the governing definition or an active study authorization in this edition. These mechanisms can use the same potential while producing different behaviour. This book does not introduce an optimizing or restoring law just because the picture resembles a bowl.
+This separation is productive. The field gives a common way to compare their endpoints; the dynamics explains timing, pending stock and recovery. In particular, a replenishment controller can be stable while the native shortage burden rises over part of its return toward a driven operating point. We will derive a storage function for that stability calculation without replacing the EBU potential.
 
-Even the phrase ``downhill'' should be read carefully. It identifies a decrease of the declared potential along a direction. It does not make the system slide there by itself. The distinction protects the later experiment from becoming a demonstration of a recovery rule placed into the plant in advance.
+EBU can therefore support two useful views of the same service. Its receipts describe the declared change of physical burden. Its response model describes whether delivery settles, overshoots or stays within a permitted region. The combination makes coordination more informative than either a bare transaction count or a single stability label.
 
 \section{Do not replace the function while keeping its name}
 The bounded function \(1-\exp(-V)\) can be formed from the quadratic. It is not the same potential. Its derivative multiplies the quadratic gradient by \(\exp(-V)\), and its finite differences give different values. Large deviations become compressed toward one.
@@ -167,7 +172,7 @@ The scalar potential deliberately compresses a state vector. That compression is
 
 In a larger graph many more states can share one value. They can differ in which cell is far from reference, whether an available edge points toward relief, and how much stock a prospective actor can access. Equal potential does not imply equal feasible menus, equal service, or equal future behaviour.
 
-For this reason, a future study should retain the state and relevant distributional diagnostics alongside \(V\). The finite account uses the scalar because its changes have a precise meaning. Interpretation should not discard the coordinates that gave it that meaning. A contour of equal potential is a mathematical level set, not a class of socially or physically interchangeable worlds.
+For this reason, the account retains the state and its distribution across cells alongside \(V\). The finite account uses the scalar because its changes have a precise meaning. Interpretation should not discard the coordinates that gave it that meaning. A contour of equal potential is a mathematical level set, not a class of socially or physically interchangeable worlds.
 
 \section{Practice and reflection}
 With reference ten and scale two, calculate local potential and marginal at stocks 4, 10, and 16. The potentials are \(4.5,0,4.5\); the marginals are \(-1.5,0,1.5\). Explain why a nonnegative potential can have a negative derivative.
@@ -175,3 +180,5 @@ With reference ten and scale two, calculate local potential and marginal at stoc
 For the main two-cell state, verify \(\mu=(2,-2)^T\) and \(H=\operatorname{diag}(1/4,1/4)\). Then explain why equal total stock does not imply equal potential, and why equal potential does not imply equal state. Use \((18,2)\), \((10,10)\), and \((2,18)\) to support the answers.
 
 Finally, write one statement that this potential establishes and one statement it leaves open. A valid pair is: ``Its value is zero exactly at the declared reference'' and ``The proposed actor process may or may not spend much time near that reference.'' The first follows from the definition; the second needs a specified process and further analysis.
+
+The potential gives the whole state a declared value; its derivatives tell us how that value changes nearby. We next restrict those derivatives to the physical directions supplied by the network, so that a local field refers to an actual possible transfer.

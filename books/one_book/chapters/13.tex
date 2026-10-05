@@ -1,5 +1,8 @@
 \chapter{From a marginal to an edge field}\label{ch:field}
 
+The gradient turns the landscape into local information: how would a small permitted change alter the potential? We derive that directional field from complete physical directions, then distinguish the field from mobility, dispatch policy and finite value. This makes local advice useful without confusing it with a command to the physical system.
+
+
 \section{What the word field means here}
 A map of local potential values is not yet an action account. To understand a proposed transfer, we need to know how the potential changes in the direction of that transfer. The marginal at each cell tells us how its local contribution responds to a small addition. The edge field combines the source and destination responses with the physical signs of the action.
 
@@ -96,7 +99,7 @@ The transpose turns each edge column into a row that selects the source and dest
 
 For a separately declared three-cell chain with marginals \((2,0,-1)^T\) and edges \(1\to2\), \(2\to3\), the fields are two and one. The field vector reports the two directional slopes. It does not choose the first edge, allocate stock, or decide whether both actions can occur together.
 
-This is an example of local computation with global notation. The formula is compact for a proof, but each edge needs only the relevant endpoint marginals under the separable model. A manager may assemble the whole vector for diagnostics; that does not authorize an actor to read a global score or a future outcome.
+This is an example of local computation with global notation. The formula is compact for a proof, but each edge needs only the relevant endpoint marginals under the separable model. The whole vector can support an aggregate diagnostic, while a local action uses the inputs appropriate to its own decision rule.
 
 \section{Reverse directions and cycles}
 If the reverse lossless edge exists, its column is \(-S_e\) and its field at the same state is \(-f_e\). At the main baseline, A-to-B has field four and B-to-A has field minus four. At a later state their values must be reevaluated. A reverse action performed after a forward action does not use the old reverse marginal.
@@ -124,11 +127,15 @@ A thermometer remains informative when nobody turns the heater on. Similarly, th
 This makes negative outcomes interpretable. If a permitted and affordable random action moves uphill, the field account can record the increase without treating it as a malfunction of the equation. The question for later research is how the complete policy changes the distribution of such events over time. That question needs the actor process, forcing, and account rules in addition to the local derivative.
 
 \section{An explicitly separate loss-aware boundary illustration}
-For a declared lossy transfer, the source changes by \(-q\) and the usable destination by \(+\eta q\). If the local potential covers those two usable-stock coordinates, the chain rule would give \(f=\mu_i-\eta\mu_j\). If a loss coordinate enters the potential, its derivative contribution must also be included. The general formula is always minus the gradient dotted with the complete action direction.
+For a lossy transfer, the complete direction includes both useful delivery and the sink. In the pending route of Chapter~\ref{ch:conservation}, arrival has direction $s_A=(0,-1,\eta,1-\eta)^{\mathsf T}$. Consequently
+\begin{equation}
+ f_A=\mu_Q-\eta\mu_X-(1-\eta)\mu_W.
+\end{equation}
+Dispatch has a different direction, $s_D=(-1,1,0,0)^{\mathsf T}$, and field $f_D=\mu_S-\mu_Q$. A controller that uses the eventual receiver shortage to request dispatch is using a completed-delivery signal. That signal is not generally the derivative of the instantaneous dispatch event.
 
-For example, with \(\mu_i=-1\), \(\mu_j=-3\), and \(\eta=1/4\), the two-coordinate expression is \(-1+3/4=-1/4\). Source harm exceeds delivered relief. A lossless expression would give two and answer the wrong physical question. This illustration changes the transformation, so it is outside the main lossless domain and does not authorize an implemented lossy study.
+For example, if a reduced potential values only receiver stock, immediate dispatch leaves that potential unchanged while arrival changes it. The controller can still sensibly order water in anticipation of the future. EBU accounts for the event boundary it actually declares; the controller describes the response across time.
 
-The lesson is structural. Derive the field from the actual declared state change. Do not derive a convenient lossless slope and then add an arbitrary adjustment elsewhere to compensate. Physics determines the directional derivative's coefficients.
+This precision has a direct efficiency benefit. A route can avoid awarding the same completed improvement once at dispatch and again at arrival. Pending stock remains visible, and the final service consequence can be associated with the complete declared action or with its correctly separated stages.
 
 \section{Where the Onsager connection comes from}
 Lars Onsager's two 1931 papers studied coupled irreversible processes, including
@@ -170,35 +177,26 @@ choose mobility one-half and activation threshold zero. The requested rate
 is two stock units per time unit. Over half a time unit it requests one
 stock unit. The exact finite field value of that quantity is \(15/4\), not
 the initial-force estimate four. Mobility sets the response rate; the finite
-equation values the complete accepted change. These illustrative choices are
-not a registered experimental configuration.
+equation values the complete accepted change. The example separates response speed from the value of the accepted quantity.
 
 \section{Why borrow this structure, and where does it stop?}
-The structure makes a conditional descent argument possible. If there is no
-external drive and the physical evolution is exactly \(\dot x=SJ\), then
-the chain rule gives \(\dot V=-\sum_e f_eJ_e\). For the declared
-threshold-mobility response, every active product is nonnegative, so that
-particular continuous-time law cannot increase the potential. Chapter~\ref{ch:motion-law} derives
-this carefully and explains the extra conditions needed for finite timesteps.
+The force--mobility structure gives a precise descent result. If $\dot x=SJ$ has no external drive, the chain rule gives $\dot V=-\sum_e f_eJ_e$. With the threshold-mobility response, every active product is nonnegative, so this particular continuous law cannot increase $V$. Chapter~\ref{ch:motion-law} derives the result and the extra restriction for finite steps.
 
-This is a reason to study the controller, not evidence that economic actors
-obey it. The EBU potential is not automatically thermodynamic free energy,
-and its decrease is not automatically measured entropy production. Nor does
-using diagonal mobilities demonstrate Onsager reciprocity for a real coupled
-social or ecological system. The original physical analogy motivates a
-mathematical architecture; the declared model still has to stand on its own.
+This is useful when a designer wants a controller with a known direction of change. It also explains why feedback must be examined on its own terms. Once delivery is pending, consumption continues or the dispatch signal differs from the instantaneous gradient, the simple descent proof need not apply. Another storage function can establish stability without turning $V$ into a thermodynamic free energy or making its decrease an entropy-production law.
+
+The advantage for EBU is a modular design: a local field can inform action, mobility can regulate speed, physical constraints can restrict permission, and the finite account can value the accepted consequence. Each part can be improved without silently changing the others.
 
 \section{Why the actor law remains an explicit choice}
 It would be possible to propose a flow proportional to positive field, or to choose whichever edge has the largest field. Either choice would add a controller. It might be useful for a different research question, but it would not follow from Equation~\ref{eq:lossless-edge-field} alone.
 
-A separately declared prospective actor model can keep the valuation rule distinct from the actor's choice. Feasible candidate actions can receive positive, zero, or negative values. A separately declared capacity policy can filter affordability. Random selection among remaining options is another declared step. Replacing that selection by largest field or largest finite EBU would change the experiment's subject.
+A declared actor model keeps valuation distinct from choice. Feasible actions can have positive, zero or negative values. A capacity policy can restrict affordability, and a selector can prioritise service, rank values or use another stated rule. These choices produce different dynamics while sharing the same finite evaluator.
 
 This distinction also prevents an easy but circular success claim. If a plant is given autonomous restoring flow, observing movement toward the reference does not by itself demonstrate an economic accounting mechanism's contribution. The field may inform analysis without being a hidden force that physically compels the actors.
 
 \section{Guided problem: equal field, unequal finite behaviour}
 Two separate hypothetical edges have the same initial field four. Edge A connects cells with scales two and two, so its curvature along quantity is \(1/4+1/4=1/2\). Edge B connects cells with scales one and one, so its curvature is two. Their initial tangents match, but their fields fall at different rates as quantity increases.
 
-For a quantity of two, the exact field reductions, derived fully next chapter, are
+For a quantity of two, the exact field reductions, derived in Chapter~\ref{ch:finite}, are
 \begin{align}
  F_A(2)&=4(2)-\tfrac12(1/2)(2)^2=7,\\
  F_B(2)&=4(2)-\tfrac12(2)(2)^2=4.
@@ -215,12 +213,8 @@ For an above-reference source, \(\mu_i>0\), so its negative stock increment cont
 The routine also exposes ambiguous action descriptions. If one cannot say which coordinate decreases, it is too early to calculate the field. A transformation involving several inputs and outputs needs a correspondingly complete column before the dot product has physical meaning.
 
 \section{Practice with solutions}
-In the main model, calculate the field after sending four units from A to B. The endpoint is \((14,6)\), marginals are \((1,-1)\), and the field is two. After a total of eight units, both marginals and the field are zero. After a total of twelve, marginals are \((-1,1)\), and the field is minus two.
+After four units move in the running example, the state is $(14,6)$, marginals are $(1,-1)$ and the field is two. After eight units it is zero; after twelve it is minus two. The direction changes because the stock changes.
 
-For a separate compatible state \((9,7)\), reference \((10,6)\), and equal scales two, marginals are \((-1/4,1/4)\). The field from the second cell to the first is one-half. A transfer in that direction initially improves the potential even though the sending cell has the smaller raw stock.
+For state $(9,7)$, reference $(10,6)$ and scales two, the marginals are $(-1/4,1/4)$. Sending from the second cell to the first initially improves the field despite the source's smaller raw stock. Reference and scale, not raw quantity alone, determine the derivative.
 
-Finally explain why a reported field of \(4\X^{-1}\) cannot be entered as four stock units in a physical ledger. Its unit is different and its meaning is a derivative. To form a first-order field change one multiplies by quantity; to form exact finite EBU one evaluates the complete finite difference under the declared physical state and boundary.
-
-\begin{intuitionbox}{What to carry forward}
-The edge field is the negative directional derivative of the declared potential. For a lossless transfer it is \(\mu_i-\mu_j\). It combines endpoint slopes, changes along finite motion, and supplies no actor policy by itself. Exact finite value requires the curvature that the starting slope omits.
-\end{intuitionbox}
+A field of $4\X^{-1}$ is not four stock units. Integrating its changing value over quantity gives finite EBU. The next chapter proves that connection.

@@ -1,5 +1,8 @@
 \chapter{An exact Taylor language for finite choices}\label{ch:discrete-taylor}
 
+Every finite coalition table has one exact multilinear representation. The coefficients are precisely its Möbius interactions. This gives EBU a compact mathematical language for the full hierarchy and makes clear when a reduced description is exact, rather than an approximation that discards part of the account.
+
+
 \section{Why use the word Taylor?}
 A continuous Taylor expansion builds a function from its value, slopes, curvature and higher derivatives near a point. A coalition table has a related hierarchy: its baseline, single-action changes, pair interactions, and higher interactions. The resemblance becomes an exact mathematical statement when we describe absent/present choices by indicator variables.
 
@@ -59,9 +62,13 @@ The empty coefficient records the baseline table value. In the normalized action
 The degree also refers to declared action coordinates. Splitting an action into new controls, changing a resolver or choosing nonlinear intensity coordinates can change the apparent polynomial structure of the physical composite. A representation theorem does not make every coordinate choice equally meaningful. Physical interpretation requires the action labels and response map that supplied the table.
 
 \section{Why this helps an EBU system}
-A complete finite representation provides a consistency check. If a stored coalition total disagrees with the sum of its stored dividends, either the records refer to different tables or the arithmetic is wrong. It also reveals when a lower-order model is exact: if every coefficient above order two vanishes, singletons and pairs reconstruct every group in that table.
+The complete polynomial is a second representation of the same table. It can reconstruct every coalition value from the baseline and interaction coefficients. This supports explanation and reconciliation: a reader can see which single actions, pairs and larger groups contribute to a proposed total.
 
-This can reduce storage and measurement effort only when the truncation is justified. Assuming all triples vanish because measuring them is expensive is not a theorem. A system seeking to support shared infrastructure should distinguish a proved structural ceiling, a tested approximation, and an untested convenience. That distinction protects communities from confident recommendations based on omitted dependencies.
+If a theorem limits the degree, the representation becomes genuinely smaller. A quadratic potential with affine endpoint response needs only the baseline, singleton and pair coefficients. A common linear feedback system preserves that ceiling even if it contains many temporal modes. The simplification follows from the composed function's degree, not from the number of differential equations or the visual smoothness of a trajectory.
+
+Without such a structural result, deleting higher orders changes the table. The omitted terms have an exact remainder on each coalition: their sum over subsets of that coalition. This lets an EBU design state the consequence of a reduced account explicitly instead of hiding it in a convenient approximation.
+
+The efficiency benefit is precise. Use the smallest representation that retains the required information, and preserve the full dependencies where they matter. This reduces unnecessary computation while helping a community understand why a coordinated service has its reported value.
 
 \section{The boundary with ordinary calculus}
 The word exact belongs to the finite Boolean representation. The next chapter connects a fixed additive physical response to mixed derivatives of the state potential. That connection explains why small interactions have familiar Taylor orders and why quadratic fields give pair-only structure under affine action maps.

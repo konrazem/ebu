@@ -1,5 +1,8 @@
 \chapter{Declaring a reference and a scale}\label{ch:reference}
 
+A useful reference says what physical condition the account compares; a scale says how strongly a departure counts. These declarations make unlike places comparable without pretending their needs are identical. We also distinguish the dimensionless EBU normalization from a native burden unit used in feedback equations, so that a controller's speed cannot silently redefine the accounting unit.
+
+
 \section{A comparison needs a declared centre}
 A tank reading of ten units is a physical fact within a measurement protocol. Whether it represents shortage, adequate provision, or excess cannot be read from the number alone. The same quantity can support a small clinic and be inadequate for a large hospital. A model that measures deviation must therefore declare what each stock is being compared with.
 
@@ -38,7 +41,7 @@ The numerator says how many stock units the cell differs from its reference. Div
 
 With reference ten and scale two, stock fourteen has standardized deviation two. Stock six has standardized deviation minus two. The signs distinguish above from below. Both are the same standardized distance from the reference. A quadratic potential will give them equal local burden because that symmetry is part of its definition.
 
-The scale is not automatically a measurement error, tolerance, acceptable range, or statistical standard deviation. The symbol \(\sigma\) is familiar from probability, but notation is not evidence of a probability model. Here it controls the geometry of a declared potential. A later calibration could connect it to data; that connection would need to be stated and justified.
+Here $\sigma_i$ controls the geometry of the potential. A measurement error describes uncertainty in an observation; a tolerance specifies an acceptable range; a statistical standard deviation belongs to a probability distribution. Those other quantities can inform a choice of scale, but they retain their own definitions. Declaring the scale explicitly allows EBU to recognise different functional needs while keeping the comparison reproducible.
 
 \section{A scale is not a boundary}
 At \(x_i=x_i^*+\sigma_i\), the standardized deviation is one. Nothing discontinuous happens there. There is no switch from safe to unsafe and no automatic prohibition. The potential and its derivative change smoothly through this point.
@@ -90,7 +93,9 @@ An action comparison uses one potential before and after. If the reference or sc
 
 For example, take a cell with stock 14, reference 10, and scale 2. Its contribution is two. If an editor moves the reference to 14 without moving stock, the contribution becomes zero. The number fell by two, but no physical action supplied that reduction. The field definition changed.
 
-References can be revised in a research programme or calibrated between declared epochs. Such revisions need an explicit version boundary and an account of the redefinition. They cannot be credited to an actor as though the same physical field had improved. The same principle applies to a scale revision or to adding and removing potential terms.
+References can be revised in a research programme or calibrated between declared epochs. Such revisions need an explicit version boundary and an account of the redefinition. They belong in a field-change account, separate from the physical action receipt. The same principle applies to a scale revision or to adding and removing potential terms. This lets an institution improve its model without rewriting the physical history of contributors. A clearer reference can guide future decisions while past receipts remain interpretable under the rule that produced them.
+
+A further normalization matters when we study feedback. A native burden $V_B$ can carry units $B$, whereas our standardized $V$ is dimensionless. If an application declares a positive burden scale $B_0$ and a fixed offset $c_B$, it may define $V=(V_B-c_B)/B_0$. Then $E=(V_B^{\mathrm b}-V_B^{\mathrm a})/B_0$. The constant offset cancels; the scale does not. In the quadratic feedback model $V_B=w(L-X)^2$, the response coefficient contains the product $2wM$ of burden weight and mobility. Observing that response rate cannot identify the weight and mobility separately, or supply $B_0$. This preserves a stable meaning for the unit while allowing controller response to be designed independently.
 
 \section{Changing cell granularity changes the declaration}
 Suppose one well-mixed tank has stock \(x\), reference \(x^*\), and scale \(\sigma\). An editor divides it into two bookkeeping cells with equal half-stocks and half-references. It is tempting to copy the old scale into both cells and assume the sum of their potentials still means the same thing. It does not.
@@ -111,7 +116,7 @@ Finally, a reference at one time does not guarantee adequacy at every future tim
 \section{A reference document that a reader can audit}
 A useful declaration identifies the carrier, cell boundary, stock unit, reference value, scale, and provenance for each coordinate. It states the total-mass compatibility condition and whether the action graph can connect the relevant places. It also states the interpretation intended for the potential: a standardized model deviation rather than a complete measure of welfare.
 
-For teaching, the provenance is openly illustrative. We choose \((10,10)\) and \((2,2)\) to make arithmetic readable. These are not estimated parameters or a registered scientific configuration. In an empirical application, the same fields would need evidence and review. The algebra does not change its standard of precision; the origin and adequacy of its inputs become additional questions.
+For teaching, the provenance is openly illustrative. We choose \((10,10)\) and \((2,2)\) to make arithmetic readable. These choices define the teaching model. An application records the origin of its own references and scales in the same declaration, preserving the same precision in the account.
 
 The document should also distinguish fixed parameters from state variables. If carrying capacity, demand, or another functional characteristic is allowed to change physically, it may need its own represented coordinate. Quietly editing a reference whenever conditions change can make a poor process appear successful by moving its target after the fact.
 

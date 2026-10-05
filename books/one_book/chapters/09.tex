@@ -1,5 +1,8 @@
 \chapter{Cells, nodes, and edges}\label{ch:graph}
 
+A physical account begins with a map of what can change. We build that map from cells, routes and quantities, then distinguish it from two other maps: the dependencies of the potential and the interactions of actions. This distinction allows EBU to compute locally while retaining the shared resources and pending processes that make coordination necessary.
+
+
 \section{Why the map comes before the actor}
 A model of economic activity can begin by giving an actor a goal. The actor seeks a resource, maximizes a reward, or chooses a trading partner. Physical accounting must first establish a world in which these actions have a definite meaning. Where is the resource stored? Which transformations are available? Which places can exchange it? Otherwise a clever decision rule can deliver stock that was never withdrawn or use a route that the represented world does not contain.
 
@@ -93,14 +96,14 @@ With quantities \((2,1,0.5)^T\), the state increment is \((-3.5,2,1,0.5)^T\). Ev
 This geometry matters twice. Physical feasibility must consider aggregate use of the source. Valuation must consider the combined change of any shared potential coordinate. Independently asking whether each action fits can miss a joint conflict. Independently valuing each action from the full initial state can also count the same improvement more than once. Those are distinct problems, and later chapters address them separately.
 
 \section{A path is not a single edge}
-A route from A through a depot to B is a sequence of edges. Its intermediate stock may matter. So may timing, physical availability, and the order in which each action becomes possible. Combining the route into one arrow can be appropriate only if the model explicitly justifies the coarser transformation and retains every relevant boundary.
+A route from A through a depot to B is a sequence of edges. Its intermediate stock may matter. Water inside a pipe is neither still available at the source nor already available to the clinic. Represent it as a pending coordinate $Q$ whenever its future arrival affects the response. Dispatch then moves stock from source to $Q$; arrival moves it from $Q$ to the usable destination. This makes the physical history intelligible without allowing both endpoints to claim the same water. So may timing, physical availability, and the order in which each action becomes possible. Combining the route into one arrow can be appropriate only if the model explicitly justifies the coarser transformation and retains every relevant boundary.
 
 Suppose the depot begins with two units. A simultaneous event requests four units into the depot and three out. The endpoint has three units, so it is nonnegative. But the initial depot does not contain the three outgoing units. A model may allow synchronized passage through a real continuous pipe; another may require receipt before onward dispatch. Both can be specified. Neither follows from the positive endpoint alone.
 
 The same caution applies more strongly to fuel, electricity, and delivered water. They are different carriers, and an energy conversion is not a lossless relocation of a homogeneous scalar. Their actions should form a linked physical chain with appropriate units and conversion accounts. The simple graph notation can teach how to record support, but it cannot erase the engineering of the chain.
 
 \section{Three maps that must stay distinct}
-The physical graph tells us which transformations exist. The potential's dependency structure tells us which coordinates each potential term reads. The action-interaction structure tells us which actions overlap in a way relevant to joint valuation or feasibility. These maps need not coincide.
+The physical graph tells us which transformations exist. The potential's dependency structure tells us which coordinates each potential term reads. The action-interaction structure tells us which actions overlap in a way relevant to joint valuation or feasibility. These maps need not coincide. A fourth distinction will become useful when motion is introduced: a response law can transmit a change through time, creating endpoint dependence beyond the coordinates touched directly at dispatch. Its state must include the variables needed to determine that response. If pending stock is omitted, the remaining available-stock coordinate can acquire memory; the underlying physical graph has not thereby become a new potential.
 
 In our separable potential, each local term reads one cell, so the potential has no cross-coordinate terms. Nevertheless two actions withdrawing from A both change A's local quadratic. They interact in the joint finite value. A diagonal potential therefore does not imply independent actions.
 
@@ -111,7 +114,7 @@ Begin with the carrier and its unit. Next choose cells whose stocks can be measu
 
 Do not place EBU values or reference stocks inside \(S\). The incidence matrix does not depend on whether A currently has excess or deficit relative to its reference. It describes the change per unit of the named transfer. Stocks belong in \(x\), references in \(x^*\), scales in \(\sigma\), and finite quantities in \(q\). Separating these objects makes later changes auditable.
 
-An edge record might state its identifier, endpoints, carrier, quantity unit, and physical validity conditions. A version identifier can freeze that declaration for an event. This helps prevent a route or parameter from changing halfway through an account. Versioning does not validate a bad physical definition; it makes the definition traceable.
+An edge record might state its identifier, endpoints, carrier, quantity unit, and physical validity conditions. A version identifier can freeze that declaration for an event. This helps prevent a route or parameter from changing halfway through an account. This stable declaration makes local records composable. A clinic and a depot can describe their part of a delivery using the same carrier and event identifiers, allowing shared-source use to be reconciled once. The efficiency gain is concrete: a consistent state map removes duplicate availability claims and directs coordination to the resources actually shared.
 
 \section{Notation laboratory}
 For a four-cell transfer from cell 2 to cell 4, the column is \(S_e=(0,-1,0,1)^T\). Its second entry is \(-1\), its fourth is \(+1\), and its dot product with the all-ones vector is zero. A quantity \(q_e=3\) gives \((0,-3,0,3)^T\).

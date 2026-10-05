@@ -17,7 +17,7 @@
 \setcounter{tocdepth}{1}
 \setcounter{secnumdepth}{2}
 % Two-level contents: chapters lead, sections provide the reading route.
-% This changes the contents only; body typography and chapter text are unchanged.
+% The contents typography remains separate from the manuscript layout.
 \newcommand{\EBUTocChapterSpace}{56pt}
 \newcommand{\EBUTocBackmatter}{\renewcommand{\EBUTocChapterSpace}{24pt}}
 \makeatletter
@@ -25,7 +25,7 @@
   \ifnum\c@tocdepth>\m@ne
     \par\addpenalty{-\@highpenalty}%
     \ifdim\dimexpr\pagegoal-\pagetotal\relax<\EBUTocChapterSpace\relax\newpage\fi
-    \addvspace{8pt}%
+    \addvspace{7pt}%
     \begingroup
       \color{navy}\sffamily\bfseries\fontsize{11}{14}\selectfont
       \@dottedtocline{0}{0em}{2.3em}{#1}{#2}%
@@ -33,7 +33,7 @@
   \fi}
 \renewcommand*\l@section[2]{%
   \begingroup
-    \color{slate}\normalfont\fontsize{9.5}{12}\selectfont
+    \color{slate}\normalfont\fontsize{9.5}{11.8}\selectfont
     \@dottedtocline{1}{1.7em}{3.5em}{#1}{#2}%
   \endgroup}
 \makeatother
@@ -113,11 +113,11 @@
 \input{chapters/discrete_taylor.tex}
 \input{chapters/continuous_taylor.tex}
 \input{chapters/degree.tex}
-\input{chapters/composite.tex}
-\input{chapters/origins.tex}
 \input{chapters/25.tex}
 \input{chapters/generators.tex}
 \input{chapters/generator_orders.tex}
+\input{chapters/composite.tex}
+\input{chapters/origins.tex}
 \input{chapters/topology.tex}
 \input{chapters/equilibrium_bridge.tex}
 \input{chapters/probability_interactions.tex}

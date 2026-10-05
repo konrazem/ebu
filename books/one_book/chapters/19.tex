@@ -1,5 +1,8 @@
 \chapter{Local actions and exact global identities}\label{ch:locality}
 
+Local exactness is a cancellation theorem. It explains how a large EBU system can assess a small action efficiently, and it states precisely when more information must be included. The relevant neighbourhood follows the potential and the endpoint response, including hidden pending state, rather than geographical distance alone.
+
+
 \section{The apparent paradox}
 An action affecting only two cells can be valued using data from those cells. Yet we have described its field effect as a change in a potential summed across a whole network. How can a calculation that does not read the other locations give the complete result?
 
@@ -96,13 +99,13 @@ Conversely, two physical edges can be far apart in a drawing but belong to the s
 Keeping the three graphs separate helps a reader avoid a common shortcut: ``local'' does not mean every kind of interaction is absent. It means the required information and support have been specified.
 
 \section{Global audit and actor information}
-A scientific evaluator may calculate full $V$ to compare it with the sum of local effects. This is a useful arithmetic and implementation check. It can reveal a missing endpoint, duplicated factor, stale baseline or sign error.
+A local evaluator reads the complete inputs of affected factors. An aggregate account can then reconcile the resulting events across the declared boundary. These are different information tasks. A participant need not receive every global stock merely because the total identity is global.
 
-That capability does not determine what an actor may inspect when selecting an action. If a future study defines local actors, its input boundary must be enforced independently of the evaluator's larger view. The evaluator can observe a result without providing that result as a decision signal.
+Dynamics determines which endpoint coordinates are affected. A dispatch action may initially change only source and pending stock but later change the receiver and a shared downstream resource. For a quote at that later horizon, cancellation is based on the resulting endpoint differences. Reading only the immediate action support would omit affected factors.
 
-Likewise, an EBU-blind random proposal mechanism should not quietly read global potential to choose which candidates to offer. Local valuation and local selection are different design properties. Demonstrating the former by cancellation does not establish the latter.
+Hidden state also matters. Two tanks with the same available stock and different pending deliveries can have different future endpoints. If the pending coordinate is retained, the response can be a local state law; if it is eliminated, the remaining description may require a memory integral and an initial-history term. Omitting both pending state and its memory is a change of model, not a computational saving supplied by the locality theorem.
 
-This chapter uses paper calculations. It does not claim that a particular future software harness has already enforced every information boundary. A software claim needs its own implemented interface, tests and source identity.
+This gives EBU a disciplined route to scale. It can avoid reading unaffected data while preserving the dependencies needed for a correct quote. The resulting economy of computation and information can make participation easier for small sites and reduce unnecessary disclosure, while shared dependencies still receive joint treatment.
 
 \section{Local computation does not choose governance}
 The theorem shows that some calculations can use small neighbourhoods. Different devices could compute them, and independent auditors could reproduce them. These possibilities do not settle who may certify references, own sensors, approve model changes or resolve a dispute.
@@ -128,14 +131,14 @@ Now add a factor $w_{45}(x_4,x_5)$ and another $w_{56}(x_5,x_6)$. The action cha
 The answer would change if the transformation also updated $x_5$ or if another factor depended on $x_4$. This is why one must inspect the actual action map rather than propagate ``affected'' indefinitely through a diagram. Future influence and present algebraic dependence are different things.
 
 \section{Practice and reflection}
-In the five-cell numerical example, replace the four-unit transfer by two units. The first two potential terms change from $(8,8)$ to $(4.5,4.5)$; their reduction is 7. The remaining terms still sum to 1, so the global potential changes from 17 to 10, also a reduction of 7.
+Replace the four-unit transfer in the five-cell example by two units. The affected terms change from $(8,8)$ to $(4.5,4.5)$; the others still sum to one. Both the local reduction and the global change $17-10$ equal seven.
 
-Next, draw a physical path of four locations. Identify one transfer's write support. Add a hypothetical pair factor connecting one of its endpoints to a neighbour and write the resulting information neighbourhood. Explain why a causal prediction about the neighbour's later behaviour would require more than this factor list.
+Draw a four-location route and one transfer's write support. Add a pair factor linking an endpoint to a neighbour. Identify the required reads and explain why predicting the neighbour's later response needs more than this factor list.
 
-Finally, explain the aggregation counterexample in words a new reader can understand. A good answer says that total quantity was preserved while internal distribution changed. It does not say that conservation failed or that the local-to-global theorem was approximate.
+Explain the aggregation counterexample: the total stayed fixed while distribution changed. Conservation and exact cancellation both held; the coarse model discarded information.
 
 \begin{intuitionbox}{What to carry forward}
-Local exactness follows from the cancellation of unchanged factors. Its scope comes from the potential and action dependencies. A complete local calculation can equal a global model difference while leaving empirical completeness, selection, privacy and governance as separate questions.
+Unchanged factors cancel exactly. The required information follows the potential and endpoint response, while selection, privacy and governance remain separate choices.
 \end{intuitionbox}
 
-The factor extension in the next chapter makes the reading neighbourhood explicit for coupled fields. We then follow complete transitions through time before constructing the coalition landscape.
+We can now make the factor structure explicit, including functions that depend on several resources together. That is the next chapter's task.

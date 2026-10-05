@@ -1,5 +1,8 @@
 \chapter{Why a field is not a motion law}\label{ch:motion-law}
 
+An account can reveal a useful direction without choosing the action that follows. We now specify the additional motion law needed to turn local information into a trajectory. Exact descent conditions, conservation and finite-step limits show how EBU can inform a controller while preserving the distinction between valuation, physical response and institutional choice.
+
+
 \section{A map does not move the traveler}
 The potential maps physical states to numbers. Its gradient describes how that number changes near the present state. Nothing in this definition makes a pump run, a household choose a repair, or a government open a water route. Conflating a measurement with a controller would hide the most important design question in EBU: how could the information guide physically possible conduct?
 
@@ -21,7 +24,7 @@ That inequality follows from the proposed dynamics and its assumptions. It does 
 
 Onsager's point was not that a gradient alone creates a flow. The classical setting identifies physical fluxes, such as heat or matter transport, and forces related to departures from equilibrium. Close enough to the specified equilibrium, the fluxes can be approximated by a matrix acting on those forces. The matrix's entries describe the system's response. Reciprocity is a further statement about paired coefficients under the relevant microscopic assumptions; it is not a universal property of every social decision process. If an EBU implementation calls a numerical gradient a ``force,'' it still owes a measured or designed map from that force to a permissible physical rate.
 
-The analogy to Onsager is therefore structural, not a borrowed experimental validation. The physical force and mobility in a laboratory system are measured for that system. An EBU mobility would have to specify its own units, admissible edges, constraints, response parameters and evidence. Without them, $M$ is a placeholder rather than a natural constant.
+For EBU, the useful structure is the explicit map from a directional quantity to a permissible rate. Mobility carries units and response assumptions. Specifying them makes it possible to change delivery speed without silently changing the potential, or to change the physical constraints without pretending the field itself supplied permission.
 
 \section{The directed threshold response has its own identity}
 For the earlier response $J_e=M_e[f_e-\theta_e]_+$ with $M_e>0$ and $\theta_e\geq0$, suppose the complete motion is $\dot x=u+SJ$. Since $f=-S^{\mathsf T}\nabla V$,
@@ -59,8 +62,10 @@ It improves the potential only for $0<hm<2$, apart from equality at the endpoint
 The same lesson appears in the first transfer example of this book. Moving some stock toward the reference improves balance; moving too much crosses the reference and can worsen it. Exact EBU is therefore a more useful action account than a marginal slogan. Whether a decision-maker chooses the best feasible quantity, a safe bounded quantity, or a quantity required by demand remains a separate rule.
 
 \section{A usable architecture}
-A prospective EBU system can keep four questions in a strict order. What physical need or opportunity is present? Which candidate transformations can really occur? What is the exact finite EBU of each accepted physical transition under the declared fixed field? Which actor or institution may select, finance or authorize it? Changing this order can make the field appear to create resources or permit actions that physics forbids.
+A complete design joins four objects: the represented physical state, the feasible transformations, the field that values their consequences and the rule that selects or generates them. Each has a clear mathematical task. Keeping them distinct makes their connections easier to use.
 
-The architecture is general in ambition: it does not restrict EBU to a laboratory toy. But general applicability would have to be earned through validated state descriptions, measurement, governance and evidence in each consequential domain. A theorem about Equation~\ref{eq:mobility-law} is one component of that programme, not its completion.
+For a pure unforced gradient law with symmetric positive semidefinite mobility, $V$ is nonincreasing. Such a law cannot sustain a nonconstant periodic orbit: a closed orbit would have zero total decrease, forcing the dissipation and hence the velocity to vanish along it. At a nondegenerate minimum, its linearized rates are real and nonpositive under the same mobility assumptions. Appendix~\ref{app:generators} gives the precise argument.
 
-The next chapter generalizes this distinction through a generator interface: a declared law supplies endpoints, and the fixed-field definition values them. Later we return to what happens when the yardstick itself changes.
+A pipeline controller can instead have complex decaying modes because its pending state and consumption change the response architecture. It may use a receiver-shortage signal to request dispatch while water arrives under another law. That system must be analysed through its full generator; its stability need not be descent of the receiver potential.
+
+This separation supports an efficient EBU design process. Use the field for a consistent comparison, the response law for timing and recovery, and the feasible set for physical safety. The resulting account can explain why a necessary service consumes resources, where correction is delayed and which improvements reduce avoidable activity. The next chapter gives the common generator interface through which all these response laws supply endpoints.

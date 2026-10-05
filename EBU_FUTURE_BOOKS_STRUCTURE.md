@@ -1,29 +1,34 @@
 # EBU book series — eight-part architecture
 
-Status: current editorial plan, updated by the author's instruction to combine
-former Parts II and III. This changes teaching order and forward numbering,
-not scientific authority, historical results, or execution permission.
+Status: eight-part editorial plan, retaining the author's combination of former
+Parts II and III and incorporating the subsequent continuous Book 1 rewrite.
+Book 1 now supplies the complete theoretical foundation for the integrated
+programme; later books develop test designs, simulations, applications and
+results. Scientific authority, historical results and execution permission
+are unchanged.
 
 ## 1. The current decision
 
-The first two volumes form one continuous course. Part I explains why the
-project is being investigated and introduces its physical and mathematical
-objects. Part II joins rigorous derivation to implementation and evidence.
-The former nine-part plan is now an **eight-part plan**.
+Book 1 is the author's selected continuous volume, rewritten within 49 chapters
+and five appendices to connect the complete finite, interaction, generator,
+feedback and canonical theory. It preserves the explanatory tone of the
+160-page Book writer edition and expands its mathematical foundation. Later
+volumes use that foundation for implementation, test designs, simulations,
+results and deeper applications. The series remains an **eight-part plan**.
 
-Each current volume should contain at least 200 pages of substantive teaching
-at the already reduced heading sizes and unchanged body size. Page count is
-a delivery constraint, not a reason to add filler, inflate typography, repeat
-arguments, or claim completeness. Preserve the originals' depth and important
-reasoning. The earlier 83/88-page selective drafts are superseded as deliverables,
-but retained unchanged for traceability.
+Book 1 has no fixed page ceiling or target. The author permits more than 600
+pages if the theory and explanation require them; any later physical split
+should preserve the continuous argument. Length follows substantive coverage,
+readability, derivations and examples, without filler or enlarged typography.
+The earlier short selective drafts remain superseded deliverables and are
+retained unchanged for traceability.
 
 ## 2. Exact old-to-new map
 
 | Current part | Teaching responsibility | Previous numbering |
 |---|---|---|
-| I | Physical intuition, motivation and the EBU idea | I, unchanged |
-| II | Mathematics, implementation and evidence | II and III, combined |
+| I | Complete theoretical foundation, physical intuition and EBU system meaning | I, expanded continuous edition |
+| II | Implementation, tests and evidence | II and III, combined |
 | III | Measurement, evidence and falsification | IV |
 | IV | Homeostasis, recovery and stochastic dynamics | V |
 | V | Multiple actions, interaction and local structure | VI |
@@ -36,27 +41,46 @@ inventories, original chapter/equation references, frozen plans and result
 artifacts retain their original identifiers. Do not globally replace Roman
 numerals in scientific sources.
 
-## 3. Part I: understand the objects
+## 3. Part I: the complete continuous theoretical foundation
 
-The expanded 32-chapter manuscript is the starting point, not a short summary.
-Its sequence remains: motivation; homeostasis and kinds of equilibrium;
-stocks, boundaries, conservation and atomic physical actions; references and
-scales; Gaussian potential and marginal field; force, mobility and Onsager-type
-flux; finite action and process burden; local and group accounting; extensive
-practice studios; conditional identities and open questions.
+Current editable source: `books/one_book/`.
+Current PDF: `output/pdf/EBU_What_an_Economy_Must_Keep_Alive.pdf`.
+The earlier `books/part_i_revised/` and `books/part_ii_integrated/` editions
+remain preserved source material, with their historical numbering intact.
 
-Retain the physical/teaching style and smaller headings. Remove old threshold
-machinery from the active introductory model, not from historical sources.
-Update the ending and reader route so that the reader continues directly to
-the combined Part II. The motivation must distinguish factual evidence,
-normative concerns and claims that EBU has not established.
+Book 1 rewrites the existing continuous manuscript throughout; it does not
+append a separate feedback chapter or reproduce the old practice studios.
+The reading route is:
 
-Current editable source: `books/part_i_revised/`.
+| Chapters | Theoretical role |
+|---|---|
+| 1–13 | Motivation, homeostasis, state and boundary, reference and scale, potential and directional field |
+| 14–24 | Paths, exact finite changes, permission, local support, signed histories, cycles and joint value |
+| 25–30 | Coalition landscapes, Möbius inversion and recursion, exact discrete Taylor, repeated FTC and degree ceilings |
+| 31–35 | Motion laws, generator interface, feedback, memory, oscillation, affine nulls and nonlinear composite response |
+| 36–42 | Dependency structure, canonical normalization, log-density and P4 interactions, field changes, uncertainty and central continuity |
+| 43–49 | Attribution, routes, capacity institutions, reproducible interfaces, coherent model specification and system synthesis |
+| Appendices A–E | Complete supporting calculus, partition, dynamic, probability and worked-example derivations |
 
-## 4. Part II: derive, implement, examine evidence
+Each law connects its assumptions and derivation to a plain explanation, a
+concrete EBU feature, its efficiency and its social use. Proved theory is
+stated confidently within its scope; generic evidence disclaimers are not
+repeated beside every benefit. Detailed test programmes, simulations and
+results belong to the later books. Book 1 nevertheless contains the core
+feedback and memory theory needed to understand its own continuity argument;
+Part VII retains advanced coordination, identification and system-dynamics
+applications. No later part is renumbered or authored by this integration.
 
-Current editable source: `books/part_ii_integrated/`.
-Main chapters continue at 33 and end at 62.
+The R-stage, S-MG and feedback sources are integrated with their supplied
+independent clearance. The rewritten book itself still requires the separate
+independent book audit. Its report records the exact provenance and checks.
+
+## 4. Part II: implement, test, examine evidence
+
+Preserved editable source: `books/part_ii_integrated/`.
+Its historical main chapters continue at 33 and end at 62. The inventory below
+remains a source and follow-on responsibility map; it does not override the
+current Book 1 chapter numbers or move its necessary theory out of Book 1.
 
 | Chapters | Teaching dependency |
 |---|---|
@@ -101,8 +125,8 @@ independent demonstration of EBU stabilization.
 
 Common baselines, path attribution and its limits; admissible subset diagnostics;
 physical, factor and action-interaction topology; canonical motifs; certified
-recursive compression. The introductory identities in Part II are prerequisites,
-not a substitute for these deeper subjects. No algebraic decomposition proves
+recursive compression. The complete theory in Book 1 supplies the prerequisites; this part develops
+its further applications and studies. No algebraic decomposition proves
 causal ownership, fairness or settlement entitlement.
 
 ### VI — Across distance
@@ -128,8 +152,9 @@ measurement does not choose a constitution.
 
 ## 6. Dependencies, not a mandatory execution ladder
 
-- I supplies shared vocabulary; II supplies the scoped mathematical,
-  implementation and evidence foundation.
+- I supplies the complete shared theoretical foundation; II continues with
+  implementation, test design and the evidence record, retaining historical
+  derivations in their source context.
 - III's methods and V's group foundations support IV's simultaneous studies.
 - V supports VI; IV–VI inform VII.
 - VIII draws on surviving scientific and social evidence, including adverse

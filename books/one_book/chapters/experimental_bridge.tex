@@ -1,65 +1,79 @@
-\chapter{Experiments that could test the connections}\label{ch:experimental-bridge}
+\chapter{From laws to a coherent model}\label{ch:experimental-bridge}
 
-\section{A theorem suggests a question, not a result}
-The hierarchy gives several exact predictions under declared assumptions. Those predictions can guide a future experimental programme, but they do not choose the apparatus, intervention sizes, tolerances or sample counts. Those decisions require a separate prospective design and authorization.
+The preceding chapters establish a family of connected results. To use them together, we must specify one model whose states, actions, response and potential are mutually compatible. This chapter assembles that theoretical specification and follows a maintained water service through it. It provides the foundation that the later books use for their designs and results.
 
-The most useful sequence begins with comparisons whose interpretation is sharp. Establish a pair effect under a controlled quadratic field, test a triple null with certified additive response, and only then seek a positive higher-order benchmark. Here ``positive benchmark'' means a known nonzero target that the method should detect, not necessarily a positive EBU sign.
+\section{Begin with the function to be maintained}
+The clinic needs usable water when care requires it. That service statement guides the choice of stocks, routes, capacities and time description. It does not yet assign a potential or select a controller. A model begins by identifying which physical conditions determine whether the function is available.
 
-\section{First establish the pair correction}
-A pair study would compare all four required endpoints under one independently calibrated $H$ and fixed increments $h_A,h_B$. The prediction is
+For the simplest instantaneous lesson, two usable stocks and a lossless edge were enough. For a maintained delivery, the source, pending stock, receiver, consumption and relevant losses belong in the physical account. Energy and quality enter when the claim concerns their consequences. The level of representation follows the function being described.
+
+This is the first source of efficiency in the theory: represent what the service requires, and use exact cancellation to avoid recomputing what an action leaves unchanged. Simplification comes after the dependency is understood, rather than by omitting the dependency at the start.
+
+\section{State the domain and the transformations}
+Let $\mathcal X$ be the admissible state space. It includes nonnegative stocks, conservation relations and any relevant capacity or service bounds. Let $\mathcal A(x)$ describe the transformations available at state $x$. An action has a complete carrier direction or a more general response rule, with units that match the state.
+
+For a pending route, dispatch and arrival are distinct transformations. The directions $s_D=(-1,1,0,0)^{\mathsf T}$ and $s_A=(0,-1,\eta,1-\eta)^{\mathsf T}$ in $(S,Q,X,W)$ preserve the complete carrier. Consumption or external replenishment has its own boundary term.
+
+A group can share source stock or equipment even if its members have individually valid requests. The model therefore states how joint permission is resolved. If a resolver changes accepted quantities, that dependence belongs in the response map used by every coalition row.
+
+The result is a consistent physical language. Each proposal can be interpreted as a possible transformation before its numerical value is considered.
+
+\section{Declare one field for one comparison}
+Choose a finite potential $V$ on the states to be compared, with its reference, scale, factorization and units. Under the standardized Gaussian construction, $V$ is dimensionless and its differences are expressed in the declared EBU convention. A native burden $V_B$ retains its own unit until an explicit normalization is supplied.
+
+The field is fixed across one finite receipt and across one coalition table. A later revision is a separate field-change event. This condition is what makes the path identity, telescoping and interaction contrast refer to a single object.
+
+A quadratic is useful because it gives exact finite curvature and a low degree under affine response. A more general field may be appropriate for a declared function, but its increased complexity should represent a physical or functional dependence. Adding a term merely to force a desired score changes the account without explaining the service.
+
+\section{Choose how the endpoint is supplied}
+The response may be immediate, $x'=x+\delta$, or generated through time. In the latter case the model states the initial state, background inputs, control family, boundary rules and horizon $T_f$. It supplies a unique admissible endpoint for each required action setting.
+
+The stock-and-pipeline model illustrates a complete choice. The receiver gains $Q/\tau$ and loses consumption $h$; pending stock gains shortage-driven dispatch and loses arrival. Its operating point, memory kernel and roots follow from those equations. Changing dispatch to use pending stock is a new controller, with a new operating point and characteristic equation.
+
+This theoretical completeness is useful even before an institutional rule is attached. It explains what is pending, which timescale governs correction and whether a chosen interval remains inside the physical branch. The endpoint can then enter the same finite account used for an immediate transfer.
+
+\section{Fix the alternatives and the background}
+For an action set $N$, each required subset $S$ has an endpoint under the same initial state, horizon, field and background. If the no-action system moves, retain both its raw interval change and the relative action table:
 \begin{equation}
- m_E(AB)=-h_A^{\mathsf T}Hh_B.
+ E^{\mathrm{rel}}(S)=V(x_\varnothing(T_f))-V(x_S(T_f)).
 \end{equation}
-The design should include conditions under which the correction is nonzero and, where appropriate, a structurally justified zero case. It should verify accepted physical increments rather than assume that identical control settings produce identical changes in every context.
+The relative table starts at zero. Its nonempty coefficients agree with those of the raw table because the background difference is constant across rows.
 
-This study could reveal a baseline error, an omitted shared coordinate or a response dependence before the analysis becomes more complicated. Its societal relevance is foundational: a future system must first show it can avoid double-counting a simple shared effect before claiming to value large cooperative projects.
+This declaration makes a coalition comparison meaningful. A pair of repairs is compared with the same repairs alone under the same background, not with unrelated starting conditions. Pending stock is part of that background, as are fixed gains and source assumptions.
 
-\section{Then test the additive quadratic triple null}
-With three fixed increments and a quadratic field, all eight alternatives predict $m_E(ABC)=0$. A valid physical null requires a complete admissible cube, common field and baseline, and a covariance model that includes shared calibration and measurements.
+An infeasible row is a missing physical alternative, not a zero-valued action. One can restrict the motif, declare an extension or use the actual feasible poset. The appropriate inversion follows the structure of the declared alternatives.
 
-A nonzero result would reject the joint null assumptions at the stated uncertainty, not prove one selected explanation. A zero result would support compatibility within the tested resolution and domain, not universal absence of higher-order interaction. Controls should help separate response nonlinearity, field error and measurement drift.
+\section{Use the strongest exact simplification available}
+Once the composite endpoint value is specified, the interaction hierarchy is determined. Möbius inversion reconstructs the table exactly. Additive response and smoothness permit the repeated-FTC representation. Polynomial degree and affine response can impose a finite ceiling.
 
-The null is valuable because it can fail. If every nonzero coefficient is removed as a bad example or absorbed into a newly fitted field after observation, the experiment no longer tests the original proposition.
+The maintained linear service is an instructive case. Suppose each action adds an input $g_i$ to one common linear operator $F(t)$. Variation of constants gives $y_S=\bar y+\sum_{i\in S}h_i$ at the horizon. A fixed quadratic potential then requires only singleton and pair terms, regardless of whether $F$ has oscillatory modes.
 
-\section{Introduce a controlled cubic target}
-A physically justified local cubic contribution can supply the exact algebraic target $m_E(ABC)=-\lambda abc$ under additive increments. A real design must specify its valid domain, stability, boundary and calibration; the unbounded scalar teaching cubic is not itself an apparatus proposal.
+If actions change $F$, activate saturation or alter a shared resolver, this simplification must be reconsidered. The exact table still exists where its endpoints do, and its coefficients remain $-\Delta_T(V\circ x)$. The general theory therefore survives when the simple ceiling does not.
 
-The purpose is to show that the measurement and analysis can detect a known higher-order contrast when it should be present. This complements the quadratic null. Passing only a null can mean a method is insensitive; passing only a nonzero case can conceal bias. The two questions belong together.
+For an EBU system, this is a practical rule for allocating effort: use proved structure to simplify, and retain the full composite dependence where structure requires it.
 
-\section{Hold the quadratic and change the response}
-A separate test could retain an independently calibrated quadratic potential while introducing a characterized nonlinear response. The target must come from that response law, not from the assumption that all nonlinear devices produce a triple.
+\section{Keep timing and value connected but distinct}
+A horizon fixes the endpoint comparison. Peak shortage, settling time and time-integrated burden describe the path leading to it. Their units and definitions remain separate. The same endpoint EBU can accompany different interruptions of service.
 
-The constructed map $x=z_1+z_2+z_3+\alpha z_1z_2$ offers an algebraic example with $m_E(123)=-\alpha$. A physical implementation would need its own state, controls and measurements. The experiment should verify the response independently enough to distinguish it from an incorrect potential fit.
+A controller's storage function provides another description. It can establish decay of deviations while the valued receiver burden rises toward a driven operating point. The two functions answer different questions, so their agreement is not assumed.
 
-This comparison could teach a future EBU system where a dependency resides. Engineering a more additive response and changing a valuation model are different interventions. Knowing which one explains a measured effect can prevent unnecessary changes to an otherwise appropriate field.
+This lets a service design pursue several compatible improvements: lower resource burden, less overshoot, fewer duplicate orders and reliable access at the required time. The finite account keeps its exact meaning while the broader physical model describes the function people need.
 
-\section{Compare two independent branches at equilibrium}
-The probability bridge suggests two readings of the same coefficient. Branch A uses physically calibrated potential differences. Branch B estimates the alternating log-density contrast in a declared reference measure. Under the canonical normalization they should agree.
+\section{Add the probability branch only with its structure}
+When a canonical physical model supplies $p=Z^{-1}e^{-V}$ in a fixed reference measure, finite EBU becomes a log density ratio and each interaction becomes the corresponding log contrast. Full-support Gaussian assumptions additionally give inverse-Hessian covariance. The specified P4 model adds the medium-entropy scaling.
 
-The independence of the branches is essential. If Branch A defines its potential by taking the negative logarithm of Branch B's estimated density, agreement is construction, not validation. Shared measurements or calibration may still create covariance, which must be included in the comparison.
+These are complete theoretical bridges with named hypotheses. The deterministic delivery model does not require them to have a valid endpoint account. Conversely, a stationary density alone does not supply reversibility or a heat balance.
 
-The study also needs compatible endpoint support, positive density where logs are used, density-of-states treatment, and a plan for uncertainty and estimator bias. A thermal entropy interpretation requires the additional P4 conditions; density agreement alone is not a test of reversibility or absence of work.
+The advantage is a foundation broad enough to describe different physical services while precise about each interpretation. A thermal benchmark and a maintained delivery can share finite accounting without being forced into identical dynamics.
 
-\section{Cross-field interaction is a later question}
-Only after a justified denomination bridge could one compare higher-order contrasts across different fields as quantities on a common scale. Actions must also be matched in physical meaning. Equal labels do not guarantee equal interventions, and mathematically dimensionless potentials need not have interchangeable units of significance.
+\section{Attach an institutional rule explicitly}
+The physical model supplies a group value. An attribution rule divides it. A capacity policy may use the attributed history to affect future choices. Rights, essential access and public investment determine how that policy serves people.
 
-This leaves an ambitious research direction open without treating it as established. If comparable accounts across domains become defensible, they could help institutions examine tradeoffs that price records alone obscure. If comparability fails, separate vector accounts may remain more informative than an unjustified scalar sum.
+The aggregate balance identity constrains a declared capacity update, but several distributions can satisfy it. A household's limited opportunity to make a repair is a property of its feasible set and resources, not a defect in the finite difference. An institution can use the account to identify where collective support creates a better option.
 
-\section{Relation to E1a}
-The current E1a physical-probabilistic work provides a nearby benchmark and an explicit separation between physical and statistical branches. Its present scientific and execution status remains governed by the frozen repository records. This chapter neither changes its target nor restarts the paused validation track.
+This separation gives the theory a constructive social role. It can make restoration legible, expose shared burdens and guide investment while allowing the institution to protect service during the transition to more efficient arrangements.
 
-The interaction studies described here are proposals beyond the current book integration. No seed, threshold, horizon, instrument or campaign is adopted in these pages. A later design should identify which prerequisites E1a actually establishes and which the new interaction question still needs.
+\section{A complete foundation for the later books}
+The model now has a physical domain, feasible transformations, a fixed valuation, a response and horizon, a coalition comparator, exact interaction laws and explicit institutional interfaces. Its optional canonical and thermodynamic branches have their own conditions. Its uncertain inputs have a defined propagation rule.
 
-\section{Beyond one favorable coefficient}
-An institution aimed at sustaining life support needs evidence about service, reserves, resilience, distribution and access over time. A positive interaction coefficient is one possible piece of information, not a complete success metric. A group can have a favorable interaction while failing to deliver a necessary service or shifting harm outside the boundary.
-
-A long-run study must therefore define its physical domain and comparable alternatives, distinguish natural forcing from actor action, and retain refusal, cycling, adverse and inconclusive outcomes. Boundedness of a continuous potential on a finite closed stock domain is already guaranteed by the domain; it cannot discriminate the success of one actor mechanism.
-
-Similarly, a potential minimum does not prove attraction. A finite action menu can make a compatible reference unreachable. If every allowed transfer changes stocks by an even integer, parity can prevent reaching a reference of the opposite parity. No amount of exact valuation repairs that physical opportunity set.
-
-\section{A credible route to social benefit}
-The proposed sequence has a practical purpose: establish that the account measures what it claims, then examine whether people and institutions can use that information well. Small exact benchmarks can reduce uncertainty about the mathematical and physical links. Later studies can ask whether maintenance is better supported, complementary services are coordinated, and essential access is protected.
-
-A failed bridge or adverse institutional result would be useful evidence. It would identify a limitation rather than invalidate every earlier identity. Conversely, a successful benchmark would not authorize broad adoption without further work. The ambition is substantial enough to deserve this sequence of distinct questions.
-
-The final chapters return to the system as a whole: how these pieces might fit into an inspectable institution, and what would count as success beyond a correctly closing account.
+These declarations are the objects to which subsequent designs, simulations and results refer. Book 1 establishes the theory and its meaning. The next chapter returns to the economy as a whole and explains how the pieces can form a useful system around the functions it is meant to keep alive.

@@ -1,11 +1,14 @@
 \chapter{From a pre-action schedule to a measured record}\label{ch:lifecycle}
 
+A quote describes a possible event; a receipt describes an identified outcome. This chapter connects the two without losing the original promise, the physical boundary or the time at which the consequence is evaluated. The same discipline also prevents the continuing response of a controller from being counted repeatedly as fresh actor activity.
+
+
 \section{A promise is not yet a physical event}
 An operator proposes to send four stock units from cell 1 to cell 2. Before anything moves, we can calculate what that action would mean under the frozen model. Afterward, a meter may show that only three units moved. The proposed quantity, permitted quantity and observed quantity answer different questions. Keeping all three is part of a useful account.
 
 The preceding chapter gave an exact value for a finite action. Here we ask what information makes that equation reproducible across time. The object of interest is still a physical change. A message requesting a transfer does not move the water. A signed agreement does not prove delivery. A correct calculation of a planned successor does not prove that the successor occurred.
 
-The original book called this progression a quote-to-settlement lifecycle. We retain that teaching idea, while separating a physical value record from any later rule that changes a spendable balance. This chapter specifies the information relationships needed to understand an account. It does not adopt a complete operating protocol for the prospective Gaussian study.
+The progression from quote to receipt connects a proposed physical outcome to the event that occurred. A later settlement rule can use that record to change an institutional balance. Keeping the stages distinct makes both the physical promise and its institutional consequence understandable.
 
 \begin{intuitionbox}{Three quantities in one story}
 The request says what an actor asks to do. The accepted domain says what the declared rules permit. The measured record says what the evidence supports as having occurred. A scientifically useful record never silently substitutes one for another.
@@ -57,13 +60,13 @@ At the shared baseline, $E(0)=V(x^{\mathrm{b}})-V(x^{\mathrm{b}})=0$. An idle ac
 \end{lawbox}
 
 \section{An epoch has a beginning and an expiry}
-Imagine a pump quote issued at 14:00 for a short movement of water. At 14:03 another pipe fails. If that failure changes a required precondition, the original quote may no longer describe the available action. A protocol must say whether the action can continue, whether its authorization expires, or whether a new epoch is opened.
+A quote is valid under a declared state and field version. Its epoch tells participants which observation and rule produced it; its expiry specifies when those conditions must be refreshed. A later change of stock, route availability or potential does not retroactively alter the old proposal. It changes the conditions for a new one.
 
-What cannot be justified by the original formula is silently choosing the most favourable baseline after seeing the outcome. An actor might prefer the high-burden state immediately after failure; an institution might prefer the lower-burden state before it. Reproducibility requires the comparison rule to be specified before those preferences can select it.
+A finite-horizon quote additionally fixes the start and end of its response interval. If a pump action is valued after $T_f$, the endpoint includes usable stock, pending delivery and every other represented consequence at that time. The account should not move the horizon after seeing which oscillation peak gives the largest number.
 
-A new epoch is not an admission that earlier arithmetic was wrong. It records that the facts or applicable model have changed. A useful archive keeps the earlier proposal, its expiry reason and the new proposal. This lets a later reviewer distinguish a legitimately revised opportunity from an outcome-dependent rewrite.
+A controller may continue adjusting after the action is registered. That continuation is part of the declared response and its background ledger. It does not create new actor receipts merely because the potential rises and falls. If further actions are registered, they receive their own identities and comparisons. Otherwise settlement follows the original action's declared boundary.
 
-The exact timing and expiry mechanics belong to a registered protocol. We need not invent them here to understand the boundary. The general requirement is consistency: the physical interval, state commitment, accepted domain and measurement claim must refer to the same event.
+This feature is essential for an efficient EBU system: one physical intervention supports one defined claim, even when its consequences unfold over many observations. Continuous monitoring can improve service without turning every sensor update into another charge or credit.
 
 \section{Shortfall, overexecution and missing evidence}
 For a measured quantity within the valid domain, the committed schedule can be evaluated at that quantity when its other assumptions remain satisfied. Our three-unit example is such a case. It does not require a new potential or a proportional approximation.

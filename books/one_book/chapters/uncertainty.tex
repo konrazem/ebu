@@ -1,9 +1,12 @@
 \chapter{How much confidence belongs beside an interaction?}\label{ch:uncertainty}
 
+Exact laws can be evaluated with uncertain inputs. This does not weaken the law; it determines the uncertainty of the resulting number. We derive the propagation rules for a coalition contrast, including shared baselines and common calibration, so that the mathematical account remains precise when its physical inputs are estimated.
+
+
 \section{Exact subtraction is not exact observation}
 A Möbius coefficient is an exact signed sum of its input table. If the inputs are estimated, the coefficient is estimated too. Alternating signs do not automatically cancel measurement errors, and a shared baseline can create correlations that must be retained.
 
-This matters especially at high order. A genuine signal may shrink as the $k$th power of a small action amplitude while the contrast still combines $2^k$ noisy readings. A theorem can be exact and its empirical target difficult to resolve. The appropriate response is a measurement design with uncertainty, not a claim that algebra has removed it.
+This matters especially at high order. A genuine signal may shrink as the $k$th power of a small action amplitude while the contrast still combines $2^k$ noisy readings. A theorem can be exact and its empirical target difficult to resolve. The resulting distinction is precise: algebra determines the target and its error propagation, while a measurement procedure determines the distribution of the inputs.
 
 \section{A linear contrast has a complete covariance formula}
 Collect the required estimates into a vector $\widehat e$ and let $c_S=(-1)^{|T|-|S|}$. Then $\widehat m=c^{\mathsf T}\widehat e$. If the estimates have finite covariance matrix $C$, elementary bilinearity gives
@@ -30,30 +33,37 @@ A deterministic constant added to every table entry cancels in a nonempty differ
 \end{cautionbox}
 
 \section{Shared calibration creates further dependence}
-All endpoints may use the same estimated reference, temperature or Hessian. Errors in those parameters can move several table entries together. A calibration uncertainty is not automatically reduced by taking more endpoint samples; it can be systematic across the entire comparison.
+All endpoints can use the same estimated reference, temperature, Hessian or response parameter. A common parameter error can therefore move several table entries together. In the feedback example, uncertainty in $\nu$ or $\tau$ changes the generated endpoints across the whole coalition table; it is not a new independent error for each row.
 
-If $m=f(\eta)$ depends smoothly on an estimated parameter vector $\eta$, a first-order delta-method approximation gives
+If $m=f(\eta)$ is differentiable in a parameter vector and a first-order approximation is appropriate, the delta method gives
 \begin{equation}
  \operatorname{Var}(\widehat m)\approx
  \nabla f(\eta)^{\mathsf T}\operatorname{Cov}(\widehat\eta)\nabla f(\eta).
 \end{equation}
-Its approximation status, parameter uncertainty and dependence assumptions should be reported. Close to boundaries, with nonlinear estimation or sparse densities, a more appropriate registered uncertainty analysis may be needed. This book does not choose a universal confidence threshold.
+This approximation has a different status from the exact linear-contrast identity $c^{\mathsf T}Cc$. The latter is exact once the covariance of the table estimates is specified; the delta method approximates how parameter uncertainty produces that covariance or the coefficient's variance.
 
-For the probability branch, log transformation can amplify relative error in small densities. Finite-bin probabilities estimate integrals over bins, not exact point densities. Bin size, smoothing and density-estimator choices can alter the target and its bias. Those choices belong in the prospective analysis design, not in a post hoc effort to make the two branches agree.
+For log-density inputs, small densities can magnify relative error. A finite-bin probability is an integral over a region, whereas a point density is relative to a measure at a point. Their uncertainty and bias refer to different targets. Keeping the target explicit preserves the canonical identity's meaning without turning a numerical estimate into a different theorem.
 
 \section{What a nonzero triple can establish}
-Suppose the null prediction requires quadratic $V$, fixed additive increments, one field, one baseline, an admissible complete cube and accurate compatible valuation. A statistically resolved nonzero triple is inconsistent with that conjunction. It does not uniquely diagnose which premise failed.
+Within an exactly specified model, affine response and quadratic valuation imply a zero triple. A mathematically nonzero triple in its endpoint table disproves the conjunction of those premises for that table. It does not select a unique alternative mechanism.
 
-The alternatives are concrete: nonlinear response; a resolver that changed accepted quantities; a nonquadratic field; drift between comparisons; omitted coordinates; calibration error; or an unsuitable measurement model. A good design includes observations or controls that can distinguish some of these explanations. If it cannot, the uncertainty belongs in the conclusion.
+With estimated inputs, the contrast additionally carries the error distribution just derived. A departure from zero must be interpreted relative to that uncertainty. Potential nonlinearity, response nonlinearity, changing baselines and a mismatched field are distinct explanations of the same apparent discrepancy.
 
-A zero triple is also limited. It can be a genuine structural null, cancellation in that motif, or insufficient power. It does not certify absence of all higher-order effects at other baselines or durations. The interpretation must match the tested face of the landscape.
+A zero can likewise arise from the structural degree ceiling or from cancellation in a nonlinear composite. The square-root response of Chapter~\ref{ch:composite} demonstrates exact cancellation. Thus the theorem's logical subject remains the complete set of assumptions, not a claim that every zero implies simple physics or every triple implies oscillation.
 
-\section{Choosing a manageable question}
-A complete arbitrary order-$k$ table requires $2^k$ corners. Repetitions, controls and calibration add further work. This burden motivates pair studies and carefully chosen triples before large interaction catalogues. Factor support or an independently justified degree ceiling can reduce work, but only within its proven scope.
+\section{A deterministic error bound}
+Error bounds can also be stated without a probability model. If each input satisfies $|\widehat e_S-e_S|\leq\epsilon_S$, the triangle inequality gives
+\begin{equation}\label{eq:deterministic-contrast-error}
+ |\widehat m-m|\leq\sum_{S\subseteq T}|c_S|\epsilon_S
+ =\sum_{S\subseteq T}\epsilon_S.
+\end{equation}
+The bound is conservative because it allows all errors to align with the contrast signs. Covariance information can give a more informative probabilistic description, but it is not needed for this deterministic guarantee.
 
-For EBU, the best early question may be small and decisive: do independently measured fixed increments under a calibrated quadratic reproduce the predicted pair correction and triple null? Such a test can teach more than a broad dashboard of poorly resolved coefficients. The social payoff, if the measurement succeeds, is a more reliable basis for later decisions, not a claim that the small experiment already validates an economy.
+A structural zero has a further advantage: it removes terms by proof rather than by an uncertain estimate. Factor support and degree ceilings therefore reduce both computational and informational demands. For EBU, this encourages the simplest account that is exact under the declared model, with explicit error bounds wherever approximations enter.
 
 \section{Communicating a result people can challenge}
-A useful interaction report names the group, baseline, field, physical endpoints, coefficient, uncertainty and source of every row. It distinguishes observed endpoints from modeled counterfactuals and reports missing or infeasible rows explicitly. A positive number without those details is difficult to contest and easy to overinterpret.
+An interaction record identifies the group, baseline, field, endpoint table and coefficient. When inputs are estimated, it also identifies their uncertainty and dependence. This connects the mathematical result to the information used to evaluate it.
 
-This transparency can help communities understand why a shared intervention is judged promising, how confident that judgment is, and what would change it. It also gives an institution a way to acknowledge uncertainty without concealing the physical account. The next chapter gathers the exact identities and their conditional bridges into one readable hierarchy.
+The resulting account is more useful to communities because disagreements can be located. A challenge to a sensor reading differs from a challenge to the reference, and both differ from a challenge to an allocation rule. Error propagation preserves those distinctions instead of hiding them inside a single authoritative-looking score.
+
+We now have the tools to join the theory in one place: exact endpoint laws, generated response, finite interaction, canonical probability and uncertainty each connect to the same declared comparison.

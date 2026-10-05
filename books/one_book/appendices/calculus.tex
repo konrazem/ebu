@@ -1,6 +1,6 @@
 \chapter{Finite differences, regularity and exact checks}\label{app:calculus}
 
-This appendix supplies details that would interrupt the main explanatory route. Every calculation concerns a declared finite table or analytic expression. None is a simulated trajectory or a new experimental result.
+This appendix completes the finite-difference proofs and verifies the examples that connect endpoint tables to smooth curvature. It also states the regularity and constraint conditions needed to use those connections exactly.
 
 \section{The alternating-sum identity by induction}
 Let $T=\{1,\ldots,k\}$ and let $F$ be defined on the corresponding Boolean cube. For $k=1$, $\Delta_1F(0)=F(1)-F(0)$. Suppose the $k$-fold formula is known. Taking one more difference subtracts the same $k$-fold sum with the new indicator absent from the sum with it present. The first sum gives all subsets containing the new index with sign $(-1)^{k+1-|S|}$, and the second gives all subsets lacking it with that same rule. Thus
@@ -70,6 +70,3 @@ For one conserved total and diagonal $H_{ii}=\sigma_i^{-2}$, the candidate is
  \lambda=\frac{M-\sum_i x_i^*}{\sum_i\sigma_i^2}.
 \end{equation}
 It solves the nonnegative problem only when every coordinate is nonnegative. Equal nonzero marginals can therefore characterize a constrained stationary point even when the ambient gradient is not zero. This explains why a zero edge field is not universally the same as reaching the declared reference.
-
-\section{What these checks establish}
-The calculations verify definitions and constructed examples under explicit assumptions. They supply independent routes for reviewing signs and coefficients. They do not establish a calibrated potential, a measured response law or a successful institution. Their value is to make later empirical disagreements easier to interpret.

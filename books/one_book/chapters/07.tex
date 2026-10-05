@@ -1,5 +1,8 @@
 \chapter{Equilibrium is not a maximum}\label{ch:equilibrium}
 
+A reference, a steady operating point and a stable response are different objects. This chapter makes those differences concrete before we define a unit of improvement. They explain why an economy should care about maintained function, and why a controller can be stable while keeping a system away from the minimum of its declared burden.
+
+
 \section{What is being kept in balance?}
 The body does not seek the highest possible temperature. The clinic does not become more secure merely by filling one tank without regard to the pressure in its pipes or the water left elsewhere. A living arrangement has several conditions of continued function. Some resources can be too scarce; some can be present in unusable places; some processes can run too quickly or consume the very reserve on which tomorrow depends.
 
@@ -8,19 +11,27 @@ This observation gives us a different kind of question from the one posed by a p
 Physiologists use homeostasis for the maintenance of conditions compatible with life through processes of regulation. The word does not mean motionless perfection. Breathing, circulation and temperature regulation continue while a person is well. In an economy, too, a stable stock might conceal a continuous flow of production, use, repair and replacement. A useful physical account must be able to distinguish a functioning flow from an identical-looking snapshot.
 
 \section{Reference, equilibrium and stability}
-To measure departure we first need a reference. Suppose a deliberately simple model has two water stores, A and B, with a total of twenty physical units. A reference of ten units in each place can be written
+To measure departure we first need a reference. Suppose two water stores, A and B, contain twenty physical units between them. A reference of ten in each is
 \begin{equation}
  x^*=(10,10).
 \end{equation}
-The star means that this is a declared comparison state. It does not assert that ten is the correct real-world stock for a clinic, that the state will be reached, or that it will remain in place. In a real design the reference would need a reason connected to use, safety and measurement.
+The star marks the declared comparison state. A reference may encode useful reserves, safe ranges or a functional operating target. It does not by itself describe what the system will do.
 
-An equilibrium makes a different claim. If a specified law of change maps a state $x$ to its next state $T(x)$, then an equilibrium $\bar x$ satisfies $T(\bar x)=\bar x$. Under a rule that never acts, every state is an equilibrium, including a state in which store B lacks water. A mathematical fixed point is therefore not automatically a healthy condition.
+An equilibrium belongs to a rule of change. If that rule is $\dot x=b(x)$, an equilibrium $\bar x$ satisfies $b(\bar x)=0$. If the rule is discrete, $x_{t+1}=T(x_t)$, the condition is $T(\bar x)=\bar x$. A rule that never acts has every state as an equilibrium, including a state with an empty clinic tank. Stationarity alone cannot define adequate service.
 
-Stability asks a further question: what happens after a disturbance? A system may be at equilibrium but move farther away when perturbed. It may return toward the reference, or it may return only while energy, materials and functioning equipment remain available. None of these behaviours follows from naming the reference. They require a declared dynamics and, ultimately, a test of how that dynamics behaves.
+Stability describes the response to a displacement. An asymptotically stable equilibrium attracts nearby states under the stated law. The approach can be monotone or can include decaying oscillations. A minimum of a potential has this dynamical significance only when the response law connects motion to that potential in a suitable way.
 
-\begin{intuitionbox}{Three claims, three different questions}
-A \emph{reference} is where we compare. An \emph{equilibrium} is stationary under a specified rule. \emph{Homeostasis} concerns continued function and response under change. A single calculation may inform all three, but it cannot make them identical.
+A continuously used tank gives a particularly useful example. Let $X$ be available water, $Q$ water pending arrival, $h>0$ consumption, $\tau>0$ a residence time and $\nu>0$ a replenishment coefficient. A shortage-driven dispatch rule and first-order arrival law give
+\begin{equation}\label{eq:operating-point-preview}
+ \dot X=Q/\tau-h,\qquad \dot Q=\nu(L-X)-Q/\tau.
+\end{equation}
+Its steady state is $Q^*=\tau h$ and $X^*=L-h/\nu$. Consumption requires continuing dispatch. The stock therefore remains below the controller's target $L$, even though both derivatives vanish. With positive coefficients this unconstrained affine system is asymptotically stable; Chapter~\ref{ch:generator-orders} derives the roots and identifies the admissible physical branch.
+
+\begin{intuitionbox}{A stable service can have a nonzero burden}
+A replenishment system can maintain a constant supply below its target because a continuing shortage signal is what sustains dispatch. Stability of this arrangement and reduction of its shortage burden are distinct mathematical statements.
 \end{intuitionbox}
+
+For EBU, this distinction prevents a useful service from disappearing into a misleading zero: zero stock derivative does not mean zero throughput, zero resource use or a zero value of the potential. It also identifies a concrete design opportunity. Recording pending delivery gives a regulator information that the available-stock snapshot omits. Better coordination can reduce needless corrective deliveries and leave more physical capacity available for essential service.
 
 \section{A physically possible reference}
 Conservation places a useful limit on the discussion. The two stores together hold twenty units. Lossless transfers between them preserve that total. The reference $(10,10)$ is compatible with the total, whereas $(12,12)$ requires twenty-four units and cannot be reached by internal transfers alone. No better incentive or smarter calculation can supply those missing four units without an explicitly represented input.
@@ -34,7 +45,7 @@ The same transfer can help in one state and harm in another. Moving four units f
 
 This is precisely why maximising every local transaction is not a satisfactory physical rule. A payment may reward the same delivery at both starting points; a field concerned with the represented balance must distinguish them. It must also account for the whole finite movement, because an action that initially helps can overshoot if carried too far. A local slope tells us a direction near the start, but the value of a completed action must include what happens as the state changes.
 
-There is a caution here that strengthens rather than weakens the proposal. A mathematical measure of departure is not itself a law that opens valves or allocates water. It can inform incentives and expose consequences, but actions still require physical permission and an institution that decides what to do with the information. The problem is to build a trustworthy account first, then test whether a proposed way of using it improves continuing function.
+There is a caution here that strengthens rather than weakens the proposal. A mathematical measure of departure is not itself a law that opens valves or allocates water. It can inform incentives and expose consequences, but actions still require physical permission and an institution that decides what to do with the information. The account therefore supplies a useful comparison to a controller without becoming the controller itself. This allows EBU to describe the cost of maintaining a service, to reveal oversupply, and to preserve the distinction between a successful regulator and a desirable operating condition.
 
 \section{The question that leads to a new account}
 Imagine that a community has two possible transfers. Both are feasible. One reduces an immediate shortage but consumes a scarce reserve; another produces less immediate delivery while leaving the stores better prepared for the next disturbance. A monetary invoice records payment, but it does not itself calculate the represented change in physical balance. An endpoint-only stock description can miss the energy carriers, losses and intermediate states needed to describe how either transfer happened.

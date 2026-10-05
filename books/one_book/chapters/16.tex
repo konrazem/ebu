@@ -1,5 +1,8 @@
 \chapter{The exact local signed EBU quote}\label{ch:quote}
 
+We now combine boundary, feasibility and finite valuation into an exact quote. Its most useful property is that unchanged parts of the potential cancel, so a complete local computation can equal the global difference. This supplies a practical foundation for an account that many sites can use without recomputing the entire network for every delivery.
+
+
 \section{The action finally has a number}
 We have taken care to identify a physical state, a reference, a potential and
 an action that can actually occur. Only now is it safe to attach a number to
@@ -73,10 +76,7 @@ from $4$ to $2$; its average is $3$, and integrating over four units again
 gives $12$. These are three derivations of one number, not three independent
 claims of value.
 
-The agreement is useful for checking software, but it does not establish that
-four units were available, that a pump ran, or that a clinic was served.
-Physical permission comes from the action model; occurrence comes from the
-event record; service comes from a separately declared outcome condition.
+The three readings give complementary ways to inspect a quote: endpoints establish the finite total, curvature explains the correction, and the integral explains its accumulation. Alongside the quote, permission describes availability, the event record describes occurrence, and a service condition describes what the clinic received. A well-designed account presents these facts together, allowing a reader to understand both the number and its practical consequence.
 
 \section{The cost of an omitted carrier}
 If a pump consumes electricity and that consumption matters to the claim,
@@ -93,14 +93,8 @@ confused with it. That separation lets a reader ask which question each
 number answers and prevents the same physical loss from being counted twice.
 
 \section{From a quote to a record}
-Before execution, a quote names a possible predecessor, potential version,
-action increment and quantity. After execution, an event record must say
-which quantity was actually accepted and which complete successor occurred.
-The recorded EBU is recalculated from that pair. If the world changed between
-quotation and execution, the old quote is an historical proposal, not the
-current baseline.
+A quote specifies the predecessor, fixed potential and complete successor. An immediate transfer gives $x^{\mathrm b}+S_eq$; a dynamic service gives the endpoint $T_{T_f}(S,x^{\mathrm b})$ at its declared horizon. The finite definition values both.
 
-The number can then be attributed to actors only under a declared rule. An
-exact group total does not by itself decide who owns it or what anyone may
-spend. We will first follow the physical event into its record, then return
-to the more difficult case of several actions sharing one field.
+Water arriving after that horizon remains pending. If the background moves, a no-action comparison can identify the incremental effect; Chapter~\ref{ch:coalitions} specifies that baseline for each subgroup.
+
+The receipt then identifies what actually occurred. Changed quantities or conditions can change the value, while the original quote remains available for comparison. Joint valuation fixes the total before attribution. The next chapter follows this passage from a calculable proposal to an identified outcome.

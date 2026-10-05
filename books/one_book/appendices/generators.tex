@@ -1,4 +1,7 @@
-\chapter{Time expansions, Lie words and ordered response}\label{app:generators}
+\chapter{Feedback, memory and generator proofs}\label{app:generators}
+
+This appendix completes the dynamic theory used in the main text: local time expansions, ordered response, exact hidden-state elimination, alternative delay laws and the admissibility of the oscillatory example. The proofs identify which simplifications preserve the endpoint account and which change the physical response.
+
 
 \section{Differentiating one solution}
 For an autonomous vector field $b$ with solution $x(t)$, differentiate the equation at $t=0$. With $v=b(x_0)$, $A=Db(x_0)$ and $B=D^2b(x_0)$,
@@ -14,16 +17,16 @@ For $F(t)=V(x(t))$, the ordinary chain rule then gives
  F'''(0)&=D^3V[v,v,v]+3D^2V[v,Av]
              +DV[B[v,v]+A^2v].
 \end{align}
-Subtracting the Taylor expansion of $F$ from $F(0)$ proves Equation~\ref{eq:short-time}. A $C^3$ field and $C^4$ potential on a common neighbourhood containing the short trajectories give a bounded fourth time derivative and hence the stated $O(\tau^4)$ remainder. With less regularity, the remainder must be weakened rather than retained by notation alone.
+Subtracting the Taylor expansion of $F$ from $F(0)$ proves Equation~\ref{eq:short-time}. A $C^3$ field and $C^4$ potential on a common neighbourhood containing the short trajectories give a bounded fourth time derivative and hence the stated $O({T_f}^4)$ remainder. With less regularity, the remainder must be weakened rather than retained by notation alone.
 
-The calculation does not solve a trajectory numerically. It derives local terms for a declared differential equation. Its empirical usefulness depends on whether that equation describes the physical response over the tested interval.
+These terms describe the local time dependence of the declared endpoint observable. Their controlled remainder makes the distinction between short-time structure and an exact finite-horizon identity explicit.
 
 \section{The observable generator}
 For a smooth observable $f$, define $L_bf=Df[b]$. Along the flow, $d f(x(t))/dt=L_bf(x(t))$. Iteration gives the formal short-time expansion
 \begin{equation}
- V(\Phi_z^\tau(x_0))
- =\sum_{r=0}^{k}\frac{\tau^r}{r!}L_{b_z}^{,r}V(x_0)
- +O(\tau^{k+1})
+ V(\Phi_z^{T_f}(x_0))
+ =\sum_{r=0}^{k}\frac{{T_f}^r}{r!}L_{b_z}^{r}V(x_0)
+ +O({T_f}^{k+1})
 \end{equation}
 under the corresponding smoothness, existence and boundedness assumptions. This is a finite expansion with a controlled remainder, not an unconditional claim that an infinite series converges.
 
@@ -34,10 +37,10 @@ Take a nonempty set $T$ of $k$ labels. The $T$-difference annihilates every term
 
 At order $r=k$, a surviving monomial must contain each label in $T$ at least once. There are exactly $k$ factors, so it contains each once, no label outside $T$, and no drift factor. The surviving operator words are all permutations of those $k$ action fields. The endpoint EBU sign gives
 \begin{equation}
- m_{E_\tau}(T)=-\frac{\tau^k}{k!}
+ m_{E_{T_f}}(T)=-\frac{{T_f}^k}{k!}
  \sum_{\pi\in\mathrm{Perm}(T)}
  L_{f_{\pi_1}}\cdots L_{f_{\pi_k}}V(x_0)
- +O(\tau^{k+1}).
+ +O({T_f}^{k+1}).
 \end{equation}
 A finite number of Boolean differences preserves the remainder order. The coefficient can vanish through cancellation; then this expression gives an upper-order bound rather than identifying the first nonzero term.
 
@@ -46,33 +49,143 @@ The generator-series and word language has established antecedents in nonlinear 
 \section{The all-time affine endpoint proof}
 For $\dot x=A(t)x+b_0(t)+\sum_i z_ib_i(t)$, let $\Phi(t,s)$ be the fundamental matrix of the common homogeneous equation. Variation of constants gives
 \begin{align}
- x_z(\tau)={}&\Phi(\tau,0)x_0+
- \int_0^\tau\Phi(\tau,s)b_0(s)\,ds\nonumber\\
- &+\sum_i z_i\int_0^\tau\Phi(\tau,s)b_i(s)\,ds.
+ x_z({T_f})={}&\Phi({T_f},0)x_0+
+ \int_0^{T_f}\Phi({T_f},s)b_0(s)\,ds\nonumber\\
+ &+\sum_i z_i\int_0^{T_f}\Phi({T_f},s)b_i(s)\,ds.
 \end{align}
-The first line is $\bar x(\tau)$ and the integral multiplying each $z_i$ is $h_i(\tau)$. The endpoint is affine in controls. A quadratic potential therefore yields a Boolean polynomial of degree at most two for every horizon for which the equations and physical domain assumptions hold.
+The first line is $\bar x({T_f})$ and the integral multiplying each $z_i$ is $h_i({T_f})$. The endpoint is affine in controls. A quadratic potential therefore yields a Boolean polynomial of degree at most two for every horizon for which the equations and physical domain assumptions hold.
 
 If $A$ depends on $z$, the fundamental matrix does too. It cannot be pulled into a common affine expression in this way. The bilinear example $\dot x=(\sum_i z_i)x$ makes that failure explicit and produces all interaction orders at finite time.
 
 \section{Ordered noncommutativity and the sign convention}
-Let X and Y be smooth vector fields. Applying X for time $\tau$ and then Y gives
+Let X and Y be smooth vector fields. Applying X for time ${T_f}$ and then Y gives
 \begin{align}
- \Phi_Y^\tau\Phi_X^\tau(x)
- =x+\tau(X+Y)
- +\tau^2\{\tfrac12DX\,X+DY\,X+\tfrac12DY\,Y\}
- +O(\tau^3).
+ \Phi_Y^{T_f}\Phi_X^{T_f}(x)
+ =x+{T_f}(X+Y)
+ +{T_f}^2\{\tfrac12DX\,X+DY\,X+\tfrac12DY\,Y\}
+ +O({T_f}^3).
 \end{align}
 Reversing the order replaces the cross term $DY\,X$ by $DX\,Y$. Hence
 \begin{equation}
- \Phi_Y^\tau\Phi_X^\tau(x)-\Phi_X^\tau\Phi_Y^\tau(x)
- =\tau^2[X,Y](x)+O(\tau^3),
+ \Phi_Y^{T_f}\Phi_X^{T_f}(x)-\Phi_X^{T_f}\Phi_Y^{T_f}(x)
+ ={T_f}^2[X,Y](x)+O({T_f}^3),
 \end{equation}
 with $[X,Y]=DY\,X-DX\,Y$. For observables,
 $L_XL_Yf-L_YL_Xf=Df[DY\,X-DX\,Y]$, so the convention is consistent.
 
-The planar example $X=\partial_x$, $Y=x\partial_y$ has $[X,Y]=\partial_y$, agreeing with the positive $\tau^2$ vertical difference when Y follows X. Keeping the convention explicit avoids an otherwise easy sign reversal.
+The planar example $X=\partial_x$, $Y=x\partial_y$ has $[X,Y]=\partial_y$, agreeing with the positive ${T_f}^2$ vertical difference when Y follows X. Keeping the convention explicit avoids an otherwise easy sign reversal.
 
 This is a statement about ordered execution. An unordered coalition table must state whether its group row means simultaneous flow, a designated order, an average over orders or another protocol. The table transform cannot choose that semantics afterward.
+
+\section{Eliminating a linear hidden state}
+Let a constant-coefficient system be partitioned into visible state $x$ and hidden state $c$:
+\begin{equation}
+ \dot x=Ax+Bc,\qquad \dot c=Cx+Dc.
+\end{equation}
+Variation of constants in the second equation gives
+\begin{equation}
+ c(t)=e^{Dt}c_0+\int_0^t e^{D(t-s)}Cx(s)\,ds.
+\end{equation}
+Substitution produces the exact visible equation
+\begin{equation}\label{eq:general-memory}
+ \dot x(t)=Ax(t)+Be^{Dt}c_0+
+ \int_0^t Be^{D(t-s)}Cx(s)\,ds.
+\end{equation}
+The matrix kernel is $K(r)=Be^{Dr}C$ for $r\geq0$. Its form follows from the hidden dynamics; it is not selected independently after deleting the state. The initial term records information that the visible initial condition alone does not contain. Matrix exponentials and input convolutions are standard linear-systems constructions \cite{sontag,feedback-systems}.
+
+For the pending tank, take visible $x$, hidden $q$, $A=0$, $B=1/\tau$, $C=-\nu$, $D=-1/\tau$. This gives the restoring kernel $-(\nu/\tau)e^{-r/\tau}$. Its negative integral $-\nu$ confirms that the kernel is a response coefficient, not a probability density.
+
+An added dispatch input $u(t)$ enters the hidden equation as
+$\dot q=-\nu x-q/\tau+u$. The visible equation becomes
+\begin{align}\label{eq:forced-tank-memory}
+ \dot x(t)={}&\frac{q_0}{\tau}e^{-t/\tau}
+ -\frac{\nu}{\tau}\int_0^t e^{-(t-s)/\tau}x(s)\,ds\nonumber\\
+ &+\frac1\tau\int_0^t e^{-(t-s)/\tau}u(s)\,ds.
+\end{align}
+A coalition of additive inputs enters through the last convolution. This is another direct route to affine endpoint response. For EBU, it shows why a smaller state description can preserve the same account only when it retains the corresponding memory and initial conditions.
+
+\section{A residence compartment and a fixed travel time}
+The law $A=Q/\tau$ describes a first-order residence compartment. A pure fixed transport delay $d>0$ instead has $A(t)=D(t-d)$, with the necessary dispatch history prescribed on the preceding interval. With shortage-driven dispatch and constant consumption, deviations obey
+\begin{equation}
+ \dot x(t)=-\nu x(t-d).
+\end{equation}
+An exponential mode $x(t)=e^{\lambda t}$ therefore satisfies
+\begin{equation}
+ \lambda+\nu e^{-\lambda d}=0.
+\end{equation}
+This is a delay characteristic equation, not the quadratic $\tau\lambda^2+\lambda+\nu=0$ of the residence model. The required initial data and spectrum differ. Replacing a pipe's travel history by one pending compartment is a modelling choice, even if both are described informally as delay.
+
+The distinction is useful for EBU service design because both descriptions can supply endpoints, but their timing and admissibility claims come from different equations. The finite valuation need not change when a more appropriate route response replaces the old one.
+
+\section{Changing the dispatch signal changes the modes}
+Consider the alternative pending-aware policy $D=\nu(L-X-Q)$, still with $A=Q/\tau$ and consumption $h$. On its positive-dispatch branch, the operating point is
+\begin{equation}
+ Q_*'=\tau h,\qquad X_*'=L-h/\nu-\tau h.
+\end{equation}
+For deviations about that point,
+\begin{equation}
+ \dot x=q/\tau,\qquad
+ \dot q=-\nu x-(\nu+1/\tau)q.
+\end{equation}
+Its characteristic polynomial factors:
+\begin{equation}
+ \lambda^2+(\nu+1/\tau)\lambda+\nu/\tau
+ =(\lambda+\nu)(\lambda+1/\tau).
+\end{equation}
+Both rates are real and negative for positive parameters; when they coincide, the repeated-root solution can contain a polynomial prefactor. This contrasts with the shortage-only policy's possible complex pair.
+
+The operating point also changed. Fewer oscillatory modes do not by themselves imply a better matched service: the reference, feasible branch and sustained stock must be compared as well. The theoretical benefit is specificity. A different treatment of pending stock changes the response through an explicit term, so a design can identify which property it seeks to improve.
+
+\section{Storage, forcing and the receiver potential}
+With $\nu=2wM$, the positive storage
+$\mathcal E_B=wx^2+q^2/(2M\tau)$ satisfies
+\begin{equation}
+ \dot{\mathcal E}_B=-\frac{q^2}{M\tau^2}
+ +\frac{qu}{M\tau}
+\end{equation}
+under added dispatch input $u$. The second term is the supply term in this particular storage identity. It is not an independently established thermodynamic work or institutional credit.
+
+Without forcing, the derivative vanishes on $q=0$. A solution that remains on that set must also have $x=0$, because $\dot q=-\nu x$. Thus the only invariant zero-dissipation state is the operating point. The negative-real-part roots already prove asymptotic stability of the affine system; this storage calculation explains the cancellation that supports it.
+
+The receiver term is exactly
+\begin{equation}
+ V_B(X)-V_B(X_*)-V_B'(X_*)(X-X_*)=wx^2.
+\end{equation}
+Consequently storage differs from raw receiver burden by its linear operating-point contribution and the pending term. At $w=1$, $M=1/2$, $\tau=2$, $L=10$, $h=2$, and $(X,Q)=(9,3)$, one has $\dot X=-1/2$, $V'_B=-2$, hence $\dot V_B=1$. At the same point $q=-1$ gives $\dot{\mathcal E}_B=-1/2$. The opposite signs are therefore exact.
+
+\section{Admissibility of the oscillatory coalition example}
+In Chapter~\ref{ch:generator-orders}, each of three actions adds $\epsilon=1/100$ to dispatch, and the common initial state is the unforced operating point $(X,Q)=(2,1)$. For a coalition of size $m\leq3$,
+\begin{equation}
+ x(t)=m\epsilon g(t),\qquad q(t)=m\epsilon g'(t),
+\end{equation}
+where
+\begin{align}
+ g(t)&=1-e^{-t/2}\left(\cos\frac{\sqrt3t}{2}
+ +\frac1{\sqrt3}\sin\frac{\sqrt3t}{2}\right),\\
+ g'(t)&=\frac2{\sqrt3}e^{-t/2}\sin\frac{\sqrt3t}{2}.
+\end{align}
+Differentiation gives $g''+g'+g=1$, $g(0)=g'(0)=0$. Thus the expression solves the declared initial-value problem exactly.
+
+For all $t\geq0$, the sine--cosine amplitude bound gives
+\begin{equation}
+ |g(t)|\leq1+2/\sqrt3<3,\qquad |g'(t)|\leq2/\sqrt3<2.
+\end{equation}
+Therefore $|x|<0.09$ and $|q|<0.06$ for every coalition. It follows that $1.91<X<2.09<3$, $Q>0.94$, and total dispatch $D=1-x+m\epsilon>0.91$. The receiver and pending states remain on the stated physical branch for every nonnegative time under the maintained-source assumptions. These are analytic bounds, with no sampled trajectory required.
+
+At horizon $T_f$, let $r=\epsilon g(T_f)$. Since $V(X,Q)=(3-X)^2/2$, direct substitution gives $E_m=mr-m^2r^2/2$. Its pair contrast is $-r^2$ and its triple contrast is
+\begin{equation}
+ (3r-9r^2/2)-3(2r-2r^2)+3(r-r^2/2)=0.
+\end{equation}
+The example demonstrates that oscillatory service response and pair-only valuation are compatible with an admissible complete coalition cube.
+
+\section{Why pure gradient descent has different local modes}
+Let $\dot x=-M(x)\nabla V(x)$ on an admissible domain, with $M(x)$ symmetric positive semidefinite. Along a regular solution,
+$\dot V=-\nabla V^{\mathsf T}M\nabla V\leq0$.
+A periodic solution would return to the same $V$, so the nonnegative dissipation must vanish throughout the orbit. For a symmetric positive semidefinite matrix, $g^{\mathsf T}Mg=0$ implies $Mg=0$. The velocity therefore vanishes, excluding a nonconstant periodic orbit of this pure law.
+
+At a critical point with positive-definite Hessian $H$, the linearization is $-M_*H$; derivatives of $M$ multiply the zero gradient and vanish. This matrix is similar to $-H^{1/2}M_*H^{1/2}$, which is symmetric negative semidefinite. Its eigenvalues are real and nonpositive. Zero rates require further analysis for attraction; positive-definite $M_*$ makes all rates strictly negative.
+
+This result applies to the specified unforced gradient architecture. The pending tank has a different state coupling and a driven operating point with nonzero receiver gradient, so its complex modes create no contradiction. For EBU, the distinction prevents a descent theorem from being attached to a controller whose actual response does not satisfy its premises.
 
 \section{A stochastic generator values expected observables}
 For a Markov process $X_t^z$ with a well-defined transition semigroup $P_t^z$, an expected-value table can be declared as

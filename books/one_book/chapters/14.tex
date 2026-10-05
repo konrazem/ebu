@@ -1,7 +1,10 @@
 \chapter{Finite changes and curvature}\label{ch:finite}
 
+The finite account contains the whole movement, including the point at which further delivery ceases to help. For a quadratic potential this correction is exact and simple. We use it to understand oversupply, shared-source interaction and why splitting one event cannot remove its curvature.
+
+
 \section{The whole movement matters}
-A slope describes the landscape at one point. A finite action travels a distance through that landscape. If the slope changes along the way, its starting value multiplied by the distance cannot give the exact endpoint difference. The Gaussian model makes this distinction unusually transparent because the omitted term can be written exactly.
+A slope describes the landscape at one point. A finite action travels a distance through that landscape. If the slope changes along the way, its starting value multiplied by the distance cannot give the exact endpoint difference. The Gaussian model makes this distinction unusually transparent because the omitted term can be written exactly. That exactness is useful operationally: a quote can display how its value changes with quantity, allowing a permitted delivery to be assessed before its size is fixed.
 
 Return to the two-cell state \((18,2)\). The starting edge field is four. A four-unit transfer therefore has initial linear estimate \(4\cdot4=16\). Its exact field reduction is twelve. An eight-unit transfer has linear estimate 32 but exact reduction sixteen. At sixteen units the linear estimate is 64, while the exact reduction is zero. No measurement noise or numerical integration is needed to explain these differences. They follow from the curvature of the declared potential.
 
@@ -110,7 +113,7 @@ It lies halfway between the initial and final fields because the field is linear
 
 At the main \(q=12\) point, initial field is four, final field is minus two, average field is one, and total reduction is twelve. The final field is already negative even though the total remains positive. This distinction helps interpret an action that has passed the potential minimum: the action as a whole still improves on its starting state, but its last increments undo some earlier improvement.
 
-An intensity diagnostic such as \(F(q)/q\) can be informative, but it is not the total finite value. Ranking by intensity and ranking by total answer different questions. Neither ranking is the action-selection rule of the prospective random programme unless explicitly adopted.
+An intensity diagnostic such as \(F(q)/q\) can be informative, but it is not the total finite value. Ranking by intensity and ranking by total answer different questions. Each ranking becomes a selection rule only when the policy explicitly uses it.
 
 \section{At the reference every nonzero net change costs field value}
 At \(x^{\mathrm{b}}=x^*\), the gradient is zero. Equation~\ref{eq:quadratic-field-reduction} becomes
@@ -171,9 +174,11 @@ The same-baseline correction is therefore \(0-(-4-4)=8\). It is positive because
 The explicit baseline change in this example is essential. Without it, an appealing algebraic illustration would depend on a standalone action that cannot be performed in the declared physical world. Mathematical formulas must retain the admissibility assumptions of the comparisons they claim to represent.
 
 \section{A fuller physical account changes the state}
-The schedule above is exact for the declared lossless two-stock world. It does not include electricity consumption, wear or a wasted carrier. To include one of those effects, declare its physical coordinate, the action's complete increment and a potential over the chosen complete state. Then calculate \(E=V_{\mathrm{pre}}-V_{\mathrm{post}}\) again. The answer may change because the world represented by the model has changed, not because an arbitrary term was appended to the definition of EBU.
+A complete increment can include source stock, pending stock, usable delivery, an energy carrier and a loss compartment. The same quadratic identity applies to the resulting vector whenever the declared potential is quadratic. It is the actual increment, not the familiar name of the action, that enters the calculation.
 
-An invoice, operating cost or policy penalty can be kept in an institutional account with its own meaning. Calling such a number EBU would hide the distinction this book is trying to make. In a lossy transfer, for example, the difference between source withdrawal and destination delivery must first appear in a declared sink or cross a boundary; only then is it possible to discuss what the potential values and what it leaves as audit-only.
+Suppose dispatch initially changes only source and pending coordinates. Valuing it as though all pending water had already arrived would use a different endpoint. One may instead define a complete delivery action evaluated at an agreed horizon; its response model then determines how much has arrived by that time. The finite difference is unchanged in form, but its inputs now describe the promised physical comparison accurately.
+
+This is also where the later generator theory joins the account. A common linear system with additive action forcing produces endpoint increments that superpose. A quadratic potential then retains exactly its singleton and pair terms, even if those increments were generated by an oscillating response. Nonlinear dispatch, saturation or a coalition-dependent controller can change the endpoint map and create higher orders. The distinction identifies where a more complex calculation is necessary, instead of treating every delayed service as an arbitrary nonlinear surcharge.
 
 \section{Why dividing the action does not erase curvature}
 Take the main four-unit transfer and split it into two consecutive two-unit actions under one fixed potential and no intervening external change. The first action goes from potential 16 to nine, giving seven. The second begins at the new state \((16,4)\) and goes from nine to four, giving five. Their sum is twelve, the unsplit four-unit field reduction.
@@ -197,3 +202,5 @@ For the main schedule, solve \(F(q)=12\). The two roots are four and twelve. Bot
 Calculate the difference between the linear estimate and exact field reduction at \(q=3\). It is \(q^2/4=2.25\); the linear estimate is twelve and the exact reduction is 9.75. This difference is a curvature contribution, not an optional audit adjustment.
 
 At the reference, let \(\delta=(-1,1)^T\) with scales two. The quadratic term is \(\tfrac12(1/4+1/4)=1/4\), so the field value is minus one-quarter. Explain how a zero gradient and a negative finite value coexist without contradiction.
+
+We now have an exact finite schedule, including its oversupply correction. Before using its favourable region, we must check whether the proposed quantity and its complete route are physically possible. That is the role of permission in the next chapter.

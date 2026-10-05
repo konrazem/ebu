@@ -1,5 +1,8 @@
 \chapter{Why the whole path has one endpoint value}\label{ch:path}
 
+Local marginals change while an action unfolds. The path identity shows why adding those changes gives exactly the finite EBU already defined. It also separates improvement between endpoints from service, exposure and resource use accumulated through time, giving each a clear place in an EBU account.
+
+
 \section{Many small changes, one complete comparison}
 A pipe can transfer water steadily or in pulses. During the movement the local marginal changes: the source becomes less full and the destination less empty. If we keep using the first marginal, we will count later units as though the earlier ones never arrived. The integral solves precisely this problem. It follows the changing marginal along the entire represented path.
 
@@ -38,11 +41,19 @@ A useful analogy is a meter whose reading changes while a tank fills. Multiplyin
 The path parameter $s$ is not necessarily clock time. Replacing it by a smooth increasing parameter changes both the velocity and the integration element, leaving their product and the integral unchanged. Thus the mathematical account need not depend on how quickly an interpolation is traversed. A physical consequence that does depend on speed, such as heating or spoilage, requires a state and action model that actually represents it.
 
 \section{The same endpoints do not mean the same operation}
-Two pumps may move the same quantity between the same tanks while using different amounts of electricity. If the model records only tank stocks, the two endpoints match and the tank EBU matches. That is an exact statement about an incomplete boundary for comparing the pumps' total effects. Add the energy carrier and other relevant changes, and the complete endpoints can differ.
+Two pumps can transfer the same water while using different electricity. A potential over tank stocks assigns equal values to their matching water endpoints. A potential over the fuller carrier state can distinguish their energy consequences. The identity remains exact in either case; the boundary determines which comparison it makes.
 
-This is why path independence is useful without being a claim that process is irrelevant. It isolates what one account measures. A water-state potential need not be a complete engineering cost functional. Calling its gradient a force does not give it units of newtons or turn its integral into mechanical work. A particular thermal normalization will later connect potential, energy and probability under explicit physical assumptions; it is not presumed here.
+Time introduces another distinction. Along a physical trajectory $x(t)$ on $[0,T_f]$,
+\begin{equation}\label{eq:path-versus-exposure}
+ -\int_0^{T_f}\nabla V(x(t))^{\mathsf T}\dot x(t)\,dt
+ =V(x(0))-V(x(T_f)),\qquad
+ \mathcal A=\int_0^{T_f}V(x(t))\,dt.
+\end{equation}
+The first expression integrates the \emph{rate of change} of the potential. The second integrates its \emph{level}. They are different functions of a trajectory and have different units: $\mathcal A$ includes an extra unit of time. Two deliveries reaching the same endpoint can have equal EBU while one leaves the clinic short of water for longer.
 
-The distinction can benefit a future EBU system in two ways. First, it prevents a bookkeeping detour from manufacturing additional value for the same complete change. Second, it makes omissions identifiable: if a supposedly equivalent route uses extra energy, the account must show where that physical difference enters. Better maintenance or route choices could follow from such information, provided the boundary and measurements are adequate.
+Feedback makes this distinction especially valuable. Overshoot, settling time, peak shortage and cumulative exposure describe different aspects of service. A controller's oscillation can affect all of them without producing an extra transaction or changing the endpoint definition. A delivery policy can therefore be compared on both restoration and continuity of service, with neither measure hidden inside the other.
+
+For EBU, path independence gives a concrete protection: changing the bookkeeping route between fixed complete endpoints cannot manufacture additional total value. The separate time description gives a complementary benefit: a system can value prompt, reliable service without mislabelling duration as another endpoint EBU. These two capabilities support clearer comparisons of maintenance and route choices.
 
 \section{An integral checked against the endpoints}
 For the familiar two-cell transfer, $V(q)=16-4q+q^2/4$ and $f(q)=4-q/2$. A four-unit movement therefore has
@@ -61,10 +72,4 @@ For the total, every admissible path satisfying the theorem gives the same resul
 \section{Regularity is part of the theorem}
 The $C^1$ assumptions above are sufficient and easy to check. A weaker formulation can use absolute continuity of $V\circ\gamma$ together with its almost-everywhere chain rule and an integrable derivative. Merely having a derivative almost everywhere is not enough: singular functions can change while their derivative is zero almost everywhere. Appendix~\ref{app:calculus} explains the corresponding issue for repeated finite differences.
 
-For physical work the practical lesson is to distinguish an abrupt event from a smooth path. A jump still has a well-defined endpoint EBU whenever both potentials exist. It need not inherit an ordinary smooth-path description of the actual mechanism. We can keep the exact finite account without pretending that all events are differentiable.
-
-\begin{lawbox}{The connection worth retaining}
-A finite EBU is defined by a state-potential difference. A regular path under the same field integrates to that difference. Path independence protects the total comparison; it neither erases unrepresented process effects nor selects an individual entitlement.
-\end{lawbox}
-
-The next chapter returns to finite actions. With a quadratic potential we can carry out the integral algebraically, keeping the entire curvature correction instead of approximating it away.
+A jump retains its endpoint EBU whenever both potentials exist, even when its actual mechanism has no smooth-path description. The finite account therefore survives the boundary of the differential representation. The next chapter evaluates it exactly for a quadratic, including the complete curvature correction.

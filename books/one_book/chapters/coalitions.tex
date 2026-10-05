@@ -1,5 +1,8 @@
 \chapter{A landscape of possible groups}\label{ch:coalitions}
 
+To understand cooperation, we need a common set of alternatives. A coalition landscape records what each subset of actions produces under the same comparison conditions. It provides the complete input for the interaction laws and gives EBU a disciplined way to compare a coordinated project with its component proposals.
+
+
 \section{Before synergy, specify what is being compared}
 Suppose a clinic needs a delivery, refrigeration and a repaired access route. The three activities may be useful together in a way that their isolated descriptions miss. Yet the phrase ``useful together'' is incomplete until we specify the alternatives. Does the delivery have the same quantity when refrigeration is absent? Does a failed route reduce the delivered amount? Does the baseline change between attempts? These choices define the comparison.
 
@@ -19,11 +22,18 @@ A group is a subset, so its label does not specify an order. With two actions th
 All entries must refer to one field and comparator rule. Changing a reference halfway through the table changes the question. So does replacing A's fixed quantity in one row with a resolver-dependent quantity in another without saying so. A resolver-dependent table is legitimate when declared, but it is a different landscape from the fixed-increment table.
 
 \section{One baseline, several counterfactual endpoints}
-The table is a family of comparisons, not a record asserting that the world simultaneously visited all its endpoints. An observed group can supply one row. The remaining rows may come from repeated controlled interventions, a justified model, or separate physical observations with a defensible common-baseline design. Their provenance must be stated.
+The table is a family of alternatives. One physical event visits one endpoint; the table also specifies what the other declared groups would produce. In a mathematical model these endpoints follow from the response rule. In an application their provenance accompanies the comparison.
 
-For EBU this is an important separation of duties. A joint action record needs its before and after states. An interaction study needs enough alternative groups to distinguish individual and joint effects. One cannot infer a three-way interaction merely by measuring the final state after three activities. The lower-order rows are part of the information needed to know what was additional.
+A dynamic background may move the system even when no action is present. Fix an initial state, horizon $T_f$, background inputs and controller, and write $x_S(T_f)$ for each endpoint. There are then two useful tables:
+\begin{align}\label{eq:coalition-drift-baselines}
+ E^{\mathrm{raw}}(S)&=V(x_0)-V(x_S(T_f)),\\
+ E^{\mathrm{rel}}(S)&=V(x_\varnothing(T_f))-V(x_S(T_f)).
+\end{align}
+The relative table has $E^{\mathrm{rel}}(\varnothing)=0$ and removes the common no-action change. The two tables differ by the constant $V(x_0)-V(x_\varnothing(T_f))$. Every nonempty interaction coefficient is therefore identical in the two tables; only the empty coefficient changes.
 
-In practical terms, this can keep a promising project from being credited for a complementarity that has never been measured. It can also reveal a real complementarity that a list of separate prices or work orders obscures. Both possibilities matter for decisions about shared infrastructure.
+This is especially useful for a maintained service with consumption and feedback. Natural depletion or autonomous correction does not become an actor's contribution merely because it occurred during the same interval. The account can retain the raw physical change and the incremental action comparison, each with its own meaning.
+
+The common initial state includes pending stock. Holding only the available receiver stock fixed while changing water already in transit would compare different backgrounds. Shared source conditions, control gains and horizon likewise belong to the protocol. These declarations make a joint project comparable with its parts instead of allowing each row to start from the most favourable world.
 
 \section{A complete two-action table}
 Return to two couriers each moving two units from $(18,2)$ under the fixed reference $(10,10)$ and scales $(2,2)$. All four alternatives are physically permitted in this teaching domain:
@@ -71,6 +81,6 @@ For a finite feasible poset $P$, inversion uses its own incidence function $\mu_
 One must inspect the intervals rather than transplant Boolean signs. There is a useful nuance: if the feasible family is downward closed, every interval $[A,B]$ with $A\subseteq B$ in that family is still a full Boolean interval. Its signs remain $(-1)^{|B\setminus A|}$. There may nevertheless be no feasible top group on which to ask the intended high-order question.
 
 \section{What a system gains from declaring the alternatives}
-A coalition table turns an ambiguous assertion about cooperation into a reproducible question. It identifies whose absence or presence is being varied, what stays fixed, and what physical endpoint each variation supplies. This can help distinguish shared-source competition from genuine complementarity, and prevent an institution from paying multiple times for the same represented improvement.
+A coalition table states exactly whose presence varies and what remains fixed. It can distinguish shared-source competition from complementarity between a water repair and an energy repair. It can also show when an attractive bundle contains no contribution beyond its smaller components.
 
-The benefit to society would depend on how the information is used. A table could help explain why a water repair and an energy repair belong in one investment decision. It could equally show that an apparently attractive bundle has no extra physical benefit under the chosen model. Neither outcome ranks the people involved. The next chapter develops the exact subtraction that extracts those relationships.
+For EBU, this makes coordinated planning explainable. A planner can show which combination restores a function and which shared resource limits it. A community can then compare complete projects without paying several times for the same represented improvement. The following transform extracts these relationships without losing any part of the total.

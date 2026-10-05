@@ -1,9 +1,12 @@
 \chapter{What a quadratic can and cannot explain}\label{ch:degree}
 
+A polynomial has a finite hierarchy of derivatives. Under affine response, that hierarchy becomes an exact ceiling on coalition interaction. For the Gaussian EBU potential, only singleton and pair terms survive. We state the complete assumptions because this powerful simplification continues through linear feedback but can fail under nonlinear response.
+
+
 \section{A ceiling on interaction order}
 A quadratic curve has slope and curvature but no third derivative. That familiar fact becomes a statement about action combinations only after the action-to-state map is specified. If the endpoint depends affinely on the action controls, a quadratic potential produces at most pair interactions. If the endpoint depends nonlinearly on the controls, the conclusion can fail.
 
-The distinction is one of the book's most useful experimental lessons. A quadratic potential is a field declaration. Pair-only interaction is a theorem about that field \emph{together with} an affine response. It is not a universal property of everything called Gaussian.
+The distinction is one of the book's most useful structural results. A quadratic potential is a field declaration. Pair-only interaction is a theorem about that field \emph{together with} an affine response. It is not a universal property of everything called Gaussian.
 
 \begin{theorem}{Polynomial degree ceiling}\label{thm:degree}
 Let $V$ be a polynomial of total degree at most $d$ on the relevant state coordinates, and let $x(z)=x_0+\sum_i z_i h_i$. For the complete coalition table $E(S)=V(x_0)-V(x(\chi_S))$,
@@ -35,11 +38,13 @@ For the Gaussian field, $g=H(x_0-x^*)$. The pair term is independent of the base
 A diagonal $H$ does not make every pair term zero. Two actions that write the same physical coordinate can have a nonzero weighted overlap. Conversely, with a nondiagonal $H$, disjoint coordinate writes can interact through the field. The theorem keeps response support and potential coupling distinct.
 
 \section{Why a null prediction is valuable}
-Suppose a planned three-action experiment has a quadratic potential, certified fixed additive increments, one common field and baseline, and all eight alternatives. It predicts $m_E(123)=0$ exactly at the mathematical level. This is a strong null: the prediction was not fitted after looking at a triple coefficient.
+An exact zero removes an entire class of terms from the account. Under the theorem's assumptions, third- and higher-order interactions need not be estimated or stored: they are absent from the mathematical model. This saves work and makes a joint value easier to explain.
 
-A future measurement should then include uncertainty and controls capable of detecting false nonzero values. A nonzero result can reject the conjunction of those assumptions and the observation model. It cannot, by itself, prove that the potential has cubic curvature. The response may have changed with group membership, a source limit may have altered quantities, or the supposed common baseline may have drifted.
+The conclusion is stronger than a small observed coefficient and more specific than calling a system simple. A linear feedback system can contain pending stocks and decaying oscillations while keeping an affine response to additive inputs. Combined with a quadratic potential, it still has this exact pair-only structure at every admissible horizon.
 
-The benefit for an EBU system is diagnostic discipline. One can begin with a field simple enough to make a sharp prediction, then investigate deviations rather than treating every interaction as an unexplained new law. This could reduce wasted effort on complicated economic mechanisms built upon misunderstood physical comparisons.
+Conversely, a nonzero higher coefficient in a correctly specified table establishes that the conjunction of these premises does not describe that table. It does not, by itself, identify which premise changed. A nonlinear plant, a coalition-dependent controller, a shared constraint or a nonquadratic potential can each alter the composed map.
+
+For EBU this is a useful design boundary. It separates a class of services that admit an exact economical account from services that require a richer interaction description. The saved complexity can support more complete physical representation and clearer decisions about shared infrastructure.
 
 \section{Cubic curvature supplies a genuine triple}
 To see an exact higher-order term without a nonlinear response, take the scalar teaching potential
@@ -78,4 +83,4 @@ For fixed action coordinates, the relevant object is the composite $G(z)=V(x(z))
 A fixed quadratic potential evaluated on an affine action-to-state map has no Möbius coefficients above order two. Quadratic potential alone is insufficient. Nonlinear response alone does not guarantee a nonzero high-order coefficient.
 \end{lawbox}
 
-This precise boundary makes the Gaussian field valuable as a teaching and testing instrument. The next chapter holds the quadratic fixed and changes the response, showing how higher-order interaction can reappear without any cubic term in the state potential.
+We now know what an affine endpoint would imply. To determine whether an actual response has that form, we need its law of change. The next chapters introduce the motion law and generator, derive a feedback example, and show exactly when superposition survives through time. We then return to the general composite response in Chapter~\ref{ch:composite}.
