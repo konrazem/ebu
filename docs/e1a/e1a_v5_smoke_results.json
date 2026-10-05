@@ -1,0 +1,491 @@
+{
+ "control_replicates": 12,
+ "deterministic_controls": [
+  {
+   "case_id": "CTL-RF-TEMP-304",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.00022744358522184182,
+   "retained_fraction": 0.306879010005119
+  },
+  {
+   "case_id": "CTL-RF-STIFF-1021",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.0005218639151212723,
+   "retained_fraction": 0.0280111782081937
+  },
+  {
+   "case_id": "CTL-RF-MODES",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "harmonic_scalar": 2.060240963855422,
+   "harmonic_would_have_passed": true,
+   "modes": [
+    1.9000000000000004,
+    2.25
+   ],
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-ELLIPSE",
+   "distance": 0.45814536593707744,
+   "epsilon_2": 0.051082562376599076,
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-STRADDLE",
+   "expected": "FIELD_REALIZATION_UNRESOLVED",
+   "observed": "FIELD_REALIZATION_UNRESOLVED",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-VALID",
+   "expected": "FIELD_REALIZATION_VALID",
+   "note": "synthetic qualification only; no physical packet is asserted VALID",
+   "observed": "FIELD_REALIZATION_VALID",
+   "passed": true
+  },
+  {
+   "axial_ratio": 0.5625,
+   "case_id": "CTL-AXIAL-COUPLE",
+   "exceeds_absolute_margin": true,
+   "exceeds_shape_margin": true,
+   "expected": "pipeline uses H_eff; K_qq bias quantified",
+   "observed": "r=0.562500 log_beta_plane=-0.496437 G_plane=0.413339",
+   "passed": true,
+   "plane_geometry_bias": 0.41333928659223396,
+   "plane_log_beta_bias": -0.496436886313891
+  },
+  {
+   "case_id": "CTL-AXIAL-MEMORY",
+   "expected": "TEMPORAL_MODEL_UNQUALIFIED or linked axial refusal",
+   "note": "no 3D hidden-state model is silently substituted",
+   "observed": [
+    "lateral temporal reduction qualified"
+   ],
+   "passed": true
+  },
+  {
+   "case_id": "CTL-OPT-FAIL",
+   "expected": "COMPUTATION_NOT_EVALUABLE; beta never fabricated",
+   "observed": [
+    "NaN objective: OptimizerFailure",
+    "inadmissible start: OptimizerFailure",
+    "singular factorisation: OptimizerFailure",
+    "budget exhausted: converged=False"
+   ],
+   "passed": true
+  }
+ ],
+ "feasibility": {
+  "N_req": 2722545.3575240127,
+  "hours_per_experiment": 9.98426130902972,
+  "info_per_frame": 0.14992,
+  "sec_per_record": 4492.917589063373,
+  "total_core_hours": 188952.14527338743,
+  "years_on_14_cores": 1.5396511299614373
+ },
+ "frames": 1500,
+ "label": "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT",
+ "mode": "smoke",
+ "power_replicates": 10,
+ "procedure_identities": {
+  "analysis": "659d6e16321b545511915c7cdd3d0f68aab2978ee0bb83470e7e7dd3fd2240e3",
+  "generator": "7f0859e02ee40a073471b74dd406913252c95043dff0f379a3ffd92164f9a83e",
+  "validation": "c53761d760cedfff1d18906ab6d744ba00479433b019301d2ae3c039222e6196"
+ },
+ "procedure_version": 2,
+ "release_contribution": "NONE - a partial validation cannot produce RELEASE",
+ "required_vs_run": {
+  "frames_required_per_record": 2723000,
+  "frames_run": 1500,
+  "power_replicates_required": 2000,
+  "power_replicates_run": 10,
+  "size_replicates_required": 5000,
+  "size_replicates_run": 100
+ },
+ "size_replicates": 100,
+ "status": "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT",
+ "stochastic": [
+  {
+   "bound": 0.029513049607039737,
+   "bound_kind": "cp_upper",
+   "case_id": "SIZE-ABS-LO",
+   "detail": {
+    "b_true": -0.04879016416943205,
+    "refused_or_nonevaluable": 0,
+    "seconds": 626.4
+   },
+   "events": 0,
+   "family": "size",
+   "passed": false,
+   "point_estimate": 0.0,
+   "replicates_run": 100,
+   "required": 0.025,
+   "wall_seconds": 626.4
+  },
+  {
+   "bound": 0.029513049607039737,
+   "bound_kind": "cp_upper",
+   "case_id": "SIZE-ABS-HI",
+   "detail": {
+    "b_true": 0.04879016416943205,
+    "refused_or_nonevaluable": 0,
+    "seconds": 622.8
+   },
+   "events": 0,
+   "family": "size",
+   "passed": false,
+   "point_estimate": 0.0,
+   "replicates_run": 100,
+   "required": 0.025,
+   "wall_seconds": 622.8
+  },
+  {
+   "case_id": "SIZE-CON-LO",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-CON-HI",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-SHAPE-BD",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-CENTRE-BD",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-CURRENT-BD",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-NUIS-NOISE",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-NUIS-EXP",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-NUIS-COND",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "case_id": "SIZE-NUIS-CAL",
+   "family": "size",
+   "reason": "requires the multi-record contrast or gate-boundary driver",
+   "replicates_run": 0,
+   "required": 5000,
+   "status": "NOT RUN",
+   "wall_seconds": 0.0
+  },
+  {
+   "bound": 0.0,
+   "bound_kind": "cp_lower",
+   "case_id": "POWER-NOMINAL",
+   "detail": {
+    "note": "refusals remain in the denominator",
+    "refused_or_nonevaluable": 0,
+    "seconds": 109.2
+   },
+   "events": 0,
+   "family": "power",
+   "passed": false,
+   "point_estimate": 0.0,
+   "replicates_run": 10,
+   "required": 0.9,
+   "wall_seconds": 109.2
+  },
+  {
+   "bound": 0.0,
+   "bound_kind": "cp_lower",
+   "case_id": "POWER-CONDLIM",
+   "detail": {
+    "note": "refusals remain in the denominator",
+    "refused_or_nonevaluable": 0,
+    "seconds": 111.6
+   },
+   "events": 0,
+   "family": "power",
+   "passed": false,
+   "point_estimate": 0.0,
+   "replicates_run": 10,
+   "required": 0.9,
+   "wall_seconds": 111.6
+  },
+  {
+   "bound": 0.0,
+   "bound_kind": "cp_lower",
+   "case_id": "POWER-NOISEHI",
+   "detail": {
+    "note": "refusals remain in the denominator",
+    "refused_or_nonevaluable": 0,
+    "seconds": 104.1
+   },
+   "events": 0,
+   "family": "power",
+   "passed": false,
+   "point_estimate": 0.0,
+   "replicates_run": 10,
+   "required": 0.9,
+   "wall_seconds": 104.1
+  },
+  {
+   "blinded_recovery_max_abs_error": 0.08532285051724975,
+   "blinded_recovery_mean_error": 0.004090019311755397,
+   "case_id": "CTL-BLIND-107",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 10,
+    "current_fail": 7,
+    "geometry_fail": 10,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "recovered log beta matches after multiplying by c",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 117.7,
+   "wall_seconds": 117.7
+  },
+  {
+   "blinded_recovery_max_abs_error": 0.11256981522992816,
+   "blinded_recovery_mean_error": -0.0028632438700056267,
+   "case_id": "CTL-BLIND-090",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 6,
+    "current_fail": 9,
+    "geometry_fail": 8,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "recovered log beta matches after multiplying by c",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 125.2,
+   "wall_seconds": 125.2
+  },
+  {
+   "case_id": "CTL-COMMON-07",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 9,
+    "current_fail": 10,
+    "geometry_fail": 11,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "cross-field contrasts may pass; absolute must fail",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 125.7,
+   "wall_seconds": 125.7
+  },
+  {
+   "case_id": "CTL-GEOM-TRACE",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 11,
+    "current_fail": 10,
+    "geometry_fail": 12,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "scalar beta plausible; T4 geometry rejects",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 135.8,
+   "wall_seconds": 135.8
+  },
+  {
+   "case_id": "CTL-GEOM-ROT",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 6,
+    "current_fail": 10,
+    "geometry_fail": 12,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "geometry detects the rotation",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 137.7,
+   "wall_seconds": 137.7
+  },
+  {
+   "case_id": "CTL-CURRENT",
+   "counts": {
+    "absolute_fail": 1,
+    "centre_fail": 0,
+    "current_fail": 1,
+    "geometry_fail": 1,
+    "nonevaluable": 11,
+    "support": 0
+   },
+   "expectation": "density/geometry pass; current gate blocks support",
+   "false_support_cp_upper": 0.95,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 245.0,
+   "wall_seconds": 245.0
+  },
+  {
+   "case_id": "CTL-NOISE-HI",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 5,
+    "current_fail": 11,
+    "geometry_fail": 9,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "diagnose, refuse or lose support",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 187.8,
+   "wall_seconds": 187.8
+  },
+  {
+   "case_id": "CTL-NOISE-HEAVY",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 11,
+    "current_fail": 11,
+    "geometry_fail": 9,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "diagnose, refuse or lose support",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 122.2,
+   "wall_seconds": 122.2
+  },
+  {
+   "case_id": "CTL-NOISE-COLOR",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 4,
+    "current_fail": 8,
+    "geometry_fail": 11,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "diagnose, refuse or lose support",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 103.9,
+   "wall_seconds": 103.9
+  },
+  {
+   "case_id": "CTL-NOISE-STATE",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 9,
+    "current_fail": 10,
+    "geometry_fail": 9,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "diagnose, refuse or lose support",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 97.5,
+   "wall_seconds": 97.5
+  },
+  {
+   "case_id": "CTL-BLUR-MISMATCH",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 7,
+    "current_fail": 10,
+    "geometry_fail": 9,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "diagnose, refuse or lose support",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 106.3,
+   "wall_seconds": 106.3
+  },
+  {
+   "case_id": "CTL-DRIFT",
+   "counts": {
+    "absolute_fail": 12,
+    "centre_fail": 12,
+    "current_fail": 11,
+    "geometry_fail": 9,
+    "nonevaluable": 0,
+    "support": 0
+   },
+   "expectation": "stationarity or diagnostics prevent full support",
+   "false_support_cp_upper": 0.22092219194555562,
+   "family": "control",
+   "replicates": 12,
+   "seconds": 91.1,
+   "wall_seconds": 91.1
+  }
+ ],
+ "total_wall_seconds": 626.6
+}
