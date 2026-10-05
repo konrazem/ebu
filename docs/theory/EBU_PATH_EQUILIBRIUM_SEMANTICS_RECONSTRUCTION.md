@@ -4,6 +4,7 @@
 
 ```
 STATUS:                        NON-CONTROLLING THEORETICAL RECONSTRUCTION
+R-STAGE REPAIR:                COMPLETE — INDEPENDENT RE-AUDIT REQUIRED
 PHYSICAL FOUNDATION:           UNCHANGED
 THEORY BASELINE:               UNCHANGED
 CURRENT E1a-v4:                PRESERVED / PAUSED
@@ -20,10 +21,31 @@ this document and controlling authority differ, **authority controls**.
 
 | | |
 |---|---|
-| analysed at HEAD | `6767b3eab4a156aaa557f8745b35e2b561464535` |
+| original reconstruction analysed at HEAD | `6767b3eab4a156aaa557f8745b35e2b561464535` |
 | tree | `df4d544d141652ba31f46c272e16434fc962e322` |
 | branch | `gaussian/stage-a-environment` |
 | worktree at start | clean |
+
+### Prospective bounded repair — 2026-10-05
+
+This revision repairs only the six independent R7 audit findings against report commit
+`0a4c229a3299ee1e6ed4a2e5efb964b7334ed0e4`. That audit returned **NOT CLEARED**.
+The repair does not grant clearance; its status is **READY FOR RE-AUDIT**.
+
+| repair starting coordinate | value |
+|---|---|
+| HEAD | `0a4c229a3299ee1e6ed4a2e5efb964b7334ed0e4` |
+| tree | `082a38810c3bd964a9e8f0adc8071d335891300a` |
+| branch | `gaussian/stage-a-environment` |
+| `git status --porcelain` | empty; clean |
+| verified remote branch HEAD | `dd0d6b0e5d370de1bda805e07215ea0be4d6d083` |
+| original report SHA-256 | `64005a290b69ea71958d1aeb8ed1de9847a8dd9d9fa7aafd03a8a6f11801a561` |
+
+Only this non-controlling report is corrected, prospectively in a new commit; the original
+commit remains intact. The explicit repair authorization permits editing this report in
+place. The frozen scientific-record artifacts discussed below are unaffected. No S-MG
+theorem or prior-art programme, Book 1 work, code change or scientific execution is included.
+The enclosing repair commit identifies the final revision without a self-referential hash.
 
 ### Note on location
 
@@ -43,7 +65,8 @@ the baseline it analyses and below it in rank.
 
 Six results. Four of them say the authority is **already correct and already complete** on
 points this task suspected might be gaps; one identifies a genuine (small) derivational gap;
-one identifies a documentary inconsistency that may need a human decision.
+one identifies a documentary inconsistency whose authority question is resolved by freeze
+provenance.
 
 **F-1 — The path integral is not missing. It is already a foundation theorem.** Foundation
 §3 states `E = −∫_γ ∇V·dx` explicitly, with a REGULARITY CORRECTION demanding a
@@ -81,11 +104,17 @@ forbidden overstatements are "**physical conservation**; thermodynamic law; any 
 constraint on `C`", and classifies carrier conservation at Layer 1 with the forbidden
 overstatement "**calling `C+V` conservation**".
 
-**F-6 — A documentary inconsistency, reported not resolved.** The foundation's own first line
-reads **"STATUS: FREEZE CANDIDATE. NOT FROZEN. NOT COMMITTED. NO REPOSITORY AUTHORITY."**,
-while `AGENTS.md` names it first in the required reading order and ranks "frozen foundation"
-above everything else. Both cannot be literally true. This is the only item in this
-reconstruction that plausibly requires a human decision.
+**F-6 — A documentary / metadata inconsistency, with authority resolved by provenance.**
+The foundation's opening status still says "FREEZE CANDIDATE. NOT FROZEN. NOT COMMITTED.
+NO REPOSITORY AUTHORITY." The sidecar instead records `status: frozen`, `frozen: true` and
+the FINAL NARROW AUDIT PASS. Freeze commit `c63d6833da10a75ef66db11f99fb5b5c68d94c5e`,
+baseline §0 and `AGENTS.md` establish the controlling frozen authority. The current canonical
+file was compared byte-for-byte with that commit: **identical, 49,098 bytes**, SHA-256
+`6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507`, matching both
+sidecar digest entries. The stale header and sidecar `committed: false` flag do not override
+the actual commit and freeze record. **No human scientific decision about foundation status
+is outstanding.** Documentary cleanup is outside this repair; the foundation and metadata
+remain unchanged.
 
 ---
 
@@ -312,23 +341,34 @@ For contrast, the same closed loop evaluated on Example B's gradient field gives
 
 ### 5.2 What the EBU endpoint potential captures and what it does not
 
+For any supplied single-valued `C¹` potential at fixed `θ`,
+
 ```
-CAPTURED        every contribution expressible as the gradient of a single-valued
-                state function V_theta on the relevant domain, at fixed theta.
-                Its integral over any admissible path is V_pre - V_post, exactly.
-
-NOT CAPTURED    any contribution with a nonzero circulation. If a physical process
-                carries F_total = F_conservative + F_nonconservative, then
-                -int F_total . dx  =  (V_pre - V_post)  -  int F_nonconservative . dx
-                and the second term is PATH-DEPENDENT and is NOT a function of the
-                endpoints.
-
-CONSEQUENCE     TOTAL PHYSICAL WORK MUST NOT BE IDENTIFIED WITH V_pre - V_post unless
-                the nonconservative part is independently shown to vanish or to be
-                outside the declared state.
+E_theta = V_pre - V_post = -int_Gamma grad V_theta . dx
 ```
 
-**No new EBU law is proposed here.** The boundary is stated, not crossed.
+remains exact along every admissible path. Adding a nonconservative force does **not**
+invalidate this identity for the potential contribution.
+
+If the physical model independently supplies an energy potential `U` and force
+`F_total = -grad U + F_nonconservative`, the standard mechanical sign convention gives
+
+```
+W_total = int_Gamma F_total . dx
+        = U_pre - U_post + int_Gamma F_nonconservative . dx
+```
+
+The additional work need not be an endpoint function: Example D proves this for its chosen
+field and paths. The dimensionless `E_theta` represents the first term divided by `k_B T`
+only when the benchmark normalization of §15 applies. It does not automatically represent
+total work. Even an unrepresented external force must be accounted for before a total-work
+claim is justified; being outside the declared state is not a reason to discard its work.
+
+**No new EBU law is proposed here.** Example D shows that an arbitrary force field's work
+need not admit a scalar-potential representation. It does not question the existence or
+exactness of an independently supplied gradient contribution.
+
+---
 
 ### 5.3 Authority already draws this boundary
 
@@ -426,13 +466,23 @@ E_field := − ∫_Γ ∇_θ V · dθ
 E_total  = E_state + E_field
 ```
 
-This decomposition is **exact and path-dependent in each term separately** — only the sum is
-an endpoint function. Two separate cautions follow, and both matter.
+This decomposition is **exact**. Its total is necessarily an endpoint difference; the
+separate state and field integrals **may depend on the joint path** and are not generally
+guaranteed to be endpoint functions.
 
-**Caution 1 — the split is not unique as an attribution.** `E_state` and `E_field`
-individually depend on the path taken through `(x, θ)` space, even though their sum does not.
-Two processes with the same endpoints can have different `(E_state, E_field)` splits. So the
-split is a property of the *path*, not of the *transition*.
+**Caution 1 — special structure can make the separate terms exact.** For
+`V(x,θ) = a(x) + b(θ)` with sufficiently regular `a` and `b`,
+
+```
+E_state = a(x_pre) - a(x_post)
+E_field = b(theta_pre) - b(theta_post)
+```
+
+For `V = x²/2 + θ²/2` between `(1,1)` and `(2,4)`, these are `−3/2` and `−15/2`,
+with total `−9`, for every admissible joint path. Separability is a special case, not a
+general assumption. For a coupled potential such as Example C, processes with the same
+endpoints can instead have different splits. Neither case supplies a unique actor
+attribution.
 
 **Caution 2 — none of the following follows from the mathematics, and none is asserted:**
 
@@ -440,7 +490,16 @@ split is a property of the *path*, not of the *transition*.
 E_state  =  actor EBU                         NOT ESTABLISHED
 E_field  =  external / environmental EBU      NOT ESTABLISHED
 field change  =  an actor earning or spending event   EXPLICITLY NOT ASSUMED
+
+FIELD EVOLUTION != REGISTERED ACTION
+NO REGISTERED ALLOWED ACTION -> NO ACTOR EBU TRANSACTION
+HISTORICAL EBU ENTRIES ARE NOT REPRICED
+CURRENT FIELD PRICES A NEW REGISTERED ACTION
 ```
+
+These accounting boundaries preserve baseline §§8–9 and §16: permanence of recorded
+entries does not establish cross-field physical commensurability. Neither integral term
+creates an actor transaction.
 
 Foundation §1 places attribution at **Layer 3** and actor decision at **Layer 4**, and states
 "no concept may move upward between layers without an independent physical derivation".
@@ -486,13 +545,14 @@ THERMODYNAMIC EQUILIBRIUM BRIDGE
 
 The first is Layer-2 mathematics, conditional on V's regularity, and holds arbitrarily
 far from equilibrium.
-The second is a physical claim about why a particular V governs a particular observed
-distribution, and holds only under canonical-equilibrium assumptions.
+The second supplies a canonical-equilibrium physical justification for a particular V
+governing a particular observed distribution. Its density conclusion can also hold in
+other dynamics; density agreement alone does not establish reversible equilibrium.
 ```
 
 ---
 
-## 9. R6 — Equilibrium *is* load-bearing for `β_bridge = 1`
+## 9. R6 — Canonical equilibrium is sufficient for the thermal bridge
 
 ### 9.1 Derivation
 
@@ -521,25 +581,70 @@ with `C_θ` independent of `x`. Comparing with the bridge form `J_θ = β_bridge
 β_bridge = 1
 ```
 
-### 9.2 Every assumption required
+### 9.2 Assumptions separated by what they establish
+
+The following are sufficient conditions for the intended physical benchmark, not a list
+of mathematically necessary conditions for every occurrence of `p ∝ exp(−V)`.
+
+**A — canonical density derivation.** E1–E5 and E8 specify the physical and measure context
+used in §9.1:
 
 ```
-E1  canonical (Gibbs) equilibrium ensemble at temperature T_theta
-E2  a normalizable Boltzmann measure: Z_theta finite on the accessible domain
-E3  U_theta is THE correct physical potential energy of the state coordinate x
-E4  T_theta is the true thermodynamic temperature of the bath, independently measured
-E5  x is the complete relevant state coordinate; no hidden coordinate is marginalised
-    in a way that changes the effective potential
-E6  no probability current; detailed balance holds
-E7  the observation is of the stationary distribution (ergodic sampling, no transient)
-E8  the normalisation reference x*_theta is declared and fixed
+E1  the canonical ensemble is independently physically justified at fixed theta
+E2  the declared reference measure and support give 0 < Z_theta < infinity
+E3  U_theta is the correct configurational energy for that measure; any density-of-states
+    or marginalisation factor is accounted for, not silently discarded
+E4  T_theta > 0 is the bath temperature; E1a measures it independently
+E5  the declared coordinates/support represent the canonical density being compared;
+    eliminated coordinates do not introduce an unaccounted x-dependent factor
+E8  x*_theta and the thermal normalization are declared and fixed within each field
 ```
 
+The displayed `dx` in §9.1 denotes the specified Lebesgue measure in the accessible
+coordinates. A different reference measure must be declared; densities and their
+curvatures are interpreted relative to it. Given the density form and normalization,
+`−ln p = V + C` follows algebraically. Independent measurement is needed for a non-circular
+empirical test, not for the subtraction or logarithm identity.
+
+**B — reversible canonical equilibrium.** The dynamics must additionally preserve the
+canonical measure and obey detailed balance with the appropriate time reversal. In E1a's
+overdamped configurational setting, this is the zero-stationary-current condition:
+
 ```
-CLASSIFICATION:  EQUILIBRIUM THERMODYNAMIC RESULT.
-It is NOT a universal nonequilibrium result, and it is NOT a new discovery -- it is
-standard equilibrium statistical mechanics applied to a declared normalisation.
+E6  detailed balance / zero stationary probability current for the declared overdamped
+    configurational dynamics and equilibrium boundary conditions
 ```
+
+This is a stronger statement than density agreement. A divergence-free nonzero current
+can preserve the same Boltzmann density (§13.3). Failure of E6 removes the ordinary
+reversible-equilibrium interpretation, not necessarily the density identity. No equivalence
+of zero current and detailed balance is asserted for arbitrary variables or dynamics.
+
+**C — accepted entropy / P4 interpretation.** E1a design §§8–9 additionally require the
+declared conservative overdamped model; fixed field and temperature; one reservoir;
+the stationary equilibrium distribution at both times; and no additional work input omitted
+from the accounting. These jointly justify `Δs_med = +k_B E`, `Δs_sys = −k_B E`, and
+`Δs_tot = 0` in that benchmark. Density shape alone does not justify all three. The
+constrained-macrostate result has its separate ensemble and boundary assumptions (§14).
+
+**D — observation and estimation.**
+
+```
+E7  observations represent the stationary distribution rather than an unaccounted transient;
+    a time-series estimate additionally needs a justified sampling/ergodicity argument
+```
+
+Ergodicity and finite-sample adequacy are sampling issues. They are not needed to take the
+logarithm of a supplied density or to differentiate its potential. E1a's independent
+branches remain mandatory for its empirical comparison.
+
+```
+CLASSIFICATION: STANDARD CANONICAL DENSITY DERIVATION, with separately stated
+REVERSIBILITY, ENTROPY and SAMPLING conditions. No universal nonequilibrium bridge
+and no new statistical-mechanical discovery are asserted.
+```
+
+---
 
 ### 9.3 The foundation's forbidden circular proof — and why E1a is not it
 
@@ -560,8 +665,9 @@ the potential. Design §2.1's forbidden routes (power spectrum, corner frequency
 are precisely the ones that would close the loop.
 
 > **What E1a therefore tests is the measurement architecture, not the Boltzmann law.** Under
-> E1–E8 the result `β = 1` is a theorem. A successful experiment is "consistent with the known
-> equilibrium bridge under independent physical and statistical measurement" — never
+> the density assumptions in §9.2 A, `β = 1` follows algebraically. A successful experiment
+> is "consistent with the known equilibrium bridge under independent physical and statistical
+> measurement" — never
 > "discovery of the Boltzmann distribution".
 
 ---
@@ -591,44 +697,77 @@ commensurability test** rather than a `β`-changing variable.
 
 ## 11. Gaussianity is not the equilibrium theorem
 
-### 11.1 The general statement needs no Gaussian
+### 11.1 General Boltzmann bridge and differential corollary
 
-The derivation of §9.1 used only E1–E8. **`U_θ` was never assumed quadratic.** For any
-normalizable `V_θ`,
-
-```
-p_θ(x) ∝ exp[ −V_θ(x) ]        and        −ln p_θ(x) = V_θ(x) + C_θ
-```
-
-A quartic, a double-well or an arbitrary anharmonic `V_θ` gives a manifestly non-Gaussian
-`p_θ` and `β_bridge = 1` all the same.
-
-### 11.2 The harmonic case is a corollary
-
-For `V_θ(x) = ½(x−x*)ᵀ H_θ (x−x*)` the Boltzmann measure is Gaussian with
+The canonical derivation of §9.1, under §9.2 A, does not assume `U_θ` quadratic. Where
+`p_θ ∝ exp(−V_θ)` on the declared support and measure,
 
 ```
-Σ_θ = β_bridge⁻¹ H_θ⁻¹        hence at β_bridge = 1:    Σ_θ⁻¹ = H_θ
+J_theta := -ln p_theta = V_theta + C_theta
+K_theta(x) := Hess_x J_theta(x) = Hess_x V_theta(x) = H_theta(x)
 ```
 
-and since for a Gaussian `K_θ := ∇²(−ln p_θ) = Σ_θ⁻¹`,
+The second line holds on the relevant smooth interior region wherever these derivatives
+exist (for example, for `C²` potentials). The relative rarity `J_prob = -ln[p(x)/p(x*)]`
+differs from `J_theta` by a constant and has the same Hessian. This is a **general
+differential corollary**, not a Gaussian assumption. For `V = x²/2 + x⁴`, for example,
+`K(x) = H(x) = 1 + 12x²` despite the non-Gaussian density. No boundary derivative or
+covariance-inverse identity follows from this interior calculation.
+
+A quartic or double-well potential can therefore satisfy `β_bridge = 1` without being
+Gaussian. The density still requires normalizability and an appropriate physical
+justification for the empirical interpretation; defining it from `V` is not evidence.
+
+### 11.2 Global harmonic Gaussian corollary — support matters
+
+Sufficient assumptions for the inverse-covariance identity are:
+
+- `V_θ(x) = ½(x−x*)ᵀ H_θ(x−x*)` throughout the **full accessible affine state space**;
+- Lebesgue measure in declared orthonormal coordinates on that space;
+- symmetric positive-definite `H_θ` on **all accessible directions**, and `β_bridge > 0`;
+- normalizability, with no truncation or boundary that changes the Gaussian moments;
+- the density bridge `p_θ ∝ exp(−β_bridge V_θ)` on that space.
+
+Then, in those accessible coordinates,
 
 ```
-K_θ = H_θ
+Sigma_theta = beta_bridge^(-1) H_theta^(-1)
+K_theta = beta_bridge H_theta = Sigma_theta^(-1)
+at beta_bridge = 1:   Sigma_theta^(-1) = H_theta
 ```
 
+For an affine constraint `x = x* + Qz`, use the restricted curvature `H_T = QᵀHQ`
+and covariance of `z`; the ambient covariance need not be invertible. This preserves
+baseline §5's accessible-direction warning.
+
+**Bounded-support counterexample.** With `V(x) = x²/2` and
+`p(x) = Z^(-1) exp(−x²/2)` on `[-1,1]`, symmetry gives mean zero. Integration by parts,
+using `(x exp(−x²/2))' = (1−x²) exp(−x²/2)`, gives
+
 ```
-CLASSIFICATION:  HARMONIC GAUSSIAN COROLLARY of the equilibrium theorem.
-NOT the general equilibrium theorem, and NOT the definition of the bridge.
+Z = int_{-1}^{1} exp(-x^2/2) dx
+Sigma = Var(x) = 1 - 2 exp(-1/2)/Z < 1
+K(x) = H(x) = 1 on (-1,1), but Sigma^(-1) != H
+```
+
+The interior density bridge and curvature identity survive truncation; the global Gaussian
+moment formula does not. No assertion about the Hessian at the support boundary is made.
+A local near-minimum quadratic expansion alone gives neither an exact global Gaussian
+nor its covariance. An approximation needs its own error control.
+
+```
+GENERAL BOLTZMANN BRIDGE             J = V + C
+GENERAL DIFFERENTIAL COROLLARY      K(x) = Hess V(x), on a smooth interior
+GLOBAL HARMONIC GAUSSIAN COROLLARY   Sigma^(-1) = H, only with the assumptions above
 ```
 
 ### 11.3 Why the direction matters
 
-`K = βH` is a statement about **curvature at a point**; `−ln p = βV + C` is a statement about
-the **whole landscape**. For a Gaussian they coincide, because a Gaussian is determined by its
-curvature. For anything else they do not: two distributions can share a Hessian at `x*` and
-differ everywhere else. Treating `K = βH` as the definition silently imports the harmonic
-assumption into the statement of the hypothesis.
+`K(x*) = βH(x*)` is a local curvature statement; `−ln p = βV + C` holds across a
+landscape. The landscape identity implies the curvature identity where differentiable.
+The reverse does not follow from a Hessian at one point. Even for full Gaussians, common
+mean/reference, support and measure must accompany equal precision for density equality;
+the Hessian alone does not fix the mean. The three levels above must remain distinct.
 
 ---
 
@@ -733,27 +872,46 @@ NOT GUARANTEED   that the stationary distribution, if it exists, is a function o
 
 > **The survival of the state-potential mathematics does not carry the thermodynamic bridge
 > with it.** This is the single most important statement in this section. The mathematics of
-> §13.1 is cheap — it follows from a declaration. The physics of §13.2 is the expensive part
-> and is exactly what assumptions E1–E8 buy.
+> §13.1 follows from a supplied potential. Density, reversible dynamics, entropy accounting
+> and empirical sampling require their separate justifications in §9.2 A–D.
 
-### 13.3 R5 — Why the bridge can fail in driven systems
+### 13.3 R5 — Density agreement is not reversible equilibrium
 
-Without proposing any nonequilibrium EBU formula, the recognised mechanisms are:
+The following are boundaries on the accepted equilibrium derivation, not proofs that every
+listed mechanism necessarily changes a stationary density:
 
-| mechanism | effect on the bridge |
+| mechanism | what follows, and what does not |
 |---|---|
-| nonzero probability currents | the stationary density is no longer `∝ exp(−U/k_BT)`; a current-carrying steady state generally has a different "effective potential" |
-| detailed-balance violation | `E6` fails directly; the Boltzmann form has no derivation |
-| time-dependent fields `θ(t)` | `p(x,t)` lags the instantaneous Boltzmann measure; `E5`/`E7` fail |
-| lag behind the instantaneous field | even a slowly driven system has `O(dθ/dt)` corrections to the quasi-static density |
-| dissipation | work and free-energy change separate; `V_pre − V_post` no longer equals either |
-| entropy production | the equilibrium entropy relation of foundation §21 has additional terms |
-| nonconservative forcing | §5 — the contribution is not a gradient at all |
+| nonzero stationary probability current | violates zero-current reversible equilibrium in the declared overdamped setting; **does not necessarily destroy Boltzmann density agreement** |
+| detailed-balance violation | removes the reversible-equilibrium guarantee and its entropy-accounting interpretation; the same density can still be invariant |
+| time-dependent fields or lag | instantaneous canonical density is not automatically the actual density; any exact tracking or lag approximation needs separate justification |
+| dissipative or externally driven work | the accepted no-omitted-work entropy accounting cannot be carried over without checking the full work/heat model |
+| entropy production | the E1a equilibrium cancellation `Δs_tot = 0` is not guaranteed; the affine foundation ansatz alone supplies no production law |
+| nonconservative forcing | total work may be path-dependent; the identity for any independently supplied gradient contribution remains exact (§5) |
+
+**Exact nonreversible-density counterexample — mathematical only.** In dimensionless
+coordinates and thermal units, let
 
 ```
-Each of these requires a LATER THEOREM. None is derived here, and no final nonequilibrium
-EBU formula is proposed.
+V(x,y) = (x^2+y^2)/2
+p(x,y) = (2 pi)^(-1) exp(-V(x,y))
+b(x,y) = (-x-y, -y+x)
+diffusion operator = Laplacian; probability current j = b p - grad p
 ```
+
+Since `grad p = (-x,-y)p`, one obtains
+
+```
+j = (-y,x)p
+div j = -y(-x p) + x(-y p) = 0
+j/p at (1,0) = (0,1) != 0
+```
+
+The normalized density is stationary, with decay at infinity, despite its nonzero
+stationary current. Thus `p ∝ exp(−V)` and `β_bridge = 1` do not certify detailed balance.
+This is a closed-form counterexample to a necessity claim, not an adopted EBU dynamics
+model, a new nonequilibrium bridge, or a simulation. Baseline §18's quarantine remains.
+The equilibrium entropy/P4 claims still require all their own conditions in §9.2 C.
 
 ---
 
@@ -777,12 +935,12 @@ and **not** assumed universal; four possibilities remain open.
 
 **E1a design §9 — four distinct objects, never equated:**
 
-| object | value under the declared conditions | nature | equilibrium-dependent? |
-|---|---|---|---|
-| medium entropy change `Δs_med` | `+k_B E_θ` | process quantity, no-work transitions only | **YES** |
-| stochastic system entropy `Δs_sys` | `−k_B E_θ` | trajectory quantity | **YES** |
-| total stochastic entropy production `Δs_tot` | **`0`** — not `k_B E` | — | **YES** |
-| constrained-macrostate entropy deficit `ΔS_constr` | `k_B E_θ` + remainder | state function, separate derivation | partly |
+| object | value under the declared conditions | scope of the accepted interpretation |
+|---|---|---|
+| medium entropy change `Δs_med` | `+k_B E_θ` | conservative overdamped, fixed-field, fixed-temperature single-bath process with no omitted additional work |
+| stochastic system entropy `Δs_sys` | `−k_B E_θ` | follows from stochastic entropy `−k_B ln p` and the same Boltzmann density at both times; this identity alone does not certify reversibility |
+| total stochastic entropy production `Δs_tot` | **`0`** — not `k_B E` | the full static-equilibrium conditions of E1a design §9, including both preceding contributions |
+| constrained-macrostate entropy deficit `ΔS_constr` | `k_B E_θ` + remainder | separate microcanonical bead-plus-reservoir derivation, bead held at `x`, constant-volume derivatives and large-reservoir regime |
 
 **Which statements connect to `E`, and under what scope:**
 
@@ -791,10 +949,11 @@ PURELY MATHEMATICAL, no equilibrium   Delta S / kappa = E   (foundation section 
                                       affine ansatz with constant kappa and constant S_eq --
                                       it is a change of variable, not a physical result)
 
-EQUILIBRIUM-DEPENDENT                 Delta s_med = +k_B E_theta, Delta s_tot = 0, and every
-                                      identification of kappa with k_B. These rest on the
-                                      canonical ensemble and on the declared static-equilibrium,
-                                      no-work conditions of E1a design section 9.
+ACCEPTED BENCHMARK INTERPRETATION     The joint medium/system/total entropy statements use
+                                      all conditions of E1a design section 9. The benchmark's
+                                      kappa = k_B is not a universal identification. A matching
+                                      density alone cannot supply the missing dynamical or
+                                      work-accounting conditions.
 ```
 
 The foundation's standing requirement is unmet and must be repeated: before any entropy
@@ -823,17 +982,30 @@ THEREFORE  -int grad V . dx  MUST NOT be rewritten as "physical mechanical work"
 
 **Where the identification *is* justified, and why that is a special case.** In the E1a
 optical-trap benchmark `U_θ` is the *mechanical potential energy* of the trap, so
-`−∫∇U_θ·dx` genuinely is mechanical work against the trap. But note what that requires: a
-declared mechanical `U`, a conservative trap, and `V_θ = (U_θ − U_θ*)/(k_B T_θ)`, i.e. `V_θ`
-is `U_θ` *in thermal units*. So `E_θ` is mechanical work divided by `k_B T_θ` — dimensionless
-— **in that benchmark only**. The general foundation `V` carries no such guarantee, because
-foundation §2 Question B says its physical origin "is not derived".
+`F_trap = −∇U_θ`, as E1a design §9 declares. Therefore
+
+```
+W_by_trap = int F_trap . dx = -int grad U_theta . dx = U_pre - U_post
+E_theta = W_by_trap / (k_B T_theta)
+```
+
+This is the **normalized conservative-force / trap-work contribution**, with fixed `θ`,
+fixed `T`, and `V_θ = (U_θ − U_θ*)/(k_B T_θ)`. The work is **BY the trap force**.
+For quasistatic externally imposed motion against that conservative force, the corresponding
+external work is `−W_by_trap`; it is not the same signed quantity. Example: `U=x²/2`,
+`0→1`, gives trap work `−1/2` and external work against the trap `+1/2`.
+
+The repository's accepted entropy terminology remains **entropy delivered to the thermal
+reservoir**, `Δs_med = +k_B E_θ`, only under the no-omitted-work conditions of design §9.
+The externally imposed example establishes the mechanical sign, not that entropy claim.
+The general foundation `V` carries no mechanical identification, because foundation §2
+Question B says its physical origin "is not derived".
 
 ---
 
 ## 16. Measurement error and approximation — bounded, not universalised
 
-### 16.1 A measurement-error identity, labelled as such
+### 16.1 A uniform potential-error bound, independent of discrepancy source
 
 If the estimated potential is `V̂(x) = V(x) + δ(x)`, then for any pair of states,
 
@@ -847,33 +1019,39 @@ and if `|δ(x)| ≤ ε` uniformly on the states used,
 | Ê_ab − E_ab | ≤ 2ε
 ```
 
-If instead the errors are modelled as random with covariance `C_V`, then for edge values
-`e = Dv` with `D` the oriented incidence matrix, `C_E = D C_V Dᵀ`, and for a single edge
+If potential errors are modelled as random with finite covariance `C_V`, then for edge
+errors `Dδ`, where `D` has `+1` at the source and `−1` at the destination,
+`C_E = D C_V Dᵀ`. In particular,
 
 ```
-Var(E_ab) = Var(V_a) + Var(V_b) − 2 Cov(V_a, V_b)
+Var(delta_a - delta_b) = Var(delta_a) + Var(delta_b) - 2 Cov(delta_a, delta_b)
 ```
 
+The same linear covariance rule applies to random potential values. It does not require
+independent node errors.
+
 ```
-CLASSIFICATION:  MEASUREMENT-ERROR BOUND.
-It is NOT a universal theorem about model misspecification, and NOT a statement about
-nonequilibrium physics. It assumes the functional form of V is correct and only its
-VALUES are mis-measured.
+CLASSIFICATION: UNIFORM ERROR BOUND FOR TWO DEFINED SCALAR POTENTIALS.
+The discrepancy may come from measurement, calibration, approximation or another source.
+The scientific task of establishing the uniform bound is separate. This arithmetic does
+NOT establish that a valid potential exists, establish equilibrium, or validate a model
+outside its domain.
 ```
 
 ### 16.2 The six error kinds, which must not be merged
 
 | kind | what it is | does the bound of §16.1 apply? |
 |---|---|---|
-| measurement error in `V` | `V̂ = V + δ`, correct functional form | **yes** |
-| parameter-estimation error | `V̂ = V(·; θ̂)`, `θ̂ ≠ θ` | only after propagating `θ̂`'s error into `δ` |
-| model approximation error | the declared `V` family does not contain the true one | **no** |
-| failure of potential representation | no single-valued `V` exists (§5) | **no** — the object being estimated does not exist |
-| field-calibration error | `θ` itself mis-specified | **no** — this is a different `V`, not a perturbed one |
-| departure from equilibrium | E1–E8 fail | **no** — this breaks the bridge, not the arithmetic |
+| measurement error in `V` | measured values differ from the target potential | **yes, if** the uniform residual bound is established |
+| parameter-estimation error | `V̂ = V(·; θ̂)`, `θ̂ ≠ θ` | **yes, if** parameter uncertainty implies the stated uniform potential bound |
+| model approximation error | the approximating family differs from a defined target potential | **yes, if** their uniform difference is bounded on the relevant common domain |
+| failure of potential representation | no single-valued target `V` exists | **no** — the bound presupposes two defined potentials |
+| field-calibration error | the estimated field changes the potential | **yes, if** the resulting potentials satisfy the uniform bound on the relevant common domain |
+| departure from equilibrium | the physical bridge lacks its equilibrium guarantee | **not by itself a potential-error bound**; any supplied potentials still obey the arithmetic if bounded, but this does not restore a physical bridge |
 
-**Nothing is filled in for the last two rows.** No approximate nonequilibrium correction is
-guessed.
+No universal size for any discrepancy is claimed, and no nonequilibrium correction is guessed.
+
+---
 
 ### 16.3 Worked Example E — internal consistency versus accuracy
 
@@ -892,15 +1070,28 @@ INTERNAL ALGEBRAIC CONSISTENCY   Telescoping of V_hat is EXACT for ANY numbers w
                                  It is a property of subtraction, not of accuracy. An
                                  entirely wrong estimated potential telescopes perfectly.
 
-ACCURACY RELATIVE TO REALITY     An entirely separate question, governed by delta and by
-                                 the five non-measurement error kinds above.
+ACCURACY RELATIVE TO REALITY     Requires a justified target potential, domain and error
+                                 bound; algebraic closure supplies none of them.
 ```
 
 A further point that matters for later topological and economic use: with `δ_A = 1/5`,
 `δ_C = 1/8`, the true error on `E_AC` is `δ_A − δ_C = 3/40`, and **`δ_B` does not appear at
 all**. The intermediate node's error cancels *deterministically*, before any variance is
-taken. Treating `E_AB` and `E_BC` as independent and adding their variances double-counts
-`Var(V_B)` and **overstates** the uncertainty on `E_AC`.
+taken. For adjacent-edge errors `X = δ_A−δ_B` and `Y = δ_B−δ_C`, retain
+
+```
+Var(X+Y) = Var(X) + Var(Y) + 2 Cov(X,Y)
+```
+
+Omitting covariance **overestimates** variance when the covariance is negative,
+**underestimates** it when positive, and leaves it unchanged when zero. With mutually
+independent node errors, the shared-node contribution gives `Cov(X,Y)=−Var(δ_B)`;
+that special case explains overestimation, but it is not general.
+
+Exact symbolic counterexample: take centered errors `δ_A=0`, `δ_B=ξ`, `δ_C=2ξ`, with
+`Var(ξ)=σ²>0`. Then `X=Y=−ξ`, true endpoint-error variance is `4σ²`, and the naive
+sum is only `2σ²`. No samples are drawn. Graph/path propagation must preserve the full
+covariance structure.
 
 ---
 
@@ -944,11 +1135,12 @@ LAYER P -- STATE POTENTIAL / PATH IDENTITY
                    piecewise-smooth, image in Omega
   DOMAIN           any declared state space with such a V. No equilibrium required.
   CONCLUSION       E = V_pre - V_post = -int_Gamma grad_x V . dx = int f dq
-  ERROR TYPE       measurement error in V (section 16.1); representation failure is
-                   OUT OF DOMAIN, not an error
-  OUT OF DOMAIN    V multivalued; V not C^1; path leaving Omega; theta varying;
-                   a nonconservative contribution present
-  SPECIAL CARE     f is NOT a mechanical force; same-base summation is not telescoping
+  ERROR TYPE       bounded potential discrepancy (section 16.1); representation failure
+                   is OUT OF DOMAIN, not a small error
+  OUT OF DOMAIN    V multivalued; V not C^1; path leaving Omega; theta varying
+  SPECIAL CARE     an additional nonconservative force does NOT invalidate this identity;
+                   total physical work needs separate accounting. f is not generally a
+                   mechanical force; same-base summation is not telescoping
   STATUS           ALREADY A FOUNDATION THEOREM (section 3 + section 25)
 
 LAYER F -- EXTENDED STATE, FIELD-CHANGING PATH
@@ -958,41 +1150,47 @@ LAYER F -- EXTENDED STATE, FIELD-CHANGING PATH
                    and telescoping holds on the extended space
   ERROR TYPE       as Layer P, plus field-calibration error
   OUT OF DOMAIN    V not jointly C^1; theta discontinuous without a declared jump convention
-  SPECIAL CARE     E_state and E_field are individually PATH-DEPENDENT; only the sum is an
-                   endpoint function. NO attribution follows.
+  SPECIAL CARE     the separate integrals MAY depend on the joint path; neither is generally
+                   guaranteed to be an endpoint function. Separability can make both exact.
+                   The total is necessarily an endpoint function. NO attribution follows.
   STATUS           PROPOSED. The foundation declares the scoping and forbids omitting the
                    term (section 17) but does not write the integral. Open questions 5 and 11;
                    roadmap gate P4.
 
-LAYER E -- CANONICAL EQUILIBRIUM BRIDGE
-  ASSUMPTIONS      E1-E8 of section 9.2
-  DOMAIN           systems in canonical equilibrium with a declared mechanical U and an
-                   independently measured T
-  CONCLUSION       p_theta(x) proportional to exp(-V_theta(x)); -ln p = V + C;
+LAYER E -- CANONICAL DENSITY BRIDGE, WITH DISTINCT PHYSICAL CONDITIONS
+  ASSUMPTIONS      section 9.2 A suffices for the canonical density derivation
+  DOMAIN           canonical configurational density on the declared support and measure,
+                   with the correct U and thermal normalization
+  CONCLUSION       p_theta proportional to exp(-V_theta); J = -ln p = V + C;
                    beta_bridge = 1
-  ERROR TYPE       thermometry error; U-calibration error; finite-sample statistical error;
-                   departure from equilibrium is OUT OF DOMAIN
-  OUT OF DOMAIN    driven systems; nonzero current; time-dependent theta; hidden coordinates
-  SPECIAL CARE     must NOT be proved by assuming p proportional to exp(-V) -- foundation
-                   section 21 forbids exactly that. Independent branches are what make the
-                   test non-circular.
-  STATUS           STANDARD EQUILIBRIUM STATISTICAL MECHANICS. Not in the foundation; in the
-                   theory baseline section 14.1 and the E1a design. NOT a new result.
+  ERROR TYPE       thermometry/U-calibration error; finite-sample statistical error
+  SPECIAL CARE     reversibility requires section 9.2 B; entropy/P4 requires 9.2 C;
+                   sampling requires 9.2 D. Density alone certifies none of these.
+                   Outside canonical equilibrium the density identity is not guaranteed,
+                   but can still hold. Independent branches prevent circular validation.
+  STATUS           STANDARD CANONICAL STATISTICAL MECHANICS. Not a new EBU result.
 
-LAYER G -- HARMONIC GAUSSIAN COROLLARY
-  ASSUMPTIONS      Layer E, plus V_theta = (1/2)(x-x*)^T H_theta (x-x*)
-  DOMAIN           harmonic traps; near-minimum expansions where the quartic term is
-                   demonstrably negligible
-  CONCLUSION       Sigma_theta = H_theta^{-1} and K_theta = H_theta at beta_bridge = 1
-  ERROR TYPE       all of Layer E, plus anharmonicity bias
-  OUT OF DOMAIN    anharmonic V; large excursions; multi-well landscapes
-  SPECIAL CARE     K = beta H is a CURVATURE statement; -ln p = beta V + C is a LANDSCAPE
-                   statement. They coincide only here.
-  STATUS           COROLLARY, not the general theorem.
+LAYER K -- GENERAL DIFFERENTIAL COROLLARY
+  ASSUMPTIONS      J = V + C on the relevant smooth interior, with second derivatives
+  CONCLUSION       K(x) = Hess V(x) = H(x)
+  SPECIAL CARE     requires neither Gaussianity nor an inverse-covariance identity;
+                   no derivative claim at a support boundary
+  STATUS           DIFFERENTIATION of the density bridge, not an equilibrium certificate
+
+LAYER G -- GLOBAL HARMONIC GAUSSIAN COROLLARY
+  ASSUMPTIONS      density bridge; globally quadratic V on the full accessible affine
+                   space; Lebesgue measure in its orthonormal coordinates; positive-definite
+                   restricted H; normalizability; no moment-changing truncation (section 11.2)
+  CONCLUSION       Sigma^(-1) = H at beta_bridge = 1, in accessible coordinates
+  ERROR TYPE       approximation requires its own error control
+  OUT OF DOMAIN    truncated support; merely local harmonic approximation; unconfined null
+                   directions; anharmonic V for this exact Gaussian moment identity
+  SPECIAL CARE     local K = H does not establish this global covariance result
+  STATUS           GLOBAL GAUSSIAN COROLLARY, not the general bridge
 
 LAYER N -- NONEQUILIBRIUM
-  STATUS           NOT ESTABLISHED. No formula proposed. Section 13.3 lists the mechanisms
-                   by which Layer E fails; each needs its own theorem.
+  STATUS           NO GENERAL BRIDGE ESTABLISHED. No new EBU formula proposed.
+                   Section 13.3 distinguishes a loss of guarantee from a necessary failure.
 ```
 
 ---
@@ -1000,44 +1198,30 @@ LAYER N -- NONEQUILIBRIUM
 ## 19. Conceptual diagram
 
 ```
-                         state potential  V
-                                 |
-        +------------------------+------------------------+
-        |                        |                        |
-  fixed-field path          field-dependent          canonical equilibrium
-  theorem  (Layer P)        V(x,theta) (Layer F)     assumptions E1-E8 (Layer E)
-        |                        |                        |
-  E = -int grad_x V . dx    dV = grad_x V . dx        p  proportional to  exp(-V)
-        |                        + grad_theta V . dtheta          |
-  topology / telescoping         |                        beta_bridge = 1
-  cycle-zero identity       E_state + E_field                     |
-        |                        |                        harmonic Gaussian
-  NEEDS NO equilibrium      NEEDS NO equilibrium                  |
-  NEEDS NO beta             attribution NOT implied       Sigma^-1 = H ;  K = H
+supplied state potential V
+    |-- fixed theta + C1 + admissible path -> endpoint/path identity (Layer P)
+    |-- joint C1 V(x,theta) -> full state/field chain rule (Layer F)
+    |                         total exact; separate terms may depend on joint path
+    |
+    +-- independently justified canonical density + thermal normalization (9.2 A)
+            -> J = V + C, beta_bridge = 1 (Layer E density conclusion)
+                |-- smooth interior -> K(x) = Hess V(x) (Layer K)
+                +-- global quadratic + full support/measure/positivity (11.2)
+                        -> Sigma^(-1) = H (Layer G)
 
+Reversible dynamics / detailed balance: separate conditions (9.2 B)
+Accepted entropy / P4 interpretation:   full additional conditions (9.2 C)
+Sampling and estimation:               separate requirements (9.2 D)
 
-   nonequilibrium / nonconservative physics
-                 |
-                 v
-   probability currents, detailed-balance violation, theta(t), lag,
-   dissipation, entropy production, nonconservative forcing
-                 |
-                 v
-   requires an ADDITIONAL theorem or model
-                 |
-                 v
-   NOT automatically covered by beta = 1
+Nonequilibrium / nonconservative setting
+    -> supplied-potential mathematics remains valid within its domain
+    -> Boltzmann density and Gaussian moments are NOT guaranteed, but may persist
+    -> density agreement alone does NOT certify reversibility or P4 accounting
 ```
 
-Two directions of implication that are **not** symmetric, and that this diagram exists to
-make visible:
-
-```
-Layer P and Layer F survive into the nonequilibrium region.
-Layer E and Layer G DO NOT.
-Therefore "the EBU mathematics still works out of equilibrium" is TRUE and
-          "therefore the bridge still holds" is a NON SEQUITUR.
-```
+Thus "the EBU potential mathematics still works out of equilibrium" does not imply
+"therefore the physical bridge holds". Conversely, failure of reversible-equilibrium
+conditions does not by itself prove that the density identity is false.
 
 ---
 
@@ -1094,8 +1278,9 @@ The proposed ordering is:
 ```
 general path / potential mathematics      (Layer P, F)
         -> canonical equilibrium theorem  (Layer E)
-        -> direct Boltzmann bridge beta=1 (Layer E conclusion)
-        -> harmonic Gaussian corollary    (Layer G)
+        -> direct Boltzmann bridge beta=1 (Layer E density conclusion)
+        -> differential K = Hess V        (Layer K, smooth interior)
+        -> global Gaussian Sigma^-1 = H   (Layer G, section 11.2 assumptions)
         -> statistical implementation
 ```
 
@@ -1103,15 +1288,15 @@ general path / potential mathematics      (Layer P, F)
 IS THIS ORDERING SCIENTIFICALLY COHERENT?   YES.
 ```
 
-Each arrow adds assumptions and narrows the domain, and no arrow is reversible. It matches the
-foundation's own layering (§1) and its Question A / Question B split (§2). It also makes
-visible something the Hessian-first presentation obscures: `K = βH` sits **two** levels below
-the general statement, not at the top.
+This is a proposed order of justification, not a claim that the physical experiment is
+validated by the algebra. It respects the foundation's Question A / Question B distinction
+(§2): `K = βH` follows by differentiation from the density bridge, while identifying that
+curvature with `Σ^(-1)` needs the additional global Gaussian assumptions.
 
 One refinement this reconstruction suggests, as a proposal: the redesign document treats
-`p ∝ exp(−βV)` as "the deepest EBU question". On the layering above it is a **Layer E**
-statement — standard equilibrium statistical mechanics — while the EBU-specific content is at
-Layers P and F, which need no equilibrium at all. The deepest *EBU* question is whether a
+`p ∝ exp(−βV)` as "the deepest EBU question". Its canonical justification above is a
+**Layer E** statement from standard equilibrium statistical mechanics; the same density
+identity need not imply reversible equilibrium. Layers P and F need no equilibrium at all. The deepest *EBU* question is whether a
 single `V(x,θ)` with a stable denomination exists across fields; the Boltzmann bridge is the
 instrument for measuring that, not the question itself.
 
@@ -1138,14 +1323,16 @@ Q3   DOES THE FIXED-FIELD ENDPOINT IDENTITY REQUIRE THERMODYNAMIC EQUILIBRIUM?
      NO.
 
 Q4   DOES beta_bridge = 1 REQUIRE THE CURRENT CANONICAL-EQUILIBRIUM ASSUMPTIONS?
-     YES -- all of E1-E8 in section 9.2.
+     NOT AS A MATHEMATICAL NECESSITY. Section 9.2 A supplies the canonical physical
+     derivation; B, C and D separately justify reversibility, entropy/P4 and sampling.
+     A current-carrying stationary density can still satisfy beta_bridge = 1.
 
 Q5   DOES beta_bridge = 1 REQUIRE GAUSSIANITY?
      NO. The derivation never assumes U quadratic.
 
-Q6   DOES THE HARMONIC K=H COROLLARY REQUIRE THE GAUSSIAN/HARMONIC SPECIAL CASE?
-     YES -- K = Sigma^-1 holds for a Gaussian; for a general distribution the curvature
-     at a point does not determine the landscape.
+Q6   DOES K=H REQUIRE THE GAUSSIAN/HARMONIC SPECIAL CASE?
+     NO -- J = V + C implies K(x) = Hess V(x) on a smooth interior. The additional
+     identity Sigma^-1 = H requires the global Gaussian assumptions in section 11.2.
 
 Q7   WHEN theta CHANGES, IS -int grad_x V . dx ALONE GENERALLY ENOUGH?
      NO. Example C: the state term gives -4 against a total of -15/2; the field term
@@ -1157,7 +1344,8 @@ Q8   DOES THE FULL EXTENDED-STATE DIFFERENTIAL ADD A FIELD TERM?
 
 Q9   DOES A NONCONSERVATIVE PATH-DEPENDENT CONTRIBUTION REQUIRE SPECIAL TREATMENT?
      YES. Example D: same endpoints, values +1 and -1, closed loop 2 != 0. No state
-     function represents it and the endpoint account cannot capture it.
+     function represents that field's work. A separately supplied gradient contribution
+     remains exact and must not be confused with total work.
 
 Q10  DO PURE FIXED-FIELD TOPOLOGY IDENTITIES REQUIRE beta=1?
      NO. Foundation section 12 needs only that V be a state function.
@@ -1166,9 +1354,9 @@ Q11  DO CROSS-FIELD PHYSICAL EBU ADDITIONS REQUIRE ADDITIONAL COMMENSURABILITY E
      YES. Extended-space telescoping is mathematics; a common denomination is physics.
 
 Q12  SHOULD THE CURRENT FROZEN FOUNDATION BE AMENDED NOW?
-     NO -- with one caveat. On the scientific content of R1-R6 no amendment is indicated.
-     The caveat is the STATUS inconsistency of F-6, which is documentary and is a human
-     decision, not a scientific one.
+     NO. No R1-R6 scientific amendment is indicated. Freeze provenance resolves the
+     authority status; the stale header is a documentary / metadata inconsistency whose
+     cleanup is outside this task, not an unresolved scientific decision.
 
 Q13  IS A NON-CONTROLLING CLARIFICATION / THEOREM-HIERARCHY DOCUMENT WARRANTED?
      YES. Section 18 is a candidate.
@@ -1186,9 +1374,10 @@ Q13  IS A NON-CONTROLLING CLARIFICATION / THEOREM-HIERARCHY DOCUMENT WARRANTED?
 | fixed-field telescoping and cycle-zero | **ALREADY AUTHORISED** — §12, §25 |
 | same-base summation ≠ telescoping | **ALREADY AUTHORISED** — §12 |
 | endpoint identity needs no equilibrium | **MATHEMATICALLY SETTLED** — §2 Question A; assumption lists omit equilibrium |
-| `β_bridge = 1` requires E1–E8 | **MATHEMATICALLY SETTLED** — standard statistical mechanics |
+| canonical assumptions suffice for `β_bridge = 1` | **CONDITIONAL CANONICAL DERIVATION** — §9.2 A; reversibility, entropy and sampling are separate |
 | `β_bridge = 1` needs no Gaussianity | **MATHEMATICALLY SETTLED** — §11.1 |
-| `K = H` is a harmonic corollary | **MATHEMATICALLY SETTLED** — §11.2 |
+| `K(x) = H(x)` on a smooth interior | **GENERAL DIFFERENTIAL COROLLARY** of `J = V + C` — §11.1 |
+| `Σ^(-1) = H` | **GLOBAL GAUSSIAN COROLLARY**, only under §11.2's support/measure/positivity assumptions |
 | circular `p ∝ exp(−V)` proof forbidden | **ALREADY AUTHORISED** — §21, §25 |
 | nonconservative contributions need separate treatment | **MATHEMATICALLY SETTLED**, and **ALREADY AUTHORISED** as a do-not-promote item in the baseline |
 | `Σ E = 0` is not the first law | **ALREADY AUTHORISED** — §25 forbidden column |
@@ -1196,35 +1385,25 @@ Q13  IS A NON-CONTROLLING CLARIFICATION / THEOREM-HIERARCHY DOCUMENT WARRANTED?
 | state/field attribution to actors | **FUTURE NONEQUILIBRIUM / ATTRIBUTION THEORY** — §23 Q11, roadmap P4 |
 | nonequilibrium bridge | **FUTURE NONEQUILIBRIUM THEORY** — no formula proposed |
 | book-series topology wording | **NOT VERIFIED** — not audited in this task |
-| foundation header says NOT FROZEN / NO REPOSITORY AUTHORITY while `AGENTS.md` ranks it first | **SCIENTIFIC AUTHORITY GAP → HUMAN DECISION REQUIRED** |
+| stale foundation header conflicts with freeze provenance | **DOCUMENTARY / METADATA INCONSISTENCY** — frozen authority confirmed in F-6; no scientific decision required |
 
-### Human decisions
+### Human scientific decisions required for R1–R6
 
-```
-D1  FOUNDATION STATUS. docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md
-    opens with "STATUS: FREEZE CANDIDATE. NOT FROZEN. NOT COMMITTED. NO REPOSITORY
-    AUTHORITY." while AGENTS.md requires it be read first and ranks "frozen foundation"
-    above the theory baseline and all reports. Both cannot be literally true. Someone must
-    decide whether the document is frozen authority, a freeze candidate, or authority-
-    by-convention-with-a-stale-header. This reconstruction treated it as controlling,
-    which is what AGENTS.md directs, and flags the discrepancy rather than resolving it.
-    CLASSIFICATION: documentary, not scientific. Nothing in R1-R6 turns on it.
-
-D2  WHETHER TO ADOPT A CLARIFICATION DOCUMENT, and at what rank. Section 18's hierarchy
-    is a candidate; adopting it would be a prospective, non-controlling addition BELOW the
-    foundation. Not required for correctness. (Q13 says it is warranted; whether to do it
-    is the decision.)
-
-NO OTHER HUMAN DECISION IS EXPOSED. Every other item in the table above is either settled
-by mathematics, already authorised, a pedagogical matter, or explicitly future work.
-```
+**NONE identified by this bounded repair.** The former D1 foundation-status decision is
+removed because freeze provenance resolves it. No replacement decision is introduced.
+Adopting any future clarification at a new authority rank remains outside this repair and
+is not required for its mathematical correctness. Open physical questions already marked
+in the foundation remain open. Independent re-audit, not this repair's self-check, decides
+whether R1–R6 is cleared.
 
 ---
 
 ## 25. Identities and state
 
-Report-only. Recomputed independently; reports are outside every identity preimage, and none
-was artificially adjusted.
+Report-only. The original reconstruction recorded the identities below. This bounded repair
+recomputed them before and after editing: all are unchanged. The report is outside the
+analysis and execution identity preimages inspected in `e1a_v4/identity.py` and
+`e1a_v4/validation/plan.py`; no authority identity was adjusted.
 
 ```
 foundation  6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507   UNCHANGED
@@ -1237,6 +1416,8 @@ analysis    60122602528f7e89ae3aa6716a20db5a0bf6e89ad52bc7b1e031318327add527   U
 execution   442e3d53e3e6f660b78af350e1d5db2312eccb09dca78e764c0442e476aa166b   UNCHANGED
 ```
 
+**Historical validation record from the original reconstruction — not rerun by this repair:**
+
 ```
 4,002 checks, 0 failures, 17 suites, 0 not clean ; static preflight PASSED
 execution_authorised = false ; execution seal state PRE_DRIVER, NOT FROZEN
@@ -1245,8 +1426,82 @@ OFFICIAL RESULTS  NONE          OFFICIAL TRAJECTORIES  0
 REAL OPTICAL-TRAP EXPERIMENT NOT RUN             CALIBRATION EXECUTIONS 0
 ```
 
-`results/e1a_v4_validation` does not exist. Every calculation in this report is exact
-rational arithmetic or closed-form algebra; **no RNG, no trajectory, no Monte Carlo, no
-calibration, no campaign job**.
+### Bounded repair verification — 2026-10-05
 
-**This report authorises nothing and amends nothing.**
+The repair used exact rational polynomial integration and closed-form algebra, strict JSON
+parsing, static inspection of the identity recipes, SHA-256 recomputation and Git inspection.
+No scientific package was imported; no RNG, trajectory, Monte Carlo, calibration, campaign,
+test suite or execution preflight was run. The historical 4,002-check claim above is not
+presented as new validation evidence.
+
+| deterministic recheck | result |
+|---|---|
+| Example A | endpoint and integral both `−9` |
+| Example B | straight, L-shaped and curved paths all `−9`; closed gradient loop `0` |
+| Example C | state `−4`, field `−7/2`, total `−15/2` |
+| Example D | routes `+1` and `−1`; closed nonconservative loop `2` |
+| Example E | telescoping `17/2`; endpoint residual `3/40` |
+| stationary-current counterexample | `div j = 0`, `j != 0`, Boltzmann density retained |
+| truncated harmonic density | exact integration-by-parts variance formula; `K=H=1` in the interior, `Σ^(-1) != H` |
+| covariance sign | with unit edge variances, covariance `−1,0,+1` gives total variance `0,2,4`; naive sum is `2` |
+| separable state/field potential | individual endpoint values `−3/2`, `−15/2`; total `−9` |
+| mechanical sign | trap work `−1/2`; quasistatic external work against trap `+1/2` |
+| foundation provenance | current bytes identical to freeze commit; sidecar SHA and 49,098-byte count match |
+| analysis / execution identity recipes | independently reconstructed using only static source data and hashing; both match §25 |
+| authorization / seal | plan and seal both `execution_authorised = false`; seal `PRE_DRIVER`, expected execution identity `null` |
+| allowed-file and whitespace checks | complete diff reviewed; only this report changed; `git diff --check` passed |
+
+`results/e1a_v4_validation` remains absent. The seal's state above is reported literally;
+it is not an assertion that its historical driver-absence commentary describes current code.
+No seal or authorization change is made.
+
+### Disposition of the six audit findings
+
+| finding | repair | sections |
+|---|---|---|
+| 1 — probability current and supplied-potential boundary | **CORRECTED**: density agreement separated from reversibility/P4; added force does not destroy a supplied gradient identity | §§5, 8–9, 13–14, 18–19, 22–24 |
+| 2 — harmonic covariance | **CORRECTED**: smooth-interior curvature separated from global Gaussian moments; support, measure and positivity explicit | §§11, 18–19, 22–24 |
+| 3 — work sign | **CORRECTED**: work by the conservative trap; external work against it has opposite sign | §§5, 15 |
+| 4 — uncertainty | **CORRECTED**: covariance sign retained; uniform bound applies to any bounded discrepancy between defined potentials | §§16, 18 |
+| 5 — field/state decomposition | **CORRECTED**: separate terms may depend on path; separable counterexample and actor-accounting boundary explicit | §§7, 18–19 |
+| 6 — foundation status | **CORRECTED**: frozen provenance verified; documentary inconsistency; D1 removed | F-6, §§23–25 |
+
+These are repair dispositions, not an independent clearance verdict.
+
+### Required repair classifications
+
+```
+PATH INTEGRAL ALREADY PRESENT: YES
+FIXED-FIELD ENDPOINT IDENTITY: exact for a supplied state function; line-integral equality
+    under single-valued C1 V and an admissible piecewise-smooth path in its domain
+NONZERO CURRENT NECESSARILY DESTROYS BOLTZMANN DENSITY: NO
+BOLTZMANN DENSITY ALONE CERTIFIES REVERSIBLE EQUILIBRIUM: NO
+GENERAL CURVATURE IDENTITY K=H: J=V+C implies K=Hess V on the smooth interior where
+    second derivatives exist; no Gaussianity or boundary claim
+GLOBAL Sigma^-1=H: only with the full accessible affine support, Lebesgue measure,
+    global positive-definite quadratic potential and normalizable untruncated density
+    of section 11.2, at beta_bridge=1
+TRAP WORK SIGN: E = W_by_trap/(k_B T) in the fixed-field thermal benchmark;
+    quasistatic external work against the conservative trap has the opposite sign
+UNCERTAINTY COVARIANCE: MUST BE RETAINED; omitting it can overestimate, underestimate
+    or leave variance unchanged
+UNIFORM POTENTIAL ERROR BOUND: sup |V_hat-V| <= epsilon implies |E_hat-E| <= 2 epsilon
+    for two defined potentials on the relevant common domain; no physical validation follows
+FIELD/STATE TERMS INDIVIDUALLY ENDPOINT FUNCTIONS: NOT GUARANTEED;
+    MAY BE UNDER SPECIAL STRUCTURE, including V(x,theta)=a(x)+b(theta)
+ACTOR FIELD-CHANGE TRANSACTION: NO; field evolution alone creates no registered action
+FOUNDATION AUTHORITY STATUS: FROZEN, confirmed from repository freeze provenance
+FOUNDATION HEADER CONFLICT: DOCUMENTARY / METADATA INCONSISTENCY
+HUMAN SCIENTIFIC DECISION REQUIRED FOR R1-R6: NONE identified by this repair
+R1-R6 READY FOR RE-AUDIT: YES
+S-MG THEOREM PROGRAMME: NOT STARTED
+BOOK 1: NOT MODIFIED
+OFFICIAL LONG-RUN CAMPAIGN: NOT RUN
+REAL OPTICAL-TRAP EXPERIMENT: NOT RUN
+EXECUTION AUTHORISED: FALSE
+EXECUTION SEAL: NOT FROZEN
+PUSH: NO
+STATUS: R-STAGE REPAIR COMPLETE — RE-AUDIT REQUIRED
+```
+
+**This report authorises nothing and amends no controlling authority.**
