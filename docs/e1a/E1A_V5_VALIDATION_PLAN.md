@@ -3,6 +3,7 @@
 ```text
 STATUS:                  NON-CONTROLLING CANDIDATE
 POLICY VERSION:          E1A-T11a-RF-v1
+PROCEDURE VERSION:       2  (version 1 repaired before any validation outcome existed)
 AUTHORITY MODIFIED:      NO
 EXECUTION AUTHORISED:    FALSE
 E1a-v4:                  UNTOUCHED (identities, contracts, plan, seal)
@@ -22,15 +23,15 @@ validated quantity was tuned using the validation it was judged by.
 
 | Object | SHA-256 |
 |---|---|
-| analysis procedure | `5c4053d1c04c4f02342fcd8d999731db21840167e74377587c5344ad613e8cd1` |
-| packet schema | `6f5d25aebe7f716034e5c201e7c79421c0f1426bf89e329e2eef2b99952ebd69` |
-| seed map | `0791ca3e181593bcbacca484b7a418266d555838b17b91dfbbababea8fd4b870` |
-| synthetic generator | `c0a50482c1ebb40e512e5ba831d1f48129baa003abd7cf1d97691960c24e6405` |
-| validation procedure | `49e50a72b54b00a76a78b471ae172d83289bdf23618c3263137fb050e06c7458` |
+| analysis procedure | `659d6e16321b545511915c7cdd3d0f68aab2978ee0bb83470e7e7dd3fd2240e3` |
+| packet schema | `576ebed583fb8c5399efff493df3b96c57aa615c1be73c86fd03a95d70c1fe3b` |
+| seed map | `ca903abf11b5cab40dd0b21ae3ff546506d399fe8a46ffb9a4e52485842930df` |
+| synthetic generator | `7f0859e02ee40a073471b74dd406913252c95043dff0f379a3ffd92164f9a83e` |
+| validation procedure | `c53761d760cedfff1d18906ab6d744ba00479433b019301d2ae3c039222e6196` |
 
 Each identity is taken over an ordered preimage of module path and file digest,
 followed by the canonical JSON of the declared configuration
-`{"design_point": "e1a_v5_candidate_2026-10-06", "policy_version": "E1A-T11a-RF-v1"}`. Nothing ambient enters the preimage.
+`{"design_point": "e1a_v5_candidate_2026-10-06", "policy_version": "E1A-T11a-RF-v1", "procedure_version": 2, "supersedes": "procedure version 1 (pre-Riccati-repair)"}`. Nothing ambient enters the preimage.
 
 ## 2. Frozen thresholds
 

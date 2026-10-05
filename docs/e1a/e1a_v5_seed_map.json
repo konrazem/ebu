@@ -81,6 +81,7 @@
  },
  "frozen_before_validation": true,
  "prng": "python-stdlib-MersenneTwister-19937",
+ "procedure_version": 2,
  "reuse_of_e1a_v4_seeds": "NONE",
  "root": "e1a_v5/validation/2026-10-06",
  "schema": "e1a_v5_seed_map/1",

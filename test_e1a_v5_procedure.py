@@ -489,6 +489,73 @@ def test_likelihood_and_generator() -> None:
         check("non-SPD diffusion refused", True)
 
 
+def test_physical_scale_regressions() -> None:
+    """Regressions for two defects that only appear at physical SI scale.
+
+    Both were found by running the pipeline, not by the algebraic suites, and
+    both are invisible in dimensionless test fixtures.
+    """
+    from e1a_v5.estimate import _fit
+    from e1a_v5.validation import plan as vplan
+    from e1a_v5.validation.harness import design_specs, run_record
+
+    specs = design_specs(n_frames=vplan.SMOKE_FRAMES)
+    spec, H = specs[0]
+    sigma = nm.spd_inverse(H)
+    check("physical covariance really is tiny", sigma[0][0] < 1e-15)
+
+    y = generate_record(spec, Stream(derive_seed("regression", "riccati")))
+    true = Parameters(0.0, (0.0, 0.0), chol_params_from_spd(spec.d_true), 0.0, None)
+    out = log_likelihood(true, H, y, spec.p_matrix, spec.r_obs, list(spec.b_det),
+                         spec.dt, spec.t_exp, collect_innovations=True)
+
+    # Defect 1: the Riccati convergence test must be relative to the
+    # covariance's OWN scale. A max(1.0, ||P||) floor makes it trivially true
+    # at 1e-17 and freezes the Kalman gain after one frame.
+    check("Riccati reaches steady state by genuine convergence", out.steady_after > 2,
+          f"steady_after = {out.steady_after}")
+
+    # Defect 2: with the gain frozen, the likelihood rewarded a degenerate
+    # D -> 0 limit. The true parameters must beat that degenerate point.
+    degenerate = Parameters(
+        1.3, (0.0, 0.0),
+        (true.d_chol[0] - 8.0, 0.0, true.d_chol[2] - 4.5), 0.0, None,
+    )
+    ll_deg = log_likelihood(degenerate, H, y, spec.p_matrix, spec.r_obs,
+                            list(spec.b_det), spec.dt, spec.t_exp).loglik
+    check("true parameters beat the degenerate D -> 0 point",
+          out.loglik > ll_deg, f"{out.loglik} vs {ll_deg}")
+
+    # The MLE must land near the truth, and beat it only by the usual
+    # overfitting margin of about half the free-parameter count.
+    best, ll_fit, _, conv, _ = _fit(y, H, spec.p_matrix, spec.r_obs, list(spec.b_det),
+                                    spec.dt, spec.t_exp, free_sigma=False)
+    check("locked fit converges", conv)
+    check("MLE recovers log beta near zero", abs(best.log_beta) < 0.25, f"{best.log_beta}")
+    check("MLE recovers the diffusion scale",
+          0.5 < (math.exp(best.d_chol[0]) / math.exp(true.d_chol[0])) ** 2 < 2.0)
+    check("MLE beats truth only by the overfitting margin",
+          0.0 <= ll_fit - out.loglik < 20.0, f"{ll_fit - out.loglik}")
+
+    # Defect 3: optimiser coordinates must be dimensionless. A 5 percent
+    # relative step on d_chol (magnitude ~ 14 to 40) is a factor-of-several
+    # jump; the scaling layer keeps every coordinate of order one.
+    from e1a_v5.estimate import _initial_parameters, _scaling_for
+    init = _initial_parameters(y, H, spec.p_matrix, list(spec.b_det), spec.dt, False)
+    sc = _scaling_for(init, sigma_of(init, H), False)
+    u0 = sc.from_parameters(init, False)
+    check("optimiser coordinates are order one", all(abs(v) < 5.0 for v in u0), str(u0))
+    check("scaling round-trips", nm.max_abs([[
+        a - b for a, b in zip(sc.from_parameters(sc.to_parameters(u0, False), False), u0)]]) < 1e-9)
+
+    # The whole record pipeline must be evaluable at the physical design point.
+    out2 = run_record(spec, H, Stream(derive_seed("regression", "pipeline")))
+    check("record pipeline is evaluable at physical scale", out2.evaluable, out2.reason)
+    check("record reports every gate statistic",
+          all(v is not None for v in (out2.log_beta, out2.se, out2.geometry,
+                                      out2.centre, out2.r_irr, out2.stationarity)))
+
+
 def main() -> int:
     print("Schur reduction")
     test_schur_reduction()
@@ -506,9 +573,11 @@ def main() -> int:
     test_seeds_and_identity()
     print("\nlikelihood, generator and optimiser [SYNTHETIC RNG]")
     test_likelihood_and_generator()
+    print("\nphysical-scale regressions [SYNTHETIC RNG]")
+    test_physical_scale_regressions()
     print(f"\nRESULT: {PASSED} passed, {FAILED} failed")
     print("Execution class: MIXED STATIC/PURE + SYNTHETIC VALIDATION RNG")
-    print("  SYNTHETIC OU TRAJECTORIES .. 2")
+    print("  SYNTHETIC OU TRAJECTORIES .. 4")
     print("  REAL EXPERIMENT DATA ....... 0")
     print("  CALIBRATION EXECUTIONS ..... 0")
     print("  OFFICIAL CAMPAIGN JOBS ..... 0")

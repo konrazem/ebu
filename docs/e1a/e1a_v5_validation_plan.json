@@ -553,7 +553,9 @@
  ],
  "configuration": {
   "design_point": "e1a_v5_candidate_2026-10-06",
-  "policy_version": "E1A-T11a-RF-v1"
+  "policy_version": "E1A-T11a-RF-v1",
+  "procedure_version": 2,
+  "supersedes": "procedure version 1 (pre-Riccati-repair)"
  },
  "design_point": {
   "axial_coupling": 0.05,
@@ -627,11 +629,11 @@
   "sigma_cal_contrast_max": 0.003
  },
  "identities": {
-  "analysis_procedure": "5c4053d1c04c4f02342fcd8d999731db21840167e74377587c5344ad613e8cd1",
-  "packet_schema": "6f5d25aebe7f716034e5c201e7c79421c0f1426bf89e329e2eef2b99952ebd69",
-  "seed_map": "0791ca3e181593bcbacca484b7a418266d555838b17b91dfbbababea8fd4b870",
-  "synthetic_generator": "c0a50482c1ebb40e512e5ba831d1f48129baa003abd7cf1d97691960c24e6405",
-  "validation_procedure": "49e50a72b54b00a76a78b471ae172d83289bdf23618c3263137fb050e06c7458"
+  "analysis_procedure": "659d6e16321b545511915c7cdd3d0f68aab2978ee0bb83470e7e7dd3fd2240e3",
+  "packet_schema": "576ebed583fb8c5399efff493df3b96c57aa615c1be73c86fd03a95d70c1fe3b",
+  "seed_map": "ca903abf11b5cab40dd0b21ae3ff546506d399fe8a46ffb9a4e52485842930df",
+  "synthetic_generator": "7f0859e02ee40a073471b74dd406913252c95043dff0f379a3ffd92164f9a83e",
+  "validation_procedure": "c53761d760cedfff1d18906ab6d744ba00479433b019301d2ae3c039222e6196"
  },
  "module_digests": {
   "analysis": {
@@ -639,9 +641,9 @@
    "branch_a.py": "36eef41eabbbabdbff82abfb88bd99a8a32d69bf14a5ef63540c648ed33d1644",
    "confidence.py": "2a423d27223e701b55f14a2a9fed1a559960c2c6e9a4407842802a9b58087e5f",
    "diagnostics.py": "a44cd0bf6864d65ebdfe47c7eb4493e430b0096f780627c728f4a384d15b9020",
-   "estimate.py": "14103266c9d9d2c49d28642400b7f489e12eaadf91c37b131201b21be8cf57f0",
+   "estimate.py": "7c2ac04d44db9e0a5ec8adeeccbf92261a22ab031f44e73a8d786cd86b710a5f",
    "gates.py": "e0d8201ddaabad048d01a59888f4cd12c9a5d0434226551e01419ba83157b52f",
-   "likelihood.py": "4d74529ea8fab406fccb0f39bb4ab5e6bb29f82c7a104326cd9a9728adb5a42f",
+   "likelihood.py": "86fc43f55f94024911991fc669808cce20c117d732690206bcab2fb4d9ba3369",
    "numerics.py": "165ca4c11efd4f21a85b66d45ae4071197a0b2056812810db30cd6909ab61a8b",
    "observation.py": "f91024ee01c84f6ccd7410fc676c6e9706594251f9b39d70f9f13c0ccd2c3f93",
    "optimize.py": "bc20886bd7ca35ac51025cd327ca1940528c7f6c57859f4768e7342585e8138a",
@@ -661,7 +663,7 @@
    "seeds.py": "2b7402d48b7a0e99ffd319ab4421eeafde579afca3f99ae352cda6ddf9c7ea30",
    "validation/__init__.py": "cfb51def4ee4877b60dcc62a9636e6672244d8cc338a4979f1086a27e3d3bb9b",
    "validation/cases.py": "9d09ffceb7462d737d48b3920817ea7d45e15ae6b1ae531897648566ddec37bc",
-   "validation/harness.py": "f1171a7ad85ff995c08481fed852e91b9969c6d6a62ae83b2c04b3670cc4c35a",
+   "validation/harness.py": "7f1f6b40f0c693e35dc1ef7fc26ef7de58f0df839130ac10528b86b723ff292a",
    "validation/plan.py": "c5f9f360cd64180d3669dd068bb280e648fd53204998a38244a85a152a2fd076"
   }
  },
@@ -671,6 +673,8 @@
   "derivation": "sha256(root|family|case|'rep'|replicate)[:8] big-endian",
   "seed_root": "e1a_v5/validation/2026-10-06"
  },
+ "procedure_version": 2,
+ "procedure_version_note": "version 1 was frozen at 0aea510 and REPAIRED before any validation outcome existed; no validation result was produced under version 1",
  "release_logic": {
   "no_majority_vote": true,
   "no_weighted_score": true,

@@ -35,10 +35,20 @@ from .likelihood import (
 from .numerics import Matrix, NumericalFailure
 from .optimize import OptimizerFailure, minimise
 
-#: Frozen finite-difference step for the profile curvature of ``log beta``.
-SE_STEP = 1e-3
-#: Frozen fallback ladder of steps if the first curvature is not positive.
-SE_STEP_LADDER = (1e-3, 3e-3, 1e-2)
+#: Target log-likelihood drop for the profile curvature step.  Choosing the
+#: step so the drop is of order one keeps the second difference far above the
+#: optimiser's own noise floor; a fixed small step suffers catastrophic
+#: cancellation because the log likelihood itself is O(N).
+SE_TARGET_DROP = 0.5
+#: Admissible window for the achieved drop before the step is rescaled.
+SE_DROP_MIN = 0.02
+SE_DROP_MAX = 8.0
+#: Maximum step rescalings.
+SE_MAX_ROUNDS = 6
+#: Initial step, used only to measure the local curvature scale.
+SE_INITIAL_STEP = 0.02
+#: Inner-optimiser evaluation budget for each profile point.
+SE_INNER_EVALUATIONS = 1500
 
 
 @dataclass(frozen=True)
@@ -153,6 +163,89 @@ def _initial_parameters(
     )
 
 
+@dataclass(frozen=True)
+class Scaling:
+    """Affine map from dimensionless optimiser coordinates to model parameters.
+
+    The raw parameters are badly scaled for a simplex method: ``mu`` is a
+    physical length of order 1e-8 m, while ``d_chol`` holds logarithms of
+    Cholesky entries whose magnitude is of order 40.  One relative step size
+    cannot serve both, and a 5 percent relative step on a logarithm of
+    magnitude 40 is a factor-of-seven jump that destroys the simplex.  Every
+    optimiser coordinate here is dimensionless and of order one, measured
+    against the frozen initialisation.
+    """
+
+    mu_scale: float
+    l11_init: float
+    l21_init: float
+    l22_init: float
+    omega_scale: float
+    s11_init: float = 1.0
+    s21_init: float = 0.0
+    s22_init: float = 1.0
+
+    def to_parameters(self, u: Sequence[float], free_sigma: bool) -> Parameters:
+        if free_sigma:
+            sigma_chol = (
+                math.log(self.s11_init) + u[0],
+                self.s21_init + u[1] * self.s11_init,
+                math.log(self.s22_init) + u[2],
+            )
+            rest = list(u[3:])
+            log_beta = 0.0
+        else:
+            sigma_chol = None
+            log_beta = u[0]
+            rest = list(u[1:])
+        return Parameters(
+            log_beta=log_beta,
+            mu=(rest[0] * self.mu_scale, rest[1] * self.mu_scale),
+            d_chol=(
+                math.log(self.l11_init) + rest[2],
+                self.l21_init + rest[3] * self.l11_init,
+                math.log(self.l22_init) + rest[4],
+            ),
+            omega=rest[5] * self.omega_scale,
+            sigma_chol=sigma_chol,
+        )
+
+    def from_parameters(self, p: Parameters, free_sigma: bool) -> list[float]:
+        rest = [
+            p.mu[0] / self.mu_scale,
+            p.mu[1] / self.mu_scale,
+            p.d_chol[0] - math.log(self.l11_init),
+            (p.d_chol[1] - self.l21_init) / self.l11_init,
+            p.d_chol[2] - math.log(self.l22_init),
+            p.omega / self.omega_scale,
+        ]
+        if free_sigma:
+            if p.sigma_chol is None:
+                raise NumericalFailure("free-sigma scaling requires sigma_chol")
+            return [
+                p.sigma_chol[0] - math.log(self.s11_init),
+                (p.sigma_chol[1] - self.s21_init) / self.s11_init,
+                p.sigma_chol[2] - math.log(self.s22_init),
+                *rest,
+            ]
+        return [p.log_beta, *rest]
+
+
+def _scaling_for(init: Parameters, sigma0: Matrix, free_sigma: bool) -> Scaling:
+    l11 = math.exp(init.d_chol[0])
+    l22 = math.exp(init.d_chol[2])
+    omega_scale = max(l11 * l11, 1e-300)
+    mu_scale = math.sqrt(sigma0[0][0]) if sigma0[0][0] > 0.0 else 1.0
+    if free_sigma:
+        if init.sigma_chol is None:
+            raise NumericalFailure("free-sigma scaling requires sigma_chol")
+        return Scaling(
+            mu_scale, l11, init.d_chol[1], l22, omega_scale,
+            math.exp(init.sigma_chol[0]), init.sigma_chol[1], math.exp(init.sigma_chol[2]),
+        )
+    return Scaling(mu_scale, l11, init.d_chol[1], l22, omega_scale)
+
+
 def _fit(
     y: Sequence[Sequence[float]],
     h_a: Matrix | None,
@@ -162,23 +255,38 @@ def _fit(
     dt: float,
     t_exp: float,
     free_sigma: bool,
-) -> tuple[Parameters, float, int, bool]:
-    init = _initial_parameters(y, h_a if h_a is not None else nm.eye(2), p_matrix, b_det, dt, free_sigma)
+) -> tuple[Parameters, float, int, bool, Scaling]:
+    """Maximise the exact likelihood in dimensionless optimiser coordinates."""
+    href = h_a if h_a is not None else nm.eye(2)
+    init = _initial_parameters(y, href, p_matrix, b_det, dt, free_sigma)
+    sigma0 = sigma_of(init, href)
+    scaling = _scaling_for(init, sigma0, free_sigma)
+    u0 = scaling.from_parameters(init, free_sigma)
+    # Offset the objective so the optimiser's relative tolerance acts on an
+    # O(1) quantity rather than on a log likelihood of order N.
+    ll0 = log_likelihood(init, h_a, y, p_matrix, r_obs, b_det, dt, t_exp).loglik
 
-    def objective(x: Sequence[float]) -> float:
-        params = unpack(x, free_sigma)
-        return -log_likelihood(
-            params, h_a, y, p_matrix, r_obs, b_det, dt, t_exp
-        ).loglik
+    def objective(u: Sequence[float]) -> float:
+        params = scaling.to_parameters(u, free_sigma)
+        return -(
+            log_likelihood(params, h_a, y, p_matrix, r_obs, b_det, dt, t_exp).loglik - ll0
+        )
 
-    res = minimise(objective, pack(init, free_sigma))
+    res = minimise(objective, u0)
     if not res.converged:
         raise OptimizerFailure(f"locked={not free_sigma}: {res.reason or 'did not converge'}")
-    return unpack(res.x, free_sigma), -res.fun, res.evaluations, res.converged
+    return (
+        scaling.to_parameters(res.x, free_sigma),
+        ll0 - res.fun,
+        res.evaluations,
+        res.converged,
+        scaling,
+    )
 
 
 def _profile_se(
     best: Parameters,
+    scaling: Scaling,
     h_a: Matrix,
     y: Sequence[Sequence[float]],
     p_matrix: Matrix,
@@ -188,44 +296,53 @@ def _profile_se(
     t_exp: float,
     ll_hat: float,
 ) -> float:
-    """Standard error of ``log beta`` from the profile curvature at the maximum."""
-    for step in SE_STEP_LADDER:
-        vals = []
-        ok = True
-        for sign in (-1.0, 1.0):
-            trial = Parameters(
-                log_beta=best.log_beta + sign * step,
-                mu=best.mu,
-                d_chol=best.d_chol,
-                omega=best.omega,
-                sigma_chol=None,
+    """Standard error of ``log beta`` from the profile curvature at the maximum.
+
+    The step is chosen adaptively so the profile log-likelihood drop is of
+    order one.  This matters: the log likelihood is O(N), so a fixed small step
+    makes the second difference a difference of nearly equal large numbers and
+    the optimiser's own convergence noise dominates it.  The nuisance
+    re-optimisation runs in the same dimensionless coordinates as the main fit.
+    """
+    u_best = scaling.from_parameters(best, False)
+
+    def profile_at(log_beta: float) -> float:
+        """Maximised log likelihood with ``log beta`` fixed, offset by ``ll_hat``."""
+
+        def obj(u: Sequence[float]) -> float:
+            p = scaling.to_parameters([log_beta, *u], False)
+            return -(
+                log_likelihood(p, h_a, y, p_matrix, r_obs, b_det, dt, t_exp).loglik - ll_hat
             )
 
-            def obj(x: Sequence[float], lb=trial.log_beta) -> float:
-                p = Parameters(
-                    log_beta=lb,
-                    mu=(x[0], x[1]),
-                    d_chol=(x[2], x[3], x[4]),
-                    omega=x[5],
-                    sigma_chol=None,
-                )
-                return -log_likelihood(p, h_a, y, p_matrix, r_obs, b_det, dt, t_exp).loglik
+        res = minimise(obj, u_best[1:], max_evaluations=SE_INNER_EVALUATIONS)
+        return -res.fun
 
-            try:
-                res = minimise(
-                    obj,
-                    [best.mu[0], best.mu[1], *best.d_chol, best.omega],
-                    max_evaluations=1200,
-                )
-            except OptimizerFailure:
-                ok = False
-                break
-            vals.append(-res.fun)
-        if not ok or len(vals) != 2:
+    step = SE_INITIAL_STEP
+    for _ in range(SE_MAX_ROUNDS):
+        try:
+            lo = profile_at(best.log_beta - step)
+            hi = profile_at(best.log_beta + step)
+        except OptimizerFailure:
+            step *= 0.5
             continue
-        curv = (2.0 * ll_hat - vals[0] - vals[1]) / (step * step)
-        if curv > 0.0 and math.isfinite(curv):
-            return 1.0 / math.sqrt(curv)
+        drop = -0.5 * (lo + hi)
+        if not math.isfinite(drop):
+            step *= 0.5
+            continue
+        if drop <= 0.0:
+            # The profile beats the incumbent: no unique usable maximum was
+            # established.  That is a declared failure, never a fabricated SE.
+            raise OptimizerFailure(
+                "profile exceeds the incumbent maximum; no unique maximum established"
+            )
+        if SE_DROP_MIN <= drop <= SE_DROP_MAX:
+            curv = 2.0 * drop / (step * step)
+            if curv > 0.0 and math.isfinite(curv):
+                return 1.0 / math.sqrt(curv)
+        step *= math.sqrt(SE_TARGET_DROP / drop)
+        if not math.isfinite(step) or step <= 0.0:
+            break
     raise OptimizerFailure("profile curvature for log beta is not positive")
 
 
@@ -240,13 +357,13 @@ def fit_record(
     want_free: bool = True,
 ) -> RecordFit:
     """Fit one record: locked scale fit plus the unrestricted characterisation."""
-    locked, ll_locked, ev1, conv1 = _fit(
+    locked, ll_locked, ev1, conv1, scaling = _fit(
         y, h_a, p_matrix, r_obs, b_det, dt, t_exp, free_sigma=False
     )
-    se = _profile_se(locked, h_a, y, p_matrix, r_obs, b_det, dt, t_exp, ll_locked)
+    se = _profile_se(locked, scaling, h_a, y, p_matrix, r_obs, b_det, dt, t_exp, ll_locked)
 
     if want_free:
-        free, ll_free, ev2, conv2 = _fit(
+        free, ll_free, ev2, conv2, _ = _fit(
             y, None, p_matrix, r_obs, b_det, dt, t_exp, free_sigma=True
         )
         sigma_free = spd_from_chol(free.sigma_chol)  # type: ignore[arg-type]

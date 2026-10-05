@@ -109,14 +109,14 @@ def run_record(
     try:
         y = generate_record(spec, stream)
     except NumericalFailure as exc:
-        return RecordOutcome(None, None, None, None, None, None, False, f"generator: {exc}")
+        return RecordOutcome(None, None, None, None, None, None, None, False, f"generator: {exc}")
     try:
         fit = fit_record(
             y, h_locked, spec.p_matrix, spec.r_obs, list(spec.b_det), spec.dt, spec.t_exp,
             want_free=want_free,
         )
     except (OptimizerFailure, NumericalFailure) as exc:
-        return RecordOutcome(None, None, None, None, None, None, False, f"fit: {exc}")
+        return RecordOutcome(None, None, None, None, None, None, None, False, f"fit: {exc}")
 
     try:
         g = geometry_statistic(fit.sigma_free, h_locked)

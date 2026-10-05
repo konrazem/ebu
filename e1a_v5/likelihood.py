@@ -155,7 +155,13 @@ def run_filter(
                     nm.matmul(nm.matmul(K, S_inn), nm.transpose(K)),
                 )
             )
-            if nm.max_abs(nm.sub(P_next, P)) <= RICCATI_TOL * max(1.0, nm.max_abs(P_next)):
+            # Relative to the covariance's OWN scale.  Using max(1.0, ||P||)
+            # here would be a latent bug: physical covariances are of order
+            # 1e-17 m^2, so the 1.0 floor turns a relative test into a
+            # trivially satisfied absolute one and freezes the Kalman gain at
+            # its unconverged first value.
+            p_scale = nm.max_abs(P_next)
+            if p_scale > 0.0 and nm.max_abs(nm.sub(P_next, P)) <= RICCATI_TOL * p_scale:
                 steady_K, steady_Sinv, steady_logdet = K, S_inv, logdet
                 steady_after = i
             P = P_next
