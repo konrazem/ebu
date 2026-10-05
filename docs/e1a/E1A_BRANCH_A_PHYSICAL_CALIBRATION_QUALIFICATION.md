@@ -5,12 +5,12 @@
 | Programme item | Status |
 |---|---|
 | R / S-MG / S | CLEARED inputs; no theoretical reopening |
-| T1–T12 | INDEPENDENTLY CLEARED; narrow target-realization interface gap identified, T amendment pending |
-| Independent U audit | NOT CLEARED: axial marginalization and realized-field qualification |
-| U repair | Axial specification repaired for re-audit; U9 GAP; field qualification BLOCKED |
+| T1–T12 / T11a | Base T independently cleared; E1A-T11a-RF-v1 added, independent amendment audit required |
+| Original independent U audit | NOT CLEARED: axial marginalization and realized-field qualification |
+| U repair | Axial specification preserved; U9 COMPLETE AS SPECIFICATION; independent re-audit required |
 | Physical calibration data | NOT COLLECTED |
 | Apparatus qualification | NOT ESTABLISHED |
-| V / W | NOT STARTED; V blocked by missing field-realization policy and independent re-audit |
+| V / W | NOT STARTED; V BLOCKED PENDING INDEPENDENT T-AMENDMENT + U-REPAIR AUDIT |
 | Execution | NOT AUTHORISED; existing execution flags remain false |
 
 Prepared on 2026-10-05 against repository commit
@@ -40,12 +40,11 @@ Gaussian model required by T. Independently driven response measurements must qu
 that approximation over the observation bandwidth; otherwise the apparatus is refused
 for this design.
 
-The axial construction is specified for independent re-audit; the overall U stage
-remains **NOT CLEARED**. Instrument values and actual qualification remain unmeasured.
-The cleared T report does not determine numerical field-target realization regions
-or a required discrimination-power objective for departures from its nominal fields.
-Under the user's instruction this gap is recorded, T is unchanged, and field
-qualification and V remain blocked. No new scientific tolerance is invented.
+The axial construction is preserved for independent re-audit. T11a now supplies the
+programme-adopted 90–110% retained-challenge regions and minimum 0.90 scalar planning
+discrimination, completing U9 as specification. Instrument values and actual field
+qualification remain unmeasured. The T amendment and dependent U completion are
+**NOT INDEPENDENTLY CLEARED**; V remains blocked pending their independent audit.
 
 For the EBU programme, the purpose is concrete: the mechanical energy landscape is
 constructed without learning its scale from the distribution used to test it. A
@@ -61,14 +60,23 @@ The independent U audit, as supplied in the commissioning repair brief, returned
 1. No selected quantitative independent axial marginalization/PMF qualification.
 2. No binding realization rule preserving the intended T-stage physical challenges.
 
-This revision repairs the axial specification in §5 and its direct dependencies.
-It withdraws the inadequate weak-presence rules in §21, identifies the exact narrow
-T-interface decision and blocks packet validity until that decision is adopted.
-The user explicitly chose to record the gap and keep field qualification and V
-blocked. Thus Blocker B is **contained by refusal, not scientifically closed**.
-No T amendment is committed before its normative objectives are selected. Unrelated
-U methods and budgets are preserved. This work is not an independent audit and does
-not claim clearance of either the repair or the original U artifact.
+The axial revision at `097aec81bcfe420bb9e25d0152cd8b4a08f69fde` repaired §5 and
+its dependencies, withdrew inadequate weak-presence rules and recorded the missing
+T-interface choice. At that stage the user chose to retain the gap and block V;
+Blocker B was contained by refusal, not closed. That historical disposition is now
+superseded only by the programme decision and dependent completion below. Neither
+revision performs an independent audit or claims independent clearance.
+
+### 1.2 T11a-dependent U9 completion
+
+On 2026-10-06 the programme supplied the missing decision: 90% minimum retained
+nominal challenge, at most 10% magnitude departure and at least 0.90 planning
+discrimination for the named scalar alternatives. The narrow T amendment was committed
+first as `fb977f425a25d3252fdcfb510b767448aa839fe9`, policy `E1A-T11a-RF-v1`.
+This dependent update implements only that policy in U9 and the directly dependent
+refusal, packet, status and handoff text. The axial method and all unrelated methods
+and budgets remain unchanged. No remaining human scientific decision is required by
+this policy; no physical qualification or independent clearance is asserted.
 
 ## 2. Authority and provenance
 
@@ -84,8 +92,9 @@ their explicitly cleared scope. The controlling scientific inputs are:
   [S-MG continuity](../theory/EBU_MOBIUS_GENERATOR_CONTINUITY_THEOREM.md) where applicable to the
   hierarchy, and [S-stage anchor](../theory/EBU_EQUILIBRIUM_THERMODYNAMIC_ANCHOR.md).
 - [T-stage experiment design](E1A_MINIMAL_EQUILIBRIUM_EXPERIMENT_DESIGN.md), committed
-  at the cleared T parent SHA above. T12 clearance is an explicit input of the user's U brief;
-  this report does not invent a separately committed T12 audit document.
+  at the cleared T parent SHA above, with the narrow §22.6 amendment at
+  `fb977f425a25d3252fdcfb510b767448aa839fe9`. Base T12 clearance is an explicit input
+  of the user's brief; amendment clearance is pending and no audit document is invented.
 
 The current branch has no `docs/scientific_record/` directory. Its absence is already
 reconstructed in R; no record from another branch is silently promoted into this one.
@@ -101,14 +110,16 @@ this calibration specification and must be repaired before W. No baseline edit i
 made. No actor balance, transaction price, repricing rule or social-efficiency claim
 is inferred from the physical calibration.
 
-Selected SHA-256 identities, measured directly at the start:
+Selected SHA-256 identities: protected sources remain unchanged; the original T hash
+is retained for provenance and its amended hash is recorded separately:
 
 | Object | SHA-256 |
 |---|---|
 | Foundation, 49,098 bytes | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
 | Foundation metadata | `b7771b54002b02433c2aede767ce1b7e04b79096613f7f2b5a1927cd6f94b39d` |
 | Working baseline | `0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa` |
-| T report | `1f613f93dd5c6eda10fdc8b15e1b7ba72e9fde7d68f8166062fbf81b896db326` |
+| Original T report | `1f613f93dd5c6eda10fdc8b15e1b7ba72e9fde7d68f8166062fbf81b896db326` |
+| T report with E1A-T11a-RF-v1 | `10ddfdceb90454a87cd83a7868c65a1e1b7a7147cc4e8360faf70225ba6d4519` |
 | Existing prospective design | `25b637c3af0e92d73f6dec0e992da9dd42d9fadc00020e89f20b76c2f1ad70a6` |
 | Existing contract | `d7215ae4636a88a6542d616c8c974d6a5aeca9f68ba487a7a39cac338593fad4` |
 | Existing validation plan JSON | `fbe1877826a3947399065451b9bfa3fba730243c144d33648bf05b631a7ba9e4` |
@@ -500,7 +511,7 @@ allocation and all other error sources included. Require the total 0.009 absolut
 and 0.003 contrast standard-uncertainty limits, the joint 0.0005 absolute/contrast
 bias bounds, full-region H_eff SPD/condition limit and the positive-gate precision
 condition. Axial terms cannot spend those allowances a second time. The separate
-field-target geometry check is presently blocked under §21; T4's density-agreement
+field-target geometry check is now specified by T11a under §21; T4's density-agreement
 margin is not a substitute target-realization tolerance.
 
 ### 5.6 Harmonic support, residual bounds and axial observation effects
@@ -605,7 +616,7 @@ joint 99.9% physical region, with bounded model errors also included:
    respectively; axial shape/centre terms satisfy T.29 with every other contribution.
 5. The lateral temporal reduction meets the unchanged T likelihood/bandwidth requirements.
 6. The effective lateral fields satisfy the separately adopted target-realization policy;
-   that policy is not yet specified and is blocked under §21.
+   policy E1A-T11a-RF-v1 is specified in §21 and awaits independent audit.
 
 Failure of items 1–5 produces AXIAL_REDUCTION_UNQUALIFIED with its precise dependency
 reason (and existing subsidiary codes). Missing or failed item 6 produces the field
@@ -1362,253 +1373,167 @@ shape, quarter-stationarity and current precision. No actual count, duration or 
 qualification is established by U because no actual packet exists. V must validate
 finite-sample coverage/power before any adoption or experiment.
 
-## 21. Field realization: narrow T-interface gap and binding refusal
+## 21. Field realization under T11a — complete prospective policy
 
-### 21.1 Audit correction and source finding
+### 21.1 Version, provenance and boundary
 
-The weak presence predicates in the failed U report are withdrawn as qualification
-rules. Neither `T3/T0>1.02`, `r_k>1.02`, a barely resolved ellipse nor commanding the
-nominal settings establishes realization of T's named challenges. In particular,
-304 K and a stiffness ratio 1.021 are not admitted by any rule in this revision.
-The earlier use of T4's ln(1.05) density-agreement margin as a circular-target
-realization tolerance is also withdrawn.
+The narrow T-interface decision is supplied by **E1A-T11a-RF-v1**, in the
+[T report](E1A_MINIMAL_EQUILIBRIUM_EXPERIMENT_DESIGN.md) §22.6, committed first at
+`fb977f425a25d3252fdcfb510b767448aa839fe9`. It is the sole source of the predicates
+below. The programme adopted 90% retained nominal challenge, at most 10% departure
+from nominal challenge magnitude, and minimum 0.90 planning discrimination for the
+named scalar alternatives. These are prospective design criteria, not consequences
+of beta=1, uncertainty allowances or findings from future outcomes.
 
-**NARROW T-STAGE AMENDMENT REQUIRED.** Direct inspection of T §7 finds prospective
-nominal targets and distinct field purposes, together with an explicit prohibition
-on silently substituting temperatures or tolerances. T §§22.1–22.4 fixes information,
-calibration limits and true-bridge complete-pass planning. T §20.3 requires at least
-0.90 unconditional complete-pass probability when the correct bridge holds. That
-is not a required discovery probability under a wrong-normalization alternative.
-T §22.5 calculates planning discrimination for named 10% absolute and 5% relative
-alternatives, but does not declare a minimum discovery probability for realized
-field departures or a target-conformance region around its nominal fields.
+The gap recorded at `097aec81bcfe420bb9e25d0152cd8b4a08f69fde` is now closed **as
+specification**. No separate absolute 100-microN/m or 298-K tolerance is invented:
+T11a defines target conformity through the relative challenges and existing qualified
+physical/model domains. The nominal settings remain unchanged. Physical qualification
+is NOT ESTABLISHED; the T amendment and this U completion require independent audit.
+The weak >2% and barely-nonzero-rotation rules remain withdrawn.
 
-Even interpreting those named alternatives as challenge benchmarks would not uniquely
-supply target widths around 298/318 K, 100/210 micro-newtons/metre or the specified
-ellipse. It would not supply an upper field departure, a matrix target tolerance or
-a joint temperature/stiffness conformance rule. The 0.009/0.003 calibration requirements
-limit measurement uncertainty; they do not choose how different the accurately
-measured object is allowed to be from its target. The 5%/2% beta-equivalence margins
-compare probability and energy; they are not actuator or field-construction tolerances.
+### 21.2 Exact full-region qualification
 
-The programme instruction for this repair is to **record this gap and keep field
-qualification and V blocked**. T remains byte-for-byte unchanged. No numerical region,
-new power objective or T amendment is adopted here. This is a pending normative
-scientific decision, not a mathematical derivation that can be assigned to V.
-
-### 21.2 Target objects and uncertainty convention
-
-The following target matrices describe the **effective lateral mechanical curvature**
-that T's two-dimensional density model tests, now unambiguously K_eff from §5, not an
-unobserved plane block K_qq. Let R_30 be a rotation by 30 degrees in the independently
-calibrated lateral physical axes.
-
-| Named field | Preregistered target | Realized object used in analysis | Required region; current status |
-|---|---|---|---|
-| theta0 | `K0*=100 I` micro N/m; local T0*=298 K | Independently measured K_eff,0 and local T0 | Reference absolute scale, near-isotropic matrix and temperature conformity region: NOT SPECIFIED BY T |
-| theta1 | `K1*=210 I` micro N/m; local T1*=298 K; target ratio 2.1 | Measured K_eff,1, K_eff,0, T1 and joint covariance | Target-centred stiffness/temperature region and preservation of confinement/relaxation/detector/heating challenge: NOT SPECIFIED BY T |
-| theta2 | `K2*=R_30 diag(150,60) R_30^T` micro N/m; local T2*=298 K | Full measured K_eff,2, including cross term and orientation | Matrix target-conformity region with scale, eigenvalue separation and orientation jointly controlled: NOT SPECIFIED BY T |
-| theta3 | `K3*=100 I` micro N/m; local T3*=318 K, reference local 298 K | Measured K_eff,3 and local T3, with reference covariance | Temperature and mechanical target-conformity region plus thermal-normalization discrimination objective: NOT SPECIFIED BY T |
-
-Target values do not imply infinitely precise control. The missing object is a
-**predeclared nonzero realization region** that preserves the scientific challenges.
-Exact equality is not silently imposed as a replacement. No fixed eigenvector angle
-is meaningful for an exactly isotropic reference; matrix conformity handles this
-without inventing a reference orientation test at a degeneracy.
-
-Retain U's existing joint **99.9% physical calibration region**, including all shared
-and axial uncertainties and separately bounded errors. Let its projection to the
-realized field parameters of one block be C_b. Once the programme adopts a target
-region R_T and its challenge-preservation policy, qualification requires
+Write S_bj=K_eff,bj from §5. Carry the existing joint 99.9% physical region C_b, its
+bounded-error sets and numerical bounds through the full measurement map. Pair
+projections C_b,0j retain shared-reference, axial, thermal and coordinate covariance.
+Use T11a's R_b, including all existing physical/model domains. Then (T.R1) becomes
 
 \[
-C_b\subseteq R_T,
-\quad\inf_{\vartheta\in C_b}P_{\rm detect,j}(\vartheta)
-\ge p_{j,*}\ \text{where that objective is adopted}, \tag{U.F1}
+\mathcal C_b\subseteq\mathcal R_b,\qquad
+\inf_{\vartheta\in\mathcal C_{b,0j}}P^{\rm plan}_j(\vartheta)\ge0.90,
+\quad j\in\{1,3\}. \tag{U.F1}
 \]
 
-together with every existing T information, precision, physical and model gate.
-This uses the existing coverage convention; it adds no new confidence level.
-C_b and R_T remain different objects. Large calibration uncertainty cannot make a
-weak realization acceptable by merely making a confidence region overlap the target.
-Both preparation blocks must pass independently, with every named field represented;
-there is no averaging of a strong block and a weak block.
+This has no unspecified p_* or target width. The inequalities below hold throughout
+the relevant pair region, separately in both preparations. The reference record also
+requires all three relative challenges involving it; dependency failures are labelled.
+No point estimate, overlap with a target, unchecked finite grid, scalar mode average
+or averaging of preparations can establish containment.
 
-R_T and any required p_j,* are currently **missing mandatory scientific inputs**.
-Consequently (U.F1) is not evaluable and no named-field comparison packet can be VALID.
-This is the binding rule until the narrow T amendment is selected and independently
-reviewed. Final V/H always uses measured S and T; it never substitutes a nominal
-matrix or nominal temperature to manufacture target conformity.
+T11a's boundaries are inclusive, while the existing beta-equivalence confidence gates
+remain strict as before. Certified numerical uncertainty belongs in the enclosure;
+rounding a displayed threshold must not decide a boundary case. Final analysis always
+uses measured S, local T, centre, H_eff=S/(k_B T) and their covariance, never substituted
+nominal values. A target miss invalidates the named experimental role, not beta=1.
 
-### 21.3 Deterministic temperature-discrimination calculation
+### 21.3 Temperature field and fixed planning calculation
 
-For the wrong fixed-reference normalization using 298 K,
+Under (T.R2), with theta3 the named hot field,
 
 \[
-\beta_{\rm wrong}(T)=298/T,
-\quad h_T(T)=\left|\log(298/T)\right|. \tag{U.F2}
+c_T^*=\log(318/298)=0.06495789627477229,\qquad
+c_{T,b}=\log(T_{b3}/T_{b0}),\qquad
+0.90c_T^*\le c_{T,b}\le1.10c_T^*. \tag{U.F2}
 \]
 
-If the actual reference is T0 rather than exactly 298 K, the wrong model's within-block
-log contrast has magnitude `abs(log(T/T0))`; the common 298 numerator cancels. The
-absolute and contrast alternatives must not be confused. Correct normalization
-predicts beta=1 regardless of the realized temperature.
+The ratio interval is `[(318/298)^0.90,(318/298)^1.10]`, approximately
+[1.060204810219,1.074068405040]. At an exactly 298 K reference the illustrative hot
+interval is [315.941033445,320.072384702] K. The official rule uses the measured local
+ratio, not independently hard-coded Kelvin limits or controller setpoints. Keep field
+labels fixed in the reversed acquisition order; invert the logarithm consistently if
+writing the ratio in the opposite order. A cold theta3 cannot pass through an absolute
+value.
 
-Use exactly T's normal planning calculation, not a new test. At N*=450000,
+The named wrong denominator predicts beta_wrong=T_b0/T_b3. Use exactly T11a (T.R3):
 
 \[
-s_a=\sqrt{0.009^2+1.1025/450000}=0.0091350971533,
-\quad s_c=\sqrt{0.003^2+2.205/450000}=0.0037282703765,
-\]
-\[
-P^{\rm plan}_{\rm abs}(T)=\Phi\!\left[
-\frac{h_T(T)-\log(1.05)-0.001}{s_a}-3.273078364\right],
-\]
-\[
-P^{\rm plan}_{\rm cross}(T,T0)=\Phi\!\left[
-\frac{|\log(T/T0)|-\log(1.02)-0.001}{s_c}-3.273078364\right]. \tag{U.F3}
+\mathcal P(h)=\Phi\!\left[
+\frac{h-\log(1.02)-0.001}{\sqrt{0.003^2+2.205/450000}}
+-3.273078364\right],\qquad
+P^{\rm plan}_{\rm temp}=\mathcal P(c_{T,b}). \tag{U.F3}
 \]
 
-The 3.273078364 value is T.30's conservative first-step threshold for the 47-test
-Holm/Bonferroni discovery family. It is not the 2.10 positive-equivalence critical
-ceiling. The 0.001 retains both the 0.0005 bounded displacement and interval expansion.
-These are signed named-direction discrepancy probabilities under the same normal
-planning approximation, not achieved power or a new finite-N result.
+All uncertainty floors and information gates remain prerequisites. The shared
+calibration contribution already enters the standard error; do not add it again.
+Full-region minimization protects against a weakened true physical challenge.
+The minimum effect for 0.90 planning detection is h_90=0.03778351913824557; the
+retention lower limit 0.05846210664729507 is stronger. The two retention boundaries
+give planning detection `1-4.30590784e-12` and `1-3.09051356e-25` respectively.
+A 298-to-304 K realization retains only 30.687901% of the nominal log challenge and
+fails. Its planning detection is approximately 0.023%. None of these are apparatus
+measurements or achieved-power claims.
 
-For any actual qualification region, use the infimum of (U.F3) over its joint local
-T/T0 region and the qualified standard-error envelope. The calibration covariance
-already enters s_a/s_c through the fixed T architecture; it is not added again as
-an independent thermometer error. Taking the infimum additionally guards against
-an uncertain physical challenge. At departures outside the envelope where the
-planning variance is justified, (U.F3) is only a formal extrapolation and cannot
-certify a field.
+### 21.4 Stiffness field: no averaging of modes
 
-The deterministic point-temperature comparison at T0=298 K gives:
-
-| T | `abs(log(T/298))` | T.30 cross-field planning detection |
-|---:|---:|---:|
-| 304 K | 0.0199342149008 | 0.0002274435852, approximately 0.023% |
-| 318 K | 0.0649578962748 | Approximately `1 - 5.16e-18` under the idealized planning approximation |
-
-This quantifies the audit counterexample without treating the near-one number as a
-laboratory guarantee. The old point boundary 303.96 K merely puts the wrong model
-outside the 2% equivalence band. It does not preserve the nominal challenge or supply
-high discovery probability.
-
-If a future amendment selects p_* for this specific contrast objective, the hotter-field
-point boundary at a known reference is algebraically
+Use (T.R5) on the measured effective matrices:
 
 \[
-T\ge T0\exp\{\log(1.02)+0.001+
- s_c[3.273078364+\Phi^{-1}(p_*)]\}. \tag{U.F4}
+c_{k,b,r}=\log\lambda_r(S_{b0}^{-1/2}S_{b1}S_{b0}^{-1/2}),\quad r=1,2,
+\qquad 0.90\log2.1\le c_{k,b,r}\le1.10\log2.1. \tag{U.F4}
 \]
 
-Uncertain T/T0 requires the full-region inequality, not plugging in a convenient point.
-Power alone provides a lower strength boundary, **not** a target-conformity width or
-an upper acceptable temperature. For illustration of the unresolved decision only,
-p_*=0.90, 0.95 or 0.99 would give point boundaries approximately 309.475, 309.894 or
-310.683 K at a known 298 K reference. **None is adopted.** Even those power levels
-would allow temperatures well below 318 K, demonstrating why target conformity is a
-separate required scientific choice.
+Here log2.1=0.7419373447293773, and both generalized eigenvalue ratios must lie in
+[1.949832770649,2.261732424639] approximately. This is a two-mode requirement even
+for nonproportional realized pairs. The 1.021-fold example retains only 2.801118%
+of nominal log challenge and fails. Its planning detection is approximately 0.0522%.
 
-### 21.4 Stiffness challenge
+For the proportional omitted-stiffness alternative beta_wrong=r_k, using actual T_1.
+For nonproportional pairs implement T.R6 exactly:
+`h_k=min_r c_k,r`, `P_stiffness^plan=P(h_k)`, and require its full-region infimum at
+least 0.90, as well as **both** mode inequalities. T11a explains the conservative
+instantaneous scalar-projection basis of this planning screen and its temporal
+misspecification limitation. It does not replace T's estimator or add modewise tests.
+At the retention boundaries the normal arguments are 170.2500081 and 210.0506272;
+the 0.90 screen passes under that fixed approximation. These large-shift planning
+values do not extend the validated beta envelope or establish finite-N performance.
+All existing T4 shape, physical and temporal gates remain separate requirements.
 
-T defines two circular target eigenvalues, 100 and 210 micro N/m, giving a nominal
-factor 2.1 in **both modes**. It does not define a replacement scalar averaging rule
-for materially nonproportional realized matrices. For exactly proportional effective
-curvatures `S1=r_k S0`, omission of the stiffness change while using the actual field
-temperature predicts `beta_wrong=r_k`. Its log effect is `abs(log r_k)`, and the
-T.30 planning expression is (U.F3) with that effect in place of the temperature contrast.
+### 21.5 Ellipse, reference and accompanying parameters
 
-For `r_k=1.021`, this expression is approximately **0.0005218639151**, or 0.0522%
-named-discrepancy probability at the specified planning precision. It is not a
-qualified version of the 2.1-fold challenge. A formal insertion of 2.1 gives an
-extremely strong scalar effect; no finite-N guarantee outside the qualified variance
-and nuisance envelope is inferred from that extrapolation.
-
-For general realized S0,S1, retain the matrix pair and its uncertainty. The ideal
-instantaneous wrong-reference-scale diagnostic is `2/tr(S0 S1^-1)` with a separate
-T4 shape contrast; it is not a newly adopted definition of an admissible stiffness
-ratio. The generalized eigenvalues of `(S1,S0)` express changes in both directions;
-all are 2.1 at the target. A future target region must control the matrices' absolute
-scales, their relative changes, shape and nominal temperature, so that detector
-range, confinement/relaxation and heating dependence retain their intended challenge.
-A power threshold for a scalar omitted-stiffness alternative alone does not determine
-such a region. No acceptable interval around 2.1 is derived uniquely from T.
-
-### 21.5 Matrix-level reference and ellipse conformity
-
-Use T4's intrinsic matrix geometry as a **metric**, while keeping its density-test
-threshold distinct from a presently missing target-conformity threshold. For a target
-mechanical matrix S_j,* and realized S_j, let `S_j,*=R_j,*^T R_j,*` and form
+With S_0*=100I and S_2*=R_30 diag(150,60) R_30^T in micro N/m, use (T.R7)–(T.R8):
 
 \[
-M_{j,*}=R_{j,*}S_j^{-1}R_{j,*}^T,\quad
-s_{j,*}=\tfrac12\log\det M_{j,*},\quad
-g_{j,*}=\|\log M_{j,*}-s_{j,*}I\|_{\rm op}. \tag{U.F5}
+L_2^*=R_{30}\operatorname{diag}(\log1.5,\log0.6)R_{30}^T,
+\qquad L_{2,b}=\log(S_{b0}^{-1/2}S_{b2}S_{b0}^{-1/2}), \tag{U.F5}
 \]
-
-The scalar s controls overall mechanical scale; g controls unequal modes, rotation
-and off-diagonal structure in a coordinate-invariant comparison. Carry their joint
-uncertainty from the full Schur/coordinate/temperature model. Pair them with actual
-local T target conformity; comparing H alone could conceal compensating K/T departures.
-At the ellipse target, the matrix in micro N/m is
-`[[127.5,38.9711431703],[38.9711431703,82.5]]` in the specified frame. A full-matrix
-region avoids arbitrary separate angle and eigenvalue tolerances.
-
-For an ellipse with eigenvalue ratio rho and an omitted rotation psi, the diagnostic
-shape contrast remains
-
 \[
-G_{\rm omit\ rotation}=\operatorname{arcosh}
-\left[1+\frac{(\rho-1)^2}{2\rho}\sin^2\psi\right]. \tag{U.F6}
+\sup_{\mathcal C_{b,02}}\|L_{2,b}-L_2^*\|_{\rm op}
+\le0.10\|L_2^*\|_{\rm op}=0.05108256237659907. \tag{U.F6}
 \]
 
-It is 0.4700036292 at rho=2.5 and psi=30 degrees. Merely requiring this number to
-exceed ln(1.05) admitted angles near 2.95 degrees in the failed specification; that
-presence test is withdrawn. T4's bound applies to agreement of the actual density
-with its measured potential, not to proximity of that potential to the designed
-30-degree ellipse. T supplies no numerical bounds on s_j,* or g_j,* for target
-realization, nor a discovery-power floor against each weakened geometry challenge.
-The reference likewise requires scale and matrix target conformity; it cannot be
-redefined by an arbitrary accurately measured anisotropic trap.
+T11a proves common orthogonal-coordinate invariance, eigenvalue/rotation control and
+well-definedness at a circular reference. Use the calibrated Euclidean physical frame,
+transform the target with it and retain coordinate uncertainty. Symmetric positive
+roots, solves and symmetric logarithms follow the existing SPD/conditioning/numerical
+requirements. No raw nonorthogonal detector-coordinate comparison is substituted.
 
-### 21.6 Exact pending programme decision and dispositions
+The nominal log matrix is
+`[[0.176392425140,0.396765525528],[0.396765525528,-0.281752940797]]`.
+An unrotated target-eigenvalue ellipse has distance 0.458145365937 and fails. The
+new target threshold is not T4's ln(1.05) density-agreement margin. T contains no
+separate wrong-orientation probability formula; no new geometry test is created.
+This full-matrix condition and existing T4/T.29 requirements remain binding.
 
-The narrow amendment must select and preregister:
+Theta0 uses measured S_0,T_0 and qualifies through all existing apparatus/model domains
+and the three relative comparisons. No additional arbitrary absolute stiffness,
+absolute-temperature or isotropic-reference angle tolerance is introduced. Theta3
+uses measured S_3 without requiring exact S_3=S_0; its mechanical, detector, relaxation,
+conditioning and harmonic domains still apply. Theta1 and theta2 use actual local
+T, including heating, within existing reservoir/model domains. These complete T11a
+choices replace the earlier request for separate absolute target regions; no design
+choice is left to V.
 
-1. A nonzero target-conformance region for each local T and effective lateral mechanical
-   matrix, including the reference, the near-2.1 two-mode change, and the specified
-   rotated ellipse. It must state treatment of correlations and be applied by the
-   existing joint 99.9% containment rule (U.F1).
-2. The quantitative meaning of preserving each named challenge: for example minimum
-   discovery probabilities for the named wrong-normalization/wrong-stiffness/wrong-
-   geometry alternatives, or an explicitly selected minimum retained nominal effect
-   under the fixed T inference and information rules. Any chosen objective needs
-   target conformity as well; it is not sufficient alone.
-3. A versioned region/predicate and pre-B qualification protocol, with conservative
-   treatment of realization uncertainty and applicability of the planning envelope.
+### 21.6 Prospective dispositions and fixed handoff
 
-Reasonable scientific choices include retaining a specified portion of nominal
-challenge strength or requiring a declared detection power such as 0.90, 0.95 or 0.99
-for the named alternatives. These are **decision families, not recommended or adopted
-numbers**. The acceptable target widths and matrix neighbourhoods express experimental
-purpose; neither likelihood algebra nor a calibration certificate selects them.
-Changing the 450000/408164 information targets, beta margins, block count or unrelated
-T gates is outside this amendment.
+Use the exact T11a outcomes per field and preparation:
 
-Once a region exists, containment establishes qualification. A region crossing its
-boundary is FIELD_REALIZATION_UNRESOLVED and cannot yield VALID; a certified outside
-realization is FIELD_REALIZATION_OUT_OF_SPEC. The latter invalidates the named record
-for the preregistered design and requires separately authorized reconstruction or
-reacquisition, not a beta/theorem failure. While the region itself is missing, use
-FIELD_REALIZATION_SPECIFICATION_MISSING. This currently blocks **all eight named
-records**, including theta0 and both preparation blocks. Heating of theta1 is evaluated
-against its own local-temperature target region, not merely the 318 K arm's region.
+- FIELD_REALIZATION_VALID: full-region retention, applicable planning discrimination
+  and existing-domain predicates pass, with required reference dependencies.
+- FIELD_REALIZATION_UNRESOLVED: a boundary is crossed, required physical evidence is
+  missing, or certified containment/disjointness is unavailable; no VALID packet.
+- FIELD_REALIZATION_OUT_OF_SPEC: the qualified region is certified disjoint from the
+  accepted role region; separately authorized reconstruction/reacquisition is required.
+- FIELD_REALIZATION_SPECIFICATION_MISSING: the required policy/version is absent or
+  mismatched. This remains a generic schema refusal, **not the current scientific gap**.
 
-The downstream Schur/uncertainty formulas are specified. Numerical target predicates,
-field-validity release and their V validators depend on this unresolved T decision.
-U9 remains GAP; no wording elsewhere in this report authorizes a weaker challenge.
+A role-valid result is only one component of overall packet validity. No such result
+is fabricated here. Each of eight records must qualify; one preparation cannot rescue
+another. Keep T11's 450000/408164 targets, fixed count mapping and cap, two blocks and
+eight records. Do not reduce N for a strong field or increase it to rescue a weak one.
+U9 is **COMPLETE AS SPECIFICATION, NOT PHYSICALLY QUALIFIED, NOT INDEPENDENTLY CLEARED**.
+**V remains blocked pending independent T-amendment and U-repair audit**, followed by
+separate authorization; it must implement this exact policy.
 
 ## 22. Two separately prepared blocks
 
@@ -1631,8 +1556,8 @@ estimated from only two points. Report both blocks separately and all required
 within-block reference contrasts. Do not average away a failed block or claim the
 precision improves by `sqrt(2)` for common standards. The reversed field order helps
 expose order/thermal-history problems; it does not prove their absence. Each block must
-also separately satisfy §21's adopted realization policy; that policy is presently
-missing, so neither block can be released as a valid named-field experiment.
+also separately satisfy §21's E1A-T11a-RF-v1 realization policy. Its specification
+is complete; neither preparation has yet been physically qualified.
 
 ## 23. Shared and common calibration standards
 
@@ -1891,9 +1816,10 @@ the failure is physical, metrological, statistical or numerical.
 | OBSERVATION_MODEL_UNQUALIFIED | Noise, blur, synchronization, distortion or photon regime outside T model; refuse |
 | CALIBRATION_UNCERTAINTY_EXCESS | Absolute/contrast floor, bias bound or T.29 floor fails; more B frames do not cure a calibration floor |
 | AXIAL_REDUCTION_UNQUALIFIED | Missing/unidentified axial blocks or provenance, nonpositive axial/full matrix, unqualified harmonic/support/dynamical reduction, or failed propagated budgets/geometry; no VALID packet |
-| FIELD_REALIZATION_SPECIFICATION_MISSING | Target region or challenge-preservation policy not adopted; CURRENT blocking state for all named records |
-| FIELD_REALIZATION_UNRESOLVED | Existing joint 99.9% region straddles an adopted realization boundary; no VALID packet |
-| FIELD_REALIZATION_OUT_OF_SPEC | Independently certified outside the adopted target region; invalid for the named experimental role, not a beta/theorem failure |
+| FIELD_REALIZATION_SPECIFICATION_MISSING | Required policy/version absent or mismatched; generic schema refusal, no longer the current four-field scientific gap |
+| FIELD_REALIZATION_UNRESOLVED | Joint 99.9% region crosses a realization boundary, evidence is missing, or certified containment/disjointness is unavailable; no VALID packet |
+| FIELD_REALIZATION_OUT_OF_SPEC | Region certified disjoint from the adopted role region; invalid experimental role, not beta/theorem failure |
+| FIELD_REALIZATION_VALID | Complete T11a role predicates pass over the joint region; necessary component of overall VALID, not asserted without actual data |
 | T11_UNQUALIFIED | No count in the fixed range satisfies information and all positive-gate precision requirements |
 | INVALID_RECORD_MONITOR | Later independent monitor, clipping, missingness or thermal/geometry state leaves frozen envelope; apply T invalid-record rule |
 | VALID | All conditions passed on actual independent evidence; not asserted in U |
@@ -1927,7 +1853,9 @@ populated packet. Exact serialization and schema validation belong to V.
 | Full physical field | K^(3), K_qq, K_qz, K_zz, full zero-force centre/intercept, local T, 3D coordinate/force maps and complete covariance |
 | Official lateral field | K_eff=S, q-star, U_eff difference function, H_eff=S/(k_B T), V function; unambiguously the matrix for B's lateral density |
 | Axial qualification | 3D calibration and sensing provenance; Schur correction/Jacobian/nonlinear covariance; support/remainder, geometry and dynamical-reduction certificates; qualification/refusal result |
-| Field realization | Nominal target, measured effective field/T and joint uncertainty, adopted target-region/power predicate and version, per-field/per-block status; missing policy explicitly blocks VALID |
+| Realization policy | E1A-T11a-RF-v1, exact T amendment commit/hash, nominal targets and challenges, applicable T.R1–T.R8 predicates |
+| Realization evidence | Measured effective fields/local T and challenges, full joint physical region with shared-reference covariance, worst-case retained challenge and each mode bound or ellipse matrix supremum |
+| Realization result | Worst-case planning detection for theta1/theta3, geometry probability marked not separately specified by T, per-field/per-block qualification status and dependency/refusal reasons |
 | State space | Full 3D calibration state and 2D observed lateral marginal, product measure/support, axial integration/remainder evidence, qualified spatial range and FOV/escape qualification |
 | Hydrodynamics | eta(T) model and node data, per-bead radius/temperature transfer, gamma0, tensor Gamma, wall/shape/flow corrections, remainder bounds and model validity domain |
 | Dynamics | Joint generalized modes/times, driven-response records and residual envelope, tau_f/tau_s, non-alias qualification; no B spectral estimates |
@@ -2026,9 +1954,9 @@ the binding requirements are the complete covariance and T gates.
 | Noise/shutter | Immobilized and driven reference targets, optical timing pulses | Example 0.0005 / 0.0002 contributions; noise ratio <=0.05, exposure/timing constraints | Hardware dependent; photon count and frame rate can conflict | NOT MEASURED |
 | Relaxation/Markov model | Independent driven response and generalized mechanical modes | Finite positive tau bounds, non-alias band and endpoint/coverage residual bounds | Significant risk from fluid memory, especially for stiff traps in low-viscosity liquid | NOT MEASURED |
 | Axial marginal reduction | 3D chamber drag and calibrated holographic position; Schur complement | Full-region axial/full SPD, full covariance/nonlinear bounds, existing total scale/shape/bias budgets and 2D temporal closure | Conditional; axial normal drag, optical-height transfer and hidden-mode memory must be qualified | NOT MEASURED |
-| Named-field target conformance | Versioned region plus challenge-preservation objective | §21; no new numeric width or power floor adopted | BLOCKED: narrow T-interface decision required | NOT MEASURED |
+| Named-field target conformance | E1A-T11a-RF-v1 joint-region qualification | §21; 90–110% challenge regions, 10% ellipse matrix ball and minimum 0.90 scalar planning detection | Specified; independent T-amendment/U audit required | NOT MEASURED |
 | Harmonic/conservative domain | Full force map plus justified remainder bound | Joint log bias <=0.0005, shape/current/centre requirements and spatial-tail domain | Conditional; local derivative at the centre is not enough | NOT MEASURED |
-| 298/318 K arm | Same standards, direct local maps and viscosity curve | Target-conformance/power policy missing (§21); differential covariance <=0.003 after all sources | Thermally accessible in principle; local homogeneity and long-duration stability unestablished | NOT MEASURED |
+| 298/318 K arm | Same standards, direct local maps and viscosity curve | T11a temperature ratio and planning predicates (§21); differential covariance <=0.003 after all sources | Thermally accessible in principle; local homogeneity and long-duration stability unestablished | NOT MEASURED |
 | Two preparations | Fresh bead/liquid/chamber assembly, full recalibration | Separate blocks with shared-standard covariance | Operationally feasible; does not establish statistical independence of standards | NOT MEASURED |
 | Complete eight-record design | Exact T11 mapping and all positive gates | Information 450,000 / 408,164; count cap; T.29; later V complete-pass validation | Not determined without the actual apparatus packet | NOT MEASURED |
 
@@ -2097,7 +2025,8 @@ explicit prospective authority and compatible dependence. **F4 construction is
 specified prospectively; actual physical inputs remain unmeasured and old F4 authority
 is unchanged.** No historical F-stage implementation is resumed. The bounded repair
 makes the prospective field construction explicitly K^(3) to S to H_eff; release
-of any named field additionally remains blocked by the target-realization gap in §21.
+of any named field additionally requires §21's specified T11a predicates, independent
+T-amendment/U audit and actual physical qualification.
 This does not reopen the unchanged F2 specification or amend old F4 authority.
 
 ## 33. U1–U12 disposition
@@ -2117,22 +2046,21 @@ has been achieved.
 | U6 Thermometry/local T | COMPLETE | Traceable bulk anchors plus calibrated local maps, heating/gradients/perturbation and common-reference covariance |
 | U7 Coordinates/orientation | COMPLETE | Full affine maps, distortion bound, force transformation and eigenspace-aware orientation |
 | U8 Observation calibration | COMPLETE | Independent R, shutter/timing law, range and noise-model refusal; no passive thermal calibration |
-| U9 Fields/blocks | GAP | Nominal T targets/orders retained; target-conformance regions and challenge-preservation objective missing; no weak-field substitution or VALID packet |
+| U9 Fields/blocks | COMPLETE AS SPECIFICATION | Exact E1A-T11a-RF-v1 predicates, both-mode/temperature/matrix regions and scalar planning power; NOT PHYSICALLY QUALIFIED, NOT INDEPENDENTLY CLEARED |
 | U10 Calibration covariance | REPAIRED AS SPECIFICATION | Existing hierarchy/budgets retained; Schur/axial terms and nonlinear correction propagated with all shared dependencies |
-| U11 Qualification/refusal | REPAIRED AS SPECIFICATION | AXIAL_REDUCTION_UNQUALIFIED and missing/unresolved/out-of-spec realization states block all VALID comparison packets as applicable |
-| U12 Packet/lock | REPAIRED AS SPECIFICATION | Full 3D blocks, official H_eff, axial covariance/provenance and mandatory versioned realization policy/status added; old lock semantics retained |
+| U11 Qualification/refusal | REPAIRED AS SPECIFICATION | Axial refusal preserved; T11a valid/unresolved/out-of-spec role outcomes specified; missing-policy state retained only as generic schema refusal |
+| U12 Packet/lock | REPAIRED AS SPECIFICATION | Axial content preserved; exact T11a version/identity, nominal/realized challenges, joint region, worst-case retention/power and qualification status bound; locks unchanged |
 
-The previous global COMPLETE/NONE disposition is withdrawn. Unrelated methods are
-preserved under the supplied audit scope; this is not a new independent clearance.
-HUMAN/PROGRAMME SCIENTIFIC DECISION REQUIRED TO CLOSE U9: the narrowly specified
-realization regions and challenge-preservation objectives in §21.6. For this repair,
-the user chose to record that gap and retain the block; no further decision is assumed.
-Physical measurements and independent re-audit remain future requirements.
+U9's former GAP is closed as specification by the programme-adopted T11a policy.
+HUMAN SCIENTIFIC DECISION REQUIRED: **NONE** for this bounded completion. Unrelated
+methods remain preserved; no independent clearance or physical validity is inferred.
+The T amendment and U repair require independent audit. All actual calibration and
+field qualification remain future work under separate authorization.
 
 ## 34. U-to-V handoff — not begun
 
-Only after the narrow T-interface decision is adopted, U is independently re-cleared
-and separate authorization is given, V must:
+Only after independent clearance of the T11a amendment and U repair, and separate
+authorization, V must:
 
 1. Implement the semantic packet schema, units/types, covariance/reference graph,
    immutable raw references and completeness validation. Distinguish actual data,
@@ -2140,7 +2068,8 @@ and separate authorization is given, V must:
 2. Implement the selected full 3D mechanical EIV estimator, axial sensing/force ingestion,
    Schur reduction and its covariance/nonlinear bounds, coordinate transformations and
    the required lateral dynamical closure. Preserve common Gamma–K and eta–T dependencies;
-   validate axial and field-realization refusals without replacing measured H_eff by a target.
+   preserve the axial validators and implement E1A-T11a-RF-v1's exact realization
+   predicates and outcomes without replacing measured H_eff by a target.
 3. Implement full primitive-law propagation, confidence-domain and bounded-error
    enclosures, numerical representation checks, SPD/conditioning certificates and
    the projection of residual models to scale and positive gates.
@@ -2158,11 +2087,11 @@ and separate authorization is given, V must:
 T's finite-N requirements, including achieved-size confidence bounds, 2.10 critical
 ceiling and complete-pass lower bound, control these tasks. Planning information or
 a finite grid is not a substitute for their validation. V must not be started merely
-because this document exists. **V is blocked by the missing T realization policy and
-independent U re-audit.** V must not choose an axial-reduction route, target tolerance,
-weaker temperature/stiffness/ellipse challenge or new power objective. It must implement
-the scientifically adopted validators exactly. W authority adoption and physical
-execution require their own subsequent gates.
+because this document exists. **V IS BLOCKED PENDING INDEPENDENT T-AMENDMENT +
+U-REPAIR AUDIT.** No unspecified realization choice remains. V must implement the
+axial construction and E1A-T11a-RF-v1 exactly; it may not choose a target tolerance,
+weaker challenge or new power objective. W authority adoption and physical execution
+require their own subsequent gates.
 
 ## 35. Physical-execution handoff — not begun
 
@@ -2182,7 +2111,8 @@ A later separately authorized physical stage must obtain and preserve:
   calibration at the actual operating conditions;
 - the complete primitive law/covariance, shared-standard graph, bounded errors,
   full-region geometry and uncertainty predicates, and per-block target-region checks
-  under a separately adopted policy; until that policy exists these checks remain blocked;
+  under E1A-T11a-RF-v1, with nominal/realized challenges and worst-case retention,
+  matrix and planning-power bounds; actual checks await measurements and authorization;
 - the resulting fixed sample counts, durations, settling/burn-in schedule and independent
   monitor envelopes, followed by separate packet locks before passive comparison.
 
@@ -2193,13 +2123,14 @@ run a trajectory or authorize the later optical-trap experiment.
 
 ## 36. Bounded repair status and static verification record
 
-Independent U audit: **NOT CLEARED**. This revision specifies the axial repair and
-records/contains the realization defect; it does not self-audit or claim independent
-clearance. **U9 remains GAP. FIELD QUALIFICATION AND V REMAIN BLOCKED.** T has not been
-amended because the user chose to record the missing normative decision rather than
-supply a new field-target policy. The next scientific action is the narrow programme
-review of §21.6, followed by independent re-audit; neither is performed here.
+The original independent U audit returned **NOT CLEARED**. The axial repair remains
+unchanged except for two U9 status references. The programme has now supplied the
+realization decision, T11a has been committed first, and **U9 IS COMPLETE AS
+SPECIFICATION**. No actual field is qualified and no independent clearance is claimed.
+**V IS BLOCKED PENDING INDEPENDENT T-AMENDMENT + U-REPAIR AUDIT.** No self-audit or
+later-stage work is performed. HUMAN SCIENTIFIC DECISION REQUIRED: **NONE**.
 
+The following axial algebra checks are retained from the preceding repair.
 The Gaussian square completion, determinant factorization, lateral inverse-block
 identity, Schur differential and pure axial-coordinate invariance are derived in §5.
 They and a shared-covariance propagation example were checked in exact rational
@@ -2224,26 +2155,34 @@ The effective-drag identity in §5.7 was also checked on a rational autonomous e
 | 304 K wrong-normalization alternative | Named cross-discrepancy planning probability 0.0002274435852 |
 | 318 K wrong-normalization alternative | Planning failure tail about 5.16e-18; not an achieved-power claim |
 | Stiffness ratio 1.021 alternative | Named cross-discrepancy planning probability 0.0005218639151 |
-| Illustrative unadopted p*=0.90/0.95/0.99 | Point thermal lower boundaries 309.475/309.894/310.683 K; these are not target-conformance regions |
+| Adopted p*=0.90 and retained thermal challenge | Power-only point boundary 309.474904752 K; the T11a retention lower boundary 315.941033445 K is stronger at T0=298 K |
 
 These are mathematical examples and planning formula checks, not calibration packets,
 physical results, finite-N validation or an independent audit. No scientific module,
 RNG, Monte Carlo, model trajectory, calibration acquisition, optical-trap experiment,
 old F-stage repair or official campaign is run. Execution authorization remains FALSE.
 
-Repair starting SHA: `7c3346462f5aeed5dfef176ecaa4e5e9070e847a`.
-Cleared T SHA: `ebcf2641fa2d8fe4ab95fef011e96fe53feeadc6`.
-Failed-U source SHA-256:
-`c627ff3df0f4797709e2473f97122751268cd2870c444c91ef30dc58256d6c79`.
-The only authorized changed file in this repair is this U report. The starting snapshot
-covers 2,990 tracked files; the other 2,989, including T, all authority, Book 1, code,
-plans, contracts and seal, are byte-identical in the completed comparison. Strict
-JSON parsing and AST-literal inspection reconstruct the unchanged analysis identity
-from 12 sources and execution identity from 19 validation sources plus the driver,
-matching §2. Both execution flags remain FALSE, seal state remains PRE_DRIVER and no
-official validation result exists. The report remains outside both identity preimages.
-The untouched method sections and F2 specification were compared directly; section,
-equation, local-link and table structure checks passed. Complete-diff review and
-exact-path staging precede one local repair commit; its full SHA and report hash are returned
-in the completion message. **PUSH: NO.** The baseline DeltaJ defect remains non-blocking
-here and must be repaired before W; it is not edited in this task.
+For this completion, the T11a deterministic checks recomputed c_T*=0.06495789627477229,
+c_k*=0.7419373447293773, temperature and stiffness intervals, the 304 K and 1.021-fold
+regressions, boundary planning power, nominal ellipse matrix, orthogonal invariance,
+mode/orientation control and full-region inequality directions. The exact formulas
+and results are in §21 and T §22.6. No physical observation, RNG or simulated path
+was used. T's original text and statistical rules were preserved; only the narrow
+subsection and provenance notice were added. U's axial section was compared
+byte-for-byte after accounting for only the two permitted policy-status references;
+all unrelated method sections and the F2 text are unchanged.
+
+Overall starting SHA: `097aec81bcfe420bb9e25d0152cd8b4a08f69fde`.
+T amendment / immediate U-update parent: `fb977f425a25d3252fdcfb510b767448aa839fe9`.
+Starting U SHA-256:
+`c4eb094a404f7ab2b8cc8c8a4c5684daa74cf05ba1010223836d6e3147da9046`.
+The authorized change set is exactly the T and U reports. The other 2,988 tracked
+files remain byte-identical, including Book 1, foundation, baseline, code, contracts,
+plans, seeds and seal. Strict JSON/AST identity reconstruction retains the analysis
+and execution hashes in §2; execution flags remain FALSE, seal remains PRE_DRIVER
+and no official validation result exists. Both reports remain outside those identity
+preimages. Section/equation references, local links, table structure, whitespace,
+complete diffs and exact-path staging are checked for the two separate local commits.
+The final U commit SHA and report hash are returned in the completion message.
+**PUSH: NO.** The known baseline DeltaJ defect remains non-blocking here and must be
+repaired before W; it is not changed in this task.
