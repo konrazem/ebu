@@ -5,26 +5,31 @@
 | Programme item | Status |
 |---|---|
 | R / S-MG / S | CLEARED inputs; no theoretical reopening |
-| T1–T12 | INDEPENDENTLY CLEARED, as reported in the commissioning brief |
-| U1–U12 | COMPLETE AS SPECIFICATION; independent audit required |
+| T1–T12 | INDEPENDENTLY CLEARED; narrow target-realization interface gap identified, T amendment pending |
+| Independent U audit | NOT CLEARED: axial marginalization and realized-field qualification |
+| U repair | Axial specification repaired for re-audit; U9 GAP; field qualification BLOCKED |
 | Physical calibration data | NOT COLLECTED |
 | Apparatus qualification | NOT ESTABLISHED |
-| V / W | NOT STARTED |
+| V / W | NOT STARTED; V blocked by missing field-realization policy and independent re-audit |
 | Execution | NOT AUTHORISED; existing execution flags remain false |
 
 Prepared on 2026-10-05 against repository commit
 `ebcf2641fa2d8fe4ab95fef011e96fe53feeadc6`, branch `codex/book-one-continuity`.
-This report specifies future measurements and decisions. It contains neither an actual
-calibration packet nor a claim that an apparatus meets its requirements.
+Bounded repair starts from failed U commit
+`7c3346462f5aeed5dfef176ecaa4e5e9070e847a`. The original preparation coordinate above
+is retained for provenance. This revision changes only the two audited blockers and
+their necessary mathematical/status/handoff dependencies. It contains neither an
+actual calibration packet nor a claim that an apparatus meets its requirements.
 
 ## 1. Executive result
 
 Branch A will construct the potential through **controlled, externally driven
 force–displacement calibration**, using a calibrated translating chamber, independently
 measured fluid viscosity and actual bead radius, and a qualified finite-chamber
-hydrodynamic resistance. A full two-dimensional mechanical fit supplies the stiffness
-matrix and zero-force centre. Traceable local thermometry supplies the temperature in
-`H = H_U/(k_B T)`. Coordinate, localization-noise and shutter calibrations are separate
+hydrodynamic resistance. The repaired route uses a full three-dimensional mechanical
+fit and its zero-force centre, then a harmonic Schur complement to predict the observed
+lateral marginal. Traceable local thermometry supplies the temperature in
+`H_eff = K_eff/(k_B T)`. Coordinate, localization-noise and shutter calibrations are separate
 measurement streams with a shared covariance ledger.
 
 The selected route retains Stokes drag only inside its measured domain. It does not
@@ -35,20 +40,35 @@ Gaussian model required by T. Independently driven response measurements must qu
 that approximation over the observation bandwidth; otherwise the apparatus is refused
 for this design.
 
-The result is a complete **conditional specification**, not achieved physical
-qualification. It fixes the method, estimator, dependencies, decision functionals,
-packet contents and lock order. Instrument serial numbers, measured values, certified
-ranges and attainable uncertainties are mandatory future inputs, not values invented
-here. All physical acceptance tests remain unevaluated until those inputs exist.
-There is no identified missing T field definition and no new scientific decision is
-required. The role checks below are consequences of T's existing tolerances; they do
-not authorize replacing T's nominal fields or changing its power claims.
+The axial construction is specified for independent re-audit; the overall U stage
+remains **NOT CLEARED**. Instrument values and actual qualification remain unmeasured.
+The cleared T report does not determine numerical field-target realization regions
+or a required discrimination-power objective for departures from its nominal fields.
+Under the user's instruction this gap is recorded, T is unchanged, and field
+qualification and V remain blocked. No new scientific tolerance is invented.
 
 For the EBU programme, the purpose is concrete: the mechanical energy landscape is
 constructed without learning its scale from the distribution used to test it. A
 successful later comparison can therefore inform the thermal-normalization claim.
 A calibration refusal instead identifies a measurement limitation. It establishes
 neither a failure of the equilibrium theorem nor a result about social mechanisms.
+
+### 1.1 Bounded repair record
+
+The independent U audit, as supplied in the commissioning repair brief, returned
+**NOT CLEARED** with exactly two material blockers:
+
+1. No selected quantitative independent axial marginalization/PMF qualification.
+2. No binding realization rule preserving the intended T-stage physical challenges.
+
+This revision repairs the axial specification in §5 and its direct dependencies.
+It withdraws the inadequate weak-presence rules in §21, identifies the exact narrow
+T-interface decision and blocks packet validity until that decision is adopted.
+The user explicitly chose to record the gap and keep field qualification and V
+blocked. Thus Blocker B is **contained by refusal, not scientifically closed**.
+No T amendment is committed before its normative objectives are selected. Unrelated
+U methods and budgets are preserved. This work is not an independent audit and does
+not claim clearance of either the repair or the original U artifact.
 
 ## 2. Authority and provenance
 
@@ -64,7 +84,7 @@ their explicitly cleared scope. The controlling scientific inputs are:
   [S-MG continuity](../theory/EBU_MOBIUS_GENERATOR_CONTINUITY_THEOREM.md) where applicable to the
   hierarchy, and [S-stage anchor](../theory/EBU_EQUILIBRIUM_THERMODYNAMIC_ANCHOR.md).
 - [T-stage experiment design](E1A_MINIMAL_EQUILIBRIUM_EXPERIMENT_DESIGN.md), committed
-  at the starting SHA. T12 clearance is an explicit input of the user's U brief;
+  at the cleared T parent SHA above. T12 clearance is an explicit input of the user's U brief;
   this report does not invent a separately committed T12 audit document.
 
 The current branch has no `docs/scientific_record/` directory. Its absence is already
@@ -169,8 +189,10 @@ construction**, not a false diagonal covariance assumption.
 ## 5. Physical field and record architecture
 
 Use one sealed, temperature-controlled chamber per preparation, a trapped nonporous
-microsphere, independently observed chamber geometry, two-dimensional stage translation
-and a common physical coordinate frame. The working liquid must be homogeneous,
+microsphere, independently observed chamber geometry, three-axis stage translation
+for A calibration and a common physical coordinate frame. Passive Branch B remains
+two-dimensional; this extends calibration, not the B observation or likelihood dimension.
+The working liquid must be homogeneous,
 Newtonian and compatible with the selected fluorescence thermometer. The spherical
 hydrodynamic boundary must be qualified. The exact liquid recipe, bead material,
 nominal size, dye concentration, chamber dimensions and instrument models are apparatus
@@ -184,29 +206,413 @@ may lead to a newly identified preparation and a complete new pre-B packet; it c
 license selecting among packets after inspecting B. All failed preparations and their
 reason codes remain in the acquisition ledger.
 
-For each block b and field j, construct actual measured quantities
+For each block b and field j, construct the full mechanical stiffness K^(3), its
+zero-force centre and the effective lateral curvature S=K_eff defined below. The
+official two-dimensional field is
 
 \[
-U_{bj}(x)-U_{bj}(x^*_{bj})=\tfrac12 q^T K_{bj}q,
-\quad q=x-x^*_{bj},\quad K_{bj}=H_{U,bj},
+U_{\rm eff}(q)-U_{\rm eff}(q_\star)=\tfrac12(q-q_\star)^T S(q-q_\star),
+\quad H=H_{\rm eff}=S/(k_BT),\quad
+V(q)=\tfrac12(q-q_\star)^T H_{\rm eff}(q-q_\star). \tag{U.1}
 \]
+
+Throughout the downstream two-dimensional density, uncertainty and geometry formulas,
+K or H_U denotes this **effective lateral** S, and H denotes H_eff. The full 3D
+matrix K^(3), its plane block K_qq and the effective matrix are separate packet fields.
+Their units are N/m = J/m²; H_eff has units m⁻² and V is dimensionless. The base
+measure for B's latent physical density is dq, after the axial marginalization below.
+Do not interpret a principal block of the 3D drag as an effective 2D dynamical drag
+without the qualification in §5.7. Camera support remains an observation limitation,
+not conditioning on survival or an EBU conservation constraint.
+
+Notation: in §§5.1–5.8 q is lateral position and Q=q-q_star is displacement. The
+retained downstream formulas use x for position and q=x-x_star for displacement.
+
+### 5.1 Observed state and selected reduction
+
+Branch B observes **two-dimensional lateral detector coordinates**, interpreted through
+§19's calibrated observation model as q=(x,y). The axial coordinate z is unobserved in
+B and is marginalized. It is measured in the separate driven A calibration described
+below. The density prediction is therefore for the lateral marginal with respect to
+`dq=dx dy`, not for an energy slice at fixed z. A plane restriction `U(q,z0)` is not
+an admissible substitute.
+
+The single selected primary route is **independently driven full 3D force-response
+calibration, followed by harmonic Schur-complement reduction**. A separability assertion
+and a general nonlinear PMF reconstruction are not alternative official routes left
+to V. Measured zero coupling is a special case of this route. A nonlinear potential
+outside its bounded harmonic approximation causes refusal and would require a separate
+prospective design decision.
+
+Write Q=q-q_star and Z=z-z_star. After independent conservative-force qualification,
+
 \[
-H_{bj}=\frac{K_{bj}}{k_BT_{bj}},\qquad
-V_{bj}(x)=\tfrac12 q^T H_{bj}q. \tag{U.1}
+U(q,z)=U_*+\tfrac12 Q^T A Q+Q^T b Z+\tfrac12\kappa Z^2,
+\qquad
+K^{(3)}=\begin{pmatrix}A&b\\b^T&\kappa\end{pmatrix},
+\quad A=K_{qq},\quad b=K_{qz},\quad\kappa=K_{zz}. \tag{U.A1}
 \]
 
-K has units N/m = J/m², H has units m⁻², and V is dimensionless. An arbitrary energy
-zero does not affect V; no absolute U zero is claimed. The declared model is a full
-rank two-dimensional affine space with Lebesgue measure `dx_1 dx_2`. A nonsingular
-coordinate change carries its Jacobian; a nonlinear coordinate density is not silently
-identified with the same Gaussian.
+Here A is 2-by-2, b is 2-by-1, and kappa is scalar. These symbols are local stiffness
+blocks, not acquisition-stream labels. Require kappa>0 and full K^(3) SPD over the
+joint physical calibration region. With product Lebesgue measure `dq dz`, fixed
+uniform T and full Gaussian support, completing the square gives
 
-Finite camera support is an observation limitation, not a conditioning of the physical
-law on survival. The complete T field-of-view tail requirement is retained. The axial
-coordinate must be independently shown separable over the qualified range, or its
-independently determined potential of mean force must satisfy the same harmonic model.
-Simply dropping a coupled axial coordinate is invalid. Neither a camera crop nor a
-wall is an EBU conservation constraint.
+\[
+U-U_*=\tfrac12 Q^T S Q+
+\tfrac12\kappa\left(Z+\kappa^{-1}b^T Q\right)^2,
+\qquad S=A-b\kappa^{-1}b^T. \tag{U.A2}
+\]
+
+The translation of Z has unit Jacobian. Therefore
+
+\[
+\int_{\mathbb R}e^{-(U-U_*)/(k_BT)}dz
+=\sqrt{\frac{2\pi k_BT}{\kappa}}
+ e^{-Q^T S Q/(2k_BT)}. \tag{U.A3}
+\]
+
+The prefactor is independent of q because kappa is constant in this quadratic model.
+It cancels on lateral normalization. Consequently the official density-bridge field is
+
+\[
+\boxed{K_{\rm eff}=S=K_{qq}-K_{qz}K_{zz}^{-1}K_{zq}},\qquad
+\boxed{H_{\rm eff}=S/(k_BT)},\qquad
+V_A(q)=\tfrac12 Q^T H_{\rm eff}Q. \tag{U.A4}
+\]
+
+This also follows from `(K^(3)^-1)_qq=S^-1`, but (U.A3) establishes the reference
+measure and normalization explicitly; `det K^(3)=kappa det S`. For the scalar lateral
+counterexample in the audit, A=k, b=g and kappa=k_z give `K_eff=k-g^2/k_z`, rather than k. Full SPD requires
+`k k_z>g^2`. A stiff positive plane section by itself does not establish that condition.
+
+Replacing the full exponent by `-beta U/(k_B T)` in this **quadratic** calculation
+changes the axial prefactor to `sqrt(2 pi k_B T/(beta kappa))`; it remains independent
+of q. Thus the lateral covariance is `beta^-1 H_eff^-1` without fitting any axial
+or lateral passive covariance to calibrate H_eff.
+
+For a general nonquadratic potential the canonical definition is instead
+
+\[
+U_{\rm PMF}(q)=-k_BT\log\int e^{-U(q,z)/(k_BT)}d\nu_z+C. \tag{U.A5}
+\]
+
+This requires the declared reservoir, reference measure, support and finite integral.
+A q-dependent measure, accessible axial domain or axial curvature can contribute
+additional terms. The Schur complement is not a universal replacement for (U.A5).
+Nor does multiplying a general PMF by beta necessarily commute with marginalizing
+`exp(-beta U/(k_B T))`. The selected primary route is the harmonic case in (U.A1)–(U.A4).
+
+### 5.2 Independent axial position and force measurement
+
+Extend the selected chamber-drag route to a **calibrated three-axis translation stage**.
+An independently calibrated axial interferometric encoder supplies z displacement and
+velocity of the chamber. In-situ Lorenz–Mie holographic localization supplies all three
+bead coordinates during A drives, in a common physical frame. Calibrate its axial
+scale, sign, linearity and lateral/axial cross-talk with immobilized reference spheres
+translated through known three-dimensional displacements. Include refractive-index
+mismatch, focal-depth conversion, aberrations, wavelength, bead-image parameters and
+axis tilt. An apparent focus displacement is not automatically a physical z displacement.
+
+This extends the existing per-bead optical method rather than using thermal variance
+to identify axial stiffness. [Lee et al. (2007)](https://arxiv.org/abs/0712.1738)
+demonstrates holographic 3D localization, including axial position information. Its
+reported resolution is evidence for the sensing principle, not a traceable calibration
+or demonstrated EBU uncertainty. No instrument capability is asserted here.
+
+For steady plateaux use the **full 3-by-3** finite-chamber resistance Gamma^(3), including
+normal-to-wall resistance and its cross-components, with the same independently
+measured eta, radius and geometry already required by §§8–11. The three-dimensional
+force input is `F^(3)=Gamma^(3) v_rel^(3)`. A parallel-wall Faxen correction for lateral
+motion cannot be reused as the normal drag coefficient. Axial flow transfer is measured
+by the same independent driven-advection procedure, using 3D localization; no passive
+spectrum, equipartition relation or B covariance provides an axial force standard.
+
+Axial chamber motion can change wall distance, refraction, focal depth, trap centre and
+stiffness. Use paired positive/negative velocity plateaux at matched chamber heights,
+with an independently calibrated optical/fiducial transfer at those heights. Reduce
+each probe to the declared record geometry through that measured transfer and its
+covariance. A small stroke alone is not proof that K^(3) stayed fixed. If field changes,
+velocity transfer, bead height or optical perturbation cannot be bounded within the
+existing residual/uncertainty budgets, return AXIAL_REDUCTION_UNQUALIFIED; do not fit
+a single K^(3) to unqualified changing fields.
+
+An independent axial force transducer or a nonlinear PMF method could be future
+substitutes, but neither is selected in this specification. Absence of an adequate
+axial stage/position/drag calibration is a refusal, not permission for V to choose
+another route.
+
+### 5.3 Full 3D identification and relation to the retained lateral probes
+
+Fit the vector equilibrium relation
+
+\[
+F^{(3)}_r=K^{(3)}X_r+c^{(3)},\qquad
+X=(x,y,z)^T,\qquad X_\star=-(K^{(3)})^{-1}c^{(3)}. \tag{U.A6}
+\]
+
+The conservative fit has six stiffness components
+`K_xx,K_xy,K_xz,K_yy,K_yz,K_zz` and three intercept components. First fit the unrestricted
+3-by-3 response for curl/conservativity diagnostics; impose symmetry only after their
+qualification, following §12. Estimate all nine physical parameters jointly with
+force, position, geometry and standard nuisances using the existing errors-in-variables
+construction. The lateral centre is the q projection of X_star, with full covariance.
+Here zero force means zero imposed drag. The fitted conservative potential includes
+any independently qualified stationary gravity/buoyancy contribution; a constant
+conservative load shifts the centre. Uncontrolled background flow cannot be absorbed
+into that centre to qualify an equilibrium record (§7).
+
+Three independent force directions with paired signs can identify an affine response
+when the measured design has full rank. The selected production design is overdetermined:
+retain the original four lateral directions and add the remaining directions in
+
+\[
+\{(u_x,u_y,u_z):u_i\in\{-1,0,1\},\ u\ne0,\
+\text{first nonzero component is }+1\}, \tag{U.A7}
+\]
+
+with each direction normalized in physical space. There are 13 undirected directions:
+three axes, six face diagonals and four body diagonals. Both signs and three amplitude
+levels give **78 nonzero plateaux per complete cycle**, including the original 24
+lateral probes. This adds independent z forcing and mixed xz/yz/xyz probes; lateral
+motion alone cannot identify b and kappa. Zero-force references, at least three
+cycles, reversed cycle order, A-only pilot selection of fixed counts and the existing
+mean-covariance treatment remain as in §§12–13. Amplitudes cover the qualified **3D**
+volume at thermal radii R/3, 2R/3 and R under the pilot's full K^(3), with propagated
+placement uncertainty. This does not use passive B widths.
+The directions specify desired physical displacements. The A-only pilot maps these
+to the required velocity/force vectors, which generally point in different directions;
+qualification uses the measured 3D design, not nominal commands.
+
+The six stiffness entries are identified by the independent derivatives of the three
+force components with respect to the three measured positions; the three intercepts
+locate x_star, y_star and z_star. Require full rank of the physical displacement/force
+design after nuisance profiling, finite covariance and a qualified numerical solution.
+The specified directions also identify all 20 monomials of a scalar cubic polynomial
+in three variables. They support the full vector nonlinearity check, including xyz;
+finite probes still require a justified between-probe remainder bound under §13.
+
+Eliminating z from the static **force** equations gives an additional check:
+
+\[
+S q+c_{\rm eff}=F_q-b\kappa^{-1}F_z,
+\qquad c_{\rm eff}=c_q-b\kappa^{-1}c_z. \tag{U.A8}
+\]
+
+If independently established F_z=0, a relaxed lateral response can measure S directly;
+it does not identify b and kappa separately. Without that axial-force condition a
+lateral fit need not measure either A or S. Equations (U.A6)–(U.A8) remove that ambiguity.
+The old 2D fit remains a lateral-subset consistency check using the reduced force in
+(U.A8); it is no longer a stand-alone construction of the official physical H.
+
+### 5.4 Schur covariance, scale and orientation
+
+For a general positive axial block C, with S=A-B C^-1 B^T,
+
+\[
+dS=dA-dB C^{-1}B^T-B C^{-1}dB^T
++B C^{-1}(dC)C^{-1}B^T. \tag{U.A9}
+\]
+
+For the selected single axial coordinate, in component order
+`v=(A11,A12,A22,b1,b2,kappa)` the Jacobian to `(S11,S12,S22)` is
+
+\[
+J_S=\begin{pmatrix}
+1&0&0&-2b_1/\kappa&0&b_1^2/\kappa^2\\
+0&1&0&-b_2/\kappa&-b_1/\kappa&b_1b_2/\kappa^2\\
+0&0&1&0&-2b_2/\kappa&b_2^2/\kappa^2
+\end{pmatrix}. \tag{U.A10}
+\]
+
+Chain this with the full 3D EIV and coordinate Jacobians, not only six marginal error
+bars. With existing primitive vector phi enlarged by the axial measurements,
+`C_vech(S)=J_S,phi C_phi J_S,phi^T`, retaining cross-covariance with T, centres, drag,
+observation calibration and every other field/block. Normalization gives
+`dH_eff=dS/(k_B T)-H_eff dT/T`. Small estimated b is not evidence that its uncertainty
+or the second-order Schur term is zero. Near b=0 the leading Jacobian in b vanishes;
+propagate the quadratic term by the existing nonlinear-enclosure requirement, not a
+zero-variance linearization.
+
+Let `X=P_3 u` map the calibrated 3D instrument coordinates to physical coordinates.
+Stiffness transforms as `K^(3)=P_3^-T K_u P_3^-1`; for `L=dP_3 P_3^-1`,
+
+\[
+dK^{(3)}=P_3^{-T}(dK_u)P_3^{-1}-L^T K^{(3)}-K^{(3)}L. \tag{U.A11}
+\]
+
+This explicitly includes tilt/orientation and axial scale. Forces transform as
+covectors and stage velocities as vectors under the same map. A **pure reparametrization**
+`z'=s z` changes b to b/s and kappa to kappa/s², leaving S exactly invariant; a
+covariance implementation must preserve that cancellation. Actual axial-scale error
+can still affect inferred forces, wall heights, fluid transfer and optical cross-talk.
+It is propagated through those measurement dependencies, not added as an independent
+percentage to S or dismissed by the coordinate-invariance identity.
+
+All axial derivatives feed §25's actual profiled temporal-likelihood sensitivity.
+In the ideal instantaneous Gaussian diagnostic,
+`d log beta=-(1/2) tr(S^-1 dS)`. Therefore the enlarged Jacobian contributes inside
+`J_beta C_phi J_beta^T`; it receives **no additional 0.009 allowance**. For a contrast,
+use `(J_beta,bj-J_beta,b0) C_phi (J_beta,bj-J_beta,b0)^T`, including field-dependent
+b, kappa, thermal effects and shared axial references. It receives **no additional
+0.003 allowance**. Any cancellation must follow from this covariance, not a declaration
+that the same sensor was used.
+
+### 5.5 Quantitative axial scale and shape qualification
+
+Always publish S and H_eff for the lateral comparison, even when the correction looks
+small. Record the exact diagnostic difference `Delta K_axial=-b kappa^-1 b^T`.
+For A SPD define
+
+\[
+r=\frac{b^T A^{-1}b}{\kappa},\quad 0\le r<1. \tag{U.A12}
+\]
+
+Full SPD is equivalent to kappa>0 and S SPD; in this case r<1. If the plane block A
+were mistakenly used against the true lateral covariance, the eigenvalues of its
+whitened covariance would be `1` and `1/(1-r)`. Consequently
+
+\[
+\beta_{\rm plane}=\frac{2(1-r)}{2-r},\quad
+|\log\beta_{\rm plane}|=\log\frac{2-r}{2(1-r)},\quad
+G_{\rm plane}=-\tfrac12\log(1-r). \tag{U.A13}
+\]
+
+These quantify both scale and geometry impact; a scalar trace check alone is
+insufficient. They are **diagnostics of the omitted correction**, not a new permitted
+axial tolerance. A large precisely known correction can be retained provided the
+resulting S meets every actual field, precision and model requirement. A small
+uncertain correction cannot simply be dropped.
+
+For uncertainty and residual-model qualification, use exactly T4's scale-independent
+matrix statistic. For a locked H_eff estimate `Hhat=Rhat^T Rhat`, and each candidate
+true effective curvature H in the joint physical/model region, form
+
+\[
+M(H)=Rhat\,H^{-1}Rhat^T,\quad
+w(H)=\log M(H)-\tfrac12\log\det M(H)I. \tag{U.A14}
+\]
+
+Propagate the two independent components of w, and the lateral centre, jointly into
+T.29's fixed contrast basis, covariance and bounded-error sets. The positive shape
+gate remains the T4 97.5% upper limit below ln(1.05), with T.29's fixed planning
+allocation and all other error sources included. Require the total 0.009 absolute
+and 0.003 contrast standard-uncertainty limits, the joint 0.0005 absolute/contrast
+bias bounds, full-region H_eff SPD/condition limit and the positive-gate precision
+condition. Axial terms cannot spend those allowances a second time. The separate
+field-target geometry check is presently blocked under §21; T4's density-agreement
+margin is not a substitute target-realization tolerance.
+
+### 5.6 Harmonic support, residual bounds and axial observation effects
+
+The Gaussian integral is exact for the full quadratic model on the stated product
+support. Actual finite walls, escape, nonquadratic force terms and unobserved excursions
+must be covered independently; conditioning on a narrow axial camera window would
+change the tested law. Extend the mechanical force map, conservative qualification,
+thermometry and smoothness bounds to the full 3D volume. The permitted fluctuation-
+averaging correction uses only driven A position moments as in §13. It never uses
+an axial equipartition or passive covariance estimate to obtain a stiffness.
+
+A quantitative way to bound the reduction remainder is to write
+`U=U_quad+R(q,z)` from the independent force reconstruction. At each q let Q_q be the
+normalized axial Gaussian in (U.A3), with mean
+`z_star-kappa^-1 b^T(q-q_star)` and variance `k_B T/kappa`. On the mechanically
+qualified axial interval, certify
+`a(q)<=R(q,z)/(k_B T)<=b_R(q)` and its gradient/Hessian bounds. Let epsilon_Q(q) be
+the Gaussian mass outside that interval and let t_plus(q) bound the actual outside
+Boltzmann integral divided by the full quadratic integral at q. The latter needs an
+independent energy/support bound; a Gaussian tail for the quadratic approximation
+alone does not bound an arbitrary physical tail. Then
+
+\[
+L(q)=e^{-b_R(q)}[1-\epsilon_Q(q)]
+\le \frac{I_{\rm true}(q)}{I_{\rm quad}(q)}
+\le e^{-a(q)}[1-\epsilon_Q(q)]+t_+(q)=U_b(q). \tag{U.A15}
+\]
+
+For positive L, the dimensionless PMF correction lies in
+`[-log U_b(q),-log L(q)]`; subtract its independently bounded value at q_star to
+obtain the potential-difference remainder. Missing or infinite tail bounds cause
+refusal. In the global uniform case `|R/(k_B T)|<=epsilon`, the PMF value correction
+is at most epsilon and its difference from the centre at most 2 epsilon. This is a
+bound, not an allocated numerical tolerance.
+
+To qualify shape as well as potential values, retain derivative bounds and propagate
+the corresponding independently specified physical-model set through (U.A14) and §25.
+For fixed product support and justified differentiation under the integral,
+`Hess_q U_PMF = E[U_qq] - Cov(U_q)/(k_B T)`. These expectations are calculated from
+the independently measured physical potential and its certified remainder set, not
+from a passive B covariance. Support-boundary terms must be included if relevant;
+otherwise that non-product case is unqualified for this route. Finite force samples
+alone do not establish uniform remainder or tail bounds. No nonlinear PMF is installed
+as a new primary likelihood in this repair; the bounds only qualify the existing
+harmonic approximation. Evaluate its error over the same scale/field envelope used
+in T and include it in the existing bias, shape, centre and diagnostic budgets.
+For an exponent scaled by beta, the same bound uses beta R/(k_B T) and axial Gaussian
+variance k_B T/(beta kappa); a certificate only at beta=1 does not cover that envelope.
+
+Finally, qualify defocus-dependent lateral tracking using independently moved 3D
+reference targets. A linear choice of physical lateral axes may absorb a calibrated
+projection; residual dependence of the lateral detector map/noise on hidden z must
+fit §19's fixed observation law and its existing error budget. No per-frame B axial
+estimate is introduced to rescue an invalid 2D observation model. Missing axial
+support, unbounded defocus effects or nonuniform axial temperature invokes
+AXIAL_REDUCTION_UNQUALIFIED or the existing observation/reservoir refusal as applicable.
+
+### 5.7 Direct temporal consequence of eliminating z
+
+A correct Gaussian lateral **density** need not have a two-dimensional Markov path.
+For the independently calibrated full overdamped model, let
+`A_3=(Gamma^(3))^-1 K^(3)` and let E_q project onto the two observed coordinates.
+Under the canonical benchmark its lateral lag covariance is
+
+\[
+C_q(t)=E_q e^{-A_3t}(k_BT[K^{(3)}]^{-1})E_q^T,\quad t\ge0. \tag{U.A16}
+\]
+
+In general this is not `exp(-A_2 t) k_B T S^-1` for one constant 2-by-2 A_2.
+The sufficient exact-closure condition `(A_3)_qz=0` makes the q equation autonomous;
+otherwise require the independently driven 3D response and its observation transfer
+to bound the deviation from T's retained 2D temporal model under §20. Fast axial
+relaxation alone is not a numerical error bound.
+
+Under exact closure, put `mu_eff=[(Gamma^(3))^-1]_qq`. Then
+`A_2=(A_3)_qq=mu_eff S` and `Gamma_eff=mu_eff^-1`. Thus even in this exact case
+the appropriate 2D drag is an inverse mobility block, generally the Schur complement
+of the axial drag block, rather than Gamma_qq. Propagate its shared covariance with S.
+
+Do not set `tau=gamma/k_eff` or take the qq block of Gamma^(3) without proving the
+required dynamical reduction. Use independently qualified lateral response/time
+bounds for the unchanged T11 schedule. If hidden-mode memory cannot fit the existing
+residual and coverage/diagnostic requirements, refuse the realization under
+TEMPORAL_MODEL_UNQUALIFIED, linked to AXIAL_REDUCTION_UNQUALIFIED. A 3D hidden-state
+likelihood is not introduced by this repair and cannot be selected by V. This is a
+direct dependency of Blocker A, not a reopening of T's unrelated statistical design.
+
+### 5.8 Axial qualification predicate
+
+No comparison packet is VALID unless all of the following hold on the full existing
+joint 99.9% physical region, with bounded model errors also included:
+
+1. Axial position, applied force, b and kappa are independently identified with complete
+   covariance and provenance; the 3D force design and numerical solution are qualified.
+2. K^(3) is SPD, kappa>0, and S is SPD; H_eff satisfies T's existing
+   condition-number and numerical requirements. No clipping or SPD projection repairs
+   a failed region.
+3. The 3D conservative harmonic approximation, product-support reduction, residual/tail
+   bounds, local temperature and lateral observation transfer are qualified.
+4. The enlarged total log-beta uncertainty and bias satisfy 0.009/0.003 and 0.0005,
+   respectively; axial shape/centre terms satisfy T.29 with every other contribution.
+5. The lateral temporal reduction meets the unchanged T likelihood/bandwidth requirements.
+6. The effective lateral fields satisfy the separately adopted target-realization policy;
+   that policy is not yet specified and is blocked under §21.
+
+Failure of items 1–5 produces AXIAL_REDUCTION_UNQUALIFIED with its precise dependency
+reason (and existing subsidiary codes). Missing or failed item 6 produces the field
+realization refusal in §28; unresolved target geometry is also recorded in axial
+qualification so it cannot be hidden by an otherwise valid Schur calculation.
+Specification of the axial method is complete for re-audit; **no axial measurement or
+physical qualification has been performed**.
 
 ## 6. Candidate physical calibration routes
 
@@ -228,6 +634,10 @@ its particular estimator adopted.
 
 ## 7. Selected mechanical calibration
 
+For the repaired primary construction, apply the following force balance in three
+physical dimensions as specified in §5.2. Its two-dimensional reduction uses the
+reduced force in (U.A8); a lateral-only fit is not the official field construction.
+For the full 3D use of (U.2), K, Gamma, x and x-star mean K^(3), Gamma^(3), X and X_star.
 Translate the whole closed chamber at independently calibrated velocities while the
 trap remains fixed in the laboratory frame. In a qualified steady plateau, with
 fluid velocity at the bead `v_rel` relative to the mean bead velocity, force balance is
@@ -468,6 +878,13 @@ may detect the issue but cannot turn an unusable downstream gamma into a valid v
 
 ## 12. Force/displacement tensor calibration
 
+The retained 2D construction below is the lateral-subset consistency check within
+§5.3's primary 3D EIV fit. Its K and c are S and c_eff, and its force is the reduced
+force (U.A8). The 24 lateral probes are retained within the 78-probe 3D cycle; they
+cannot by themselves certify axial blocks or the official lateral marginal.
+In this check, the force notation Gamma(phi) v_r below means the reduced 3D force
+F_q-b kappa^-1 F_z, not a principal-block drag multiplied by lateral velocity alone.
+
 For probe r, fit the vector relation
 
 \[
@@ -516,6 +933,11 @@ or profile curvature calculations supply candidate covariance; the actual auxili
 coverage and estimator behaviour are later V responsibilities.
 
 ## 13. Harmonic linearity and force range
+
+Apply these existing lateral conditions to the effective field from §5, and extend
+the force/nonlinearity measurements to the 3D volume and axial conditional tails
+specified in §§5.3 and 5.6. The d=2 tail identity below still concerns the observed
+lateral marginal; it does not qualify an unobserved axial tail on its own.
 
 The mechanical pilot uses only controlled A drives to obtain a coarse stiffness,
 centre and flow transfer. It then fixes the production amplitudes to cover the
@@ -587,8 +1009,10 @@ A failed model check does not falsify a general equilibrium identity.
 
 ## 14. Trap centre
 
-The A centre is the **zero-external-force intercept** of the driven mechanical fit,
-transferred to the B observation frame through independently measured fiducials:
+The A centre is the q projection of the **3D zero-imposed-drag centre** in (U.A6),
+transferred to B through independently measured fiducials. Equivalently use S and
+the reduced intercept c_eff in (U.A8), with their full shared covariance. The following
+2D centre differential then applies:
 
 \[
 x^*=-K^{-1}c,\qquad
@@ -773,7 +1197,9 @@ anisotropy and rotation as specified in §21.
 
 ## 19. Observation-instrument calibration
 
-Retain T's model, with physical latent position X and detector output y:
+The axial detector cross-talk/defocus qualification in §5.6 is an additional direct
+dependency of reducing the physical state; it does not add a B axial observation or
+change this likelihood. Retain T's model, with physical latent position X and detector output y:
 
 \[
 y_i=b_{\rm det}+P\int w_i(s)X(s)\,ds+\epsilon_i,
@@ -831,6 +1257,12 @@ and the confined-motion treatment of [Calderon (2016)](https://arxiv.org/abs/151
 Neither source is a certificate that this camera has the required noise or bandwidth.
 
 ## 20. Relaxation-time qualification and T11 mapping
+
+The following 2D time formulas require the independently qualified dynamical closure
+in §5.7. They cannot be applied to S and the qq block of Gamma^(3) by substitution.
+The full 3D generalized modes and driven response supply the closure/error certificate;
+only then may an equivalent 2D drag/drift and its bounds be used. A failure leaves T's
+likelihood unqualified, rather than introducing a hidden axial state in V.
 
 For qualified passive, conservative overdamped dynamics, the mechanical drift is
 `A_phys=Gamma^-1 K`. Use the symmetric generalized-eigenvalue problem
@@ -930,85 +1362,253 @@ shape, quarter-stationarity and current precision. No actual count, duration or 
 qualification is established by U because no actual packet exists. V must validate
 finite-sample coverage/power before any adoption or experiment.
 
-## 21. Field-by-field requirements and role preservation
+## 21. Field realization: narrow T-interface gap and binding refusal
 
-Actual measured K, T and orientation determine V. Nominal targets define the intended
-roles; one must not force actual measurements to equal them. Both blocks retain all
-four targets in §3. The tests below are **necessary role checks derived from existing
-T margins**, not new scientific tolerances around the nominal targets and not a
-license to substitute a weaker experiment.
+### 21.1 Audit correction and source finding
 
-For every role, propagate the full A region and bounded errors, and apply the fixed
-T11 information/positive-gate rule. An unresolved role is FIELD_ROLE_UNRESOLVED;
-a confidently absent role is FIELD_ROLE_INVALID. Neither is an EBU theorem failure.
-The actual acquisition manifest must continue to command T's nominal targets.
-For a circular-role field, preserve circularity at T's existing shape resolution:
-its scale-free distance to an isotropic stiffness is `G_circ=(1/2)ln kappa_2(K)`,
-so require the joint upper bound on G_circ to be below `ln(1.05)`. This is the same
-shape metric applied to role realization; it does not force measured eigenvalues
-to agree or assert an exact physical degeneracy. The ellipse must instead resolve
-its noncircular role by the lower-bound test below.
+The weak presence predicates in the failed U report are withdrawn as qualification
+rules. Neither `T3/T0>1.02`, `r_k>1.02`, a barely resolved ellipse nor commanding the
+nominal settings establishes realization of T's named challenges. In particular,
+304 K and a stiffness ratio 1.021 are not admitted by any rule in this revision.
+The earlier use of T4's ln(1.05) density-agreement margin as a circular-target
+realization tolerance is also withdrawn.
 
-| Field | Physical requirement and role check |
-|---|---|
-| theta0 | Reference circular target at local 298 K; full tensor/centre calibration; no forced equality of measured eigenvalues |
-| theta1 | Increased circular stiffness target at local 298 K; measure extra laser heating and actual stiffness ratio; no assumption that power ratio equals stiffness ratio |
-| theta2 | Actual anisotropy and nonzero orientation relative to the calibrated axes resolved over the full A region; full off-diagonal stiffness covariance retained |
-| theta3 | Circular target at actual local 318 K; separate local thermometry/viscosity and radius-transfer measurement; sufficient separation from theta0 |
+**NARROW T-STAGE AMENDMENT REQUIRED.** Direct inspection of T §7 finds prospective
+nominal targets and distinct field purposes, together with an explicit prohibition
+on silently substituting temperatures or tolerances. T §§22.1–22.4 fixes information,
+calibration limits and true-bridge complete-pass planning. T §20.3 requires at least
+0.90 unconditional complete-pass probability when the correct bridge holds. That
+is not a required discovery probability under a wrong-normalization alternative.
+T §22.5 calculates planning discrimination for named 10% absolute and 5% relative
+alternatives, but does not declare a minimum discovery probability for realized
+field departures or a target-conformance region around its nominal fields.
 
-**Temperature derivation.** Keeping the actual K but wrongly dividing it by the
-reference T0 gives `H_wrong=(T3/T0) H_true` and hence
-`beta_wrong=T0/T3`. Nominally `298/318=0.9371069182`, a 6.2893% decrease. To lie
-strictly outside T's reciprocal 2% cross-field band, the actual ratio must satisfy
+Even interpreting those named alternatives as challenge benchmarks would not uniquely
+supply target widths around 298/318 K, 100/210 micro-newtons/metre or the specified
+ellipse. It would not supply an upper field departure, a matrix target tolerance or
+a joint temperature/stiffness conformance rule. The 0.009/0.003 calibration requirements
+limit measurement uncertainty; they do not choose how different the accurately
+measured object is allowed to be from its target. The 5%/2% beta-equivalence margins
+compare probability and energy; they are not actuator or field-construction tolerances.
+
+The programme instruction for this repair is to **record this gap and keep field
+qualification and V blocked**. T remains byte-for-byte unchanged. No numerical region,
+new power objective or T amendment is adopted here. This is a pending normative
+scientific decision, not a mathematical derivation that can be assigned to V.
+
+### 21.2 Target objects and uncertainty convention
+
+The following target matrices describe the **effective lateral mechanical curvature**
+that T's two-dimensional density model tests, now unambiguously K_eff from §5, not an
+unobserved plane block K_qq. Let R_30 be a rotation by 30 degrees in the independently
+calibrated lateral physical axes.
+
+| Named field | Preregistered target | Realized object used in analysis | Required region; current status |
+|---|---|---|---|
+| theta0 | `K0*=100 I` micro N/m; local T0*=298 K | Independently measured K_eff,0 and local T0 | Reference absolute scale, near-isotropic matrix and temperature conformity region: NOT SPECIFIED BY T |
+| theta1 | `K1*=210 I` micro N/m; local T1*=298 K; target ratio 2.1 | Measured K_eff,1, K_eff,0, T1 and joint covariance | Target-centred stiffness/temperature region and preservation of confinement/relaxation/detector/heating challenge: NOT SPECIFIED BY T |
+| theta2 | `K2*=R_30 diag(150,60) R_30^T` micro N/m; local T2*=298 K | Full measured K_eff,2, including cross term and orientation | Matrix target-conformity region with scale, eigenvalue separation and orientation jointly controlled: NOT SPECIFIED BY T |
+| theta3 | `K3*=100 I` micro N/m; local T3*=318 K, reference local 298 K | Measured K_eff,3 and local T3, with reference covariance | Temperature and mechanical target-conformity region plus thermal-normalization discrimination objective: NOT SPECIFIED BY T |
+
+Target values do not imply infinitely precise control. The missing object is a
+**predeclared nonzero realization region** that preserves the scientific challenges.
+Exact equality is not silently imposed as a replacement. No fixed eigenvector angle
+is meaningful for an exactly isotropic reference; matrix conformity handles this
+without inventing a reference orientation test at a degeneracy.
+
+Retain U's existing joint **99.9% physical calibration region**, including all shared
+and axial uncertainties and separately bounded errors. Let its projection to the
+realized field parameters of one block be C_b. Once the programme adopts a target
+region R_T and its challenge-preservation policy, qualification requires
 
 \[
-\inf_{\mathcal A,\mathcal B}\log(T_3/T_0)>\log(1.02). \tag{U.16}
+C_b\subseteq R_T,
+\quad\inf_{\vartheta\in C_b}P_{\rm detect,j}(\vartheta)
+\ge p_{j,*}\ \text{where that objective is adopted}, \tag{U.F1}
 \]
 
-At an exactly known T0=298 K, the strict point-value boundary is T3>303.96 K, a
-separation greater than 5.96 K. With uncertainty, test the **joint ratio bound**,
-not two nominal setpoints or a comparison of separately rounded confidence limits.
-This is a role-separation boundary only. It does not replace the 318 K target, nor
-claim T's planned power for an arbitrarily small excess beyond 2%. Finite-sample
-sensitivity remains a V validation responsibility under the retained nominal design.
+together with every existing T information, precision, physical and model gate.
+This uses the existing coverage convention; it adds no new confidence level.
+C_b and R_T remain different objects. Large calibration uncertainty cannot make a
+weak realization acceptable by merely making a confidence region overlap the target.
+Both preparation blocks must pass independently, with every named field represented;
+there is no averaging of a strong block and a weak block.
 
-**Stiffness derivation.** At the same temperature, using the reference K0 in a truly
-circular field with `K1=r K0` yields `beta_wrong=r`, not `1/r`. Thus the role needs
-`inf log r>ln(1.02)` to put this omitted-stiffness perturbation outside the same
-cross-field margin. With unequal realized temperatures, the mechanically isolated
-failure mode still uses the actual T1 in both correct and wrong normalizations.
-For nonscalar realized matrices, calculate the erroneous comparison through the full
-likelihood; the ideal instantaneous Gaussian scale is
-`beta_wrong=d/tr(K0 K1^-1)`, with shape failure retained separately. A scalar power
-ratio must not conceal anisotropy. The nominal stiffness ratio is 2.1, far beyond
-the role boundary; its realization has not been measured.
+R_T and any required p_j,* are currently **missing mandatory scientific inputs**.
+Consequently (U.F1) is not evaluable and no named-field comparison packet can be VALID.
+This is the binding rule until the narrow T amendment is selected and independently
+reviewed. Final V/H always uses measured S and T; it never substitutes a nominal
+matrix or nominal temperature to manufacture target conformity.
 
-**Anisotropy and rotation derivation.** For a two-mode ellipse with ratio rho>1,
-replacing its shape by an isotropic matrix leaves the scale-free log-shape distance
-`G=(1/2)ln rho`. T's shape margin implies the necessary resolved-anisotropy condition
-`inf rho>1.05^2=1.1025`. If the eigenvalues are correct but the ellipse is wrongly
-left unrotated by an angle psi relative to its actual axes, the determinant-one
-whitened comparison has
+### 21.3 Deterministic temperature-discrimination calculation
+
+For the wrong fixed-reference normalization using 298 K,
 
 \[
-G_{\rm rotation}=\operatorname{arcosh}\!\left[
-1+\frac{(\rho-1)^2}{2\rho}\sin^2\psi\right]. \tag{U.17}
+\beta_{\rm wrong}(T)=298/T,
+\quad h_T(T)=\left|\log(298/T)\right|. \tag{U.F2}
 \]
 
-The role requires the joint lower bound on this expression to exceed `ln(1.05)`.
-At the nominal rho=2.5 and psi=30 degrees, G is approximately 0.470 (the exact
-arithmetic is recorded in §36); the point-value minimum angle at rho=2.5 is about
-2.95 degrees modulo the equivalent principal-axis conventions. These are derived
-sensitivity boundaries, not a new acceptable angle target. Retain 30 degrees,
-(150,60) micro-newtons/metre and T.29. Matrix-domain evaluation handles correlations
-between rho, psi, axis mapping and temperature. A finite grid or an eigenvector
-standard error at a degeneracy is insufficient.
+If the actual reference is T0 rather than exactly 298 K, the wrong model's within-block
+log contrast has magnitude `abs(log(T/T0))`; the common 298 numerator cancels. The
+absolute and contrast alternatives must not be confused. Correct normalization
+predicts beta=1 regardless of the realized temperature.
 
-T does not prescribe an additional universal manufacturing tolerance such as
-“30 degrees plus/minus 5 degrees.” U does not invent one. Target settings, measured
-realization, derived role resolution and full T qualification are separate fields
-in the packet. Failure of a role leads to prospective apparatus correction before
-B; an intentional change of a target or of a T power objective returns to T.
+Use exactly T's normal planning calculation, not a new test. At N*=450000,
+
+\[
+s_a=\sqrt{0.009^2+1.1025/450000}=0.0091350971533,
+\quad s_c=\sqrt{0.003^2+2.205/450000}=0.0037282703765,
+\]
+\[
+P^{\rm plan}_{\rm abs}(T)=\Phi\!\left[
+\frac{h_T(T)-\log(1.05)-0.001}{s_a}-3.273078364\right],
+\]
+\[
+P^{\rm plan}_{\rm cross}(T,T0)=\Phi\!\left[
+\frac{|\log(T/T0)|-\log(1.02)-0.001}{s_c}-3.273078364\right]. \tag{U.F3}
+\]
+
+The 3.273078364 value is T.30's conservative first-step threshold for the 47-test
+Holm/Bonferroni discovery family. It is not the 2.10 positive-equivalence critical
+ceiling. The 0.001 retains both the 0.0005 bounded displacement and interval expansion.
+These are signed named-direction discrepancy probabilities under the same normal
+planning approximation, not achieved power or a new finite-N result.
+
+For any actual qualification region, use the infimum of (U.F3) over its joint local
+T/T0 region and the qualified standard-error envelope. The calibration covariance
+already enters s_a/s_c through the fixed T architecture; it is not added again as
+an independent thermometer error. Taking the infimum additionally guards against
+an uncertain physical challenge. At departures outside the envelope where the
+planning variance is justified, (U.F3) is only a formal extrapolation and cannot
+certify a field.
+
+The deterministic point-temperature comparison at T0=298 K gives:
+
+| T | `abs(log(T/298))` | T.30 cross-field planning detection |
+|---:|---:|---:|
+| 304 K | 0.0199342149008 | 0.0002274435852, approximately 0.023% |
+| 318 K | 0.0649578962748 | Approximately `1 - 5.16e-18` under the idealized planning approximation |
+
+This quantifies the audit counterexample without treating the near-one number as a
+laboratory guarantee. The old point boundary 303.96 K merely puts the wrong model
+outside the 2% equivalence band. It does not preserve the nominal challenge or supply
+high discovery probability.
+
+If a future amendment selects p_* for this specific contrast objective, the hotter-field
+point boundary at a known reference is algebraically
+
+\[
+T\ge T0\exp\{\log(1.02)+0.001+
+ s_c[3.273078364+\Phi^{-1}(p_*)]\}. \tag{U.F4}
+\]
+
+Uncertain T/T0 requires the full-region inequality, not plugging in a convenient point.
+Power alone provides a lower strength boundary, **not** a target-conformity width or
+an upper acceptable temperature. For illustration of the unresolved decision only,
+p_*=0.90, 0.95 or 0.99 would give point boundaries approximately 309.475, 309.894 or
+310.683 K at a known 298 K reference. **None is adopted.** Even those power levels
+would allow temperatures well below 318 K, demonstrating why target conformity is a
+separate required scientific choice.
+
+### 21.4 Stiffness challenge
+
+T defines two circular target eigenvalues, 100 and 210 micro N/m, giving a nominal
+factor 2.1 in **both modes**. It does not define a replacement scalar averaging rule
+for materially nonproportional realized matrices. For exactly proportional effective
+curvatures `S1=r_k S0`, omission of the stiffness change while using the actual field
+temperature predicts `beta_wrong=r_k`. Its log effect is `abs(log r_k)`, and the
+T.30 planning expression is (U.F3) with that effect in place of the temperature contrast.
+
+For `r_k=1.021`, this expression is approximately **0.0005218639151**, or 0.0522%
+named-discrepancy probability at the specified planning precision. It is not a
+qualified version of the 2.1-fold challenge. A formal insertion of 2.1 gives an
+extremely strong scalar effect; no finite-N guarantee outside the qualified variance
+and nuisance envelope is inferred from that extrapolation.
+
+For general realized S0,S1, retain the matrix pair and its uncertainty. The ideal
+instantaneous wrong-reference-scale diagnostic is `2/tr(S0 S1^-1)` with a separate
+T4 shape contrast; it is not a newly adopted definition of an admissible stiffness
+ratio. The generalized eigenvalues of `(S1,S0)` express changes in both directions;
+all are 2.1 at the target. A future target region must control the matrices' absolute
+scales, their relative changes, shape and nominal temperature, so that detector
+range, confinement/relaxation and heating dependence retain their intended challenge.
+A power threshold for a scalar omitted-stiffness alternative alone does not determine
+such a region. No acceptable interval around 2.1 is derived uniquely from T.
+
+### 21.5 Matrix-level reference and ellipse conformity
+
+Use T4's intrinsic matrix geometry as a **metric**, while keeping its density-test
+threshold distinct from a presently missing target-conformity threshold. For a target
+mechanical matrix S_j,* and realized S_j, let `S_j,*=R_j,*^T R_j,*` and form
+
+\[
+M_{j,*}=R_{j,*}S_j^{-1}R_{j,*}^T,\quad
+s_{j,*}=\tfrac12\log\det M_{j,*},\quad
+g_{j,*}=\|\log M_{j,*}-s_{j,*}I\|_{\rm op}. \tag{U.F5}
+\]
+
+The scalar s controls overall mechanical scale; g controls unequal modes, rotation
+and off-diagonal structure in a coordinate-invariant comparison. Carry their joint
+uncertainty from the full Schur/coordinate/temperature model. Pair them with actual
+local T target conformity; comparing H alone could conceal compensating K/T departures.
+At the ellipse target, the matrix in micro N/m is
+`[[127.5,38.9711431703],[38.9711431703,82.5]]` in the specified frame. A full-matrix
+region avoids arbitrary separate angle and eigenvalue tolerances.
+
+For an ellipse with eigenvalue ratio rho and an omitted rotation psi, the diagnostic
+shape contrast remains
+
+\[
+G_{\rm omit\ rotation}=\operatorname{arcosh}
+\left[1+\frac{(\rho-1)^2}{2\rho}\sin^2\psi\right]. \tag{U.F6}
+\]
+
+It is 0.4700036292 at rho=2.5 and psi=30 degrees. Merely requiring this number to
+exceed ln(1.05) admitted angles near 2.95 degrees in the failed specification; that
+presence test is withdrawn. T4's bound applies to agreement of the actual density
+with its measured potential, not to proximity of that potential to the designed
+30-degree ellipse. T supplies no numerical bounds on s_j,* or g_j,* for target
+realization, nor a discovery-power floor against each weakened geometry challenge.
+The reference likewise requires scale and matrix target conformity; it cannot be
+redefined by an arbitrary accurately measured anisotropic trap.
+
+### 21.6 Exact pending programme decision and dispositions
+
+The narrow amendment must select and preregister:
+
+1. A nonzero target-conformance region for each local T and effective lateral mechanical
+   matrix, including the reference, the near-2.1 two-mode change, and the specified
+   rotated ellipse. It must state treatment of correlations and be applied by the
+   existing joint 99.9% containment rule (U.F1).
+2. The quantitative meaning of preserving each named challenge: for example minimum
+   discovery probabilities for the named wrong-normalization/wrong-stiffness/wrong-
+   geometry alternatives, or an explicitly selected minimum retained nominal effect
+   under the fixed T inference and information rules. Any chosen objective needs
+   target conformity as well; it is not sufficient alone.
+3. A versioned region/predicate and pre-B qualification protocol, with conservative
+   treatment of realization uncertainty and applicability of the planning envelope.
+
+Reasonable scientific choices include retaining a specified portion of nominal
+challenge strength or requiring a declared detection power such as 0.90, 0.95 or 0.99
+for the named alternatives. These are **decision families, not recommended or adopted
+numbers**. The acceptable target widths and matrix neighbourhoods express experimental
+purpose; neither likelihood algebra nor a calibration certificate selects them.
+Changing the 450000/408164 information targets, beta margins, block count or unrelated
+T gates is outside this amendment.
+
+Once a region exists, containment establishes qualification. A region crossing its
+boundary is FIELD_REALIZATION_UNRESOLVED and cannot yield VALID; a certified outside
+realization is FIELD_REALIZATION_OUT_OF_SPEC. The latter invalidates the named record
+for the preregistered design and requires separately authorized reconstruction or
+reacquisition, not a beta/theorem failure. While the region itself is missing, use
+FIELD_REALIZATION_SPECIFICATION_MISSING. This currently blocks **all eight named
+records**, including theta0 and both preparation blocks. Heating of theta1 is evaluated
+against its own local-temperature target region, not merely the 318 K arm's region.
+
+The downstream Schur/uncertainty formulas are specified. Numerical target predicates,
+field-validity release and their V validators depend on this unresolved T decision.
+U9 remains GAP; no wording elsewhere in this report authorizes a weaker challenge.
 
 ## 22. Two separately prepared blocks
 
@@ -1030,7 +1630,9 @@ The block is the independent physical preparation, not a random-effects distribu
 estimated from only two points. Report both blocks separately and all required
 within-block reference contrasts. Do not average away a failed block or claim the
 precision improves by `sqrt(2)` for common standards. The reversed field order helps
-expose order/thermal-history problems; it does not prove their absence.
+expose order/thermal-history problems; it does not prove their absence. Each block must
+also separately satisfy §21's adopted realization policy; that policy is presently
+missing, so neither block can be released as a valid named-field experiment.
 
 ## 23. Shared and common calibration standards
 
@@ -1061,7 +1663,9 @@ It includes at least:
 - per-bead radius, optical/model inputs and temperature transfer;
 - resistance/fluorescence parameters, local thermal maps and their interpolation;
 - wall/chamber geometry, slip/shape bounds, driven fluid transfer and velocity standards;
-- force/displacement fit variables, plateau mean covariances, centre and frame transfer;
+- full 3D force/displacement fit variables, six stiffness entries, three centre/intercept
+  entries, axial sensing/axis-map nuisances and plateau mean covariances; the derived
+  Schur matrix and q-centre retain all shared covariances under §5.4;
 - both coordinate maps, their distortion bounds, clock and encoder parameters;
 - detector offsets/noise parameters, shutter kernels, synchronization and reference drift.
 
@@ -1102,8 +1706,10 @@ V must establish it under the actual auxiliary model.
 
 ## 25. Propagation to U, H, V and log beta
 
-Let `C_phi` denote the complete auxiliary covariance and use analytic or independently
-verified Jacobians. For the physical Hessian and potential,
+Let `C_phi` denote the complete auxiliary covariance, now including the axial variables
+of §5.4, and use analytic or independently verified Jacobians. Here K=S and H=H_eff;
+the Schur Jacobian and its nonlinear remainder precede the existing propagation.
+No new axial uncertainty or bias allowance is added. For the physical Hessian and potential,
 
 \[
 dH=\frac{dK}{k_BT}-H\frac{dT}{T},\qquad
@@ -1284,7 +1890,10 @@ the failure is physical, metrological, statistical or numerical.
 | INSUFFICIENT_GEOMETRY_CALIBRATION | A region reaches non-SPD matrices, exceeds condition limit, or cannot resolve required field geometry; inconclusive, not projected to SPD |
 | OBSERVATION_MODEL_UNQUALIFIED | Noise, blur, synchronization, distortion or photon regime outside T model; refuse |
 | CALIBRATION_UNCERTAINTY_EXCESS | Absolute/contrast floor, bias bound or T.29 floor fails; more B frames do not cure a calibration floor |
-| FIELD_ROLE_UNRESOLVED / FIELD_ROLE_INVALID | Required perturbation not resolved / absent; no substitute weaker field |
+| AXIAL_REDUCTION_UNQUALIFIED | Missing/unidentified axial blocks or provenance, nonpositive axial/full matrix, unqualified harmonic/support/dynamical reduction, or failed propagated budgets/geometry; no VALID packet |
+| FIELD_REALIZATION_SPECIFICATION_MISSING | Target region or challenge-preservation policy not adopted; CURRENT blocking state for all named records |
+| FIELD_REALIZATION_UNRESOLVED | Existing joint 99.9% region straddles an adopted realization boundary; no VALID packet |
+| FIELD_REALIZATION_OUT_OF_SPEC | Independently certified outside the adopted target region; invalid for the named experimental role, not a beta/theorem failure |
 | T11_UNQUALIFIED | No count in the fixed range satisfies information and all positive-gate precision requirements |
 | INVALID_RECORD_MONITOR | Later independent monitor, clipping, missingness or thermal/geometry state leaves frozen envelope; apply T invalid-record rule |
 | VALID | All conditions passed on actual independent evidence; not asserted in U |
@@ -1315,8 +1924,11 @@ populated packet. Exact serialization and schema validation belong to V.
 | Target settings | T's nominal k modes, orientation, temperatures, field order; explicitly tagged TARGET, not MEASURED |
 | Raw observations | Immutable references and content digests for force/position/velocity plateaux, viscometry/density, holograms, temperature maps, calibration targets and timing pulses |
 | Measured primitives | Values, SI units, measurement procedures, repetitions, fit versions, range certificates, actual temperature and pressure, finite-positive checks |
-| Derived physical field | K=H_U, x-star, U difference function, local T, H=K/(k_B T), V function, matrix/eigenvector conventions and transformation maps |
-| State space | Dimension, affine coordinates, domain/qualified spatial range, base measure, axial reduction/separability evidence, FOV/escape qualification |
+| Full physical field | K^(3), K_qq, K_qz, K_zz, full zero-force centre/intercept, local T, 3D coordinate/force maps and complete covariance |
+| Official lateral field | K_eff=S, q-star, U_eff difference function, H_eff=S/(k_B T), V function; unambiguously the matrix for B's lateral density |
+| Axial qualification | 3D calibration and sensing provenance; Schur correction/Jacobian/nonlinear covariance; support/remainder, geometry and dynamical-reduction certificates; qualification/refusal result |
+| Field realization | Nominal target, measured effective field/T and joint uncertainty, adopted target-region/power predicate and version, per-field/per-block status; missing policy explicitly blocks VALID |
+| State space | Full 3D calibration state and 2D observed lateral marginal, product measure/support, axial integration/remainder evidence, qualified spatial range and FOV/escape qualification |
 | Hydrodynamics | eta(T) model and node data, per-bead radius/temperature transfer, gamma0, tensor Gamma, wall/shape/flow corrections, remainder bounds and model validity domain |
 | Dynamics | Joint generalized modes/times, driven-response records and residual envelope, tau_f/tau_s, non-alias qualification; no B spectral estimates |
 | Observation model | Detector offset/map, R and its calibration law, shutter kernels, timing/deadtime/synchronization, quantization and missingness policy, range qualifications |
@@ -1409,12 +2021,14 @@ the binding requirements are the complete covariance and T gates.
 | Bead radius | Per-bead calibrated holography, optical/hydrodynamic boundary qualification | Example endpoint contributions 0.0020 / 0.0002; shape/slip separately bounded | Demanding; published image precision alone is insufficient absolute metrology | NOT MEASURED |
 | Local temperature | PRT anchors plus calibrated rhodamine-B maps | Full chain (U.11), example 0.0010 / 0.0006 contributions; spatial bias and T drift limits | Conditional; spatial averaging and optical perturbation may be limiting | NOT MEASURED |
 | Wall/drag model | Measured chamber geometry and finite-chamber resistance | Tensor uncertainty, example 0.0005 / 0.0003 contributions; model remainder within joint bias set | Demanding near walls; a bare Stokes formula is insufficient | NOT MEASURED |
-| Mechanical K and centre | Balanced 2D driven force fit with EIV | Full tensor/centre covariance; example 0.0015 / 0.0007 contributions; T shape/centre precision | Conditional; mean-displacement precision can improve with A repetition, common force errors cannot | NOT MEASURED |
+| Mechanical K and centre | Balanced 3D driven EIV fit and lateral Schur reduction | Full tensor/centre covariance; example 0.0015 / 0.0007 contributions; T shape/centre precision | Conditional; mean-displacement precision can improve with A repetition, common force errors cannot | NOT MEASURED |
 | Coordinates | Traceable grid, interferometric stage, fiducials | Example 0.0005 / 0.0002 contributions; nonsingular map and bounded distortion | Conditional; x/y/shear/orientation and frame transfers all matter | NOT MEASURED |
 | Noise/shutter | Immobilized and driven reference targets, optical timing pulses | Example 0.0005 / 0.0002 contributions; noise ratio <=0.05, exposure/timing constraints | Hardware dependent; photon count and frame rate can conflict | NOT MEASURED |
 | Relaxation/Markov model | Independent driven response and generalized mechanical modes | Finite positive tau bounds, non-alias band and endpoint/coverage residual bounds | Significant risk from fluid memory, especially for stiff traps in low-viscosity liquid | NOT MEASURED |
+| Axial marginal reduction | 3D chamber drag and calibrated holographic position; Schur complement | Full-region axial/full SPD, full covariance/nonlinear bounds, existing total scale/shape/bias budgets and 2D temporal closure | Conditional; axial normal drag, optical-height transfer and hidden-mode memory must be qualified | NOT MEASURED |
+| Named-field target conformance | Versioned region plus challenge-preservation objective | §21; no new numeric width or power floor adopted | BLOCKED: narrow T-interface decision required | NOT MEASURED |
 | Harmonic/conservative domain | Full force map plus justified remainder bound | Joint log bias <=0.0005, shape/current/centre requirements and spatial-tail domain | Conditional; local derivative at the centre is not enough | NOT MEASURED |
-| 298/318 K arm | Same standards, direct local maps and viscosity curve | Actual ratio role bound; differential covariance <=0.003 after all sources | Thermally accessible in principle; local homogeneity and long-duration stability unestablished | NOT MEASURED |
+| 298/318 K arm | Same standards, direct local maps and viscosity curve | Target-conformance/power policy missing (§21); differential covariance <=0.003 after all sources | Thermally accessible in principle; local homogeneity and long-duration stability unestablished | NOT MEASURED |
 | Two preparations | Fresh bead/liquid/chamber assembly, full recalibration | Separate blocks with shared-standard covariance | Operationally feasible; does not establish statistical independence of standards | NOT MEASURED |
 | Complete eight-record design | Exact T11 mapping and all positive gates | Information 450,000 / 408,164; count cap; T.29; later V complete-pass validation | Not determined without the actual apparatus packet | NOT MEASURED |
 
@@ -1481,7 +2095,10 @@ U's future packet extends the complete scientific content that must be bound; it
 does not rewrite an old identity enumeration or grant reuse. Reuse would still need
 explicit prospective authority and compatible dependence. **F4 construction is
 specified prospectively; actual physical inputs remain unmeasured and old F4 authority
-is unchanged.** No historical F-stage implementation is resumed.
+is unchanged.** No historical F-stage implementation is resumed. The bounded repair
+makes the prospective field construction explicitly K^(3) to S to H_eff; release
+of any named field additionally remains blocked by the target-realization gap in §21.
+This does not reopen the unchanged F2 specification or amend old F4 authority.
 
 ## 33. U1–U12 disposition
 
@@ -1493,35 +2110,37 @@ has been achieved.
 | Item | Disposition | Closure in this specification |
 |---|---|---|
 | U1 Branch-A independence | COMPLETE | Four typed streams, no B-derived field/noise/centre, pre-B construction and locks |
-| U2 Mechanical force/stiffness | COMPLETE | Controlled chamber drag, overdetermined 2D EIV fit, conservativity and uniform harmonic qualification |
+| U2 Mechanical force/stiffness | REPAIRED AS SPECIFICATION | Full 3D driven EIV identification, axial localization/drag, Schur reduction and conservative harmonic qualification; re-audit required |
 | U3 Viscosity | COMPLETE | Actual-batch capillary/density route, fixed temperature interpolation, valid domain and joint eta/T covariance |
 | U4 Bead radius | COMPLETE | Per-bead optical metrology with material/boundary qualification and thermal transfer |
 | U5 Hydrodynamic drag | COMPLETE | Full resistance tensor, measured walls/flow, physical and numerical validity, memory qualification |
 | U6 Thermometry/local T | COMPLETE | Traceable bulk anchors plus calibrated local maps, heating/gradients/perturbation and common-reference covariance |
 | U7 Coordinates/orientation | COMPLETE | Full affine maps, distortion bound, force transformation and eigenspace-aware orientation |
 | U8 Observation calibration | COMPLETE | Independent R, shutter/timing law, range and noise-model refusal; no passive thermal calibration |
-| U9 Fields/blocks | COMPLETE | Exact T targets/orders, derived role resolution, two fresh preparations, fixed T11 mapping |
-| U10 Calibration covariance | COMPLETE | Full primitive measurement law, shared references, nonlinear propagation and absolute/contrast uncertainty definitions |
-| U11 Qualification/refusal | COMPLETE | Missing/invalid/inconclusive states, full-region SPD, physical/model/numerical gates and all-path refusal |
-| U12 Packet/lock | COMPLETE | Semantic schema, complete actual-packet identity, provenance and publish-before-comparison boundary |
+| U9 Fields/blocks | GAP | Nominal T targets/orders retained; target-conformance regions and challenge-preservation objective missing; no weak-field substitution or VALID packet |
+| U10 Calibration covariance | REPAIRED AS SPECIFICATION | Existing hierarchy/budgets retained; Schur/axial terms and nonlinear correction propagated with all shared dependencies |
+| U11 Qualification/refusal | REPAIRED AS SPECIFICATION | AXIAL_REDUCTION_UNQUALIFIED and missing/unresolved/out-of-spec realization states block all VALID comparison packets as applicable |
+| U12 Packet/lock | REPAIRED AS SPECIFICATION | Full 3D blocks, official H_eff, axial covariance/provenance and mandatory versioned realization policy/status added; old lock semantics retained |
 
-No item is declared NOT APPLICABLE merely because its measurement is difficult.
-Physical measurements, numerical implementation and independent audit remain explicit
-future dependencies. No load-bearing missing T rule was supplied by an invented
-scientific margin: field-role minima are derived from T, and arbitrary manufacturing
-tolerances are not introduced. HUMAN SCIENTIFIC DECISION REQUIRED: **NONE** for this
-specification. Independent U audit can still identify a logical or physical-design gap.
+The previous global COMPLETE/NONE disposition is withdrawn. Unrelated methods are
+preserved under the supplied audit scope; this is not a new independent clearance.
+HUMAN/PROGRAMME SCIENTIFIC DECISION REQUIRED TO CLOSE U9: the narrowly specified
+realization regions and challenge-preservation objectives in §21.6. For this repair,
+the user chose to record that gap and retain the block; no further decision is assumed.
+Physical measurements and independent re-audit remain future requirements.
 
 ## 34. U-to-V handoff — not begun
 
-After independent U clearance and separate authorization, V must:
+Only after the narrow T-interface decision is adopted, U is independently re-cleared
+and separate authorization is given, V must:
 
 1. Implement the semantic packet schema, units/types, covariance/reference graph,
    immutable raw references and completeness validation. Distinguish actual data,
    synthetic parameter injection, target settings and exact constants.
-2. Implement the selected mechanical EIV estimator and independent calibration ingestion,
-   analytic/checked derivatives, matrix transformations and generalized-mode pairing.
-   Preserve common Gamma–K and eta–T dependencies; validate all mandatory refusal paths.
+2. Implement the selected full 3D mechanical EIV estimator, axial sensing/force ingestion,
+   Schur reduction and its covariance/nonlinear bounds, coordinate transformations and
+   the required lateral dynamical closure. Preserve common Gamma–K and eta–T dependencies;
+   validate axial and field-realization refusals without replacing measured H_eff by a target.
 3. Implement full primitive-law propagation, confidence-domain and bounded-error
    enclosures, numerical representation checks, SPD/conditioning certificates and
    the projection of residual models to scale and positive gates.
@@ -1539,8 +2158,11 @@ After independent U clearance and separate authorization, V must:
 T's finite-N requirements, including achieved-size confidence bounds, 2.10 critical
 ceiling and complete-pass lower bound, control these tasks. Planning information or
 a finite grid is not a substitute for their validation. V must not be started merely
-because this document exists. **V is blocked pending independent U audit.** W authority
-adoption and any physical execution require their own subsequent gates.
+because this document exists. **V is blocked by the missing T realization policy and
+independent U re-audit.** V must not choose an axial-reduction route, target tolerance,
+weaker temperature/stiffness/ellipse challenge or new power objective. It must implement
+the scientifically adopted validators exactly. W authority adoption and physical
+execution require their own subsequent gates.
 
 ## 35. Physical-execution handoff — not begun
 
@@ -1551,14 +2173,16 @@ A later separately authorized physical stage must obtain and preserve:
   heating/cooling repeatability and model/domain bounds;
 - actual per-bead radius, material/shape/boundary qualification and thermal transfer;
 - measured wall geometry, fluid transfer, background flow and resistance correction;
-- full two-axis force/displacement data, mechanical K, zero-force centre, nonlinear
-  and nonconservative residual bounds, and independently driven response qualification;
+- full three-axis force/displacement and axial position data, K^(3) and its blocks,
+  full zero-force centre, Schur K_eff/H_eff and covariance, nonlinear/nonconservative
+  residual and support bounds, and independently driven lateral-reduction qualification;
 - local temperature maps, bulk anchors, laser-heating/gradient/probe-effect bounds and
   record-duration stability at every field setting;
 - coordinate, fiducial, detector, shutter, synchronization, localization and digitization
   calibration at the actual operating conditions;
 - the complete primitive law/covariance, shared-standard graph, bounded errors,
-  full-region geometry and uncertainty predicates, field-role checks and reasons;
+  full-region geometry and uncertainty predicates, and per-block target-region checks
+  under a separately adopted policy; until that policy exists these checks remain blocked;
 - the resulting fixed sample counts, durations, settling/burn-in schedule and independent
   monitor envelopes, followed by separate packet locks before passive comparison.
 
@@ -1567,60 +2191,59 @@ curve, viscosity nodes, radii, chamber dimensions, calibration covariance and ca
 parameters remain unpopulated. The handoff does not collect even one observation,
 run a trajectory or authorize the later optical-trap experiment.
 
-## 36. Final status and static verification record
+## 36. Bounded repair status and static verification record
 
-U-STAGE BRANCH-A PHYSICAL CALIBRATION SPECIFICATION: **COMPLETE — INDEPENDENT AUDIT
-REQUIRED.** All U1–U12 are complete as design. Apparatus qualification is NOT ESTABLISHED;
-physical calibration data are NOT COLLECTED. V and W have NOT STARTED. The baseline
-DeltaJ defect is NON-BLOCKING here; repair before W. Book 1, all authority, plans,
-contracts, seeds, seal and code remain unchanged.
+Independent U audit: **NOT CLEARED**. This revision specifies the axial repair and
+records/contains the realization defect; it does not self-audit or claim independent
+clearance. **U9 remains GAP. FIELD QUALIFICATION AND V REMAIN BLOCKED.** T has not been
+amended because the user chose to record the missing normative decision rather than
+supply a new field-target policy. The next scientific action is the narrow programme
+review of §21.6, followed by independent re-audit; neither is performed here.
 
-Verification is limited to direct source inspection, strict JSON/AST reading, hashing,
-dimensional reasoning and isolated deterministic arithmetic. No scientific module was
-imported or executed. No scientific RNG, optimization of experimental outcomes,
-trajectory, Monte Carlo, calibration acquisition, official campaign, unblinding or
-real optical-trap experiment was performed.
+The Gaussian square completion, determinant factorization, lateral inverse-block
+identity, Schur differential and pure axial-coordinate invariance are derived in §5.
+They and a shared-covariance propagation example were checked in exact rational
+arithmetic on a nonzero-coupling matrix. The specified 13-direction, signed,
+three-radius 3D probe design has rank 20 for scalar cubic terms. T.30's normal planning
+calculations were evaluated directly, without random draws or trajectory data.
+The rational example uses A=[[4,1],[1,3]], b=(1,1/2), kappa=2, hence
+S=[[7/2,3/4],[3/4,23/8]], in abstract consistent units. Its shared input covariance
+is I/10000 + 11^T/40000 in the six-component order of (U.A10). The 13-direction
+homogeneous polynomial ranks are 1, 3, 6 and 10 for degrees 0–3; the three signed
+amplitude levels separate the degrees, so direction normalization preserves rank.
+The effective-drag identity in §5.7 was also checked on a rational autonomous example.
 
-The deterministic checks accompanying preparation of this report cover temperature
-and stiffness scale signs, anisotropy/rotation formulae, wall-correction magnitudes,
-scalar/tensor drag cancellation in relaxation, Jacobian covariance with shared
-standards, and numerical positivity/underflow distinctions. They use mathematical
-examples only and are not calibration packets. The completed arithmetic results are:
 
-| Check | Result |
+| Deterministic check | Result |
 |---|---|
-| Fixed-298 normalization at 318 K | beta = 0.9371069182389937; 6.2893081761% decrease |
-| Strict 2% temperature-role boundary at exactly 298 K | T3 > 303.96 K, with uncertainty enlarging the required separation |
-| Rotation log-shape at rho=2.5, psi=30 degrees | 0.4700036292457356 |
-| Point rotation-role boundary at rho=2.5 | 2.9482778277 degrees; target remains 30 degrees |
-| Displayed one-wall Faxen series at h/a=10 and 100 | 5.9482755552% and 0.5656694976% drag increments |
-| Abstract common-scale covariance example | absolute standard uncertainty 0.0061846584; contrast 0.0021213203 |
-| Noncommuting tensor drag cancellation | Exact rational-matrix equality `inverse(K^-1 Gamma)=Gamma^-1 K` verified |
-| Nonorthogonal coordinate transform | Work and quadratic potential exactly invariant in rational arithmetic |
-| Signed four-direction, three-radius polynomial design | Scalar cubic design rank 10, including intercept |
-| Centre differential | Analytic derivative agreed with a symmetric numerical difference to 8.9e-12 absolute error |
-| Tiny positive primitives | Positive primitive checks alone allow multiplication underflow to zero; distinct derived refusal required |
+| Gaussian completion/inverse-block identity | S=A-b kappa^-1 b^T and `(K^(3)^-1)_qq=S^-1` checked on the rational example |
+| Schur differential and axial reparametrization | Component Jacobian and exact pure-z-scaling cancellation checked on that example |
+| Nonzero-coupling algebraic example | r=0.1363636364; plane-only beta=0.9268292683; plane-only G=0.0733017371 |
+| 3D probe design | 78 nonzero plateaux; scalar cubic monomial rank 20 |
+| T planning contrast standard error | 0.0037282703765 at 450000 equivalents |
+| 304 K wrong-normalization alternative | Named cross-discrepancy planning probability 0.0002274435852 |
+| 318 K wrong-normalization alternative | Planning failure tail about 5.16e-18; not an achieved-power claim |
+| Stiffness ratio 1.021 alternative | Named cross-discrepancy planning probability 0.0005218639151 |
+| Illustrative unadopted p*=0.90/0.95/0.99 | Point thermal lower boundaries 309.475/309.894/310.683 K; these are not target-conformance regions |
 
-These checks validate specific formulae, not apparatus accuracy, field qualification,
-finite-sample coverage or a proof of feasibility. The first centre-difference check
-used an overly tight mixed floating-point tolerance and was replaced by an explicit
-finite-difference tolerance; the derivative formula was unchanged.
+These are mathematical examples and planning formula checks, not calibration packets,
+physical results, finite-N validation or an independent audit. No scientific module,
+RNG, Monte Carlo, model trajectory, calibration acquisition, optical-trap experiment,
+old F-stage repair or official campaign is run. Execution authorization remains FALSE.
 
-The start snapshot contains 2,989 tracked regular files. A completed byte-hash comparison
-confirmed all 2,989 unchanged. Strict JSON parsing and AST-literal inspection independently
-reconstructed the protected analysis identity from 12 sources and execution identity
-from 19 validation sources plus the driver; both match §2. The T report hash also
-matches its starting value. The report's 36 numbered sections, 24 numbered equations,
-local source links, Markdown table structure and whitespace were checked. The final
-commit procedure requires the complete added-file diff to equal this reviewed draft,
-exact-path staging, a clean diff check and a report-only staged filename list; the
-post-commit verification repeats the protected-file comparison and confirms a clean
-tree. No scientific test suite or runner is invoked by these checks.
-
-Starting SHA: `ebcf2641fa2d8fe4ab95fef011e96fe53feeadc6`.
-Authorized changed file: `docs/e1a/E1A_BRANCH_A_PHYSICAL_CALIBRATION_QUALIFICATION.md`.
-The final commit SHA and this report's content hash are returned in the completion
-message rather than inserted self-referentially into the report. The report is excluded
-from the existing analysis/execution identity preimages. Existing execution authorization
-remains FALSE and seal state remains PRE_DRIVER, with no official validation results
-directory. This report is committed locally only. **PUSH: NO.**
+Repair starting SHA: `7c3346462f5aeed5dfef176ecaa4e5e9070e847a`.
+Cleared T SHA: `ebcf2641fa2d8fe4ab95fef011e96fe53feeadc6`.
+Failed-U source SHA-256:
+`c627ff3df0f4797709e2473f97122751268cd2870c444c91ef30dc58256d6c79`.
+The only authorized changed file in this repair is this U report. The starting snapshot
+covers 2,990 tracked files; the other 2,989, including T, all authority, Book 1, code,
+plans, contracts and seal, are byte-identical in the completed comparison. Strict
+JSON parsing and AST-literal inspection reconstruct the unchanged analysis identity
+from 12 sources and execution identity from 19 validation sources plus the driver,
+matching §2. Both execution flags remain FALSE, seal state remains PRE_DRIVER and no
+official validation result exists. The report remains outside both identity preimages.
+The untouched method sections and F2 specification were compared directly; section,
+equation, local-link and table structure checks passed. Complete-diff review and
+exact-path staging precede one local repair commit; its full SHA and report hash are returned
+in the completion message. **PUSH: NO.** The baseline DeltaJ defect remains non-blocking
+here and must be repaired before W; it is not edited in this task.
