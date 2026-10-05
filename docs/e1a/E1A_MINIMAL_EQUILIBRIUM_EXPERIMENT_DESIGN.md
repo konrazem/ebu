@@ -16,6 +16,10 @@ Prepared on 2026-10-05. Starting commit:
 “Complete” describes a prospective scientific design, not apparatus qualification,
 achieved test size, demonstrated power, or permission to run an experiment.
 
+**2026-10-06 amendment:** §22.6 adds `E1A-T11a-RF-v1`, the programme-adopted
+realized-field qualification policy. The original preparation/status record above is
+retained; this narrow amendment requires independent audit and authorizes no execution.
+
 ## 1. Executive result
 
 The proposed experiment compares an independently measured mechanical energy landscape
@@ -1272,6 +1276,309 @@ not claimed achieved powers. At a 2.5% cross-field deviation the corresponding m
 about **0.013**. Therefore the hard 2.5% control is a false-support challenge, not a
 promised high-power positive-discrepancy demonstration. A non-pass there is often
 correctly inconclusive.
+
+### 22.6 T11a — realized-field qualification, version E1A-T11a-RF-v1
+
+**Prospective programme amendment, 2026-10-06; independent audit required.** The
+independent U audit exposed an unspecified T-to-U field-realization interface. The
+axial repair at `097aec81bcfe420bb9e25d0152cd8b4a08f69fde` supplied the independent
+3D-to-lateral construction but correctly left that design choice open. The programme
+now adopts **90% minimum retained nominal challenge, 10% maximum departure from its
+nominal magnitude, and at least 0.90 planning detection for the named scalar
+wrong-model alternatives**. These are prospective experimental-design criteria, not
+physical constants, calibration uncertainties, beta margins or apparatus results.
+They do not follow as a theorem from beta=1 and are not inferred from future outcomes.
+The 0.90 level aligns with the programme's existing complete-pass objective, but that
+objective did not mathematically imply this new choice.
+
+This subsection alone defines realization-policy version `E1A-T11a-RF-v1`. The base
+T design at `ebcf2641fa2d8fe4ab95fef011e96fe53feeadc6` is independently cleared as
+reported by the commissioning brief; this amendment is not yet independently cleared.
+No previous theorem, likelihood, endpoint, multiplicity rule, validation strategy,
+nominal target or T11 count rule is changed. Existing controlling authority remains
+unchanged; this prospective report does not authorize V or physical execution.
+
+#### 22.6.1 Objects, domains and the joint-region rule
+
+In this subsection write K_bj for the **measured effective lateral mechanical matrix**
+K_eff of field j in preparation b, not the 3D plane block and not the statistical
+rarity Hessian. U's full 3D force calibration, Schur reduction, covariance, harmonic,
+observation and temporal qualifications remain prerequisites. T_bj is independently
+measured local temperature. The actual comparison uses measured
+`H_eff,bj=K_bj/(k_B T_bj)`, centre and joint covariance throughout.
+
+Nominal values define the preregistered perturbation. Realized qualified values define
+the actual physical potential. A target miss is an experimental-role invalidity, not
+permission to substitute nominal values and not evidence against beta=1. The 90–110%
+challenge regions below judge realization; the unchanged 5% absolute and 2% cross-field
+beta bands judge physical/statistical bridge agreement. They answer different questions.
+
+Let C_b be U's existing **joint 99.9% physical calibration region**, enlarged by the
+existing bounded-error sets and certified numerical errors. Its pair projections C_b,0j
+retain shared-reference, axial, temperature, coordinate and all other covariance.
+They are not products of independently constructed marginal intervals. Let D_b denote
+the existing T/U physical, detector, harmonic/conservative, SPD/conditioning, observation,
+relaxation, calibration and information domains. Define R_b by D_b and all predicates
+in this subsection. Prospective qualification requires
+
+\[
+\mathcal C_b\subseteq\mathcal R_b,
+\qquad \inf_{\vartheta\in\mathcal C_{b,0j}}
+ P^{\rm plan}_j(\vartheta)\ge0.90,\quad j\in\{1,3\}. \tag{T.R1}
+\]
+
+Each preparation qualifies separately, and each named field carries its own result
+and dependencies. A reference record requires all three of its relative comparisons
+to qualify; a failed partner is reported as that dependency, not as a demonstrated
+error in the reference instrument. Neither one good block nor a strong mode can
+compensate for another failed block or mode. A nominal point inside R_b is insufficient
+when C_b crosses a boundary. Use certified extrema/containment, not an unchecked grid.
+Missing measurements or an unbounded region cannot produce a valid result.
+
+The boundaries below are inclusive. A numerical enclosure straddling a boundary is
+unresolved; rounding displayed decimal values does not change the exact predicates.
+
+#### 22.6.2 Temperature challenge and its planning discrimination
+
+For the named hot field theta3 and reference theta0 set
+
+\[
+c_T^*=\log(318/298),\qquad c_{T,b}=\log(T_{b3}/T_{b0}),\qquad
+0.90c_T^*\le c_{T,b}\le1.10c_T^*. \tag{T.R2}
+\]
+
+The nominal log challenge is c_T*=0.06495789627477229.
+The condition holds at **every** point of C_b,03. Thus the official ratio region is
+`[(318/298)^0.90,(318/298)^1.10]`, approximately
+`[1.060204810219,1.074068405040]`. At an exactly 298 K reference it gives
+**[315.941033445, 320.072384702] K**. These Kelvin numbers are illustrations; the
+validator uses the measured local ratio. Reversing acquisition order in block 2 does
+not reverse field labels. If a formula lists reference/hot rather than hot/reference,
+negate its logarithm consistently; an absolute value must not admit a physically
+reversed challenge under the fixed labels.
+
+Keeping the measured mechanical field but using T_b0 as the hot-field denominator
+predicts `beta_wrong,b3=T_b0/T_b3` and a log contrast `-c_T,b`. Correct normalization
+predicts beta=1. Use the existing (T.25)/(T.30) cross-field planning expression at the
+fixed N_*=450000:
+
+\[
+s_c=\sqrt{0.003^2+2.205/450000}=0.00372827037646145,
+\]
+\[
+\mathcal P(h)=\Phi\!\left[
+\frac{h-\log(1.02)-0.001}{s_c}-3.273078364\right],\qquad
+P^{\rm plan}_{\rm temp}=\mathcal P(c_{T,b}). \tag{T.R3}
+\]
+
+The 47-test first-step critical value, 2% contrast margin and two copies of the
+0.0005 residual allowance are unchanged. The contrast-calibration term already
+includes the shared measurement uncertainty; do not add independent thermometer
+variance again. Containment additionally protects against an uncertain true challenge.
+All relevant calibration floors and T11 information conditions must first qualify.
+On the retained positive-effect region the fixed worst-case planning SE is conservative
+within this approximation; smaller qualified SE cannot reduce this planning power.
+
+Monotonicity of Phi gives the equivalent scalar planning boundary
+
+\[
+h\ge h_{90}:=\log(1.02)+0.001+
+ s_c[3.273078364+\Phi^{-1}(0.90)]
+ =0.03778351913824557. \tag{T.R4}
+\]
+
+Both retention and power are binding requirements. Here the retention lower limit
+`0.05846210664729507` exceeds h_90, so retention is stronger under the fixed planner.
+Its lower and upper boundaries give respectively
+`1-4.30590784e-12` and `1-3.09051356e-25` planning detection. These are normal-approximation
+calculations, not achieved power. A 298-to-304 K example retains only **0.3068790100**
+of the nominal log challenge and fails (T.R2); its (T.30) planning detection is only
+0.0002274435852. This is a deterministic regression example, not physical data.
+
+#### 22.6.3 Stiffness challenge: both generalized modes
+
+For each realized SPD pair form the symmetric generalized contrast and its positive
+eigenvalues:
+
+\[
+M_{1,b}=K_{b0}^{-1/2}K_{b1}K_{b0}^{-1/2},\qquad
+c_{k,b,r}=\log\lambda_r(M_{1,b}),\quad r=1,2,
+\]
+\[
+0.90\log2.1\le c_{k,b,r}\le1.10\log2.1
+\quad\text{for both modes throughout }\mathcal C_{b,01}. \tag{T.R5}
+\]
+
+Here log 2.1=0.7419373447293773; the log-mode bounds are
+[0.6677436102564396,0.8161310792023151]. Equivalently both generalized eigenvalues lie in
+`[2.1^0.90,2.1^1.10] = [1.949832770649,2.261732424639]` approximately.
+Use symmetric generalized-eigenvalue/Cholesky-solve methods under the existing
+conditioning and backward-error requirements, not eigenvectors of K_0^-1 K_1.
+The rule applies to nonproportional pairs too; no scalar average can replace either
+mode condition. Existing T4 shape and all physical/model gates remain separate.
+For example, modes (1.9,2.25) fail even though their harmonic scalar 2.0602409639 lies
+inside the interval. The proportional 1.021-fold example retains only **0.0280111782**
+of the nominal log challenge and fails decisively.
+
+For a proportional pair K_1=r K_0, omitting the stiffness change while retaining the
+actual T_1 gives `beta_wrong=r`, so its named log effect is log r. For a nonproportional
+pair the same omission also creates shape error. A conservative scalar strength input
+to the existing planning approximation is the **least** mode effect:
+
+\[
+h_{k,b}=\min_{r=1,2}c_{k,b,r},\qquad
+P^{\rm plan}_{\rm stiffness}=\mathcal P(h_{k,b}),\qquad
+\inf_{\mathcal C_{b,01}}P^{\rm plan}_{\rm stiffness}\ge0.90. \tag{T.R6}
+\]
+
+This is a realization planning screen, not two additional statistical tests or a
+replacement beta estimator. To check its scalar direction, the existing ideal
+instantaneous Gaussian omitted-stiffness projection has
+`beta_wrong,ideal=2/(lambda_1^-1+lambda_2^-1)`, between the two generalized eigenvalues.
+Consequently its log effect is at least h_k. The least-mode screen cannot conceal a
+weak mode through that scalar projection. This observation does **not** identify the
+pseudo-true temporal profile estimate under a wrong, nonproportional H; that procedure
+and its geometry diagnosis retain the separate V validation requirement.
+
+At the retained lower and upper boundaries the T.30 normal arguments are respectively
+170.2500081 and 210.0506272, both far above Phi^-1(0.90). A normal-tail bound gives
+failure below 10^-6296 and 10^-9583 respectively; do not report floating-point
+underflow as exact power one. These very large shifts are outside §22.3's local
+true-bridge beta envelope. Applying the **unchanged formula** here is expressly a
+prospective planning screen adopted by this amendment, not a claim that its local
+variance approximation is an established finite-N law at beta near two. It does not
+expand the actual-analysis beta envelope, change the likelihood, or replace V's
+operating-characteristic checks. The 1.021 example gives planning detection
+0.0005218639151 and fails both requirements.
+
+#### 22.6.4 Ellipse: full-matrix target conformity
+
+Use the nominal matrices in the calibrated Euclidean lateral frame:
+
+\[
+K_0^*=100I,\qquad
+K_2^*=R_{30}\operatorname{diag}(150,60)R_{30}^T
+=\begin{pmatrix}127.5&45\sqrt3/2\\45\sqrt3/2&82.5\end{pmatrix}
+\quad[\text{micro N/m}].
+\]
+\[
+L_2^*=\log[(K_0^*)^{-1/2}K_2^*(K_0^*)^{-1/2}]
+=R_{30}\operatorname{diag}(\log1.5,\log0.6)R_{30}^T,
+\quad
+L_{2,b}=\log[K_{b0}^{-1/2}K_{b2}K_{b0}^{-1/2}]. \tag{T.R7}
+\]
+
+Adopt the proposed full symmetric-log contrast, including its scalar part:
+
+\[
+\sup_{\vartheta\in\mathcal C_{b,02}}
+ \|L_{2,b}-L_2^*\|_{\rm op}
+\le\epsilon_2:=0.10\|L_2^*\|_{\rm op}
+=0.10|\log0.6|=0.05108256237659907. \tag{T.R8}
+\]
+
+Numerically L_2^* is
+`[[0.176392425140,0.396765525528],[0.396765525528,-0.281752940797]]`.
+This is the 10%-of-nominal-challenge ball; it is not T4's ln(1.05) density margin.
+The reverse triangle inequality gives
+`0.90 ||L_2*|| <= ||L_2|| <= 1.10 ||L_2*||`, while the centred matrix bound also retains
+orientation and individual contrasts, which a norm-magnitude condition alone would lose.
+
+**Orthogonal invariance.** For a common orthogonal coordinate change Q, both realized
+and nominal physical matrices transform by Q K Q^T. Uniqueness of the positive
+square root and the symmetric matrix logarithm gives
+`(Q K Q^T)^-1/2=Q K^-1/2 Q^T` and `log(Q M Q^T)=Q log(M) Q^T`.
+Hence both L matrices transform by Q L Q^T, and the operator norm of their difference
+is unchanged. This includes reflections and swaps of calibrated axes. The target
+must transform with the measured matrices; rotating only the realization is a physical
+target departure, not a coordinate change.
+
+**Mode and orientation control.** Put a=log1.5, d=log0.6 and g_*=a-d=log2.5.
+If E=L_2-L_2^* and ||E||<=epsilon_2, Rayleigh-quotient bounds give each ordered
+log eigenvalue within epsilon_2 of its nominal value. The log-eigenvalue gap remains
+at least `g_*-2 epsilon_2=0.814125607121>0`. For a unit top eigenvector v of L_2,
+projecting `(L_2^*+E)v=lambda v` onto the lower nominal eigendirection gives
+`|(lambda-d) sin psi|<=epsilon_2`; since lambda>=a-epsilon_2,
+`|sin psi|<=epsilon_2/(g_*-epsilon_2)`. The resulting bound is about 3.385 degrees.
+For unchanged eigenvalues the exact matrix distance is `g_* |sin psi|`, yielding
+about 3.196 degrees. These are consequences, not separate adopted angle tolerances.
+For a noncircular realized reference the orientation is that of the symmetric
+reference-whitened contrast; only for a scalar reference is it also the raw K_2 angle.
+An unrotated target-eigenvalue ellipse has distance 0.458145365937 and fails (T.R8).
+
+**Circular reference and computation.** At K_0=100I the unique inverse square root
+is 0.1I regardless of any chosen eigenbasis. There is no reference-angle ambiguity
+or eigenvector division by a zero eigengap. Construct the unique symmetric positive
+root by a stable symmetric factorization, use solves to form its whitened SPD matrix,
+and evaluate the symmetric logarithm with certified backward-error bounds under §11.
+Repeated positive eigenvalues are allowed; approaching zero is already refused.
+
+The metric is invariant under common orthogonal changes of physical axes; no arbitrary
+nonorthogonal-congruence invariance is claimed. Raw detector coordinates must first be
+mapped to the common calibrated physical frame, with its uncertainty retained. T4's
+trace-free density statistic deliberately discards scalar scale and compares different
+objects; substituting it alone would not implement this full-matrix target condition.
+Thus no replacement metric or new 5% realization tolerance is introduced.
+
+T specifies positive geometry precision in (T.29) and geometry controls in §20.4,
+but no separate wrong-orientation detection-probability formula analogous to (T.30).
+No such test is invented. For theta2, (T.R8) and all existing T4/T.29 requirements
+are binding; the scalar 0.90 detection screen applies to theta1 and theta3 only.
+
+#### 22.6.5 Reference and accompanying field parameters
+
+Theta0 remains nominally 100/100 micro N/m at 298 K, circular, and is analyzed using
+its measured K_eff,0 and T_0. It must satisfy all existing domains and every relative
+challenge involving it. No exact equality, arbitrary absolute stiffness interval or
+orientation at an isotropic degeneracy is required. The target-conformance object in
+this version is the declared **relative perturbation** together with those domains.
+
+Theta3 retains the nominal reference mechanical target while temperature changes.
+The original §7 explicitly requires actual stiffness to be measured; it supplies no
+numerical same-stiffness tolerance. This amendment adds none. Measured K_eff,3 must
+satisfy the existing mechanical, detector, conditioning, relaxation and harmonic
+requirements, and measured H_eff,3 enters analysis. Theta1 and theta2 retain their
+nominal 298 K settings, but use actual local temperature and all existing reservoir,
+calibration and model-domain limits. Heating is measured and propagated, not erased
+by nominal substitution. No extra absolute temperature-target width is introduced.
+
+#### 22.6.6 Outcomes, fixed counts, packet and audit boundary
+
+For each field and preparation, classify the complete joint-region predicates:
+
+| Realization status | Meaning |
+|---|---|
+| FIELD_REALIZATION_VALID | Entire relevant qualified region is contained in the applicable retention/domain/power region; dependencies pass |
+| FIELD_REALIZATION_UNRESOLVED | Region crosses a boundary, evidence is incomplete, or certified containment/disjointness cannot be established; no VALID packet |
+| FIELD_REALIZATION_OUT_OF_SPEC | Region is certified disjoint from the applicable accepted region; invalid named role, not beta/theorem failure |
+| FIELD_REALIZATION_SPECIFICATION_MISSING | Required versioned policy is absent or mismatched; generic schema refusal, no longer the current scientific gap for these four fields |
+
+FIELD_REALIZATION_VALID is only the role component of U's full packet validity.
+No actual status is asserted without measurements. A failed field requires separately
+authorized reconstruction/reacquisition, not adjusting N to rescue its challenge.
+Retain exactly 450000 quadratic equivalents, information 408164, the existing
+N_0-to-2N_0 minimization/count mapping, two blocks and eight records. The dependence of
+that fixed mapping on independently measured time/noise parameters is unchanged;
+challenge strength may neither shorten nor extend it.
+
+U12 must bind this policy version and T amendment identity, nominal and realized
+challenges, the joint physical region, both mode bounds or matrix supremum, worst-case
+retained challenge, worst-case planning detection where applicable, and qualification
+status with dependency reasons. A hash binds that content; it does not establish
+physical accuracy. V must later implement these exact predicates and validate the
+existing inference and operating characteristics; it may not select a different
+realization criterion. **V IS BLOCKED PENDING INDEPENDENT T-AMENDMENT AND U-REPAIR
+AUDIT**, and subsequent separate authorization.
+
+The numerical values above were recomputed by deterministic logarithms, exponentials,
+normal-tail calculations and 2-by-2 symmetric matrix algebra. Orthogonal covariance
+of L and invariance of the metric were also checked with Q=[[0.6,-0.8],[0.8,0.6]] on
+both a scalar reference and a noncircular SPD pair; discrepancies were below 1e-13.
+Checks included nominal pass, omitted-rotation failure, the 304 K and 1.021-fold
+failures, a failing mode hidden by a scalar average, and containment versus a
+boundary-crossing region. These are design checks, not data, simulations or an
+independent audit. No RNG, trajectory, Monte Carlo, implementation or experiment was
+run. No human scientific decision remains unspecified in this realization policy.
 
 ## 23. Replicate structure
 
