@@ -1,0 +1,115 @@
+\chapter{Action receipts and exact closure}\label{ch:receipts}
+
+\section{What a physical receipt records}
+A shop receipt records a commercial exchange. An EBU action receipt names a
+physical predecessor, an accepted transformation, its successor and the
+version of the potential used to compare them. The two kinds of receipt may
+coexist, but one does not validate the other. A payment cannot prove that a
+reservoir recovered, and a positive EBU does not establish who was paid.
+
+The preceding factor chapters showed why a complete change can often be evaluated
+from affected factors alone. We now connect several correctly evaluated
+changes. The central fact is simple: the state after one action is the state
+before the next. Its potential appears once with each sign, and cancels.
+
+\section{Follow the actual chain}
+Consider a sequence of authoritative states under one fixed potential,
+\begin{equation}
+ x_0\longrightarrow x_1\longrightarrow\cdots\longrightarrow x_m.
+\end{equation}
+For each complete transition define
+\begin{equation}
+ E_r=V(x_{r-1})-V(x_r).
+\end{equation}
+The arrows are physical or modeled events, not an arbitrary sort order for
+files. If several actions occur together, one arrow can be their joint
+transition, retaining the identities of its children. A later allocation of
+that group's total is another question.
+
+Summing the consecutive differences gives
+\begin{align}
+ \sum_{r=1}^m E_r
+ &=V(x_0)-V(x_1)+V(x_1)-V(x_2)+\cdots
+   +V(x_{m-1})-V(x_m)\\
+ &=V(x_0)-V(x_m).
+\end{align}
+Equivalently,
+\begin{equation}\label{eq:receipt-closure}
+ \sum_r E_r+V(x_m)-V(x_0)=0.
+\end{equation}
+This is exact telescoping for any state function $V$. Gaussian geometry is
+not needed. Neither is an actor willing to improve the state. The
+intermediate states still matter: without them we cannot test whether each
+action was physical, whether its recorded value was correct or whether an
+event is missing.
+
+\begin{lawbox}{What closure proves}
+Correctly linked, complete transitions under one fixed potential have a
+total EBU equal to their endpoint potential reduction. The identity checks
+accounting consistency. It does not prove fair ownership, useful service or
+eventual recovery.
+\end{lawbox}
+
+\section{One sequence, not three fresh beginnings}
+Use the two-cell potential with reference $(10,10)$ and scales $(2,2)$.
+Three successive lossless transfers carry the state through
+\[
+ (18,2)\to(16,4)\to(13,7)\to(12,8),
+ \qquad V:16\to9\to\frac94\to1.
+\]
+The action values are $7$, $27/4$ and $5/4$, which add to $15=16-1$.
+The middle transfer starts from $(16,4)$, not from $(18,2)$. Reusing the
+initial slope for it would quote a different imagined action, not the
+second event in this sequence.
+
+\diagram{sequence}{Three consecutive finite differences telescope to fifteen. Every action uses the preceding endpoint as its baseline.}{fig:sequence}
+
+Suppose a record assigned the first and third lines to one actor and the
+second to another. Their historical contributions would be $33/4$ and
+$27/4$, adding to the same $15$. This partition uses an explicit owner rule;
+the potential did not choose the owners. Individual accounts can remain
+signed. There is no physical theorem requiring a negative contribution to
+be prohibited or prefunded.
+
+\section{Why the negative line must remain}
+Let an action take potential from $1$ to $4$, then another take it from $4$
+to $0$. Their EBU values are $-3$ and $+4$. The total is $+1$, exactly the
+endpoint reduction. Reporting only the positive line would manufacture a
+four-unit improvement from a one-unit net change. A society may decide how
+to support an essential negative action, but it must not remove the action's
+physical sign from history to make that decision easier.
+
+\section{External events need their own line}
+Now let an external event take $x_t$ to $x^{\mathrm{b}}_t$, followed by an actor action
+from $x^{\mathrm{b}}_t$ to $x_{t+1}$. Define the external potential change by
+\[
+ D_{{\mathrm{ext}},t}=V(x^{\mathrm{b}}_t)-V(x_t).
+\]
+The actor's EBU is $E_t=V(x^{\mathrm{b}}_t)-V(x_{t+1})$, so
+\begin{equation}\label{eq:driven-closure}
+ \sum_t E_t=V(x_0)-V(x_N)+\sum_tD_{{\mathrm{ext}},t}.
+\end{equation}
+An external worsening can create deviation that a later actor reduces.
+An external improvement can remove deviation without actor contribution.
+Both signs belong in the record. For example, if an external redistribution
+moves potential from $0$ to $4$ and an actor then reduces it to $1$, the
+actor records $3$, not the $-1$ obtained by comparing the wrong endpoints.
+
+If the potential itself changes between events, the calculation needs an
+explicit field-change line too. Comparing values produced by two different
+rulers as though they were one fixed $V$ breaks Equation~\ref{eq:receipt-closure}.
+We return to that harder question after the fixed-field theory is complete.
+
+\section{Balance is not carrier conservation}
+In a lossless transfer, physical stock is conserved while $V$ changes.
+States $(18,2)$ and $(14,6)$ each contain twenty stock units; their
+potentials are sixteen and four. A twelve-EBU reduction did not create or
+destroy twelve litres. Equation~\ref{eq:receipt-closure} is a reconciliation
+of values, not a conservation law for matter or energy.
+
+An auditor therefore checks both ledgers. First follow the physical states,
+routes, carriers and boundaries. Then verify potential versions, event
+identities and signed EBU lines. A residual can expose an omitted event,
+duplicate receipt, stale baseline or arithmetic error; it cannot by itself
+reconstruct the missing physical cause. The next chapter uses this discipline
+to examine closed loops and action splitting.

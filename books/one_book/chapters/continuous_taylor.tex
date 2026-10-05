@@ -1,0 +1,80 @@
+\chapter{From finite interaction to continuous curvature}\label{ch:continuous-taylor}
+
+\section{Walk across the table through physical space}
+The Boolean table records endpoints, but some action families give us more: a continuous path between every combination. Suppose each action has a fixed state increment $h_i$ and the increments add. Turning action $i$ from absent to present then moves continuously along $h_i$. The pair table forms the corners of a parallelogram in state space; a triple forms the corners of a parallelotope.
+
+Curvature describes how a slope changes across that shape. Repeated integration of mixed derivatives recovers the alternating endpoint difference exactly. This is the bridge between the finite interaction table and the familiar language of continuous calculus.
+
+\section{Fixed additive increments are a substantive assumption}
+Let
+\begin{equation}\label{eq:additive-map}
+ x_S=x_0+\sum_{i\in S}h_i,
+ \qquad G(t)=V\left(x_0+\sum_{i\in T}t_i h_i\right).
+\end{equation}
+The $h_i$ do not change when a different subset is chosen. A shared-capacity resolver that reduces one action's quantity when another is present does not satisfy this declaration merely because it returns a vector. It supplies a more general composite map, treated later.
+
+For the physical calculus interpretation, the entire parallelotope must lie in a domain on which the required derivatives are valid. Admissible vertices alone need not supply all admissible intermediate physical states in a nonconvex domain. If an extension of $V$ is used for mathematical interpolation, label that extension and limit the physical claim accordingly.
+
+\section{Integrating the mixed derivative}
+\begin{theorem}{Repeated fundamental theorem of calculus}\label{thm:repeated-ftc}
+For $T=\{i_1,\ldots,i_k\}$ with fixed additive increments, suppose $V\in C^k$ on a neighbourhood of the parallelotope in Equation~\ref{eq:additive-map}. Then
+\begin{align}\label{eq:ftc-mobius}
+ m_E(T)=-\int_{[0,1]^k}
+ D^kV\left(x_0+\sum_{i\in T}t_i h_i\right)
+ [h_{i_1},\ldots,h_{i_k}]\,dt.
+\end{align}
+Here $D^kV(x)[h_{i_1},\ldots,h_{i_k}]$ is the $k$-linear derivative of $V$ applied to the specified directions.
+\end{theorem}
+\begin{proof}
+For one direction the difference $G(1)-G(0)$ is the integral of its derivative. Apply the same identity in a second coordinate to the difference of those integrals, then continue through all $k$ coordinates. Continuity on the compact cube permits the repeated integrals and their rearrangement. The alternating corner sum is $\Delta_TG(0)$, while the chain rule for the affine map gives the displayed directional derivative. Finally $m_E(T)=-\Delta_TG(0)$.
+\end{proof}
+
+For a pair this becomes
+\begin{equation}
+ m_E(ij)=-\int_0^1\!\int_0^1
+ h_i^{\mathsf T}\nabla^2V(x_0+s h_i+t h_j)h_j\,ds\,dt.
+\end{equation}
+A pair coefficient is therefore an integrated cross-curvature over a finite physical region. It need not equal the Hessian at the initial point times the increments unless the curvature is constant or a controlled approximation is used.
+
+\section{Why the pair sign is not fixed by convexity}
+A positive-semidefinite Hessian guarantees $h^{\mathsf T}Hh\geq0$ for the same direction twice. It does not guarantee $h_i^{\mathsf T}Hh_j\geq0$ for different directions. If the directions oppose one another, the cross product can be negative, giving a positive EBU pair correction.
+
+This is the continuous explanation of the cancelling-transfer example. Convexity penalizes a nonzero departure from the reference, but opposite departures can cancel in the joint endpoint. The positive correction repairs the overstatement of separate burdens. It is not evidence of a mysterious extra output.
+
+For EBU, the theorem lets a measured interaction be compared with the field's declared geometry. A mismatch can expose an omitted response dependence or a wrong field. Such a comparison is useful for model diagnosis before any institutional reward is attached to the number.
+
+\section{Small actions and a controlled local approximation}
+Set $h_i=\varepsilon d_i$, holding directions $d_i$ fixed while shrinking the common amplitude. Continuity of $D^kV$ at $x_0$ gives
+\begin{equation}\label{eq:small-amplitude}
+ m_E(T)=-\varepsilon^kD^kV(x_0)[d_{i_1},\ldots,d_{i_k}]
+          +o(|\varepsilon|^k).
+\end{equation}
+The notation $o(|\varepsilon|^k)$ means that the remainder divided by $|\varepsilon|^k$ tends to zero. It does not promise a full extra power of $\varepsilon$ under only $C^k$ smoothness.
+
+If $D^kV$ is Lipschitz with constant $L$ on the relevant neighbourhood, the stronger estimate is
+\begin{equation}\label{eq:lipschitz-remainder}
+ |R_T(\varepsilon)|\leq
+ \frac L2|\varepsilon|^{k+1}
+ \left(\sum_{i\in T}\|d_i\|\right)
+ \prod_{i\in T}\|d_i\|.
+\end{equation}
+Indeed, compare the derivative at $x_0+\varepsilon\sum t_i d_i$ with that at $x_0$, use the Lipschitz bound and multilinearity, and integrate $t_i$ over $[0,1]$, whose mean is $1/2$.
+
+The assumptions determine the error claim. Replacing little-$o$ by $O(\varepsilon^{k+1})$ without stronger regularity would claim precision the theorem has not supplied. For physical measurements this difference can matter when extrapolating interactions from small interventions to larger ones.
+
+\section{An exact finite table and a local approximation can both be right}
+The multilinear expansion in Chapter~\ref{ch:discrete-taylor} reconstructs the measured finite table without a remainder. Equation~\ref{eq:small-amplitude} approximates a coefficient as action amplitudes shrink. Its remainder concerns the replacement of an integrated derivative by one local derivative, not an incompleteness of Boolean inversion.
+
+A practical comparison is the difference between a complete map of several specified trips and a local estimate of road slope. The map can give exact distances between its listed places while a tangent estimate between nearby points remains approximate. Neither kind of knowledge invalidates the other; their domains differ.
+
+For a system designer, the finite table is appropriate when actions are indivisible or large. A derivative model can help identify how changes scale with size and where a small-action approximation is defensible. The record should say which object was used and carry its error conditions.
+
+\section{Weaker regularity needs a real theorem}
+Some physical models are piecewise smooth. Repeated FTC can still hold under suitable absolute-continuity and integrability conditions on the pullback $G(t)$, but ``derivatives exist almost everywhere'' is not a sufficient replacement by itself. Appendix~\ref{app:calculus} states a useful formulation and explains a singular-function counterexample.
+
+The finite Möbius coefficient remains defined from the vertices even when no such derivative theorem applies. This gives a robust order of reasoning: retain the exact finite comparison, then add a continuous interpretation only when its mathematical hypotheses are met. A failed smooth approximation need not invalidate the endpoint account.
+
+\section{A useful question for the EBU system}
+If higher-order terms become small as interventions shrink, a local study may efficiently identify the leading geometry. If they remain large, the physical response or field may contain an important nonlinearity. Either finding can guide the scale of a future trial. The theorem does not choose a socially acceptable intervention size; measurement, feasibility and service constraints still govern that choice.
+
+We can now state a particularly useful exact result. When the potential is polynomial and the response affine, sufficiently high finite differences vanish identically, at finite action sizes. The next chapter shows why the Gaussian model is an instructive null case and where its simplicity ends.

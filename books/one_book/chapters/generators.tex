@@ -1,0 +1,72 @@
+\chapter{A generator supplies the movement}\label{ch:generators}
+
+\section{From a map of value to a rule of change}
+The previous chapter of physical dynamics explained why a gradient does not move a pump. We now give a general interface for a declared motion law. Once a law and a duration determine an endpoint for each control setting, that endpoint can enter the same coalition table. The potential definition and Möbius transform need not be reinvented.
+
+A generator therefore sits beside the valuation chain as a source of physical response. It is not the foundation from which EBU must always be derived. Measured finite transitions, fixed increments and jumps can all have endpoint EBU without being solutions of the particular differential equation used here.
+
+\section{A well-posed flow is needed first}
+Let a fixed control vector $z$ specify a vector field $b_z$. Consider
+\begin{equation}\label{eq:flow}
+ \dot x=b_z(x),\qquad x(0)=x_0,
+ \qquad x_z(\tau)=\Phi_z^\tau(x_0).
+\end{equation}
+For each control used in the coalition table, require a unique solution through the entire declared duration $\tau$, within the admissible state domain. Continuity and local Lipschitz dependence on state are familiar sufficient local conditions; existence up to the chosen horizon and domain invariance still need to be established.
+
+These requirements prevent the endpoint from being ambiguous. The equation $\dot x=\sqrt{|x|}$ starting at zero has nonunique solutions: the state can remain zero for an arbitrary waiting time before departing. The equation $\dot x=x^2$ starting at one has solution $1/(1-t)$ and no finite endpoint at or beyond $t=1$. Writing a generator symbol does not repair either problem.
+
+\section{The generator-to-coalition theorem}
+\begin{theorem}{Flow, value and interaction}\label{thm:flow-mobius}
+Suppose every required control $z=\chi_S$ has a unique admissible endpoint $\Phi_z^\tau(x_0)$, and $V$ is finite there. Set
+\begin{equation}
+ E_\tau(S)=V(x_0)-V(\Phi_{\chi_S}^\tau(x_0)).
+\end{equation}
+Then for every nonempty $T$,
+\begin{equation}\label{eq:flow-mobius}
+ m_{E_\tau}(T)=-\Delta_T\bigl[V(\Phi_z^\tau(x_0))\bigr]_{z=0}.
+\end{equation}
+If in addition $V$ and the trajectories satisfy the path theorem,
+\begin{equation}\label{eq:flow-path}
+ E_\tau(S)=-\int_0^\tau
+ \nabla V(x_S(t))^{\mathsf T}b_{\chi_S}(x_S(t))\,dt.
+\end{equation}
+\end{theorem}
+\begin{proof}
+The flow supplies a complete endpoint map. Apply the coalition definition and the cancellation of the common constant $V(x_0)$ in every nonempty difference. Along each regular solution, the chain rule gives $dV/dt=\nabla V^{\mathsf T}b_z$; its integral gives the path expression.
+\end{proof}
+
+The first statement requires endpoints, not a smooth interpolation across all control values. Control derivatives used later need stronger parameter regularity. Keeping those levels separate makes the theorem usable for a broad range of physically declared response models.
+
+\section{No control can still mean natural movement}
+An empty coalition need not leave a dynamical system at rest. If $b_0\ne0$, the no-action endpoint $x_\varnothing(\tau)$ can differ from $x_0$. Then the raw table has
+\begin{equation}
+ E_\tau(\varnothing)=V(x_0)-V(x_\varnothing(\tau))\ne0.
+\end{equation}
+It measures the whole interval, including natural drift. To compare controls against that same no-action evolution, define the centered table
+\begin{equation}\label{eq:drift-centered}
+ E_\tau^{\mathrm{rel}}(S)=V(x_\varnothing(\tau))-V(x_S(\tau)).
+\end{equation}
+Now $E_\tau^{\mathrm{rel}}(\varnothing)=0$. The raw and relative tables differ by a constant, so all their nonempty Möbius coefficients agree. Their total values and interpretations differ by the baseline drift.
+
+This is not automatically a causal effect estimate. It is a declared dynamical comparator, whose identification requires a valid model or intervention design. A future EBU record should not credit passive natural recovery to an idle actor merely because it occurred during the actor's observation interval.
+
+\section{Historical force, flux and opposition}
+Earlier EBU models used a chain from potential to directional force, then mobility or threshold response, then physical flux and state change. In that historical notation $J_e$ denotes an edge flux. An expression involving a scalar $\Psi$ can represent opposition in a particular proposal. Such a scalar is not automatically the vector field $b_z$ in Equation~\ref{eq:flow}.
+
+To supply a generator, a model must state how every relevant control, flux, boundary and constraint produces the entire state velocity. The source documents for historical force--flux proposals remain useful context; their response laws are not adopted as universal physical law or as an active economic mechanism by this chapter.
+
+This distinction lets the book preserve a valuable idea without overclaiming it. A transparent force--response architecture can make assumptions testable. Its name or analogy to Onsager does not establish measured transport coefficients, microscopic reversibility, or a successful social controller.
+
+\section{Ordered actions ask a different question}
+A flow under simultaneous controls produces one endpoint. Performing A and then B can produce another, and reversing their order can produce a third. These are ordered words, not interchangeable rows of an unordered subset table.
+
+For a concrete smooth example in the plane, let $X=\partial_x$ and $Y=x\partial_y$, starting from $(0,0)$. Applying X for time $\tau$ then Y for time $\tau$ reaches $(\tau,\tau^2)$. Reversing the order reaches $(\tau,0)$. Applying $X+Y$ simultaneously for time $\tau$ reaches $(\tau,\tau^2/2)$. All statements follow by direct integration of these declared equations.
+
+The order difference is related at small times to the Lie bracket $[X,Y]=DY\,X-DX\,Y$. For observables, $[L_X,L_Y]=L_{[X,Y]}$, where $L_Xf=Df[X]$. Appendix~\ref{app:generators} gives the convention and expansion. The difference between two orders is not itself an unordered Möbius coefficient; one must first define a coalition protocol for every subset.
+
+\section{Why the interface matters for EBU}
+The generator interface can connect accounting to realistic duration, capacity and response. It allows the same finite-value law to be used with several explicitly different physical mechanisms while preserving their identities. It also makes a failure informative: an endpoint ambiguity is a response-model problem, while a mismatch in the potential evaluation is a valuation problem.
+
+The social opportunity is more credible comparison of interventions whose physical effects unfold over time. A repair, a delivery and a scheduling change may have different endpoint responses at different durations. That information could support better service planning. It does not determine which planner should have authority, or prove that a particular actor policy will sustain function.
+
+The next chapter shows why even a generator linear in its controls can create higher-order finite-time interactions. A local short-time hierarchy is useful, but it is not an all-time ceiling.

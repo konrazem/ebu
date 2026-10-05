@@ -1,0 +1,85 @@
+\chapter{When a potential is also a probability landscape}\label{ch:equilibrium-bridge}
+
+\section{Two ways of learning about the same states}
+A physical model can assign energy to a state. Repeated observations can estimate how often nearby states occur. In a properly specified thermal equilibrium benchmark, these two descriptions are related. This offers a powerful way to test a potential against information that was not obtained merely by evaluating the potential itself.
+
+The relationship is conditional. A useful inventory potential does not become a thermal energy by resemblance to a Gaussian curve. A stationary histogram does not establish detailed balance. We first state the density relation, then distinguish the dynamical and thermodynamic claims that need additional evidence.
+
+\section{Canonical normalization}
+Suppose a system has a specified energy $U(x)$, one fixed temperature $T>0$, an appropriate canonical ensemble, and a declared reference measure $\nu$. Assume its density relative to that measure is
+\begin{equation}
+ p(x)=Z_U^{-1}\exp[-\beta_{\mathrm{thermo}}U(x)],
+ \qquad \beta_{\mathrm{thermo}}=\frac1{k_BT},
+\end{equation}
+with finite nonzero normalizer. Define the dimensionless potential
+\begin{equation}\label{eq:thermal-potential}
+ V(x)=\frac{U(x)-U(x^*)}{k_BT}.
+\end{equation}
+The constant reference energy can be absorbed into the normalizer, giving $p=Z^{-1}e^{-V}$.
+
+Here $\beta_{\mathrm{thermo}}$ has units of inverse energy. It is not the dimensionless coefficient $\beta_{\mathrm{bridge}}$ used to compare an independently defined EBU potential with relative surprisal. Keeping those symbols separate prevents a normalization convention from looking like a fitted universal constant.
+
+\begin{corollary}{The normalized bridge in its canonical scope}\label{cor:beta-one}
+Under the canonical assumptions and Equation~\ref{eq:thermal-potential}, define $J_{\mathrm{prob}}(x)=-\ln p(x)$ and relative surprisal
+$J_{\mathrm{rel}}(x)=J_{\mathrm{prob}}(x)-J_{\mathrm{prob}}(x^*)$. Then
+\begin{equation}\label{eq:relative-surprisal}
+ J_{\mathrm{rel}}(x)=V(x),\qquad \beta_{\mathrm{bridge}}=1.
+\end{equation}
+\end{corollary}
+\begin{proof}
+Taking logarithms gives $J_{\mathrm{prob}}=V+\ln Z$. Subtracting its value at $x^*$ removes the constant and uses $V(x^*)=0$.
+\end{proof}
+
+This is known canonical physics expressed in the chosen EBU normalization. It is not evidence that every ecological or economic field has the same relation. A broader cross-field claim remains a hypothesis requiring independent calibration, comparable coordinates and measurements.
+
+\section{A density is relative to a measure}
+For a continuous variable, the probability of an exact point is normally zero. A density tells us probability per unit of a declared measure. Saying a state has density twice another state's is meaningful only within that coordinate and measure convention.
+
+If $y=f(x)$ is an invertible smooth change of coordinates and densities are reported relative to the new Lebesgue measure, then
+\begin{equation}\label{eq:density-jacobian}
+ p_y(f(x))=\frac{p_x(x)}{|\det Df(x)|}.
+\end{equation}
+A nonconstant Jacobian contributes a nonconstant log term. It need not cancel in an endpoint ratio or an interaction contrast. Transforming the reference measure consistently with the state description preserves the original scalar relation; silently changing the measure does not.
+
+A density-of-states factor creates the same kind of issue. If an observed macrostate density is proportional to $g(x)e^{-V(x)}$, its negative log is $V(x)-\ln g(x)$ plus a constant. One must account for $g$ rather than announce a failure or confirmation of $J=V$ from a comparison using incompatible definitions.
+
+\section{Curvature agrees more generally than covariance does}
+Where the density relation holds smoothly in the declared coordinates,
+\begin{equation}\label{eq:hessian-equality}
+ \nabla^2J_{\mathrm{prob}}(x)=\nabla^2V(x)=H(x).
+\end{equation}
+This follows by differentiation of the log relation. It does not require a Gaussian density, and $H$ may vary with state.
+
+A stronger result applies when $V=\tfrac12(x-x^*)^{\mathsf T}H(x-x^*)$ on all of $\mathbb R^d$, with constant symmetric positive-definite $H$, Lebesgue reference measure and no truncation. Then the normalized density is a global Gaussian with
+\begin{equation}\label{eq:gaussian-covariance}
+ \operatorname{Cov}(x)=\Sigma=H^{-1}.
+\end{equation}
+Completing the quadratic, or transforming to unit-normal coordinates, proves this covariance statement. It is not a general consequence of matching Hessians at one point.
+
+Truncate the Gaussian to nonnegative stocks, impose a finite-mass boundary, or change the reference measure, and the global covariance need not equal the ambient inverse Hessian. A local quadratic approximation can still be useful, but it must be labeled as an approximation. In particular, the two-cell closed stock world of the opening chapters is not an unconstrained full-support Gaussian distribution.
+
+\section{Conservation changes which directions can fluctuate}
+If physical states satisfy $Ax=b$, an interior accessible displacement lies in the null space of $A$. Choose an orthonormal basis matrix $Q$ for that tangent space and write $x=x_c+Qy$. The restricted potential has Hessian $Q^{\mathsf T}H Q$ in the linear coordinates $y$.
+
+Only in a full untruncated Gaussian on that affine subspace, with its induced measure and positive-definite restricted Hessian, does
+\begin{equation}
+ \operatorname{Cov}(y)=(Q^{\mathsf T}HQ)^{-1},\qquad
+ \operatorname{Cov}(x)=Q(Q^{\mathsf T}HQ)^{-1}Q^{\mathsf T}
+\end{equation}
+follow. The ambient covariance is singular along conserved directions. For curved manifolds, coordinate curvature and the chosen intrinsic measure need explicit treatment; one should not casually apply this affine formula.
+
+This is a practical protection against interpreting a conserved total as a failed fluctuation measurement. The inaccessible direction is not supposed to have the variance of an unconstrained system.
+
+\section{The same density can support different dynamics}
+A probability density tells us how mass is distributed across states, not how it circulates among them. For a diffusion with constant positive diffusion coefficient $D$, a drift of the form
+\begin{equation}
+ b=-D\nabla V+c,\qquad \nabla\!\cdot(c p)=0,
+\end{equation}
+can preserve $p\propto e^{-V}$ under appropriate boundary conditions while carrying stationary current $c p$. A nonzero current generally violates the reversible equilibrium interpretation for ordinary even state variables.
+
+Appendix~\ref{app:probability} gives a rotating Gaussian example and a driven jump ring. They show why density agreement, stationarity, detailed balance, local detailed balance and entropy accounting must be treated as separate claims. A histogram alone cannot establish all of them.
+
+\section{What this bridge offers EBU}
+A canonical benchmark offers a controlled place to compare two independently obtained descriptions: physical energy divided by $k_BT$, and negative log density in a specified measure. Agreement can validate a calibration and analysis route within that benchmark. It cannot establish economy-wide applicability by analogy.
+
+The prospective benefit is a firmer foundation for measurement. Before asking an institution to rely on an EBU denomination, one can ask whether its physical and statistical readings agree where theory makes a precise prediction. The next chapter carries that same comparison through the complete coalition table.

@@ -1,0 +1,55 @@
+\chapter{The all-order composite chain rule}\label{app:partitions}
+
+\section{Partitions organize every derivative placement}
+Let $T$ be a finite set of distinct control labels. A set partition $\pi$ divides $T$ into nonempty disjoint blocks whose union is $T$. For example, the partitions of $\{1,2,3\}$ are
+\[
+ 1|2|3,\qquad 12|3,\qquad 13|2,\qquad 23|1,\qquad 123.
+\]
+The notation records which differentiations act together on one derivative of the response. It is not a partition of physical actors into institutions or a grouping decision for execution.
+
+Assume $x$ and $V$ are $C^k$ on suitable neighbourhoods, with $k=|T|$, and define $x_B=\partial_Bx$. The chain rule is
+\begin{equation}
+ \partial_T(V\circ x)=
+ \sum_{\pi\in\Pi(T)}D^{|\pi|}V(x)[x_B:B\in\pi].
+\end{equation}
+Since mixed derivatives commute under these hypotheses, the order in which the blocks are listed does not change the term.
+
+\section{An induction proof}
+For one label, the only partition has one block and the formula is the ordinary chain rule $\partial_i(V\circ x)=DV[x_i]$.
+
+Assume the formula holds for $T$ and differentiate in a new label $j$. In any term, the derivative can act on $D^{|\pi|}V(x)$ through $x$. This creates a new argument $x_j$ and corresponds to adding the singleton block $\{j\}$ to $\pi$.
+
+Alternatively, it can act on one argument $x_B$, replacing it by $x_{B\cup\{j\}}$. This corresponds to inserting $j$ into that block. Every partition of $T\cup\{j\}$ has exactly one of these forms: either $j$ is a singleton, or it belongs to one unique larger block. Removing $j$ recovers a unique predecessor term. Thus every new partition appears once and only once, proving the formula.
+
+This labeled form explains why no factorial coefficient accompanies a partition. Multiplicities arise in alternative versions when several differentiation labels are identified or terms with equal form are collected. Those versions must be translated carefully before numerical coefficients are borrowed.
+
+\section{The fourth order displayed}
+For labels $1,2,3,4$, the fifteen partitions fall into five patterns:
+\begin{align}
+ \partial_{1234}(V\circ x)
+ ={}&D^4V[x_1,x_2,x_3,x_4]\nonumber\\
+ &+\sum_{\{i,j\}\subset\{1,2,3,4\}}
+   D^3V[x_{ij},x_k,x_l]\nonumber\\
+ &+D^2V[x_{12},x_{34}]+D^2V[x_{13},x_{24}]
+   +D^2V[x_{14},x_{23}]\nonumber\\
+ &+D^2V[x_{123},x_4]+D^2V[x_{124},x_3]\nonumber\\
+ &+D^2V[x_{134},x_2]+D^2V[x_{234},x_1]\nonumber\\
+ &+DV[x_{1234}].
+\end{align}
+In the six-term sum, $\{k,l\}$ is the complementary pair of labels. The five patterns have counts $1,6,3,4,1$, adding to fifteen.
+
+A quadratic potential leaves the $D^2V$ and $DV$ terms. An affine response leaves only the $D^4V$ term. If both conditions hold, the fourth derivative vanishes, in agreement with the finite degree ceiling. If neither holds, several algebraic origins can contribute to one total.
+
+\section{From the derivative back to the coefficient}
+Suppose the complete control cube and the regularity needed for repeated FTC are available. Then
+\begin{equation}
+ m_E(T)=-\int_{[0,1]^{|T|}}\partial_T(V\circ x)(z_T,0_{N\setminus T})\,dz_T.
+\end{equation}
+Substituting the partition formula gives a finite sum of integrated derivative terms. This can support a model-based diagnostic, but it still depends on the chosen smooth response across the cube. The vertices alone determine the sum, not its decomposition into those terms.
+
+A nonzero local mixed derivative also need not produce a nonzero finite coefficient: positive and negative contributions can cancel in the integral. Conversely, a nonzero coefficient proves that the integrated mixed derivative is nonzero when the representation applies, not that its sign is uniform throughout the cube.
+
+\section{How to use the formula without overclaiming it}
+The formula can identify which additional response measurements a proposed explanation needs. A claim that a triple is entirely due to $D^3V$ should justify why the mixed response derivatives vanish. A claim of direct three-way response should identify $x_{123}$ rather than infer it solely from the total coefficient.
+
+The theorem is established multivariable calculus; Hardy's treatment explains the combinatorics of such partial derivatives \cite{hardy}. In EBU it serves as an interpretation tool inside a declared model. Its practical benefit is a more precise diagnosis of dependencies, while its limitation protects the book from presenting a coordinate-dependent split as a unique physical discovery.

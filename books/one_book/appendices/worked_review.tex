@@ -1,0 +1,78 @@
+\chapter{Following one claim all the way through}\label{app:worked-review}
+
+\section{A declaration small enough to inspect}
+Use three dimensionless binary controls and the scalar response
+\begin{equation}
+ x(z)=z_1+z_2+z_3+z_1z_2,
+ \qquad V(x)=\tfrac12x^2,
+ \qquad x_0=0.
+\end{equation}
+Assume all eight endpoints are admissible for this constructed example. The declaration specifies a response and a potential, not a real apparatus, a selection policy or an economic institution.
+
+For each subset $S$, define $E(S)=-V(x_S)$. The table, including every interaction coefficient, is
+\begin{center}
+\begin{tabular}{lrrr}\toprule
+$S$ & $x_S$ & $E(S)$ & $m_E(S)$\\\midrule
+$\varnothing$ & 0 & 0 & 0\\
+$1$ & 1 & $-1/2$ & $-1/2$\\
+$2$ & 1 & $-1/2$ & $-1/2$\\
+$3$ & 1 & $-1/2$ & $-1/2$\\
+$12$ & 3 & $-9/2$ & $-7/2$\\
+$13$ & 2 & $-2$ & $-1$\\
+$23$ & 2 & $-2$ & $-1$\\
+$123$ & 4 & $-8$ & $-1$\\\bottomrule
+\end{tabular}
+\end{center}
+The coefficients sum on the full group to $-3/2-7/2-1-1-1=-8$. The three-way value is not the whole difference between the group and its singletons. The pair terms must be removed first.
+
+\section{The exact finite polynomial}
+The unique multilinear extension is
+\begin{equation}
+ \widetilde E(z)=-\tfrac12(z_1+z_2+z_3)
+ -\tfrac72z_1z_2-z_1z_3-z_2z_3-z_1z_2z_3.
+\end{equation}
+Evaluating this polynomial at any Boolean vertex recovers the table. It has no remainder there. Its values at nonbinary controls need not match the physical smooth composite $-x(z)^2/2$, because the multilinear reduction replaced repeated powers using a Boolean identity.
+
+\section{The smooth derivative check}
+For the physical smooth response, the only nonzero mixed second derivative is $x_{12}=1$, and $x_3=1$. Since $V''=1$ and $V'''=0$, the triple chain rule gives $\partial_{123}(V\circ x)=1$. Its integral over the unit cube is one, so the EBU triple is minus one.
+
+This matches the table and demonstrates response-generated interaction under a quadratic field. It does not prove a unique physical cause in another system whose response has not been measured. The response is known here because it was explicitly declared.
+
+\section{The probability check is conditional}
+If, separately, these scalar states are evaluated under the normalized Gaussian density $p(x)=(2\pi)^{-1/2}e^{-x^2/2}$ on $\mathbb R$, the density relation holds. The triple log product is
+\begin{equation}
+ \ln\frac{p(4)p(1)^3}{p(3)p(2)^2p(0)}=-1.
+\end{equation}
+The normalizers cancel. The density readings are at response endpoints; they are not probabilities that each coalition will be selected.
+
+This calculation is conditional algebra because the density was stipulated. An experiment would have to obtain its physical potential and density estimates independently enough to make agreement informative. The table itself contains no evidence of stationarity or detailed balance.
+
+\section{The entropy check needs still more}
+If every entry were realized by a process satisfying the full fixed conservative overdamped single-reservoir P4 conditions, the medium-entropy coefficient would be $-k_B$. That conclusion does not follow merely because a Gaussian density was written down.
+
+The response law above does not specify heat, work, a reservoir, or how controls are applied. Therefore the example as declared does not claim that any actual entropy was produced or measured. It illustrates exactly where the thermal premise would enter and what additional evidence would be needed.
+
+\section{A joint outcome still leaves attribution open}
+The full group has value minus eight. Many triples of signed numbers sum to minus eight. None is selected by the Möbius decomposition as a unique owner payment. The dividends describe subset interactions; an allocation rule may use them, but must state how and why.
+
+A common-path decomposition would need a declared path and a decomposition of its velocity into child contributions. A Shapley-type allocation would average conditional increments across orders under its own axioms. A service institution might use another rule entirely. All can be discussed without changing the already determined group value.
+
+\section{An uncertainty statement needs the measurement design}
+If the eight potential values were independently estimated with common variance $\sigma^2$, the triple contrast would have variance $8\sigma^2$. If the table instead came from shared fitted parameters, its covariance would differ. The exact table cannot tell us which observation model was used.
+
+Thus a complete empirical report would append the calibration and covariance model, not simply say that the coefficient is exactly minus one. Exactness describes the constructed mathematics here. Measurements would need their own uncertainty and possible bias assessment.
+
+\section{The claim ledger}
+\begin{longtable}{P{.36\linewidth}P{.54\linewidth}}
+\toprule Claim & What supports it\\\midrule
+Complete endpoint table & The declared response and admissible vertices.\\
+Exact coefficients & Boolean finite differences and reconstruction.\\
+Triple under quadratic $V$ & Nonlinear response and the composite derivative.\\
+Log-density equality & An additionally stipulated canonical density and measure.\\
+Thermal entropy interpretation & Not established by this response declaration; full P4 premises would be needed.\\
+Owner entitlement & Not defined by the table.\\
+Social improvement & Not established by constructed arithmetic.\\
+\bottomrule
+\end{longtable}
+
+This sequence is the book's method in miniature. Start from a clear physical comparison, derive what follows, and name every additional premise when moving to a stronger interpretation. The result is a more useful foundation for future work because it tells readers both what they can rely on and what they still need to learn.

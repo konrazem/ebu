@@ -1,0 +1,92 @@
+\chapter{Dividing a result does not define an entitlement}\label{ch:attribution}
+
+\section{The joint account is already known}
+We have now defined a complete coalition landscape and its interaction hierarchy. None of that analysis required an actor wallet. A joint transition has one value before anyone decides how to divide it. We can therefore examine an attribution rule without mistaking its closure for a new physical law.
+
+A path attribution can be useful for reporting contributions under a declared convention. Its assumptions, path and child decomposition must be retained. It is not automatically an observed causal contribution, a fair share or a payment.
+
+\section{One declared path through the joint change}
+Consider the straight path
+\begin{equation}
+ \gamma(s)=x^{\mathrm{b}}+s\delta_{\mathcal G},\qquad 0\le s\le1.
+\end{equation}
+The parameter $s$ says what fraction of the joint increment has been included in this mathematical path. If the physical model explicitly stipulates constant-rate simultaneous execution, that path can also be its realized state path. If only endpoints are specified, it is a declared interpolation convention.
+
+For each child, define the simultaneous-path field attribution
+\begin{equation}\label{eq:path-child}
+ R_a=-\int_0^1\nabla V(x^{\mathrm{b}}+s\delta_{\mathcal G})^T\delta_a\,ds.
+\end{equation}
+The minus sign follows the book's convention: reducing potential gives positive field value. The integral sums the child's directional contribution along the common path. Every child uses that same path; choosing a different path for each would require a different argument for closure.
+
+This construction has Aumann--Shapley-type common-path mathematics. Naming that relationship is an attribution of mathematical structure, not an adoption of a fairness theorem or a claim that physical matter follows a cooperative-game allocation rule.
+
+\section{Why the path contributions close}
+Add equation~\eqref{eq:path-child} over children. Finite summation and integration commute, and the child increments sum to $\delta_{\mathcal G}$:
+\begin{align}
+ \sum_aR_a
+ &=-\int_0^1\nabla V(x^{\mathrm{b}}+s\delta_{\mathcal G})^T\delta_{\mathcal G}\,ds\\
+ &=-\int_0^1\frac{d}{ds}V(x^{\mathrm{b}}+s\delta_{\mathcal G})\,ds\\
+ &=V(x^{\mathrm{b}})-V(x^{\mathrm{b}}+\delta_{\mathcal G}).
+\end{align}
+The last step is the fundamental theorem of calculus, under the differentiability and path-domain assumptions. Our fixed quadratic satisfies the required smoothness.
+
+\begin{lawbox}{Common-path closure}
+For fixed additive child increments and one declared differentiable common path of the stated form, the signed derivative integrals sum to the exact group field reduction. The theorem establishes the sum. It does not establish ownership, causal necessity, fair shares or permission to spend an attribution.
+\end{lawbox}
+
+The closure result concerns the complete state and potential that were declared. If a group's physical operation changes additional energy, loss or equipment coordinates, those coordinates belong in its complete increment and in any potential that claims to value them. The field integral does not authorize a second, unspecified charge. Nor does its exact sum determine a unique owner allocation.
+
+\section{The Gaussian integral is explicit}
+Because the Gaussian gradient is affine,
+\[
+ \nabla V(x^{\mathrm{b}}+s\delta_{\mathcal G})=\mu(x^{\mathrm{b}})+sH\delta_{\mathcal G}.
+\]
+Substitute into equation~\eqref{eq:path-child} and integrate $1$ and $s$:
+\begin{equation}
+ R_a=-\mu(x^{\mathrm{b}})^T\delta_a-\tfrac12\delta_a^TH\delta_{\mathcal G}.
+\end{equation}
+No numerical quadrature is needed for this quadratic. The expression includes the way each child overlaps the full group increment. It does not merely divide the total by the number of names on the record.
+
+For the symmetric two-courier example, each attribution is 6 and their sum is 12. The same-baseline singleton value was 7, while the first and second sequential values were 7 and 5. These are three different questions with compatible arithmetic.
+
+\section{Unequal quantities on the same edge}
+Let A send one unit and B send three from the same baseline $(18,2)$. The group still sends four units and has field value 12. The singleton values are
+\[
+ E_A^{(0)}=4-1/4=3.75,\qquad
+ E_B^{(0)}=12-9/4=9.75,
+\]
+summing to 13.5. The cross-term correction is $-1.5$.
+
+Along the common path, A's increment is one quarter of the total and B's is three quarters, so their field attributions are 3 and 9. This proportionality follows here because the increments are collinear and use the same path. It is not a universal justification for dividing all group values by sent quantity.
+
+If the actions use different destinations, different scales or different physical maps, equal sent quantities need not have equal directional field effects. A proportional policy can still be defined, but it answers a policy question distinct from the common-path calculation.
+
+\section{A fan-out example with distinct destinations}
+Use three locations with $x^{\mathrm{b}}=(18,2,10)$, references $(10,10,10)$ and scales all equal to 2. Let A send two units from location 1 to 2 and B send two from location 1 to 3. The increments are $(-2,2,0)$ and $(-2,0,2)$.
+
+Initial potential is 16. The joint successor is $(14,4,12)$, whose terms are $2$, $4.5$ and $0.5$, totaling 7. Group value is 9. Acting alone, A gives 7 and B gives 3, totaling 10. Their one-unit discrepancy comes from the shared source coordinate.
+
+The common-path attributions are $6.5$ to A and $2.5$ to B. They sum to 9. Equal sent quantities did not yield equal attributions because one destination began below reference while the other began at reference. The arithmetic describes the declared path; whether these are appropriate economic shares remains a separate question.
+
+\section{Why an allocation remains an additional choice}
+Many numerical allocations can sum to 12. Equal shares, proportional shares and some marginal constructions all close in a symmetric example. Closure alone cannot distinguish them. An institution may also consider responsibility, measured effort, guaranteed access, bargaining power and risk.
+
+Even attractive algebraic properties have precise scope. Relabeling fixed children leaves the common-path formula unchanged. Proportionally splitting a fixed child preserves its summed attribution. But changing requests can change physical acceptance, group composition and affordability. Those effects require analysis of the entire mechanism.
+
+An earlier prospective Gaussian programme proposed using a declared path attribution in an action-capacity rule. That proposal can be studied without pretending it has already solved economic fairness. A negative result about the mechanism would not invalidate the calculus identity; a correct identity would not rescue a poorly performing mechanism.
+
+
+\section{Dividends can inform an allocation without choosing it}
+For a normalized cooperative table, one familiar allocation divides every dividend $m_E(T)$ equally among its members and sums the assigned pieces. This gives the Shapley allocation
+\begin{equation}
+ \phi_i=\sum_{T\ni i}\frac{m_E(T)}{|T|},
+ \qquad \sum_i\phi_i=E(N).
+\end{equation}
+The sum follows because each dividend is distributed exactly once. This is established cooperative-game mathematics, not a rule adopted for EBU ownership \cite{harsanyi,grabisch}. Other rules can close on the same total under different axioms or priorities.
+
+For the symmetric two-courier table, equal dividend splitting gives six each, as does the common straight path. Coincidence in a symmetric example does not make all allocation methods equivalent. Nonlinear response, asymmetric actions and different baselines can distinguish them.
+
+\section{What a future system could use this for}
+An explicit allocation convention can make shared work easier to inspect: readers can reconstruct how a known group total was distributed and challenge the rule separately from the physical calculation. That may support cooperation when people agree on the convention and have fair access to participate.
+
+The possible benefit does not come from declaring the formula morally correct. It comes from making the choice visible. Rights, effort, risk, essential service and bargaining power remain matters for institutional design and evidence. The following chapters carry the account through routes and persistent institutions while preserving that boundary.

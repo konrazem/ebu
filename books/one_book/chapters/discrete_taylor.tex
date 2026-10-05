@@ -1,0 +1,69 @@
+\chapter{An exact Taylor language for finite choices}\label{ch:discrete-taylor}
+
+\section{Why use the word Taylor?}
+A continuous Taylor expansion builds a function from its value, slopes, curvature and higher derivatives near a point. A coalition table has a related hierarchy: its baseline, single-action changes, pair interactions, and higher interactions. The resemblance becomes an exact mathematical statement when we describe absent/present choices by indicator variables.
+
+There is also a crucial difference. An ordinary truncated continuous Taylor series generally leaves a remainder. The complete multilinear representation of a finite Boolean table leaves none. It reproduces every row exactly because it has exactly the coefficients needed to represent that finite collection of choices.
+
+\section{From a subset to its indicators}
+Let $z_i$ be one when action $i$ is included and zero otherwise. Write $\chi_S$ for the vector representing $S$. Define
+\begin{equation}\label{eq:multilinear}
+ \widetilde E(z)=\sum_{T\subseteq N}m_E(T)\prod_{i\in T}z_i,
+ \qquad z\in\mathbb R^n,
+\end{equation}
+with the empty product equal to one. Each variable appears with exponent at most one, which is what multilinear means here.
+
+\begin{theorem}{Exact finite discrete Taylor representation}\label{thm:multilinear}
+Equation~\ref{eq:multilinear} is the unique multilinear polynomial satisfying $\widetilde E(\chi_S)=E(S)$ for all $S\subseteq N$. It has no remainder on the Boolean cube, and
+\begin{equation}
+ \partial_T\widetilde E(0)=m_E(T)
+\end{equation}
+for each set of distinct variables $T$.
+\end{theorem}
+\begin{proof}
+At $\chi_S$, a product is one precisely when $T\subseteq S$ and otherwise zero. Evaluation therefore gives $\sum_{T\subseteq S}m_E(T)=E(S)$. Any multilinear polynomial has one coefficient per such product; evaluating its subsets in increasing size determines these coefficients uniquely by the same inversion. Differentiating once in each variable of $T$ and evaluating all variables at zero selects exactly its coefficient.
+\end{proof}
+
+The theorem allows the whole landscape to be reconstructed from its interactions. It does not require small physical actions, differentiable endpoints or an equilibrium probability law. It is a representation theorem for the finite table.
+
+\section{A complete quadratic example}
+For the three equal one-unit couriers of the previous chapter,
+\begin{equation}
+ \widetilde E(z)=\frac{15}{4}(z_1+z_2+z_3)
+             -\frac12(z_1z_2+z_1z_3+z_2z_3).
+\end{equation}
+There is no $z_1z_2z_3$ term. Setting all indicators to one gives $45/4-3/2=39/4$, exactly the triple value. Setting only $z_1,z_2$ to one gives $15/2-1/2=7$, exactly the pair value.
+
+Now compare this with the physical polynomial for fractional control intensities,
+\begin{equation}
+ E_{\mathrm{phys}}(z)=4(z_1+z_2+z_3)-\tfrac14(z_1+z_2+z_3)^2.
+\end{equation}
+At Boolean vertices $z_i^2=z_i$, so it reduces to the multilinear formula above. Between vertices the two functions generally differ. For one half-active action, the physical polynomial gives $31/16$, whereas the multilinear extension gives $15/8$. Both agree when the action is entirely absent or present.
+
+This small difference carries a large conceptual lesson: the unique multilinear extension is not automatically the physical law for fractional actions. Binary observations determine one interpolating polynomial in the multilinear class. They do not determine every smooth function through the same vertices.
+
+\section{A probabilistic interpolation with a declared meaning}
+There is a useful alternative interpretation. Suppose actions are included independently, with inclusion probabilities $z_i\in[0,1]$, and then the selected coalition receives its table value. The expected table value is
+\begin{equation}
+ \sum_{S\subseteq N}E(S)
+ \prod_{i\in S}z_i\prod_{j\notin S}(1-z_j)
+ =\widetilde E(z).
+\end{equation}
+The equality follows by taking expectations of the product indicators in Equation~\ref{eq:multilinear}. This is a mathematical randomized selection model with independent inclusions. It does not claim that actual actors choose independently or that an infeasible group becomes admissible because it has a probability weight.
+
+A fractional physical dose and a probability of a full dose are different interventions. Confusing them can turn an exact interpolation into a false physical prediction. In an EBU system, the record should say whether a slider changes quantity, participation probability, or merely the displayed interpolation.
+
+\section{Constants, units and reparametrization}
+The empty coefficient records the baseline table value. In the normalized action table it is zero. With a natural-drift comparator it may not be, and we must retain it or explicitly center the table. Nonempty differences annihilate a constant, but reconstruction of the full value still needs that constant.
+
+The degree also refers to declared action coordinates. Splitting an action into new controls, changing a resolver or choosing nonlinear intensity coordinates can change the apparent polynomial structure of the physical composite. A representation theorem does not make every coordinate choice equally meaningful. Physical interpretation requires the action labels and response map that supplied the table.
+
+\section{Why this helps an EBU system}
+A complete finite representation provides a consistency check. If a stored coalition total disagrees with the sum of its stored dividends, either the records refer to different tables or the arithmetic is wrong. It also reveals when a lower-order model is exact: if every coefficient above order two vanishes, singletons and pairs reconstruct every group in that table.
+
+This can reduce storage and measurement effort only when the truncation is justified. Assuming all triples vanish because measuring them is expensive is not a theorem. A system seeking to support shared infrastructure should distinguish a proved structural ceiling, a tested approximation, and an untested convenience. That distinction protects communities from confident recommendations based on omitted dependencies.
+
+\section{The boundary with ordinary calculus}
+The word exact belongs to the finite Boolean representation. The next chapter connects a fixed additive physical response to mixed derivatives of the state potential. That connection explains why small interactions have familiar Taylor orders and why quadratic fields give pair-only structure under affine action maps.
+
+The two constructions will meet, but they will not become interchangeable. The discrete polynomial is determined by all vertices. The local continuous derivative is determined near a point. One is a finite table identity; the other is local geometric information with explicit regularity and remainder conditions.

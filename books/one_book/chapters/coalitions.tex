@@ -1,0 +1,76 @@
+\chapter{A landscape of possible groups}\label{ch:coalitions}
+
+\section{Before synergy, specify what is being compared}
+Suppose a clinic needs a delivery, refrigeration and a repaired access route. The three activities may be useful together in a way that their isolated descriptions miss. Yet the phrase ``useful together'' is incomplete until we specify the alternatives. Does the delivery have the same quantity when refrigeration is absent? Does a failed route reduce the delivered amount? Does the baseline change between attempts? These choices define the comparison.
+
+A coalition table makes the alternatives explicit. It does not assume that actions are additive. Each permitted group is assigned its complete endpoint by a declared physical response rule. We can then ask how the values of the groups fit together. The endpoint rule might be a fixed sum of increments, an engineering resolver, or a well-posed flow. The arithmetic to come works at the level of the resulting table.
+
+\section{The complete Boolean cube}
+\begin{definition}{Coalition landscape}\label{def:coalition}
+Let $N=\{1,\ldots,n\}$ index distinct actions. For every $S\subseteq N$, declare an endpoint $x_S$ under the same initial condition $x_0$, field $V$, boundary and comparison protocol. Set
+\begin{equation}\label{eq:coalition-value}
+ E(S)=V(x_0)-V(x_S).
+\end{equation}
+For the normalized fixed-baseline landscape require $x_\varnothing=x_0$, so $E(\varnothing)=0$.
+\end{definition}
+
+A group is a subset, so its label does not specify an order. With two actions there are four entries: neither, A alone, B alone, and both. With three there are eight. The mathematical structure is the Boolean lattice, ordered by set inclusion. The word Boolean means that each action is absent or present in the table; it does not require the physical state to be binary.
+
+All entries must refer to one field and comparator rule. Changing a reference halfway through the table changes the question. So does replacing A's fixed quantity in one row with a resolver-dependent quantity in another without saying so. A resolver-dependent table is legitimate when declared, but it is a different landscape from the fixed-increment table.
+
+\section{One baseline, several counterfactual endpoints}
+The table is a family of comparisons, not a record asserting that the world simultaneously visited all its endpoints. An observed group can supply one row. The remaining rows may come from repeated controlled interventions, a justified model, or separate physical observations with a defensible common-baseline design. Their provenance must be stated.
+
+For EBU this is an important separation of duties. A joint action record needs its before and after states. An interaction study needs enough alternative groups to distinguish individual and joint effects. One cannot infer a three-way interaction merely by measuring the final state after three activities. The lower-order rows are part of the information needed to know what was additional.
+
+In practical terms, this can keep a promising project from being credited for a complementarity that has never been measured. It can also reveal a real complementarity that a list of separate prices or work orders obscures. Both possibilities matter for decisions about shared infrastructure.
+
+\section{A complete two-action table}
+Return to two couriers each moving two units from $(18,2)$ under the fixed reference $(10,10)$ and scales $(2,2)$. All four alternatives are physically permitted in this teaching domain:
+\begin{center}
+\begin{tabular}{llll}\toprule
+Group & Endpoint & Potential & $E(S)$\\\midrule
+$\varnothing$ & $(18,2)$ & $16$ & $0$\\
+$\{A\}$ & $(16,4)$ & $9$ & $7$\\
+$\{B\}$ & $(16,4)$ & $9$ & $7$\\
+$\{A,B\}$ & $(14,6)$ & $4$ & $12$\\\bottomrule
+\end{tabular}
+\end{center}
+The duplicate singleton endpoints are not an error: distinct couriers can have equal physical increments. Their identities are distinct, while their effects under this declaration coincide. The table says the joint value is twelve and the sum of isolated comparisons is fourteen. It does not say that twelve plus a further interaction reward may be issued. The joint value already includes the interaction.
+
+\section{Conditional addition is a change of baseline in the table}
+For disjoint groups $A$ and $B$, define the conditional increment
+\begin{equation}
+ E(B\mid A)=E(A\cup B)-E(A)
+          =V(x_A)-V(x_{A\cup B}).
+\end{equation}
+This is an exact difference between table entries. If the declared physical execution of B after A actually takes $x_A$ to $x_{A\cup B}$, it also represents that live sequential action. Without this compatibility it is only a table contrast. A sequential resolver may instead reach another endpoint.
+
+For two actions, the discrepancy between B after A and B alone is
+\begin{equation}\label{eq:pair-conditional}
+ E(B\mid A)-E(B)=E(AB)-E(A)-E(B),
+\end{equation}
+using $E(\varnothing)=0$ and writing $AB$ for $\{A,B\}$. In the courier example, B after A gives five rather than seven, a difference of minus two. The interaction measures how the context changes the increment.
+
+An actual sequential endpoint $y_{A\to B}$ gives total $V(x_0)-V(y_{A\to B})$. Comparing it with the simultaneous group yields
+\begin{equation}
+ E(AB)-E_{A\to B}=V(y_{A\to B})-V(x_{AB}).
+\end{equation}
+This is zero when the complete endpoints match, even though the same-baseline interaction can be nonzero. The distinction prevents a curvature correction from being advertised as proof that simultaneous organization is more efficient.
+
+\section{When the full table cannot be physically constructed}
+Two actions can each be permitted alone but impossible together because they share a source or a machine. Conversely, an action may be possible only with another action supplying a necessary service. If a required row is physically inadmissible, the full Boolean interaction is not an observed physical quantity on that domain.
+
+There are several honest responses: restrict the study to a fully admissible motif; declare a modeled extension and label its unobserved rows; or work on the actual feasible partially ordered set. These are different scientific objects. Filling an impossible row with zero does not recover the original comparison: zero is a value, not a marker for missing permission.
+
+For a finite feasible poset $P$, inversion uses its own incidence function $\mu_P$, determined by
+\begin{equation}
+ \mu_P(a,a)=1,\qquad
+ \sum_{a\leq c\leq b}\mu_P(a,c)=0\quad(a<b).
+\end{equation}
+One must inspect the intervals rather than transplant Boolean signs. There is a useful nuance: if the feasible family is downward closed, every interval $[A,B]$ with $A\subseteq B$ in that family is still a full Boolean interval. Its signs remain $(-1)^{|B\setminus A|}$. There may nevertheless be no feasible top group on which to ask the intended high-order question.
+
+\section{What a system gains from declaring the alternatives}
+A coalition table turns an ambiguous assertion about cooperation into a reproducible question. It identifies whose absence or presence is being varied, what stays fixed, and what physical endpoint each variation supplies. This can help distinguish shared-source competition from genuine complementarity, and prevent an institution from paying multiple times for the same represented improvement.
+
+The benefit to society would depend on how the information is used. A table could help explain why a water repair and an energy repair belong in one investment decision. It could equally show that an apparently attractive bundle has no extra physical benefit under the chosen model. Neither outcome ranks the people involved. The next chapter develops the exact subtraction that extracts those relationships.

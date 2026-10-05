@@ -1,0 +1,59 @@
+\chapter{How much confidence belongs beside an interaction?}\label{ch:uncertainty}
+
+\section{Exact subtraction is not exact observation}
+A Möbius coefficient is an exact signed sum of its input table. If the inputs are estimated, the coefficient is estimated too. Alternating signs do not automatically cancel measurement errors, and a shared baseline can create correlations that must be retained.
+
+This matters especially at high order. A genuine signal may shrink as the $k$th power of a small action amplitude while the contrast still combines $2^k$ noisy readings. A theorem can be exact and its empirical target difficult to resolve. The appropriate response is a measurement design with uncertainty, not a claim that algebra has removed it.
+
+\section{A linear contrast has a complete covariance formula}
+Collect the required estimates into a vector $\widehat e$ and let $c_S=(-1)^{|T|-|S|}$. Then $\widehat m=c^{\mathsf T}\widehat e$. If the estimates have finite covariance matrix $C$, elementary bilinearity gives
+\begin{equation}\label{eq:variance}
+ \operatorname{Var}(\widehat m)=c^{\mathsf T}Cc.
+\end{equation}
+This is exact for the specified linear contrast, whether or not the errors are Gaussian. It includes variances on the diagonal and pairwise error covariances off the diagonal.
+
+\begin{proof}
+Subtract the mean from each estimate and expand the square of $\sum_S c_S(\widehat e_S-\mathbb E\widehat e_S)$. Taking expectations gives $\sum_{S,R}c_Sc_R\operatorname{Cov}(\widehat e_S,\widehat e_R)$, which is the matrix expression.
+\end{proof}
+
+For independent equal-variance readings of all $2^k$ potentials, each with variance $\sigma^2$, the corresponding alternating potential contrast has variance $2^k\sigma^2$. Independence is an assumption about errors, not a property supplied by the transform.
+
+\section{Why the shared baseline does not simply disappear}
+For a normalized triple table, $E(\varnothing)=0$ is exact. The seven nonempty values may be calculated as $\widehat E(S)=\widehat V_0-\widehat V_S$, all using the same estimated baseline potential. If one treats these seven estimates as independent, one ignores their shared error.
+
+The signed coefficients of the seven nonempty rows sum to one. Therefore the baseline estimate enters the triple contrast once. If the eight potential estimates are mutually independent with equal variance $\sigma^2$, the result has variance $8\sigma^2$: one baseline contribution and seven endpoint contributions.
+
+Equivalently, each nonempty $\widehat E(S)$ has variance $2\sigma^2$, and two different rows have covariance $\sigma^2$ through the baseline. Substituting this full covariance into Equation~\ref{eq:variance} again gives $8\sigma^2$. It is not $14\sigma^2$, obtained by incorrectly treating those differences as independent, and not $7\sigma^2$, which would describe seven independently measured E-values of variance $\sigma^2$ under a different design.
+
+\begin{cautionbox}{What cancels, and what does not}
+A deterministic constant added to every table entry cancels in a nonempty difference. An uncertain baseline reused inside normalized differences can leave a correlated error contribution. These statements concern different data-generating constructions.
+\end{cautionbox}
+
+\section{Shared calibration creates further dependence}
+All endpoints may use the same estimated reference, temperature or Hessian. Errors in those parameters can move several table entries together. A calibration uncertainty is not automatically reduced by taking more endpoint samples; it can be systematic across the entire comparison.
+
+If $m=f(\eta)$ depends smoothly on an estimated parameter vector $\eta$, a first-order delta-method approximation gives
+\begin{equation}
+ \operatorname{Var}(\widehat m)\approx
+ \nabla f(\eta)^{\mathsf T}\operatorname{Cov}(\widehat\eta)\nabla f(\eta).
+\end{equation}
+Its approximation status, parameter uncertainty and dependence assumptions should be reported. Close to boundaries, with nonlinear estimation or sparse densities, a more appropriate registered uncertainty analysis may be needed. This book does not choose a universal confidence threshold.
+
+For the probability branch, log transformation can amplify relative error in small densities. Finite-bin probabilities estimate integrals over bins, not exact point densities. Bin size, smoothing and density-estimator choices can alter the target and its bias. Those choices belong in the prospective analysis design, not in a post hoc effort to make the two branches agree.
+
+\section{What a nonzero triple can establish}
+Suppose the null prediction requires quadratic $V$, fixed additive increments, one field, one baseline, an admissible complete cube and accurate compatible valuation. A statistically resolved nonzero triple is inconsistent with that conjunction. It does not uniquely diagnose which premise failed.
+
+The alternatives are concrete: nonlinear response; a resolver that changed accepted quantities; a nonquadratic field; drift between comparisons; omitted coordinates; calibration error; or an unsuitable measurement model. A good design includes observations or controls that can distinguish some of these explanations. If it cannot, the uncertainty belongs in the conclusion.
+
+A zero triple is also limited. It can be a genuine structural null, cancellation in that motif, or insufficient power. It does not certify absence of all higher-order effects at other baselines or durations. The interpretation must match the tested face of the landscape.
+
+\section{Choosing a manageable question}
+A complete arbitrary order-$k$ table requires $2^k$ corners. Repetitions, controls and calibration add further work. This burden motivates pair studies and carefully chosen triples before large interaction catalogues. Factor support or an independently justified degree ceiling can reduce work, but only within its proven scope.
+
+For EBU, the best early question may be small and decisive: do independently measured fixed increments under a calibrated quadratic reproduce the predicted pair correction and triple null? Such a test can teach more than a broad dashboard of poorly resolved coefficients. The social payoff, if the measurement succeeds, is a more reliable basis for later decisions, not a claim that the small experiment already validates an economy.
+
+\section{Communicating a result people can challenge}
+A useful interaction report names the group, baseline, field, physical endpoints, coefficient, uncertainty and source of every row. It distinguishes observed endpoints from modeled counterfactuals and reports missing or infeasible rows explicitly. A positive number without those details is difficult to contest and easy to overinterpret.
+
+This transparency can help communities understand why a shared intervention is judged promising, how confident that judgment is, and what would change it. It also gives an institution a way to acknowledge uncertainty without concealing the physical account. The next chapter gathers the exact identities and their conditional bridges into one readable hierarchy.

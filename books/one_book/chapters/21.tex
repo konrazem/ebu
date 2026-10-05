@@ -1,0 +1,107 @@
+\chapter{Closed cycles, splitting and external change}\label{ch:cycles}
+
+\section{Can damage and repair mint value?}
+Imagine moving water away from a useful distribution and then returning it.
+The return movement may have positive EBU. If an actor reports only that
+movement, it looks like a renewable source of credit. The first movement,
+however, raised the represented potential and had the opposite sign. A
+complete account follows both events from their actual baselines.
+
+For an undriven sequence that begins and ends at the same complete state
+$x_0=x_m$ under one fixed potential, Chapter~\ref{ch:receipts} gives
+\begin{equation}\label{eq:cycle}
+ \sum_{r=1}^m E_r=V(x_0)-V(x_m)=0.
+\end{equation}
+The theorem does not need a Gaussian. It needs the complete chain and the
+same state function at every comparison. If a transition is a simultaneous
+group, its exact group total is one line in the chain. The equation still
+does not dictate how that line is divided among people.
+
+At reference $(10,10)$ with scales $(2,2)$, transfer two units one way.
+The new state $(8,12)$ has potential one, so the action is worth $-1$.
+Transfer the same amount back and the return action is worth $+1$. The
+positive restoration is real within the account; the claim of positive
+\emph{net} creation from the complete loop is false.
+
+\section{The represented state must really return}
+A battery can recover its displayed charge while losing health. A tank can
+recover its volume while losing quality. A vehicle can return to a depot
+after using fuel. If those changes are part of the physical claim, a loop
+in one displayed coordinate is not a loop in the complete state. A carrier
+or boundary record must show what happened, and a potential over a fuller
+state may give a different result.
+
+Equal potential is weaker still than equal state. States $(18,2)$ and
+$(2,18)$ have the same Gaussian potential but very different source stocks
+and future options. Their direct finite EBU is zero; the physical state did
+not return. An audit of future feasibility needs the actual coordinates,
+not just their scalar value.
+
+\section{Dividing an action cannot divide away its consequence}
+From $(18,2)$, an unsplit four-unit transfer ends at $(14,6)$ and reduces
+potential by twelve. Split it into two genuine sequential two-unit actions.
+The first moves potential $16\to9$ and records seven. The second begins from
+that new state, moves $9\to4$ and records five. Thus $7+5=12$. Calling both
+pieces seven would reuse the original state twice.
+
+This is refinement invariance of a state-function difference:
+\[
+ [V(x)-V(y)]+[V(y)-V(x^{\mathrm{b}})]=V(x)-V(x^{\mathrm{b}}).
+\]
+It does not claim that physically stopping and restarting a pump always has
+the same complete effects as running it continuously. Different energy use,
+heat or wear would change the complete physical transition if those carriers
+were represented. The identity says that a consequence cannot be made to
+disappear by changing how its record is sliced.
+
+\section{An aggregate cycle need not restore every actor's history}
+Suppose a return loop contains an action attributed to one owner and its
+reverse attributed to another. The total EBU is zero, but the two historical
+accounts can change by opposite amounts. A three-cell example from the
+physical foundation begins at $(4,4,4)$: $B\to C$ has EBU $-1$ assigned to
+$B$, and the reverse $C\to B$ has EBU $+1$ assigned to $C$. The state
+returns; the owner vector changes by $(0,-1,+1)$. This is an existence
+example, not a claim that every possible attribution rule has such loops.
+
+The distinction matters because exact group closure is sometimes mistaken
+for a fairness theorem. It is not. Aggregate EBU is a difference of state
+values, while a person's historical attribution can depend on the path of
+events and on the declared ownership rule.
+
+\section{External change can recreate work}
+If a disturbance moves a system away from its reference and an actor
+restores it, positive actor EBU may recur. That does not violate
+Equation~\ref{eq:cycle}: the interval contains an external event. In the
+notation of Chapter~\ref{ch:receipts}, the action total is
+\[
+ \sum_t E_t=V(x_0)-V(x_N)+\sum_t D_{{\mathrm{ext}},t}.
+\]
+If repeated disturbances increase potential by four and subsequent actions
+reduce it by four, the positive actor entries are balanced by real external
+changes. A request or desire alone is not a physical sink. To claim a
+recurring demand caused a stock change, a model must represent consumption,
+transformation or boundary exchange.
+
+Nor may an actor-created disturbance be silently renamed an external one.
+The equation tells us what entries are needed; provenance and causal review
+tell us whether they were classified honestly. The mathematics cannot
+reconstruct an omitted event from an apparently convenient total.
+
+\section{Changing the ruler is a third kind of event}
+At the same state $(14,6)$, scales $(2,2)$ give potential four, while scales
+$(4,4)$ give potential one. No water moved. The three-unit difference came
+from changing the field. If old and new values are joined without a
+field-change entry, intermediate potentials will not telescope as though
+one ruler had been used throughout.
+
+This is not an argument against improving a model. It is a demand that
+learning about the world not be disguised as an action upon the world.
+Later we ask a harder question: whether EBU values earned under different
+physical fields can nevertheless share one stable physical interpretation.
+
+Finally, no cycle equation proves recovery. On a fixed finite-mass domain a
+continuous Gaussian potential is bounded even if the system stays trapped
+far from its reference. A motion law, actor rule and disturbances must be
+specified before attraction or long-run homeostasis can be tested. The next
+chapter first examines the more immediate complication: several actions
+sharing one nonlinear comparison at the same time.

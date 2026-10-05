@@ -1,0 +1,66 @@
+\chapter{Why a field is not a motion law}\label{ch:motion-law}
+
+\section{A map does not move the traveler}
+The potential maps physical states to numbers. Its gradient describes how that number changes near the present state. Nothing in this definition makes a pump run, a household choose a repair, or a government open a water route. Conflating a measurement with a controller would hide the most important design question in EBU: how could the information guide physically possible conduct?
+
+The distinction already appears in mechanics. A height map identifies downhill directions, but a stone's motion depends on inertia, friction and constraints. In thermodynamics, a driving force and a constitutive response are also different objects. The EBU field can describe a directional tendency; a separate account of mobility and choice is required before a trajectory is predicted.
+
+\section{The Onsager analogy and its boundary}
+Lars Onsager's 1931 work on reciprocal relations studied near-equilibrium irreversible processes. In that setting, suitably chosen thermodynamic forces and fluxes are connected by linear response coefficients, subject to assumptions including the relevant reversibility conditions \cite{onsager-one,onsager-two}. This historical idea is useful here because it shows why naming a ``force'' does not yet specify a rate: the response coefficients and their domain matter.
+
+As a proposed EBU controller, one might write
+\begin{equation}\label{eq:mobility-law}
+ \dot x=-M(x)\nabla V(x),
+\end{equation}
+where $M$ maps gradients into physically admissible state velocities. If $M$ is symmetric positive semidefinite, the field is fixed and the motion remains in the declared domain, then
+\begin{equation}
+ \frac{dV}{dt}=\nabla V^{\mathsf T}\dot x
+   =-\nabla V^{\mathsf T}M\nabla V\leq0.
+\end{equation}
+That inequality follows from the proposed dynamics and its assumptions. It does not say that the actual economy follows Equation~\ref{eq:mobility-law}, nor that every real action should move downhill. Essential service, finite reserves and irreversible transformations can create obligations that a one-line gradient flow does not express.
+
+Onsager's point was not that a gradient alone creates a flow. The classical setting identifies physical fluxes, such as heat or matter transport, and forces related to departures from equilibrium. Close enough to the specified equilibrium, the fluxes can be approximated by a matrix acting on those forces. The matrix's entries describe the system's response. Reciprocity is a further statement about paired coefficients under the relevant microscopic assumptions; it is not a universal property of every social decision process. If an EBU implementation calls a numerical gradient a ``force,'' it still owes a measured or designed map from that force to a permissible physical rate.
+
+The analogy to Onsager is therefore structural, not a borrowed experimental validation. The physical force and mobility in a laboratory system are measured for that system. An EBU mobility would have to specify its own units, admissible edges, constraints, response parameters and evidence. Without them, $M$ is a placeholder rather than a natural constant.
+
+\section{The directed threshold response has its own identity}
+For the earlier response $J_e=M_e[f_e-\theta_e]_+$ with $M_e>0$ and $\theta_e\geq0$, suppose the complete motion is $\dot x=u+SJ$. Since $f=-S^{\mathsf T}\nabla V$,
+\begin{equation}
+ \dot V=\nabla V^{\mathsf T}u-\sum_e f_eJ_e
+ =\nabla V^{\mathsf T}u-\sum_e\left(\frac{J_e^2}{M_e}+\theta_eJ_e\right).
+\end{equation}
+For an active edge, $f_e=J_e/M_e+\theta_e$; for an inactive edge, its product is zero. This proves the equality for that declared response. With no external drive the potential cannot increase along an admissible continuous solution. Thresholds, disconnected routes and constraints can still prevent arrival at the reference. A later cap or projection changes the vector field and requires checking the actual accepted flux.
+
+For a frozen Euler direction $w$, a quadratic gives the exact change
+$\Delta V=h\nabla V^{\mathsf T}w+\tfrac12h^2w^{\mathsf T}Hw$.
+When $D=-\nabla V^{\mathsf T}w>0$ and $w^{\mathsf T}Hw>0$, nonincrease along this frozen direction holds precisely for $0\leq h\leq2D/(w^{\mathsf T}Hw)$. Physical feasibility remains a separate condition. On a network, $w=SJ$ brings in $J^{\mathsf T}S^{\mathsf T}HSJ$, including shared-node cross terms.
+
+\section{Conservation restricts motion}
+Suppose $A x=b$ expresses conserved homogeneous totals. A permissible internal flow must satisfy $A\dot x=0$. An arbitrary $-\nabla V$ usually will not. One can construct a mobility whose image lies in the conservation tangent space, or write flows through an incidence matrix, $\dot x=Sj$, with $AS=0$. Either way the conservation law is part of the physical permission layer, not a favourable term that can be traded against EBU.
+
+Additional constraints may bound sources, routes, reserve stocks and simultaneous demand. The menu of feasible actions can therefore be empty even when a mathematical descent direction exists. Conversely, a permitted service action can have negative EBU under the current field. A controller has to say how it treats that case; the potential cannot silently answer it.
+
+\section{Finite steps require a finite check}
+Even if a continuous trajectory satisfies $dV/dt\leq0$, a large discrete step based on its initial slope can overshoot. For the fixed quadratic field, Equation~\ref{eq:coupled-finite} shows exactly why: the curvature term grows quadratically with the step. If a policy promises non-increasing $V$ on accepted actions, it must check the finite successor, not merely the sign of the initial gradient.
+
+For example, freeze $g=\nabla V(x)$ and propose one Euler step $\delta=-hMg$ with $h>0$. The exact quadratic calculation is
+\begin{equation}
+ E(h)=h\,g^{\mathsf T}Mg-\frac{h^2}{2}(Mg)^{\mathsf T}H(Mg).
+\end{equation}
+The first term is the infinitesimal improvement suggested by mobility; the second is the finite curvature correction. When both terms are positive and finite, sufficiently small $h$ improves the field, while an arbitrarily large $h$ need not. This statement still presupposes that the proposed increment is physically feasible. It is not a license to step outside a stock or route constraint.
+
+In one dimension, set $V(x)=x^2/2$ and let mobility be the positive number $m$. The continuous proposal is $\dot x=-mx$, so a solution beginning at $x_0$ is $x(t)=x_0e^{-mt}$ and its potential is $V(t)=V(0)e^{-2mt}$. The simple finite Euler instruction $x'=x-hmx$ is different. Direct calculation gives
+\begin{equation}
+ E=\tfrac12x^2\bigl[1-(1-hm)^2\bigr]
+  =\tfrac12x^2(2hm-h^2m^2).
+\end{equation}
+It improves the potential only for $0<hm<2$, apart from equality at the endpoints. A larger discrete step can reverse the promised direction even though the continuous law is restoring. This is why a real quote should use the actual finite successor rather than attach an unlimited entitlement to a favourable local slope.
+
+The same lesson appears in the first transfer example of this book. Moving some stock toward the reference improves balance; moving too much crosses the reference and can worsen it. Exact EBU is therefore a more useful action account than a marginal slogan. Whether a decision-maker chooses the best feasible quantity, a safe bounded quantity, or a quantity required by demand remains a separate rule.
+
+\section{A usable architecture}
+A prospective EBU system can keep four questions in a strict order. What physical need or opportunity is present? Which candidate transformations can really occur? What is the exact finite EBU of each accepted physical transition under the declared fixed field? Which actor or institution may select, finance or authorize it? Changing this order can make the field appear to create resources or permit actions that physics forbids.
+
+The architecture is general in ambition: it does not restrict EBU to a laboratory toy. But general applicability would have to be earned through validated state descriptions, measurement, governance and evidence in each consequential domain. A theorem about Equation~\ref{eq:mobility-law} is one component of that programme, not its completion.
+
+The next chapter generalizes this distinction through a generator interface: a declared law supplies endpoints, and the fixed-field definition values them. Later we return to what happens when the yardstick itself changes.

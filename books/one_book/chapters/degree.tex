@@ -1,0 +1,81 @@
+\chapter{What a quadratic can and cannot explain}\label{ch:degree}
+
+\section{A ceiling on interaction order}
+A quadratic curve has slope and curvature but no third derivative. That familiar fact becomes a statement about action combinations only after the action-to-state map is specified. If the endpoint depends affinely on the action controls, a quadratic potential produces at most pair interactions. If the endpoint depends nonlinearly on the controls, the conclusion can fail.
+
+The distinction is one of the book's most useful experimental lessons. A quadratic potential is a field declaration. Pair-only interaction is a theorem about that field \emph{together with} an affine response. It is not a universal property of everything called Gaussian.
+
+\begin{theorem}{Polynomial degree ceiling}\label{thm:degree}
+Let $V$ be a polynomial of total degree at most $d$ on the relevant state coordinates, and let $x(z)=x_0+\sum_i z_i h_i$. For the complete coalition table $E(S)=V(x_0)-V(x(\chi_S))$,
+\begin{equation}
+ m_E(T)=0\qquad\text{whenever }|T|>d.
+\end{equation}
+\end{theorem}
+\begin{proof}
+The composite $V(x(z))$ is a polynomial in the controls of degree at most $d$. On Boolean vertices, powers $z_i^r$ with $r\geq1$ reduce to $z_i$. This reduction cannot increase total degree. The unique multilinear representation consequently has no monomial involving more than $d$ distinct variables. Its coefficients are the Möbius coefficients, so all higher ones vanish.
+\end{proof}
+
+This proof is algebraic. It does not assume infinitesimal increments and carries no Taylor remainder. Restricted physical feasibility still matters: a physical claim about the complete cube requires every row used in the coefficient to be admissible under the stated comparison.
+
+\section{The quadratic formula in full}
+Let
+\begin{equation}
+ V(x)=c+g^{\mathsf T}(x-x_0)
+       +\tfrac12(x-x_0)^{\mathsf T}H(x-x_0),
+ \qquad H=H^{\mathsf T}.
+\end{equation}
+Positive definiteness is useful for a homeostatic minimum, but is not needed for the degree argument. Expanding at $x_0+\sum z_i h_i$ and reducing Boolean squares gives
+\begin{align}\label{eq:quadratic-dividends}
+ m_E(i)&=-g^{\mathsf T}h_i-\tfrac12h_i^{\mathsf T}Hh_i,\nonumber\\
+ m_E(ij)&=-h_i^{\mathsf T}Hh_j,\\
+ m_E(T)&=0\quad (|T|\geq3).\nonumber
+\end{align}
+For the Gaussian field, $g=H(x_0-x^*)$. The pair term is independent of the baseline as long as $H$ and the increments stay fixed. Singleton values change with the baseline because their tangent contributions change.
+
+A diagonal $H$ does not make every pair term zero. Two actions that write the same physical coordinate can have a nonzero weighted overlap. Conversely, with a nondiagonal $H$, disjoint coordinate writes can interact through the field. The theorem keeps response support and potential coupling distinct.
+
+\section{Why a null prediction is valuable}
+Suppose a planned three-action experiment has a quadratic potential, certified fixed additive increments, one common field and baseline, and all eight alternatives. It predicts $m_E(123)=0$ exactly at the mathematical level. This is a strong null: the prediction was not fitted after looking at a triple coefficient.
+
+A future measurement should then include uncertainty and controls capable of detecting false nonzero values. A nonzero result can reject the conjunction of those assumptions and the observation model. It cannot, by itself, prove that the potential has cubic curvature. The response may have changed with group membership, a source limit may have altered quantities, or the supposed common baseline may have drifted.
+
+The benefit for an EBU system is diagnostic discipline. One can begin with a field simple enough to make a sharp prediction, then investigate deviations rather than treating every interaction as an unexplained new law. This could reduce wasted effort on complicated economic mechanisms built upon misunderstood physical comparisons.
+
+\section{Cubic curvature supplies a genuine triple}
+To see an exact higher-order term without a nonlinear response, take the scalar teaching potential
+\begin{equation}
+ V(x)=\frac{\lambda}{6}x^3,
+ \qquad x_S=x_0+\sum_{i\in S}h_i.
+\end{equation}
+For three increments $a,b,c$, its third derivative is the constant $\lambda$. Repeated FTC gives
+\begin{equation}\label{eq:cubic-example}
+ m_E(123)=-\lambda abc.
+\end{equation}
+The result is independent of $x_0$ because the third derivative is constant. It can also be checked by expanding all eight cubes: only the product involving all three distinct increments survives the alternating sum.
+
+With $x_0=0$, $a=b=c=1$ and $\lambda=1$, singleton values are $-1/6$, pair values $-8/6$, and the triple value is $-27/6$. Therefore $-27/6+3(8/6)-3(1/6)=-1$. These are exact constructed values. The cubic is used on a declared finite domain; it is not claimed to be a globally confining physical equilibrium energy.
+
+\section{Quartic curvature continues the pattern}
+For
+\begin{equation}
+ V(x)=\frac{\lambda}{24}x^4,
+\end{equation}
+the fourth derivative is $\lambda$, so four fixed increments give
+\begin{equation}\label{eq:quartic-example}
+ m_E(1234)=-\lambda h_1h_2h_3h_4.
+\end{equation}
+With unit increments and zero baseline, the alternating coefficient is
+$[-256+4(81)-6(16)+4(1)]/24=-1$ for $\lambda=1$. All coefficients of order five or higher vanish under the same additive declaration.
+
+The factorials in these examples normalize the relevant derivative to $\lambda$. They do not convert stock into EBU by themselves; the units and calibration of $\lambda$ must match the chosen coordinate. The examples show a structural possibility, not a measured coefficient for society.
+
+\section{Degree is a property of a representation and its response}
+A nonlinear coordinate change can turn a simple expression into a complicated one. If it represents the same physical quantity faithfully, the complete endpoint EBU is unchanged, but the split between potential and response derivatives can change. We should therefore resist treating the printed degree of $V$ as a coordinate-free explanation of all observed interactions.
+
+For fixed action coordinates, the relevant object is the composite $G(z)=V(x(z))$. A finite table can even have no high-order coefficients while a chosen smooth extension has nonzero high derivatives between vertices whose integrated effects cancel. Absence of a coefficient is a fact about the declared finite contrast, not necessarily the absence of every local nonlinearity.
+
+\begin{lawbox}{The pair-only statement with its full subject}
+A fixed quadratic potential evaluated on an affine action-to-state map has no Möbius coefficients above order two. Quadratic potential alone is insufficient. Nonlinear response alone does not guarantee a nonzero high-order coefficient.
+\end{lawbox}
+
+This precise boundary makes the Gaussian field valuable as a teaching and testing instrument. The next chapter holds the quadratic fixed and changes the response, showing how higher-order interaction can reappear without any cubic term in the state potential.

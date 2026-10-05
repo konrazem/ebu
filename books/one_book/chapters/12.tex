@@ -1,0 +1,177 @@
+\chapter{Homeostasis as a Gaussian landscape}\label{ch:potential}
+
+\section{From comparison to a function}
+A function is a repeatable rule that maps an input to an output. Our input is a physical state. The output will be a nonnegative number measuring standardized deviation from the declared reference. Calling this number a potential gives it a mathematical role: its differences and derivatives can be evaluated consistently across actions.
+
+For cell \(i\), define
+\begin{equation}\label{eq:local-gaussian-potential}
+ V_i(x_i)=\frac12\left(\frac{x_i-x_i^*}{\sigma_i}\right)^2,
+ \qquad \sigma_i>0.
+\end{equation}
+The global potential is
+\begin{equation}\label{eq:global-gaussian-potential}
+ V(x)=\sum_{i=1}^{N}V_i(x_i).
+\end{equation}
+The word global describes the argument of this mathematical function. It does not require every actor to read the whole state. A later locality identity shows exactly which terms a local action needs.
+
+The factor one-half is a convenient normalization. It makes the derivative especially simple. Omitting it would create a consistently rescaled model if every dependent equation were changed, but mixing the two conventions would change numerical quotes. We retain the one-half throughout this edition.
+
+\diagram{potential}{The one-coordinate quadratic penalty with reference ten and scale two. Its height is a declared deviation measure, not an amount of physical stock.}{fig:potential}
+
+\section{Why the landscape is called Gaussian}
+Consider the unnormalized shape
+\begin{equation}
+ g_i(x_i)=\exp\left[-\frac12
+          \left(\frac{x_i-x_i^*}{\sigma_i}\right)^2\right].
+\end{equation}
+It has the familiar Gaussian bell shape, with its highest value at the reference. Taking the negative logarithm gives \(-\log g_i(x_i)=V_i(x_i)\). The potential is therefore the relative negative-log geometry of that shape, with its minimum set to zero.
+
+This construction is a definition, not a claim that nature universally follows a Gaussian law. No probability density has yet been fitted to stock observations. No random mechanism has been specified that makes the system's stationary distribution equal to \(g_i\). The name explains the shape used for deviation; it does not supply missing dynamics or evidence.
+
+On the fixed-mass nonnegative domain, coordinates are also constrained together. Even though the quadratic is a sum of one-coordinate terms, the actual stocks cannot vary independently: their sum is fixed. A product of Gaussian shapes in an unconstrained mathematical space is not automatically a product probability law for the physical system.
+
+\diagram{gaussian}{The exponential shape associated with the quadratic. This relative shape does not itself supply a probability model or prove that observations are normally distributed.}{fig:gaussian}
+
+\section{The bowl and its centre}
+Each local potential is a smooth quadratic bowl. It is zero at \(x_i^*\), positive elsewhere, and symmetric about that centre. Moving one scale above or below the reference gives \(V_i=1/2\). Moving two scales gives \(V_i=2\). Moving four scales gives \(V_i=8\).
+
+The symmetry is an explicit modelling choice. It does not assert that real deficit and excess have equal biological consequences. A clinic with too little water may face different problems from one with too much. The first Gaussian model isolates a transparent geometry for studying an accounting and action process. A later asymmetric or multi-coordinate field would need its own declaration and review.
+
+\begin{lawbox}{Definition and immediate consequence}
+With fixed positive scales, \(V(x)=\tfrac12\sum_i((x_i-x_i^*)/\sigma_i)^2\geq0\). Equality holds exactly when every represented coordinate equals its reference. This follows from a sum of nonnegative squares. It is not a statement that every unrepresented human or ecological need is satisfied.
+\end{lawbox}
+
+\section{Equal total, unequal potential}
+Return to the main world. At \((18,2)\), standardized deviations are \((4,-4)\) and potential is 16. At \((14,6)\), they are \((2,-2)\) and potential is 4. At \((10,10)\), both are zero. Each state contains the same total stock, 20.
+
+The landscape distinguishes configurations of a conserved quantity. It does not create or destroy the quantity it evaluates. This is why a conserved physical ledger can coexist with a changing potential. The total-mass invariant concerns a sum of stocks; the potential concerns squared departures from a reference.
+
+The reflected state \((2,18)\) again has potential 16. It is different from \((18,2)\), although the scalar potential is equal. A single potential value does not reconstruct the state. If an account records only \(V\), it loses the information about which place is above and which below its reference.
+
+\section{Reading the quadratic along the physical domain}
+For two cells with total 20, every physical state can be written \((r,20-r)\), with \(0\leq r\leq20\). Under equal references ten and scales two,
+\begin{align}
+ V(r,20-r)
+ &=\frac12\left(\frac{r-10}{2}\right)^2
+  +\frac12\left(\frac{10-r}{2}\right)^2\\
+ &=\frac{(r-10)^2}{4}.
+\end{align}
+This one-dimensional curve is the potential restricted to the physically allowed line. Its centre is \(r=10\). The two endpoints \(r=0\) and \(r=20\) each have potential 25. Every state in this particular closed world therefore has a finite potential between zero and 25.
+
+The boundedness follows from the domain before an EBU-guided process is tested. A comparison between two action rules cannot claim success merely because both remain bounded in this finite simplex. Useful questions concern how often they occupy large-deviation states, whether they recover after forcing, whether they cycle, or whether affordability makes them refuse useful opportunities.
+
+\section{The marginal: a local slope}
+The local marginal is the derivative of the potential with respect to its stock:
+\begin{equation}\label{eq:gaussian-marginal}
+ \mu_i(x_i)=\frac{dV_i}{dx_i}
+           =\frac{x_i-x_i^*}{\sigma_i^2}.
+\end{equation}
+Below reference, the marginal is negative: adding a small amount lowers local potential. Above reference, it is positive: adding more raises local potential. At the reference it is zero.
+
+Derive the formula rather than memorize it. Write \(V_i=(x_i-x_i^*)^2/(2\sigma_i^2)\). The reference and scale are fixed. Differentiating the square gives \(2(x_i-x_i^*)\); the two cancels the one-half. The remaining denominator is \(\sigma_i^2\).
+
+The potential is dimensionless in this model. The marginal therefore has units \(\X^{-1}\), or potential units per stock unit. It is neither a stock nor a complete action value. Multiplying by a small stock increment gives the first-order potential change. A finite increment also encounters curvature, which we derive in Chapter~\ref{ch:finite}.
+
+\section{A gentle derivative laboratory}
+For one cell with reference ten and scale two, \(V(x)=(x-10)^2/8\). Starting at 14, add a small increment \(h\). Direct expansion gives
+\begin{equation}
+ V(14+h)-V(14)=h+\frac{h^2}{8}.
+\end{equation}
+Divide by \(h\neq0\): the ratio is \(1+h/8\). As \(h\) approaches zero, the ratio approaches one. That limit is the marginal at 14. The formula also shows what the derivative leaves out for a finite change: the quadratic term \(h^2/8\).
+
+At stock six, the same calculation gives marginal minus one. Adding a small positive amount lowers potential. At ten, the marginal vanishes, but a finite nonzero displacement raises the potential by its square divided by eight. Zero initial slope is therefore not permission to move a finite distance without effect.
+
+This is the bridge between an intuitive landscape and calculus. A slope is a nearby rate of change. It describes the tangent at one point. The finite EBU account compares two actual endpoints within the declared model.
+
+\section{The gradient and the Hessian}
+Collect the marginals into the gradient vector,
+\begin{equation}
+ \mu(x)=\nabla V(x)
+       =\left(\frac{x_1-x_1^*}{\sigma_1^2},\ldots,
+               \frac{x_N-x_N^*}{\sigma_N^2}\right)^T.
+\end{equation}
+The symbol \(\nabla\), read ``nabla,'' denotes the vector of partial derivatives. A partial derivative varies one coordinate while holding the others fixed in the mathematical function. Physically allowed directions can then be built from combinations that respect conservation.
+
+The Hessian records derivatives of those slopes:
+\begin{equation}\label{eq:gaussian-hessian}
+ H=\operatorname{diag}\left(\frac1{\sigma_1^2},\ldots,
+                            \frac1{\sigma_N^2}\right).
+\end{equation}
+``Diagonal'' means the off-diagonal entries are zero. Each local slope changes at the constant rate \(1/\sigma_i^2\) with its own stock. The Hessian is positive definite because all scales are positive. For any nonzero vector \(d\), \(d^THd=\sum_i d_i^2/\sigma_i^2>0\).
+
+The matrix form of the potential is
+\begin{equation}
+ V(x)=\frac12(x-x^*)^TH(x-x^*).
+\end{equation}
+It compresses the sum of standardized squares. It does not replace their physical interpretation. The row-vector, matrix, and column-vector multiplication expands back into the same local contributions.
+
+\section{Ellipses, distance, and unequal scales}
+In an unconstrained two-coordinate drawing, points with a fixed potential satisfy
+\begin{equation}
+ \frac{(x_1-x_1^*)^2}{\sigma_1^2}
+ +\frac{(x_2-x_2^*)^2}{\sigma_2^2}=2V.
+\end{equation}
+These curves are ellipses. With equal scales they are circles in the chosen physical coordinate units. A larger scale stretches the contour along its coordinate: a larger physical deviation is needed to produce the same contribution. This is the geometric meaning of scale weighting.
+
+The physical fixed-mass states occupy only a slice of this drawing. For two cells they lie on a line of constant sum. The field evaluated along that line is the restriction of the same quadratic, not a second potential. A picture of a circular bowl should therefore not suggest that every direction in the plane is a permitted physical motion.
+
+The quantity \(\sqrt{2V}\) is the Euclidean length of the standardized deviation vector. It can be described as a distance in these standardized coordinates. It is not geographical distance, and it is not itself the signed action value. Taking its square root changes finite differences and derivatives. We retain \(V\) as the declared potential even when the distance picture helps intuition.
+
+\section{Diagonal geometry does not mean independent outcomes}
+The absence of off-diagonal Hessian entries says that the declared local marginal of one coordinate does not directly depend on another coordinate in the unrestricted function. Physical conservation still couples stocks, and the graph couples possible actions. If A sends to B, both coordinates change together.
+
+Two actions that share A can therefore interact in their combined value. Their increments overlap in A's squared deviation. This does not require a correlated multivariate Gaussian or a non-separable potential. It follows from applying a separable nonlinear function to a sum of increments.
+
+A richer potential might use a symmetric positive-definite matrix with off-diagonal entries to represent declared cross-coordinate dependence. That would be another model. Its affected-factor neighbourhood, calibration, and interpretation would require review. We do not introduce it merely to obtain an attractive interaction effect. The diagonal model already has enough structure to distinguish local potential geometry from action overlap.
+
+\section{A bounded domain gives a bound before any experiment}
+Because nonnegative stocks sum to \(M\), every coordinate lies between zero and \(M\). Its absolute deviation from a fixed reference cannot exceed the larger of \(x_i^*\) and \(|M-x_i^*|\). Hence
+\begin{equation}
+ V(x)\leq\frac12\sum_i
+ \frac{\max\{(x_i^*)^2,(M-x_i^*)^2\}}{\sigma_i^2}.
+\end{equation}
+For finitely many cells and fixed positive scales, the right-hand side is finite. It is a convenient bound, not necessarily the tight maximum because each coordinate cannot attain its individual extreme simultaneously under the common total.
+
+This distinction matters to scientific interpretation. If a future comparison asks whether EBU prevents unbounded growth of this potential, the physical domain has already answered that question for every admissible policy. A meaningful study must ask something that the domain has not guaranteed: recovery after a shock, frequency of substantial deviation, distribution across cells, cycling, or refusal. The theorem is useful because it narrows the question honestly.
+
+\section{Convexity without mystery}
+A quadratic bowl with positive curvature is convex. Geometrically, the straight chord joining two points on its graph lies on or above the graph. Algebraically, the tangent at a starting point underestimates the potential at a finite displaced point by a nonnegative quadratic amount.
+
+This will matter for valuation. If the initial slope predicts an improvement, multiplying that slope by a large action quantity overstates the finite field improvement. The potential curves upward relative to its tangent. Exact endpoint comparison automatically includes that curvature.
+
+Convexity is a property of the potential, not a promise about action choices. A random actor can choose a direction that raises a convex potential. A capacity rule can permit cycles. A graph can block a path toward the minimum. A simple bowl is mathematically helpful precisely because these separate mechanisms remain visible; the shape does not decide them by itself.
+
+\section{Why the potential is not a controller}
+Imagine drawing this landscape on paper and placing a marker at \((18,2)\). The drawing tells us the value at every admissible state. It does not move the marker. To move it, one must specify a physical action and an actor or dynamic rule that chooses that action.
+
+A gradient-flow law would be one possible added rule. A largest-value selector would be another. An earlier research proposal asked what happens under a separately declared random choice among feasible and affordable options; that proposal is not the governing definition or an active study authorization in this edition. These mechanisms can use the same potential while producing different behaviour. This book does not introduce an optimizing or restoring law just because the picture resembles a bowl.
+
+Even the phrase ``downhill'' should be read carefully. It identifies a decrease of the declared potential along a direction. It does not make the system slide there by itself. The distinction protects the later experiment from becoming a demonstration of a recovery rule placed into the plant in advance.
+
+\section{Do not replace the function while keeping its name}
+The bounded function \(1-\exp(-V)\) can be formed from the quadratic. It is not the same potential. Its derivative multiplies the quadratic gradient by \(\exp(-V)\), and its finite differences give different values. Large deviations become compressed toward one.
+
+Such a transformation might be studied under another declared model, but it cannot be substituted merely because both expressions use a Gaussian exponential. The active definition is the quadratic negative-log potential itself. Field, marginal, curvature, and finite account must all be derived from that same definition.
+
+Likewise, dropping a coordinate, adding a weight, or changing a scale changes the functional. Precise notation prevents an appealing diagram from concealing a substantive amendment. Every quantitative claim in the main example traces back to Equations~\ref{eq:local-gaussian-potential} and~\ref{eq:global-gaussian-potential}.
+
+\section{Guided problem: three cells}
+In a new three-cell illustration, choose reference \((4,6,10)\), scales \((2,2,4)\), and state \((2,8,10)\). Total stock and reference total are both 20. Standardized deviations are \((-1,1,0)\), so \(V=1\).
+
+The marginals are \((-1/2,1/2,0)\). Moving a small lossless quantity from cell 2 to cell 1 has direction \((1,-1,0)^T\). Its initial potential derivative is \((-1/2)(1)+(1/2)(-1)=-1\), so the direction initially lowers potential. A two-unit transfer reaches the reference, giving exact field reduction one. Initial slope times quantity would predict two, twice the available reduction.
+
+This calculation uses a new reference and scale declaration, identified openly. It reinforces the same mathematical structure without quietly changing the parameters of A and B. The reader can check each coordinate independently before adding the total.
+
+\section{One potential value, several physical descriptions}
+The scalar potential deliberately compresses a state vector. That compression is useful for finite identities, but it loses information. In the symmetric two-cell fixture, the same value four occurs at \((14,6)\) and \((6,14)\). These states place the shortage at different locations. A clinic at B experiences them differently even though the total standardized squared deviation is equal.
+
+In a larger graph many more states can share one value. They can differ in which cell is far from reference, whether an available edge points toward relief, and how much stock a prospective actor can access. Equal potential does not imply equal feasible menus, equal service, or equal future behaviour.
+
+For this reason, a future study should retain the state and relevant distributional diagnostics alongside \(V\). The finite account uses the scalar because its changes have a precise meaning. Interpretation should not discard the coordinates that gave it that meaning. A contour of equal potential is a mathematical level set, not a class of socially or physically interchangeable worlds.
+
+\section{Practice and reflection}
+With reference ten and scale two, calculate local potential and marginal at stocks 4, 10, and 16. The potentials are \(4.5,0,4.5\); the marginals are \(-1.5,0,1.5\). Explain why a nonnegative potential can have a negative derivative.
+
+For the main two-cell state, verify \(\mu=(2,-2)^T\) and \(H=\operatorname{diag}(1/4,1/4)\). Then explain why equal total stock does not imply equal potential, and why equal potential does not imply equal state. Use \((18,2)\), \((10,10)\), and \((2,18)\) to support the answers.
+
+Finally, write one statement that this potential establishes and one statement it leaves open. A valid pair is: ``Its value is zero exactly at the declared reference'' and ``The proposed actor process may or may not spend much time near that reference.'' The first follows from the definition; the second needs a specified process and further analysis.

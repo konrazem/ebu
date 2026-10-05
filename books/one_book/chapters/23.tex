@@ -1,0 +1,140 @@
+\chapter{Routes, resource accounts and learning}\label{ch:routes}
+
+\section{A local equation in a connected world}
+The antidote a clinic needs may be made far away. A pump can depend on a spare part, an electrical supply and a skilled repairer. A water transfer can depend on a chain of transformations that began with fuel. Such chains prevent the local equation from becoming an isolated tank puzzle.
+
+Local accounting does not mean that the world consists of disconnected actions. It means that each calculation uses a declared physical boundary and the complete factors affected within it. Links between actions retain sequence, dependence, quantities and provenance. They do not automatically make the whole chain one indivisible action.
+
+This chapter explains what can already be said about composition and what would need a larger model. It preserves the practical questions about routes, infrastructure, cooperation, poverty and institutions while keeping them distinct from the Gaussian identities.
+
+\section{A route is an ordered physical record}
+Let a stock travel from A to a hub and then to B. The path has two directed edges. The first action decreases A and increases the hub; the second decreases the hub and increases B. Each action has a finite quantity, time interval and predecessor state.
+
+If the actions occur successively under one fixed potential and no intervening external change, their field differences telescope. The hub may temporarily carry extra stock, but its intermediate potential cancels when the route total is added. This cancellation requires using the actual intermediate state, not evaluating both edges independently against the original one.
+
+Suppose the hub already contains stock. The later outgoing action may use stock that was present earlier rather than a physically distinguishable parcel just received. A quantity ledger can still track flows. A provenance claim about which shipment served which patient needs an explicit tracing convention or evidence. Algebraic endpoint equality does not identify the history of individual molecules.
+
+\section{A complete two-edge Gaussian route}
+Use three cells with references $(10,10,10)\X$, scales $(2,2,2)\X$ and initial state $(18,10,2)\X$. The order is A, hub, B. Potential is $8+0+8=16$.
+
+Send four units from A to the hub. The state becomes $(14,14,2)\X$, with potential $2+2+8=12$. The first action's value is 4. Now send four from the hub to B. The state becomes $(14,10,6)\X$, with potential $2+0+2=4$. The second action's value is 8. Their route total is 12.
+
+A direct lossless transfer of four from A to B has the same endpoint and the same field reduction. Under this ideal field alone, adding an intermediate hub has not created a geographical fee. If the route has additional energy use, time effects or material losses, those are additional physical facts that must be represented and compared.
+
+\begin{center}
+\begin{tabular}{llll}\toprule
+Stage & State & $V$ & Field value\\\midrule
+Before & $(18,10,2)$ & 16 & --\\
+A to hub & $(14,14,2)$ & 12 & 4\\
+Hub to B & $(14,10,6)$ & 4 & 8\\\bottomrule
+\end{tabular}
+\end{center}
+
+The example provides a calculation, not a recommendation that every delivery should pass through a hub. It omits time, handling and equipment. The scope is stated precisely so that a later extension can identify what changed.
+
+\diagram{route}{The relay route has two real transformations and two consecutive baselines. Their signed values add to the endpoint difference.}{fig:route}
+
+\section{Distance enters through physical mechanisms}
+A longer route may require more energy, more storage, a different transport mode or greater exposure to delay. Distance matters through those physical relationships. The present equation does not contain a universal inverse-square distance law or an automatic per-kilometre burden.
+
+Two routes of the same length can have different grades, loads, efficiencies and reliability. Two routes of different lengths can deliver the same service with different total physical effects. A route comparison must therefore state the transformations and constraints rather than use distance as a substitute for them.
+
+For a time-sensitive medicine, a shorter delay can matter even when transported quantity is equal. If the model ignores expiry or temperature, it cannot certify that the two deliveries are equivalent. A travel-time label in a table is not enough unless the intended service comparison actually uses it.
+
+\section{A loss ledger is a physical extension}
+The main Gaussian examples are lossless. To understand the boundary, consider a separate quantity-only route where ten units pass through efficiencies $0.9$, $0.8$ and $0.95$. Delivered amounts are $9$, $7.2$ and $6.84$. The successive missing quantities are $1$, $1.8$ and $0.36$, totaling $3.16$.
+
+Those quantities need named carriers, sinks or boundary crossings. The physical ledger can then show $10=6.84+3.16$ in the relevant stock units. Whether any ``loss'' remains useful somewhere else depends on the carrier and boundary. Water entering another basin is not annihilated water; usable medicine becoming waste is a transformation of condition or classification.
+
+The product $0.9\times0.8\times0.95=0.684$ is an end-to-end quantity retention ratio. EBU values are not multiplied that way. Each finite value depends on its own before and after field. The lossless Gaussian controller or attribution formulas cannot simply inherit every interpretation from a heterogeneous-efficiency world without re-derivation.
+
+\begin{cautionbox}{Scope of the loss illustration}
+The route calculation above closes physical quantities only. It adopts no loss-aware runtime, no valuation of the sink, and no residual dissipation charge. Physical accounting and valuation need separate declarations, especially where an older process-burden rationale assumed a missing loss coordinate.
+\end{cautionbox}
+
+\section{Fuel, electricity and water stay linked and distinct}
+A generator converts fuel energy into electricity and other outputs. A delivery system conveys electricity. A pump uses electricity to move water and generates heat. These are linked transformations, but the fuel quantity, electrical energy and water quantity do not share one stock unit.
+
+An adequate physical description names each input and output, including boundary exchange and losses of useful form. It does not call the entire chain one water action while treating the upstream transformation as invisible. Nor does it subtract an additional burden at every arrow merely because the arrows exist.
+
+The accounting boundary determines which effects enter the physical state and the valuation. Double-counting can arise if the same electrical consumption lowers a represented energy account and is also subtracted unchanged as a generic water-process cost. The finite EBU of the declared complete transition is the potential difference, not that difference followed by a second hidden deduction.
+
+The original book's practical lesson survives: decompose enough to measure physical transformations, and preserve enough links to understand the service. Neither a disconnected list nor an all-purpose mega-action provides both.
+
+\section{Several resource accounts form a vector}
+Suppose one project reports $+8$ in a declared water field and $-2$ in a declared energy field. The honest record can display
+\begin{equation}
+ \mathbf E_a=\begin{pmatrix}+8\ \E_{\mathrm{water}}\\-2\ \E_{\mathrm{energy}}\end{pmatrix}.
+\end{equation}
+Even if both numbers are mathematically dimensionless after standardization, their scales and interpretations can differ. Adding them to obtain 6 chooses a conversion or weighting rule. Dimensionless notation alone does not justify that choice.
+
+A scalar combination may be useful for a specified decision, but its weights need an explicit meaning and sensitivity analysis. If one resource is non-substitutable for an essential function, an easy gain in another account cannot automatically compensate for its loss. Physical feasibility and minimum service conditions may remain separate constraints.
+
+Within each resource account, the relevant endpoint and process terms can close. The vector preserves those separate reconciliations. It allows comparison without pretending that one universal token has already solved the problem of valuing heterogeneous systems.
+
+\section{Planning is a different use of the records}
+A planner can compare feasible routes, examine repair strategies or forecast future needs. Such planning may use information that a local action quote does not: deadlines, inventories elsewhere, expected failures and future scenarios. This is acceptable when the layer and its assumptions are declared.
+
+The planner should not be smuggled into the EBU formula. The formula evaluates an action given its state and field. A route optimizer chooses among possible sequences using an objective. A random actor chooses by a different rule. Both can use the same value calculation without becoming the same experiment.
+
+If a planner's prediction later differs from reality, the forecast and actual record should be compared. Replacing the actual physical result with the predicted favourable one would destroy the account's purpose. A forecast can justify a decision under uncertainty while remaining a forecast.
+
+\section{Receipts as evidence for maintenance}
+A series of well-specified records may reveal that a pump repeatedly uses more electricity for the same delivered water, that a route often misses a deadline or that emergency parts come from one fragile source. These patterns can motivate investigation.
+
+They do not automatically identify a cause. A higher apparent burden may reflect changing loads, altered references, better measurement or a genuine equipment problem. Comparisons need consistent conditions and versioned definitions. A report should retain these explanatory variables instead of ranking devices by one unqualified average.
+
+Maintenance itself has physical consequences. It can consume parts now and improve later performance. Its present construction or repair record and the later operating records are connected, but the later improvement cannot be issued in advance as an observed current field reduction unless a justified present capacity coordinate already represents it.
+
+\section{Infrastructure changes the menu of possible actions}
+Building a bridge, laying a pipe or adding a cold store can change which actions are feasible. This is a deeper change than selecting a different quantity on an existing edge. The action menu, physical map and possibly the represented state must be updated with explicit versions.
+
+The field can describe a consequence only through its declared variables. If a new bridge changes travel time but the model contains neither time nor service constraints, the benefit is not captured by merely adding an edge label. The limitation should be reported and the representation revised where justified.
+
+Once the new infrastructure operates, future receipts can supply evidence about actual use and consequences. That evidence may differ from the investment forecast. A good archive lets readers study the difference, including unused capacity, maintenance demands and unexpected access effects.
+
+\section{Cooperation is a hypothesis to examine}
+Two clinics might share a cold store, transport capacity or specialist repair service. If doing so meets the same needs with lower total represented burden, the group account can show that difference. It still does not determine how to distribute costs, access, responsibilities or gains.
+
+Shared provision can create dependencies and vulnerabilities as well as efficiencies. A failure at a common store can affect both clinics. A powerful participant can control access. Geographic concentration can disadvantage a remote community. These concerns require service and institutional analysis alongside the physical account.
+
+Thus the reasoned hypothesis is conditional: better physical information may help identify beneficial cooperation. Whether it produces stable, fair cooperation depends on mechanisms and behaviour that must be studied. A calculation showing a lower potential is not a proof of voluntary participation or equitable bargaining.
+
+\section{Poverty can constrain the choice set}
+A household may use an inefficient device because it cannot obtain a replacement. Another household may have capital, secure housing and access to shared infrastructure. Their physical records can differ because their feasible opportunities differ, not because one values the environment more.
+
+An institution that attaches consequences to EBU records must confront that asymmetry. It could provide access, collective investment, support for essential services or other arrangements, but the equation does not choose among them. A physical burden should remain visible while responsibility and assistance are considered separately.
+
+This is why socioeconomic questions were placed at the beginning of the revised book. They are not a decorative appendix to an otherwise finished currency. An account intended to serve life must be assessed for how people actually encounter its rules, including people with disability, limited resources or unavoidable high-burden needs.
+
+\section{Observation does not require unlimited surveillance}
+A record can identify a transformation without publicly exposing every personal detail of its beneficiaries. The information needed to verify a physical event depends on its quantities, timing, boundaries and evidence. Some identity links may be held by authorized auditors; other information may be aggregated or withheld.
+
+The choices need explicit governance: purpose, access, retention, correction and appeal. Mathematical locality offers a way to describe necessary physical inputs. It does not itself design secure storage or justify collecting personal data unrelated to the calculation.
+
+More observations can improve an estimate, but more data can also multiply inconsistent definitions and opportunities for misuse. The quality of a physical account depends on what its measurements mean and how they can be challenged, not simply on how many records exist.
+
+\section{Money and physical accounts can coexist}
+A payment can finance a repair while a physical account describes its effects. The two ledgers may inform the same decision without being interchangeable. Money can redistribute claims or fund access; it cannot retroactively change the litres moved or the field used in an observed account.
+
+One possible research sequence begins with observational physical accounts in a narrow domain, examines measurement and interpretability, and only later studies institutional consequences. This is a possible path, not an adopted deployment plan. Broader claims require broader evidence.
+
+An institutional capacity rule is not identical to the physical account. If a future system uses balances to decide which offers are affordable, that rule must state whose balances, which obligations, and how an essential service is protected. Property rights, income support, appeals, labour agreements and democratic authority do not follow from the physical identity; they have to be designed and assessed openly.
+
+\section{Guided problem: compare complete routes}
+Two routes move the same amount of water between the same endpoints under one fixed field. The first uses less electrical energy than the second. If energy is represented in the complete state and the potential, their final states differ, so their EBU values may differ too. Without the energy coordinates and their valuation, the difference cannot honestly be assigned a number. If both routes reach exactly the same complete represented endpoint, their EBU values are equal; a hidden route charge cannot change that identity.
+
+Now suppose the lower-energy route misses a required deadline. It no longer satisfies the same service problem. A report should say that it fails the deadline, not rank it as the better solution by ignoring time. If time-dependent degradation changes the physical endpoint, even equality of the water quantities is insufficient.
+
+\section{Practice and reflection}
+Recalculate the two-edge Gaussian route with quantity two. The first state becomes $(16,12,2)$ with potential 13; the second becomes $(16,10,4)$ with potential 9. The values are 3 and 4, totaling 7, equal to the direct endpoint reduction.
+
+Then choose a familiar service, such as drinking water or a refrigerated meal. Draw three linked physical transformations and name the carrier at each. Identify one quantity ledger, one possible service constraint and one institutional question that cannot be read from the physical ledger.
+
+Finally describe an infrastructure improvement and separate its present construction effects, measured capability, future forecast, authorization and compensation. State which claim can be observed now and which must wait for later evidence.
+
+\begin{intuitionbox}{What to carry forward}
+Routes compose physical actions under explicit states and times. Resource accounts retain their meanings as a vector unless a conversion is justified. Records can inform learning and cooperation, but adaptation, access and governance require their own evidence and choices.
+\end{intuitionbox}
+
+The route links physical records across space and time. The next chapter asks a further institutional question: when could a signed history alter anyone's future capacity to act, and which parts of that choice remain outside the physical law?

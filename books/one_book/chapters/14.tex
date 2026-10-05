@@ -1,0 +1,199 @@
+\chapter{Finite changes and curvature}\label{ch:finite}
+
+\section{The whole movement matters}
+A slope describes the landscape at one point. A finite action travels a distance through that landscape. If the slope changes along the way, its starting value multiplied by the distance cannot give the exact endpoint difference. The Gaussian model makes this distinction unusually transparent because the omitted term can be written exactly.
+
+Return to the two-cell state \((18,2)\). The starting edge field is four. A four-unit transfer therefore has initial linear estimate \(4\cdot4=16\). Its exact field reduction is twelve. An eight-unit transfer has linear estimate 32 but exact reduction sixteen. At sixteen units the linear estimate is 64, while the exact reduction is zero. No measurement noise or numerical integration is needed to explain these differences. They follow from the curvature of the declared potential.
+
+This chapter retains the original book's lesson about overshoot while deriving it directly for finite quantities. We are not choosing a timestep for a restoring controller. We are evaluating a declared physical increment exactly.
+
+\section{Expand one square first}
+For one coordinate, write its initial deviation as \(a=x_i-x_i^*\) and its physical increment as \(d\). Then
+\begin{equation}
+ (a+d)^2=a^2+2ad+d^2.
+\end{equation}
+Dividing by \(2\sigma_i^2\) gives
+\begin{equation}
+ V_i(x_i+d)-V_i(x_i)
+ =\frac{x_i-x_i^*}{\sigma_i^2}d
+  +\frac{d^2}{2\sigma_i^2}.
+\end{equation}
+The first term is marginal times increment. The second is the curvature contribution. It is nonnegative and vanishes only when \(d=0\), given a finite positive scale.
+
+This is exact expansion, not an approximation truncated after a convenient term. A quadratic has no cubic or higher terms to omit. That fact makes the Gaussian domain a clear introductory setting: the finite correction can be derived with the algebra of a square before using vector calculus.
+
+\section{Add the coordinates}
+Let \(\delta\) be any declared finite state increment. Sum the one-coordinate expansions:
+\begin{equation}\label{eq:quadratic-expansion}
+ V(x^{\mathrm{b}}+\delta)=V(x^{\mathrm{b}})+\mu(x^{\mathrm{b}})^T\delta+\frac12\delta^TH\delta.
+\end{equation}
+The dot product \(\mu^T\delta\) is the initial linear contribution. The quadratic form \(\delta^TH\delta\) equals \(\sum_i\delta_i^2/\sigma_i^2\). The word ``form'' simply describes this matrix expression producing a scalar.
+
+Define the finite EBU as \(E=V(x^{\mathrm{b}})-V(x^{\mathrm{b}}+\delta)\). In the calculations of this chapter we also write \(F=E\) when emphasizing the field integral. Then
+\begin{equation}\label{eq:quadratic-field-reduction}
+ F=-\mu(x^{\mathrm{b}})^T\delta-\frac12\delta^TH\delta.
+\end{equation}
+The sign reverses because improvement means lower potential. A beneficial initial direction makes the first term positive. Curvature subtracts from that initial linear estimate.
+
+\begin{lawbox}{Exact quadratic finite-change identity}
+For fixed references, fixed positive scales, and the declared additive Gaussian potential, every finite increment satisfies Equation~\ref{eq:quadratic-expansion}. Therefore exact field reduction equals the initial linear improvement minus one-half the squared standardized increment. Physical feasibility is a separate requirement on the increment and event.
+\end{lawbox}
+
+\section{Specialize to one lossless edge}
+For \(i\to j\), the increment is \(\delta_i=-q\), \(\delta_j=q\), with every other entry zero. Substituting into the exact identity gives
+\begin{equation}\label{eq:finite-lossless-field}
+ F_e(q)=q\bigl(\mu_i(x^{\mathrm{b}}_i)-\mu_j(x^{\mathrm{b}}_j)\bigr)
+       -\frac{q^2}{2}\left(\frac1{\sigma_i^2}+\frac1{\sigma_j^2}\right).
+\end{equation}
+Name the positive directional curvature
+\begin{equation}
+ k_e=\frac1{\sigma_i^2}+\frac1{\sigma_j^2}>0.
+\end{equation}
+Then the schedule is the simple parabola \(F_e(q)=f_e(0)q-k_eq^2/2\). This notation makes the roles visible: \(f_e(0)\) is the initial benefit per stock unit, while \(k_e\) tells how quickly that benefit falls as more is sent.
+
+For the main fixture, \(f_e(0)=4\) and \(k_e=1/2\). Thus
+\begin{equation}\label{eq:main-finite-schedule}
+ F(q)=4q-\frac{q^2}{4}.
+\end{equation}
+The physical source limit for this isolated lossless transfer is \(0\leq q\leq18\). The algebraic parabola can be evaluated outside that interval, but such values are not physically executable points of the declared event.
+
+\section{Read the complete schedule}
+\begin{center}
+\begin{tabular}{rrrrr}
+\toprule
+\(q\) & A & B & After-potential & Field reduction\\
+\midrule
+0 & 18 & 2 & 16 & 0\\
+2 & 16 & 4 & 9 & 7\\
+4 & 14 & 6 & 4 & 12\\
+6 & 12 & 8 & 1 & 15\\
+8 & 10 & 10 & 0 & 16\\
+12 & 6 & 14 & 4 & 12\\
+16 & 2 & 18 & 16 & 0\\
+17 & 1 & 19 & 20.25 & -4.25\\
+18 & 0 & 20 & 25 & -9\\
+\bottomrule
+\end{tabular}
+\end{center}
+Every row is an independent counterfactual from the same baseline, not the next step of a trajectory. That distinction is essential. The \(q=6\) row means send six units from \((18,2)\), not send six after the \(q=4\) row has already happened.
+
+Potential initially falls as the action moves toward the reference. It reaches its minimum at eight. Further movement crosses the reference and climbs the other side. The total field reduction remains positive until sixteen because the final potential is still below the original 16. Positive total value therefore does not imply that every part of the path is downhill.
+
+\section{The maximum of a schedule is not a selector}
+Differentiating the cost-free field schedule gives
+\begin{equation}
+ F_e'(q)=f_e(0)-k_e q.
+\end{equation}
+If \(f_e(0)>0\), its unconstrained vertex is at \(q_v=f_e(0)/k_e\). In the main fixture this is eight. The positive root other than zero is \(q_0=2f_e(0)/k_e=16\).
+
+These quantities describe the function. They do not instruct the actor to choose \(q_v\). A physical cap may make the vertex unavailable. A service obligation may require another quantity. Naming the maximum allows us to understand the geometry without quietly installing optimization as a physical law.
+
+If the initial field is nonpositive, every positive quantity has negative field reduction in this quadratic lossless model. At zero initial field, curvature alone gives \(-k_e q^2/2\). At negative initial field, both terms are negative. This is a conditional mathematical statement about one fixed direction, not a claim that the action must be morally prohibited.
+
+\section{An integral gives the same finite difference}
+The field along the path is \(f_e(s)=f_e(0)-k_e s\). Integrating from zero to the finite quantity gives
+\begin{equation}
+ \int_0^q f_e(s)\,ds=f_e(0)q-\frac12 k_e q^2=F_e(q).
+\end{equation}
+This is the fundamental theorem of calculus in a particularly simple form. The area under the changing field equals the endpoint potential reduction. It is not a different competing definition of single-action value.
+
+For \(q=4\), the field falls from four to two. Its average is three, so the integral is \(3\cdot4=12\). For \(q=8\), the average is two and the integral is sixteen. For \(q=16\), the field falls from four to minus four; positive and negative signed areas cancel.
+
+The integral uses a mathematical path through state space. For an isolated linear transfer whose physical model realizes constant-rate motion, that path can also describe the modeled physical progression. If only endpoints have been declared, the path is an interpolation used to derive the identity. A mathematical identity alone does not establish which physical timing occurred.
+
+\section{Average, initial, and final slopes}
+For \(q>0\), the average field is
+\begin{equation}
+ \overline f(q)=\frac{F_e(q)}{q}=f_e(0)-\frac12 k_e q.
+\end{equation}
+It lies halfway between the initial and final fields because the field is linear along this quadratic path. The exact total is quantity times this average, not quantity times the initial value.
+
+At the main \(q=12\) point, initial field is four, final field is minus two, average field is one, and total reduction is twelve. The final field is already negative even though the total remains positive. This distinction helps interpret an action that has passed the potential minimum: the action as a whole still improves on its starting state, but its last increments undo some earlier improvement.
+
+An intensity diagnostic such as \(F(q)/q\) can be informative, but it is not the total finite value. Ranking by intensity and ranking by total answer different questions. Neither ranking is the action-selection rule of the prospective random programme unless explicitly adopted.
+
+\section{At the reference every nonzero net change costs field value}
+At \(x^{\mathrm{b}}=x^*\), the gradient is zero. Equation~\ref{eq:quadratic-field-reduction} becomes
+\begin{equation}
+ F=-\frac12\delta^TH\delta.
+\end{equation}
+It is negative for every nonzero net increment. This follows from positive definiteness of \(H\). The reference is a strict minimum of the potential.
+
+The phrase ``net increment'' matters for groups. Several nonzero actions can cancel so that their sum is zero. In the declared state the group's endpoint then equals its baseline and its EBU is zero. It would be false to infer negative EBU merely from the presence of nonzero child actions. If their operation changes another represented physical carrier, that carrier belongs in the complete state and the potential must be evaluated there.
+
+The negative sign does not itself forbid departure. A clinic may need to draw from a well-placed reserve to treat a patient. Physical permission and service are separate questions from the potential difference. An institution that makes a negative EBU unaffordable adds a rule of its own; the geometry neither requires nor justifies that rule.
+
+\section{Two coordinates with unequal scales}
+Use a separate sensitivity example with the main stocks and references but scales \((2,4)\). Initial potential is ten, field is \(2.5\), and directional curvature is \(1/4+1/16=5/16\). Therefore
+\begin{equation}
+ F(q)=\frac52q-\frac{5}{32}q^2.
+\end{equation}
+The vertex remains eight in this two-cell compatible setup, because a transfer of eight reaches both references simultaneously. The maximum is ten, the entire starting potential. At four units, the reduction is \(10-2.5=7.5\), and the after-potential is 2.5.
+
+The unchanged vertex should not be generalized to all networks. Here there is only one mass-conserving degree of freedom, and both deviations are opposite amounts. In a multi-cell world an action can improve one pair while leaving other deviations untouched. Different scales then affect tradeoffs among available directions and finite quantities.
+
+\section{Several actions introduce cross terms}
+For two additive increments \(\delta_a\) and \(\delta_b\), the net increment is their sum. Expanding its quadratic term gives
+\begin{equation}
+ (\delta_a+\delta_b)^TH(\delta_a+\delta_b)
+ =\delta_a^TH\delta_a+2\delta_a^TH\delta_b+\delta_b^TH\delta_b.
+\end{equation}
+Consequently the joint field reduction differs from the sum of standalone reductions evaluated at one baseline by
+\begin{equation}
+ F_{ab}-F_a-F_b=-\delta_a^TH\delta_b.
+\end{equation}
+This previews the group chapters. The cross term is present even though the potential is separable. The overlap occurs because both actions change a shared coordinate.
+
+If both remove stock from the same source and change disjoint destinations, their source components have the same sign, giving a positive inner product and a negative correction. If one adds to a coordinate while the other removes, that shared contribution can have the opposite sign. No universal assertion of positive synergy follows from the existence of a group.
+
+This is a comparison of fixed increments at the same baseline. If each hypothetical subset reruns a resolver and gets new quantities, it defines another set of comparisons. The simple fixed-increment expansion must not be used to describe it without checking those new dependencies.
+
+\section{Worked shared-source correction}
+Use a new three-cell declaration: state \((14,3,3)\), reference \((8,6,6)\), scales two at every cell, and lossless edges from the source to both destinations. Initial potential is
+\begin{equation}
+ \frac12\left(3^2+(-1.5)^2+(-1.5)^2\right)=6.75.
+\end{equation}
+Each actor proposes quantity two. Alone, either action has initial field \(2.25\) and directional curvature \(1/2\), so its standalone reduction is \(2.25(2)-(2)^2/4=3.5\). The two standalone values sum to seven.
+
+Together the increment is \((-4,2,2)\), giving endpoint \((10,5,5)\). Standardized deviations there are \((1,-0.5,-0.5)\), so potential is \(0.75\). Exact group reduction is \(6.75-0.75=6\), not seven.
+
+The cross-term calculation gives the same correction. The action increments are \(\delta_a=(-2,2,0)\) and \(\delta_b=(-2,0,2)\). With \(H=I/4\), their weighted inner product is one, entirely from the common source. Thus \(F_{ab}=3.5+3.5-1=6\). No potential coupling between different cells was needed.
+
+This group is physically possible under an ordinary frozen-source availability rule because aggregate withdrawal four does not exceed fourteen. Physical feasibility therefore does not solve the separate overcounting problem. Each check has its own job.
+
+\section{Worked cancellation correction}
+At the main baseline, suppose both directed lossless edges exist. Let action A send four from A to B, and action B send four in the reverse direction. The reverse standalone action is not feasible from B's two units under a frozen-source rule, so its same-baseline value must not be presented as an admissible physical comparator there.
+
+To make the comparison legitimate, declare a separate baseline \((10,10)\), with the same reference and scales. Both four-unit standalone transfers are now physically feasible. Each alone raises potential from zero to four, so each has field value minus four. The joint cancelling group has net increment zero and field value zero.
+
+The same-baseline correction is therefore \(0-(-4-4)=8\). It is positive because the hypothetical standalone endpoints each depart from the reference while the group endpoint does not. This does not identify an extra eight units to issue in addition to the group value. It is a diagnostic difference between two different accounting comparisons.
+
+The explicit baseline change in this example is essential. Without it, an appealing algebraic illustration would depend on a standalone action that cannot be performed in the declared physical world. Mathematical formulas must retain the admissibility assumptions of the comparisons they claim to represent.
+
+\section{A fuller physical account changes the state}
+The schedule above is exact for the declared lossless two-stock world. It does not include electricity consumption, wear or a wasted carrier. To include one of those effects, declare its physical coordinate, the action's complete increment and a potential over the chosen complete state. Then calculate \(E=V_{\mathrm{pre}}-V_{\mathrm{post}}\) again. The answer may change because the world represented by the model has changed, not because an arbitrary term was appended to the definition of EBU.
+
+An invoice, operating cost or policy penalty can be kept in an institutional account with its own meaning. Calling such a number EBU would hide the distinction this book is trying to make. In a lossy transfer, for example, the difference between source withdrawal and destination delivery must first appear in a declared sink or cross a boundary; only then is it possible to discuss what the potential values and what it leaves as audit-only.
+
+\section{Why dividing the action does not erase curvature}
+Take the main four-unit transfer and split it into two consecutive two-unit actions under one fixed potential and no intervening external change. The first action goes from potential 16 to nine, giving seven. The second begins at the new state \((16,4)\) and goes from nine to four, giving five. Their sum is twelve, the unsplit four-unit field reduction.
+
+If both pieces were instead valued independently from the original state, each would claim seven, for a total of fourteen. That is a different calculation and overstates the actual four-unit endpoint reduction. The second piece has been allowed to reuse the first piece's initial field.
+
+This example distinguishes sequential telescoping from independent same-baseline claims. The correction is not an arbitrary penalty for using two names. It is the mathematical consequence of evaluating the second physical change where it actually begins. Simultaneous groups require a joint value and a separately declared attribution convention; those are developed later.
+
+\section{Guided problem: derive an entire schedule}
+Use a separate lossless two-cell example with total 16, state \((12,4)\), reference \((8,8)\), and equal scales two. Initial marginals are one and minus one, so the field is two. Directional curvature is one-half. The exact schedule is
+\begin{equation}
+ F(q)=2q-\frac{q^2}{4},\qquad 0\leq q\leq12.
+\end{equation}
+At \(q=2\), field reduction is three; the endpoint \((10,6)\) has potential one, compared with initial four. At \(q=4\), the reference is reached and reduction is four. At \(q=8\), the endpoint is \((4,12)\) and reduction is zero. At \(q=10\), reduction is \(20-25=-5\).
+
+Now perform the same exercise by endpoint evaluation alone. This independent form of arithmetic verifies signs and normalization. Finally integrate the field \(2-q/2\) from zero to each quantity. The three methods agree because they are three expressions of the same quadratic identity, not three separate scientific findings.
+
+\section{Practice and reflection}
+For the main schedule, solve \(F(q)=12\). The two roots are four and twelve. Both provide the same total field reduction but leave different endpoint distributions, \((14,6)\) and \((6,14)\). Explain why a value alone cannot identify what physically happened.
+
+Calculate the difference between the linear estimate and exact field reduction at \(q=3\). It is \(q^2/4=2.25\); the linear estimate is twelve and the exact reduction is 9.75. This difference is a curvature contribution, not an optional audit adjustment.
+
+At the reference, let \(\delta=(-1,1)^T\) with scales two. The quadratic term is \(\tfrac12(1/4+1/4)=1/4\), so the field value is minus one-quarter. Explain how a zero gradient and a negative finite value coexist without contradiction.

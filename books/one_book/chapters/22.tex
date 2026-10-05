@@ -1,0 +1,71 @@
+\chapter{Several actors on one nonlinear field}\label{ch:groups}
+
+\section{Known quantities do not make value linear}
+Two couriers each deliver two units from A to B. We know their identities, quantities and directions. Yet valuing each delivery as though the other did not exist gives a different sum from valuing the combined four-unit movement. The difficulty is not missing quantity data. It is the curvature of the potential.
+
+Physical increments can add linearly while the value of their sum remains nonlinear. This distinction is already present in a diagonal Gaussian potential. It does not require a mysterious nonlocal force or a new physical interaction between the couriers.
+
+This chapter retains the original shared-source lesson and updates its arithmetic. A later chapter makes the common-path decomposition explicit. A decomposition that closes mathematically is useful, but its interpretation must be stated: path accounting, physical realization, causal contribution and institutional entitlement are different claims.
+
+\section{The two-courier counterexample}
+Use the repeated state $(18,2)\X$, references $(10,10)\X$ and scales $(2,2)\X$. Let the increments be
+\[
+ \delta_A=(-2,2)\X,\qquad \delta_B=(-2,2)\X.
+\]
+Either courier alone would produce $(16,4)\X$, reducing potential from 16 to 9. The two same-baseline singleton values therefore sum to $7+7=14$.
+
+Their actual joint increment is $(-4,4)\X$, producing $(14,6)\X$ with potential 4. The joint field value is 12. The difference of two is not a rounding error or an unobserved physical loss. It is the discrepancy between a joint finite difference and a sum of different counterfactual finite differences.
+
+\begin{cautionbox}{A counterfactual sum is not the joint account}
+Each singleton value asks what would happen if that child acted alone at the frozen baseline. The joint value asks what happens when the accepted children act together. On a nonlinear field these are different comparisons, even when the child quantities are known exactly.
+\end{cautionbox}
+
+If the couriers actually act sequentially, the values are 7 and 5, which sum to 12. A physically meaningful sequence supplies different baselines. If execution is simultaneous, inventing that sequence afterward gives an allocation convention, not an observed intermediate history.
+
+\section{The exact group formula}
+Let the accepted increments be $\delta_a$, and define $\delta_{\mathcal G}=\sum_{a\in {\mathcal G}}\delta_a$. Under fixed Gaussian geometry,
+\begin{equation}
+ E_{\mathcal G}=-\mu(x^{\mathrm{b}})^T\delta_{\mathcal G}-\tfrac12\delta_{\mathcal G}^TH\delta_{\mathcal G}
+\end{equation}
+for the complete represented physical transition. Here $H=\operatorname{diag}(1/\sigma_i^2)$ and $\mu(x^{\mathrm{b}})=H(x^{\mathrm{b}}-x^*)$.
+
+The same-baseline singleton sum uses $\delta_a$ separately in each quadratic term. Expanding the joint square gives
+\begin{equation}\label{eq:group-nonadd}
+ E_{\mathcal G}-\sum_a E_a^{(0)}
+ =-\sum_{a<b}\delta_a^TH\delta_b.
+\end{equation}
+The superscript $(0)$ marks the common frozen baseline. It does not denote an observed first step. The right-hand side is a signed cross-term diagnostic for these fixed increments and this fixed potential.
+
+For the two couriers, $H=\operatorname{diag}(1/4,1/4)$ and $\delta_A^TH\delta_B=2$, giving $12-14=-2$. The shared coordinates and directions determine the sign.
+
+\diagram{group}{Two separately evaluated two-unit actions each have value seven at the frozen baseline. The joint four-unit action has value twelve, not fourteen. A later declared straight-path decomposition assigns six to each.}{fig:group}
+
+\section{The discrepancy can have either sign}
+Convexity does not make every group discrepancy negative. Consider opposing increments from the reference state $(10,10)$:
+\[
+ \delta_A=(-2,2),\qquad\delta_B=(2,-2).
+\]
+Each action alone increases potential to 1, so each singleton value is $-1$. Their joint increment is zero and the ideal group field value is zero. Thus $E_{\mathcal G}-(E_A^{(0)}+E_B^{(0)})=2$.
+
+The cross product is $-2$, agreeing with equation~\eqref{eq:group-nonadd}. Two same-direction increments gave a negative discrepancy; opposing increments give a positive one. The physical feasibility of the combined flows must still be declared. Endpoint cancellation does not automatically permit unlimited circulation or establish that the real process is free.
+
+For disjoint coordinate supports under diagonal $H$, the cross product is zero. The field values then add. Shared physical constraints can nevertheless couple the permitted quantities. An arithmetic additivity result does not remove a common pump-capacity or source-availability constraint.
+
+\section{Three comparisons that must stay separate}
+The group-versus-singletons discrepancy compares simultaneous execution with two or more counterfactuals that each start alone. A parallel-versus-sequential comparison uses a complete sequential history. An institutional allocation compares ways of distributing a given joint number.
+
+With fixed additive increments and the same endpoint, each physically feasible sequential order and the group have the same total field value. A feasible joint endpoint alone does not guarantee feasible intermediate states in every order. The singleton sum can still differ. Thus a nonzero singleton discrepancy does not establish that simultaneity created a physical efficiency gain.
+
+If a resolver changes quantities when actions are replayed sequentially, or a delay changes the state, the sequential endpoint can differ. The comparison then has to identify the ordering, resolver, timing and endpoint. Reporting an ``interaction benefit'' without naming this comparator leaves its meaning incomplete.
+
+\section{Grouping follows dependencies}
+A shared coordinate often requires joint valuation. Shared constraints can also require joint physical resolution even when the eventual increments happen to have disjoint support. Relevant dependencies include overlapping execution or reservation intervals, common capacities, and effects on another action's feasibility or completion.
+
+A conservative grouping design collects connected dependent actions within a compatible accounting boundary. This prevents an action indirectly linked through a third child from being treated as independent without examination. It is a design rule requiring declared supports and timing; it is not established merely by two actors belonging to the same organization.
+
+Every group should preserve its child records. Joint evaluation does not erase who sent what, which edge was used or which evidence supports the quantities. It acknowledges that the group's nonlinear field total must be computed together.
+
+\section{The next question is the complete interaction landscape}
+The two-action cross term is the first member of a larger hierarchy. Before dividing a joint value among actors, we will examine all admissible subsets, subtract lower-order contributions and identify what truly belongs to a higher order. Chapter~\ref{ch:attribution} later returns to the common-path allocation and its limits.
+
+The full group value already includes every interaction under its declared response. An interaction diagnostic must never be issued again as additional value on top of that total. The next chapter defines the common-baseline table that makes those comparisons precise.

@@ -1,0 +1,60 @@
+\chapter{Density, current and thermodynamic scope}\label{app:probability}
+
+\section{Stationarity and reversibility are separate properties}
+For a diffusion with constant scalar diffusion coefficient $D>0$ and density $p$, the probability current has the form $j=bp-D\nabla p$. A stationary density satisfies $\nabla\cdot j=0$, with appropriate boundary conditions. Zero divergence permits circulating current; it does not require $j=0$.
+
+If $p=Z^{-1}e^{-V}$, then $\nabla p=-p\nabla V$. A drift $b=-D\nabla V+c$ therefore gives $j=cp$. Any sufficiently regular $c$ satisfying $\nabla\cdot(cp)=0$ and the boundary requirements preserves the same density. Reversible gradient diffusion is the special case with no such current in the usual setting of even state variables.
+
+This mathematical distinction is one reason nonreversible sampling dynamics can share a target density with reversible ones \cite{duncan}. An observed canonical-shaped density cannot determine which of those mechanisms produced it.
+
+\section{A rotating Gaussian with the same density}
+On $\mathbb R^2$, take $V(x)=\tfrac12x^{\mathsf T}x$, $D=1$, and a nonzero constant skew-symmetric matrix
+\begin{equation}
+ Q=\begin{pmatrix}0&-\omega\\\omega&0\end{pmatrix}.
+\end{equation}
+Consider drift $b(x)=-x+Qx$. The standard Gaussian density satisfies $\nabla p=-xp$. Its current is $j=Qx\,p$.
+
+To check stationarity, use $\operatorname{tr}Q=0$ and $x^{\mathsf T}Qx=0$:
+\begin{equation}
+ \nabla\cdot(Qx\,p)=\operatorname{tr}(Q)p+(Qx)^{\mathsf T}\nabla p=0.
+\end{equation}
+The Gaussian decay supplies the usual integrability and boundary behavior. Yet the current is nonzero away from the origin when $\omega\ne0$. Density agreement with $e^{-V}$ therefore coexists with circulation.
+
+An EBU endpoint log-density identity still holds for that declared density and potential. The accepted P4 interpretation cannot be inferred from the density alone. In a physical model, the nonconservative rotational drive and its work or entropy accounting need their own treatment.
+
+\section{Detailed balance for a jump process}
+For a jump process with rates $k_{xy}$ and a positive stationary mass function $p$, detailed balance means
+\begin{equation}
+ p(x)k_{xy}=p(y)k_{yx}
+\end{equation}
+for the paired transitions. When $p\propto e^{-V}$, it gives
+\begin{equation}
+ \ln\frac{k_{xy}}{k_{yx}}=\ln\frac{p(y)}{p(x)}=V(x)-V(y).
+\end{equation}
+The rate-ratio conclusion requires detailed balance, not merely stationarity. A physical local-detailed-balance relation, in turn, connects rate ratios to specified reservoir entropy changes under a physical model. It should not be used as a synonym for global detailed balance in a driven network \cite{maes,seifert}.
+
+\section{A driven ring with constant state potential}
+Take a three-state ring, clockwise rate two and counterclockwise rate one on every edge. Uniform probability $p_i=1/3$ is stationary: each state has total inflow and outflow three times the same mass. Pairwise detailed balance fails because $p_i k_{i,i+1}=2/3$ and $p_{i+1}k_{i+1,i}=1/3$.
+
+The uniform density corresponds to a constant $V$ up to normalization, so every endpoint EBU is zero. Nevertheless each clockwise edge has log rate ratio $\ln2$, and the clockwise cycle affinity is $3\ln2$. If a compatible physical local-detailed-balance model identifies those ratios with reservoir entropy flow, the drive has a nonzero thermodynamic cost. The state potential does not account for it as an endpoint difference.
+
+The example isolates the logical boundary without inventing an EBU charge. A broader physical account must explicitly represent the drive, work and reservoirs. It cannot recover their path dependence by claiming that a constant state potential already contained them.
+
+\section{Stationary curvature and global Gaussian covariance}
+If a positive density satisfies $J_{\mathrm{prob}}=V+\ln Z$ in fixed coordinates, Hessian equality follows wherever the derivatives exist. No statement about global covariance follows without additional structure.
+
+For a full-support Gaussian with positive-definite constant $H$, diagonalize $H=R^{\mathsf T}\Lambda R$ with orthogonal $R$. The variable $u=\Lambda^{1/2}R(x-x^*)$ has density proportional to $e^{-u^{\mathsf T}u/2}$, so $\operatorname{Cov}(u)=I$. Transforming back gives $\Sigma=H^{-1}$.
+
+If a boundary truncates the density, the transformed support is not all of $\mathbb R^d$. Its moments need not be those of the untruncated standard normal. A locally fitted Hessian can describe local log curvature while the tails and boundaries determine different global moments. This distinction is particularly relevant to nonnegative conserved stocks.
+
+\section{Different statistical interactions use different operations}
+A log-linear coefficient on a binary cube is an anchored alternating log-probability contrast. Interaction information instead applies inclusion--exclusion to marginal entropies. Marginalization changes the objects before the alternating sum. One should therefore not expect the two operations to commute or produce equal coefficients.
+
+As a simple structural example, a joint log density with only $a z_1z_2z_3$ has no anchored pair term at the all-zero background, but conditioning on the third variable being one produces a pair log odds ratio $a$. Marginalizing over the third variable produces yet another pair expression involving a sum of exponentials. Background, conditioning and marginalization are distinct procedures.
+
+Connected-information and maximum-entropy decompositions offer another perspective on dependence \cite{schneidman}. They can complement an EBU study when the relevant joint distribution is defined, but their terms should retain their own names and estimands. Pointwise endpoint densities alone do not supply the full statistical objects those methods require.
+
+\section{The boundary is scientifically productive}
+These examples do not weaken the canonical-density theorem. They identify which additional observations are needed to advance from density to dynamics and entropy. Currents, rate ratios, work and reservoir conditions can distinguish processes that endpoint histograms cannot.
+
+For EBU, that creates a disciplined route to deeper physical interpretation. Begin with the exact finite account; test its density relation where justified; then test the dynamical and thermodynamic premises separately. Each successful step can support a stronger claim, while a failure remains interpretable rather than hidden behind a universal analogy.

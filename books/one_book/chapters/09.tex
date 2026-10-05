@@ -1,0 +1,168 @@
+\chapter{Cells, nodes, and edges}\label{ch:graph}
+
+\section{Why the map comes before the actor}
+A model of economic activity can begin by giving an actor a goal. The actor seeks a resource, maximizes a reward, or chooses a trading partner. Physical accounting must first establish a world in which these actions have a definite meaning. Where is the resource stored? Which transformations are available? Which places can exchange it? Otherwise a clever decision rule can deliver stock that was never withdrawn or use a route that the represented world does not contain.
+
+The simplest useful map is a directed graph. A graph is a collection of places together with connections between them. A directed connection has an orientation. Here a place is called a cell or node, and a directed connection is called an edge. The graph describes available physical transformations; it does not prescribe which one an actor selects.
+
+A cell need not be a square on a geographical grid. It may be one well-mixed tank, a warehouse, or a region for which a particular stock can be measured. Good boundaries keep important exchanges visible. Combining a reservoir and treatment plant into one cell may conceal a transformation between them. Dividing one well-mixed tank into a thousand cells may add notation without adding physical information.
+
+\section{Vocabulary before notation}
+\begin{center}
+\begin{tabular}{P{0.25\linewidth}P{0.62\linewidth}}
+\toprule
+Word & Meaning in the present model\\
+\midrule
+Cell or node & One represented place carrying a scalar stock.\\
+Index & A stable label used to identify a cell or an edge.\\
+Edge & One declared directed transfer possibility.\\
+Source & The cell from which an action withdraws stock.\\
+Destination & The cell that receives stock.\\
+Path & An ordered sequence of adjoining edges.\\
+Topology & The pattern of available connections.\\
+Support & The coordinates changed by a specified action.\\
+\bottomrule
+\end{tabular}
+\end{center}
+An index is a label, not a size or a ranking. Writing \(i=1\) for A and \(i=2\) for B does not declare A more important. It fixes the order in which their numbers appear. That order must remain stable throughout a calculation and its record.
+
+We write \(x_i\) for the stock at cell \(i\). Thus \(x_1=18\) and \(x_2=2\) are two scalar statements. A scalar is one number with its declared unit. A vector collects several numbers in a fixed order.
+
+\section{A vector is an ordered physical record}
+The complete state of \(N\) cells is written
+\begin{equation}
+ x=\begin{bmatrix}x_1\\x_2\\\vdots\\x_N\end{bmatrix}\in\mathbb{R}^N.
+\end{equation}
+The notation \(\mathbb{R}^N\) means the set of ordered lists of \(N\) real numbers. Our physical domain is narrower: every stock is nonnegative, and their sum is the fixed total \(M\). Writing the larger mathematical space is convenient for derivatives; it does not permit negative water in an executable state.
+
+For A and B the state is \(x=(18,2)^T\). The superscript \(T\) means transpose. It turns a row into a column or a column into a row. It is neither a power nor a time label. A row multiplied by a matching column gives the dot product:
+\begin{equation}
+ a^Tb=\sum_{i=1}^{N}a_i b_i.
+\end{equation}
+For \(a=(2,3)^T\) and \(b=(5,7)^T\), the result is \(2\cdot5+3\cdot7=31\). Later, a marginal vector multiplied by a state change will add the local contributions to a change of potential. The operation remains this ordinary multiply-and-add procedure.
+
+\section{An edge is a directed possibility}
+Write an edge as \(e=(i\to j)\). One unit sent on this lossless edge removes one stock unit from source \(i\) and adds one to destination \(j\). The existence of \(i\to j\) does not imply that \(j\to i\) exists. A pipe may operate only in one direction. A permitted road route may differ from its reverse. If both directions are available, represent them as separate edges.
+
+The graph also does not say how much will move. A road's existence does not fill a truck. The action contains a finite nonnegative quantity \(q_e\), expressed in stock units. Direction is carried by the edge; we do not silently use a negative quantity to create a reverse process that the graph has not declared.
+
+Nor is an edge a universal relation of distance. Two distant tanks may have a direct pipe, while neighbouring tanks may have no connection. Distance can matter to delay, equipment, or an extended physical model. It does not enter this field through an assumed inverse-square law. The graph and the potential have explicitly defined jobs.
+
+\section{One column for one transfer}
+For edge \(e=(i\to j)\), define the column \(S_e\) by
+\begin{equation}
+ (S_e)_k=\begin{cases}-1,&k=i,\\+1,&k=j,\\0,&\text{otherwise}.\end{cases}
+\end{equation}
+Read the subscript outside the parentheses as ``entry \(k\) of the column.'' It does not multiply two symbols. The minus sign marks withdrawal, the plus sign marks delivery, and zero marks an unchanged coordinate.
+
+The action's state change is
+\begin{equation}
+ \delta_e=S_e q_e.
+\end{equation}
+For A to B, \(S_e=(-1,1)^T\). Sending four units gives \(\delta_e=(-4,4)^T\), so the successor is \((18,2)^T+(-4,4)^T=(14,6)^T\). This is the calculation already performed in words. The column has made its signs reusable.
+
+\begin{intuitionbox}{Read the column aloud}
+One lossless edge column says: withdraw one unit here, deliver one unit there, change nothing else directly. Multiplying by a finite quantity gives the physical increment. The column records where the change occurs; it does not choose the quantity or value the action.
+\end{intuitionbox}
+
+\section{From columns to a matrix}
+Place all edge columns side by side to form the incidence matrix,
+\begin{equation}
+ S=[S_1\ S_2\ \cdots\ S_m].
+\end{equation}
+There is one row per cell and one column per edge. The letter \(m\) here counts graph edges; the symbol \(E\) is reserved elsewhere for an EBU value. If \(q=(q_1,\ldots,q_m)^T\) collects finite quantities, then \(Sq\) is the sum of their state increments.
+
+Consider a separately declared three-cell illustration: A is cell 1, a store is cell 2, and the clinic tank is cell 3. Edges run \(1\to2\) and \(2\to3\). Both are lossless. Then
+\begin{equation}
+ S=\begin{bmatrix}-1&0\\1&-1\\0&1\end{bmatrix}.
+\end{equation}
+For quantities \(q=(4,2)^T\), multiplication gives
+\begin{equation}
+ Sq=\begin{bmatrix}-4\\4-2\\2\end{bmatrix}
+    =\begin{bmatrix}-4\\2\\2\end{bmatrix}.
+\end{equation}
+The store receives four and sends two, for a net gain of two. The net entries add to zero. This matrix product is physical bookkeeping, not a proof that the proposed actions are jointly feasible. If the store begins empty and the event rule forbids use of simultaneous incoming stock, its outgoing proposal still fails. Event timing is not determined by matrix notation.
+
+\section{A shared source has one stock}
+Now let A supply three destinations: the clinic, a food store, and a fire tank. In this new four-cell example,
+\begin{equation}
+ S=\begin{bmatrix}-1&-1&-1\\1&0&0\\0&1&0\\0&0&1\end{bmatrix}.
+\end{equation}
+With quantities \((2,1,0.5)^T\), the state increment is \((-3.5,2,1,0.5)^T\). Every source entry appears in the same row. The total withdrawal is \(3.5\), not three independent uses of the same stock.
+
+This geometry matters twice. Physical feasibility must consider aggregate use of the source. Valuation must consider the combined change of any shared potential coordinate. Independently asking whether each action fits can miss a joint conflict. Independently valuing each action from the full initial state can also count the same improvement more than once. Those are distinct problems, and later chapters address them separately.
+
+\section{A path is not a single edge}
+A route from A through a depot to B is a sequence of edges. Its intermediate stock may matter. So may timing, physical availability, and the order in which each action becomes possible. Combining the route into one arrow can be appropriate only if the model explicitly justifies the coarser transformation and retains every relevant boundary.
+
+Suppose the depot begins with two units. A simultaneous event requests four units into the depot and three out. The endpoint has three units, so it is nonnegative. But the initial depot does not contain the three outgoing units. A model may allow synchronized passage through a real continuous pipe; another may require receipt before onward dispatch. Both can be specified. Neither follows from the positive endpoint alone.
+
+The same caution applies more strongly to fuel, electricity, and delivered water. They are different carriers, and an energy conversion is not a lossless relocation of a homogeneous scalar. Their actions should form a linked physical chain with appropriate units and conversion accounts. The simple graph notation can teach how to record support, but it cannot erase the engineering of the chain.
+
+\section{Three maps that must stay distinct}
+The physical graph tells us which transformations exist. The potential's dependency structure tells us which coordinates each potential term reads. The action-interaction structure tells us which actions overlap in a way relevant to joint valuation or feasibility. These maps need not coincide.
+
+In our separable potential, each local term reads one cell, so the potential has no cross-coordinate terms. Nevertheless two actions withdrawing from A both change A's local quadratic. They interact in the joint finite value. A diagonal potential therefore does not imply independent actions.
+
+Conversely, two geographically close places may have no common action support. Their values can be independent within this model if no potential factor couples them. A richer model could add such a factor, but then the affected neighbourhood used in a local quote must include it. The general principle is simple: locate dependence from the actual equations, not from a picture or a metaphor.
+
+\section{Building a graph from a practical description}
+Begin with the carrier and its unit. Next choose cells whose stocks can be measured consistently. Name each transfer process and its direction. Assign stable row and column indices. For each lossless edge put \(-1\) at its source, \(+1\) at its destination, and zeros elsewhere. Keep a separate record of physical quantity limits, timing, and permitted information.
+
+Do not place EBU values or reference stocks inside \(S\). The incidence matrix does not depend on whether A currently has excess or deficit relative to its reference. It describes the change per unit of the named transfer. Stocks belong in \(x\), references in \(x^*\), scales in \(\sigma\), and finite quantities in \(q\). Separating these objects makes later changes auditable.
+
+An edge record might state its identifier, endpoints, carrier, quantity unit, and physical validity conditions. A version identifier can freeze that declaration for an event. This helps prevent a route or parameter from changing halfway through an account. Versioning does not validate a bad physical definition; it makes the definition traceable.
+
+\section{Notation laboratory}
+For a four-cell transfer from cell 2 to cell 4, the column is \(S_e=(0,-1,0,1)^T\). Its second entry is \(-1\), its fourth is \(+1\), and its dot product with the all-ones vector is zero. A quantity \(q_e=3\) gives \((0,-3,0,3)^T\).
+
+If there are \(N\) cells and \(m\) edges, the matrix has shape \(N\times m\). The quantity vector has shape \(m\times1\), so the result has shape \(N\times1\). The inner dimensions match. This simple size check catches many transcription mistakes before any arithmetic is attempted.
+
+For any cell \(i\), the component formula is
+\begin{equation}
+ (Sq)_i=\sum_{e:\,\mathrm{dest}(e)=i}q_e
+       -\sum_{e:\,\mathrm{src}(e)=i}q_e.
+\end{equation}
+It says to add all incoming quantities and subtract all outgoing quantities. A reader who finds the full matrix abstract can always return to this one-cell account. Matrix form is especially useful for proofs; component form is especially useful for tracing a real event.
+
+\section{Guided problem: build a returning route}
+A depot sends resource to a clinic and to a water plant. The clinic can return unused resource to the depot. In this illustration all transfers involve the same homogeneous carrier and are lossless. Index depot 1, clinic 2, plant 3, and edges \(1\to2\), \(1\to3\), \(2\to1\). The matrix is
+\begin{equation}
+ S=\begin{bmatrix}-1&-1&1\\1&0&-1\\0&1&0\end{bmatrix}.
+\end{equation}
+For \(q=(2,1,0.5)^T\), the change is \((-2.5,1.5,1)^T\). Its entries add to zero. The reverse edge is its own event component. It is not a negative number concealed in the first quantity.
+
+Now suppose the starting state is \((5,1,0)^T\). The endpoint is \((2.5,2.5,1)^T\), with total six units before and after. The depot's outgoing total is three, and the clinic's outgoing quantity is one-half, each available from its initial stock. Under a source-availability rule excluding unreceived inflow, those particular source checks pass. Other physical constraints would still need their own declared checks.
+
+\section{Disconnected regions and unreachable references}
+The graph can impose conservation statements stronger than the global total. Suppose there are two disconnected regions and every edge begins and ends inside one region. Summing the incidence entries over either region gives zero for every edge. Each region therefore retains its own stock under the declared internal actions.
+
+For a concrete four-cell illustration, let cells 1 and 2 form one connected pair and cells 3 and 4 another, with no edge between the pairs. Starting stocks are \((8,2,3,7)\). The two regional totals are both ten. A reference \((5,5,5,5)\) is compatible with these regional totals. A reference \((6,6,4,4)\) has the same global total 20 but demands twelve units in the first region and eight in the second. It cannot be reached using only the declared internal edges.
+
+This is an exact obstruction supplied by topology. No improvement in quote arithmetic removes it. A new cross-region route would change the physical graph and could remove the obstruction, but its construction is another physical and institutional question. The field should expose the remaining deviation without pretending that the actor has an unavailable action.
+
+More generally, a cut is a partition of the cells into two sets. The only internal transfers that can change the total on one side are edges crossing that cut. Writing the sum of the component ledger on that side cancels every wholly internal edge. This simple cancellation is useful when auditing a region, even when its individual cells are numerous.
+
+\section{Renaming cells should not change the physics}
+If A and B exchange their numerical indices in a data file, every associated object must be reordered together: state, references, scales, and incidence rows. The physical result should be unchanged. A consistent permutation changes notation, not the model.
+
+For example, the main state \((18,2)\) and column \((-1,1)\) become \((2,18)\) and \((1,-1)\) when the two row labels are exchanged. The same four-unit transfer produces the reordered endpoint \((6,14)\). This is the earlier endpoint \((14,6)\) written in the new order. It must not be confused with physically reversing the action while keeping the original labels.
+
+This distinction is elementary but important in large records. A matrix with correct numbers and the wrong identifier-to-row map can conserve total stock while moving it between the wrong places. Physical identity belongs in the record alongside arithmetic consistency. Stable identifiers make an account reproducible across software ordering choices.
+
+\section{Common questions and practice}
+\emph{Does \(S\) calculate the best route?} No. It records effects of declared edge quantities. A route selector is another object.
+
+\emph{Are all entries of a physical state allowed real numbers?} The state is represented by real coordinates, but admissibility restricts them to the declared nonnegative fixed-mass domain and any further physical conditions.
+
+\emph{Does a zero entry mean a place cannot be affected indirectly?} It means this action column does not directly change that coordinate. Later actions or a richer potential can create other dependencies, which must be represented separately.
+
+For practice, draw A connected to two destinations and add a return edge from one destination. Write all columns and compute their sum for quantities \((3,2,1)\). Your source increment should be \(-4\), the returning destination's net increment \(+2\), and the other destination's increment \(+2\). Explain how the result depends on the declared ordering of coordinates but not on the order in which the three columns are added.
+
+Next remove the return edge. A proposal to return one unit is now unavailable even if it would improve the potential. This illustrates a central boundary: an algebraically attractive direction is not automatically an edge in the physical world.
+
+\begin{intuitionbox}{What to carry forward}
+A cell is a state location. An edge is a directed physical possibility. Its incidence column records source withdrawal and destination delivery. The product \(Sq\) adds finite increments. Feasibility, timing, value, and action selection require their own declarations.
+\end{intuitionbox}
+
+With the map established, we can audit quantities, units, and boundaries. The next chapter follows one physical change without letting a mathematical shorthand create or destroy stock.

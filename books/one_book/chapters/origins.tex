@@ -1,0 +1,73 @@
+\chapter{Two sources of interaction, one measurable total}\label{ch:origins}
+
+\section{The field bends, and the response can bend too}
+A curved potential changes how successive increments are valued. A nonlinear response changes the increments themselves as controls are combined. Both effects can contribute to the same interaction coefficient. To separate them algebraically, we need a smooth response model between the Boolean endpoints.
+
+For this chapter assume the pullback $G=V\circ x$ is sufficiently smooth on a neighbourhood of the relevant control cube. Write $x_i=\partial_i x$, $x_{ij}=\partial_i\partial_jx$, and similarly for higher derivatives. These symbols denote derivatives of the response, not the endpoint of action $i$ alone. The context and subscripts distinguish them from the earlier physical stock coordinates.
+
+\section{The pair chain rule}
+Differentiate once: $\partial_iG=DV(x)[x_i]$. Differentiate again. The derivative can act on $DV$, because the state changes, or on $x_i$, because the response direction changes. Thus
+\begin{equation}\label{eq:pair-chain}
+ \partial_{ij}G=D^2V(x)[x_i,x_j]+DV(x)[x_{ij}].
+\end{equation}
+The first term pairs the two first-order responses through field curvature. The second evaluates the mixed response through the field slope. Integrating their sum over the pair face, with a minus sign, gives $m_E(ij)$.
+
+This is useful when diagnosing a measured pair effect. The same total can arise from different combinations of field curvature and response dependence. If quantities are certified fixed and additive, $x_{ij}=0$ and the second term vanishes. Without that certification, attributing the whole effect to curvature would be unjustified.
+
+\section{The triple chain rule}
+Differentiate Equation~\ref{eq:pair-chain} in a third distinct control. The result is
+\begin{align}\label{eq:triple-chain}
+ \partial_{ijk}G={}&D^3V[x_i,x_j,x_k]\nonumber\\
+ &+D^2V[x_{ij},x_k]+D^2V[x_{ik},x_j]
+   +D^2V[x_{jk},x_i]\nonumber\\
+ &+DV[x_{ijk}].
+\end{align}
+All derivatives of $V$ are evaluated at $x(z)$. There is one pure third-derivative term, three terms mixing field curvature with second response derivatives, and one slope acting on the third response derivative.
+
+For a quadratic $V$, the first term vanishes but the others need not. For an affine response, every response derivative of order two or more vanishes, leaving only the pure derivative of $V$. The formula therefore unifies the two counterexamples of the preceding chapter without changing the meaning of EBU.
+
+\diagram{interaction_origins}{The coalition coefficient belongs to the composite $G=V\circ x$. Potential curvature and response dependence can both contribute. Their smooth derivative decomposition depends on the chosen coordinates and interpolation; the finite table coefficient does not depend on that interpolation.}{fig:origins}
+
+\section{A mixed example with both contributions}
+Take $s=z_1+z_2+z_3$, response $x=s+\alpha z_1z_2$, and potential $V=x^3/6$. Boolean expansion gives
+\begin{equation}\label{eq:mixed-triple}
+ m_E(123)=-1-\frac52\alpha-\frac12\alpha^2.
+\end{equation}
+At $\alpha=1$ this is $-4$. Both cubic field structure and response dependence contribute.
+
+We can see the split directly from the smooth chain rule. At $\alpha=1$, $x_1=1+z_2$, $x_2=1+z_1$, $x_3=1$, $x_{12}=1$, and the other relevant higher response derivatives vanish. Since $V'''=1$ and $V''=x$,
+\begin{equation}
+ \partial_{123}G=(1+z_1)(1+z_2)+x.
+\end{equation}
+The first term integrates over the unit cube to $9/4$, and the second to $7/4$. Their sum is four, so the EBU coefficient is minus four. This checks the finite table by a different route.
+
+The split is informative within this declared model. It would be misleading to describe $9/4$ and $7/4$ as separately observed physical substances. They are terms in the derivative decomposition of a chosen representation.
+
+\section{Why the origin split is not unique}
+Consider two smooth maps on the same pair cube:
+\begin{equation}
+ x^{(a)}=z_1+z_2,\qquad
+ x^{(b)}=z_1+z_2+z_1(1-z_1)z_2,
+\end{equation}
+with $V=x^2/2$. The extra term vanishes at every Boolean vertex. Both maps therefore produce the same four endpoints and the same pair coefficient $m_E(12)=-1$.
+
+For the first interpolation, the integrated curvature and response terms in Equation~\ref{eq:pair-chain} are $1$ and $0$. For the second, they are $7/6$ and $-1/6$. They still sum to one. Appendix~\ref{app:calculus} gives the elementary integrations.
+
+No observation of the four endpoints alone can choose between these interpolations. Thus the finite interaction is invariant under this change, while the named origin split is not. A nonlinear change of state coordinates can similarly move complexity between $V$ and $x$. The total composite contrast is the stable object; a causal or physical interpretation of its components needs additional evidence.
+
+\section{The all-order rule}
+Let $\Pi(T)$ be the set of partitions of the distinct action indices in $T$. For a block $B$, write $x_B=\partial_Bx$. The general chain rule is
+\begin{equation}\label{eq:partition-rule}
+ \partial_T(V\circ x)
+ =\sum_{\pi\in\Pi(T)}D^{|\pi|}V(x)[x_B:B\in\pi].
+\end{equation}
+Each partition groups together the differentiations that act on one response derivative. The partition into singletons gives the highest field derivative; the one-block partition gives the highest response derivative. All mixed cases lie between them.
+
+For distinct labeled derivatives, each set partition appears once. There is no extra factorial to insert into this form. Appendix~\ref{app:partitions} proves the rule by induction and relates it to established multivariable chain-rule work \cite{hardy}.
+
+\section{What a future diagnosis should report}
+A scientifically useful report can state the measured finite coefficient, the endpoint model, the smooth extension used for interpretation, and the derivative terms predicted by that extension. It should then say which elements are independently measured and which are inferred. That record is more useful than a categorical claim that an interaction ``comes from the potential'' when the response is unknown.
+
+For EBU, this offers a disciplined way to locate candidate improvements. A shared pressure limit suggests an engineering response change; a poorly calibrated coupled factor suggests work on the field; unstable baselines suggest better measurement. If those diagnoses are validated, the resulting repairs could improve services and reduce waste. The theorem supplies a way to organize the investigation, not evidence that one intervention will succeed.
+
+We have treated the endpoint response as given. The next part of the argument asks how a declared law of motion can supply it, while keeping the definition of EBU independent of any one generator.

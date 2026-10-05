@@ -1,0 +1,55 @@
+\chapter{Which connections matter for interaction?}\label{ch:topology}
+
+\section{A pipe drawing is only one map}
+A network diagram can show where water may flow without showing which measurements a potential reads, which actions share a machine, or which combinations are feasible. These are different structures. Confusing them can make an account appear local while it omits a remote dependency, or make two actions appear independent while they compete for one capacity.
+
+The physical graph lists transformations. The factor graph lists dependencies of the valuation. The feasible-action poset records which subsets are permitted. The value-interaction hypergraph records which sets have nonzero coefficients. A hyperedge can join three or more actions; it is not necessarily a pipe, a causal link or a contractual group.
+
+\section{Factor support can impose an exact ceiling}
+Suppose the composite landscape has a declared decomposition
+\begin{equation}\label{eq:composite-factors}
+ G(z)=\sum_{a\in\mathcal A}G_a(z_{K_a}),
+\end{equation}
+where $K_a$ contains every action control on which factor $a$ depends. The dependence must be checked after composing the state response with the potential. A local state factor can acquire broad control dependence through a coupled response.
+
+\begin{theorem}{Interaction support cancellation}\label{thm:support}
+For nonempty $T$, if no $K_a$ contains $T$, then $m_E(T)=0$.
+\end{theorem}
+\begin{proof}
+For each factor there is an index in $T$ on which it does not depend. Taking the difference in that index gives zero. Therefore its full $T$-difference vanishes. Linearity of differences gives $\Delta_TG=0$, and the EBU sign relation gives the result.
+\end{proof}
+
+This is a sufficient structural condition, not a converse. Even when a factor depends on all of $T$, its finite difference can cancel. A drawn connection means an interaction is possible under that factor structure; it does not guarantee a nonzero coefficient.
+
+\section{Shared sources and distant factors}
+Under the diagonal quadratic, two deliveries from the same source interact through the source coordinate, even if their destinations are far apart. Their pair term contains the product of the two source withdrawals weighted by the source curvature. The relationship comes from shared state support.
+
+A coupled potential can instead link actions with disjoint write supports. For example, a factor representing jointly required water and energy can change when either service changes. A nonlinear response can add a third layer: one action may alter how another affects a remote coordinate. The correct support is obtained by tracing the actual response and factor dependencies, not by measuring distance on the physical drawing.
+
+For an EBU system this matters both computationally and socially. Complete affected-factor evaluation can reduce unnecessary data collection. But declaring a narrow support merely to avoid inconvenient measurements can conceal an external effect. Mathematical locality should be demonstrated from the model and then challenged against the physical claim.
+
+\section{Small motifs can be studied without claiming universal compression}
+A motif is a small pattern worth examining repeatedly: two actions sharing a source, a relay, an enabling triple, or a small coupled factor. If two motifs have the same complete coalition table up to a relabeling, their coefficients match under that relabeling. This follows immediately by substituting the bijection into the alternating sum.
+
+The premise is stronger than graph isomorphism. Two identical pipe drawings can have different stocks, capacities, field scales, boundary conditions, histories and timing rules. Any of those differences can change the table. Reusing a cached coefficient requires a certificate that all result-affecting inputs and semantics agree, together with invalidation when a dependency changes.
+
+The earlier EBU motif programme requires its A1--A8 conditions jointly for the stronger runtime and history reuse claims. These include complete boundary and composition information, the necessary subset interactions, cache identity and provenance, dependency invalidation, and history-wide boundary equivalence. This book does not replace that full certificate with a drawing or implement a compressed runtime. The algebraic relabeling result proves only what its premise states.
+
+\section{Aggregation can hide the relationship one wants to measure}
+Combining two tanks into a single total preserves mass but loses their internal distribution. A transfer between them then leaves the coarse state unchanged even though the fine potential changes. To preserve the fine value, a coarse representation must retain enough information about internal deviation or include a justified summary of it.
+
+The same issue appears in interaction tables. A region summarized only by its total may hide which local actions share a constrained source. A group may then appear additive at the coarse level because the variables carrying the interaction were discarded. Coarse additivity is not proof of fine independence.
+
+There is a useful exact criterion. If a summary map $r(x)$ and coarse potential $\bar V$ satisfy $V(x)=\bar V(r(x))+c$ on all compared states, then every endpoint difference is preserved. If not, a residual must be retained or the claim narrowed. This statement does not require a particular compression algorithm; it gives a test that any proposed one must meet.
+
+\section{The exponential burden is real}
+An arbitrary order-$k$ coefficient contains $2^k$ table entries, each with a nonzero sign. Without extra assumptions, omitting one leaves the coefficient unidentified: changing that missing entry changes the answer while preserving every observed row. This is an information requirement, not merely a slow implementation.
+
+Known low degree, verified factor support, symmetry or a certified reusable motif can reduce the necessary work. An assumed low-order model can also reduce work, but then its error needs testing. A large system cannot be declared scalable simply because the transform has an elegant formula.
+
+A sensible EBU programme begins with small, physically meaningful motifs and a question that justifies the measurement burden. It may then extend only where the extra order resolves a consequential uncertainty. This approach could support more accountable infrastructure decisions while avoiding a costly collection of high-order numbers with no clear service meaning.
+
+\section{From topology to a physical probability interpretation}
+Everything so far has concerned states, responses and finite values. None of it has required an equilibrium distribution. That is deliberate: a coalition table can be useful in a deterministic or driven setting without claiming canonical physics.
+
+We can now add a probability layer where independently justified. The next chapter shows exactly what the canonical relation contributes and why it does not, by itself, prove reversibility, a motion law, or a universal economic denomination.

@@ -1,0 +1,70 @@
+\chapter{Why the whole path has one endpoint value}\label{ch:path}
+
+\section{Many small changes, one complete comparison}
+A pipe can transfer water steadily or in pulses. During the movement the local marginal changes: the source becomes less full and the destination less empty. If we keep using the first marginal, we will count later units as though the earlier ones never arrived. The integral solves precisely this problem. It follows the changing marginal along the entire represented path.
+
+There are two objects here. The finite definition compares states, $E=V(x_0)-V(x_1)$. The path theorem explains when a continuous calculation gives that same number. The theorem does not define a new kind of EBU or add a charge for traveling between the endpoints. It connects the finite account to local differential information.
+
+Think of measuring elevation along a walk. Adding all upward and downward elevation changes gives the difference between the final and initial heights. A long detour changes the sequence of readings, but not that height difference. Distance walked and effort expended are different quantities. In an EBU application, pumping energy and wear likewise need their own physical representation; they cannot be inferred from the endpoint change of an inventory potential.
+
+\section{The assumptions that make the connection exact}
+\begin{theorem}{Fixed-field path identity}\label{thm:path}
+Let $V$ be a single-valued $C^1$ function on an open neighbourhood of an admissible piecewise $C^1$ path $\gamma:[0,1]\to\mathcal X$, with $\gamma(0)=x_0$ and $\gamma(1)=x_1$. Hold the potential and its parameters fixed throughout the comparison. Then
+\begin{equation}\label{eq:path-main}
+ E=V(x_0)-V(x_1)
+   =-\int_0^1\nabla V(\gamma(s))^{\mathsf T}\gamma'(s)\,ds.
+\end{equation}
+The same statement holds intrinsically on a smooth constrained state manifold, using its differential $dV$ along a piecewise smooth path.
+\end{theorem}
+\begin{proof}
+On each smooth segment the chain rule gives
+$\frac{d}{ds}V(\gamma(s))=\nabla V(\gamma(s))^{\mathsf T}\gamma'(s)$.
+Integrating gives the potential at that segment's end minus the potential at its start. Summing over segments cancels the intermediate endpoints. Negating the result gives the stated sign convention.
+\end{proof}
+
+The proof is short because the important work is in the declaration. We have supplied a state function, the path lies in its domain, and the derivative is regular enough for the fundamental theorem of calculus. We have not started with an arbitrary vector field and tried to prove that a potential exists. That distinction removes a frequently misplaced topological condition: \emph{no simply connected domain is required when the single-valued potential is already supplied}. A hole in the domain does not invalidate the chain rule for a path on which $V$ is defined.
+
+If instead someone gives only a vector field and asks whether it is a gradient, global compatibility becomes a separate problem. Vanishing local curl alone can fail on a domain with holes. That is not the problem solved by defining EBU through an already declared $V$.
+
+\section{What the local differential says}
+Write
+\begin{equation}
+ dE=-dV=-\nabla V(x)^{\mathsf T}dx.
+\end{equation}
+This is an infinitesimal relation along the fixed field. It says how a tiny represented displacement contributes to the full comparison. It does not say that a finite displacement can be priced by one derivative sample. For an edge increment $dx=S_e\,dq$, it becomes $dE=f_e(x)\,dq$, where $f_e=-\nabla V^{\mathsf T}S_e$.
+
+A useful analogy is a meter whose reading changes while a tank fills. Multiplying the first rate by the full duration works only when the relevant rate stays constant. Integrating changing readings is not an optional correction. It is the calculation needed to describe the whole event.
+
+The path parameter $s$ is not necessarily clock time. Replacing it by a smooth increasing parameter changes both the velocity and the integration element, leaving their product and the integral unchanged. Thus the mathematical account need not depend on how quickly an interpolation is traversed. A physical consequence that does depend on speed, such as heating or spoilage, requires a state and action model that actually represents it.
+
+\section{The same endpoints do not mean the same operation}
+Two pumps may move the same quantity between the same tanks while using different amounts of electricity. If the model records only tank stocks, the two endpoints match and the tank EBU matches. That is an exact statement about an incomplete boundary for comparing the pumps' total effects. Add the energy carrier and other relevant changes, and the complete endpoints can differ.
+
+This is why path independence is useful without being a claim that process is irrelevant. It isolates what one account measures. A water-state potential need not be a complete engineering cost functional. Calling its gradient a force does not give it units of newtons or turn its integral into mechanical work. A particular thermal normalization will later connect potential, energy and probability under explicit physical assumptions; it is not presumed here.
+
+The distinction can benefit a future EBU system in two ways. First, it prevents a bookkeeping detour from manufacturing additional value for the same complete change. Second, it makes omissions identifiable: if a supposedly equivalent route uses extra energy, the account must show where that physical difference enters. Better maintenance or route choices could follow from such information, provided the boundary and measurements are adequate.
+
+\section{An integral checked against the endpoints}
+For the familiar two-cell transfer, $V(q)=16-4q+q^2/4$ and $f(q)=4-q/2$. A four-unit movement therefore has
+\begin{equation}
+ E=\int_0^4(4-q/2)\,dq=16-4=12.
+\end{equation}
+Direct evaluation gives the same answer from $V(0)=16$ and $V(4)=4$. A two-stage physical execution gives seven for the first two units and five for the next two. The changing contributions sum to twelve because their baselines join.
+
+The agreement is more informative than a numerical coincidence. If a software quote returns sixteen, it probably kept the first field value for the whole movement. If it returns fourteen by adding two same-baseline two-unit quotes, it probably treated two counterfactual beginnings as one physical history. The endpoint identity gives an independent way to recognize both mistakes.
+
+\section{A path that is declared is not necessarily observed}
+A straight segment between the endpoints is often convenient. On a convex stock domain it stays within that domain. But it is a physical trajectory only if the declared mechanism supplies that timing and simultaneous flow. Endpoint measurements alone cannot prove that every intermediate point occurred.
+
+For the total, every admissible path satisfying the theorem gives the same result. For a decomposition among children or actors, the chosen path can matter. We will therefore calculate the joint outcome and its interaction structure before treating a path split as an attribution rule. A convenient interpolation must remain visible as a convention.
+
+\section{Regularity is part of the theorem}
+The $C^1$ assumptions above are sufficient and easy to check. A weaker formulation can use absolute continuity of $V\circ\gamma$ together with its almost-everywhere chain rule and an integrable derivative. Merely having a derivative almost everywhere is not enough: singular functions can change while their derivative is zero almost everywhere. Appendix~\ref{app:calculus} explains the corresponding issue for repeated finite differences.
+
+For physical work the practical lesson is to distinguish an abrupt event from a smooth path. A jump still has a well-defined endpoint EBU whenever both potentials exist. It need not inherit an ordinary smooth-path description of the actual mechanism. We can keep the exact finite account without pretending that all events are differentiable.
+
+\begin{lawbox}{The connection worth retaining}
+A finite EBU is defined by a state-potential difference. A regular path under the same field integrates to that difference. Path independence protects the total comparison; it neither erases unrepresented process effects nor selects an individual entitlement.
+\end{lawbox}
+
+The next chapter returns to finite actions. With a quadratic potential we can carry out the integral algebraically, keeping the entire curvature correction instead of approximating it away.

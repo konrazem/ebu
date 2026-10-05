@@ -1,0 +1,75 @@
+\chapter{Finite differences, regularity and exact checks}\label{app:calculus}
+
+This appendix supplies details that would interrupt the main explanatory route. Every calculation concerns a declared finite table or analytic expression. None is a simulated trajectory or a new experimental result.
+
+\section{The alternating-sum identity by induction}
+Let $T=\{1,\ldots,k\}$ and let $F$ be defined on the corresponding Boolean cube. For $k=1$, $\Delta_1F(0)=F(1)-F(0)$. Suppose the $k$-fold formula is known. Taking one more difference subtracts the same $k$-fold sum with the new indicator absent from the sum with it present. The first sum gives all subsets containing the new index with sign $(-1)^{k+1-|S|}$, and the second gives all subsets lacking it with that same rule. Thus
+\begin{equation}
+ \Delta_TF(0)=\sum_{S\subseteq T}(-1)^{|T|-|S|}F(\chi_S)
+\end{equation}
+at every finite order. No assumption about the values other than their existence is used.
+
+This proof also establishes commutation of distinct difference operators: the resulting signed sum depends only on the set of indices, not the order of expansion. Ordered physical flows can still fail to commute because their endpoint protocol is a different object.
+
+\section{Repeated FTC with a useful weaker formulation}
+The main theorem assumes $G\in C^k$ on a neighbourhood of the cube. One may weaken this if the repeated one-dimensional FTC steps remain valid. A sufficient formulation is that, in a chosen coordinate order, the successive mixed partials have absolutely continuous representatives on the relevant coordinate sections, their endpoint traces agree with the lower-order derivatives used in the iteration, and the final mixed derivative is integrable with the hypotheses needed for Fubini's theorem. The conditions must cover the boundary sections appearing in the repeated differences, not merely an unspecified almost-everywhere interior derivative.
+
+Under these conditions, apply the one-dimensional absolutely continuous FTC successively. Each step gives an endpoint difference equal to an integral, and the integrability conditions justify the repeated integration. This is a valid weaker route, but it is not a license to replace the hypotheses with ``smooth enough'' without checking them in a piecewise or singular model.
+
+The Cantor function illustrates the risk. It is continuous, increases from zero to one, and has derivative zero almost everywhere, yet the integral of that derivative is zero. It is not absolutely continuous. A statement based only on almost-everywhere differentiability would miss its finite change. For a nonsmooth EBU model, the finite endpoint definition remains available even when a proposed differential representation needs repair.
+
+\section{The remainder estimate in detail}
+For $h_i=\varepsilon d_i$, factor $\varepsilon^k$ out of the multilinear derivative in the repeated-FTC formula. Subtract the derivative at $x_0$. If $D^kV$ is continuous, uniform continuity on shrinking compact neighbourhoods gives a remainder $o(|\varepsilon|^k)$.
+
+If $D^kV$ is Lipschitz in operator norm with constant $L$, the integrand difference is bounded by
+\begin{equation}
+ L|\varepsilon|\left\|\sum_i t_i d_i\right\|
+ \prod_i\|d_i\|
+ \leq L|\varepsilon|\sum_i t_i\|d_i\|\prod_i\|d_i\|.
+\end{equation}
+Multiplying by $|\varepsilon|^k$ and integrating each $t_i$ gives the $L/2$ bound in Equation~\ref{eq:lipschitz-remainder}. This argument does not assume the leading derivative is nonzero. If it vanishes, the bound still controls the remainder but does not identify the next nonzero order without more information.
+
+\section{Checking the mixed cubic example from vertices}
+For $x=z_1+z_2+z_3+\alpha z_1z_2$ and $V=x^3/6$, the singleton states are one, the 12 state is $2+\alpha$, the other pair states are two, and the triple state is $3+\alpha$. Baseline is zero. Therefore
+\begin{align}
+ m_E(123)
+ &=\frac{-(3+\alpha)^3+(2+\alpha)^3+2(2^3)-3}{6}\nonumber\\
+ &=-1-\frac52\alpha-\frac12\alpha^2.
+\end{align}
+At $\alpha=0$ the additive cubic value is $-1$; at $\alpha=1$ it is $-4$. The continuous split in Chapter~\ref{ch:origins} must add to this vertex result, providing a useful independent sign check.
+
+\section{Checking interpolation dependence explicitly}
+For the second pair interpolation in Chapter~\ref{ch:origins}, write the actual map
+\begin{equation}
+ x(s,t)=s+t+s(1-s)t=s+(1+s-s^2)t.
+\end{equation}
+With $V=x^2/2$, the curvature term is $x_sx_t$ and the response term is $x\,x_{st}$. Here
+\[
+ x_s=1+(1-2s)t,\quad x_t=1+s-s^2,\quad x_{st}=1-2s.
+\]
+Integrate in $t$ first. The curvature contribution is
+\begin{equation}
+ \int_0^1(1+s-s^2)(3/2-s)\,ds=\frac76.
+\end{equation}
+The response contribution is
+\begin{equation}
+ \int_0^1(1-2s)\{s+\tfrac12(1+s-s^2)\}\,ds=-\frac16.
+\end{equation}
+Their sum is one. For $x=s+t$, the corresponding pair is $(1,0)$. Both maps agree at all four vertices, so both EBU coefficients equal minus one. The contrast belongs to the vertices; the named derivative split belongs to the smooth interpolation as well.
+
+\section{Affine constraints and quadratic geometry}
+For a constant symmetric positive-definite $H$, minimizing $\tfrac12(x-x^*)^{\mathsf T}H(x-x^*)$ on an affine plane $Ax=b$ is a constrained problem. A stationary interior candidate satisfies
+\begin{equation}
+ H(x-x^*)=A^{\mathsf T}\lambda.
+\end{equation}
+The sign convention for $\lambda$ is arbitrary and fixed here by that equation. Solving the constraint gives the appropriate projected point when $AH^{-1}A^{\mathsf T}$ is invertible. Nonnegativity or other active boundaries require their own constrained conditions.
+
+For one conserved total and diagonal $H_{ii}=\sigma_i^{-2}$, the candidate is
+\begin{equation}
+ x_i=x_i^*+\lambda\sigma_i^2,\qquad
+ \lambda=\frac{M-\sum_i x_i^*}{\sum_i\sigma_i^2}.
+\end{equation}
+It solves the nonnegative problem only when every coordinate is nonnegative. Equal nonzero marginals can therefore characterize a constrained stationary point even when the ambient gradient is not zero. This explains why a zero edge field is not universally the same as reaching the declared reference.
+
+\section{What these checks establish}
+The calculations verify definitions and constructed examples under explicit assumptions. They supply independent routes for reviewing signs and coefficients. They do not establish a calibrated potential, a measured response law or a successful institution. Their value is to make later empirical disagreements easier to interpret.

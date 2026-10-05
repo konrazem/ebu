@@ -1,0 +1,87 @@
+\chapter{When the relationship itself changes}\label{ch:recursion}
+
+\section{A third action can change a pair}
+A water delivery and a refrigeration repair may have a certain combined effect when a clinic already has electricity. If the electrical connection is absent, their relationship may be different. The question is not merely what the third action contributes alone. It is whether the third action changes what the first two contribute together.
+
+This is the intuitive meaning of the third-order coefficient. Higher order continues the same pattern: one more action changes a lower-order interaction. The recursion gives a way to teach, calculate and interpret the hierarchy without treating every order as an unrelated formula.
+
+\section{A finite difference adds one action}
+For $i\notin S$, define
+\begin{equation}
+ (\Delta_iE)(S)=E(S\cup\{i\})-E(S).
+\end{equation}
+The operator compares a row with and without $i$ while holding its background $S$ fixed. For distinct actions $i,j$, the difference operators commute wherever all required rows exist. Expanding either order gives the same four entries.
+
+For disjoint $T$ and $S$, write $\Delta_T=\prod_{i\in T}\Delta_i$. Then
+\begin{equation}\label{eq:context-difference}
+ (\Delta_TE)(S)=\sum_{A\subseteq T}(-1)^{|T|-|A|}E(S\cup A).
+\end{equation}
+It is the interaction among the actions in $T$ at background $S$. At the empty background it is exactly $m_E(T)$.
+
+\begin{theorem}{Discrete difference and recursion}\label{thm:recursion}
+On a complete Boolean table,
+\begin{align}
+ m_E(T)&=(\Delta_TE)(\varnothing),\label{eq:mobius-difference}\\
+ (\Delta_{T\cup\{k\}}E)(S)
+  &=(\Delta_TE)(S\cup\{k\})-(\Delta_TE)(S),\label{eq:recursion}\\
+ (\Delta_TE)(S)&=\sum_{R\subseteq S}m_E(T\cup R),\label{eq:background-dividends}
+\end{align}
+where $S,T,\{k\}$ are disjoint as needed.
+\end{theorem}
+\begin{proof}
+The first identity is the alternating expansion of the product of differences. The second is the definition of one more difference. For the third, expand each $E(S\cup A)$ by Boolean inversion. A coefficient $m_E(B)$ survives the differences precisely when $B$ contains every element of $T$ and its remaining elements lie in $S$. Every such coefficient survives once.
+\end{proof}
+
+This proof also explains why context matters. A pair difference at a populated background can include the empty-background pair coefficient and higher-order coefficients involving that background. Calling all of it ``the pair coefficient'' without naming the background hides those contributions.
+
+\section{The triple written as a comparison of pairs}
+Define the A--B interaction with C present by
+\begin{equation}
+ I_{AB\mid C}=E(ABC)-E(AC)-E(BC)+E(C).
+\end{equation}
+With C absent it is $I_{AB\mid\varnothing}=E(AB)-E(A)-E(B)+E(\varnothing)$. Their difference is
+\begin{equation}\label{eq:triple-recursion}
+ m_E(ABC)=I_{AB\mid C}-I_{AB\mid\varnothing}.
+\end{equation}
+Thus a third-order finding means the pair relationship changed when the third action entered. It does not mean that three standalone benefits were simply added.
+
+\diagram{recursion}{Interaction as a changing relationship. The third-order coefficient compares the same pair contrast with and without C. The fourth order asks how this difference changes when D is present. Every box uses one declared coalition table.}{fig:recursion}
+
+\section{A nonlinear response makes the recursion visible}
+Consider dimensionless controls $z_i\in\{0,1\}$ and the constructed response
+\begin{equation}\label{eq:nonlinear-response-demo}
+ x(z)=z_1+z_2+z_3+z_1z_2,\qquad V(x)=\tfrac12x^2.
+\end{equation}
+Here $x_0=0$. The extra $z_1z_2$ says that the first two controls jointly change the endpoint beyond their separate increments. It is a teaching response map, not a calibrated clinic model. Its complete table is
+\begin{center}
+\begin{tabular}{lrr}\toprule
+Group & $x_S$ & $E(S)$\\\midrule
+$\varnothing$ & 0 & 0\\
+$1,2,3$ individually & 1 & $-1/2$ each\\
+$12$ & 3 & $-9/2$\\
+$13,23$ & 2 & $-2$ each\\
+$123$ & 4 & $-8$\\\bottomrule
+\end{tabular}
+\end{center}
+The A--B pair contrast without C is $-9/2+1/2+1/2=-7/2$. With C it is $-8+2+2-1/2=-9/2$. Their difference is $-1$, the genuine triple coefficient.
+
+All endpoint values here are negative because the example moves away from the minimum of $V$. This is useful: it stops a discussion of structure from quietly turning into a success story. The response illustrates higher-order dependence regardless of whether a particular institution would want the action.
+
+\section{A quadratic null also has an interpretation}
+For fixed additive increments and a quadratic potential, the A--B pair coefficient is independent of whether C is included. Therefore the triple difference is zero. The cancellation is a substantive prediction about this declared landscape. It is not a statement that C has no standalone effect, that all actors are independent, or that the physical system contains no shared constraints.
+
+If a measured triple differs from zero beyond its uncertainty, one or more assumptions behind that null may fail. The response could be nonlinear, the potential nonquadratic, the baseline inconsistent, or the measurements biased. The result narrows a question; it does not uniquely identify the responsible mechanism. Later chapters make these alternatives explicit.
+
+\section{Fourth order does not require a new kind of arithmetic}
+Let $I_{ABC\mid D}=(\Delta_A\Delta_B\Delta_C E)(\{D\})$. Then
+\begin{equation}
+ m_E(ABCD)=I_{ABC\mid D}-I_{ABC\mid\varnothing}.
+\end{equation}
+The pattern continues at every order. This is an exact recurrence, not an approximation valid only for small actions. It works because the table has discrete absent/present coordinates and all needed rows are supplied.
+
+In an EBU research programme the recursion supports small, interpretable studies. Begin by checking two-action interactions. Add a third action only when the scientific question concerns a change in that relationship. This can reduce the temptation to fit a large opaque model whose high-order coefficients lack a physical interpretation.
+
+\section{What this could improve in a service system}
+Some infrastructure failures arise from dependencies among dependencies. A repair can help only when another service works, and that relationship can itself depend on a third condition. A recursive interaction account provides a vocabulary for such situations. It could help identify which combination of interventions deserves joint evaluation and which apparent benefit is already explained by smaller components.
+
+The possible societal gain is better targeting of investigation and investment, not an automatic allocation rule. The table does not decide which community deserves service first. It can provide evidence about how the represented actions depend on one another, leaving need, rights and access as explicit decisions. We now turn this hierarchy into an exact finite analogue of a Taylor expansion.

@@ -1,0 +1,121 @@
+\chapter{Positive, zero and negative EBU in real needs}\label{ch:signs}
+
+\section{The sign belongs to an action in a state}
+The same stock transfer can arrive where it is urgently needed, where stock is already well placed, or where delivery displaces something else. The name of the product does not determine the sign of its EBU. The declared before-state, complete physical transformation and fixed potential determine the calculation.
+
+This statement is sometimes uncomfortable because everyday language uses ``valuable'' for several different things. A treatment can be valuable to a patient. A delivery can have a high market price. A redistribution can lower a particular stock potential. These statements may all be true, but they do not express the same relationship.
+
+The examples in this chapter keep the physical account visible alongside service and human need. All numbers are invented teaching inputs. They are not clinical guidance, a valuation of a life or a claim that medicine can be represented adequately by two stocks.
+
+\begin{intuitionbox}{Read the sign with its noun}
+Positive EBU means the declared fixed potential fell across the complete represented transition. It does not mean a good person, an adequate wage, a complete cure or a socially optimal decision. Negative values are equally specific.
+\end{intuitionbox}
+
+\section{One delivery, three starting states}
+Use two storage locations with compatible references $(10,10)\X$ and scales $(2,2)\X$. A delivery sends $2\X$ from the first to the second, with perfect quantity retention in this ideal illustration. Any energy use would require an additional represented carrier and is outside this two-stock example.
+
+Start first from $(18,2)\X$. The potential is 16; the successor $(16,4)\X$ has potential 9. The delivery's field value is $+7$. The clinic still has less than its declared reference, so a positive result does not mean all relevant needs have been met.
+
+Now start from $(11,9)\X$. The potential is $1/4$. The same delivery produces $(9,11)\X$, also with potential $1/4$. Its field value is zero. Two physical stocks changed, and medicine reached the clinic, but the chosen quadratic assigns equal deviation to the endpoints.
+
+Finally start from $(10,10)\X$. Potential is zero. The same delivery produces $(8,12)\X$, whose potential is 1. The field value is $-1$. This is the simplest example of a permitted physical change that moves the modeled system away from its reference.
+
+\begin{center}
+\begin{tabular}{llll}\toprule
+Before & After & $V$ before/after & $E$\\\midrule
+$(18,2)$ & $(16,4)$ & $16\to9$ & $+7$\\
+$(11,9)$ & $(9,11)$ & $1/4\to1/4$ & $0$\\
+$(10,10)$ & $(8,12)$ & $0\to1$ & $-1$\\\bottomrule
+\end{tabular}
+\end{center}
+
+The common action description is not enough to reproduce any of the three answers. The starting state is indispensable. So is the fixed field: using different references would ask a different question.
+
+\section{A zero is not an empty event}
+In the middle example, the source and destination exchange their deviations. The endpoint states differ, although their potentials agree. A scalar function assigns one number to a state containing several numbers; equal potential generally does not imply equal state.
+
+This matters for interpretation. One endpoint may have a different available route, future need or exposure to failure. Those differences can change later opportunities even when current $V$ is equal. They cannot be recovered from the scalar alone. A complete action record keeps the state, not merely its potential.
+
+Zero can also arise when the total increment of a group cancels. Two opposing ideal transfers may leave the net stocks unchanged. That does not establish that real pumps consumed no electricity. If pumping energy is in scope, its transformation must be represented through the appropriate carrier or boundary. A richer state can therefore give a different EBU from the ideal two-stock calculation without adding an unrepresented charge to the equation.
+
+\section{The full quantity can reverse the initial sign}
+Return to $(18,2)\X$. A small A-to-B transfer improves the Gaussian field, but the exact schedule is
+\[
+ E(q)=4q-q^2/4.
+\]
+At $q=8$, the endpoint is the reference and $E=16$. At $q=16$, the endpoint is $(2,18)$ and $E=0$. At $q=17$, the endpoint is $(1,19)$, whose potential is $81/4=20.25$, giving $E=-4.25$.
+
+The positive initial slope did not promise that every amount in that direction would be beneficial. The transfer passed through the reference and continued until the full action increased deviation. A finite calculation includes the entire movement. A slope is a nearby statement.
+
+One could design a controller that chooses $q=8$ to maximize this particular schedule. That is an additional selection rule, not part of the definition of EBU. A different actor might choose an amount for a deadline, a random menu or another objective. This book teaches the measurement without silently building a maximizer into the word ``field.''
+
+\section{An essential action can have negative field value}
+Suppose a patient needs a dose at the second location, while the simplified inventory reference currently places equal stock at both locations. The example starting at $(10,10)$ says a two-unit transfer has field value $-1$. It does not tell us whether the patient should receive treatment.
+
+The potential may not represent clinical timing, patient condition, dose compatibility, expiry or access. A reader who turns $-1$ into automatic refusal has supplied a social rule and a claim of model completeness that the equation never contained. A reader who changes the result to positive because the patient needs help has replaced the declared physical comparison with a different judgment.
+
+An honest account can state both: the represented inventory deviation increased by one, and the delivery met a separately described urgent need. If the scientific model is inadequate for the intended decision, its scope must be revised through explicit evidence and governance. The old event remains described by the field actually used.
+
+\begin{cautionbox}{An action is not a person}
+Do not say that a patient ``is a burden of one EBU.'' Say which delivery action changed which represented state under which field. A human need and a person's claim to care are not coordinates in this two-tank demonstration.
+\end{cautionbox}
+
+\section{Feasibility, value and service are separate tests}
+A movement can have positive hypothetical value while being physically impossible. If A contains only one unit, an instruction to remove two cannot be made valid by a favourable clinic term. Conservation and source availability constrain the action before its potential difference is treated as an executable opportunity.
+
+A feasible action can fail a service requirement. A delivery arriving after a deadline may preserve a stock balance while failing its intended use. Time can be part of the represented state, a constraint or a separately reported outcome, but it cannot be omitted and then assumed satisfied.
+
+A negative action can be feasible and successful on a service dimension. The three dimensions therefore form a small report, not a single ranking:
+\begin{center}\small
+\begin{tabular}{P{0.20\linewidth}P{0.24\linewidth}P{0.46\linewidth}}\toprule
+Physical status & Field status & Service interpretation\\\midrule
+Feasible & Positive & Can improve the field while leaving demand unmet\\
+Feasible & Zero & Can move goods without changing the chosen potential\\
+Feasible & Negative & Can meet a need while worsening represented deviation\\
+Infeasible & Any hypothetical sign & No executed candidate follows from the sign\\\bottomrule
+\end{tabular}
+\end{center}
+
+The report avoids calling every dimension ``success.'' A later scientific comparison must declare which outcomes matter and how conclusions are drawn. Choosing that interpretation after seeing results would change the question being tested.
+
+\diagram{account_layers}{Physical stock, potential and an action account answer different questions. Their records must be linked without treating them as the same quantity.}{fig:account-layers}
+
+\section{A repair needs a represented physical consequence}
+A mechanic repairs a pump. A water-stock model that observes only the current litres may show no immediate change in $x$. Under that model, the stock field effect is zero. This is not evidence that repair is useless; the model lacks the equipment condition or other capacity coordinate needed to describe the benefit.
+
+One option for future research is to represent a certified physical equipment state. That requires a definition, unit, measurement method and justified contribution to a potential. Merely writing ``pump repaired'' in a field does not supply these. Another option is to report the repair in a linked physical record while observing its later effects without issuing an invented current field reward.
+
+The distinction also applies to diagnosis. Finding a leak provides useful information. If no physical coordinate in the model changes, a separate claim of positive physical field reduction needs an information or service model that actually defines such a change. Professional effort deserves consideration in compensation, but occupation and effort do not replace the state difference.
+
+\section{Five layers in an infrastructure decision}
+Consider building a shared cold store. First describe construction: materials, energy, land, transport and waste, with appropriate carriers and boundaries. Second describe what capability has been established and how it is measured. Third identify who has authority to approve the construction. Fourth determine who bears its institutional responsibilities. Fifth specify how workers and providers are compensated.
+
+These five questions can refer to one project without becoming one equation. A high future service expectation does not erase present construction burden. Conversely, a negative present physical account does not show that investment should never occur. Long-term planning can consider future outcomes, but its forecast is not an observed action receipt.
+
+A changed route or machine can also alter future action maps and efficiencies. That is a versioned physical and modeling change. The old route's receipts should remain interpretable under the old description; the new route's receipts should identify the new description. Rewriting old efficiencies would make improvement impossible to audit.
+
+\section{The rural clinic as a linked case}
+The clinic needs medicine, refrigeration, water and a working backup supply. In ordinary conversation these form one service. Physically they contain different carriers and transformations. The medicine transfer changes dose stocks; refrigeration transforms energy while maintaining temperature; water delivery changes water stocks; repair changes equipment condition when that state can be measured.
+
+Linking these records preserves dependence: medicine can become unusable without refrigeration, and a clinic can cease functioning without water. Adding their numerical EBU values without a declared common calibration would hide differences of meaning. A small positive water account cannot automatically compensate for an unrepresented failure of medicine storage.
+
+The teaching scalar is useful because it allows complete arithmetic. It is not useful if we forget why it is small. For a real clinic, the scientific task includes deciding which states and dependencies are necessary for the intended claim. The potential must be evaluated as a model of that task, not as a universal vocabulary of health.
+
+\section{Recurring burdens can inform redesign}
+Suppose repeated emergency deliveries are physically expensive. The records can motivate questions about regional storage, local production, repair skills or transport reliability. They cannot by themselves prove which investment will succeed. Comparing a new store with existing deliveries requires consistent service, time horizon, boundary and uncertainty treatment.
+
+This is a place where monetary and physical records can complement one another. A financially inaccessible improvement might reduce physical burden. A financially attractive improvement might shift burden outside the current boundary. An institutional study must examine access and distribution alongside physical consequences.
+
+Such questions preserve the original book's ambition while making its status clear. EBU may provide information useful for adaptation. Whether people can act on it, whether benefits are captured, and whether outcomes improve are empirical and institutional questions. A sequence of exact receipts is evidence about the recorded events, not automatic proof of a just transition.
+
+\section{Guided problem: different needs at equal potential}
+Use the same field and compare $(14,6)$ with $(6,14)$. Both have potential 4. From each, consider a two-unit first-to-second transfer. The first ends at $(12,8)$ with potential 1 and has value $+3$. The second ends at $(4,16)$ with potential 9 and has value $-5$.
+
+The starting potentials were equal, but the local directions were different. This shows why recording only $V$ loses decision-relevant state information. Now suppose the second location in both cases has a separate urgent deadline. That service fact does not change the arithmetic. It changes the complete interpretation and may reveal that the current reference model needs additional representation.
+
+\section{Practice and reflection}
+For $x^{\mathrm{b}}=(12,8)$, calculate a two-unit and a four-unit transfer. The initial potential is 1. The first transfer reaches $(10,10)$ and gives $+1$; the second reaches $(8,12)$ and gives zero. State a reason why the zero-value action might still have a separately measured service outcome.
+
+Then describe a useful maintenance action whose immediate benefit is missing from a stock-only model. Identify the missing physical quantity, possible evidence for it, and the institutional question that would remain even after it was measured. Do not assign a number to the benefit without defining the new field.
+
+Finally rewrite the sentence ``This household caused five negative EBU'' as an action-specific report. A good answer identifies the device or transport event, model version, physical cause, service delivered and measurement status. It avoids converting a receipt into a judgment of the household's worth.

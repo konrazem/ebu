@@ -1,0 +1,106 @@
+\chapter{The exact local signed EBU quote}\label{ch:quote}
+
+\section{The action finally has a number}
+We have taken care to identify a physical state, a reference, a potential and
+an action that can actually occur. Only now is it safe to attach a number to
+the action. The number is not the quantity delivered, the price paid or the
+initial slope of the potential. It is the complete change in the declared
+potential between the accepted predecessor and successor.
+
+Let $x^{\mathrm{b}}$ be the state immediately before an action, let $q$ be its finite
+source-side quantity, and let $S_e$ be the declared increment per unit of
+that quantity. Under one fixed field $V$,
+\begin{equation}\label{eq:exact-local-ebu}
+ E_e(q)=V(x^{\mathrm{b}})-V(x^{\mathrm{b}}+S_e q).
+\end{equation}
+Positive $E_e$ means the represented potential fell. Negative $E_e$ means it
+rose. Zero means the two endpoints have equal potential; it does not prove
+that the action was empty. The complete increment and the version of $V$
+belong beside the number on any trustworthy quote.
+
+\begin{lawbox}{The finite definition}
+For a fixed, declared potential, exact finite EBU is before-potential minus
+after-potential for the complete accepted physical change. It is not defined
+by the local gradient approximation, a monetary price or an extra charge
+invented after the event.
+\end{lawbox}
+
+\section{Why a local computation can give the whole answer}
+Suppose the potential is a sum of factors, $V=\sum_\alpha\phi_\alpha$, each
+with a declared set of input coordinates. An action changes only some of
+those coordinates. In $V(x^{\mathrm{b}})-V(x^{\mathrm{b}}+S_eq)$ every factor whose inputs are unchanged
+cancels exactly. Thus a local evaluator needs the changed factors and their
+complete inputs, not a new calculation over every untouched place in the
+system. This is the precise mathematical answer to the opening question of
+how a local action can be assessed without a global recalculation each time.
+
+Local evaluation does not license incomplete observation. If a factor couples
+the source to a downstream or environmental coordinate, that entire factor
+must be reevaluated. If an action changes an energy carrier as well as water,
+the complete physical increment must say so. Computational locality follows
+from a declared factorization; it is not a promise that the physical world
+has no long-range dependencies.
+
+\section{The Gaussian expression is a theorem below the definition}
+For the quadratic potential of Chapter~\ref{ch:potential}, write
+$H=\operatorname{diag}(1/\sigma_i^2)$ and $\mu(x^{\mathrm{b}})=H(x^{\mathrm{b}}-x^*)$. Exact expansion
+of the squares gives
+\begin{equation}\label{eq:gaussian-exact-ebu}
+ E_e(q)=-q\,\mu(x^{\mathrm{b}})^T S_e-\frac{q^2}{2}S_e^T H S_e.
+\end{equation}
+The first term uses the initial slope. The second tells us how the slope
+changes over the finite action. No small-$q$ approximation has been made.
+For a lossless transfer from $i$ to $j$, $S_e=-e_i+e_j$, and the expression
+becomes
+\begin{equation}
+ E_e(q)=q(\mu_i-\mu_j)
+       -\frac{q^2}{2}\left(\frac1{\sigma_i^2}+\frac1{\sigma_j^2}\right).
+\end{equation}
+This edge polynomial is a corollary for this physical increment and this
+quadratic potential. It is not the general definition of EBU. A lossy route,
+a valued sink or a coupled potential changes the specialized formula while
+leaving Equation~\ref{eq:exact-local-ebu} intact.
+
+\section{One calculation with three independent readings}
+Return to the lossless two-cell state $(18,2)$, reference $(10,10)$ and
+scales $(2,2)$. A four-unit transfer reaches $(14,6)$. Direct evaluation
+gives $V_{\mathrm{pre}}=16$ and $V_{\mathrm{post}}=4$, hence $E=12$.
+
+The Gaussian expansion gives the same result: the initial edge field is
+$4$ per stock unit and the directional curvature is $1/2$, so
+$E=4(4)-(1/2)(4^2)/2=12$. Along the linear evaluation path the field falls
+from $4$ to $2$; its average is $3$, and integrating over four units again
+gives $12$. These are three derivations of one number, not three independent
+claims of value.
+
+The agreement is useful for checking software, but it does not establish that
+four units were available, that a pump ran, or that a clinic was served.
+Physical permission comes from the action model; occurrence comes from the
+event record; service comes from a separately declared outcome condition.
+
+\section{The cost of an omitted carrier}
+If a pump consumes electricity and that consumption matters to the claim,
+one may extend the physical state with an energy coordinate and declare the
+pump's full transition. The potential over that extended state then evaluates
+its chosen consequences. If some loss crosses the model boundary, the
+boundary crossing must be explicit. By contrast, adding a number called
+``process burden'' to the right of Equation~\ref{eq:exact-local-ebu} would
+create a different account. It cannot silently redefine the physical EBU.
+
+There is room for engineering cost ledgers and institutional charges. Their
+units, provenance and decision role should be written alongside EBU, not
+confused with it. That separation lets a reader ask which question each
+number answers and prevents the same physical loss from being counted twice.
+
+\section{From a quote to a record}
+Before execution, a quote names a possible predecessor, potential version,
+action increment and quantity. After execution, an event record must say
+which quantity was actually accepted and which complete successor occurred.
+The recorded EBU is recalculated from that pair. If the world changed between
+quotation and execution, the old quote is an historical proposal, not the
+current baseline.
+
+The number can then be attributed to actors only under a declared rule. An
+exact group total does not by itself decide who owns it or what anyone may
+spend. We will first follow the physical event into its record, then return
+to the more difficult case of several actions sharing one field.

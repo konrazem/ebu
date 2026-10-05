@@ -1,0 +1,69 @@
+\chapter{When actions change one another's physical effects}\label{ch:composite}
+
+\section{The endpoint rule belongs in the mathematics}
+Two pumps can compete for pressure. One repair can enable a delivery that otherwise stops halfway. A resolver can reduce accepted quantities when a shared source is exhausted. In each case the physical endpoint of a group need not equal the starting state plus a fixed vector for each member.
+
+The appropriate general object is a response map $x(z)$. The controls $z$ describe the actions; the response describes what physical state they produce. The potential then evaluates that state. The composite
+\begin{equation}\label{eq:composite-map}
+ G(z)=V(x(z))
+\end{equation}
+is the landscape seen by the coalition calculation. Keeping both stages visible prevents a nonlinearity in physical response from being misdiagnosed as a new feature of the potential.
+
+\section{The exact condition for a high-order coefficient}
+For any declared endpoint map on the Boolean vertices and any nonempty $T$,
+\begin{equation}\label{eq:composite-difference}
+ m_E(T)=-\Delta_TG(0).
+\end{equation}
+Thus a nonzero order-$k$ coefficient occurs exactly when the corresponding $k$-fold finite difference of the composite is nonzero. This condition requires no smoothness. It is necessary and sufficient for that table and baseline.
+
+It would be too strong to replace it with ``nonlinearity creates synergy.'' Nonlinearity can create a high-order term, but it can also cancel under composition or vanish on the relevant vertices. A correct result must inspect the actual composite contrast.
+
+\section{A quadratic potential with a triple interaction}
+Use a family extending the response of Chapter~\ref{ch:recursion}:
+\begin{equation}
+ x(z)=z_1+z_2+z_3+\alpha z_1z_2,
+ \qquad V(x)=\tfrac12x^2,
+ \qquad x_0=0.
+\end{equation}
+The square contains $2\alpha z_1z_2z_3$ before multiplication by $1/2$. All other terms either involve fewer than three distinct controls or reduce to lower-order Boolean monomials. Therefore
+\begin{equation}\label{eq:quadratic-nonlinear-triple}
+ m_E(123)=-\alpha.
+\end{equation}
+At $\alpha=1$ the table already calculated gives $-1$. The field is still quadratic. The third action changes the value of the pair response through the composition.
+
+This is a particularly helpful counterexample for EBU. A finite capacity resolver, a completion rule or an enabling action can change accepted physical effects with membership. A quadratic evaluator downstream of that mechanism does not guarantee a pair-only coalition table. Certifying the evaluator's formula is only half of the structural check.
+
+\section{Even a linear potential can have high-order response effects}
+Take a scalar field $V(x)=x$ and the constructed response $x(z)=z_1z_2z_3$, again from baseline zero. Every proper subset produces zero, while the full group produces one. Hence $E(123)=-1$ and all proper nonempty values are zero, so $m_E(123)=-1$.
+
+There is no curvature in this potential. The entire three-way dependence is in the response: all three controls are required for the endpoint to change. This example resembles an enabling chain in its logic, but its unit response is a mathematical declaration, not a measured law for any particular machine or institution.
+
+The operational implication is constructive. When a high-order effect is found, examine the response before complicating the field. It may be more faithful to represent the actual enabling mechanism than to force the effect into a fitted potential term.
+
+\section{A nonlinear response with no interaction at all}
+Now let
+\begin{equation}
+ x(z)=\sqrt{1+z_1+z_2+z_3},\qquad V(x)=\tfrac12x^2.
+\end{equation}
+The baseline is $x_0=1$. Although $x(z)$ is nonlinear,
+\begin{equation}
+ G(z)=\tfrac12(1+z_1+z_2+z_3),
+ \qquad E(S)=-\tfrac12|S|.
+\end{equation}
+All interactions above singletons vanish. The nonlinear response and the nonlinear field cancel in the composite. This exact example is why a list of nonlinear ingredients is not enough to establish a nonzero interaction.
+
+Nor does a zero coefficient prove that the ingredients are simple. In an application, one may need additional measurements to distinguish additive response from cancellation. The final group values alone identify the finite landscape, not every internal mechanism that could produce it.
+
+\section{How a resolver changes the scientific question}
+Suppose A and B each request four units from a source holding six. A declared proportional resolver accepts three each when both are present, while accepting four when either acts alone. The table uses different accepted increments in different rows. That is a well-defined intervention family if the resolver is part of the protocol.
+
+It is not the fixed-increment table of two three-unit actions, nor of two four-unit actions. A theorem about either fixed vector cannot be applied to the resolver table without re-derivation. Even when the resolver's endpoint happens to yield only pair structure in one small case, no general degree ceiling follows from a quadratic field alone.
+
+For a future EBU system, the record should retain request, acceptance and realized endpoint. This helps explain whether a negative interaction reflects a shared physical limit, a field coupling or a decision rule. It could improve transparency around scarce services: people could see which constraint changed the outcome rather than being told only that their group received a lower score.
+
+\section{What can be learned from a finite table}
+An exact coalition table determines its Möbius coefficients. It usually does not identify a unique smooth response between the vertices, a unique causal mechanism, or a unique split into potential and response origins. Those stronger claims need additional structure or interventions.
+
+This limitation does not reduce the value of the table. It tells us what the table is good for: reproducible comparisons among declared alternatives, model checks, and focused questions for further measurements. Used carefully, it can inform planning without turning a fitted explanation into an asserted law of society.
+
+To see how the two sources of nonlinearity enter a smooth model, we next differentiate the composite. The resulting chain rule gives a precise explanation, while also revealing why its division into named origins depends on the chosen representation.

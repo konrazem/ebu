@@ -1,0 +1,71 @@
+\chapter{Interaction as a contrast of probabilities}\label{ch:probability-interactions}
+
+\section{The same table in a second language}
+Under the canonical density relation, a decrease in potential corresponds to an increase in equilibrium density. Each coalition value can therefore be read as a log density ratio. Applying the same alternating signs to the log densities gives the same interaction coefficient.
+
+This is a continuity result: the object being transformed has changed language, while the finite coalition operation has stayed the same. It is not a new source of value to add to the physical account. When its assumptions hold, the two expressions describe one comparison.
+
+\begin{theorem}{Canonical-density Möbius identity}\label{thm:probability-mobius}
+Assume a complete coalition table, one fixed reference measure and support, $0<Z<\infty$, and positive finite densities $p(x_S)=Z^{-1}e^{-V(x_S)}$ at all required endpoints. Then
+\begin{align}\label{eq:probability-value}
+ E(S)&=\ln\frac{p(x_S)}{p(x_0)},\\
+ m_E(T)&=\sum_{S\subseteq T}(-1)^{|T|-|S|}\ln p(x_S)
+ \qquad(T\ne\varnothing).\label{eq:probability-mobius}
+\end{align}
+Equivalently, the coefficient is the logarithm of the product of densities raised to the corresponding alternating powers.
+\end{theorem}
+\begin{proof}
+The density relation gives $\ln p(x)=-V(x)-\ln Z$. Subtracting the two endpoint logs gives Equation~\ref{eq:probability-value}. A nonempty Boolean difference annihilates both constant normalization terms. The remaining signed log sum is the EBU coefficient. Exponentiating the sum gives the product form.
+\end{proof}
+
+The algebra uses the density relation at the named points. To call it a physical canonical result, the ensemble and calibration conditions of Chapter~\ref{ch:equilibrium-bridge} must be justified independently. Neither stationarity nor reversibility is proved by this finite algebra.
+
+\section{The pair product}
+Writing $p_S=p(x_S)$ and $p_0=p(x_0)$, a normalized two-action table gives
+\begin{equation}\label{eq:pair-log-product}
+ m_E(AB)=\ln\frac{p_{AB}p_0}{p_Ap_B}.
+\end{equation}
+The denominator combines the two standalone density readings. The numerator combines the joint endpoint with the shared baseline. The ratio equals one precisely when this pair contrast is zero.
+
+For the courier table, potential values are $16,9,9,4$. Their densities have a common unknown normalization. Substitution gives
+$\ln[e^{-4}e^{-16}/(e^{-9}e^{-9})]=-2$, with the normalizer canceling. This checks the physical pair correction in probability language. It is an algebraic illustration using the stipulated density relation, not an independent empirical validation of that relation.
+
+\section{The triple product}
+The eight-term contrast becomes
+\begin{equation}\label{eq:triple-log-product}
+ m_E(ABC)=\ln
+ \frac{p_{ABC}p_Ap_Bp_C}{p_{AB}p_{AC}p_{BC}p_0}.
+\end{equation}
+The same recursive interpretation survives: it measures how a pair log contrast changes when the third action is present. The powers and signs are fixed by Boolean inversion. They must not be guessed from a verbal claim that synergy should be positive.
+
+When densities are very small, direct products can be numerically unstable. A future implementation would normally add log densities with their signed coefficients. That is a numerical representation choice, not a change in the physical definition. Zeros require separate treatment: a zero-density endpoint produces an undefined or infinite logarithm, not a finite coefficient to be smoothed away without a model.
+
+\section{Endpoint densities are not action probabilities}
+The entries $p(x_S)$ describe density at physical endpoints. They are not generally probabilities of the binary action pattern $S$. Different coalitions can reach the same endpoint, and a physical density need not sum to one when sampled at a handful of endpoints.
+
+One can define artificial normalized weights $q(S)=p(x_S)/\sum_Rp(x_R)$ on the action patterns. Their nonempty log contrasts match the endpoint contrasts because this new normalizer also cancels. But that construction does not show that actors actually choose according to $q$, or that the resulting binary variables are causally independent.
+
+If a positive binary joint distribution $q$ is independently specified, its pair contrast on a fixed face is an ordinary log odds ratio. A zero pair contrast in the face with all other variables absent does not establish unconditional independence. For example,
+\begin{equation}
+ \ln q(z)=\text{constant}+a z_1z_2z_3
+\end{equation}
+has zero pair contrast for actions 1 and 2 when $z_3=0$, but pair contrast $a$ when $z_3=1$. The context changes the relationship exactly as the recursion predicts.
+
+\section{Several quantities called information remain different}
+A pointwise log-density contrast is not an alternating sum of marginal entropies. Interaction information uses marginal entropy combinations; multi-information compares a joint distribution with the product of its marginals. Connected information compares successive maximum-entropy models. Cumulants use a log moment-generating function and a different combinatorial structure.
+
+These constructions can all describe dependence, but they answer different questions and need not give the same number or sign. A claim that EBU interaction is one of them requires a precise derivation under the relevant distribution and coding convention. The common word ``information'' does not establish the equality.
+
+This is especially important in communication with non-specialists. A positive coalition coefficient should not be translated into ``more information'' or ``more cooperation'' without defining that statement. A future system benefits from labels that preserve what was measured rather than borrowing the authority of a familiar term.
+
+\section{The prior-art connection}
+Gibbs and log-linear representations, Möbius inversion, cooperative-game dividends and interaction decompositions have extensive antecedents. Jansma explicitly connects higher-order energy interactions, probability contrasts and game-theoretic decompositions in this general mathematical family \cite{jansma2025,jansma2023}. The EBU formula here should be read in that context, not presented as a newly invented inversion principle.
+
+The derivation above fixes its own sign from $E=V(x_0)-V(x_S)$ and $\ln p=-V-\ln Z$. This provides a direct check without relying on an isolated intermediate equation in another text. The versioned equation-level source comparison remains available in the project's prior-art appendix \cite{smg-prior}.
+
+\section{A two-branch measurement could test the connection}
+A future experiment could calculate a coalition contrast from independently calibrated physical potential and estimate the corresponding log-density contrast from separate observations. Agreement would be meaningful only if the first branch was not defined by fitting the second to agree, and if endpoints, reference measure and uncertainty were compatible.
+
+Such a test could expose faulty calibration, an omitted density-of-states term, drift or a response mismatch. Its possible benefit to EBU is a more trustworthy physical denomination. It would still be evidence about the tested system and field, not proof that unlike resources share one universal scale.
+
+The remaining thermal step is narrower. Under the accepted conservative single-reservoir benchmark, the same potential difference can be expressed as a medium entropy change. The next chapter keeps every assumption visible while carrying the interaction transform through that equality.

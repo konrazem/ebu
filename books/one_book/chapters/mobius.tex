@@ -1,0 +1,82 @@
+\chapter{Finding the part that only a group contributes}\label{ch:mobius}
+
+\section{Subtract what has already been explained}
+When two actions act together, their total can include what each would do alone and a further correction for being combined. With three actions, subtracting only the singleton values is insufficient. Some of the difference may already be explained by pairs. A genuine three-way coefficient is what remains after every lower-order contribution has been accounted for exactly once.
+
+This idea is easier to understand as bookkeeping than as new terminology. If a sum contains individual terms and pair terms, those terms must be removed before naming the remainder ``three-way.'' Möbius inversion provides the general rule for that subtraction. The name refers to a well-established mathematical construction, not an additional physical force discovered by EBU.
+
+\section{The interaction coefficient}
+\begin{definition}{Boolean Möbius coefficient}\label{def:mobius}
+For a complete finite coalition table $E:2^N\to\mathbb R$, define
+\begin{equation}\label{eq:mobius-main}
+ m_E(T)=\sum_{S\subseteq T}(-1)^{|T|-|S|}E(S).
+\end{equation}
+In particular $m_E(\varnothing)=E(\varnothing)$. For the normalized landscape the empty coefficient is zero.
+\end{definition}
+
+The sign alternates as entries are added or removed. A singleton has $m_E(\{i\})=E(i)-E(\varnothing)$. A pair has
+\begin{equation}
+ m_E(ij)=E(ij)-E(i)-E(j)+E(\varnothing).
+\end{equation}
+Thus the two-courier coefficient is $12-7-7+0=-2$. It is a negative correction to the same-baseline singleton sum. It is neither a two-unit physical loss nor a two-unit charge added to a twelve-unit receipt.
+
+For three actions the alternating sum is
+\begin{align}\label{eq:triple-main}
+ m_E(123)={}&E(123)-E(12)-E(13)-E(23)\nonumber\\
+            &+E(1)+E(2)+E(3)-E(\varnothing).
+\end{align}
+The singleton signs become positive because each singleton was subtracted twice inside the three pair terms. Inclusion--exclusion restores the correct count.
+
+\section{Why all the pieces reconstruct the whole}
+\begin{theorem}{Boolean inversion}\label{thm:inversion}
+For every $S\subseteq N$,
+\begin{equation}\label{eq:inversion}
+ E(S)=\sum_{T\subseteq S}m_E(T).
+\end{equation}
+The coefficients are unique.
+\end{theorem}
+\begin{proof}
+Insert the definition of $m_E(T)$ and collect the coefficient of one fixed $E(A)$ with $A\subseteq S$. That coefficient is
+$\sum_{A\subseteq T\subseteq S}(-1)^{|T|-|A|}=(1-1)^{|S\setminus A|}$.
+It is zero unless $A=S$, when it equals one. This proves reconstruction. Uniqueness also follows recursively: the empty value fixes the empty coefficient, and the value at each larger set fixes its coefficient after all proper-subset coefficients are subtracted.
+\end{proof}
+
+No derivatives, dynamics or probability laws appear in this proof. Any finite table has the decomposition. The physical quality of an EBU interaction therefore comes from the quality of its declared coalition endpoints and potential, not from the sophistication of the transform applied afterward.
+
+\section{Three equal actions reveal what pairs already explain}
+Let three couriers each carry one unit on the same ideal edge from $(18,2)$. All groups are admissible. A group of size $r$ has value $4r-r^2/4$, so the singleton, pair and triple values are $15/4$, $7$ and $39/4$.
+
+Each pair coefficient is $7-15/4-15/4=-1/2$. The triple coefficient is
+\begin{equation}
+ \frac{39}{4}-3(7)+3\left(\frac{15}{4}\right)=0.
+\end{equation}
+Yet the triple value differs from the singleton sum by $39/4-45/4=-3/2$. All of that discrepancy is the sum of the three pair corrections. Calling the entire $-3/2$ a three-way interaction would confuse the size of the group with the order of its unexplained interaction.
+
+This distinction matters when discussing cooperation. A large project can contain many pair dependencies without containing a nonzero high-order coefficient. Conversely, a modest three-action motif can contain a truly three-way dependence that no pair comparison reveals. A system should report the order it measured, not the number of participants in its photograph.
+
+\section{Interaction is not necessarily beneficial}
+The term synergy is often used for a positive extra benefit. We will use ``interaction'' for the signed coefficient and, where synergy appears, keep the sign explicit. A positive coefficient means the group value exceeds the prediction from its proper-subset coefficients under this table. It does not establish that the total group value is positive, that the group is physically efficient, or that everyone benefits.
+
+For example, two opposite transfers at a reference state can each have negative standalone value while their joint endpoint is unchanged. Their positive pair coefficient corrects the sum back to zero. It does not create a positive group outcome. Similarly, a positive triple term can coexist with sufficiently negative singletons that the full group remains adverse.
+
+Signs can guide investigation when the comparison is meaningful. Shared depletion may produce a negative pair correction, while compatible actions can remove a bottleneck and produce a positive one. Which explanation applies requires the response model and physical evidence. The transform alone does not identify a cause.
+
+\section{The EBU sign comes from the potential difference}
+For nonempty $T$, the constant $V(x_0)$ cancels in the alternating sum. Therefore
+\begin{equation}\label{eq:mobius-potential}
+ m_E(T)=-\sum_{S\subseteq T}(-1)^{|T|-|S|}V(x_S).
+\end{equation}
+The minus sign is essential. A positive potential interaction represents an extra burden in the composite endpoint landscape; its EBU coefficient has the opposite sign. Retaining this convention throughout will connect the same coefficient to derivatives, log probabilities and, under narrower assumptions, medium entropy.
+
+An additive constant in $V$ changes no EBU and no nonempty interaction. A positive rescaling of $V$ rescales all values and coefficients, while changing references or coordinate weights can change their relative sizes and signs. Interactions are meaningful within their declared denomination and field version.
+
+\section{Established mathematics, a specific EBU application}
+Rota's incidence-algebra treatment gives the general inversion language. Cooperative-game theory calls the corresponding coefficients Harsanyi dividends; equivalent representations also occur in pseudo-Boolean functions, capacities and multilinear game extensions \cite{rota,harsanyi,grabisch,boros,owen}. Epistasis studies use related decompositions to describe effects that depend on combinations of factors \cite{poelwijk}.
+
+EBU's contribution here is a disciplined application: define one physically interpretable endpoint table, retain the sign of potential reduction, and connect that table to the other declared layers. It is not a claim to have invented inclusion--exclusion, cooperative-game dividends or high-order interaction. Nor should a baseline-specific dividend be confused with a distribution-averaged sensitivity index; the averaging measure would add another declaration.
+
+\begin{intuitionbox}{What this law makes possible}
+The transform gives a lossless decomposition of a complete coalition table. It prevents pair effects from being renamed three-way effects and prevents interaction from being added twice to the group value. Its practical usefulness depends on valid alternatives and adequate measurements.
+\end{intuitionbox}
+
+We have a formula for every order. The next step is to understand why each higher order asks how a lower-order relationship changes in a new context.

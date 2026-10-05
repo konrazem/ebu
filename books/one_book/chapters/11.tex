@@ -1,0 +1,147 @@
+\chapter{Declaring a reference and a scale}\label{ch:reference}
+
+\section{A comparison needs a declared centre}
+A tank reading of ten units is a physical fact within a measurement protocol. Whether it represents shortage, adequate provision, or excess cannot be read from the number alone. The same quantity can support a small clinic and be inadequate for a large hospital. A model that measures deviation must therefore declare what each stock is being compared with.
+
+Write the reference for cell \(i\) as \(x_i^*\). The star identifies a reference value; it is not multiplication and does not mean that the value has been proved optimal. The vector \(x^*\) collects all references in the same cell order as the state. In our main example it is \((10,10)^T\).
+
+The reference is a model declaration whose practical meaning requires domain justification. It might be informed by engineering function, an agreed service profile, or a research design. Algebra cannot decide which interpretation is appropriate. The important first step is to record that interpretation explicitly and keep it fixed during a comparison.
+
+\section{Reference, observation, and equilibrium}
+Three ideas are easily conflated. An observed mean summarizes data. A reference states the centre used by a model. A dynamic equilibrium is a state that remains unchanged under a particular evolution rule. These objects may coincide in a carefully justified application, but their symbols do not make them identical.
+
+If a community's water distribution is persistently unequal, its historical mean distribution may reflect that inequality. Choosing a reference equal to that mean is a substantive decision. Conversely, choosing a more balanced reference does not prove that available routes or institutions can reach it. A reference makes the question precise; it does not answer every practical question associated with it.
+
+For the Gaussian potential taught here, \(x^*\) is the unique zero of the full quadratic when all scales are positive. That mathematical minimum is a statement about the chosen function. It does not prove that an actor process converges to the point, that a society should adopt it, or that all living functions are satisfied there.
+
+\begin{intuitionbox}{Three sentences with different meanings}
+``The mean stock was ten'' describes a dataset. ``The reference is ten'' defines a comparison. ``Ten is an equilibrium'' describes a specified dynamic law. Use the sentence supported by the available definition or evidence.
+\end{intuitionbox}
+
+\section{Compatibility with a conserved total}
+The first model preserves total stock \(M\). We therefore choose references satisfying
+\begin{equation}
+ x_i^*\geq0,\qquad \sum_i x_i^*=M.
+\end{equation}
+This ensures that the reference lies in the same nonnegative fixed-mass domain as the physical states. In the main example, \(10+10=20\). A reference of \((12,12)\) would require 24 units, which a closed 20-unit world cannot supply.
+
+The compatibility condition is simple but scientifically important. Without it, a positive minimum deviation may reflect an impossible reference rather than poor action choices. A model might intentionally study an incompatible target in another project, but it would need to explain that problem. We do not introduce it silently here.
+
+Compatibility is weaker than reachability. If the only physical edge runs from B to A, then starting from \((18,2)\) the direct transfer toward \((10,10)\) is unavailable. If the graph is disconnected, each component preserves its own total under internal transfers. The reference must then also be compatible with those component totals to be reachable by those actions. Declaring a global total alone does not construct a route.
+
+\section{The scale tells us how to compare deviations}
+Let \(\sigma_i>0\) be a declared physical scale in the same units as \(x_i\). The standardized deviation is
+\begin{equation}
+ y_i=\frac{x_i-x_i^*}{\sigma_i}.
+\end{equation}
+The numerator says how many stock units the cell differs from its reference. Dividing by the scale expresses that difference in units of the declared width. The result is dimensionless.
+
+With reference ten and scale two, stock fourteen has standardized deviation two. Stock six has standardized deviation minus two. The signs distinguish above from below. Both are the same standardized distance from the reference. A quadratic potential will give them equal local burden because that symmetry is part of its definition.
+
+The scale is not automatically a measurement error, tolerance, acceptable range, or statistical standard deviation. The symbol \(\sigma\) is familiar from probability, but notation is not evidence of a probability model. Here it controls the geometry of a declared potential. A later calibration could connect it to data; that connection would need to be stated and justified.
+
+\section{A scale is not a boundary}
+At \(x_i=x_i^*+\sigma_i\), the standardized deviation is one. Nothing discontinuous happens there. There is no switch from safe to unsafe and no automatic prohibition. The potential and its derivative change smoothly through this point.
+
+This distinguishes the Gaussian construction from a model that uses a flat acceptable interval with penalties outside it. The present field has one declared centre and positive curvature everywhere. Every nonzero local deviation contributes to its potential. Physical feasibility still includes nonnegative stock and any separately declared domain constraints; those are not manufactured by treating \(\sigma_i\) as a threshold.
+
+If an application requires a hard storage capacity or a protected ecological condition, it must declare that physical or institutional rule separately. Calling a scale a safety certificate would give it a job its definition does not perform. Conversely, the lack of an introductory threshold term does not claim that real systems lack critical boundaries.
+
+\section{Worked standardization table}
+For one cell with \(x^*=10\) and \(\sigma=2\), the relevant values are
+\begin{center}
+\begin{tabular}{rrrr}
+\toprule
+Stock \(x\) & Deviation \(x-10\) & Standardized \(y\) & \(\tfrac12 y^2\)\\
+\midrule
+2 & -8 & -4 & 8\\
+6 & -4 & -2 & 2\\
+8 & -2 & -1 & 0.5\\
+10 & 0 & 0 & 0\\
+12 & 2 & 1 & 0.5\\
+14 & 4 & 2 & 2\\
+18 & 8 & 4 & 8\\
+\bottomrule
+\end{tabular}
+\end{center}
+Read the third column before the fourth. Standardization is a physical-unit conversion within the model; squaring and halving is the declared valuation shape. Separating these operations helps a reader locate where an assumption enters.
+
+A deviation of four stock units is two scales, and its quadratic contribution is two. Doubling that physical deviation to eight makes the contribution eight, four times as large. This is a transparent consequence of the square. It is not an empirical theorem that doubling every real shortage multiplies its harm by four.
+
+\section{Different cells may have different scales}
+Consider a new illustrative reference \((10,10)\) with scales \((2,4)\). The main stocks remain \((18,2)\). A is four scales above reference and B is two scales below it. Their contributions are eight and two, for total ten.
+
+The field now assigns a smaller contribution to B's eight-unit deviation than before. No physical stock changed; the declared geometry changed. This example is a sensitivity calculation across two different models. It must not be inserted into one action record as though the actor caused the difference between potential 16 and potential 10.
+
+Unequal scales can be useful when a stock deviation has different functional significance in different places. They can also conceal unjustified weights. A narrow scale steepens the field and makes changes at that cell count more strongly. Its provenance belongs in the model definition, not in an after-the-fact explanation of why a preferred action won.
+
+\section{Changing physical units must not change the answer}
+Suppose one stock unit represents one cubic metre, and we switch to litres. Every stock, reference, scale, and finite quantity is multiplied by 1000. The standardized deviation remains unchanged:
+\begin{equation}
+ \frac{1000x_i-1000x_i^*}{1000\sigma_i}
+ =\frac{x_i-x_i^*}{\sigma_i}.
+\end{equation}
+The potential and its finite difference are therefore unchanged. The marginal's numerical value changes because it is now per litre rather than per cubic metre. Multiplying it by a correspondingly converted quantity restores the same dimensionless product.
+
+If an implementation changes stocks to litres but leaves \(\sigma\) numerically unchanged, it has changed the model, not just the unit. Its potential becomes much steeper. This is a useful audit test because every piece of the declaration is visible. A physical unit conversion must transform all quantities with that unit consistently.
+
+\section{Why a reference must remain fixed during an action}
+An action comparison uses one potential before and after. If the reference or scale changes between the two evaluations, the result includes a model change. A zero physical increment can then appear to create value.
+
+For example, take a cell with stock 14, reference 10, and scale 2. Its contribution is two. If an editor moves the reference to 14 without moving stock, the contribution becomes zero. The number fell by two, but no physical action supplied that reduction. The field definition changed.
+
+References can be revised in a research programme or calibrated between declared epochs. Such revisions need an explicit version boundary and an account of the redefinition. They cannot be credited to an actor as though the same physical field had improved. The same principle applies to a scale revision or to adding and removing potential terms.
+
+\section{Changing cell granularity changes the declaration}
+Suppose one well-mixed tank has stock \(x\), reference \(x^*\), and scale \(\sigma\). An editor divides it into two bookkeeping cells with equal half-stocks and half-references. It is tempting to copy the old scale into both cells and assume the sum of their potentials still means the same thing. It does not.
+
+With copied scales, each deviation is half the original, and the two squared contributions sum to half the original potential. If each new scale is instead set to \(\sigma/2\), each standardized deviation equals the old one, and their total potential doubles. Neither result is a physical consequence of moving water; it comes from changing the accounting representation.
+
+If the halves are constrained always to remain equal and the aim is to preserve this particular aggregate quadratic exactly, choosing each scale as \(\sigma/\sqrt{2}\) makes the two contributions sum to the original. That is a conditional algebraic mapping, not a universal rule for spatial refinement. Once the halves can vary independently, the finer model can represent an internal imbalance that the original one-cell state could not see.
+
+The example shows why cell boundaries, references, and scales should be calibrated together. Merely increasing the number of cells is not a neutral way to gain apparent precision. A change of granularity may reveal useful new physical structure, but it also changes the field's meaning and must be declared.
+
+\section{The reference is not a quota for each transaction}
+A ten-unit reference at B does not mean that every delivery should contain ten units. The reference is a state coordinate, whereas an action quantity is a change. If B already contains six, adding four reaches ten; if it contains nine, adding four reaches thirteen. The same delivery has different consequences at the two baselines.
+
+Nor does a cell's reference assign ownership of that stock to a particular actor. The physical index identifies the represented place. Ownership and permission require their own maps and rules. Keeping those objects separate allows a potential to be studied without pretending that an equation has decided all institutional arrangements.
+
+Finally, a reference at one time does not guarantee adequacy at every future time. A continuing-life application may have changing demands and carriers. Such extensions require a time-varying model or additional physical state. They cannot be simulated simply by shifting the reference after an outcome and reporting the resulting lower potential as earned improvement.
+
+\section{A reference document that a reader can audit}
+A useful declaration identifies the carrier, cell boundary, stock unit, reference value, scale, and provenance for each coordinate. It states the total-mass compatibility condition and whether the action graph can connect the relevant places. It also states the interpretation intended for the potential: a standardized model deviation rather than a complete measure of welfare.
+
+For teaching, the provenance is openly illustrative. We choose \((10,10)\) and \((2,2)\) to make arithmetic readable. These are not estimated parameters or a registered scientific configuration. In an empirical application, the same fields would need evidence and review. The algebra does not change its standard of precision; the origin and adequacy of its inputs become additional questions.
+
+The document should also distinguish fixed parameters from state variables. If carrying capacity, demand, or another functional characteristic is allowed to change physically, it may need its own represented coordinate. Quietly editing a reference whenever conditions change can make a poor process appear successful by moving its target after the fact.
+
+\section{Guided problem: asymmetric needs}
+For a separate two-cell exercise, declare reference \((12,8)\), scales \((2,2)\), total stock 20, and current state \((18,2)\). Both coordinates are six units from reference, or three scales. Potential is \(\tfrac12(3)^2+\tfrac12(-3)^2=9\).
+
+A lossless six-unit transfer reaches \((12,8)\), the declared reference. An eight-unit transfer reaches \((10,10)\), leaving deviations \((-2,2)\), each one scale, and potential one. Equal raw stocks are therefore not the minimum of this changed model. The reference embodies different declared functional stocks at the two cells.
+
+Do not conclude that either reference is ethically correct from the calculation. The example establishes the mathematical dependence of value on the declaration. An author who changes from equal to asymmetric references must explain the domain reason, rather than claim that the equations discovered it.
+
+\section{Guided problem: incompatible mass}
+Suppose total stock is 20 and someone proposes reference \((12,12)\). The reference lies outside the fixed-mass domain. With equal scales, the best balanced feasible point is \((10,10)\), but it still has a positive deviation from the proposed reference. In fact each coordinate differs by minus two and contributes one-half at scale two, for total one.
+
+This is not a result showing that an actor failed to recover to a reachable reference. The reference itself demands more stock than the closed model contains. The correct first-model response is to require a compatible reference or explicitly change the physical boundary and problem. The example explains why compatibility is checked before controller performance is interpreted.
+
+\section{Misconceptions and practice}
+\emph{``Sigma is the noise level.''} Only if a separate declaration connects it to measurement uncertainty. In this model it is a physical reference scale.
+
+\emph{``One scale from the reference is a safe boundary.''} No such boundary is implied. It is a location on a smooth quadratic.
+
+\emph{``Gaussian means actual stocks follow a normal distribution.''} The Gaussian shape motivates the potential geometry. An actual distribution requires a stochastic process and evidence or a mathematical derivation for that process.
+
+\emph{``A compatible reference must be reachable.''} Conservation compatibility removes one obstruction; graph structure and allowed actions may create others.
+
+For practice, take reference 15, scale 3, and stocks 9, 15, and 21. Their standardized deviations are minus two, zero, and two; their local potentials are two, zero, and two. Now convert every physical quantity to a unit one-tenth as large. The numerical stocks and scale become ten times larger, while all three potentials remain unchanged.
+
+For a three-cell reference \((4,6,10)\) and total stock 20, check compatibility. Then imagine no edge connects the first two cells to the third, and the third begins with eight. The reference is globally compatible but unreachable by internal transfers within the two disconnected components. Explain the missing condition in words before attempting any controller design.
+
+\begin{intuitionbox}{What to carry forward}
+The reference names the centre of comparison; the positive scale measures deviations in physical units. Neither is automatically an empirical mean, uncertainty bound, or equilibrium. Keep them fixed within an action account and compatible with the declared physical domain.
+\end{intuitionbox}
+
+We can now assemble these declarations into a potential and see why a Gaussian landscape gives especially transparent finite mathematics.

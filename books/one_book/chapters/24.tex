@@ -1,0 +1,62 @@
+\chapter{Beyond isolated coordinates}\label{ch:factors}
+
+\section{What the simple field has taught us}
+The two-stock examples made one fact unusually clear: an action is valued by what it does to a declared physical state, not by the name of the action or the intention of its actor. In a real service network, however, an energy carrier can support a water transfer, a store can protect a medicine shipment, and a damaged route can change the meaning of available stock. We need a way to keep those relationships visible without calculating the condition of the entire planet after every action.
+
+The Gaussian used so far has one term per coordinate. That separability is a useful starting point, not a requirement of exact EBU. The finite definition only asks for one sufficiently defined potential, the same field before and after, and a physical transition represented completely enough for the claim at hand. We can therefore enlarge the field while retaining the identity that made local accounting possible.
+
+\section{Factors, not necessarily separate cells}
+Write the potential as a sum of declared factors,
+\begin{equation}\label{eq:factor-potential}
+ V(x)=\sum_{\alpha\in\mathcal F}V_\alpha(x_{D_\alpha}),
+\end{equation}
+where $D_\alpha$ is the set of physical coordinates on which factor $\alpha$ depends. One factor might describe water availability at a reservoir, another a coupled relation between water and pumping energy, and another a temperature-dependent condition of medicine storage. Their formulas, units, references and data sources must be specified; the symbols alone do not confer physical meaning.
+
+Suppose an action changes only coordinates in a write set $W$. A factor whose dependency set does not meet $W$ has exactly the same value before and after. Consequently,
+\begin{equation}\label{eq:factor-local}
+ E=V(x)-V(x+\delta)
+   =\sum_{\alpha:D_\alpha\cap W\ne\varnothing}
+     \bigl[V_\alpha(x_{D_\alpha})-V_\alpha((x+\delta)_{D_\alpha})\bigr].
+\end{equation}
+This is the precise sense in which the calculation can be local. We evaluate every factor affected by the action, including coupled factors that read unchanged neighbouring coordinates, while unchanged factors cancel. It is not a promise that a poorly chosen global factor can be evaluated from two nearby sensors. Locality is a property to establish for the declared factor graph.
+
+To see the distinction, take three dimensionless coordinates and choose
+\begin{equation}
+ V(x_1,x_2,x_3)=\tfrac12(x_1-x_2)^2+\tfrac12x_3^2.
+\end{equation}
+An action adds $q$ to $x_2$ and changes neither $x_1$ nor $x_3$. Its exact EBU is
+\begin{equation}
+ E(q)=q(x_1-x_2)-\tfrac12q^2.
+\end{equation}
+The $x_3$ term cancels, but $x_1$ must be read even though it is not written. This is how a nearby dependency enters a local account. Replacing the first term by a function of $x_2$ alone would make the calculation easier only by changing the scientific model. The example also shows finite curvature again: the initial slope is $x_1-x_2$, whereas the value of a whole action includes $-q^2/2$.
+
+\begin{lawbox}{Finite locality}
+For a fixed factorized potential and a represented state increment, all factors untouched by that increment cancel exactly. The result is an algebraic theorem. Whether the chosen factors faithfully represent the physical consequence remains a scientific question.
+\end{lawbox}
+
+\section{What coupling changes}
+Near a reference $x^*$, a quadratic extension can be written
+\begin{equation}
+ V(x)=\tfrac12(x-x^*)^{\mathsf T}H(x-x^*),
+\end{equation}
+with a symmetric positive-semidefinite matrix $H$ on the declared state domain. Nonzero off-diagonal entries represent interactions in the chosen field. For a finite increment $\delta$, direct expansion gives
+\begin{equation}\label{eq:coupled-finite}
+ E=-\nabla V(x)^{\mathsf T}\delta-\tfrac12\delta^{\mathsf T}H\delta.
+\end{equation}
+No small-action approximation appears here. If $H$ depends on state, the same exact endpoint definition still works, but this particular quadratic expansion does not.
+
+Coupling also changes the reading neighbourhood. An action may write one coordinate while its value depends on another coordinate because a factor reads both. The calculating node needs the relevant neighbouring state or a trustworthy authenticated summary. It does not need every unrelated coordinate merely because those coordinates exist in the world.
+
+This distinction matters for governance. A mathematical proof that unaffected factors cancel is not a proof that every participant has access to the required measurements, that private data should be disclosed, or that a distributed network will reach agreement. The data protocol and the institution each require their own design.
+
+\section{Coupling prepares the joint-action question}
+When several actions share a factor, their joint value must be evaluated on the complete combined endpoint. Later chapters construct the coalition table and separate its interactions before considering any division among actors. For now the important lesson is that a factor's complete dependencies determine what must be read.
+
+\section{The limit of a single number}
+A physical system may carry water, energy, medicine and ecological function in unlike units. Declaring a scalar $V$ requires a scientifically and institutionally justified relation among represented effects. Where that relation is not justified, a vector of separate accounts is more honest. One can still ask whether each physical balance closes and whether each service requirement is met. What one cannot do is add unlike consequences under an unstated exchange rate and call the result a law of nature.
+
+The question of substitution is particularly important near essential limits. An extra unit of one abundant carrier may not replace a missing unit of another carrier that performs a specific function. A potential can encode such dependence through a coupled factor or a hard feasibility constraint, but it has to say which. A hard physical impossibility cannot be cured by a sufficiently favourable value elsewhere in the potential. Conversely, a scientific claim that two effects are exchangeable needs a measured basis; it cannot be read from the fact that a scalar sum is convenient.
+
+There is a practical way to test the meaning of a proposed factor. Hold its input coordinates fixed while changing something it claims to represent. If the represented function changes but the factor cannot respond, the model is incomplete for that claim. If the factor responds to a coordinate that cannot be observed or verified at action time, the proposed local evaluator is incomplete. These are design tests, not failures of the algebra. The algebra is deliberately transparent enough to make them visible.
+
+The factor view therefore extends the exact mathematics without pretending that model construction is finished. We now know how to calculate a consequence in a fixed field. The next question follows complete events through time: how do their signed records add when every successor becomes the next predecessor?

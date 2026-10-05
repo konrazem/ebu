@@ -1,0 +1,87 @@
+\chapter{Time expansions, Lie words and ordered response}\label{app:generators}
+
+\section{Differentiating one solution}
+For an autonomous vector field $b$ with solution $x(t)$, differentiate the equation at $t=0$. With $v=b(x_0)$, $A=Db(x_0)$ and $B=D^2b(x_0)$,
+\begin{align}
+ x'(0)&=v,\\
+ x''(0)&=Av,\\
+ x'''(0)&=B[v,v]+A^2v.
+\end{align}
+For $F(t)=V(x(t))$, the ordinary chain rule then gives
+\begin{align}
+ F'(0)&=DV[v],\\
+ F''(0)&=D^2V[v,v]+DV[Av],\\
+ F'''(0)&=D^3V[v,v,v]+3D^2V[v,Av]
+             +DV[B[v,v]+A^2v].
+\end{align}
+Subtracting the Taylor expansion of $F$ from $F(0)$ proves Equation~\ref{eq:short-time}. A $C^3$ field and $C^4$ potential on a common neighbourhood containing the short trajectories give a bounded fourth time derivative and hence the stated $O(\tau^4)$ remainder. With less regularity, the remainder must be weakened rather than retained by notation alone.
+
+The calculation does not solve a trajectory numerically. It derives local terms for a declared differential equation. Its empirical usefulness depends on whether that equation describes the physical response over the tested interval.
+
+\section{The observable generator}
+For a smooth observable $f$, define $L_bf=Df[b]$. Along the flow, $d f(x(t))/dt=L_bf(x(t))$. Iteration gives the formal short-time expansion
+\begin{equation}
+ V(\Phi_z^\tau(x_0))
+ =\sum_{r=0}^{k}\frac{\tau^r}{r!}L_{b_z}^{,r}V(x_0)
+ +O(\tau^{k+1})
+\end{equation}
+under the corresponding smoothness, existence and boundedness assumptions. This is a finite expansion with a controlled remainder, not an unconditional claim that an infinite series converges.
+
+If $b_z=f_0+\sum_i z_i f_i$, then $L_{b_z}=L_{f_0}+\sum_i z_iL_{f_i}$. The operator product of $r$ such factors expands into ordered words. Each word carries a control monomial of degree at most $r$. The operators need not commute, so their order must be retained.
+
+\section{Proof of the control-affine order result}
+Take a nonempty set $T$ of $k$ labels. The $T$-difference annihilates every term of degree less than $k$. Therefore all time orders $r<k$ vanish from the coefficient.
+
+At order $r=k$, a surviving monomial must contain each label in $T$ at least once. There are exactly $k$ factors, so it contains each once, no label outside $T$, and no drift factor. The surviving operator words are all permutations of those $k$ action fields. The endpoint EBU sign gives
+\begin{equation}
+ m_{E_\tau}(T)=-\frac{\tau^k}{k!}
+ \sum_{\pi\in\mathrm{Perm}(T)}
+ L_{f_{\pi_1}}\cdots L_{f_{\pi_k}}V(x_0)
+ +O(\tau^{k+1}).
+\end{equation}
+A finite number of Boolean differences preserves the remainder order. The coefficient can vanish through cancellation; then this expression gives an upper-order bound rather than identifying the first nonzero term.
+
+The generator-series and word language has established antecedents in nonlinear systems and control theory, including Fliess and Sontag \cite{fliess,sontag}. The EBU use here is to apply the finite coalition contrast to the endpoint observable, with the comparison assumptions kept explicit.
+
+\section{The all-time affine endpoint proof}
+For $\dot x=A(t)x+b_0(t)+\sum_i z_ib_i(t)$, let $\Phi(t,s)$ be the fundamental matrix of the common homogeneous equation. Variation of constants gives
+\begin{align}
+ x_z(\tau)={}&\Phi(\tau,0)x_0+
+ \int_0^\tau\Phi(\tau,s)b_0(s)\,ds\nonumber\\
+ &+\sum_i z_i\int_0^\tau\Phi(\tau,s)b_i(s)\,ds.
+\end{align}
+The first line is $\bar x(\tau)$ and the integral multiplying each $z_i$ is $h_i(\tau)$. The endpoint is affine in controls. A quadratic potential therefore yields a Boolean polynomial of degree at most two for every horizon for which the equations and physical domain assumptions hold.
+
+If $A$ depends on $z$, the fundamental matrix does too. It cannot be pulled into a common affine expression in this way. The bilinear example $\dot x=(\sum_i z_i)x$ makes that failure explicit and produces all interaction orders at finite time.
+
+\section{Ordered noncommutativity and the sign convention}
+Let X and Y be smooth vector fields. Applying X for time $\tau$ and then Y gives
+\begin{align}
+ \Phi_Y^\tau\Phi_X^\tau(x)
+ =x+\tau(X+Y)
+ +\tau^2\{\tfrac12DX\,X+DY\,X+\tfrac12DY\,Y\}
+ +O(\tau^3).
+\end{align}
+Reversing the order replaces the cross term $DY\,X$ by $DX\,Y$. Hence
+\begin{equation}
+ \Phi_Y^\tau\Phi_X^\tau(x)-\Phi_X^\tau\Phi_Y^\tau(x)
+ =\tau^2[X,Y](x)+O(\tau^3),
+\end{equation}
+with $[X,Y]=DY\,X-DX\,Y$. For observables,
+$L_XL_Yf-L_YL_Xf=Df[DY\,X-DX\,Y]$, so the convention is consistent.
+
+The planar example $X=\partial_x$, $Y=x\partial_y$ has $[X,Y]=\partial_y$, agreeing with the positive $\tau^2$ vertical difference when Y follows X. Keeping the convention explicit avoids an otherwise easy sign reversal.
+
+This is a statement about ordered execution. An unordered coalition table must state whether its group row means simultaneous flow, a designated order, an average over orders or another protocol. The table transform cannot choose that semantics afterward.
+
+\section{A stochastic generator values expected observables}
+For a Markov process $X_t^z$ with a well-defined transition semigroup $P_t^z$, an expected-value table can be declared as
+\begin{equation}
+ \bar E_t(S)=V(x_0)-\mathbb E_{x_0}[V(X_t^{\chi_S})]
+            =V(x_0)-P_t^{\chi_S}V(x_0).
+\end{equation}
+Require the expectation to be finite. Its nonempty coefficients are the corresponding finite differences of $-P_t^zV(x_0)$. This is an expected observable, not a particular realized endpoint receipt.
+
+Writing a time expansion in a Markov generator additionally requires that $V$ belong to the relevant generator domains and that the iterated-generator and remainder conditions hold. Differential symbols alone do not establish those functional-analytic facts. Boundary conditions and admissibility can matter as much as the interior formula.
+
+This extension shows how the same table logic can organize stochastic response. It does not establish a stationary law, detailed balance or the thermodynamic interpretation of every Markov process. Those questions belong to the next appendix's physical distinctions.

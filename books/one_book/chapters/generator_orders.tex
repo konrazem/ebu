@@ -1,0 +1,83 @@
+\chapter{Why time can create higher-order interaction}\label{ch:generator-orders}
+
+\section{A simple input can have a nonlinear accumulated effect}
+Turning a control on twice as strongly need not double the endpoint after a finite time. The state changes while the law acts on it, and that changed state affects later response. This feedback through time can create a nonlinear control-to-endpoint map even when the vector field is affine in the controls.
+
+The lesson is closely related to finite curvature. An initial local description can be exact at the instant it is written and still fail to describe the whole finite interval by simple multiplication. The generator makes that time dependence explicit.
+
+\section{The first few time terms}
+For one fixed $z$, write at $x_0$
+\[
+ v=b_z(x_0),\qquad A=Db_z(x_0),\qquad B=D^2b_z(x_0).
+\]
+Under the smoothness and bounded-neighbourhood assumptions detailed in Appendix~\ref{app:generators},
+\begin{align}\label{eq:short-time}
+ E_z(\tau)={}&-\tau DV[v]\nonumber\\
+ &-\frac{\tau^2}{2}\{D^2V[v,v]+DV[Av]\}\nonumber\\
+ &-\frac{\tau^3}{6}\{D^3V[v,v,v]+3D^2V[v,Av]\nonumber\\
+ &\hspace{56pt}+DV[B[v,v]+A^2v]\}+O(\tau^4).
+\end{align}
+The first term evaluates the starting velocity. The next terms account for curvature of $V$ and change in the velocity as the state moves. The expression concerns one declared flow; taking its coalition differences then reveals interaction orders.
+
+The remainder requires more than the existence of the printed derivatives at one point. A convenient sufficient condition is a $C^3$ vector field and $C^4$ potential on a neighbourhood containing the short trajectories, with the needed bounds. This is an asymptotic statement as duration shrinks, not a promise that three terms describe a long experiment accurately.
+
+\section{Control-affine does give a short-time order rule}
+Suppose
+\begin{equation}\label{eq:control-affine}
+ b_z=f_0+\sum_i z_i f_i,
+\end{equation}
+with adequate smoothness and common admissible short-time solutions. For $|T|=k$, the leading result is
+\begin{equation}\label{eq:lie-order}
+ m_{E_\tau}(T)=-\frac{\tau^k}{k!}
+ \sum_{\pi\in\mathrm{Perm}(T)}
+ L_{f_{\pi_1}}\cdots L_{f_{\pi_k}}V(x_0)
+ +O(\tau^{k+1}).
+\end{equation}
+A sufficient regularity choice is $C^k$ fields and $V\in C^{k+1}$ on a suitable common neighbourhood. Appendix~\ref{app:generators} proves the result by expanding iterated generators.
+
+Why can no lower time order contain all $k$ actions? A product of fewer than $k$ control-affine generator factors cannot contain every one of the $k$ distinct control labels. The $k$-fold Boolean difference removes those lower-degree terms. At order $k$, every surviving word contains each action field once, in some order. Drift words enter at later orders because including drift would use a place needed for one of those action labels.
+
+This is useful for designing a local diagnostic. It does not say that high-order coefficients stay zero at a finite duration. Nor does it promise a nonzero leading coefficient: Lie-word contributions can cancel.
+
+\section{An exact counterexample at every order}
+Take the scalar controlled equation
+\begin{equation}
+ \dot x=u x,\qquad u=\sum_{i\in S}1=|S|,
+ \qquad x_0=1,qquad V(x)=\tfrac12x^2.
+\end{equation}
+The generator is affine in the controls and the potential is quadratic. Nevertheless the endpoint is $x_S(\tau)=e^{|S|\tau}$, so
+\begin{equation}
+ E_\tau(S)=\tfrac12\bigl(1-e^{2|S|\tau}\bigr).
+\end{equation}
+For every nonempty $T$ of size $k$, binomial expansion gives
+\begin{equation}\label{eq:bilinear-all-orders}
+ m_{E_\tau}(T)=-\tfrac12\bigl(e^{2\tau}-1\bigr)^k.
+\end{equation}
+At every positive duration this is nonzero at all available orders. As $\tau\to0$, it is $O(\tau^k)$, exactly consistent with the short-time theorem.
+
+The coefficient does not contradict the quadratic pair-only result: the endpoint map is exponential, not affine in the controls. The example is an exact analytic response illustration, with no claim that uncontrolled exponential growth describes a viable EBU economy.
+
+\section{What really suffices for pair-only structure at all times}
+A stronger condition is a common linear state operator with affine control inputs:
+\begin{equation}\label{eq:joint-affine-dynamics}
+ \dot x=A(t)x+b_0(t)+\sum_i z_i b_i(t).
+\end{equation}
+The operator $A(t)$ must be the same for every coalition. Variation of constants gives
+\begin{equation}
+ x_z(\tau)=\bar x(\tau)+\sum_i z_i h_i(\tau),
+\end{equation}
+where $\bar x$ includes the initial state and the common drift, and each $h_i$ is the response to input $b_i$. Thus the endpoint map is affine in the controls at every admitted horizon. A fixed quadratic potential then gives no coefficients above order two.
+
+This conclusion needs existence and admissibility for the required coalitions. A coalition-dependent matrix $A_z$, saturation, projection or changing boundary rule can destroy the affine endpoint structure. Describing a system as ``linear'' without specifying what is linear in which variables is insufficient.
+
+\section{Nonlinear control dependence can appear immediately}
+Consider $\dot x=z_1z_2z_3$, starting at zero, with $V(x)=x$. The full group reaches $\tau$ while every proper subset remains at zero. Its triple coefficient is $-\tau$, not $O(\tau^3)$.
+
+The control-affine assumption has failed, so its short-time order theorem does not apply. This example helps interpret a time-scaling experiment: unexpectedly low-order scaling can indicate a direct joint control term, but measurement, baseline and model alternatives still need checking. Scaling is a diagnostic, not a unique mechanism identifier.
+
+\section{What time-aware interaction could do for a system}
+A future EBU system may need to distinguish an immediate delivery from an intervention that changes the response over hours or months. The generator framework can state those differences without changing the endpoint definition. It can also warn against extrapolating a short-duration calibration to a long intervention with accumulated nonlinear effects.
+
+The potential social gain is better planning of coordinated work: identifying when a combination's value depends on timing, or when a response that looks additive locally becomes coupled over time. This requires a validated response law and a relevant service boundary. Neither a small-time theorem nor a closed-form example proves that the resulting institutional choices will be fair or effective.
+
+Before probability enters the argument, we return to structure. A physical network, a dependency graph and a coalition interaction table each describe a different kind of connection. Their relation determines how much of the landscape can be studied locally.
