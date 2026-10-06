@@ -344,7 +344,7 @@ a fixture outside test mode.
 
 ### Regressions
 
-Eleven injection attempts, each required to yield no calibrated gate: an
+Twelve injection attempts, each required to yield no calibrated gate: an
 arbitrary string identity (now unexpressible), no procedure at all, wrong gate
 family, wrong procedure version, wrong nuisance domain, uncalibrated status,
 missing calibration identity, missing procedure identity, missing domain
