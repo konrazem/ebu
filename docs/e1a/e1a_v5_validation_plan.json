@@ -34,6 +34,14 @@
   "set_construction": "closed-form bound on the exact second-order Schur remainder over the declared primitive covariance, at 3.0 sigma; every step is an inequality"
  },
  "baseline_sign_defect": "STILL OWED before W-stage authority freeze; not repaired here",
+ "bounded_bias_qualification": {
+  "absolute_ceiling": 0.0005,
+  "contrast_ceiling": 0.0005,
+  "design_point_note": "over the joint 99.9% region the design point exceeds both ceilings. Reported as measured; the model error is not shrunk to make it pass, and a prospective design change would be separate reviewed work.",
+  "design_point_verdict": "UNQUALIFIED",
+  "enforced": "both are qualification PREDICATES on the official path, inclusive, the contrast on its own jointly computed bound",
+  "refusal": "CALIBRATION_UNCERTAINTY_EXCESS"
+ },
  "calibration_covariance": {
   "bounded_bias": "separate structure; never converted into covariance; a missing bound is MISSING, not 0.0",
   "conditional_plus_calibration": "Var_total = Var_cond + Var_cal, summed once in e1a_v5.calibration.combined_standard_error; the two sources share no primitive, so the declared model carries no cross term",
@@ -45,7 +53,40 @@
   "forbidden_shortcut": "the ideal Gaussian trace formula is NOT used as the production sensitivity",
   "joint_matrix": "C_b,cal = J_beta C_phi J_beta^T over all eight log-beta endpoints",
   "log_beta_extraction": "one row, taken only AFTER the full nuisance system is solved",
+  "observation_primitives": "P gain and shear, the bead-radius transfer, the localisation scale, both detector offsets, the shutter calibration and the timing standard all propagate into the fitted comparison",
   "perturbation_side": "phi moves the ANALYSIS side (H_A and the observation calibration) with the truth held fixed, which is what a calibration measurement error physically is; V3 perturbed the truth instead and so reported the opposite sign",
+  "primitive_basis": [
+   "log_k_standard",
+   "log_T_standard",
+   "log_eta_ref",
+   "log_eta_dT",
+   "log_bead_radius",
+   "log_force_displacement_cal",
+   "log_axial_stiffness",
+   "log_axial_coupling",
+   "log_p_gain",
+   "p_shear",
+   "log_r_obs_scale",
+   "b_det_x",
+   "b_det_y",
+   "fiducial_x",
+   "fiducial_y",
+   "log_t_exp",
+   "log_dt",
+   "log_k_block@block1",
+   "log_T_block@block1",
+   "log_k_field@block1/theta0",
+   "log_k_field@block1/theta1",
+   "log_k_field@block1/theta2",
+   "log_k_field@block1/theta3",
+   "log_k_block@block2",
+   "log_T_block@block2",
+   "log_k_field@block2/theta0",
+   "log_k_field@block2/theta1",
+   "log_k_field@block2/theta2",
+   "log_k_field@block2/theta3"
+  ],
+  "primitive_count": 29,
   "profiled_nuisance_vector": [
    "log_beta",
    "mu_x",
@@ -56,8 +97,9 @@
    "omega"
   ],
   "sensitivity_method": "U.20 option A: implicit differentiation of the expected-score system, d theta*/d phi = -(d_theta E s)^{-1} d_phi E s",
-  "shared_primitive_rule": "one variable identity per shared standard; off-diagonal blocks follow with no independence assumption",
+  "shared_primitive_rule": "one LATENT standard variable per shared standard; the loading structure survives into the generating law, so a control that drops the covariance still faces data that carry it",
   "status": "IMPLEMENTED ON THE OFFICIAL PATH",
+  "structural_zeros": "a zero J_beta row is permitted only where the primitive provably does not enter the analysis model; the zero is detected, recorded and separately re-derived numerically",
   "used_by_official_intervals": true
  },
  "case_contract": {
@@ -68,9 +110,13 @@
    "replicates",
    "seed_namespace",
    "expected_event",
+   "expectation",
+   "false_support_event",
+   "acceptance_rule",
    "family",
    "detail"
   ],
+  "generation": "the cases block is generated once, at a procedure freeze, from the reviewed registry and frozen with the procedure; from that point it is the compared source of truth and any later divergence, in either direction, fails the deterministic suite",
   "mode": "any difference fails the deterministic suite; there is no warning-only mode and no registry-as-source-of-truth fallback",
   "source_of_truth": "this file"
  },
@@ -817,8 +863,8 @@
   "design_point": "e1a_v5_candidate_2026-10-06",
   "domain_identity": "e1a_v5_candidate_2026-10-06/nominal-envelope",
   "policy_version": "E1A-T11a-RF-v1",
-  "procedure_version": 5,
-  "supersedes": "procedure version 4 (audit: NOT CLEARED)"
+  "procedure_version": 6,
+  "supersedes": "procedure version 5 (audit: NOT CLEARED)"
  },
  "critical_value_status": {
   "normal_start": "1.959963984540054 is the STARTING value of the calibration search and is marked UNCALIBRATED",
@@ -924,7 +970,7 @@
   "unusable_interval_containment": "returns None, never True and never False; an unusable interval has no containment answer"
  },
  "execution_authorised": false,
- "frozen_at_commit": "52f375f0b8688c8fa43eed5ba19f7340de26989d",
+ "frozen_at_commit": "3b4e86eb846bd9d6cbb03400222e885961af83d6",
  "frozen_thresholds": {
   "bias_absolute_max": 0.0005,
   "bias_contrast_max": 0.0005,
@@ -943,30 +989,45 @@
   "sigma_cal_contrast_max": 0.003
  },
  "gate_calibration": {
-  "artifact": "e1a_v5.evidence.CalibratedGateProcedure",
-  "checked_on_use": [
+  "artifact": "e1a_v5.evidence.GateCalibrationReceipt",
+  "binds": [
    "gate family",
    "procedure version",
-   "domain identity",
-   "calibration status",
-   "provenance",
-   "fixture flag"
+   "analysis procedure identity",
+   "validation procedure identity",
+   "validation plan identity",
+   "seed map identity",
+   "calibration seed namespace",
+   "calibration case/domain identity",
+   "replicate count",
+   "critical value radius",
+   "coverage target",
+   "calibration result digest",
+   "release state",
+   "receipt digest"
   ],
-  "fields": [
-   "family",
-   "procedure_version",
-   "procedure_identity",
-   "calibration_identity",
-   "coverage_target",
-   "domain_identity",
-   "radius",
-   "status",
-   "fixture_only"
+  "fixtures": "SyntheticGateFixture is a separate TYPE with its own constructor; no production API accepts it, and there is no boolean an ordinary caller could leave unset",
+  "forgery_regressions": [
+   "arbitrary identities",
+   "wrong analysis identity",
+   "wrong validation identity",
+   "wrong plan identity",
+   "wrong seed map",
+   "wrong calibration seed namespace",
+   "wrong domain",
+   "wrong gate family",
+   "wrong procedure version",
+   "wrong coverage target",
+   "mutated critical value",
+   "mutated replicate count",
+   "missing result digest",
+   "not released",
+   "negative radius",
+   "a plain string",
+   "a synthetic fixture passed to the production API"
   ],
-  "fixture": "synthetic_calibrated_gate_fixture sets fixture_only and puts every identity in the SYNTHETIC-FIXTURE namespace; the production builder refuses it",
-  "live_v5_state": "UNCALIBRATED for shape, centre, stationarity and current",
-  "raw_statistic_separation": "limit = statistic + procedure.radius always; no constructor accepts a limit",
-  "string_identity_removed": "GateLimit.calibrated(statistic, limit, identity) is deleted; a bare non-empty string could make a raw zero statistic a passing calibrated limit"
+  "live_v6_state": "no production receipt exists; UNCALIBRATED for shape, centre, stationarity and current",
+  "verification": "the production builder recomputes the receipt digest and compares every identity against the RUNNING procedure's own; nothing is taken on the strength of a field being nonempty"
  },
  "gate_limits": {
   "representation": "e1a_v5.evidence.GateLimit with the same three statuses",
@@ -974,31 +1035,205 @@
   "v4_state": "UNCALIBRATED for shape, centre, stationarity and current"
  },
  "identities": {
-  "analysis_procedure": "c10efe5109da9d8b3f4a6bd2ec0bb0f57e4718bed7ee5b763f06f646a92f4e75",
-  "gate_semantics": "694f0769f547ebccdc13d664041ccc10f601d2042a264552081a9aea023c59ac",
-  "packet_schema": "b6e1e9b276ee8039e9784baa6d60e6cc3edcdd064956a0a5feaf783c348cd9f9",
-  "seed_map": "909521bc2204f714108aebeee0b882ad406cc2d537b226ea5221c8bbfe25a165",
-  "synthetic_generator": "95b14ee4321f522c17fdded41c8e7521f327543caed82c753c536fb3209530a9",
-  "validation_procedure": "6be714826bd8d6d08125dd0f1b5a8f40cc71622f122e5cf351712a924953cba9"
+  "analysis_procedure": "85add71db0a61543d4657537b124d80223313ef5f7a36bbe48e4c88cec250408",
+  "gate_semantics": "faec0e05385cd1e106777b05ac7d271c074d0087a34d615e2bb199225619aac1",
+  "packet_schema": "22f1f27a50b8cd4952e0efb640a083ee7967c7f21bdf0f90806a0f65abf21e63",
+  "seed_map": "268943c7f73b31026b2934929a7ae685c61ec981682f110df6d5ba5fdb62bc96",
+  "synthetic_generator": "2ab4c76bb772d83ccb199cf0b30659224390fb554fedb689a5029edcde50c361",
+  "validation_procedure": "072aba3d8d95a89d99449a3c30e700eb7984efb6442b0458117187c65d379144"
+ },
+ "joint_calibration_region": {
+  "allocated_noncoverage": 0.001,
+  "bounded_systematics": {
+   "wall_hydrodynamic_resistance": 0.005
+  },
+  "categories": [
+   {
+    "bound": null,
+    "category": "viscosity_eta_of_T",
+    "classification": "uncertain",
+    "justification": "buffer viscosity and its temperature coefficient; they set the drag, which the estimator profiles",
+    "members": [
+     "log_eta_ref",
+     "log_eta_dT"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "temperature_calibration",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_T_standard",
+     "log_T_block"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "bead_radius_material_transfer",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_bead_radius"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "force_displacement_calibration_3d",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_force_displacement_cal"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "axial_stiffness_coupling",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_axial_stiffness",
+     "log_axial_coupling"
+    ]
+   },
+   {
+    "bound": 0.005,
+    "category": "wall_hydrodynamic_resistance",
+    "classification": "bounded_systematic",
+    "justification": "a deterministic near-surface drag correction with a stated fractional bound; U forbids converting a bounded model error into a Gaussian variable",
+    "members": []
+   },
+   {
+    "bound": null,
+    "category": "coordinate_transform_P",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_p_gain",
+     "p_shear"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "centre_fiducial_transfer",
+    "classification": "uncertain",
+    "justification": "the fiducial enters the centre statistic, not the scale; its log-beta row is a demonstrated zero",
+    "members": [
+     "fiducial_x",
+     "fiducial_y"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "localization_covariance_R_obs",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_r_obs_scale"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "detector_offset",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "b_det_x",
+     "b_det_y"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "shutter_exposure",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_t_exp"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "timing_synchronization",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_dt"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "shared_standards",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_k_standard"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "block_specific",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_k_block"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "field_specific",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_k_field"
+    ]
+   }
+  ],
+  "construction": "intersection of individually calibrated marginal primitive regions with allocated noncoverage; valid for any dependence structure by the union bound",
+  "coverage_factor_max": 4.141642461643443,
+  "coverage_factor_min": 4.141642461643443,
+  "guaranteed_joint_coverage": 0.999,
+  "identity": "0bf05848f0397cd0a686aa8a42bc5387546481cbbf776cb854e66c3064fec5b7",
+  "latent_basis": [
+   "thermometry_standard"
+  ],
+  "primitive_count": 29,
+  "required_categories": [
+   "viscosity_eta_of_T",
+   "temperature_calibration",
+   "bead_radius_material_transfer",
+   "force_displacement_calibration_3d",
+   "axial_stiffness_coupling",
+   "wall_hydrodynamic_resistance",
+   "coordinate_transform_P",
+   "centre_fiducial_transfer",
+   "localization_covariance_R_obs",
+   "detector_offset",
+   "shutter_exposure",
+   "timing_synchronization",
+   "shared_standards",
+   "block_specific",
+   "field_specific"
+  ],
+  "version": 1
  },
  "module_digests": {
   "analysis": {
    "__init__.py": "912a9b4635bf29280fc1be1bf631b46af24fe0f4790037f84749a8389ff60baa",
    "branch_a.py": "36eef41eabbbabdbff82abfb88bd99a8a32d69bf14a5ef63540c648ed33d1644",
-   "calibration.py": "69f43804dbd8f376e84e24aa0025b86afc7584934ea65fc8789f9c5e7802a962",
+   "calibration.py": "804a24b6ae89059df0d5f61fcea8f1d59395985dd6a443060567d7a44bbc1e1b",
    "confidence.py": "d9ed2a6ebb4ab883cfcb54b145abba02e69f810ef518b7e157604741d4ffa975",
    "diagnostics.py": "2d33b3547f93c59ede121e5ad0f398fb9508ec41c78f702f29d9e9248893f645",
    "estimate.py": "6df3087dfc031e0db7124a3ecb473bf21325abb8b375a38ea6641b1d062140a9",
-   "evidence.py": "9199024e54a926201a6b2e238d2e9046846aab1bf213837d2fc6d2f60d5aff36",
+   "evidence.py": "a25bac4f40617da7334807ce61acd3568462b6fde7e716af3ef6493494dd3fad",
    "gates.py": "6e2f8e534edec3297a517cf5d0a83d3a568eca0f525acca9f70b4bc3cea16f5b",
    "likelihood.py": "86fc43f55f94024911991fc669808cce20c117d732690206bcab2fb4d9ba3369",
    "numerics.py": "e25c8f6a26a0923f1315bc98d51e1853176f8255515daa5138eda9afe3574f43",
-   "observation.py": "2f80aa6ebfe0a1667e5a3e751b699699f7f5982d3613a51f1d00a4fa7a58037e",
+   "observation.py": "656fed6da5e680be0252f817b42c8358a8a874f97320747325d126689df375a8",
    "optimize.py": "d5c0237180521e25ebf288c42606731c2b5ca181fea939346b51f5b5e848810a",
    "packets.py": "c6f05d61f8ec22ae7cc75930caba2b9704d537884f8a17453d297f04b9af0914",
    "pipeline.py": "a2873e8a91e4230e03fcc21908914e2a4987204774fbe61be8ebca150c317710",
    "realization.py": "88d341a117da72560980bc26e6575feb0244891fcf04d3fc225fa96abb5ceb83",
-   "reduction.py": "d6114bd031b56b1e3835d7fd42bd30d152398ad5194e4d5758ed340bd91587d4",
+   "reduction.py": "1711e2ab65f049f94ee01e3703117cc4311547b03ecab1137ed882d0267b2a2b",
    "refusals.py": "1d10a89f4138e1b2fcecabbad1ad3118e067b215b325644df3c63e50cbcf9596",
    "units.py": "f53ee21027387cbeaf138cea9dd6c87a39a1e63351b9dd234f18d1e2b33ce379",
    "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
@@ -1010,28 +1245,28 @@
    "realization.py": "88d341a117da72560980bc26e6575feb0244891fcf04d3fc225fa96abb5ceb83"
   },
   "generator": {
-   "generate.py": "8bf8a2278b9eba519b9480c73e062e84816646cc3c53d51623b2a5331ad183d2",
+   "generate.py": "749f2ce2079150e8a2cfd333552826dfc98e0f00df373b0771f089cf2a95b1b8",
    "rng.py": "47bef207648ea393df7a338235d8d8fc15737173c3702a9fa5f82b10a9a7506d"
   },
   "validation": {
-   "calibration.py": "69f43804dbd8f376e84e24aa0025b86afc7584934ea65fc8789f9c5e7802a962",
-   "certified.py": "aab2139ad6483c340c3fcfe855a1fc0e1a890e59e399030e363f60f0f97f6af4",
+   "calibration.py": "804a24b6ae89059df0d5f61fcea8f1d59395985dd6a443060567d7a44bbc1e1b",
+   "certified.py": "75b2d029e3f6cce7dcee6998ece51abb0d02657ec19a25d27a570f055c9ad42f",
    "diagnostics.py": "2d33b3547f93c59ede121e5ad0f398fb9508ec41c78f702f29d9e9248893f645",
-   "evidence.py": "9199024e54a926201a6b2e238d2e9046846aab1bf213837d2fc6d2f60d5aff36",
-   "generate.py": "8bf8a2278b9eba519b9480c73e062e84816646cc3c53d51623b2a5331ad183d2",
+   "evidence.py": "a25bac4f40617da7334807ce61acd3568462b6fde7e716af3ef6493494dd3fad",
+   "generate.py": "749f2ce2079150e8a2cfd333552826dfc98e0f00df373b0771f089cf2a95b1b8",
    "identity.py": "fb0de704d416807e39239ceaa5ca6103adf29f0bfc88c9f5488243ab1bf7d012",
-   "observation.py": "2f80aa6ebfe0a1667e5a3e751b699699f7f5982d3613a51f1d00a4fa7a58037e",
+   "observation.py": "656fed6da5e680be0252f817b42c8358a8a874f97320747325d126689df375a8",
    "pipeline.py": "a2873e8a91e4230e03fcc21908914e2a4987204774fbe61be8ebca150c317710",
-   "reduction.py": "d6114bd031b56b1e3835d7fd42bd30d152398ad5194e4d5758ed340bd91587d4",
-   "seeds.py": "89b791bce68c4440f0f263928309b90bf780625cbf42ae950dfd26e5917046bc",
+   "reduction.py": "1711e2ab65f049f94ee01e3703117cc4311547b03ecab1137ed882d0267b2a2b",
+   "seeds.py": "76868eaa4eeb7fc9de6fc9d4f59bfa22e4a4c0f4cfec070237b44a64ccd443a6",
    "validation/__init__.py": "cfb51def4ee4877b60dcc62a9636e6672244d8cc338a4979f1086a27e3d3bb9b",
-   "validation/cases.py": "32a3092af4bbd8907571321965f29e0da892a3583a29e927d83f0b6535872230",
-   "validation/contract.py": "86b2ef22ae0b8bb2d10639247d9c0f190f136f11d400c05cb695796ef07b7171",
-   "validation/dispatch.py": "6a7377144d841990b8ff8adddfb2a1a52b7ddbd5bdfe258dbf4f10457c26710b",
+   "validation/cases.py": "101d605f54de215089accdf68647fb8e082b8d37e459f03e49a55363f324e4da",
+   "validation/contract.py": "aabf9b5383cd8e225de4488cc7668f9c4c9902f0466edecdfae84ff93f33f028",
+   "validation/dispatch.py": "bb8790ff335736254acfd0b61c8ee64138de783edb5e46eb6a4ebb8e7719b215",
    "validation/events.py": "e6785c8397039acaed6a127d53741fe5de74e5634153bd51cf35b06614c7c926",
-   "validation/harness.py": "0e87c0af6cfec868a2cc15fdc9ef6eb65ffb805814433b8754037f466fce9ca6",
-   "validation/plan.py": "6a978e96f05dad461299b5711738ac57ee30bfd27c4bf8a9f3e700ae6d3f44dc",
-   "validation/run.py": "a67ae9bbc0fff6c0cd24106df45da44ee5227711aee7a0d59657a7631496a046",
+   "validation/harness.py": "45a3a77e5555394869c6f188633c2a0362dbc0ea3144b2a00c0273d2c81599fe",
+   "validation/plan.py": "66c34d727fdee781053638e1eb078d484cb81d9c0558088cf46cbee63e0ee0c5",
+   "validation/run.py": "9acb5ab4a9bb8ef996d8c4bc1b78fcaa664276b0de74615454b86c15a3b0eb1b",
    "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
   }
  },
@@ -1067,45 +1302,79 @@
   "rule": "each required negative control separately satisfies the false-support bound"
  },
  "numerical_error_certification": {
-  "floating_point": "every hyper-dual component is an interval, outward rounded after each operation (one ulp for the IEEE-correctly-rounded + - * / and sqrt, two for log and exp, which the platform libm does not guarantee)",
-  "linear_solve": "residual enclosed in interval arithmetic, amplified by a Weyl-certified lower bound on the smallest eigenvalue of the symmetric expected information",
+  "bounds_enter_the_enclosure": true,
+  "contractivity": "the Lipschitz constant ||F_cl||_w^2 is bounded over the BALL by epsilon inflation, not at a midpoint; a recomputed bound that does not fit back inside the inflated ball refuses certification",
+  "linear_solve": "residual enclosed in interval arithmetic with the matrix entries entering as the intervals they are",
+  "lyapunov_tail": "||Q|| ||F||^(2 * 2^m) / (1 - ||F||^2), evaluated in logarithms",
   "method": "interval-arithmetic hyper-dual differentiation of the expected-score system",
   "no_enclosure": "UNRESOLVED_AT_NUMERICAL_PRECISION, which is fail-closed",
+  "nonsingularity": "lambda_min >= mu PROVED by an interval Cholesky of S - mu I; the V5 Weyl-plus-reconstruction estimate, which subtracted a RELATIVE residual as if absolute, is removed",
   "qualification_rule": "PASS iff u+ <= c; FAIL iff u- > c; UNRESOLVED otherwise, with inclusive ceiling semantics and c never widened",
-  "removed": "the V4 fine/coarse agreement plus nine-point least-squares smoothness residual, which bounded neither truncation nor an unobserved higher derivative",
-  "riccati_fixed_point": "one-step residual divided by 1 - ||F_cl||^2, the contraction factor of the Riccati map",
+  "riccati_derivative": "the SAME estimate, read back per component from the grading: dP/dtheta, dP/dphi and the mixed second derivative each carry their own bound",
+  "riccati_value": "a posteriori contraction estimate on the hyper-dual iterate, in the graded Banach-algebra norm |x0| + w|x1| + w|x2| + w^2|x12|",
+  "square_root": "candidate from math.sqrt, PROVED by exact rational comparison of lo*lo <= a_lo and hi*hi >= a_hi; no IEEE-754 or libm property is appealed to",
+  "transcendentals": {
+   "arithmetic_guarantee": "General Decimal Arithmetic specification: add, subtract, multiply and divide are correctly rounded under the context rounding mode",
+   "directed_rounding": [
+    "ROUND_FLOOR",
+    "ROUND_CEILING"
+   ],
+   "exp_reduction": "y = x / 2**k exactly, |y| <= 1/2, then k squarings",
+   "exp_remainder": "|y|^(N+1) / (N+1)! / (1 - |y|/(N+2))",
+   "exp_series": "sum_{j<=N} y^j / j!",
+   "exp_terms": 40,
+   "input_conversion": "Decimal(float) and math.frexp/math.ldexp, both exact on the binary value; no decimal display string is parsed",
+   "library_transcendentals_used": [],
+   "log_reduction": "x = m * 2**e exactly; log x = log m + e log 2",
+   "log_remainder": "2 u^(2N+1) / ((2N+1) (1 - u^2))",
+   "log_series": "log m = -2 atanh((1-m)/(1+m)), |u| <= 1/3",
+   "log_terms": 45,
+   "precision_digits": 60,
+   "route": "self-contained interval series over decimal basic arithmetic",
+   "sqrt": "candidate from math.sqrt, PROVED by exact rational comparison"
+  },
   "truncation_error": "EXACTLY ZERO: the chain rule is evaluated, not approximated; there is no step size"
  },
  "observation_qualification": {
-  "caller_override": "none; observation_valid comes from qualify_observation",
-  "ceiling_semantics": "inclusive",
-  "evaluated_per_record": true,
+  "auditor_counterexample": "Sigma = I, P = 0.1 I, R_obs = 0.01 I gives exactly 1.0 and FAILS; V5's latent-only comparison reported 0.01 and passed",
+  "ceiling_semantics": "inclusive; a worst case above the ceiling fails",
+  "coordinates": "DETECTOR: S_y = P Sigma P^T, r_loc = lambda_max(S_y^-1/2 R_obs S_y^-1/2)",
+  "envelope_inputs": [
+   "Branch-A locked thermal Hessian",
+   "calibrated drag matrix",
+   "instrument-calibrated P",
+   "instrument-calibrated R_obs",
+   "timing and shutter calibration",
+   "T's declared design/power range of log beta, taken from this plan",
+   "the certified axial-remainder radius"
+  ],
+  "evaluation": "closed-form WORST CASE over the whole envelope",
+  "exposure_averaged_ratio": "recorded separately; U's own requirement, never a replacement for the instantaneous ceiling",
   "predicates": [
    "R_obs positive definite",
    "P invertible",
-   "instantaneous localisation ratio <= 0.05",
+   "instantaneous detector-coordinate localisation ratio <= 0.05",
    "t_exp / tau_fast <= 0.1",
    "||B||_2 dt <= 0.2",
    "0 <= t_exp <= dt",
    "noise model in the qualified set"
   ],
-  "qualified_noise_models": [
-   "gaussian"
-  ],
-  "ratio_definition": "lambda_max(Sigma^{-1/2} R_obs Sigma^{-1/2}) (T.23 / T 15.2)",
-  "uncertainty": "each quantity is enlarged by the certified axial rate factor; a value whose enclosure straddles its ceiling does NOT pass"
+  "rates": "generalized eigenvalues lambda(K, Gamma), so anisotropic or uncertain drag widens the relaxation-rate range",
+  "source": "an INDEPENDENT pre-Branch-B envelope; no fitted quantity enters"
  },
- "open_release_blockers": {
-  "ci_integration": "e1a_v5 test suites still require CI integration before W",
-  "complete_power_validation": "NOT RUN FOR V5",
-  "continuous_nuisance_domain_coverage": "OPEN",
-  "diagnostic_size_validation": "NOT RUN FOR V5",
-  "false_equivalence_validation": "NOT RUN FOR V5",
-  "finite_n_critical_calibration": "NOT RUN FOR V5",
-  "full_campaign_resource_requirement": "OPEN",
-  "geometry_centre_gate_boundary_driver": "NOT IMPLEMENTED",
-  "multi_record_contrast_driver": "NOT IMPLEMENTED"
- },
+ "open_release_blockers": [
+  "finite-N critical-value calibration NOT RUN",
+  "false-equivalence size validation NOT RUN",
+  "diagnostic-family size validation NOT RUN",
+  "complete eight-record power validation NOT RUN",
+  "negative-control confirmatory runs NOT RUN",
+  "continuous nuisance-domain coverage OPEN",
+  "the design point is UNQUALIFIED on both bounded-bias ceilings",
+  "the multi-record contrast driver is not implemented",
+  "the geometry/centre gate-boundary driver is not implemented",
+  "the e1a_v5 suites are absent from CI and must enter it before W adoption",
+  "baseline section 14.3 sign defect STILL OWED before W-stage freeze"
+ ],
  "policy_version": "E1A-T11a-RF-v1",
  "prng": {
   "algorithm": "python-stdlib-MersenneTwister-19937",
@@ -1139,21 +1408,34 @@
    "report_commit": "c56aa6338995414a329353af7c5ccdc86c7875ed"
   },
   "v5": {
+   "disposition": "NOT CLEARED BY INDEPENDENT AUDIT",
+   "documentary_correction": "3b65a39fddc3aaaec350f7fdfc962428df2aac4a",
+   "evidence_status": "V5 / SUPERSEDED PROCEDURE EVIDENCE - not V6 validation",
+   "freeze": "bbd4da1a113149629432a9b9d4cafeb6351c64d7",
+   "repair_commit": "52f375f0b8688c8fa43eed5ba19f7340de26989d",
+   "report_commit": "829c6a36eafe9c8a90ea0fd2ba5d5765acec1c0e"
+  },
+  "v6": {
    "additional_findings": [
-    "the V4 plan/code meta-test compared the registry to the dispatcher, both of them code, and never to the machine plan",
-    "the V4 machine plan's case block was never regenerated: it still carried V3 seed namespaces and had no expected_event field"
+    "the ln2 doubling and the ln m negation were performed in the ambient decimal context, which rounds to 28 digits half-even and can round a lower bound upward",
+    "the exp series was evaluated with signed terms, where rounding an intermediate downward does not bound the next one",
+    "ginnovation_mean's early-out tested only the VALUE component, so at the linearisation point it discarded the centre rows of the expected information and made the system singular"
    ],
    "blockers_repaired": [
-    "the numerical sensitivity enclosure was heuristic, not certified",
-    "axial nonlinear-remainder bounds used first-order quantities and were not routed to every affected budget",
-    "an arbitrary non-empty gate identity converted a raw statistic into a CALIBRATED gate limit",
-    "observation qualification did not enforce T 15.2's localisation ceiling",
-    "CTL-ETA-T-COV and CTL-AXIAL-MEMORY were weakened away from the frozen plan and plan/code correspondence was therefore false"
+    "the numerical sensitivity certification rested on an undocumented libm property, bounded the Riccati VALUE only, and reported that bound rather than using it",
+    "the axial remainder set used an informal marginal 3 sigma instead of U's joint 99.9% physical region",
+    "the official C_phi path omitted ten of the fifteen required calibration primitive categories",
+    "the 0.0005 absolute and contrast bounded-bias ceilings were computed and never compared against anything",
+    "observation qualification omitted P, so it compared detector noise against the LATENT covariance, and it read the Branch-B fit",
+    "gate-calibration provenance was a typed artifact an ordinary caller could fill with anything",
+    "CTL-ETA-T-COV drew no auxiliary measurement and CTL-AXIAL-MEMORY's temporal qualification was a hand-set flag"
    ],
-   "disposition": "REPAIRED - INDEPENDENT AUDIT REQUIRED"
+   "disposition": "REPAIRED - INDEPENDENT AUDIT REQUIRED",
+   "plan_clarification_commit": "9c0480f68f14806145f3acf74ea5ed3972285a5e",
+   "repair_commit": "3b4e86eb846bd9d6cbb03400222e885961af83d6"
   }
  },
- "procedure_version": 5,
+ "procedure_version": 6,
  "reason_retention": {
   "aggregate": [
    "classification counts",
@@ -1196,9 +1478,11 @@
   "CTL-AXIAL-MEMORY": {
    "acceptance_rule": "one-sided 95% Clopper-Pearson upper bound <= 0.025 at R = 5000",
    "axial_fraction": 0.08,
+   "branch_b_data": "lateral only; the analyser is never given a hidden coordinate",
    "coupling": 0.15,
    "expected_physical_classification": "TEMPORAL_MODEL_UNQUALIFIED and/or INVALID_MEASUREMENT_OR_MODEL",
    "kind": "full-pipeline stochastic control",
+   "physical_qualification": "DERIVED from the independent driven-response measurement by the ordinary machinery; the V5 hand-set flag is removed",
    "release_event": "FALSE_SUPPORT (complete support)",
    "replicates": 5000,
    "supplementary_exact_check": "REF-AXIAL-REFUSAL, REF-AXIAL-MEMORY-WITNESS",
@@ -1208,54 +1492,42 @@
   "CTL-ETA-T-COV": {
    "acceptance_rule": "one-sided 95% Clopper-Pearson upper bound <= 0.025 at R = 5000",
    "declared_correlation": 0.7,
-   "direction_claim": "NONE. V4 asserted that omitting the covariance always understates uncertainty; its own ratios contradicted that and the assertion is removed.",
+   "direction_claim": "NONE. No universal sign is claimed for the effect.",
+   "generating_law": "FRESH auxiliary measurements drawn from the declared law, shared thermometry LATENT included; the analyst locks in exactly what those measurements say, including the detector map, localisation covariance, offset and timing",
    "kind": "full-pipeline stochastic control",
-   "misspecification": "the analysis C_phi omits the declared correlation between the stiffness standard and the temperature standard, which share one thermometry error",
+   "misspecification": "the ANALYSER's C_phi omits the shared latent and treats the two standards as independent; the data do not",
+   "recorded_per_replicate": [
+    "correct standard uncertainty",
+    "misspecified standard uncertainty",
+    "difference and ratio",
+    "contrast standard uncertainties",
+    "absolute interval widths",
+    "top-level classification"
+   ],
    "release_event": "FALSE_SUPPORT (complete support)",
    "replicates": 5000,
    "supplementary_exact_check": "REF-ETA-T-COV-ALGEBRA"
   }
  },
- "schema": "e1a_v5_validation_plan/4",
+ "schema": "e1a_v5_validation_plan/5",
  "seed_disjointness": {
-  "complete-power-v5": {
-   "from_all_engineering": true,
-   "from_v2": true,
-   "from_v3": true,
-   "from_v4": true
-  },
-  "critical-calibration-v5": {
-   "from_all_engineering": true,
-   "from_v2": true,
-   "from_v3": true,
-   "from_v4": true
-  },
-  "diagnostic-validation-v5": {
-   "from_all_engineering": true,
-   "from_v2": true,
-   "from_v3": true,
-   "from_v4": true
-  },
-  "negative-controls-v5": {
-   "from_all_engineering": true,
-   "from_v2": true,
-   "from_v3": true,
-   "from_v4": true
-  },
-  "size-validation-v5": {
-   "from_all_engineering": true,
-   "from_v2": true,
-   "from_v3": true,
-   "from_v4": true
-  }
+  "checked_against": [
+   "v5",
+   "v4",
+   "v3",
+   "v2",
+   "every engineering stream past and present"
+  ],
+  "confirmatory_executed": false,
+  "root": "e1a_v5/validation/v6/2026-10-06"
  },
  "seed_families": {
-  "complete-power-v5": 3060025210657503379,
-  "critical-calibration-v5": 15280046052714316182,
-  "diagnostic-validation-v5": 8067945209365484799,
-  "engineering-v5": 12900281823331069400,
-  "negative-controls-v5": 17829790455794060110,
-  "size-validation-v5": 10157267318770872789
+  "complete-power-v6": 15340229898012003877,
+  "critical-calibration-v6": 7785151095471264693,
+  "diagnostic-validation-v6": 7680297471468244930,
+  "engineering-v6": 2135856219033427549,
+  "negative-controls-v6": 10679338032700473471,
+  "size-validation-v6": 9926685174563395746
  },
  "status": "NON-CONTROLLING CANDIDATE",
  "success_predicate": {
@@ -1267,8 +1539,22 @@
   "success_iff": "SUPPORTED_WITHIN_DECLARED_TOLERANCES"
  },
  "supersedes_nothing": "e1a_v4 identities, contracts, plans and seal are untouched",
- "v5_core_status": "REPAIRED AND FROZEN - INDEPENDENT AUDIT REQUIRED",
- "v_release": "NON-RELEASE - VALIDATION NOT YET COMPLETE",
+ "temporal_model_qualification": {
+  "architecture": {
+   "band_sigma": 5.0,
+   "displacement_in_stationary_sd": 6.0,
+   "lag_fraction_of_lateral_tau_slow": 1.5,
+   "required_resolution": 0.2,
+   "trials_per_direction": 6000
+  },
+  "construction_time": "design builders derive the item from the built world's own exact semigroup residual; the hand-set flag is gone from the package",
+  "refusal": "TEMPORAL_MODEL_UNQUALIFIED",
+  "source": "an INDEPENDENT driven-response measurement; no flag is supplied anywhere and nothing is fitted",
+  "test": "R(2 tau) = R(tau)^2 holds for EVERY 2D linear generator, so a measured violation beyond the measurement's own standard error excludes the whole admissible class at once",
+  "unresolved_is_not_qualified": "a band too wide to exclude anything returns UNRESOLVED, which does not qualify"
+ },
+ "v6_core_status": "REPAIRED - INDEPENDENT AUDIT REQUIRED",
+ "v_release": "NON-RELEASE",
  "validation_case_architecture": {
   "dispatcher": "e1a_v5.validation.dispatch.instantiate",
   "driver_assignment": {
@@ -1362,21 +1648,33 @@
    "evidence.py",
    "pipeline.py",
    "diagnostics.py",
+   "certified.py",
+   "calibration.py",
+   "observation.py",
+   "reduction.py",
+   "generate.py",
    "validation/__init__.py",
    "validation/plan.py",
    "validation/cases.py",
+   "validation/contract.py",
    "validation/dispatch.py",
    "validation/events.py",
    "validation/harness.py",
    "validation/run.py"
   ],
   "rationale": {
+   "calibration.py": "the certified sensitivity and its enclosure",
+   "certified.py": "the certified derivative arithmetic",
    "diagnostics.py": "the authoritative diagnostic-family result",
    "evidence.py": "whether the evidence is the planned experiment",
+   "generate.py": "the synthetic worlds, including 3D hidden memory",
    "identity.py": "the identity rule itself",
+   "observation.py": "the T 15.2 observation-domain qualification",
    "pipeline.py": "the authoritative complete-success predicate",
+   "reduction.py": "the exact finite axial-remainder effects",
    "seeds.py": "seed interpretation",
    "validation/cases.py": "case generation and replicate counts",
+   "validation/contract.py": "the plan-to-code correspondence rule",
    "validation/dispatch.py": "which world each case instantiates",
    "validation/events.py": "whether a replicate realised its event",
    "validation/harness.py": "record execution and gate evaluation",

@@ -958,7 +958,8 @@ def test_v5_identities_and_seeds() -> None:
               __import__("json").load(open(os.path.join(
                   "docs", "e1a", "e1a_v5_seed_map.json")))["families"].values()
               if f["confirmatory"]))
-    check("the plan declares procedure version 5", doc["procedure_version"] == 5)
+    check("the plan declares the live procedure version",
+          doc["procedure_version"] == PROCEDURE_VERSION)
 
 
 def test_deterministic_battery() -> None:

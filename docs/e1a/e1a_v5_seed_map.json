@@ -1,129 +1,135 @@
 {
  "confirmatory_families_executed": false,
  "derivation": "seed = int(sha256(parts joined by '|').digest()[:8], 'big')",
- "disjointness": "families, cases and replicates occupy disjoint namespaces by construction",
+ "disjointness": "families, cases and replicates occupy disjoint namespaces by construction, and every confirmatory family is checked disjoint from the V5, V4, V3 and V2 streams and from every engineering stream past and present",
  "families": {
-  "complete-power-v5": {
+  "complete-power-v6": {
    "cases": {
-    "POWER-CONDLIM": 16453527133658900448,
-    "POWER-NOISEHI": 13766522695013736776,
-    "POWER-NOMINAL": 15147641812288525473
+    "POWER-CONDLIM": 17334692857466063348,
+    "POWER-NOISEHI": 12979036593382709464,
+    "POWER-NOMINAL": 9109183731925086637
    },
    "confirmatory": true,
    "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
    "disjoint_from_v4": true,
+   "disjoint_from_v5": true,
    "executed": false,
-   "seed": 3060025210657503379
+   "seed": 15340229898012003877
   },
-  "critical-calibration-v5": {
+  "critical-calibration-v6": {
    "cases": {
-    "CAL-CENTRE-01": 6747827454430955482,
-    "CAL-CONTRAST-01": 1914448784679562047,
-    "CAL-CURRENT-01": 8934199794837688809,
-    "CAL-DIAG-01": 7138552482139497636,
-    "CAL-SCALE-01": 10845640537192840641,
-    "CAL-SHAPE-01": 17095939895026883758,
-    "CAL-STAT-01": 7317663188134574227
+    "CAL-CENTRE-01": 1190950357527929147,
+    "CAL-CONTRAST-01": 13504851861802536152,
+    "CAL-CURRENT-01": 1048799216581555493,
+    "CAL-DIAG-01": 3951714368394952598,
+    "CAL-SCALE-01": 9079934747608364597,
+    "CAL-SHAPE-01": 7689889910091695525,
+    "CAL-STAT-01": 17198700736545774989
    },
    "confirmatory": true,
    "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
    "disjoint_from_v4": true,
+   "disjoint_from_v5": true,
    "executed": false,
-   "seed": 15280046052714316182
+   "seed": 7785151095471264693
   },
-  "diagnostic-validation-v5": {
+  "diagnostic-validation-v6": {
    "cases": {
-    "DIAG-NULL-COND": 1068424245152736671,
-    "DIAG-NULL-EXP": 16389777921036503050,
-    "DIAG-NULL-NOM": 8807998683988577678
+    "DIAG-NULL-COND": 15404878947886462286,
+    "DIAG-NULL-EXP": 9442728594532302765,
+    "DIAG-NULL-NOM": 4176400371070392489
    },
    "confirmatory": true,
    "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
    "disjoint_from_v4": true,
+   "disjoint_from_v5": true,
    "executed": false,
-   "seed": 8067945209365484799
+   "seed": 7680297471468244930
   },
-  "engineering-v5": {
+  "engineering-v6": {
    "cases": {},
    "confirmatory": false,
    "disjoint_from_confirmatory": true,
    "purpose": "implementation and smoke draws only; explicitly NOT part of any confirmatory validation and no result drawn from it may be reported as a validation outcome",
-   "seed": 12900281823331069400
+   "seed": 2135856219033427549
   },
-  "negative-controls-v5": {
+  "negative-controls-v6": {
    "cases": {
-    "CTL-AXIAL-COUPLE": 8816225252422960238,
-    "CTL-AXIAL-MEMORY": 5143456290733815711,
-    "CTL-BLIND-090": 15208690308283763241,
-    "CTL-BLIND-107": 3271400562978350234,
-    "CTL-BLUR-MISMATCH": 11956819931739857783,
-    "CTL-COMMON-07": 3186028193909302096,
-    "CTL-CURRENT": 15396096369031985480,
-    "CTL-DRIFT": 14469401876994683860,
-    "CTL-ETA-T-COV": 15648734113529640722,
-    "CTL-FIELD-106": 1964325213471673458,
-    "CTL-FIELD-110": 6045842276316091975,
-    "CTL-FIELD-MIX": 10679331934035865161,
-    "CTL-GEOM-ROT": 755179018860206213,
-    "CTL-GEOM-TRACE": 5118010485878460709,
-    "CTL-HARD-025": 8916347094291951838,
-    "CTL-NOISE-COLOR": 6806459404375843914,
-    "CTL-NOISE-HEAVY": 15177068610165747394,
-    "CTL-NOISE-HI": 5965317152676090084,
-    "CTL-NOISE-STATE": 12422646341716797279,
-    "CTL-OPT-FAIL": 6867267702328640870,
-    "CTL-RF-ELLIPSE": 731570404953024141,
-    "CTL-RF-MODES": 3077428413122589281,
-    "CTL-RF-STIFF-1021": 4828875454421734794,
-    "CTL-RF-STRADDLE": 13511554098106592965,
-    "CTL-RF-TEMP-304": 7431625840195474069,
-    "CTL-RF-VALID": 8424086428127964822,
-    "CTL-SELECTION": 2494413683356947384
+    "CTL-AXIAL-COUPLE": 17222409292785015970,
+    "CTL-AXIAL-MEMORY": 4495820791928859411,
+    "CTL-BLIND-090": 7832629340815492095,
+    "CTL-BLIND-107": 9158981575324012726,
+    "CTL-BLUR-MISMATCH": 10452668444527702254,
+    "CTL-COMMON-07": 14532878026083802072,
+    "CTL-CURRENT": 4657952228400043365,
+    "CTL-DRIFT": 16822047424227035888,
+    "CTL-ETA-T-COV": 18044426880764347139,
+    "CTL-FIELD-106": 16756475331235862647,
+    "CTL-FIELD-110": 17419620030299792934,
+    "CTL-FIELD-MIX": 11231071789494445011,
+    "CTL-GEOM-ROT": 16053180365312230130,
+    "CTL-GEOM-TRACE": 9599551616636474820,
+    "CTL-HARD-025": 6415396016231924223,
+    "CTL-NOISE-COLOR": 17649922769419277250,
+    "CTL-NOISE-HEAVY": 5824259343271714507,
+    "CTL-NOISE-HI": 8321914564792046347,
+    "CTL-NOISE-STATE": 10016577940841741365,
+    "CTL-OPT-FAIL": 666675675296528211,
+    "CTL-RF-ELLIPSE": 5493324254773453687,
+    "CTL-RF-MODES": 4661368263266459665,
+    "CTL-RF-STIFF-1021": 1740749778411785287,
+    "CTL-RF-STRADDLE": 184851040400962476,
+    "CTL-RF-TEMP-304": 3963898245467229547,
+    "CTL-RF-VALID": 1400321631742519532,
+    "CTL-SELECTION": 9459067243779853556
    },
    "confirmatory": true,
    "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
    "disjoint_from_v4": true,
+   "disjoint_from_v5": true,
    "executed": false,
-   "seed": 17829790455794060110
+   "seed": 10679338032700473471
   },
-  "size-validation-v5": {
+  "size-validation-v6": {
    "cases": {
-    "SIZE-ABS-HI": 9377359857785546803,
-    "SIZE-ABS-LO": 10426814947525078510,
-    "SIZE-CENTRE-BD": 15603122351860702088,
-    "SIZE-CON-HI": 17997125123801183517,
-    "SIZE-CON-LO": 12529269346084096696,
-    "SIZE-CURRENT-BD": 6041378878986148777,
-    "SIZE-NUIS-CAL": 394729240377289375,
-    "SIZE-NUIS-COND": 10527259394421906114,
-    "SIZE-NUIS-EXP": 8422705647772660547,
-    "SIZE-NUIS-NOISE": 10613000378081279659,
-    "SIZE-SHAPE-BD": 5774422783890861594
+    "SIZE-ABS-HI": 9491161807001445187,
+    "SIZE-ABS-LO": 3090214446445846178,
+    "SIZE-CENTRE-BD": 2427560277169821930,
+    "SIZE-CON-HI": 16311121072859670731,
+    "SIZE-CON-LO": 277079652767549566,
+    "SIZE-CURRENT-BD": 12297937047824827197,
+    "SIZE-NUIS-CAL": 5539159427740234869,
+    "SIZE-NUIS-COND": 5671916779298665320,
+    "SIZE-NUIS-EXP": 3596559669710216588,
+    "SIZE-NUIS-NOISE": 13376521343406082734,
+    "SIZE-SHAPE-BD": 11911895091179921705
    },
    "confirmatory": true,
    "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
    "disjoint_from_v4": true,
+   "disjoint_from_v5": true,
    "executed": false,
-   "seed": 10157267318770872789
+   "seed": 9926685174563395746
   }
  },
  "frozen_before_results_inspected": true,
- "procedure_version": 5,
- "root": "e1a_v5/validation/v5/2026-10-06",
- "schema": "e1a_v5_seed_map/4",
+ "procedure_version": 6,
+ "root": "e1a_v5/validation/v6/2026-10-06",
+ "schema": "e1a_v5_seed_map/5",
  "superseded_roots": {
   "v2": "e1a_v5/validation/2026-10-06",
   "v3": "e1a_v5/validation/v3/2026-10-06",
-  "v4": "e1a_v5/validation/v4/2026-10-06"
+  "v4": "e1a_v5/validation/v4/2026-10-06",
+  "v5": "e1a_v5/validation/v5/2026-10-06"
  }
 }

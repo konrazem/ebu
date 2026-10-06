@@ -1,0 +1,1218 @@
+{
+ "bounded_bias_qualification": {
+  "absolute": {
+   "theta0": {
+    "absolute_bounded_bias": 0.002059805848542531,
+    "ceiling": 0.0005,
+    "centre_factor": 1.000903676253346,
+    "exact_geometry_supremum": 0.0018081711080553207,
+    "exact_scale_supremum": 0.0018098058485425312,
+    "qualification": "EXCEEDS_CEILING",
+    "rate_factor": 1.0018081691374632,
+    "remainder_set_radius": 0.0018081691374631451
+   },
+   "theta1": {
+    "absolute_bounded_bias": 0.0011042977594143124,
+    "ceiling": 0.0005,
+    "centre_factor": 1.0004268753641996,
+    "exact_geometry_supremum": 0.0008539331585389974,
+    "exact_scale_supremum": 0.0008542977594143123,
+    "qualification": "EXCEEDS_CEILING",
+    "rate_factor": 1.0008539329509758,
+    "remainder_set_radius": 0.000853932950975848
+   },
+   "theta2": {
+    "absolute_bounded_bias": 0.0032212194304680943,
+    "ceiling": 0.0005,
+    "centre_factor": 1.0014823062473428,
+    "exact_geometry_supremum": 0.0029668184311227386,
+    "exact_scale_supremum": 0.0029712194304680945,
+    "qualification": "EXCEEDS_CEILING",
+    "rate_factor": 1.0029668097264965,
+    "remainder_set_radius": 0.002966809726496634
+   },
+   "theta3": {
+    "absolute_bounded_bias": 0.002059805848542531,
+    "ceiling": 0.0005,
+    "centre_factor": 1.000903676253346,
+    "exact_geometry_supremum": 0.0018081711080553207,
+    "exact_scale_supremum": 0.0018098058485425312,
+    "qualification": "EXCEEDS_CEILING",
+    "rate_factor": 1.0018081691374632,
+    "remainder_set_radius": 0.0018081691374631451
+   }
+  },
+  "contrast": {
+   "theta1-theta0": {
+    "ceiling": 0.0005,
+    "contrast_bounded_bias": 0.0031641036079568434,
+    "qualification": "EXCEEDS_CEILING"
+   },
+   "theta2-theta0": {
+    "ceiling": 0.0005,
+    "contrast_bounded_bias": 0.005281025279010625,
+    "qualification": "EXCEEDS_CEILING"
+   },
+   "theta3-theta0": {
+    "ceiling": 0.0005,
+    "contrast_bounded_bias": 0.004119611697085062,
+    "qualification": "EXCEEDS_CEILING"
+   }
+  },
+  "design_point_verdict": "UNQUALIFIED",
+  "note": "reported as measured. Section 32 forbids shrinking the model error to make a design point pass; a prospective design change would be separate reviewed work."
+ },
+ "certified_calibration": {
+  "absolute_sigma": {
+   "block1/theta0": {
+    "hi": 0.006573148756746258,
+    "lo": 0.006570736457831273,
+    "point": 0.006571942607288765,
+    "qualification": "PASS"
+   },
+   "block1/theta1": {
+    "hi": 0.006535140625361533,
+    "lo": 0.006532693021690271,
+    "point": 0.006533916823525902,
+    "qualification": "PASS"
+   },
+   "block1/theta2": {
+    "hi": 0.0066408466047967775,
+    "lo": 0.00650455627104966,
+    "point": 0.006572701437923219,
+    "qualification": "PASS"
+   },
+   "block1/theta3": {
+    "hi": 0.00657315187989024,
+    "lo": 0.006570733334687228,
+    "point": 0.006571942607288734,
+    "qualification": "PASS"
+   },
+   "block2/theta0": {
+    "hi": 0.006573148756746258,
+    "lo": 0.006570736457831273,
+    "point": 0.006571942607288765,
+    "qualification": "PASS"
+   },
+   "block2/theta1": {
+    "hi": 0.006535140625361533,
+    "lo": 0.006532693021690271,
+    "point": 0.006533916823525902,
+    "qualification": "PASS"
+   },
+   "block2/theta2": {
+    "hi": 0.0066408466047967775,
+    "lo": 0.00650455627104966,
+    "point": 0.006572701437923219,
+    "qualification": "PASS"
+   },
+   "block2/theta3": {
+    "hi": 0.00657315187989024,
+    "lo": 0.006570733334687228,
+    "point": 0.006571942607288734,
+    "qualification": "PASS"
+   }
+  },
+  "contrast_sigma": {
+   "block1/theta1-block1/theta0": {
+    "hi": 0.0021653430644857346,
+    "lo": 0.002160549375248402,
+    "point": 0.0021629462198670684,
+    "qualification": "PASS"
+   },
+   "block1/theta2-block1/theta0": {
+    "hi": 0.0022244938519789047,
+    "lo": 0.00208592302793706,
+    "point": 0.0021552084399579824,
+    "qualification": "PASS"
+   },
+   "block1/theta3-block1/theta0": {
+    "hi": 0.0021237026627510236,
+    "lo": 0.002118938024368261,
+    "point": 0.0021213203435596424,
+    "qualification": "PASS"
+   }
+  },
+  "enclosure_evidence": {
+   "certified_information_min_eigenvalue": 0.0719627874720357,
+   "information_inverse_norm": 13.89607094345246,
+   "linear_solve_residual": 2.3586983601357433e-08,
+   "lyapunov_tail_bound_relative": 2.152739554340769e-33,
+   "riccati_derivative_bound_relative": 5.009079930042735e-10,
+   "riccati_value_bound_relative": 4.426284335019386e-12,
+   "worst_second_derivative_radius": 1.3538027280468897e-07
+  },
+  "fully_certified": true,
+  "log_beta_row_block1_theta0": {
+   "b_det_x": {
+    "radius": 163.88319873325625,
+    "value": 0.0
+   },
+   "b_det_y": {
+    "radius": 163.8831987332563,
+    "value": 0.0
+   },
+   "fiducial_x": {
+    "radius": 3.432785633e-314,
+    "value": 0.0
+   },
+   "fiducial_y": {
+    "radius": 3.432785633e-314,
+    "value": 0.0
+   },
+   "log_T_block@block1": {
+    "radius": 0.0005580935775782889,
+    "value": 1.0000000000000042
+   },
+   "log_T_block@block2": {
+    "radius": 1.3731e-319,
+    "value": 0.0
+   },
+   "log_T_standard": {
+    "radius": 0.0002801432793874305,
+    "value": 1.0000000000000016
+   },
+   "log_axial_coupling": {
+    "radius": 5.593642974000274e-06,
+    "value": 0.01575044337465092
+   },
+   "log_axial_stiffness": {
+    "radius": 1.3915221503870608e-05,
+    "value": -0.007875221687325476
+   },
+   "log_bead_radius": {
+    "radius": 0.00029085653704185097,
+    "value": 2.0000000000026854
+   },
+   "log_dt": {
+    "radius": 0.0027842889649052215,
+    "value": 0.017991607011952113
+   },
+   "log_eta_dT": {
+    "radius": 1.373e-320,
+    "value": 0.0
+   },
+   "log_eta_ref": {
+    "radius": 3.433e-320,
+    "value": 0.0
+   },
+   "log_force_displacement_cal": {
+    "radius": 0.00018752060831574624,
+    "value": -1.0000000000000018
+   },
+   "log_k_block@block1": {
+    "radius": 0.00028014837172494924,
+    "value": -1.0000000000000029
+   },
+   "log_k_block@block2": {
+    "radius": 6.8655e-320,
+    "value": 0.0
+   },
+   "log_k_field@block1/theta0": {
+    "radius": 0.00018752060831574624,
+    "value": -1.0000000000000018
+   },
+   "log_k_field@block1/theta1": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_field@block1/theta2": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_field@block1/theta3": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_field@block2/theta0": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_field@block2/theta1": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_field@block2/theta2": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_field@block2/theta3": {
+    "radius": 4.577e-320,
+    "value": 0.0
+   },
+   "log_k_standard": {
+    "radius": 4.854667852348948e-05,
+    "value": -1.0000000000000016
+   },
+   "log_p_gain": {
+    "radius": 0.00029085653704185097,
+    "value": 2.0000000000026854
+   },
+   "log_r_obs_scale": {
+    "radius": 1.484012003160329e-05,
+    "value": 0.02208312264325462
+   },
+   "log_t_exp": {
+    "radius": 0.00027933977686729844,
+    "value": -0.01799160701196557
+   },
+   "p_shear": {
+    "radius": 0.0005630867697673642,
+    "value": -0.01235530783520695
+   }
+  },
+  "mu_x_row_detector_offset": {
+   "d mu_x / d b_det_x": -0.999999999999998,
+   "radius": 1.057850438609161e-06
+  },
+  "primitive_count": 29,
+  "primitives": [
+   "log_k_standard",
+   "log_T_standard",
+   "log_eta_ref",
+   "log_eta_dT",
+   "log_bead_radius",
+   "log_force_displacement_cal",
+   "log_axial_stiffness",
+   "log_axial_coupling",
+   "log_p_gain",
+   "p_shear",
+   "log_r_obs_scale",
+   "b_det_x",
+   "b_det_y",
+   "fiducial_x",
+   "fiducial_y",
+   "log_t_exp",
+   "log_dt",
+   "log_k_block@block1",
+   "log_T_block@block1",
+   "log_k_field@block1/theta0",
+   "log_k_field@block1/theta1",
+   "log_k_field@block1/theta2",
+   "log_k_field@block1/theta3",
+   "log_k_block@block2",
+   "log_T_block@block2",
+   "log_k_field@block2/theta0",
+   "log_k_field@block2/theta1",
+   "log_k_field@block2/theta2",
+   "log_k_field@block2/theta3"
+  ],
+  "structural_zeros": [
+   "log_eta_ref",
+   "log_eta_dT",
+   "fiducial_x",
+   "fiducial_y",
+   "log_k_field@block1/theta1",
+   "log_k_field@block1/theta2",
+   "log_k_field@block1/theta3",
+   "log_k_block@block2",
+   "log_T_block@block2",
+   "log_k_field@block2/theta0",
+   "log_k_field@block2/theta1",
+   "log_k_field@block2/theta2",
+   "log_k_field@block2/theta3"
+  ],
+  "transcendental_backend": {
+   "arithmetic_guarantee": "General Decimal Arithmetic specification: add, subtract, multiply and divide are correctly rounded under the context rounding mode",
+   "directed_rounding": [
+    "ROUND_FLOOR",
+    "ROUND_CEILING"
+   ],
+   "exp_reduction": "y = x / 2**k exactly, |y| <= 1/2, then k squarings",
+   "exp_remainder": "|y|^(N+1) / (N+1)! / (1 - |y|/(N+2))",
+   "exp_series": "sum_{j<=N} y^j / j!",
+   "exp_terms": 40,
+   "input_conversion": "Decimal(float) and math.frexp/math.ldexp, both exact on the binary value; no decimal display string is parsed",
+   "library_transcendentals_used": [],
+   "log_reduction": "x = m * 2**e exactly; log x = log m + e log 2",
+   "log_remainder": "2 u^(2N+1) / ((2N+1) (1 - u^2))",
+   "log_series": "log m = -2 atanh((1-m)/(1+m)), |u| <= 1/3",
+   "log_terms": 45,
+   "precision_digits": 60,
+   "route": "self-contained interval series over decimal basic arithmetic",
+   "sqrt": "candidate from math.sqrt, PROVED by exact rational comparison"
+  }
+ },
+ "complete_experiments": {
+  "CTL-AXIAL-MEMORY": {
+   "axial_memory_witness": {
+    "condition_k_eff": 1.0,
+    "k3_spd": true,
+    "lateral_marginal_relative_error": 1.497927925171023e-16,
+    "markov_closure_residual": {
+     "tau_slow_x0.25": 0.09328433987059101,
+     "tau_slow_x0.5": 0.05688287263765277,
+     "tau_slow_x1.0": 0.020926338785410763
+    },
+    "schur_spd": true,
+    "worst_markov_closure_residual": 0.09328433987059101
+   },
+   "classification": "INVALID_MEASUREMENT_OR_MODEL",
+   "observation_valid": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "reason_codes": {
+    "CALIBRATION_UNCERTAINTY_EXCESS": 14,
+    "INCOMPLETE_INPUT": 47,
+    "TEMPORAL_MODEL_UNQUALIFIED": 8
+   },
+   "seconds": 39.3,
+   "temporal_bands": [
+    0.06487219228551837,
+    0.07053858229091581,
+    0.11392822331141293,
+    0.06518941800332449,
+    0.06574650351416748,
+    0.06913652548680932,
+    0.11119703049747212,
+    0.06461744951260781
+   ],
+   "temporal_residuals": [
+    0.29605522607855034,
+    0.23581051650929422,
+    0.42147910687802115,
+    0.3043232689103963,
+    0.305440122334726,
+    0.2159299891984583,
+    0.3965481634765421,
+    0.29063414198288834
+   ],
+   "temporal_status": [
+    "UNQUALIFIED",
+    "UNQUALIFIED",
+    "UNQUALIFIED",
+    "UNQUALIFIED",
+    "UNQUALIFIED",
+    "UNQUALIFIED",
+    "UNQUALIFIED",
+    "UNQUALIFIED"
+   ]
+  },
+  "CTL-ETA-T-COV": {
+   "classification": "INVALID_MEASUREMENT_OR_MODEL",
+   "eta_t_covariance_consequence": {
+    "absolute_interval_width_max": 0.35791569238722715,
+    "absolute_interval_width_min": 0.27497732313350576,
+    "auxiliary_draw": {
+     "drawn": true,
+     "log_T_standard": 0.0014137487928813186,
+     "log_k_standard": 0.007393487639954916,
+     "shared_latent": "thermometry_standard"
+    },
+    "classification": "INVALID_MEASUREMENT_OR_MODEL",
+    "declared_correlation": 0.7,
+    "note": "the DIRECTION of the consequence is a property of this primitive map, not a general rule; no universal claim is made about the SIGN of the effect. This is MANDATORY recorded output and is not the release criterion, which is false complete support.",
+    "ratio_omitted_over_correct": 1.0929261322179475,
+    "sigma_abs_correct_shared_model": 0.006571942607288765,
+    "sigma_abs_difference": 0.0006107052076536794,
+    "sigma_abs_omitted_covariance": 0.007182647814942445,
+    "sigma_contrast_correct_shared_model": 0.0021629462198670684,
+    "sigma_contrast_difference": 0.0,
+    "sigma_contrast_omitted_covariance": 0.0021629462198670684
+   },
+   "observation_valid": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "reason_codes": {
+    "CALIBRATION_UNCERTAINTY_EXCESS": 14,
+    "INCOMPLETE_INPUT": 47,
+    "OBSERVATION_MODEL_UNQUALIFIED": 1
+   },
+   "seconds": 58.4,
+   "temporal_bands": [
+    0.07102891580605358,
+    0.07086322577074264,
+    0.10529105752543857,
+    0.07134510479191758,
+    0.07060260619534778,
+    0.07082685004898477,
+    0.10547403127517235,
+    0.07166976542470839
+   ],
+   "temporal_residuals": [
+    0.007582685667253473,
+    0.015918160755228034,
+    0.012405821672612798,
+    0.008986362785275448,
+    0.004993190289468598,
+    0.009477960527968194,
+    0.027426760301376876,
+    0.020660904211651725
+   ],
+   "temporal_status": [
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED"
+   ]
+  },
+  "CTL-NOISE-HI": {
+   "classification": "COMPUTATION_NOT_EVALUABLE",
+   "observation_valid": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "reason_codes": {
+    "CALIBRATION_UNCERTAINTY_EXCESS": 28,
+    "COMPUTATION_NOT_EVALUABLE": 8,
+    "INCOMPLETE_INPUT": 47,
+    "OBSERVATION_MODEL_UNQUALIFIED": 9
+   },
+   "seconds": 81.6,
+   "temporal_bands": [
+    0.07890617755364093,
+    0.07940702317149281,
+    0.11270317566917087,
+    0.07956282968065473,
+    0.07819385365101574,
+    0.07954085132750802,
+    0.11163383931680365,
+    0.08020656989640997
+   ],
+   "temporal_residuals": [
+    0.013301658773302642,
+    0.02627690992287423,
+    0.01694447826022194,
+    0.01534393265441779,
+    0.016001705698471865,
+    0.012765200508575169,
+    0.011023779647734449,
+    0.025237694123159484
+   ],
+   "temporal_status": [
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED"
+   ]
+  },
+  "POWER-NOMINAL": {
+   "classification": "INVALID_MEASUREMENT_OR_MODEL",
+   "observation_valid": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+   ],
+   "reason_codes": {
+    "CALIBRATION_UNCERTAINTY_EXCESS": 14,
+    "INCOMPLETE_INPUT": 47
+   },
+   "seconds": 38.8,
+   "temporal_bands": [
+    0.07141197498909035,
+    0.0711097119115125,
+    0.10478108277319403,
+    0.07184415874226004,
+    0.07240657525019502,
+    0.07179515772887557,
+    0.10448665441123653,
+    0.07182821334960744
+   ],
+   "temporal_residuals": [
+    0.011560699565644832,
+    0.011056519106499435,
+    0.013257538830715471,
+    0.02161872152836721,
+    0.021237816682454936,
+    0.02913546973992036,
+    0.01374828777014456,
+    0.019746130036559048
+   ],
+   "temporal_status": [
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED",
+    "QUALIFIED"
+   ]
+  }
+ },
+ "confirmatory_seeds_consumed": 0,
+ "deterministic_controls": [
+  {
+   "case_id": "CTL-RF-TEMP-304",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.00022744358522184182,
+   "retained_fraction": 0.306879010005119
+  },
+  {
+   "case_id": "CTL-RF-STIFF-1021",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.0005218639151212723,
+   "retained_fraction": 0.0280111782081937
+  },
+  {
+   "case_id": "CTL-RF-MODES",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "harmonic_scalar": 2.060240963855422,
+   "harmonic_would_have_passed": true,
+   "modes": [
+    1.9000000000000004,
+    2.25
+   ],
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-ELLIPSE",
+   "distance": 0.45814536593707744,
+   "epsilon_2": 0.051082562376599076,
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-STRADDLE",
+   "expected": "FIELD_REALIZATION_UNRESOLVED",
+   "observed": "FIELD_REALIZATION_UNRESOLVED",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-VALID",
+   "expected": "FIELD_REALIZATION_VALID",
+   "note": "synthetic qualification only; no physical packet is asserted VALID",
+   "observed": "FIELD_REALIZATION_VALID",
+   "passed": true
+  },
+  {
+   "axial_ratio": 0.5625,
+   "case_id": "CTL-AXIAL-COUPLE",
+   "declared_coupling": 0.3,
+   "exceeds_absolute_margin": true,
+   "exceeds_shape_margin": true,
+   "expected": "pipeline uses H_eff; K_qq bias quantified",
+   "observed": "r=0.562500 log_beta_plane=-0.496437 G_plane=0.413339",
+   "passed": true,
+   "plane_geometry_bias": 0.41333928659223396,
+   "plane_log_beta_bias": -0.496436886313891
+  },
+  {
+   "case_id": "REF-TEMPORAL-QUALIFICATION",
+   "expected": "the measured response qualifies a 2D world and excludes a 3D one",
+   "note": "no flag is supplied anywhere. For EVERY 2D linear generator the mean response is a semigroup, R(2t) = R(t)^2, so a measured violation beyond the measurement's own 5-sigma error excludes the whole admissible 2D class without fitting anything.",
+   "observed": {
+    "hidden_memory": {
+     "band": 0.06449056959419994,
+     "entry_standard_error": 0.002173067468400883,
+     "qualified": false,
+     "residual_standard_error": 0.012898113918839988,
+     "resolution_required": 0.2,
+     "response_scale": 0.3273699876954198,
+     "semigroup_residual": 0.2883452975261539,
+     "status": "UNQUALIFIED",
+     "tau": 0.00012582078577627116,
+     "trials": 6000
+    },
+    "nominal": {
+     "band": 0.07102089572226294,
+     "entry_standard_error": 0.002183089871653668,
+     "qualified": true,
+     "residual_standard_error": 0.014204179144452588,
+     "resolution_required": 0.2,
+     "response_scale": 0.22452190611817424,
+     "semigroup_residual": 0.011798188711951676,
+     "status": "QUALIFIED",
+     "tau": 0.00012781794110605326,
+     "trials": 6000
+    }
+   },
+   "passed": true
+  },
+  {
+   "case_id": "REF-AXIAL-MEMORY-WITNESS",
+   "expected": "lateral density matches Schur while the 2D Markov closure fails",
+   "note": "the Chapman-Kolmogorov identity C(2t) = C(t) Sigma^-1 C(t) holds for EVERY 2D Markov generator, so a nonzero residual proves no admissible 2D temporal model reproduces this lateral path",
+   "observed": {
+    "condition_k_eff": 1.0,
+    "k3_spd": true,
+    "lateral_marginal_relative_error": 1.497927925171023e-16,
+    "markov_closure_residual": {
+     "tau_slow_x0.25": 0.09328433987059101,
+     "tau_slow_x0.5": 0.05688287263765277,
+     "tau_slow_x1.0": 0.020926338785410763
+    },
+    "schur_spd": true,
+    "worst_markov_closure_residual": 0.09328433987059101
+   },
+   "passed": true
+  },
+  {
+   "case_id": "REF-OBS-DETECTOR-COORDS",
+   "expected": "P enters the localisation ratio; the P = 0.1 I case FAILS",
+   "note": "S_y = P Sigma P^T, so r_loc = lambda_max(S_y^-1/2 R S_y^-1/2) = 1.0. V5 compared against the latent Sigma and reported 0.01, which passes. Both the P = I and the nontrivial P cases are regressed.",
+   "observed": {
+    "ceiling": 0.05,
+    "detector_coordinate_ratio": 1.0,
+    "latent_only_ratio_v5_would_report": 0.01
+   },
+   "passed": true
+  },
+  {
+   "case_id": "REF-JOINT-REGION",
+   "expected": "a joint region with a GUARANTEED coverage, not a marginal 3 sigma",
+   "note": "allocated noncoverage per primitive, intersected; the union bound makes the joint coverage valid for ANY dependence structure, so the declared shared thermometry latent is retained rather than being assumed away",
+   "observed": {
+    "allocated_noncoverage": 0.001,
+    "bounded_systematics": {
+     "wall_hydrodynamic_resistance": 0.005
+    },
+    "categories": [
+     {
+      "bound": null,
+      "category": "viscosity_eta_of_T",
+      "classification": "uncertain",
+      "justification": "buffer viscosity and its temperature coefficient; they set the drag, which the estimator profiles",
+      "members": [
+       "log_eta_ref",
+       "log_eta_dT"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "temperature_calibration",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_T_standard",
+       "log_T_block"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "bead_radius_material_transfer",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_bead_radius"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "force_displacement_calibration_3d",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_force_displacement_cal"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "axial_stiffness_coupling",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_axial_stiffness",
+       "log_axial_coupling"
+      ]
+     },
+     {
+      "bound": 0.005,
+      "category": "wall_hydrodynamic_resistance",
+      "classification": "bounded_systematic",
+      "justification": "a deterministic near-surface drag correction with a stated fractional bound; U forbids converting a bounded model error into a Gaussian variable",
+      "members": []
+     },
+     {
+      "bound": null,
+      "category": "coordinate_transform_P",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_p_gain",
+       "p_shear"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "centre_fiducial_transfer",
+      "classification": "uncertain",
+      "justification": "the fiducial enters the centre statistic, not the scale; its log-beta row is a demonstrated zero",
+      "members": [
+       "fiducial_x",
+       "fiducial_y"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "localization_covariance_R_obs",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_r_obs_scale"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "detector_offset",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "b_det_x",
+       "b_det_y"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "shutter_exposure",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_t_exp"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "timing_synchronization",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_dt"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "shared_standards",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_k_standard"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "block_specific",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_k_block"
+      ]
+     },
+     {
+      "bound": null,
+      "category": "field_specific",
+      "classification": "uncertain",
+      "justification": "",
+      "members": [
+       "log_k_field"
+      ]
+     }
+    ],
+    "construction": "intersection of individually calibrated marginal primitive regions with allocated noncoverage; valid for any dependence structure by the union bound",
+    "coverage_factor_max": 4.141642461643443,
+    "coverage_factor_min": 4.141642461643443,
+    "guaranteed_joint_coverage": 0.999,
+    "identity": "0bf05848f0397cd0a686aa8a42bc5387546481cbbf776cb854e66c3064fec5b7",
+    "latent_basis": [
+     "thermometry_standard"
+    ],
+    "primitive_count": 29,
+    "version": 1
+   },
+   "passed": true
+  },
+  {
+   "case_id": "REF-ETA-T-COV-ALGEBRA",
+   "expected": "the two propagations differ",
+   "note": "SUPPLEMENTARY exact reference, not the CTL-ETA-T-COV control. It shows only that the two covariance propagations differ. V4 additionally asserted a universal SIGN for the effect of omitting the covariance; its own ratios (0.327, 1.005, 0.317) contradict any universal sign, so no such claim is made.",
+   "observed": {
+    "sigma_ratio_with_over_without": [
+     0.32720772447490043,
+     1.0054001348026205,
+     0.31702759704842215
+    ]
+   },
+   "passed": true
+  },
+  {
+   "case_id": "CTL-OPT-FAIL",
+   "expected": "COMPUTATION_NOT_EVALUABLE; beta never fabricated",
+   "observed": [
+    "NaN objective: OptimizerFailure",
+    "inadmissible start: OptimizerFailure",
+    "singular factorisation: OptimizerFailure",
+    "budget exhausted: converged=False"
+   ],
+   "passed": true
+  }
+ ],
+ "frames_per_record": 1200,
+ "gate_calibration": {
+  "expectations": {
+   "analysis_identity": "85add71db0a61543d4657537b124d80223313ef5f7a36bbe48e4c88cec250408",
+   "calibration_seed_namespace": "critical-calibration-v6",
+   "coverage_target": 0.975,
+   "domain_identity": "e1a_v5_candidate_2026-10-06/nominal-envelope",
+   "plan_identity": "0ef888251bff0892e0afdda914677cc96d161ca0e6a9b47e8a386af9f3f66132",
+   "procedure_version": 6,
+   "seed_map_identity": "268943c7f73b31026b2934929a7ae685c61ec981682f110df6d5ba5fdb62bc96",
+   "validation_identity": "072aba3d8d95a89d99449a3c30e700eb7984efb6442b0458117187c65d379144"
+  },
+  "live_state": "UNCALIBRATED for shape, centre, stationarity and current",
+  "production_receipts": 0
+ },
+ "identities": {
+  "analysis_procedure": "85add71db0a61543d4657537b124d80223313ef5f7a36bbe48e4c88cec250408",
+  "gate_semantics": "faec0e05385cd1e106777b05ac7d271c074d0087a34d615e2bb199225619aac1",
+  "packet_schema": "22f1f27a50b8cd4952e0efb640a083ee7967c7f21bdf0f90806a0f65abf21e63",
+  "seed_map": "268943c7f73b31026b2934929a7ae685c61ec981682f110df6d5ba5fdb62bc96",
+  "synthetic_generator": "2ab4c76bb772d83ccb199cf0b30659224390fb554fedb689a5029edcde50c361",
+  "validation_procedure": "072aba3d8d95a89d99449a3c30e700eb7984efb6442b0458117187c65d379144"
+ },
+ "information_fraction_of_target": 0.0026666666666666666,
+ "joint_calibration_region": {
+  "allocated_noncoverage": 0.001,
+  "bounded_systematics": {
+   "wall_hydrodynamic_resistance": 0.005
+  },
+  "categories": [
+   {
+    "bound": null,
+    "category": "viscosity_eta_of_T",
+    "classification": "uncertain",
+    "justification": "buffer viscosity and its temperature coefficient; they set the drag, which the estimator profiles",
+    "members": [
+     "log_eta_ref",
+     "log_eta_dT"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "temperature_calibration",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_T_standard",
+     "log_T_block"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "bead_radius_material_transfer",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_bead_radius"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "force_displacement_calibration_3d",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_force_displacement_cal"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "axial_stiffness_coupling",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_axial_stiffness",
+     "log_axial_coupling"
+    ]
+   },
+   {
+    "bound": 0.005,
+    "category": "wall_hydrodynamic_resistance",
+    "classification": "bounded_systematic",
+    "justification": "a deterministic near-surface drag correction with a stated fractional bound; U forbids converting a bounded model error into a Gaussian variable",
+    "members": []
+   },
+   {
+    "bound": null,
+    "category": "coordinate_transform_P",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_p_gain",
+     "p_shear"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "centre_fiducial_transfer",
+    "classification": "uncertain",
+    "justification": "the fiducial enters the centre statistic, not the scale; its log-beta row is a demonstrated zero",
+    "members": [
+     "fiducial_x",
+     "fiducial_y"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "localization_covariance_R_obs",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_r_obs_scale"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "detector_offset",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "b_det_x",
+     "b_det_y"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "shutter_exposure",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_t_exp"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "timing_synchronization",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_dt"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "shared_standards",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_k_standard"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "block_specific",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_k_block"
+    ]
+   },
+   {
+    "bound": null,
+    "category": "field_specific",
+    "classification": "uncertain",
+    "justification": "",
+    "members": [
+     "log_k_field"
+    ]
+   }
+  ],
+  "construction": "intersection of individually calibrated marginal primitive regions with allocated noncoverage; valid for any dependence structure by the union bound",
+  "coverage_factor_max": 4.141642461643443,
+  "coverage_factor_min": 4.141642461643443,
+  "guaranteed_joint_coverage": 0.999,
+  "identity": "0bf05848f0397cd0a686aa8a42bc5387546481cbbf776cb854e66c3064fec5b7",
+  "latent_basis": [
+   "thermometry_standard"
+  ],
+  "primitive_count": 29,
+  "version": 1
+ },
+ "label": "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT",
+ "observation_qualification": {
+  "auditor_counterexample": {
+   "ceiling": 0.05,
+   "detector_coordinate_ratio": 1.0,
+   "latent_only_ratio_v5_reported": 0.01,
+   "p": "0.1 I",
+   "r_obs": "0.01 I",
+   "sigma": "I"
+  },
+  "ctl_noise_hi_identity_p": {
+   "bandwidth_product": 0.15,
+   "bandwidth_product_upper": 0.1563836709303567,
+   "envelope": {
+    "bandwidth_product": 0.15,
+    "bandwidth_product_upper": 0.1563836709303567,
+    "exposure_fraction": 0.05,
+    "exposure_fraction_upper": 0.052322558470938356,
+    "generalized_rate_max_upper": 12423.934157722148,
+    "localization_ratio": 0.25,
+    "localization_ratio_upper": 0.3241274078602649,
+    "relaxation_rates": [
+     11735.441730792845,
+     11921.718583662572
+    ]
+   },
+   "exposure_averaged_ratio": null,
+   "exposure_fraction": 0.05,
+   "exposure_fraction_upper": 0.052322558470938356,
+   "localization_ratio": 0.25,
+   "localization_ratio_upper": 0.3241274078602649,
+   "noise_model": "gaussian",
+   "refusals": [
+    "OBSERVATION_MODEL_UNQUALIFIED"
+   ],
+   "valid": false
+  },
+  "ctl_noise_hi_nontrivial_p": {
+   "bandwidth_product": 0.15,
+   "bandwidth_product_upper": 0.1563836709303567,
+   "envelope": {
+    "bandwidth_product": 0.15,
+    "bandwidth_product_upper": 0.1563836709303567,
+    "exposure_fraction": 0.05,
+    "exposure_fraction_upper": 0.052322558470938356,
+    "generalized_rate_max_upper": 12423.934157722148,
+    "localization_ratio": 1.8261504747991237,
+    "localization_ratio_upper": 2.3676216790377276,
+    "relaxation_rates": [
+     11735.441730792845,
+     11921.718583662572
+    ]
+   },
+   "exposure_averaged_ratio": null,
+   "exposure_fraction": 0.05,
+   "exposure_fraction_upper": 0.052322558470938356,
+   "localization_ratio": 1.8261504747991237,
+   "localization_ratio_upper": 2.3676216790377276,
+   "noise_model": "gaussian",
+   "refusals": [
+    "OBSERVATION_MODEL_UNQUALIFIED"
+   ],
+   "valid": false
+  },
+  "design_log_beta_range": [
+   -0.4054651081081645,
+   0.15415067982725833
+  ],
+  "nominal": {
+   "bandwidth_product": 0.15,
+   "bandwidth_product_upper": 0.1563836709303567,
+   "envelope": {
+    "bandwidth_product": 0.15,
+    "bandwidth_product_upper": 0.1563836709303567,
+    "exposure_fraction": 0.05,
+    "exposure_fraction_upper": 0.052322558470938356,
+    "generalized_rate_max_upper": 12423.934157722148,
+    "localization_ratio": 0.019999999999999997,
+    "localization_ratio_upper": 0.025930192628821184,
+    "relaxation_rates": [
+     11735.441730792845,
+     11921.718583662572
+    ]
+   },
+   "exposure_averaged_ratio": null,
+   "exposure_fraction": 0.05,
+   "exposure_fraction_upper": 0.052322558470938356,
+   "localization_ratio": 0.019999999999999997,
+   "localization_ratio_upper": 0.025930192628821184,
+   "noise_model": "gaussian",
+   "refusals": [],
+   "valid": true
+  }
+ },
+ "plan_code_correspondence": {
+  "findings": [],
+  "ok": true
+ },
+ "procedure_version": 6,
+ "scientific_accounting": {
+  "calibration_executions": 0,
+  "confirmatory_seeds_consumed": 0,
+  "official_campaign_jobs": 0,
+  "optical_trap_experiments": 0,
+  "physical_calibration_data": 0,
+  "real_experiment_data": 0
+ },
+ "seed_namespace": "engineering-v6",
+ "seeds": {
+  "confirmatory_executed": false,
+  "confirmatory_families": {
+   "complete-power-v6": 15340229898012003877,
+   "critical-calibration-v6": 7785151095471264693,
+   "diagnostic-validation-v6": 7680297471468244930,
+   "negative-controls-v6": 10679338032700473471,
+   "size-validation-v6": 9926685174563395746
+  },
+  "engineering": {
+   "engineering-v6": 2135856219033427549
+  },
+  "root": "e1a_v5/validation/v6/2026-10-06"
+ },
+ "temporal_model_qualification": {
+  "architecture": {
+   "band_sigma": 5.0,
+   "displacement_sd": 6.0,
+   "lag_fraction_of_tau_slow": 1.5,
+   "required_resolution": 0.2,
+   "test": "R(2 tau) = R(tau)^2 holds for EVERY 2D linear generator",
+   "trials_per_direction": 6000
+  },
+  "hidden_memory_3d_world": {
+   "band": 0.06587058848692379,
+   "entry_standard_error": 0.002173067468400883,
+   "qualified": false,
+   "residual_standard_error": 0.013174117697384758,
+   "resolution_required": 0.2,
+   "response_scale": 0.323824672956297,
+   "semigroup_residual": 0.3155222614479105,
+   "status": "UNQUALIFIED",
+   "tau": 0.00012582078577627116,
+   "trials": 6000
+  },
+  "manual_flag": "ABSENT",
+  "nominal_2d_world": {
+   "band": 0.07200369280816525,
+   "entry_standard_error": 0.002183089871653668,
+   "qualified": true,
+   "residual_standard_error": 0.01440073856163305,
+   "resolution_required": 0.2,
+   "response_scale": 0.22130626929900943,
+   "semigroup_residual": 0.017232870245041762,
+   "status": "QUALIFIED",
+   "tau": 0.00012781794110605326,
+   "trials": 6000
+  }
+ },
+ "total_seconds": 238.0,
+ "validation_plan_identity": "0ef888251bff0892e0afdda914677cc96d161ca0e6a9b47e8a386af9f3f66132"
+}

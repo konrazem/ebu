@@ -1,10 +1,10 @@
-# E1a v5 — candidate pre-execution validation plan
+# E1a V-stage — candidate pre-execution validation plan
 
 ```text
 STATUS:                  NON-CONTROLLING CANDIDATE
 POLICY VERSION:          E1A-T11a-RF-v1
-PROCEDURE VERSION:       5  (v1 superseded; v2 AUDIT FAILED;
-                             v3 NOT CLEARED; v4 NOT CLEARED)
+PROCEDURE VERSION:       6  (v1 superseded; v2 AUDIT FAILED;
+                             v3, v4, v5 NOT CLEARED)
 AUTHORITY MODIFIED:      NO
 EXECUTION AUTHORISED:    FALSE
 E1a-v4:                  UNTOUCHED (identities, contracts, plan, seal)
@@ -24,21 +24,23 @@ validated quantity was tuned using the validation it was judged by.
 
 | Object | SHA-256 |
 |---|---|
-| analysis procedure | `c10efe5109da9d8b3f4a6bd2ec0bb0f57e4718bed7ee5b763f06f646a92f4e75` |
-| packet schema | `b6e1e9b276ee8039e9784baa6d60e6cc3edcdd064956a0a5feaf783c348cd9f9` |
-| gate semantics | `694f0769f547ebccdc13d664041ccc10f601d2042a264552081a9aea023c59ac` |
-| seed map | `909521bc2204f714108aebeee0b882ad406cc2d537b226ea5221c8bbfe25a165` |
-| synthetic generator | `95b14ee4321f522c17fdded41c8e7521f327543caed82c753c536fb3209530a9` |
-| validation procedure | `6be714826bd8d6d08125dd0f1b5a8f40cc71622f122e5cf351712a924953cba9` |
+| analysis procedure | `85add71db0a61543d4657537b124d80223313ef5f7a36bbe48e4c88cec250408` |
+| packet schema | `22f1f27a50b8cd4952e0efb640a083ee7967c7f21bdf0f90806a0f65abf21e63` |
+| gate semantics | `faec0e05385cd1e106777b05ac7d271c074d0087a34d615e2bb199225619aac1` |
+| seed map | `268943c7f73b31026b2934929a7ae685c61ec981682f110df6d5ba5fdb62bc96` |
+| synthetic generator | `2ab4c76bb772d83ccb199cf0b30659224390fb554fedb689a5029edcde50c361` |
+| validation procedure | `072aba3d8d95a89d99449a3c30e700eb7984efb6442b0458117187c65d379144` |
 
 Each identity is taken over an ordered preimage of module path and file digest,
 followed by the canonical JSON of the declared configuration
-`{"design_point": "e1a_v5_candidate_2026-10-06", "policy_version": "E1A-T11a-RF-v1", "procedure_version": 5, "supersedes": "procedure version 4 (audit: NOT CLEARED)"}`. Nothing ambient enters the preimage.
+`{"design_point": "e1a_v5_candidate_2026-10-06", "domain_identity": "e1a_v5_candidate_2026-10-06/nominal-envelope", "policy_version": "E1A-T11a-RF-v1", "procedure_version": 6, "supersedes": "procedure version 5 (audit: NOT CLEARED)"}`. Nothing ambient enters the preimage.
 
-The validation identity binds, in addition to its own modules, the four
-modules that decide what a result *means*: `evidence.py`, `diagnostics.py`,
-`validation/dispatch.py` and `validation/events.py`. Under V3 a change to any
-of those could alter every validation outcome without moving the identity.
+The validation identity binds every module whose bytes can change a validation
+outcome, including `certified.py`, `calibration.py`, `observation.py`,
+`reduction.py`, `generate.py`, `validation/contract.py`,
+`validation/harness.py` and `validation/run.py` alongside the four that decide
+what a result *means*: `evidence.py`, `diagnostics.py`,
+`validation/dispatch.py` and `validation/events.py`.
 
 ## 2. Frozen thresholds
 
@@ -93,25 +95,25 @@ optimiser-failed experiments remain in the denominator.
 
 ## 6. Seed architecture
 
-PRNG `python-stdlib-MersenneTwister-19937`, seed root `e1a_v5/validation/v5/2026-10-06`.
+PRNG `python-stdlib-MersenneTwister-19937`, seed root `e1a_v5/validation/v6/2026-10-06`.
 Derivation `sha256(root|family|case|'rep'|replicate)[:8] big-endian`.
 
 | Family | Family seed | Role |
 |---|---:|---|
-| `critical-calibration-v5` | 15280046052714316182 | confirmatory |
-| `size-validation-v5` | 10157267318770872789 | confirmatory |
-| `diagnostic-validation-v5` | 8067945209365484799 | confirmatory |
-| `complete-power-v5` | 3060025210657503379 | confirmatory |
-| `negative-controls-v5` | 17829790455794060110 | confirmatory |
-| `engineering-v5` | 12900281823331069400 | engineering only |
+| `critical-calibration-v6` | 7785151095471264693 | confirmatory |
+| `size-validation-v6` | 9926685174563395746 | confirmatory |
+| `diagnostic-validation-v6` | 7680297471468244930 | confirmatory |
+| `complete-power-v6` | 15340229898012003877 | confirmatory |
+| `negative-controls-v6` | 10679338032700473471 | confirmatory |
+| `engineering-v6` | 2135856219033427549 | engineering only |
 
 The five confirmatory families are frozen here and are **not executed**. Each
-is checked disjoint from the corresponding V4 (`e1a_v5/validation/v4/2026-10-06`), V3 and V2
-streams, and from **every** engineering stream past and present — an earlier
-version's engineering draws have been inspected just as thoroughly as its
-confirmatory ones.
+is checked disjoint from the corresponding V5, V4, V3 and V2 streams, and from
+**every** engineering stream past and present — an earlier version's
+engineering draws have been inspected just as thoroughly as its confirmatory
+ones.
 
-`engineering-v5` carries every draw made during implementation and smoke
+`engineering-v6` carries every draw made during implementation and smoke
 testing. It is explicitly not part of any confirmatory validation, and no
 result drawn from it may be reported as a validation outcome.
 
@@ -139,6 +141,53 @@ procedure.
 | instantaneous localisation ratio | 0.020 |
 | exposure, fraction of `tau_fast` | 0.05 |
 | frame interval, fraction of bandwidth ceiling | 0.75 |
+
+### Declared auxiliary primitive model
+
+The complete auxiliary model `C_φ` the official path propagates. Every value is
+a **synthetic prospective** declaration; none is a measured apparatus
+performance and none is a real calibration.
+
+| Category | Classification | Primitives | Declared σ |
+|---|---|---|---:|
+| shared standards | UNCERTAIN | `log_k_standard` | 0.0060 |
+| temperature calibration | UNCERTAIN | `log_T_standard`, `log_T_block` | 1.0e-03, 5.0e-04 |
+| viscosity / η(T) | UNCERTAIN | `log_eta_ref`, `log_eta_dT` | 2.0e-03, 5.0e-03 |
+| bead radius / material transfer | UNCERTAIN | `log_bead_radius` | 1.0e-03 |
+| 3D force/displacement calibration | UNCERTAIN | `log_force_displacement_cal` | 1.5e-03 |
+| axial stiffness / coupling | UNCERTAIN | `log_axial_stiffness`, `log_axial_coupling` | 2.0e-02, 5.0e-02 |
+| wall / hydrodynamic resistance | **BOUNDED_SYSTEMATIC** | — | bound 5.0e-03 |
+| coordinate transform `P` | UNCERTAIN | `log_p_gain`, `p_shear` | 1.0e-03, 5.0e-04 |
+| centre / fiducial transfer | UNCERTAIN | `fiducial_x`, `fiducial_y` | 2.0e-09 m |
+| localisation covariance `R_obs` | UNCERTAIN | `log_r_obs_scale` | 2.0e-02 |
+| detector offset | UNCERTAIN | `b_det_x`, `b_det_y` | 2.0e-09 m |
+| shutter / exposure | UNCERTAIN | `log_t_exp` | 1.0e-03 |
+| timing / synchronisation | UNCERTAIN | `log_dt` | 1.0e-04 |
+| block-specific | UNCERTAIN | `log_k_block` | 1.0e-03 |
+| field-specific | UNCERTAIN | `log_k_field` | 0.0015 |
+
+29 stochastic primitives in all. The stiffness and temperature standards load
+`sqrt(0.7)` each on one declared latent thermometry variable, so their
+correlation is exactly 0.7 by construction and the sharing survives into the
+generating law.
+
+The **joint 99.9% physical calibration region** is the intersection of
+individually calibrated marginal regions with allocated noncoverage
+`Σ αᵢ ≤ 0.001`, giving a per-primitive coverage factor of 4.1416. By the union
+bound its coverage is guaranteed whatever the dependence structure.
+
+### Declared response-measurement architecture
+
+The independent Branch-A measurement that qualifies the retained 2D temporal
+model. These are properties of the measurement, not scientific tolerances.
+
+| Parameter | Value |
+|---|---:|
+| response lag, as a multiple of the lateral slow time | 1.5 |
+| prepared releases per lateral direction | 6000 |
+| initial displacement, in stationary σ | 6.0 |
+| band on the measurement's own standard error | 5σ |
+| required resolution of the band | 0.20 |
 
 ## 8. Preregistered cases
 
@@ -317,8 +366,53 @@ never regenerated, so it still carried V3 seed namespaces and had no
 V2, V3 and V4 results are retained as historical evidence and are labelled
 **SUPERSEDED PROCEDURE EVIDENCE**. They are not V5 validation.
 
+## 12. Procedure version 6 repairs
+
+V5 was **NOT CLEARED** by independent audit. Version 6 repairs the seven
+material blocker families it found, and three further defects of the same
+classes that surfaced while doing so.
+
+| Item | V6 state |
+|---|---|
+| transcendental enclosure | **no library transcendental is called**. `log` and `exp` come from explicit series with proved remainders over range reductions that are exact in binary, evaluated in `decimal` under directed rounding. The only borrowed property is correctly-rounded decimal `+ − × ÷` under an explicit rounding mode, which the General Decimal Arithmetic specification requires |
+| input conversion | `Decimal(float)`, `frexp` and `ldexp`, all exact on the binary value. No decimal display string is parsed |
+| square root | a `math.sqrt` candidate **proved** by exact rational comparison of `lo·lo ≤ a_lo` and `hi·hi ≥ a_hi`; no IEEE-754 property is appealed to |
+| Riccati fixed point | the a posteriori contraction estimate in the graded Banach-algebra norm `|x₀| + w|x₁| + w|x₂| + w²|x₁₂|`, so the VALUE and every DERIVATIVE component carry their own bound |
+| contractivity | `‖F_cl‖²_w` is bounded over the **ball** by ε-inflation, not at a midpoint; a recomputed bound that does not fit back inside the inflated ball refuses certification |
+| Lyapunov tail | `‖Q‖ ‖F‖^(2·2^m) / (1 − ‖F‖²)`, evaluated in logarithms |
+| bounds in the enclosure | every fixed-point bound is **folded into the enclosure** before the result is used, not merely reported |
+| linear solve | residual enclosed in interval arithmetic; nonsingularity **proved** by an interval Cholesky of `S − μI`. The V5 Weyl-plus-reconstruction estimate, which subtracted a RELATIVE residual as if absolute, is removed |
+| failure semantics | any of these failing gives `certified = false`, which makes the 0.009 / 0.003 qualification `UNRESOLVED_AT_NUMERICAL_PRECISION`. No fallback |
+| axial remainder domain | the **joint 99.9% physical calibration region**, built as an intersection of individually calibrated marginal regions with Σαᵢ ≤ 0.001 — valid for ANY dependence structure by the union bound. The informal marginal 3σ is gone |
+| bounded systematics | a separate deterministic set, never converted into variances |
+| centre and rate effects | over the full region, through the U generalized-eigenvalue construction `λ(K, Γ)` |
+| `C_φ` | all **fifteen** required primitive categories declared, each as UNCERTAIN, EXACT_CONSTANT, FIXED_BY_VALIDATION_CASE, BOUNDED_SYSTEMATIC or NOT_APPLICABLE. Absence cannot mean zero uncertainty |
+| `J_β` | 29 primitives; the observation calibration, shutter, timing and axial parameters all reach the fitted comparison. Zero rows are **structural** and demonstrated |
+| shared standards | ONE latent variable, carried into the generating law, not an asserted off-diagonal |
+| bias ceilings | both 0.0005 ceilings are enforced predicates. The design point is **UNQUALIFIED** on both; reported as measured, not retuned |
+| localisation ratio | DETECTOR coordinates, `S_y = P Σ Pᵀ`. The auditor's `P = 0.1 I` case gives exactly 1.0 and fails |
+| observation envelope | **independent and pre-Branch-B**, evaluated at the closed-form worst case. No fitted quantity enters |
+| exposure-averaged ratio | U's separate requirement, recorded alongside and never in place of the instantaneous ceiling |
+| gate calibration | a **verifiable** `GateCalibrationReceipt` binding every frozen identity, the seed namespace, the replicate count, the result digest and the release state, with a digest the production builder recomputes. Seventeen forgery routes regressed |
+| fixtures | separated by **type**; no production API accepts `SyntheticGateFixture`, and there is no boolean to leave unset |
+| `CTL-ETA-T-COV` | draws **fresh auxiliary measurements** under the shared thermometry latent; the analyser drops the latent, the data do not. No direction is claimed |
+| `CTL-AXIAL-MEMORY` | the temporal model is qualified against a **measured driven response**: `R(2τ) = R(τ)²` holds for every 2D generator, so a measured violation beyond the measurement's own 5σ error excludes the whole class. The hand-set flag is gone from the package |
+| plan contract | the comparison adds the expected classification, the false-support event and the exact acceptance rule |
+
+Three further defects surfaced during the repair and are also fixed: the `ln 2`
+doubling and the `ln m` negation were performed in the ambient decimal context,
+which rounds to 28 digits half-even and can round a lower bound upward; the
+`exp` series was evaluated with signed terms, where rounding an intermediate
+downward does not bound the next one; and `ginnovation_mean`'s early-out tested
+only the VALUE component, so at the linearisation point it discarded the centre
+rows of the expected information.
+
+V2, V3, V4 and V5 results are retained as historical evidence and are labelled
+**SUPERSEDED PROCEDURE EVIDENCE**. They are not V6 validation.
+
 Open release blockers are listed in the JSON contract under
 `open_release_blockers`. Finite-N critical calibration, false-equivalence
-size, diagnostic size and complete power are all **NOT RUN FOR V5**,
-continuous nuisance-domain coverage remains **OPEN**, and the `e1a_v5` test
-suites still require CI integration before W.
+size, diagnostic size, complete power and both negative-control confirmatory
+runs are all **NOT RUN FOR V6**, continuous nuisance-domain coverage remains
+**OPEN**, the design point is **UNQUALIFIED** on bounded bias, and the
+`e1a_v5` test suites still require CI integration before W.
