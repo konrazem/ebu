@@ -1,0 +1,1266 @@
+{
+ "complete_experiment_synthetic_fixture": {
+  "diagnostic": "CALIBRATED",
+  "evidence_ok": true,
+  "label": "SYNTHETIC CALIBRATED CRITICAL VALUES INJECTED - ENGINEERING CHECK ONLY",
+  "per_record": [
+   {
+    "centre": 0.029095963283072204,
+    "current": 0.3527012571456966,
+    "log_beta": -0.017998970575046576,
+    "record": "block1/theta0",
+    "se_total": 0.1321314351689615,
+    "shape": 0.03651604392475532,
+    "stationarity": 21.16799124030699
+   },
+   {
+    "centre": 0.20713565730619582,
+    "current": 0.2570190354621734,
+    "log_beta": 0.13164414609364342,
+    "record": "block1/theta1",
+    "se_total": 0.11811003103716637,
+    "shape": 0.052887221717251943,
+    "stationarity": 16.26015908115809
+   },
+   {
+    "centre": 0.22452483869824152,
+    "current": 0.07731773415967257,
+    "log_beta": 0.3101019473119828,
+    "record": "block1/theta2",
+    "se_total": 0.12576744418943495,
+    "shape": 0.055511027939401596,
+    "stationarity": 15.92885441610397
+   },
+   {
+    "centre": 0.3028679297900399,
+    "current": 0.14854503317398882,
+    "log_beta": 0.2658240327129089,
+    "record": "block1/theta3",
+    "se_total": 0.11706856835562088,
+    "shape": 0.1251976892187993,
+    "stationarity": 27.933374779042904
+   },
+   {
+    "centre": 0.2143133842868214,
+    "current": 0.10826879614327806,
+    "log_beta": 0.3450098028764233,
+    "record": "block2/theta0",
+    "se_total": 0.10842487770503563,
+    "shape": 0.10710700335405786,
+    "stationarity": 27.722108690597672
+   },
+   {
+    "centre": 0.1256771514231845,
+    "current": 0.06700936404586474,
+    "log_beta": 0.19919924225227675,
+    "record": "block2/theta1",
+    "se_total": 0.12232443697675409,
+    "shape": 0.24057188440038418,
+    "stationarity": 12.475946351954642
+   },
+   {
+    "centre": 0.3679812269790534,
+    "current": 0.08987277113581171,
+    "log_beta": -0.049025118882828615,
+    "record": "block2/theta2",
+    "se_total": 0.15667238431326566,
+    "shape": 0.3271497184193983,
+    "stationarity": 24.318891095000712
+   },
+   {
+    "centre": 0.21619116351757836,
+    "current": 0.3284517067590648,
+    "log_beta": -0.06666887356113264,
+    "record": "block2/theta3",
+    "se_total": 0.12891750963244386,
+    "shape": 0.20939709487651265,
+    "stationarity": 23.57056546131989
+   }
+  ],
+  "result": {
+   "classification": "INVALID_MEASUREMENT_OR_MODEL",
+   "diagnostic": {
+    "critical_identity": "SYNTHETIC FIXTURE - not a calibration",
+    "critical_value": 1000000000.0,
+    "reason_codes": [],
+    "records": [
+     {
+      "reason": "",
+      "record": "block1/theta0",
+      "rejected": false,
+      "scaled_max": 0.1485199308269619
+     },
+     {
+      "reason": "",
+      "record": "block1/theta1",
+      "rejected": false,
+      "scaled_max": 0.09666343129682768
+     },
+     {
+      "reason": "",
+      "record": "block1/theta2",
+      "rejected": false,
+      "scaled_max": 0.07178477620448512
+     },
+     {
+      "reason": "",
+      "record": "block1/theta3",
+      "rejected": false,
+      "scaled_max": 0.11841180624341927
+     },
+     {
+      "reason": "",
+      "record": "block2/theta0",
+      "rejected": false,
+      "scaled_max": 0.13620252622617798
+     },
+     {
+      "reason": "",
+      "record": "block2/theta1",
+      "rejected": false,
+      "scaled_max": 0.08776001554837556
+     },
+     {
+      "reason": "",
+      "record": "block2/theta2",
+      "rejected": false,
+      "scaled_max": 0.11835265032596384
+     },
+     {
+      "reason": "",
+      "record": "block2/theta3",
+      "rejected": false,
+      "scaled_max": 0.08237580871585129
+     }
+    ],
+    "rejected": false,
+    "statistic": 0.1485199308269619,
+    "status": "CALIBRATED"
+   },
+   "evidence_ok": true,
+   "qualifier": "demonstrated model or domain breach",
+   "reasons": [
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.20004072374074292
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.23343593570850013
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.2093749385035406
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.2484624460505647
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.21624834778380203
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.2005906477301545
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    }
+   ],
+   "success": false,
+   "tally": {
+    "absolute_pass": 0,
+    "branch_a_valid": 8,
+    "centre_pass": 1,
+    "contrast_pass": 0,
+    "current_pass": 0,
+    "diagnostic_rejected": false,
+    "observation_valid": 8,
+    "realization_valid": 8,
+    "shape_pass": 1,
+    "stationarity_pass": 0
+   }
+  },
+  "seconds": 27.8
+ },
+ "complete_experiment_uncalibrated": {
+  "configuration": {
+   "b_true": null,
+   "blind_scale": null,
+   "case_id": "POWER-NOMINAL",
+   "consumed": [],
+   "declared": {},
+   "driver": "complete_experiment",
+   "geometry": null,
+   "measured": {
+    "beta_true_by_field": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "condition_h_true": 1.0158730158730158,
+    "drift_rate": [
+     0.0,
+     0.0
+    ],
+    "exposure_over_dt": 0.33333333333333337,
+    "generate_t_exp": null,
+    "localization_ratio": 0.019999999999999997,
+    "n_frames": 400,
+    "noise_model": "gaussian",
+    "omega_true": 0.0
+   },
+   "selection": null,
+   "sigma_cal": null
+  },
+  "diagnostic": "UNCALIBRATED",
+  "result": {
+   "classification": "INVALID_MEASUREMENT_OR_MODEL",
+   "diagnostic": {
+    "critical_identity": "",
+    "critical_value": null,
+    "reason_codes": [
+     "no frozen null scales; the family statistic is not defined",
+     "no calibrated familywise critical value; raw components existing is not a family that passed",
+     "familywise critical value carries no calibration identity"
+    ],
+    "records": [
+     {
+      "reason": "",
+      "record": "block1/theta0",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block1/theta1",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block1/theta2",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block1/theta3",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block2/theta0",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block2/theta1",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block2/theta2",
+      "rejected": null,
+      "scaled_max": null
+     },
+     {
+      "reason": "",
+      "record": "block2/theta3",
+      "rejected": null,
+      "scaled_max": null
+     }
+    ],
+    "rejected": null,
+    "statistic": null,
+    "status": "UNCALIBRATED"
+   },
+   "evidence_ok": false,
+   "qualifier": "demonstrated model or domain breach",
+   "reasons": [
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block1/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block1/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block1/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block1/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block2/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block2/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block2/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "interval_defect": "critical_value_uncalibrated",
+      "record": "block2/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "contrast": "block1/theta1-block1/theta0",
+      "interval_defect": "critical_value_uncalibrated"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "contrast": "block1/theta2-block1/theta0",
+      "interval_defect": "critical_value_uncalibrated"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "contrast": "block1/theta3-block1/theta0",
+      "interval_defect": "critical_value_uncalibrated"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "contrast": "block2/theta1-block2/theta0",
+      "interval_defect": "critical_value_uncalibrated"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "contrast": "block2/theta2-block2/theta0",
+      "interval_defect": "critical_value_uncalibrated"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "contrast": "block2/theta3-block2/theta0",
+      "interval_defect": "critical_value_uncalibrated"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "interval critical_value_uncalibrated",
+     "reason": "interval evidence is not usable for inference: critical_value_uncalibrated"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "status": "UNCALIBRATED"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "diagnostic family calibrated and coherent",
+     "reason": "diagnostic family status UNCALIBRATED: no frozen null scales; the family statistic is not defined; no calibrated familywise critical value; raw components existing is not a family that passed; familywise critical value carries no calibration identity"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.23091525205814808
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.24669823010296021
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block1/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta0"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.22823426568125685
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta1"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta2"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "OBSERVATION_MODEL_UNQUALIFIED",
+     "detail": {
+      "bandwidth_product": 0.20718266477674258
+     },
+     "family": "INVALID",
+     "predicate": "||B||_2 dt <= 0.2",
+     "reason": "fitted generator exceeds the non-aliasing bandwidth"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "shape upper limit calibrated",
+     "reason": "no calibrated shape upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "centre upper limit calibrated",
+     "reason": "no calibrated centre upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "stationarity upper limit calibrated",
+     "reason": "no calibrated stationarity upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    },
+    {
+     "code": "INCOMPLETE_INPUT",
+     "detail": {
+      "record": "block2/theta3"
+     },
+     "family": "INCOMPLETE",
+     "predicate": "current upper limit calibrated",
+     "reason": "no calibrated current upper limit (UNCALIBRATED); the raw statistic may not be compared against the tolerance in its place"
+    }
+   ],
+   "success": false,
+   "tally": {
+    "absolute_pass": 0,
+    "branch_a_valid": 8,
+    "centre_pass": 0,
+    "contrast_pass": 0,
+    "current_pass": 0,
+    "diagnostic_rejected": false,
+    "observation_valid": 8,
+    "realization_valid": 8,
+    "shape_pass": 0,
+    "stationarity_pass": 0
+   }
+  },
+  "seconds": 32.1
+ },
+ "confirmatory_seeds_consumed": false,
+ "control_CTL_CURRENT": {
+  "affected": {
+   "block1/theta0": 1,
+   "block1/theta1": 1,
+   "block1/theta1-block1/theta0": 1,
+   "block1/theta2": 1,
+   "block1/theta2-block1/theta0": 1,
+   "block1/theta3": 1,
+   "block1/theta3-block1/theta0": 1,
+   "block2/theta0": 1,
+   "block2/theta1": 1,
+   "block2/theta1-block2/theta0": 1,
+   "block2/theta2": 1,
+   "block2/theta2-block2/theta0": 1,
+   "block2/theta3": 1,
+   "block2/theta3-block2/theta0": 1
+  },
+  "case_id": "CTL-CURRENT",
+  "classifications": {
+   "INVALID_MEASUREMENT_OR_MODEL": 1
+  },
+  "configuration": {
+   "b_true": null,
+   "blind_scale": null,
+   "case_id": "CTL-CURRENT",
+   "consumed": [
+    "r_irr_target"
+   ],
+   "declared": {
+    "r_irr_target": 0.05
+   },
+   "driver": "complete_experiment",
+   "geometry": null,
+   "measured": {
+    "beta_true_by_field": [
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "condition_h_true": 1.0158730158730158,
+    "drift_rate": [
+     0.0,
+     0.0
+    ],
+    "exposure_over_dt": 0.33333333333333337,
+    "generate_t_exp": null,
+    "localization_ratio": 0.019999999999999997,
+    "n_frames": 400,
+    "noise_model": "gaussian",
+    "omega_true": 2.4332610527077082e-14
+   },
+   "selection": null,
+   "sigma_cal": null
+  },
+  "evaluator_version": "e1a-v5-event-evaluator-v4",
+  "events": 0,
+  "expectation": "density/geometry pass; current gate blocks support",
+  "expected_event": "complete_support",
+  "false_support_cp_upper": 0.95,
+  "family": "control",
+  "joint_reason_combinations": {
+   "INCOMPLETE_INPUT+OBSERVATION_MODEL_UNQUALIFIED": 1
+  },
+  "per_replicate": [
+   {
+    "absolute_contained": null,
+    "affected": [
+     "block1/theta0",
+     "block1/theta1",
+     "block1/theta2",
+     "block1/theta3",
+     "block2/theta0",
+     "block2/theta1",
+     "block2/theta2",
+     "block2/theta3",
+     "block1/theta1-block1/theta0",
+     "block1/theta2-block1/theta0",
+     "block1/theta3-block1/theta0",
+     "block2/theta1-block2/theta0",
+     "block2/theta2-block2/theta0",
+     "block2/theta3-block2/theta0",
+     "",
+     "",
+     "block1/theta0",
+     "block1/theta0",
+     "block1/theta0",
+     "block1/theta0",
+     "",
+     "block1/theta1",
+     "block1/theta1",
+     "block1/theta1",
+     "block1/theta1",
+     "block1/theta2",
+     "block1/theta2",
+     "block1/theta2",
+     "block1/theta2",
+     "block1/theta3",
+     "block1/theta3",
+     "block1/theta3",
+     "block1/theta3",
+     "",
+     "block2/theta0",
+     "block2/theta0",
+     "block2/theta0",
+     "block2/theta0",
+     "block2/theta1",
+     "block2/theta1",
+     "block2/theta1",
+     "block2/theta1",
+     "block2/theta2",
+     "block2/theta2",
+     "block2/theta2",
+     "block2/theta2",
+     "",
+     "block2/theta3",
+     "block2/theta3",
+     "block2/theta3",
+     "block2/theta3"
+    ],
+    "bandwidth_ok": null,
+    "bandwidth_product": null,
+    "blinded_error": null,
+    "case_id": "CTL-CURRENT",
+    "classification": "INVALID_MEASUREMENT_OR_MODEL",
+    "configuration": {
+     "b_true": null,
+     "blind_scale": null,
+     "case_id": "CTL-CURRENT",
+     "consumed": [
+      "r_irr_target"
+     ],
+     "declared": {
+      "r_irr_target": 0.05
+     },
+     "driver": "complete_experiment",
+     "geometry": null,
+     "measured": {
+      "beta_true_by_field": [
+       1.0,
+       1.0,
+       1.0,
+       1.0
+      ],
+      "condition_h_true": 1.0158730158730158,
+      "drift_rate": [
+       0.0,
+       0.0
+      ],
+      "exposure_over_dt": 0.33333333333333337,
+      "generate_t_exp": null,
+      "localization_ratio": 0.019999999999999997,
+      "n_frames": 400,
+      "noise_model": "gaussian",
+      "omega_true": 2.4332610527077082e-14
+     },
+     "selection": null,
+     "sigma_cal": null
+    },
+    "diagnostic_status": "UNCALIBRATED",
+    "evaluable": true,
+    "optimizer_status": null,
+    "realization_status": null,
+    "reason_codes": [
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "OBSERVATION_MODEL_UNQUALIFIED",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "OBSERVATION_MODEL_UNQUALIFIED",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "OBSERVATION_MODEL_UNQUALIFIED",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "OBSERVATION_MODEL_UNQUALIFIED",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT",
+     "INCOMPLETE_INPUT"
+    ],
+    "reason_predicates": [
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:interval critical_value_uncalibrated",
+     "INCOMPLETE_INPUT:diagnostic family calibrated and coherent",
+     "OBSERVATION_MODEL_UNQUALIFIED:||B||_2 dt <= 0.2",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "OBSERVATION_MODEL_UNQUALIFIED:||B||_2 dt <= 0.2",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "OBSERVATION_MODEL_UNQUALIFIED:||B||_2 dt <= 0.2",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated",
+     "OBSERVATION_MODEL_UNQUALIFIED:||B||_2 dt <= 0.2",
+     "INCOMPLETE_INPUT:shape upper limit calibrated",
+     "INCOMPLETE_INPUT:centre upper limit calibrated",
+     "INCOMPLETE_INPUT:stationarity upper limit calibrated",
+     "INCOMPLETE_INPUT:current upper limit calibrated"
+    ],
+    "replicate": 0,
+    "seed": 6316946458076273722
+   }
+  ],
+  "reason_codes": {
+   "INCOMPLETE_INPUT": 1,
+   "OBSERVATION_MODEL_UNQUALIFIED": 1
+  },
+  "reason_predicates": {
+   "INCOMPLETE_INPUT:centre upper limit calibrated": 1,
+   "INCOMPLETE_INPUT:current upper limit calibrated": 1,
+   "INCOMPLETE_INPUT:diagnostic family calibrated and coherent": 1,
+   "INCOMPLETE_INPUT:interval critical_value_uncalibrated": 1,
+   "INCOMPLETE_INPUT:shape upper limit calibrated": 1,
+   "INCOMPLETE_INPUT:stationarity upper limit calibrated": 1,
+   "OBSERVATION_MODEL_UNQUALIFIED:||B||_2 dt <= 0.2": 1
+  },
+  "replicates_run": 1,
+  "seconds": 30.9
+ },
+ "control_seconds": 30.9,
+ "deterministic_controls": [
+  {
+   "case_id": "CTL-RF-TEMP-304",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.00022744358522184182,
+   "retained_fraction": 0.306879010005119
+  },
+  {
+   "case_id": "CTL-RF-STIFF-1021",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.0005218639151212723,
+   "retained_fraction": 0.0280111782081937
+  },
+  {
+   "case_id": "CTL-RF-MODES",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "harmonic_scalar": 2.060240963855422,
+   "harmonic_would_have_passed": true,
+   "modes": [
+    1.9000000000000004,
+    2.25
+   ],
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-ELLIPSE",
+   "distance": 0.45814536593707744,
+   "epsilon_2": 0.051082562376599076,
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-STRADDLE",
+   "expected": "FIELD_REALIZATION_UNRESOLVED",
+   "observed": "FIELD_REALIZATION_UNRESOLVED",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-VALID",
+   "expected": "FIELD_REALIZATION_VALID",
+   "note": "synthetic qualification only; no physical packet is asserted VALID",
+   "observed": "FIELD_REALIZATION_VALID",
+   "passed": true
+  },
+  {
+   "axial_ratio": 0.5625,
+   "case_id": "CTL-AXIAL-COUPLE",
+   "declared_coupling": 0.3,
+   "exceeds_absolute_margin": true,
+   "exceeds_shape_margin": true,
+   "expected": "pipeline uses H_eff; K_qq bias quantified",
+   "observed": "r=0.562500 log_beta_plane=-0.496437 G_plane=0.413339",
+   "passed": true,
+   "plane_geometry_bias": 0.41333928659223396,
+   "plane_log_beta_bias": -0.496436886313891
+  },
+  {
+   "case_id": "CTL-AXIAL-MEMORY",
+   "expected": "TEMPORAL_MODEL_UNQUALIFIED or linked axial refusal",
+   "note": "no 3D hidden-state model is silently substituted",
+   "observed": [
+    "temporal_reduction_qualified"
+   ],
+   "passed": true
+  },
+  {
+   "case_id": "CTL-ETA-T-COV",
+   "expected": "coverage consequence detected",
+   "note": "omitting the shared eta/T covariance drops a cross term, so the omitted propagation is not merely different but systematically misstated; the correct shared covariance is the reference",
+   "observed": {
+    "sigma_ratio_with_over_without": [
+     0.32720772447490043,
+     1.0054001348026205,
+     0.31702759704842215
+    ]
+   },
+   "passed": true
+  },
+  {
+   "case_id": "CTL-OPT-FAIL",
+   "expected": "COMPUTATION_NOT_EVALUABLE; beta never fabricated",
+   "observed": [
+    "NaN objective: OptimizerFailure",
+    "inadmissible start: OptimizerFailure",
+    "singular factorisation: OptimizerFailure",
+    "budget exhausted: converged=False"
+   ],
+   "passed": true
+  }
+ ],
+ "deterministic_seconds": 0.0,
+ "frames_per_record": 400,
+ "identities": {
+  "analysis_procedure": "a687ea512a33561a8630d9c0b60e486b49bf72fb59242f0a2fbaa199141d1498",
+  "gate_semantics": "694f0769f547ebccdc13d664041ccc10f601d2042a264552081a9aea023c59ac",
+  "packet_schema": "b6e1e9b276ee8039e9784baa6d60e6cc3edcdd064956a0a5feaf783c348cd9f9",
+  "seed_map": "1357c19ea90a9912da088db68569311d8b7caf7ccc309bf28c7c818f8999e633",
+  "synthetic_generator": "a734b184f7169ee715005992171af69f2b9918c4c71bc299901410fb660ca7a9",
+  "validation_procedure": "305f4c7fbf25e1b92008b4d1a82fa684830c855711a7f2369de81135656e415c"
+ },
+ "label": "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT",
+ "note": "400 frames is 0.015 percent of the T.23 information target, so every statistic here is at small-N noise. The point is that the path runs and that the authoritative verdict is what decides.",
+ "official_calibration": {
+  "absolute_enclosure_radius": {
+   "block1/theta0": 7.493371346183747e-07,
+   "block1/theta1": 7.496464368523734e-07,
+   "block1/theta2": 7.661474437847468e-07,
+   "block1/theta3": 7.491944452207508e-07,
+   "block2/theta0": 7.493371346183747e-07,
+   "block2/theta1": 7.496464368523734e-07,
+   "block2/theta2": 7.661474437847468e-07,
+   "block2/theta3": 7.491944452207508e-07
+  },
+  "absolute_qualification": {
+   "block1/theta0": "PASS",
+   "block1/theta1": "PASS",
+   "block1/theta2": "PASS",
+   "block1/theta3": "PASS",
+   "block2/theta0": "PASS",
+   "block2/theta1": "PASS",
+   "block2/theta2": "PASS",
+   "block2/theta3": "PASS"
+  },
+  "absolute_sigma": {
+   "block1/theta0": 0.006265220246297722,
+   "block1/theta1": 0.006265219575707008,
+   "block1/theta2": 0.00626522234199737,
+   "block1/theta3": 0.00626522054057805,
+   "block2/theta0": 0.006265220246297722,
+   "block2/theta1": 0.006265219575707008,
+   "block2/theta2": 0.00626522234199737,
+   "block2/theta3": 0.00626522054057805
+  },
+  "contrast_sigma": {
+   "block1/theta1-block1/theta0": 0.0021213267533580714,
+   "block1/theta2-block1/theta0": 0.002121326942477059,
+   "block1/theta3-block1/theta0": 0.0021213269192780796,
+   "block2/theta1-block2/theta0": 0.0021213267533580714,
+   "block2/theta2-block2/theta0": 0.002121326942477059,
+   "block2/theta3-block2/theta0": 0.0021213269192780796
+  },
+  "keys": [
+   "block1/theta0",
+   "block1/theta1",
+   "block1/theta2",
+   "block1/theta3",
+   "block2/theta0",
+   "block2/theta1",
+   "block2/theta2",
+   "block2/theta3"
+  ],
+  "phi_names": [
+   "log_k_standard",
+   "log_T_standard",
+   "log_k_field@block1/theta0",
+   "log_k_field@block1/theta1",
+   "log_k_field@block1/theta2",
+   "log_k_field@block1/theta3",
+   "log_k_field@block2/theta0",
+   "log_k_field@block2/theta1",
+   "log_k_field@block2/theta2",
+   "log_k_field@block2/theta3"
+  ]
+ },
+ "procedure_version": 4,
+ "seed_namespace": "engineering-v4"
+}
