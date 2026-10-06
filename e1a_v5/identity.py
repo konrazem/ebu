@@ -33,6 +33,7 @@ ANALYSIS_MODULES: tuple[str, ...] = (
     "realization.py",
     "verdict.py",
     "estimate.py",
+    "evidence.py",
     "calibration.py",
     "pipeline.py",
 )
@@ -50,14 +51,26 @@ GENERATOR_MODULES: tuple[str, ...] = ("rng.py", "generate.py")
 #:
 #: ``verdict.py`` is likewise included: the authoritative success predicate
 #: lives there, and the power runner now delegates to it.
+#:
+#: V4 adds the four modules that decide what a result MEANS: ``evidence.py``
+#: (whether the evidence is the preregistered experiment at all),
+#: ``diagnostics.py`` (the one authoritative diagnostic-family result),
+#: ``validation/dispatch.py`` (which world each case instantiates) and
+#: ``validation/events.py`` (whether a replicate counted).  Under V3 a change
+#: to any of those could alter every validation outcome without moving the
+#: validation identity.
 VALIDATION_MODULES: tuple[str, ...] = (
     "seeds.py",
     "identity.py",
     "verdict.py",
+    "evidence.py",
     "pipeline.py",
+    "diagnostics.py",
     os.path.join("validation", "__init__.py"),
     os.path.join("validation", "plan.py"),
     os.path.join("validation", "cases.py"),
+    os.path.join("validation", "dispatch.py"),
+    os.path.join("validation", "events.py"),
     os.path.join("validation", "harness.py"),
     os.path.join("validation", "run.py"),
 )
@@ -161,6 +174,10 @@ def validation_preimage() -> dict[str, object]:
         ],
         "rationale": {
             "validation/run.py": "result counting and release semantics",
+            "validation/dispatch.py": "which world each case instantiates",
+            "validation/events.py": "whether a replicate realised its event",
+            "evidence.py": "whether the evidence is the planned experiment",
+            "diagnostics.py": "the authoritative diagnostic-family result",
             "verdict.py": "verdict classification table",
             "pipeline.py": "the authoritative complete-success predicate",
             "validation/harness.py": "record execution and gate evaluation",

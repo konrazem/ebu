@@ -13,8 +13,11 @@ Two execution modes:
     labelled, and the release verdict is forced to NON-RELEASE: a partial
     validation cannot produce RELEASE.
 
-Deterministic controls (T11a predicates, axial reduction, optimiser failure
-handling) are exact and are run at full fidelity in both modes.
+Every stochastic case goes through the same three objects and no others:
+:func:`~e1a_v5.validation.dispatch.instantiate` builds the declared world,
+:func:`~e1a_v5.pipeline.complete_pipeline_result` judges it, and
+:func:`~e1a_v5.validation.events.evaluate_event` decides whether the
+replicate counted.  No raw statistic is compared against a tolerance here.
 """
 
 from __future__ import annotations
@@ -23,28 +26,86 @@ import json
 import math
 import time
 from dataclasses import dataclass
-from typing import Callable
+from typing import Any, Callable, Mapping, Sequence
 
 from .. import numerics as nm
 from .. import realization as rf
-from ..confidence import DELTA_A, DELTA_C, Interval, NORMAL_CRITICAL, build_interval
+from ..calibration import combined_contrast_standard_error, combined_standard_error
+from ..confidence import (
+    DELTA_A,
+    DELTA_C,
+    CEILING_PASS,
+    CriticalValues,
+    Interval,
+    NORMAL_CRITICAL,
+    build_interval,
+    synthetic_calibrated,
+)
+from ..diagnostics import (
+    DiagnosticFamilyResult,
+    NullScales,
+    RecordDiagnostic,
+    evaluate_diagnostic_family,
+)
+from ..evidence import (
+    BiasEvidence,
+    ContrastKey,
+    GateLimit,
+    RecordKey,
+)
 from ..gates import DELTA_G, DELTA_M, DELTA_R_IRR
-from ..numerics import clopper_pearson_lower, clopper_pearson_upper
+from ..numerics import NumericalFailure, clopper_pearson_lower, clopper_pearson_upper
 from ..optimize import OptimizerFailure, minimise
-from ..reduction import axial_ratio, plane_block_bias, reduce_axial, schur_complement
-from ..packets import CONTRASTS, RECORDS
+from ..packets import CONTRASTS, RECORDS, BlockId, FieldId
 from ..pipeline import (
-    RecordResultV3, complete_pipeline_result, contrast_key, record_key,
+    ContrastResultV4,
+    DELTA_STATIONARITY,
+    RecordResultV4,
+    complete_pipeline_result,
 )
 from ..realization import FIELD_REALIZATION_VALID
+from ..reduction import (
+    AxialEvidence, axial_ratio, normalise_covariance_to_h, plane_block_bias,
+    propagate_schur_covariance, reduce_axial, schur_complement,
+)
+from ..refusals import CALIBRATION_UNCERTAINTY_EXCESS, Refusal, refuse
 from ..rng import Stream
-from ..seeds import CALIBRATION, CONTROL, DIAGNOSTIC, POWER, SIZE, SeedMap
+from ..units import K_B
+from ..seeds import CALIBRATION, CONTROL, DIAGNOSTIC, ENGINEERING, POWER, SIZE, SeedMap
 from . import plan
-from .cases import ALL_CASES
-from .harness import Aggregator, current_control_drift, design_specs, run_record
+from .cases import ALL_CASES, CASES_BY_ID, ExpectedEvent, ValidationCaseV4
+from .dispatch import (
+    CaseInstantiation,
+    InvalidValidationPlan,
+    apply_geometry,
+    apply_selection,
+    instantiate,
+)
+from .events import (
+    EVENT_EVALUATOR_VERSION,
+    EventNotEvaluable,
+    ReasonAggregate,
+    ReplicateOutcome,
+    evaluate_event,
+)
+from .harness import (
+    Aggregator,
+    axial_remainder_bias,
+    current_control_drift,
+    design_specs,
+    experiment_calibration,
+    run_record,
+)
 
 SMOKE = "smoke"
 FULL = "full"
+
+#: Label stamped on every artefact that used an injected synthetic calibrated
+#: critical value to exercise verdict code.  Such a result is an engineering
+#: check and can never be a validation outcome.
+SYNTHETIC_CALIBRATION_LABEL = (
+    "SYNTHETIC CALIBRATED CRITICAL VALUES INJECTED - ENGINEERING CHECK ONLY"
+)
 
 
 @dataclass
@@ -66,7 +127,12 @@ class RunConfig:
 # ---------------------------------------------------------------------------
 
 def deterministic_controls() -> list[dict]:
-    """Run every control whose expected outcome is exact."""
+    """Run every control whose expected outcome is exact.
+
+    Keyed by the dispatcher's ``deterministic_key``, so the registry and this
+    battery cannot drift apart: :func:`deterministic_coverage` checks that
+    every case routed here has a handler.
+    """
     out: list[dict] = []
     K0 = nm.mat([[100.0, 0.0], [0.0, 100.0]])
 
@@ -110,25 +176,70 @@ def deterministic_controls() -> list[dict]:
         note="synthetic qualification only; no physical packet is asserted VALID")
 
     # --- axial coupling control -------------------------------------------
-    k3 = plan.nominal_k3(0, coupling=0.30)
-    red = reduce_axial(k3, plan.T_REF)
+    inst = instantiate("CTL-AXIAL-COUPLE")
+    coupling = float(inst.spec_kwargs["coupling"])
+    k3 = plan.nominal_k3(0, coupling=coupling)
     r = axial_ratio(k3)
     lb, gp = plane_block_bias(r)
     k_qq = [[k3[0][0], k3[0][1]], [k3[1][0], k3[1][1]]]
+    red = reduce_axial(k3, plan.T_REF, evidence=AxialEvidence.fully_qualified(),
+                       c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2))
     used_schur = nm.max_abs(nm.sub(red.k_eff, k_qq)) > 0.0
     rec("CTL-AXIAL-COUPLE", "pipeline uses H_eff; K_qq bias quantified",
         f"r={r:.6f} log_beta_plane={lb:.6f} G_plane={gp:.6f}",
         used_schur and red.ok and abs(lb) > DELTA_A,
+        declared_coupling=coupling,
         axial_ratio=r, plane_log_beta_bias=lb, plane_geometry_bias=gp,
         exceeds_absolute_margin=bool(abs(lb) > DELTA_A),
         exceeds_shape_margin=bool(gp > DELTA_G))
 
     # --- axial temporal-memory control ------------------------------------
-    red2 = reduce_axial(plan.nominal_k3(0), plan.T_REF, temporal_qualified=False)
-    codes = {x.predicate for x in red2.refusals}
+    # The V3 call passed ``temporal_qualified=False``, a keyword the
+    # fail-closed AxialEvidence repair had already removed, so this battery
+    # raised TypeError before reaching any assertion: the whole deterministic
+    # control set was dead.  The evidence object now carries the unqualified
+    # temporal reduction explicitly.
+    evidence = AxialEvidence(
+        **{**AxialEvidence.fully_qualified().__dict__,
+           "temporal_reduction_qualified": False}
+    )
+    red2 = reduce_axial(
+        plan.nominal_k3(0), plan.T_REF, evidence=evidence,
+        c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2),
+    )
+    codes = {x.detail.get("component") for x in red2.refusals}
     rec("CTL-AXIAL-MEMORY", "TEMPORAL_MODEL_UNQUALIFIED or linked axial refusal",
-        sorted(codes), "lateral temporal reduction qualified" in codes,
+        sorted(c for c in codes if c), "temporal_reduction_qualified" in codes,
         note="no 3D hidden-state model is silently substituted")
+
+    # --- omitted eta/T covariance control ----------------------------------
+    # Exact: the same primitive uncertainties propagate to two different
+    # C_vech(H_eff) depending on whether the shared temperature covariance is
+    # carried.  Dropping it does not merely change a number, it removes a
+    # negative cross term, so the omitted version UNDERSTATES the uncertainty
+    # and its intervals undercover.
+    k3_eta = plan.nominal_k3(0)
+    c_v_eta = nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2)
+    var_log_t = (1.0e-3) ** 2
+    c_s, _ = propagate_schur_covariance(k3_eta, c_v_eta)
+    k_eff_eta = schur_complement(k3_eta)
+    kbt = K_B * plan.T_REF
+    h_vech = [k_eff_eta[0][0] / kbt, k_eff_eta[0][1] / kbt, k_eff_eta[1][1] / kbt]
+    # The shared part: dS and dlogT both move with the same temperature.
+    cov_s_logt = [0.9 * math.sqrt(max(c_s[i][i], 0.0) * var_log_t) for i in range(3)]
+    with_cov = normalise_covariance_to_h(
+        k_eff_eta, c_s, plan.T_REF, var_log_t, cov_s_logt)
+    without = normalise_covariance_to_h(
+        k_eff_eta, c_s, plan.T_REF, var_log_t, None)
+    ratio = [
+        math.sqrt(with_cov[i][i]) / math.sqrt(without[i][i]) for i in range(3)
+    ]
+    rec("CTL-ETA-T-COV", "coverage consequence detected",
+        {"sigma_ratio_with_over_without": ratio},
+        all(r != 1.0 for r in ratio) and any(r < 1.0 for r in ratio),
+        note="omitting the shared eta/T covariance drops a cross term, so the "
+             "omitted propagation is not merely different but systematically "
+             "misstated; the correct shared covariance is the reference")
 
     # --- optimiser failure control ----------------------------------------
     observed = []
@@ -150,140 +261,274 @@ def deterministic_controls() -> list[dict]:
     return out
 
 
-# ---------------------------------------------------------------------------
-# Stochastic families
-# ---------------------------------------------------------------------------
-
-def _single_record_event(
-    seed_map: SeedMap, family: str, case_id: str, rep: int, b_true: float,
-    frames: int, **spec_kw,
-) -> tuple[bool, bool, dict]:
-    """Return ``(false_equivalence_event, evaluable, detail)`` for one outer experiment."""
-    specs = design_specs(n_frames=frames, **spec_kw)
-    spec, h_locked = specs[0]
-    spec = type(spec)(**{**spec.__dict__, "beta_true": math.exp(b_true)})
-    stream = seed_map.stream(family, case_id, rep)
-    out = run_record(spec, h_locked, stream)
-    if not out.evaluable or out.log_beta is None or out.se is None:
-        return False, False, {"reason": out.reason}
-    interval = build_interval(out.log_beta, out.se, NORMAL_CRITICAL, plan.BIAS_PER_CELL)
-    return interval.strictly_inside(DELTA_A), True, {
-        "b_hat": out.log_beta, "se": out.se, "lo": interval.lo, "hi": interval.hi,
+def deterministic_coverage() -> tuple[set[str], set[str]]:
+    """``(routed_to_deterministic, handled_by_the_battery)``."""
+    routed = {
+        c.case_id for c in ALL_CASES
+        if instantiate(c.case_id).driver == "deterministic"
     }
+    handled = {r["case_id"] for r in deterministic_controls()}
+    return routed, handled
 
 
-def run_size_case(seed_map: SeedMap, case, reps: int, frames: int) -> dict:
-    agg = Aggregator(case.case_id, "size", "cp_upper", 0.025)
-    refused = 0
-    t0 = time.time()
-    b_true = case.detail.get("b_true")
-    spec_kw: dict = {}
-    if "noise_ratio" in case.detail:
-        spec_kw["localization_ratio_target"] = case.detail["noise_ratio"]
-    if b_true is None:
-        # contrast and gate-boundary cases are not exercised by the single-record
-        # size driver; they are declared NOT RUN rather than silently skipped.
-        return {
-            "case_id": case.case_id, "family": "size", "status": "NOT RUN",
-            "reason": "requires the multi-record contrast or gate-boundary driver",
-            "replicates_run": 0, "required": case.replicates,
-        }
-    for rep in range(reps):
-        event, evaluable, _ = _single_record_event(
-            seed_map, SIZE, case.case_id, rep, b_true, frames, **spec_kw
-        )
-        if not evaluable:
-            refused += 1
-        agg.add(event)
-    res = agg.result({
-        "b_true": b_true, "refused_or_nonevaluable": refused,
-        "seconds": round(time.time() - t0, 1),
-    })
-    return res.as_dict()
-
+# ---------------------------------------------------------------------------
+# Building one record's typed result
+# ---------------------------------------------------------------------------
 
 def build_record_result(
-    block, fld, out, h_locked, crit=NORMAL_CRITICAL, bias=None,
-) -> RecordResultV3:
+    block: BlockId,
+    fld: FieldId,
+    out,
+    calibration,
+    critical: CriticalValues = NORMAL_CRITICAL,
+    gate_identity: str = "",
+) -> RecordResultV4:
     """Translate a harness RecordOutcome into the typed pipeline result.
 
-    Anything the harness did not establish stays ``None`` here.  Nothing is
-    defaulted to a value that would read as a pass.
+    The absolute interval is built on the TOTAL standard error, combining the
+    conditional fitted error with this record's calibration contribution read
+    from the joint ``C_b,cal``.  The bounded-bias enlargement is explicit
+    evidence that includes the certified axial remainder; it is never a
+    default of zero.  Anything the harness did not establish stays absent.
     """
-    from ..validation import plan as _plan
+    key = RecordKey(block, fld)
+    name = str(key)
+    reasons: list[Refusal] = list(out.reasons)
 
-    bias_bound = _plan.BIAS_PER_CELL if bias is None else bias
     if not out.evaluable or out.log_beta is None or out.se is None:
-        return RecordResultV3(
-            block=block, fld=fld, evaluable=False, reasons=tuple(out.reasons),
-        )
-    interval = build_interval(out.log_beta, out.se, crit, bias_bound)
-    return RecordResultV3(
-        block=block, fld=fld,
+        return RecordResultV4(key=key, embedded_key=key, evaluable=False,
+                              reasons=tuple(reasons))
+
+    cal_sigma = calibration.absolute_sigma(name)
+    if calibration.absolute_qualification(name) != CEILING_PASS:
+        reasons.append(refuse(
+            CALIBRATION_UNCERTAINTY_EXCESS,
+            "absolute calibration standard uncertainty <= 0.009",
+            "the certified enclosure does not establish the endpoint is "
+            "inside its U.23 ceiling",
+            record=name, sigma=cal_sigma.point,
+            classification=calibration.absolute_qualification(name),
+        ))
+    se_total = combined_standard_error(out.se, cal_sigma.point)
+
+    bias = BiasEvidence.qualified(
+        plan.BIAS_PER_CELL + axial_remainder_bias(fld.index),
+        source="design-point T.18 budget plus the certified axial remainder",
+    )
+    interval = build_interval(out.log_beta, se_total, critical, bias.require())
+
+    from ..evidence import ScientificInterval
+    sci = ScientificInterval(
+        interval=interval, estimate=out.log_beta, standard_error=se_total,
+        critical=critical, bias_bound=bias.require(),
+    )
+
+    def limit(stat: float | None) -> GateLimit:
+        # No finite-N calibration exists for V4, so no calibrated upper limit
+        # can be published and the gate fails closed.  Comparing the raw
+        # statistic against the tolerance in its place is the shortcut this
+        # repair removes.
+        if stat is None or gate_identity == "":
+            return GateLimit.uncalibrated(stat)
+        return GateLimit.calibrated(stat, stat, gate_identity)
+
+    return RecordResultV4(
+        key=key, embedded_key=key,
         branch_a_valid=True,           # synthetic packet, qualified by construction
         observation_valid=True,
         realization_status=FIELD_REALIZATION_VALID,
-        log_beta=out.log_beta, log_beta_se=out.se, absolute_interval=interval,
-        geometry=out.geometry,
-        # No finite-N calibration exists yet, so no calibrated upper limit can
-        # be published.  These stay None and therefore fail closed.
-        geometry_limit=None,
-        centre=out.centre, centre_limit=None,
-        stationarity=out.stationarity, stationarity_limit=None,
-        r_irr=out.r_irr, r_irr_limit=None,
-        diagnostic_max=None if out.diagnostic is None else 0.0,
-        diagnostic_rejected=None if out.diagnostic is None else False,
+        log_beta=out.log_beta, log_beta_se=se_total, absolute=sci,
+        absolute_bias=bias,
+        shape=limit(out.geometry),
+        centre=limit(out.centre),
+        stationarity=limit(out.stationarity),
+        current=limit(out.r_irr),
         evaluable=True,
-        reasons=tuple(out.reasons),
+        reasons=tuple(reasons),
     )
 
 
+def build_contrast_results(
+    records: Sequence[RecordResultV4],
+    calibration,
+    critical: CriticalValues = NORMAL_CRITICAL,
+) -> list[ContrastResultV4]:
+    """The six within-block contrasts, from the SAME joint covariance.
+
+    ``C_d = D C_b D^T`` is formed by differencing the sensitivity rows before
+    contracting with ``C_phi``, which is algebraically identical and keeps
+    every shared-primitive cancellation exact.  Recomputing a contrast from
+    two independent absolute uncertainties would discard the off-diagonal
+    blocks and inflate it by up to sqrt(2).
+    """
+    # Collected as a LIST per identity, not a map: a duplicate record must not
+    # disappear behind its twin here either, even though the evidence layer
+    # already refuses the experiment.
+    grouped: dict[RecordKey, list[RecordResultV4]] = {}
+    for r in records:
+        grouped.setdefault(r.key, []).append(r)
+
+    def unique(key: RecordKey) -> RecordResultV4 | None:
+        got = grouped.get(key, [])
+        return got[0] if len(got) == 1 else None
+
+    out: list[ContrastResultV4] = []
+    from ..evidence import ScientificInterval
+    for blk, fld in CONTRASTS:
+        key = ContrastKey(blk, fld)
+        a = unique(RecordKey(blk, fld))
+        b = unique(RecordKey(blk, FieldId.THETA0))
+        if a is None or b is None or a.log_beta is None or b.log_beta is None:
+            out.append(ContrastResultV4(key=key))
+            continue
+        name_a, name_b = str(a.key), str(b.key)
+        cal_sigma = calibration.contrast_sigma(name_a, name_b)
+        reasons: list[Refusal] = []
+        if calibration.contrast_qualification(name_a, name_b) != CEILING_PASS:
+            reasons.append(refuse(
+                CALIBRATION_UNCERTAINTY_EXCESS,
+                "contrast calibration standard uncertainty <= 0.003",
+                "the certified enclosure does not establish the contrast is "
+                "inside its U.24 ceiling",
+                contrast=str(key), sigma=cal_sigma.point,
+            ))
+        cond_a = a.absolute.standard_error if a.absolute else None
+        cond_b = b.absolute.standard_error if b.absolute else None
+        if cond_a is None or cond_b is None:
+            out.append(ContrastResultV4(key=key, reasons=tuple(reasons)))
+            continue
+        se = combined_contrast_standard_error(cond_a, cond_b, cal_sigma.point)
+        bias = BiasEvidence.qualified(
+            2.0 * plan.BIAS_PER_CELL
+            + axial_remainder_bias(fld.index) + axial_remainder_bias(0),
+            source="jointly computed contrast bias; never inferred from two "
+                   "absolute bounds",
+        )
+        est = a.log_beta - b.log_beta
+        iv = build_interval(est, se, critical, bias.require())
+        out.append(ContrastResultV4(
+            key=key,
+            interval=ScientificInterval(
+                interval=iv, estimate=est, standard_error=se,
+                critical=critical, bias_bound=bias.require(),
+            ),
+            bias=bias,
+            reasons=tuple(reasons),
+        ))
+    return out
+
+
+#: Frozen null scales injected ONLY by the deterministic fixture path, so the
+#: verdict code past the uncalibrated gate can be exercised.  These are not a
+#: calibration and are labelled as such in every artefact that uses them.
+SYNTHETIC_NULL_SCALES = NullScales(1.0, 1.0, 1.0, 1.0)
+SYNTHETIC_DIAGNOSTIC_CRITICAL = 1.0e9
+SYNTHETIC_DIAGNOSTIC_IDENTITY = "SYNTHETIC FIXTURE - not a calibration"
+
+
+def build_diagnostic_family(
+    per_record: Sequence[tuple[str, object, str]],
+    fixture: bool = False,
+) -> DiagnosticFamilyResult:
+    """Derive the ONE authoritative family result from the record components.
+
+    No finite-N diagnostic calibration exists for V4, so this returns
+    UNCALIBRATED whenever the components are complete, and NOT_EVALUABLE when
+    any is missing.  Neither can take part in a supported verdict, which is
+    the correct state of the procedure: raw components existing is not a
+    family that passed.
+    """
+    diags = [
+        RecordDiagnostic(record=name, components=comp, rejected=None, reason=reason)
+        for name, comp, reason in per_record
+    ]
+    expected = [f"{b.value}/{f.value}" for b, f in RECORDS]
+    if fixture:
+        return evaluate_diagnostic_family(
+            diags, expected, scales=SYNTHETIC_NULL_SCALES,
+            critical_value=SYNTHETIC_DIAGNOSTIC_CRITICAL,
+            critical_identity=SYNTHETIC_DIAGNOSTIC_IDENTITY,
+        )
+    return evaluate_diagnostic_family(
+        diags, expected, scales=None, critical_value=None, critical_identity="",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Complete eight-record experiments
+# ---------------------------------------------------------------------------
+
 def run_complete_experiment(
-    seed_map: SeedMap, case_id: str, rep: int, frames: int, **spec_kw
+    seed_map: SeedMap,
+    case: ValidationCaseV4,
+    inst: CaseInstantiation,
+    rep: int,
+    frames: int,
+    namespace: str | None = None,
+    critical: CriticalValues = NORMAL_CRITICAL,
+    gate_identity: str = "",
+    fixture: bool = False,
 ):
-    """Run one complete eight-record synthetic experiment through the ONE path.
+    """Run one complete eight-record experiment through the ONE path.
 
     This function does NOT decide success.  It assembles typed results and
     hands them to :func:`complete_pipeline_result`, which is the single
-    authoritative predicate.  A runner that re-derived its own weaker
-    conjunction is exactly the V2 defect being repaired here.
+    authoritative predicate.
     """
-    specs = design_specs(n_frames=frames, **spec_kw)
-    records = []
-    contrast_inputs: dict[tuple, float | None] = {}
-    diag_evaluated = True
+    ns = namespace or case.seed_namespace
+    specs = design_specs(n_frames=frames, **inst.spec_kwargs)
+    calibration = experiment_calibration(inst.spec_kwargs)
+    records: list[RecordResultV4] = []
+    diag_inputs: list[tuple[str, object, str]] = []
+    seeds: list[int] = []
     for idx, ((spec, h_locked), (block, fld)) in enumerate(zip(specs, RECORDS)):
-        stream = seed_map.stream(POWER, case_id, rep * 100 + idx)
+        if inst.geometry is not None:
+            spec, h_locked = apply_geometry(inst.geometry, spec, h_locked)
+        if inst.blind_scale is not None:
+            h_locked = nm.scale(h_locked, inst.blind_scale)
+        seed = seed_map.replicate_seed(ns, case.case_id, rep * 100 + idx)
+        seeds.append(seed)
+        stream = Stream(seed, label=f"{ns}/{case.case_id}/{rep}/{idx}")
         out = run_record(spec, h_locked, stream)
-        rec = build_record_result(block, fld, out, h_locked)
-        records.append(rec)
-        contrast_inputs[(block, fld)] = rec.log_beta
-        if out.diagnostic is None:
-            diag_evaluated = False
-    # Within-block contrasts. No finite-N contrast calibration exists, so the
-    # interval cannot be published and the contrast fails closed.
-    contrasts: dict[str, None] = {contrast_key(b, f): None for b, f in CONTRASTS}
-    return complete_pipeline_result(
-        records, contrasts, False if diag_evaluated else None
-    )
+        records.append(build_record_result(
+            block, fld, out, calibration, critical, gate_identity,
+        ))
+        diag_inputs.append((
+            f"{block.value}/{fld.value}", out.diagnostic, out.reason,
+        ))
+    contrasts = build_contrast_results(records, calibration, critical)
+    family = build_diagnostic_family(diag_inputs, fixture=fixture)
+    result = complete_pipeline_result(records, contrasts, family)
+    return result, inst.digest(specs), seeds
 
 
-def run_power_case(seed_map: SeedMap, case, reps: int, frames: int) -> dict:
+def run_power_case(
+    seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
+    critical: CriticalValues = NORMAL_CRITICAL, gate_identity: str = "",
+    fixture: bool = False,
+) -> dict:
     """Complete eight-record experiments, counted by the authoritative verdict."""
+    inst = instantiate(case.case_id)
+    if not inst.runnable:
+        return _not_run(case, inst)
     agg = Aggregator(case.case_id, "power", "cp_lower", 0.90)
+    reasons = ReasonAggregate(case.case_id)
     t0 = time.time()
-    classifications: dict[str, int] = {}
-    reason_tally: dict[str, int] = {}
+    digest: dict = {}
     for rep in range(reps):
-        result = run_complete_experiment(seed_map, case.case_id, rep, frames)
-        agg.add(result.counts_as_complete_success)
-        cls = result.verdict.classification
-        classifications[cls] = classifications.get(cls, 0) + 1
-        for code in result.reason_codes():
-            reason_tally[code] = reason_tally.get(code, 0) + 1
+        result, digest, seeds = run_complete_experiment(
+            seed_map, case, inst, rep, frames, critical=critical,
+            gate_identity=gate_identity, fixture=fixture,
+        )
+        outcome = ReplicateOutcome.from_complete(
+            case.case_id, rep, seeds[0], result, configuration=digest,
+        )
+        reasons.add(outcome)
+        agg.add(evaluate_event(case, outcome))
     res = agg.result({
-        "classifications": classifications,
-        "reason_codes": reason_tally,
+        **reasons.as_dict(),
+        "expected_event": case.expected_event.value,
+        "configuration": digest,
         "note": "refusals remain in the denominator; success requires the "
                 "authoritative verdict SUPPORTED_WITHIN_DECLARED_TOLERANCES",
         "seconds": round(time.time() - t0, 1),
@@ -291,75 +536,117 @@ def run_power_case(seed_map: SeedMap, case, reps: int, frames: int) -> dict:
     return res.as_dict()
 
 
-def run_control_case(seed_map: SeedMap, case, reps: int, frames: int) -> dict:
-    """Stochastic negative controls: record what the pipeline actually does."""
+def run_control_case(
+    seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
+    critical: CriticalValues = NORMAL_CRITICAL, gate_identity: str = "",
+    fixture: bool = False,
+) -> dict:
+    """Stochastic negative controls, judged by the authoritative verdict.
+
+    V3 computed "support" here from four raw statistics and discarded every
+    structured reason.  Both are repaired: the event comes from
+    :func:`evaluate_event`, and :class:`ReasonAggregate` keeps every
+    per-replicate refusal alongside the histograms.
+    """
+    inst = instantiate(case.case_id)
+    if not inst.runnable:
+        return _not_run(case, inst)
+    reasons = ReasonAggregate(case.case_id)
     t0 = time.time()
-    kw: dict = {}
-    beta = 1.0
-    if case.case_id == "CTL-COMMON-07":
-        beta = 0.7
-    if case.case_id == "CTL-CURRENT":
-        kw["omega"] = case.detail.get("omega", 0.05)
-    if case.case_id == "CTL-DRIFT":
-        kw["drift_rate"] = (2.0e-7, 0.0)
-    if case.case_id in ("CTL-NOISE-HEAVY", "CTL-NOISE-COLOR", "CTL-NOISE-STATE"):
-        kw["noise_model"] = {"CTL-NOISE-HEAVY": "heavy", "CTL-NOISE-COLOR": "colored",
-                             "CTL-NOISE-STATE": "state_dependent"}[case.case_id]
-    if case.case_id == "CTL-NOISE-HI":
-        kw["localization_ratio_target"] = 0.25
-    counts = {"support": 0, "absolute_fail": 0, "geometry_fail": 0, "centre_fail": 0,
-              "current_fail": 0, "nonevaluable": 0}
-    blind_err: list[float] = []
+    events = 0
+    digest: dict = {}
     for rep in range(reps):
-        specs = design_specs(n_frames=frames, **kw)
+        result, digest, seeds = run_complete_experiment(
+            seed_map, case, inst, rep, frames, critical=critical,
+            gate_identity=gate_identity, fixture=fixture,
+        )
+        extra: dict = {}
+        if inst.blind_scale is not None:
+            lb = next((r.log_beta for r in result.records if r.log_beta is not None), None)
+            extra["blinded_error"] = (
+                None if lb is None else lb + math.log(inst.blind_scale)
+            )
+        outcome = ReplicateOutcome.from_complete(
+            case.case_id, rep, seeds[0], result, configuration=digest, **extra,
+        )
+        reasons.add(outcome)
+        try:
+            if evaluate_event(case, outcome):
+                events += 1
+        except EventNotEvaluable:
+            pass
+    evaluated = len(reasons.replicates)
+    detail: dict = {
+        "case_id": case.case_id, "family": "control",
+        "expectation": case.expectation,
+        "expected_event": case.expected_event.value,
+        "events": events,
+        "configuration": digest,
+        "seconds": round(time.time() - t0, 1),
+        **reasons.as_dict(),
+    }
+    if evaluated > 0 and case.expected_event is ExpectedEvent.COMPLETE_SUPPORT:
+        detail["false_support_cp_upper"] = clopper_pearson_upper(events, evaluated)
+    return detail
+
+
+def _not_run(case: ValidationCaseV4, inst: CaseInstantiation) -> dict:
+    return {
+        "case_id": case.case_id,
+        "family": case.family,
+        "status": "NOT RUN",
+        "driver": inst.driver,
+        "reason": inst.not_run_reason,
+        "replicates_run": 0,
+        "required": case.replicates,
+        "expected_event": case.expected_event.value,
+        "configuration": inst.digest(),
+    }
+
+
+# ---------------------------------------------------------------------------
+# Single-record size driver
+# ---------------------------------------------------------------------------
+
+def run_size_case(
+    seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
+    critical: CriticalValues = NORMAL_CRITICAL,
+) -> dict:
+    """False-equivalence size at a boundary null, single-record driver."""
+    inst = instantiate(case.case_id)
+    if not inst.runnable or inst.b_true is None:
+        return _not_run(case, inst)
+    agg = Aggregator(case.case_id, "size", "cp_upper", 0.025)
+    reasons = ReasonAggregate(case.case_id)
+    t0 = time.time()
+    calibration = experiment_calibration(inst.spec_kwargs)
+    for rep in range(reps):
+        specs = design_specs(n_frames=frames, **inst.spec_kwargs)
         spec, h_locked = specs[0]
-        if beta != 1.0:
-            spec = type(spec)(**{**spec.__dict__, "beta_true": beta})
-        if case.case_id == "CTL-GEOM-TRACE":
-            vals, Q = nm.eigh(h_locked)
-            h_locked = nm.symmetrise(nm.matmul(nm.matmul(
-                Q, [[vals[0] * 1.6, 0.0], [0.0, vals[1] / 1.6]]), nm.transpose(Q)))
-        if case.case_id == "CTL-GEOM-ROT":
-            theta = math.pi / 5.0
-            R = nm.mat([[math.cos(theta), -math.sin(theta)], [math.sin(theta), math.cos(theta)]])
-            base = nm.mat([[spec.h_true[0][0] * 1.5, 0.0], [0.0, spec.h_true[1][1] / 1.5]])
-            spec = type(spec)(**{**spec.__dict__, "h_true": nm.symmetrise(
-                nm.matmul(nm.matmul(R, base), nm.transpose(R)))})
-            h_locked = base
-        if case.case_id == "CTL-BLUR-MISMATCH":
-            spec = type(spec)(**{**spec.__dict__, "generate_t_exp": spec.dt * 0.9})
-        c = case.detail.get("c")
-        if c is not None:
-            h_locked = nm.scale(h_locked, c)
-        stream = seed_map.stream(CONTROL, case.case_id, rep)
-        out = run_record(spec, h_locked, stream)
-        if not out.evaluable or out.log_beta is None:
-            counts["nonevaluable"] += 1
-            continue
-        if c is not None:
-            blind_err.append(out.log_beta + math.log(c))
-        iv = build_interval(out.log_beta, out.se, NORMAL_CRITICAL, plan.BIAS_PER_CELL)
-        abs_ok = iv.strictly_inside(DELTA_A)
-        geo_ok = out.geometry is not None and out.geometry < DELTA_G
-        cen_ok = out.centre is not None and out.centre < DELTA_M
-        cur_ok = out.r_irr is not None and out.r_irr < DELTA_R_IRR
-        if not abs_ok:
-            counts["absolute_fail"] += 1
-        if not geo_ok:
-            counts["geometry_fail"] += 1
-        if not cen_ok:
-            counts["centre_fail"] += 1
-        if not cur_ok:
-            counts["current_fail"] += 1
-        if abs_ok and geo_ok and cen_ok and cur_ok:
-            counts["support"] += 1
-    detail: dict = {"counts": counts, "replicates": reps,
-                    "seconds": round(time.time() - t0, 1)}
-    evaluated = reps - counts["nonevaluable"]
-    if evaluated > 0:
-        detail["false_support_cp_upper"] = clopper_pearson_upper(counts["support"], evaluated)
-    if blind_err:
-        detail["blinded_recovery_mean_error"] = sum(blind_err) / len(blind_err)
-        detail["blinded_recovery_max_abs_error"] = max(abs(v) for v in blind_err)
-    return {"case_id": case.case_id, "family": "control",
-            "expectation": case.expectation, **detail}
+        spec = type(spec)(**{**spec.__dict__, "beta_true": math.exp(inst.b_true)})
+        seed = seed_map.replicate_seed(case.seed_namespace, case.case_id, rep)
+        out = run_record(spec, h_locked, Stream(seed, label=case.case_id))
+        rec = build_record_result(
+            BlockId.BLOCK1, FieldId.THETA0, out, calibration, critical,
+        )
+        contained = (
+            None if rec.absolute is None else rec.absolute.strictly_inside(DELTA_A)
+        )
+        outcome = ReplicateOutcome(
+            case_id=case.case_id, replicate=rep, seed=seed,
+            reason_codes=tuple(r.code for r in rec.reasons),
+            reason_predicates=tuple(f"{r.code}:{r.predicate}" for r in rec.reasons),
+            absolute_contained=contained,
+            bandwidth_product=out.bandwidth_product,
+            evaluable=rec.evaluable,
+            configuration=inst.digest(specs),
+        )
+        reasons.add(outcome)
+        agg.add(evaluate_event(case, outcome))
+    res = agg.result({
+        **reasons.as_dict(),
+        "b_true": inst.b_true,
+        "expected_event": case.expected_event.value,
+        "seconds": round(time.time() - t0, 1),
+    })
+    return res.as_dict()

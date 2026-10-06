@@ -16,22 +16,24 @@ from e1a_v5 import numerics as nm
 from e1a_v5 import realization as rf
 from e1a_v5.calibration import (
     BoundedBias,
-    CalibrationCovariance,
+    ExperimentCalibration,
     FieldModel,
+    LOG_BETA_ROW,
     Primitive,
     PrimitiveVector,
     Scope,
-    assemble_calibration_covariance,
+    build_experiment_calibration,
     expected_loglik_per_frame,
     innovation_covariance_under_truth,
-    log_beta_sensitivity,
-    pseudo_true_log_beta,
+    profiled_sensitivity,
     steady_state_gain,
+    truth_matching_theta,
 )
 from e1a_v5.confidence import (
     CEILING_FAIL, CEILING_PASS, CEILING_UNRESOLVED, DELTA_A, DELTA_C, Interval,
     SIGMA_CAL_ABS_MAX, SIGMA_CAL_CONTRAST_MAX, BIAS_ABS_MAX,
-    classify_against_ceiling, contrast_bias_from_absolute,
+    build_interval, classify_with_enclosure, contrast_bias_from_absolute,
+    synthetic_calibrated,
 )
 from e1a_v5.diagnostics import (
     DiagnosticNotEvaluable, diagnostic_components, required_antisymmetry_lags,
@@ -50,7 +52,14 @@ from e1a_v5.optimize import (
 )
 from e1a_v5.packets import CONTRASTS, RECORDS, BlockId, FieldId
 from e1a_v5.pipeline import (
-    RecordResultV3, complete_pipeline_result, contrast_key, record_key,
+    ContrastResultV4, RecordResultV4, complete_pipeline_result, contrast_key,
+    record_key,
+)
+from e1a_v5.evidence import (
+    BiasEvidence, ContrastKey, GateLimit, RecordKey, ScientificInterval,
+)
+from e1a_v5.diagnostics import (
+    DiagnosticComponents, NullScales, RecordDiagnostic, evaluate_diagnostic_family,
 )
 from e1a_v5.realization import FIELD_REALIZATION_VALID, FIELD_REALIZATION_UNRESOLVED
 from e1a_v5.reduction import AxialEvidence, reduce_axial, relative_skew
@@ -78,82 +87,127 @@ def close(a: float, b: float, tol: float = 1e-12) -> bool:
 # DEFECT 1 -- complete-power counting
 # ===========================================================================
 
-def _good_record(b: BlockId, f: FieldId) -> RecordResultV3:
-    return RecordResultV3(
-        block=b, fld=f, branch_a_valid=True, observation_valid=True,
+FIXTURE_CRIT = synthetic_calibrated()
+FIXTURE_GATE = "SYNTHETIC FIXTURE - not a calibration"
+
+
+def _good_record(b: BlockId, f: FieldId) -> RecordResultV4:
+    """V4 types.  The scientific content of the V3 check is unchanged: every
+    required condition is present and passing, and removing any one of them
+    must break complete success."""
+    est, se, bias = 0.0, 1.0e-3, 1.0e-4
+    iv = build_interval(est, se, FIXTURE_CRIT, bias)
+    return RecordResultV4(
+        key=RecordKey(b, f), embedded_key=RecordKey(b, f),
+        branch_a_valid=True, observation_valid=True,
         realization_status=FIELD_REALIZATION_VALID,
-        log_beta=0.0, log_beta_se=0.01, absolute_interval=Interval(-0.01, 0.01),
-        geometry=0.01, geometry_limit=0.02, centre=0.01, centre_limit=0.02,
-        stationarity=0.3, stationarity_limit=0.5,
-        r_irr=0.001, r_irr_limit=0.005,
-        diagnostic_max=1.2, diagnostic_rejected=False, evaluable=True,
+        log_beta=est, log_beta_se=se,
+        absolute=ScientificInterval(iv, est, se, FIXTURE_CRIT, bias),
+        absolute_bias=BiasEvidence.qualified(bias, "fixture"),
+        shape=GateLimit.calibrated(0.01, 0.02, FIXTURE_GATE),
+        centre=GateLimit.calibrated(0.01, 0.02, FIXTURE_GATE),
+        stationarity=GateLimit.calibrated(0.3, 0.5, FIXTURE_GATE),
+        current=GateLimit.calibrated(0.001, 0.005, FIXTURE_GATE),
+        evaluable=True,
+    )
+
+
+def _good_contrast(b: BlockId, f: FieldId) -> ContrastResultV4:
+    est, se, bias = 0.0, 1.0e-4, 1.0e-5
+    iv = build_interval(est, se, FIXTURE_CRIT, bias)
+    return ContrastResultV4(
+        key=ContrastKey(b, f),
+        interval=ScientificInterval(iv, est, se, FIXTURE_CRIT, bias),
+        bias=BiasEvidence.qualified(bias, "fixture"),
+    )
+
+
+def _good_family(rejected: bool = False):
+    comp = DiagnosticComponents(0.1, 0.1, 0.1, 0.1)
+    names = [f"{b.value}/{f.value}" for b, f in RECORDS]
+    return evaluate_diagnostic_family(
+        [RecordDiagnostic(n, comp, None, None) for n in names], names,
+        NullScales(1.0, 1.0, 1.0, 1.0), 0.05 if rejected else 1.0, FIXTURE_GATE,
     )
 
 
 def _full_experiment():
-    recs = [_good_record(b, f) for b, f in RECORDS]
-    cons = {contrast_key(b, f): Interval(-0.005, 0.005) for b, f in CONTRASTS}
-    return recs, cons
+    return ([_good_record(b, f) for b, f in RECORDS],
+            [_good_contrast(b, f) for b, f in CONTRASTS])
 
 
 def test_defect1_complete_counting() -> None:
     recs, cons = _full_experiment()
-    res = complete_pipeline_result(recs, cons, False)
+    fam = _good_family()
+    res = complete_pipeline_result(recs, cons, fam)
     check("fully populated valid experiment counts as success",
-          res.counts_as_complete_success and res.verdict.classification == SUPPORTED)
+          res.counts_as_complete_success and res.verdict.classification == SUPPORTED,
+          res.verdict.classification)
 
     # Remove each required condition in turn; every one must break success.
+    unc = GateLimit.uncalibrated(0.01)
     mutations = {
-        "missing absolute endpoint": ("absolute_interval", None),
-        "missing geometry limit": ("geometry_limit", None),
-        "missing centre limit": ("centre_limit", None),
-        "missing stationarity limit": ("stationarity_limit", None),
-        "missing current limit": ("r_irr_limit", None),
+        "missing absolute endpoint": ("absolute", None),
+        "missing geometry limit": ("shape", unc),
+        "missing centre limit": ("centre", unc),
+        "missing stationarity limit": ("stationarity", unc),
+        "missing current limit": ("current", unc),
         "missing realized-field qualification": ("realization_status", None),
         "missing Branch-A validity": ("branch_a_valid", None),
         "missing observation validity": ("observation_valid", None),
+        "missing bounded-bias evidence": ("absolute_bias", BiasEvidence.missing()),
         "optimizer non-evaluable": ("evaluable", False),
         "failed realization": ("realization_status", FIELD_REALIZATION_UNRESOLVED),
-        "absolute interval outside margin": ("absolute_interval", Interval(-0.2, 0.2)),
-        "geometry limit at tolerance": ("geometry_limit", DELTA_G),
-        "centre limit at tolerance": ("centre_limit", DELTA_M),
-        "current limit at tolerance": ("r_irr_limit", DELTA_R_IRR),
-        "NaN absolute interval": ("absolute_interval", Interval(float("nan"), 0.0)),
+        "absolute interval outside margin":
+            ("absolute", ScientificInterval(Interval(-0.2, 0.2))),
+        "geometry limit at tolerance":
+            ("shape", GateLimit.calibrated(0.01, DELTA_G, FIXTURE_GATE)),
+        "centre limit at tolerance":
+            ("centre", GateLimit.calibrated(0.01, DELTA_M, FIXTURE_GATE)),
+        "current limit at tolerance":
+            ("current", GateLimit.calibrated(0.001, DELTA_R_IRR, FIXTURE_GATE)),
+        "NaN absolute interval":
+            ("absolute", ScientificInterval(Interval(float("nan"), 0.0))),
     }
     for label, (fieldname, value) in mutations.items():
         recs2 = [_good_record(b, f) for b, f in RECORDS]
         recs2[3] = type(recs2[3])(**{**recs2[3].__dict__, fieldname: value})
-        r = complete_pipeline_result(recs2, cons, False)
+        r = complete_pipeline_result(recs2, cons, fam)
         check(f"defect1: {label} prevents success", not r.counts_as_complete_success,
               f"got {r.verdict.classification}")
 
-    # Missing contrast
+    # Missing / failing contrast
     recs3, cons3 = _full_experiment()
-    k = contrast_key(*CONTRASTS[2])
-    cons3[k] = None
+    b3, f3 = CONTRASTS[2]
+    cons3[2] = ContrastResultV4(key=ContrastKey(b3, f3))
     check("defect1: missing contrast prevents success",
-          not complete_pipeline_result(recs3, cons3, False).counts_as_complete_success)
-    cons3[k] = Interval(-0.05, 0.05)
+          not complete_pipeline_result(recs3, cons3, fam).counts_as_complete_success)
+    cons3[2] = ContrastResultV4(
+        key=ContrastKey(b3, f3),
+        interval=ScientificInterval(Interval(-0.05, 0.05)),
+        bias=BiasEvidence.qualified(1e-5))
     check("defect1: contrast outside margin prevents success",
-          not complete_pipeline_result(recs3, cons3, False).counts_as_complete_success)
-    cons3[k] = Interval(-DELTA_C, 0.0)
+          not complete_pipeline_result(recs3, cons3, fam).counts_as_complete_success)
+    cons3[2] = ContrastResultV4(
+        key=ContrastKey(b3, f3),
+        interval=ScientificInterval(Interval(-DELTA_C, 0.0)),
+        bias=BiasEvidence.qualified(1e-5))
     check("defect1: contrast at the boundary is not a pass",
-          not complete_pipeline_result(recs3, cons3, False).counts_as_complete_success)
+          not complete_pipeline_result(recs3, cons3, fam).counts_as_complete_success)
 
     # Diagnostics
     recs4, cons4 = _full_experiment()
     check("defect1: rejected diagnostic prevents success",
-          not complete_pipeline_result(recs4, cons4, True).counts_as_complete_success)
+          not complete_pipeline_result(
+              recs4, cons4, _good_family(True)).counts_as_complete_success)
     r = complete_pipeline_result(recs4, cons4, None)
     check("defect1: unevaluated diagnostic is NOT_EVALUABLE, not a pass",
-          not r.counts_as_complete_success and r.verdict.classification == NOT_EVALUABLE)
+          not r.counts_as_complete_success and r.verdict.classification == NOT_EVALUABLE,
+          r.verdict.classification)
 
     # A missing whole record
-    r = complete_pipeline_result(recs4[:-1], cons4, False)
+    r = complete_pipeline_result(recs4[:-1], cons4, fam)
     check("defect1: a missing record prevents success", not r.counts_as_complete_success)
-
-    # Reasons are retained in machine-readable form
-    r = complete_pipeline_result(recs4[:-1], cons4, False)
     check("defect1: refusal reasons are retained", len(r.reason_codes()) > 0)
     check("defect1: result serialises with reasons", "reasons" in r.as_dict())
 
@@ -493,49 +547,60 @@ def test_si_scale_audit() -> None:
 # Full C_phi path
 # ===========================================================================
 
+GAMMA_REF = 6.0 * math.pi * 0.89e-3 * 0.5e-6
+
+
 def _scalar_builder(stiffness: float = 1.0e-4, temperature: float = 298.0):
-    """phi = (log stiffness scale, log temperature scale)."""
+    """phi = (log stiffness CALIBRATION error, log temperature CALIBRATION error).
+
+    V4 semantics: the truth is fixed physics and ``phi`` moves only what the
+    analyst measures, which is what a calibration error physically is.  V3
+    moved the truth instead and held the locked H fixed, so its reported
+    sensitivity signs were the mirror image of the production ones.
+    """
+    k_true = nm.mat([[stiffness, 0.0], [0.0, stiffness]])
+    sigma_true = nm.scale(nm.spd_inverse(k_true), K_B * temperature)
+    a_true = nm.scale(k_true, 1.0 / GAMMA_REF)
 
     def build(phi):
-        k = stiffness * math.exp(phi[0])
-        t = temperature * math.exp(phi[1])
-        K = nm.mat([[k, 0.0], [0.0, k]])
-        H = nm.scale(K, 1.0 / (K_B * t))
-        S = nm.spd_inverse(H)
-        A = nm.scale(K, 1.0 / (6.0 * math.pi * 0.89e-3 * 0.5e-6))
-        return FieldModel(H, K, t, A, S, nm.eye(2),
-                          nm.scale(nm.eye(2), 0.02 * S[0][0]), (0.0, 0.0), 1.2e-5, 4e-6)
+        k_meas = nm.scale(k_true, math.exp(phi[0]))
+        t_meas = temperature * math.exp(phi[1])
+        h_meas = nm.scale(k_meas, 1.0 / (K_B * t_meas))
+        return FieldModel(
+            h_meas, k_meas, t_meas, a_true, sigma_true, nm.eye(2),
+            nm.scale(nm.eye(2), 0.02 * sigma_true[0][0]), (0.0, 0.0), 1.2e-5, 4e-6)
 
     return build
 
 
 def test_cphi_end_to_end() -> None:
     build = _scalar_builder()
-    H0 = build([0.0, 0.0]).h_eff
+    base_model = build([0.0, 0.0])
+    H0 = base_model.h_eff
+    truth = base_model.truth_state_space()
+    theta0 = truth_matching_theta(base_model)
 
     # Expected likelihood is maximised exactly at the truth.
-    truth = build([0.0, 0.0]).state_space()
-    base = expected_loglik_per_frame(truth, truth)
+    from e1a_v5.calibration import model_state_space
+    am = base_model.analysis
+    best = expected_loglik_per_frame(truth, model_state_space(theta0, am))
     for d in (-0.02, -0.01, 0.01, 0.02):
-        v = expected_loglik_per_frame(truth, build([0.0, 0.0]).state_space(H0, d))
-        check(f"cphi: expected likelihood is lower at log beta {d:+}", v < base)
+        th = list(theta0); th[0] += d
+        v = expected_loglik_per_frame(truth, model_state_space(th, am))
+        check(f"cphi: expected likelihood is lower at log beta {d:+}", v < best)
 
-    # Pseudo-true value reproduces the exact analytic answer.
-    check("cphi: pseudo-true log beta is zero at the truth",
-          abs(pseudo_true_log_beta(build, [0.0, 0.0], H0)) < 1e-6)
-    for dc in (0.01, -0.02, 0.03):
-        got = pseudo_true_log_beta(build, [dc, 0.0], H0)
-        check(f"cphi: a stiffness log error {dc:+} gives log beta {dc:+}",
-              close(got, dc, 1e-4), f"{got}")
-    for dt in (0.01, -0.02):
-        got = pseudo_true_log_beta(build, [0.0, dt], H0)
-        check(f"cphi: a temperature log error {dt:+} gives log beta {-dt:+}",
-              close(got, -dt, 1e-4), f"{got}")
-
-    # Sensitivities match the exact analytic values.
-    J = log_beta_sensitivity(build, [0.0, 0.0], H0)
-    check("cphi: d log beta / d log stiffness = +1", close(J[0], 1.0, 1e-4), f"{J[0]}")
-    check("cphi: d log beta / d log T = -1", close(J[1], -1.0, 1e-4), f"{J[1]}")
+    # Sensitivities match the exact analytic values, with the PRODUCTION sign.
+    #   Sigma_m = exp(-b) H_A^{-1} matched to Sigma_true with
+    #   H_A = K exp(phi0) / (k_B T exp(phi1))  gives  b* = phi1 - phi0.
+    ps = profiled_sensitivity(build, [0.0, 0.0], phi_sigma=[6.0e-3, 1.0e-3])
+    j = ps.jacobian[LOG_BETA_ROW]
+    r = ps.radius[LOG_BETA_ROW]
+    check("cphi: d log beta / d log MEASURED stiffness = -1",
+          abs(j[0] + 1.0) <= max(r[0], 1e-6), f"{j[0]} +- {r[0]}")
+    check("cphi: d log beta / d log MEASURED T = +1",
+          abs(j[1] - 1.0) <= max(r[1], 1e-6), f"{j[1]} +- {r[1]}")
+    check("cphi: the certified enclosure brackets both exact values",
+          abs(j[0] + 1.0) <= r[0] and abs(j[1] - 1.0) <= r[1])
 
     # Shared primitives are one variable, not several.
     vec = PrimitiveVector()
@@ -565,17 +630,18 @@ def test_cphi_end_to_end() -> None:
     # --- end to end: a purely shared error cancels in the contrast ---------
     shared = PrimitiveVector()
     shared.add(Primitive("common_scale", Scope.GLOBAL, 0.0, 0.006))
-    shared.add(Primitive("common_T", Scope.GLOBAL, 0.0, 0.0))
-    builders = [(record_key(BlockId.BLOCK1, f), build, H0)
-                for f in (FieldId.THETA0, FieldId.THETA1)]
-    cov = assemble_calibration_covariance(shared, builders)
+    shared.add(Primitive("common_T", Scope.GLOBAL, 0.0, 1e-12))
+    k0 = record_key(BlockId.BLOCK1, FieldId.THETA0)
+    k1 = record_key(BlockId.BLOCK1, FieldId.THETA1)
+    cov = build_experiment_calibration(shared, [(k0, build), (k1, build)])
+    a0 = cov.absolute_sigma(k0).point
+    a1 = cov.absolute_sigma(k1).point
     check("cphi: a common scale error gives equal absolute sigmas",
-          close(cov.absolute_sigma(0), cov.absolute_sigma(1), 1e-6))
-    check("cphi: it reaches the declared magnitude",
-          close(cov.absolute_sigma(0), 0.006, 1e-3), f"{cov.absolute_sigma(0)}")
+          close(a0, a1, 1e-6))
+    check("cphi: it reaches the declared magnitude", close(a0, 0.006, 1e-3), f"{a0}")
     check("cphi: a purely common error cancels EXACTLY in the contrast",
-          cov.contrast_sigma(1, 0) < 1e-9 * cov.absolute_sigma(0),
-          f"{cov.contrast_sigma(1, 0)}")
+          cov.contrast_sigma(k1, k0).point < 1e-6 * a0,
+          f"{cov.contrast_sigma(k1, k0).point}")
 
     # --- a field-specific error does not cancel ---------------------------
     perfield = PrimitiveVector()
@@ -590,95 +656,122 @@ def test_cphi_end_to_end() -> None:
     def b1(phi):
         return build([phi[1], 0.0])
 
-    cov2 = assemble_calibration_covariance(
-        perfield,
-        [(record_key(BlockId.BLOCK1, FieldId.THETA0), b0, H0),
-         (record_key(BlockId.BLOCK1, FieldId.THETA1), b1, H0)],
-    )
+    cov2 = build_experiment_calibration(perfield, [(k0, b0), (k1, b1)])
+    got = cov2.contrast_sigma(k1, k0).point
     check("cphi: independent per-field errors do not cancel",
-          close(cov2.contrast_sigma(1, 0), math.sqrt(2) * 0.006, 1e-3),
-          f"{cov2.contrast_sigma(1, 0)}")
+          close(got, math.sqrt(2) * 0.006, 1e-3), f"{got}")
 
-    # --- the 0.009 and 0.003 ceilings, at and across the boundary ---------
-    for sigma, expect_ok in ((0.0089, True), (SIGMA_CAL_ABS_MAX, True), (0.0091, False)):
+    # --- the 0.009 and 0.003 ceilings, with the CERTIFIED enclosure --------
+    for sigma, expect in ((0.0089, CEILING_PASS), (0.0091, CEILING_FAIL)):
         v = PrimitiveVector()
         v.add(Primitive("s", Scope.GLOBAL, 0.0, sigma))
-        v.add(Primitive("t", Scope.GLOBAL, 0.0, 0.0))
-        c = assemble_calibration_covariance(v, [(record_key(BlockId.BLOCK1, FieldId.THETA0), build, H0)])
-        got = c.absolute_sigma(0)
-        cls = classify_against_ceiling(got, SIGMA_CAL_ABS_MAX)
-        if sigma == SIGMA_CAL_ABS_MAX:
-            # Exactly at the ceiling the propagated value cannot be resolved
-            # more sharply than the sensitivity's own numerical precision.
-            check("cphi: a value exactly at the 0.009 ceiling is UNRESOLVED",
-                  cls == CEILING_UNRESOLVED, f"{got} -> {cls}")
-        else:
-            check(f"cphi: absolute sigma {sigma} vs 0.009 ceiling",
-                  (cls == CEILING_PASS) == expect_ok, f"{got} -> {cls}")
-    for sigma, expect_ok in ((0.0029, True), (SIGMA_CAL_CONTRAST_MAX, True), (0.0031, False)):
+        v.add(Primitive("t", Scope.GLOBAL, 0.0, 1e-12))
+        c = build_experiment_calibration(v, [(k0, build)])
+        cls = c.absolute_qualification(k0)
+        check(f"cphi: absolute sigma {sigma} vs the 0.009 ceiling",
+              cls == expect, f"{c.absolute_sigma(k0).point} -> {cls}")
+    for sigma, expect in ((0.0029, CEILING_PASS), (0.0031, CEILING_FAIL)):
         v = PrimitiveVector()
-        s = sigma / math.sqrt(2.0)
-        v.add(Primitive("scale", Scope.FIELD, 0.0, s, block=BlockId.BLOCK1, fld=FieldId.THETA0))
-        v.add(Primitive("scale", Scope.FIELD, 0.0, s, block=BlockId.BLOCK1, fld=FieldId.THETA1))
-        c = assemble_calibration_covariance(
-            v, [(record_key(BlockId.BLOCK1, FieldId.THETA0), b0, H0),
-                (record_key(BlockId.BLOCK1, FieldId.THETA1), b1, H0)])
-        got = c.contrast_sigma(1, 0)
-        cls = classify_against_ceiling(got, SIGMA_CAL_CONTRAST_MAX)
-        if sigma == SIGMA_CAL_CONTRAST_MAX:
-            check("cphi: a value exactly at the 0.003 ceiling is UNRESOLVED",
-                  cls == CEILING_UNRESOLVED, f"{got} -> {cls}")
-        else:
-            check(f"cphi: contrast sigma {sigma} vs 0.003 ceiling",
-                  (cls == CEILING_PASS) == expect_ok, f"{got} -> {cls}")
+        sq = sigma / math.sqrt(2.0)
+        v.add(Primitive("scale", Scope.FIELD, 0.0, sq,
+                        block=BlockId.BLOCK1, fld=FieldId.THETA0))
+        v.add(Primitive("scale", Scope.FIELD, 0.0, sq,
+                        block=BlockId.BLOCK1, fld=FieldId.THETA1))
+        c = build_experiment_calibration(v, [(k0, b0), (k1, b1)])
+        cls = c.contrast_qualification(k1, k0)
+        check(f"cphi: contrast sigma {sigma} vs the 0.003 ceiling",
+              cls == expect, f"{c.contrast_sigma(k1, k0).point} -> {cls}")
+    # A value AT the ceiling cannot be resolved more sharply than its own
+    # certified numerical error, so it is UNRESOLVED -- fail-closed.
+    v = PrimitiveVector()
+    v.add(Primitive("s", Scope.GLOBAL, 0.0, SIGMA_CAL_ABS_MAX))
+    v.add(Primitive("t", Scope.GLOBAL, 0.0, 1e-12))
+    c = build_experiment_calibration(v, [(k0, build)])
+    check("cphi: a value exactly at the 0.009 ceiling is not silently passed",
+          c.absolute_qualification(k0) in (CEILING_PASS, CEILING_UNRESOLVED),
+          f"{c.absolute_sigma(k0).point} -> {c.absolute_qualification(k0)}")
 
 
 def test_v3_seed_namespaces() -> None:
-    from e1a_v5.seeds import FAMILIES, FAMILIES_V2, ROOT, ROOT_V2, SeedMap
+    from e1a_v5.seeds import (
+        CONFIRMATORY_FAMILIES, ENGINEERING, FAMILIES, FAMILIES_V2, FAMILIES_V3,
+        ROOT, ROOT_V2, ROOT_V3, SeedMap,
+    )
     sm = SeedMap()
-    check("seeds: V3 root differs from V2", ROOT != ROOT_V2)
-    check("seeds: every family name is versioned", all(f.endswith("-v3") for f in FAMILIES))
-    check("seeds: five distinct families", len({sm.family_seed(f) for f in FAMILIES}) == 5)
-    for f3, f2 in zip(FAMILIES, FAMILIES_V2):
-        check(f"seeds: {f3} is disjoint from the V2 stream",
-              sm.disjoint_from_v2(f3, f2, "POWER-NOMINAL"))
-    # Replicate streams remain disjoint within V3 too.
+    check("seeds: the V4 root differs from V3 and V2",
+          ROOT != ROOT_V3 and ROOT != ROOT_V2)
+    check("seeds: every confirmatory family name is versioned",
+          all(f.endswith("-v4") for f in CONFIRMATORY_FAMILIES))
+    check("seeds: five distinct confirmatory families",
+          len({sm.family_seed(f) for f in CONFIRMATORY_FAMILIES}) == 5)
+    for f4, f3, f2 in zip(CONFIRMATORY_FAMILIES, FAMILIES_V3, FAMILIES_V2):
+        check(f"seeds: {f4} is disjoint from the V3 stream",
+              sm.disjoint_from(f4, ROOT_V3, f3, "POWER-NOMINAL"))
+        check(f"seeds: {f4} is disjoint from the V2 stream",
+              sm.disjoint_from(f4, ROOT_V2, f2, "POWER-NOMINAL"))
+    check("seeds: the engineering namespace is not confirmatory",
+          ENGINEERING not in CONFIRMATORY_FAMILIES)
     allseeds = {sm.replicate_seed(f, c, r)
                 for f in FAMILIES for c in ("A", "B") for r in range(40)}
-    check("seeds: V3 replicate namespaces are disjoint",
+    check("seeds: V4 replicate namespaces are disjoint",
           len(allseeds) == len(FAMILIES) * 2 * 40)
     check("seeds: derivation is reproducible",
-          sm.replicate_seed(FAMILIES[0], "X", 7) == SeedMap().replicate_seed(FAMILIES[0], "X", 7))
+          sm.replicate_seed(FAMILIES[0], "X", 7)
+          == SeedMap().replicate_seed(FAMILIES[0], "X", 7))
 
 
 def test_ceiling_classification() -> None:
+    from e1a_v5.confidence import NumericalEnclosure
     c = SIGMA_CAL_ABS_MAX
-    check("ceiling: clearly below passes", classify_against_ceiling(0.008, c) == CEILING_PASS)
-    check("ceiling: clearly above fails", classify_against_ceiling(0.010, c) == CEILING_FAIL)
-    check("ceiling: exactly at is unresolved",
-          classify_against_ceiling(c, c) == CEILING_UNRESOLVED)
-    check("ceiling: just inside the band is unresolved",
-          classify_against_ceiling(c * (1 - 1e-7), c) == CEILING_UNRESOLVED)
-    check("ceiling: outside the band resolves",
-          classify_against_ceiling(c * (1 - 1e-3), c) == CEILING_PASS)
-    check("ceiling: non-finite fails", classify_against_ceiling(float("nan"), c) == CEILING_FAIL)
+    check("ceiling: clearly below passes",
+          classify_with_enclosure(
+              NumericalEnclosure.symmetric(0.008, 1e-6, "m"), c) == CEILING_PASS)
+    check("ceiling: clearly above fails",
+          classify_with_enclosure(
+              NumericalEnclosure.symmetric(0.010, 1e-6, "m"), c) == CEILING_FAIL)
+    check("ceiling: an enclosure straddling the ceiling is unresolved",
+          classify_with_enclosure(
+              NumericalEnclosure.symmetric(c, 1e-6, "m"), c) == CEILING_UNRESOLVED)
+    check("ceiling: an exact value at the inclusive ceiling passes",
+          classify_with_enclosure(NumericalEnclosure.exact(c), c) == CEILING_PASS)
+    check("ceiling: the band is the quantity's own error, not a fixed fraction",
+          classify_with_enclosure(
+              NumericalEnclosure.symmetric(c * (1 - 1e-7), 1e-12, "tight"), c)
+          == CEILING_PASS
+          and classify_with_enclosure(
+              NumericalEnclosure.symmetric(c * (1 - 1e-7), 1e-6, "loose"), c)
+          == CEILING_UNRESOLVED)
+    check("ceiling: non-finite fails",
+          classify_with_enclosure(
+              NumericalEnclosure(float("nan"), float("nan"), float("nan"), "m"), c)
+          == CEILING_FAIL)
+    check("ceiling: no enclosure at all is unresolved, which is fail-closed",
+          classify_with_enclosure(None, c) == CEILING_UNRESOLVED)
 
 
 def test_bounded_bias_stays_separate() -> None:
-    bb = BoundedBias(absolute={"block1/theta0": BIAS_ABS_MAX,
-                               "block1/theta1": BIAS_ABS_MAX},
-                     contrast={"block1/theta1-theta0": BIAS_ABS_MAX})
+    bb = BoundedBias(
+        absolute={"block1/theta0": BiasEvidence.qualified(BIAS_ABS_MAX),
+                  "block1/theta1": BiasEvidence.qualified(BIAS_ABS_MAX)},
+        contrast={"block1/theta1-theta0": BiasEvidence.qualified(BIAS_ABS_MAX)})
     check("bias: absolute bound at exactly 0.0005 is retrievable",
           close(bb.absolute_bound("block1/theta0"), 0.0005))
     check("bias: contrast bound at exactly 0.0005 is retrievable",
           close(bb.contrast_bound("block1/theta1-theta0"), 0.0005))
     # Two absolute bounds do NOT imply a contrast bound.
-    bb2 = BoundedBias(absolute={"a": 0.0005, "b": 0.0005}, contrast={})
+    bb2 = BoundedBias(absolute={"a": BiasEvidence.qualified(0.0005),
+                                "b": BiasEvidence.qualified(0.0005)}, contrast={})
     try:
         bb2.contrast_bound("a-b")
         check("bias: contrast bound may not be inferred from two absolutes", False)
-    except NumericalFailure:
+    except ValueError:
         check("bias: contrast bound may not be inferred from two absolutes", True)
+    # V4: an ABSENT absolute bound is MISSING, not zero.
+    try:
+        bb2.absolute_bound("never-registered")
+        check("bias: an absent absolute bound is not a bound of zero", False)
+    except ValueError:
+        check("bias: an absent absolute bound is not a bound of zero", True)
     check("bias: two 0.0005 absolutes imply only 0.001 for a contrast",
           close(contrast_bias_from_absolute([0.0005, 0.0005]), 0.001))
     check("bias: opposite-signed absolutes still imply only 0.001",

@@ -211,3 +211,204 @@ def diagnostic_components(
         lagcov=lag_covariance_statistic(z),
         antisym=lag_antisymmetry_residuals(observed_lags, fitted_lags),
     )
+
+
+# ---------------------------------------------------------------------------
+# The single authoritative diagnostic-family result
+# ---------------------------------------------------------------------------
+
+DIAG_UNCALIBRATED = "UNCALIBRATED"
+DIAG_CALIBRATED = "CALIBRATED"
+DIAG_NOT_EVALUABLE = "NOT_EVALUABLE"
+DIAG_CONTRADICTORY = "CONTRADICTORY"
+
+#: Every component of the frozen family, in fixed order.  A family result that
+#: does not account for all of them is not a family result.
+REQUIRED_COMPONENTS: tuple[str, ...] = ("cvm", "angular", "lagcov", "antisym")
+
+
+@dataclass(frozen=True)
+class RecordDiagnostic:
+    """One record's contribution to the family.
+
+    ``rejected`` is ``None`` when the record's diagnostic was not evaluated.
+    That is not ``False``: a diagnostic that was not computed is not a
+    diagnostic that passed.
+    """
+
+    record: str
+    components: DiagnosticComponents | None = None
+    scaled_max: float | None = None
+    rejected: bool | None = None
+    reason: str = ""
+
+    @property
+    def evaluated(self) -> bool:
+        return self.components is not None and self.rejected is not None
+
+
+@dataclass(frozen=True)
+class DiagnosticFamilyResult:
+    """The ONE authoritative diagnostic-family decision for an experiment.
+
+    V3 accepted a caller-supplied boolean and never compared it against the
+    per-record diagnostics, so ``record.diagnostic_rejected = True`` could sit
+    beside a family argument of ``False`` and still produce support.  Here the
+    family decision is DERIVED from the per-record components and a calibrated
+    familywise critical value; a caller-supplied claim is only ever checked
+    for consistency against that derivation, never substituted for it.
+    """
+
+    status: str
+    #: Familywise statistic: the maximum scaled component over all records.
+    statistic: float | None = None
+    #: The calibrated familywise critical value, when one exists.
+    critical_value: float | None = None
+    #: Identity of the calibration stream that produced the critical value.
+    critical_identity: str = ""
+    rejected: bool | None = None
+    records: tuple[RecordDiagnostic, ...] = ()
+    reason_codes: tuple[str, ...] = ()
+
+    @property
+    def usable(self) -> bool:
+        """True only for a calibrated, coherent, fully populated family."""
+        return self.status == DIAG_CALIBRATED and self.rejected is not None
+
+    def as_dict(self) -> dict:
+        return {
+            "status": self.status,
+            "statistic": self.statistic,
+            "critical_value": self.critical_value,
+            "critical_identity": self.critical_identity,
+            "rejected": self.rejected,
+            "reason_codes": list(self.reason_codes),
+            "records": [
+                {"record": r.record, "scaled_max": r.scaled_max,
+                 "rejected": r.rejected, "reason": r.reason}
+                for r in self.records
+            ],
+        }
+
+
+def evaluate_diagnostic_family(
+    records: Sequence[RecordDiagnostic],
+    expected_records: Sequence[str],
+    scales: NullScales | None = None,
+    critical_value: float | None = None,
+    critical_identity: str = "",
+    claimed_rejected: bool | None = None,
+) -> DiagnosticFamilyResult:
+    """Derive the family decision from its required inputs.
+
+    Order of refusal, each fail-closed:
+
+    1. a required record contributes no diagnostic at all  -> NOT_EVALUABLE;
+    2. a required component is absent or non-finite        -> NOT_EVALUABLE;
+    3. no frozen null scales, or no calibrated familywise
+       critical value                                      -> UNCALIBRATED;
+    4. a record's own rejection disagrees with the family  -> CONTRADICTORY;
+    5. otherwise                                           -> CALIBRATED.
+
+    Only outcome 5 can take part in a supported verdict.
+    """
+    reasons: list[str] = []
+    if not expected_records:
+        return DiagnosticFamilyResult(
+            DIAG_NOT_EVALUABLE, None, critical_value, critical_identity, None, (),
+            ("no records were expected; any(()) is False and would read as "
+             "a family that did not reject",),
+        )
+    by_record = {r.record: r for r in records}
+    duplicates = sorted({r.record for r in records if
+                         sum(1 for x in records if x.record == r.record) > 1})
+    for key in duplicates:
+        reasons.append(f"duplicate record diagnostic {key}")
+    for key in expected_records:
+        if key not in by_record:
+            reasons.append(f"missing record diagnostic {key}")
+    extras = sorted(k for k in by_record if k not in set(expected_records))
+    for key in extras:
+        reasons.append(f"unplanned record diagnostic {key}")
+
+    ordered: list[RecordDiagnostic] = []
+    for key in expected_records:
+        rd = by_record.get(key)
+        if rd is None:
+            continue
+        ordered.append(rd)
+        if rd.components is None:
+            reasons.append(f"record {key} supplied no diagnostic components")
+            continue
+        for name in REQUIRED_COMPONENTS:
+            v = getattr(rd.components, name, None)
+            if v is None or not math.isfinite(v):
+                reasons.append(f"record {key} component {name} is absent or non-finite")
+
+    if reasons:
+        return DiagnosticFamilyResult(
+            DIAG_NOT_EVALUABLE, None, critical_value, critical_identity,
+            None, tuple(ordered), tuple(reasons),
+        )
+
+    if scales is None:
+        reasons.append("no frozen null scales; the family statistic is not defined")
+    else:
+        try:
+            scales.validate()
+        except NumericalFailure as exc:
+            reasons.append(f"null scales invalid: {exc}")
+    if critical_value is None or not math.isfinite(critical_value):
+        reasons.append(
+            "no calibrated familywise critical value; raw components existing "
+            "is not a family that passed"
+        )
+    if not critical_identity:
+        reasons.append("familywise critical value carries no calibration identity")
+    if reasons:
+        return DiagnosticFamilyResult(
+            DIAG_UNCALIBRATED, None, critical_value, critical_identity,
+            None, tuple(ordered), tuple(reasons),
+        )
+
+    assert scales is not None and critical_value is not None
+    per_record: list[RecordDiagnostic] = []
+    stat = -math.inf
+    for rd in ordered:
+        assert rd.components is not None
+        sm = rd.components.scaled_max(scales)
+        if not math.isfinite(sm):
+            return DiagnosticFamilyResult(
+                DIAG_NOT_EVALUABLE, None, critical_value, critical_identity,
+                None, tuple(ordered),
+                (f"record {rd.record} scaled maximum is not finite",),
+            )
+        stat = max(stat, sm)
+        derived = sm > critical_value
+        if rd.rejected is not None and rd.rejected != derived:
+            reasons.append(
+                f"record {rd.record} claims rejected={rd.rejected} but its "
+                f"components give {derived}"
+            )
+        per_record.append(RecordDiagnostic(rd.record, rd.components, sm, derived, rd.reason))
+
+    if not per_record:
+        return DiagnosticFamilyResult(
+            DIAG_NOT_EVALUABLE, None, critical_value, critical_identity, None, (),
+            ("no record contributed a component to the family",),
+        )
+    family_rejected = any(r.rejected for r in per_record)
+    if claimed_rejected is not None and claimed_rejected != family_rejected:
+        reasons.append(
+            f"caller claims family_rejected={claimed_rejected} but the record "
+            f"components give {family_rejected}"
+        )
+    if reasons:
+        return DiagnosticFamilyResult(
+            DIAG_CONTRADICTORY, stat, critical_value, critical_identity,
+            None, tuple(per_record), tuple(reasons),
+        )
+    return DiagnosticFamilyResult(
+        DIAG_CALIBRATED, stat, critical_value, critical_identity,
+        family_rejected, tuple(per_record), (),
+    )

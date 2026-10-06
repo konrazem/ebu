@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from enum import Enum
 from typing import ClassVar
 from typing import Sequence
 
@@ -28,8 +29,17 @@ from .refusals import (
 )
 from .units import K_B
 
-#: Maximum admissible relative second-order Schur remainder (U-stage 5.4).
-NONLINEAR_REMAINDER_CEILING = 1.0e-3
+#: Domain guard on the DIMENSIONLESS normalised remainder.
+#:
+#: This is not a tolerance and not a budget.  ``E_K`` with operator norm >= 1
+#: means ``K_eff + Delta K`` need not remain positive definite, so the
+#: linearisation whose remainder is being bounded has no meaning at all; the
+#: reduction is outside its own domain of definition.  The V3 constant 1e-3
+#: was applied to a DIMENSIONAL quantity in N/m and is removed as a release
+#: predicate: see :func:`remainder_impacts`, which routes the certified
+#: remainder into the already-cleared log-beta bias, cross-field bias,
+#: geometry and centre budgets instead of giving it an allowance of its own.
+REMAINDER_DOMAIN_LIMIT = 1.0
 
 #: Relative numerical-skew ceiling used as a SUPPORTING diagnostic only.  The
 #: scientific conservativity pass comes from U's own qualification evidence;
@@ -58,8 +68,9 @@ class AxialEvidence:
     temporal_reduction_qualified: bool | None = None
     #: U section 19: lateral observation / defocus transfer.
     observation_transfer_qualified: bool | None = None
-    #: U section 5.4: certified bound on the second-order Schur remainder.
-    nonlinear_remainder: float | None = None
+    #: U section 5.4: certified bound on the second-order Schur remainder,
+    #: carried as a TYPED residual with declared units.
+    nonlinear_remainder: "NonlinearRemainder | None" = None
     #: U sections 26-27: projected absolute and contrast uncertainty budgets.
     uncertainty_budget_qualified: bool | None = None
     #: T.29: geometry and centre qualification availability.
@@ -88,7 +99,9 @@ class AxialEvidence:
         return [n for n in self.REQUIRED if getattr(self, n) is False]
 
     @staticmethod
-    def fully_qualified(nonlinear_remainder: float = 0.0) -> "AxialEvidence":
+    def fully_qualified(
+        nonlinear_remainder: "NonlinearRemainder | None" = None,
+    ) -> "AxialEvidence":
         """Construct complete passing evidence, for synthetic fixtures only."""
         return AxialEvidence(
             conservativity_qualified=True,
@@ -96,7 +109,10 @@ class AxialEvidence:
             support_qualified=True,
             temporal_reduction_qualified=True,
             observation_transfer_qualified=True,
-            nonlinear_remainder=nonlinear_remainder,
+            nonlinear_remainder=(
+                NonlinearRemainder.zero() if nonlinear_remainder is None
+                else nonlinear_remainder
+            ),
             uncertainty_budget_qualified=True,
             geometry_centre_qualified=True,
             provenance_complete=True,
@@ -117,6 +133,9 @@ class SchurReduction:
     c_vech_s: Matrix | None = None
     #: Covariance of ``vech(H_eff)``, including the ``-H dT/T`` term.
     c_vech_h: Matrix | None = None
+    #: Where the certified nonlinear remainder lands in the existing budgets.
+    #: ``None`` means it was never established, which fails closed downstream.
+    remainder_impacts: "RemainderImpacts | None" = None
     refusals: tuple[Refusal, ...] = ()
 
     @property
@@ -293,14 +312,157 @@ def schur_jacobian(b: Sequence[float], kappa: float) -> Matrix:
     ]
 
 
+class RemainderKind(str, Enum):
+    """What a stored axial remainder physically is.
+
+    V3 stored a bare float and compared it against a number documented as
+    relative.  The quantity is a STIFFNESS residual in N/m, so that comparison
+    was dimensionally invalid: it passed or failed purely on the SI magnitude
+    of the stiffness, and at 1e-4 N/m every physically possible remainder
+    passed by nineteen orders of magnitude.
+    """
+
+    #: Second-order residual of the Schur complement, in N/m.
+    STIFFNESS_RESIDUAL = "stiffness_residual_N_per_m"
+    #: Already normalised by K_eff; dimensionless.
+    NORMALISED = "dimensionless_normalised_residual"
+
+
+@dataclass(frozen=True)
+class NonlinearRemainder:
+    """A certified bound on the second-order Schur remainder, with its units.
+
+    ``matrix`` is the symmetric 2-by-2 residual in the units declared by
+    ``kind``.  A raw unlabelled float is no longer accepted anywhere.
+    """
+
+    matrix: Matrix
+    kind: RemainderKind = RemainderKind.STIFFNESS_RESIDUAL
+    unit: str = "N/m"
+    source: str = ""
+
+    def __post_init__(self) -> None:
+        if nm.shape(self.matrix) != (2, 2):
+            raise NumericalFailure("axial remainder must be a 2-by-2 residual matrix")
+        if self.kind is RemainderKind.NORMALISED and self.unit not in ("", "1"):
+            raise NumericalFailure("a normalised remainder is dimensionless")
+        if self.kind is RemainderKind.STIFFNESS_RESIDUAL and self.unit != "N/m":
+            raise NumericalFailure("a stiffness residual must be declared in N/m")
+
+    @staticmethod
+    def stiffness(vech: Sequence[float], source: str = "") -> "NonlinearRemainder":
+        """From ``(Delta11, Delta12, Delta22)`` in N/m."""
+        d11, d12, d22 = (float(v) for v in vech)
+        return NonlinearRemainder([[d11, d12], [d12, d22]], source=source)
+
+    @staticmethod
+    def zero(source: str = "certified zero") -> "NonlinearRemainder":
+        return NonlinearRemainder([[0.0, 0.0], [0.0, 0.0]], source=source)
+
+    @property
+    def finite(self) -> bool:
+        return nm.is_finite_matrix(self.matrix)
+
+
+def normalise_remainder(remainder: NonlinearRemainder, k_eff: Matrix) -> Matrix:
+    """``E_K = K_eff^{-1/2} Delta K K_eff^{-1/2}`` (U-stage 5.4, 5.8).
+
+    This is the U-consistent dimensionless relative operator.  Because
+    ``H_eff = K_eff / (k_B T)`` and ``Delta H = Delta K / (k_B T)`` share the
+    same scalar, ``E_K`` is identically the normalised thermal-Hessian
+    residual ``H_eff^{-1/2} Delta H H_eff^{-1/2}``; the normalisation is the
+    same object in either coordinate, which is why no separate thermal form
+    is carried.
+
+    Its spectrum is the set of generalised eigenvalues of
+    ``(Delta K, K_eff)``, so it is invariant under any congruence
+    ``K -> M K M^T``, ``Delta K -> M Delta K M^T``: a coordinate change or an
+    overall rescaling of the stiffness cannot change the classification.
+    """
+    if remainder.kind is RemainderKind.NORMALISED:
+        return nm.symmetrise(remainder.matrix)
+    if not remainder.finite:
+        raise NumericalFailure("axial remainder contains a non-finite entry")
+    w = nm.inv_sqrtm_spd(nm.symmetrise(k_eff))
+    return nm.symmetrise(nm.matmul(nm.matmul(w, nm.symmetrise(remainder.matrix)), w))
+
+
+@dataclass(frozen=True)
+class RemainderImpacts:
+    """Where a certified remainder lands in the EXISTING error budgets.
+
+    U-stage 5.4 gives the remainder no allowance of its own.  Its effect is a
+    perturbation ``H_A -> H_A + Delta H`` of the locked comparison field, and
+    that perturbation already has places to go:
+
+    ``log_beta_bias``
+        The locked-scale estimator satisfies ``tr(H_A Sigma) = d`` at its
+        maximum, so ``H_A -> H_A(I + E)`` moves it to
+        ``b = log(d / (d + tr E))``, i.e. ``|tr(E_K)| / d`` to first order.
+        Enters the per-record absolute bounded bias (T.18 / U.22, 0.0005).
+
+    ``contrast_bias``
+        Two records' remainders are independent certifications, so the
+        within-block contrast carries the sum of their magnitudes.  The caller
+        combines the pair; this field reports this record's contribution.
+
+    ``geometry_bias``
+        ``G = ||log M - (log|M|/d) I||_op`` with ``M`` similar to ``H_A Sigma``,
+        so the same perturbation shifts ``G`` by the deviatoric part of
+        ``log(I + E)``, bounded to first order by ``||E - (tr E / d) I||_op``.
+        Enters the T4 shape budget (DELTA_G).
+
+    ``centre_relative``
+        ``m = sqrt(delta^T H_A delta)`` scales as ``sqrt(1 + E)``, so the
+        centre statistic carries a RELATIVE enlargement of ``||E||_op / 2``.
+    """
+
+    norm: float
+    log_beta_bias: float
+    contrast_bias: float
+    geometry_bias: float
+    centre_relative: float
+    within_domain: bool
+
+    def as_dict(self) -> dict:
+        return {
+            "normalised_operator_norm": self.norm,
+            "log_beta_bias": self.log_beta_bias,
+            "contrast_bias": self.contrast_bias,
+            "geometry_bias": self.geometry_bias,
+            "centre_relative_enlargement": self.centre_relative,
+            "within_domain": self.within_domain,
+        }
+
+
+def remainder_impacts(e_k: Matrix) -> RemainderImpacts:
+    """Propagate the dimensionless remainder into the existing budgets."""
+    d = len(e_k)
+    tr = sum(e_k[i][i] for i in range(d))
+    dev = [[e_k[i][j] - (tr / d if i == j else 0.0) for j in range(d)] for i in range(d)]
+    norm = nm.op_norm_sym(nm.symmetrise(e_k))
+    scale_bias = abs(tr) / d
+    return RemainderImpacts(
+        norm=norm,
+        log_beta_bias=scale_bias,
+        contrast_bias=scale_bias,
+        geometry_bias=nm.op_norm_sym(nm.symmetrise(dev)),
+        centre_relative=0.5 * norm,
+        within_domain=norm < REMAINDER_DOMAIN_LIMIT,
+    )
+
+
 def schur_nonlinear_remainder(
     b: Sequence[float], kappa: float, db: Sequence[float], dkappa: float
-) -> float:
-    """Exact minus linearised Schur correction magnitude for a given perturbation.
+) -> NonlinearRemainder:
+    """Exact minus linearised Schur correction for a given perturbation.
 
     Near ``b = 0`` the leading Jacobian in ``b`` vanishes, so the quadratic term
     must be propagated explicitly rather than linearised to zero variance
     (U-stage section 5.4).
+
+    Returns the residual as a TYPED stiffness matrix in N/m.  It is only
+    meaningful after :func:`normalise_remainder`.
     """
     b1, b2 = float(b[0]), float(b[1])
     k = float(kappa)
@@ -318,7 +480,10 @@ def schur_nonlinear_remainder(
     J = schur_jacobian(b, kappa)
     dv = [0.0, 0.0, 0.0, float(db[0]), float(db[1]), float(dkappa)]
     lin = tuple(sum(J[i][j] * dv[j] for j in range(6)) for i in range(3))
-    return max(abs(exact[i] - lin[i]) for i in range(3))
+    return NonlinearRemainder.stiffness(
+        [exact[i] - lin[i] for i in range(3)],
+        source="exact minus linearised Schur correction",
+    )
 
 
 def propagate_schur_covariance(
@@ -457,8 +622,9 @@ def reduce_axial(
             )
         )
 
-    # --- nonlinear remainder must be certified, not merely small ------------
-    if evidence.nonlinear_remainder is None:
+    # --- nonlinear remainder: certified, typed, and routed to the budgets ---
+    remainder = evidence.nonlinear_remainder
+    if remainder is None:
         refusals.append(
             refuse(
                 AXIAL_REDUCTION_UNQUALIFIED,
@@ -466,15 +632,12 @@ def reduce_axial(
                 "no certified second-order Schur remainder bound",
             )
         )
-    elif not math.isfinite(evidence.nonlinear_remainder) or (
-        evidence.nonlinear_remainder > NONLINEAR_REMAINDER_CEILING
-    ):
+    elif not remainder.finite:
         refusals.append(
             refuse(
-                AXIAL_REDUCTION_UNQUALIFIED,
-                f"nonlinear remainder <= {NONLINEAR_REMAINDER_CEILING}",
-                "second-order Schur remainder exceeds its enclosure ceiling",
-                remainder=evidence.nonlinear_remainder,
+                NUMERICAL_REPRESENTATION_FAILURE,
+                "nonlinear remainder entries finite",
+                "certified second-order Schur remainder is not finite",
             )
         )
 
@@ -545,6 +708,32 @@ def reduce_axial(
                 )
             )
 
+    # --- route the certified remainder into the existing budgets -----------
+    impacts: RemainderImpacts | None = None
+    if remainder is not None and remainder.finite and nm.is_spd(k_eff):
+        try:
+            impacts = remainder_impacts(normalise_remainder(remainder, k_eff))
+        except NumericalFailure as exc:
+            refusals.append(
+                refuse(
+                    AXIAL_REDUCTION_UNQUALIFIED,
+                    "nonlinear remainder normalisable",
+                    f"the remainder could not be made dimensionless: {exc}",
+                )
+            )
+        else:
+            if not impacts.within_domain:
+                refusals.append(
+                    refuse(
+                        AXIAL_REDUCTION_UNQUALIFIED,
+                        f"||E_K||_op < {REMAINDER_DOMAIN_LIMIT}",
+                        "the normalised second-order remainder is outside the "
+                        "domain where the linearisation it bounds is defined; "
+                        "K_eff + Delta K need not be positive definite",
+                        normalised_norm=impacts.norm,
+                    )
+                )
+
     c_vech_s: Matrix | None = None
     c_vech_h: Matrix | None = None
     if c_v is not None:
@@ -563,5 +752,6 @@ def reduce_axial(
         r=r,
         c_vech_s=c_vech_s,
         c_vech_h=c_vech_h,
+        remainder_impacts=impacts,
         refusals=tuple(refusals),
     )

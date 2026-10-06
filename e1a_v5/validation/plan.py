@@ -40,6 +40,9 @@ EXPOSURE_FRACTION = 0.05
 #: 0.2 * BANDWIDTH_FRACTION, inside the T-stage 12.2 ceiling, and dt exceeds
 #: t_exp = EXPOSURE_FRACTION * tau_fast by construction.
 BANDWIDTH_FRACTION = 0.75
+#: Relative inward placement for a world designed to sit AT a qualification
+#: limit; see :func:`conditioned_stiffness`.  Numerical placement only.
+CONDITION_PLACEMENT_MARGIN = 1.0e-11
 
 #: Information target per cell (T.23).
 N_STAR = 450000
@@ -93,7 +96,64 @@ def drag_coefficient() -> float:
     return 6.0 * math.pi * VISCOSITY_REF * BEAD_RADIUS
 
 
-def timing(k_eff: list[list[float]]) -> tuple[float, float]:
+def conditioned_stiffness(
+    k_lateral: list[list[float]], condition_target: float
+) -> list[list[float]]:
+    """Reshape a lateral stiffness to an exact spectral condition number.
+
+    The geometric mean of the eigenvalues -- equivalently the determinant, and
+    so the overall scale of the trap -- is preserved, and only their ratio
+    moves.  That isolates the conditioning as the single thing the case
+    changes: a conditioning case that also moved the scale would confound the
+    two.
+
+    The world is placed a few ulps INSIDE the requested ratio.  A case
+    designed to sit at the qualification limit must not have its outcome
+    decided by the rounding of the limit's own evaluation: the symmetric
+    eigensolver reports ``cond2`` with a relative backward error of order
+    ``n * eps * cond2``, which at a target of 100 is about 4e-13 and is
+    exactly what pushed a world constructed AT the limit over a strict
+    ``cond2 <= 100`` test.  ``CONDITION_PLACEMENT_MARGIN`` is a numerical
+    placement far below any physical resolution; it does not widen the
+    scientific limit, which stays where T/U put it.
+    """
+    if not (condition_target >= 1.0 and math.isfinite(condition_target)):
+        raise nm.NumericalFailure(
+            f"condition target {condition_target!r} must be finite and at least 1"
+        )
+    vals, q = nm.eigh(nm.symmetrise(k_lateral))
+    g = math.sqrt(max(vals[0], 1e-300) * max(vals[1], 1e-300))
+    root = math.sqrt(condition_target * (1.0 - CONDITION_PLACEMENT_MARGIN))
+    lam = [g * root, g / root]
+    return nm.symmetrise(
+        nm.matmul(nm.matmul(q, [[lam[0], 0.0], [0.0, lam[1]]]), nm.transpose(q))
+    )
+
+
+def k3_from_lateral(
+    k_lateral: list[list[float]], coupling: float = AXIAL_COUPLING
+) -> list[list[float]]:
+    """Build a 3D stiffness whose SCHUR COMPLEMENT is exactly ``k_lateral``.
+
+    ``K_qq = S + b kappa^{-1} b^T`` inverts the Schur complement exactly, so a
+    conditioning target set on the lateral matrix survives the axial reduction
+    instead of being perturbed by the coupling.
+    """
+    kz = AXIAL_FRACTION * K_REF
+    b = [coupling * K_REF, 0.5 * coupling * K_REF]
+    k_qq = [
+        [k_lateral[i][j] + b[i] * b[j] / kz for j in range(2)] for i in range(2)
+    ]
+    return [
+        [k_qq[0][0], k_qq[0][1], b[0]],
+        [k_qq[1][0], k_qq[1][1], b[1]],
+        [b[0], b[1], kz],
+    ]
+
+
+def timing(
+    k_eff: list[list[float]], exposure_fraction: float = EXPOSURE_FRACTION
+) -> tuple[float, float]:
     """Return ``(dt, t_exp)`` from the bandwidth and exposure ceilings."""
     gamma = drag_coefficient()
     vals, _ = nm.eigh(k_eff)
@@ -102,7 +162,7 @@ def timing(k_eff: list[list[float]]) -> tuple[float, float]:
     tau_fast = gamma / k_fast
     rate_fast = 1.0 / tau_fast
     dt = BANDWIDTH_FRACTION * 0.2 / rate_fast
-    t_exp = EXPOSURE_FRACTION * tau_fast
+    t_exp = exposure_fraction * tau_fast
     if not (0.0 <= t_exp <= dt):
         raise nm.NumericalFailure(
             f"design point inconsistent: exposure {t_exp!r} exceeds frame interval {dt!r}"

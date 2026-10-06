@@ -112,8 +112,10 @@ def test_schur_reduction() -> None:
             worst = max(worst, abs(fd[i] - J[i][j]) / max(1.0, abs(J[i][j])))
     check("Schur Jacobian matches finite differences", worst < 1e-5, f"worst {worst:.2e}")
     # near b = 0 the leading Jacobian vanishes but the quadratic term does not
+    # V4: the remainder is a TYPED stiffness residual, not a bare float.
     rem = schur_nonlinear_remainder([0.0, 0.0], 5e-5, [1e-6, 1e-6], 0.0)
-    check("quadratic Schur term survives at b = 0", rem > 0.0)
+    check("quadratic Schur term survives at b = 0", nm.max_abs(rem.matrix) > 0.0)
+    check("the remainder declares its units", rem.unit == "N/m")
     check("Jacobian in b vanishes at b = 0", schur_jacobian([0.0, 0.0], 5e-5)[0][3] == 0.0)
     # covariance propagation
     Cv = nm.scale(nm.eye(6), 1e-12)
@@ -129,9 +131,15 @@ def test_axial_refusals() -> None:
     K = nm.mat([[1.2e-4, 1e-5, 3e-5], [1e-5, 1.0e-4, 2e-5], [3e-5, 2e-5, 5e-5]])
     # V3: axial qualification is fail-closed, so every case supplies explicit
     # evidence and the defect under test is the one named.
-    from e1a_v5.reduction import AxialEvidence
+    from e1a_v5.reduction import (
+        AxialEvidence, NonlinearRemainder, REMAINDER_DOMAIN_LIMIT, schur_complement,
+    )
     full = AxialEvidence.fully_qualified()
     Cv = nm.scale(nm.eye(6), 1e-12)
+    # V4: the remainder is a typed stiffness residual compared against K_eff,
+    # so an "excessive" remainder is one that is large RELATIVE to the matrix
+    # it perturbs, not one that exceeds a number in N/m.
+    big_remainder = NonlinearRemainder(nm.scale(schur_complement(K), 5.0))
 
     def ev(**kw):
         return AxialEvidence(**{**full.__dict__, **kw})
@@ -148,8 +156,8 @@ def test_axial_refusals() -> None:
          "support_qualified qualified"),
         ("unqualified temporal", dict(k3=K, evidence=ev(temporal_reduction_qualified=False)),
          "temporal_reduction_qualified qualified"),
-        ("large remainder", dict(k3=K, evidence=ev(nonlinear_remainder=1.0)),
-         "nonlinear remainder <= 0.001"),
+        ("large remainder", dict(k3=K, evidence=ev(nonlinear_remainder=big_remainder)),
+         f"||E_K||_op < {REMAINDER_DOMAIN_LIMIT}"),
         ("unqualified conservativity", dict(k3=K, evidence=ev(conservativity_qualified=False)),
          "conservativity qualified"),
         ("asymmetric K3",
@@ -387,8 +395,11 @@ def test_seeds_and_identity() -> None:
           sm.replicate_seed(CALIBRATION, "X", 0) != sm.replicate_seed(SIZE, "X", 0))
     check("seed derivation is deterministic",
           sm.replicate_seed(POWER, "P", 3) == SeedMap().replicate_seed(POWER, "P", 3))
-    check("all five families are distinct",
-          len({sm.family_seed(f) for f in FAMILIES}) == 5)
+    # V4 adds the engineering namespace alongside the five confirmatory ones.
+    check("every declared family is distinct",
+          len({sm.family_seed(f) for f in FAMILIES}) == len(FAMILIES))
+    check("there are five confirmatory families plus engineering",
+          len(FAMILIES) == 6)
     try:
         sm.family_seed("not_a_family")
         check("unknown seed family refused", False)
