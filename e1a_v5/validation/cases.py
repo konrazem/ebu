@@ -27,10 +27,20 @@ from ..seeds import CALIBRATION, CONTROL, DIAGNOSTIC, POWER, SIZE
 REQUIRED_SIZE_REPLICATES = 5000
 REQUIRED_DIAGNOSTIC_REPLICATES = 5000
 REQUIRED_POWER_REPLICATES = 2000
+#: Required replicates for a negative control whose release event is false
+#: complete support.  T names temperature/viscosity covariance error and the
+#: hidden-memory alternative as required negative controls and requires each
+#: of them separately to satisfy the false-support bound, so they carry the
+#: same outer-experiment count as the other false-support families.  This is
+#: a clarification of existing T authority, not a new scientific threshold.
+REQUIRED_NEGATIVE_CONTROL_REPLICATES = 5000
 #: Release criteria.
 SIZE_TARGET = 0.025
 DIAGNOSTIC_TARGET = 0.005
 POWER_TARGET = 0.90
+#: One-sided 95% Clopper-Pearson upper bound a required negative control's
+#: false-support probability must satisfy.
+NEGATIVE_CONTROL_FALSE_SUPPORT_TARGET = 0.025
 
 
 class ExpectedEvent(str, Enum):
@@ -289,8 +299,18 @@ CONTROL_CASES = (
     # the plan asks for the consequence of the misspecified covariance model
     # on the pipeline's own output.  The exact algebra survives as a
     # supplementary deterministic reference.
-    _c("CTL-ETA-T-COV", "Omitted eta/T covariance versus the correct shared covariance",
-       "control", CONTROL, 200, "coverage consequence detected",
+    # Primary release event: FALSE complete support under the declared
+    # covariance-misspecification alternative, bounded at 5000 replicates by a
+    # one-sided 95% Clopper-Pearson upper bound of 0.025.  The covariance
+    # consequence itself -- correct and misspecified standard uncertainty,
+    # their ratio and difference, the interval width and any classification
+    # change -- remains MANDATORY recorded output and is not a substitute
+    # release criterion.  The V5 wording "coverage consequence detected" named
+    # no per-replicate event; it is superseded.
+    _c("CTL-ETA-T-COV",
+       "Omitted eta/T covariance versus the correct shared thermometry covariance",
+       "control", CONTROL, REQUIRED_NEGATIVE_CONTROL_REPLICATES,
+       "false complete support bounded; covariance consequence recorded",
        E.COMPLETE_SUPPORT, omit_eta_t_covariance=True),
     _c("CTL-NOISE-HI", "Localisation noise above the qualified ratio",
        "control", CONTROL, 200, "diagnose, refuse or lose support",
@@ -321,8 +341,15 @@ CONTROL_CASES = (
     # single call that set the temporal qualification flag to False, which
     # exercises the refusal path and not the physics the control exists to
     # detect.
-    _c("CTL-AXIAL-MEMORY", "Lateral density matches Schur but the 2D temporal model fails",
-       "control", CONTROL, 200, "TEMPORAL_MODEL_UNQUALIFIED or model failure",
+    # Expected physical classification TEMPORAL_MODEL_UNQUALIFIED and/or
+    # INVALID_MEASUREMENT_OR_MODEL, recorded per replicate.  The
+    # release-critical error event is separately counted FALSE complete
+    # support, bounded at 5000 replicates by a one-sided 95% Clopper-Pearson
+    # upper bound of 0.025.
+    _c("CTL-AXIAL-MEMORY",
+       "Lateral density matches Schur but the 2D temporal model fails",
+       "control", CONTROL, REQUIRED_NEGATIVE_CONTROL_REPLICATES,
+       "TEMPORAL_MODEL_UNQUALIFIED / INVALID; false complete support bounded",
        E.COMPLETE_SUPPORT, axial_memory=True),
     _c("CTL-RF-TEMP-304", "Realized temperature 304 K",
        "control", CONTROL, 1, "FIELD_REALIZATION_OUT_OF_SPEC",

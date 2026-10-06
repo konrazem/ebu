@@ -142,7 +142,7 @@ procedure.
 
 ## 8. Preregistered cases
 
-51 cases, 107808 required replicates in total.
+51 cases, 117408 required replicates in total.
 
 ### calibration (7 cases, 28000 replicates)
 
@@ -188,7 +188,7 @@ procedure.
 | `POWER-CONDLIM` | Complete success near the conditioning limit | 2000 | CP lower >= 0.90 |
 | `POWER-NOISEHI` | Complete success at the top of the qualified noise range | 2000 | CP lower >= 0.90 |
 
-### control (27 cases, 3808 replicates)
+### control (27 cases, 13408 replicates)
 
 | Case | Purpose | Replicates | Expectation |
 |---|---|---:|---|
@@ -202,7 +202,7 @@ procedure.
 | `CTL-GEOM-TRACE` | Trace-preserving wrong geometry | 200 | scalar beta plausible; T4 geometry rejects |
 | `CTL-GEOM-ROT` | Correct eigenvalues, wrong orientation | 200 | geometry detects the rotation |
 | `CTL-CURRENT` | Current-preserving Gaussian, A Sigma = D + omega J | 200 | density/geometry pass; current gate blocks support |
-| `CTL-ETA-T-COV` | Omitted eta/T covariance versus the correct shared covariance | 200 | coverage consequence detected |
+| `CTL-ETA-T-COV` | Omitted eta/T covariance versus the correct shared thermometry covariance | 5000 | false complete support bounded; covariance consequence recorded |
 | `CTL-NOISE-HI` | Localisation noise above the qualified ratio | 200 | diagnose, refuse or lose support |
 | `CTL-NOISE-HEAVY` | Non-Gaussian heavy-tailed localisation noise | 200 | diagnose, refuse or lose support |
 | `CTL-NOISE-COLOR` | Coloured localisation noise | 200 | diagnose, refuse or lose support |
@@ -211,7 +211,7 @@ procedure.
 | `CTL-DRIFT` | Slow centre drift during the record | 200 | stationarity or diagnostics prevent full support |
 | `CTL-SELECTION` | Clipping / tracking selection of observations | 200 | invalid measurement or model, not a reconditioned pass |
 | `CTL-AXIAL-COUPLE` | 3D stiffness with K_qz != 0; plane block would bias | 1 | pipeline uses H_eff; K_qq bias quantified |
-| `CTL-AXIAL-MEMORY` | Lateral density matches Schur but the 2D temporal model fails | 200 | TEMPORAL_MODEL_UNQUALIFIED or model failure |
+| `CTL-AXIAL-MEMORY` | Lateral density matches Schur but the 2D temporal model fails | 5000 | TEMPORAL_MODEL_UNQUALIFIED / INVALID; false complete support bounded |
 | `CTL-RF-TEMP-304` | Realized temperature 304 K | 1 | FIELD_REALIZATION_OUT_OF_SPEC |
 | `CTL-RF-STIFF-1021` | Realized stiffness 1.021-fold | 1 | FIELD_REALIZATION_OUT_OF_SPEC |
 | `CTL-RF-MODES` | One weak and one strong stiffness mode | 1 | FIELD_REALIZATION_OUT_OF_SPEC |
@@ -219,6 +219,51 @@ procedure.
 | `CTL-RF-STRADDLE` | Uncertainty region straddling a realization boundary | 1 | FIELD_REALIZATION_UNRESOLVED |
 | `CTL-RF-VALID` | Nominal-like realized field | 1 | FIELD_REALIZATION_VALID (synthetic) |
 | `CTL-OPT-FAIL` | Forced optimiser failure modes | 1 | COMPUTATION_NOT_EVALUABLE; beta never fabricated |
+
+## 8a. Negative-control release events
+
+This section makes explicit what the controlling T-stage design already
+requires. It introduces **no new scientific threshold** and alters no margin:
+T names temperature/viscosity covariance error as a required negative control,
+and requires each required negative control separately to satisfy the
+false-support bound.
+
+### `CTL-ETA-T-COV`
+
+**Primary release event — `FALSE_SUPPORT`.** The complete authoritative
+pipeline returns `SUPPORTED_WITHIN_DECLARED_TOLERANCES` under the declared
+eta/T covariance-misspecification alternative. This is the quantity whose
+probability is controlled.
+
+| Item | Value |
+|---|---|
+| Replicates | 5000 independent outer validation experiments |
+| Event count | number of complete SUPPORT outcomes under the covariance-error alternative |
+| Release condition | one-sided 95% Clopper–Pearson upper bound ≤ 0.025 |
+
+**Secondary recorded consequence — mandatory, not a release criterion.** Each
+replicate additionally records the correct standard uncertainty, the
+misspecified standard uncertainty, their ratio and difference, the interval
+width, and any classification change. The earlier wording *coverage
+consequence detected* named no per-replicate event; it is superseded here.
+
+### `CTL-AXIAL-MEMORY`
+
+**Expected physical classification.** `TEMPORAL_MODEL_UNQUALIFIED` and/or
+`INVALID_MEASUREMENT_OR_MODEL`, according to the actual qualification result,
+recorded per replicate.
+
+**Primary release event — `FALSE_SUPPORT`.** The complete authoritative
+pipeline returns `SUPPORTED_WITHIN_DECLARED_TOLERANCES` under the hidden-memory
+world.
+
+| Item | Value |
+|---|---|
+| Replicates | 5000 independent outer validation experiments |
+| Release condition | one-sided 95% Clopper–Pearson upper bound ≤ 0.025 |
+
+Neither control's 5000 replicates are executed in this repair. They are a
+prospective requirement of the frozen plan.
 
 ## 9. Release logic
 
@@ -259,8 +304,8 @@ surfaced while doing so.
 | raw statistic separation | `limit = statistic + procedure.radius` always; no constructor accepts a limit, so `upper_limit = raw_statistic` cannot be expressed |
 | test fixtures | `synthetic_calibrated_gate_fixture` sets `fixture_only` and puts every identity in the `SYNTHETIC-FIXTURE` namespace; the production builder refuses it |
 | observation qualification | evaluated per record against T 15.2 / T.23: `R_obs` PSD, `P` invertible, localisation ratio ≤ 0.05, exposure ≤ 0.1 τ_fast, `‖B‖dt` ≤ 0.2, shutter inside the frame, noise model in the qualified set. No caller may assert `observation_valid` |
-| `CTL-ETA-T-COV` | **restored** to 200 replicates as a full-pipeline stochastic control. The analysis `C_φ` omits the declared correlation between the stiffness and temperature standards, which share one thermometry error |
-| `CTL-AXIAL-MEMORY` | **restored** to 200 replicates, generated from an actual 3D hidden-memory world whose lateral marginal is exactly the Schur density and whose lateral path no 2D Markov generator produces |
+| `CTL-ETA-T-COV` | **restored** to 200 replicates as a full-pipeline stochastic control (superseded by §8a, which sets 5000 and names the release event). The analysis `C_φ` omits the declared correlation between the stiffness and temperature standards, which share one thermometry error |
+| `CTL-AXIAL-MEMORY` | **restored** to 200 replicates (superseded by §8a, which sets 5000 and names the release event), generated from an actual 3D hidden-memory world whose lateral marginal is exactly the Schur density and whose lateral path no 2D Markov generator produces |
 | plan correspondence | the deterministic suite parses this plan's JSON and compares case ID, purpose, replicate count, seed family, expected event, parameter specification and validation family. Any difference fails; there is no warning-only mode and no registry-as-source-of-truth fallback |
 
 Two further defects surfaced during the repair and are also fixed: the V4

@@ -2,6 +2,7 @@
  "acceptance_counts": {
   "bound": "one-sided 95% Clopper-Pearson, exact beta quantile",
   "diagnostic_max_events_at_5000": 16,
+  "negative_control_false_support_bound": "one-sided 95% Clopper-Pearson upper <= 0.025 at R = 5000",
   "power_min_successes_at_2000": 1823,
   "size_max_events_at_5000": 106
  },
@@ -475,8 +476,8 @@
    },
    "expected_event": "complete_support",
    "family": "control",
-   "purpose": "Omitted eta/T covariance versus the correct shared covariance",
-   "replicates": 200,
+   "purpose": "Omitted eta/T covariance versus the correct shared thermometry covariance",
+   "replicates": 5000,
    "seed_namespace": "negative-controls-v5"
   },
   {
@@ -578,7 +579,7 @@
    "expected_event": "complete_support",
    "family": "control",
    "purpose": "Lateral density matches Schur but the 2D temporal model fails",
-   "replicates": 200,
+   "replicates": 5000,
    "seed_namespace": "negative-controls-v5"
   },
   {
@@ -881,6 +882,37 @@
    "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
   }
  },
+ "negative_control_release": {
+  "CTL-AXIAL-MEMORY": {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper bound on the false-support probability <= 0.025",
+   "expected_physical_classification": "TEMPORAL_MODEL_UNQUALIFIED and/or INVALID_MEASUREMENT_OR_MODEL, according to the actual qualification result",
+   "primary_release_event": "FALSE_SUPPORT",
+   "primary_release_event_definition": "the complete authoritative pipeline returns SUPPORTED_WITHIN_DECLARED_TOLERANCES under the hidden-memory world",
+   "replicates": 5000,
+   "secondary_recorded_consequence": [
+    "per-replicate physical classification",
+    "temporal-model qualification result and its residual"
+   ]
+  },
+  "CTL-ETA-T-COV": {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper bound on the false-support probability <= 0.025",
+   "primary_release_event": "FALSE_SUPPORT",
+   "primary_release_event_definition": "the complete authoritative pipeline returns SUPPORTED_WITHIN_DECLARED_TOLERANCES under the declared eta/T covariance-misspecification alternative",
+   "replicates": 5000,
+   "secondary_recorded_consequence": [
+    "correct standard uncertainty",
+    "misspecified standard uncertainty",
+    "ratio and difference",
+    "interval width",
+    "classification changes where applicable"
+   ],
+   "secondary_status": "MANDATORY descriptive/control output; NOT a substitute release criterion",
+   "superseded_wording": "'coverage consequence detected', which named no per-replicate event; the V5 report flagged the ambiguity rather than resolving it downward"
+  },
+  "authority": "T-stage negative-control false-support architecture; this clarification introduces no new scientific threshold and alters no margin",
+  "not_run_here": "the 5000 replicates of either control are a PROSPECTIVE requirement; neither is executed in this repair",
+  "rule": "each required negative control separately satisfies the false-support bound"
+ },
  "numerical_error_certification": {
   "floating_point": "every hyper-dual component is an interval, outward rounded after each operation (one ulp for the IEEE-correctly-rounded + - * / and sqrt, two for log and exp, which the platform libm does not guarantee)",
   "linear_solve": "residual enclosed in interval arithmetic, amplified by a Weyl-certified lower bound on the smallest eigenvalue of the symmetric expected information",
@@ -1003,25 +1035,31 @@
  "required_replicates": {
   "complete_power": 2000,
   "diagnostic_per_configuration": 5000,
+  "negative_control_axial_memory": 5000,
+  "negative_control_eta_t_cov": 5000,
   "size_per_configuration": 5000
  },
  "restored_controls": {
   "CTL-AXIAL-MEMORY": {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper bound <= 0.025 at R = 5000",
    "axial_fraction": 0.08,
    "coupling": 0.15,
+   "expected_physical_classification": "TEMPORAL_MODEL_UNQUALIFIED and/or INVALID_MEASUREMENT_OR_MODEL",
    "kind": "full-pipeline stochastic control",
-   "replicates": 200,
+   "release_event": "FALSE_SUPPORT (complete support)",
+   "replicates": 5000,
    "supplementary_exact_check": "REF-AXIAL-REFUSAL, REF-AXIAL-MEMORY-WITNESS",
    "witness": "K3 SPD; Schur K_eff valid; lateral marginal covariance equals k_B T K_eff^{-1} exactly; the lateral lag structure violates the Chapman-Kolmogorov identity C(2t) = C(t) Sigma^{-1} C(t) that EVERY 2D Markov generator satisfies, so no admissible 2D temporal model reproduces it",
    "world": "a full 3D Gaussian Ornstein-Uhlenbeck process observed only in its lateral coordinates through the declared camera model"
   },
   "CTL-ETA-T-COV": {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper bound <= 0.025 at R = 5000",
    "declared_correlation": 0.7,
    "direction_claim": "NONE. V4 asserted that omitting the covariance always understates uncertainty; its own ratios contradicted that and the assertion is removed.",
    "kind": "full-pipeline stochastic control",
    "misspecification": "the analysis C_phi omits the declared correlation between the stiffness standard and the temperature standard, which share one thermometry error",
-   "plan_wording_ambiguity": "the plan's expectation reads 'coverage consequence detected', which does not name a per-replicate event. The control family's standard event (complete support, bounded) is used, which is the stronger reading; the coverage consequence itself is measured and recorded in each result rather than being reduced to a pass/fail.",
-   "replicates": 200,
+   "release_event": "FALSE_SUPPORT (complete support)",
+   "replicates": 5000,
    "supplementary_exact_check": "REF-ETA-T-COV-ALGEBRA"
   }
  },

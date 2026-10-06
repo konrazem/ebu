@@ -610,12 +610,17 @@ def test_blocker4_no_caller_override() -> None:
 def test_blocker5_plan_counts_from_the_machine_plan() -> None:
     doc = load_plan()
     plan_cases = {c["case_id"]: c for c in doc["cases"]}
+    # The count itself is set by the plan, which the V6 clarification raised
+    # from 200 to the controlling T negative-control count of 5000.  What this
+    # V5 regression protects is that the plan's count is a real stochastic
+    # obligation and that the registry carries exactly it -- the V4 defect was
+    # a registry that had been weakened away from the plan.
     for cid in ("CTL-ETA-T-COV", "CTL-AXIAL-MEMORY"):
-        check(f"the machine plan requires 200 replicates for {cid}",
-              plan_cases[cid]["replicates"] == 200,
+        check(f"the machine plan requires a stochastic count for {cid}",
+              plan_cases[cid]["replicates"] >= 200,
               str(plan_cases[cid]["replicates"]))
         check(f"the registry matches the plan for {cid}",
-              CASES_BY_ID[cid].replicates == 200,
+              CASES_BY_ID[cid].replicates == plan_cases[cid]["replicates"],
               str(CASES_BY_ID[cid].replicates))
         check(f"{cid} is a stochastic full-pipeline case",
               CASES_BY_ID[cid].expected_event is ExpectedEvent.COMPLETE_SUPPORT)
@@ -717,9 +722,15 @@ def test_blocker5_eta_t_covariance() -> None:
     doc = load_plan()
     check("the plan records that no direction claim is made",
           doc["restored_controls"]["CTL-ETA-T-COV"]["direction_claim"].startswith("NONE"))
-    check("the plan records the exact wording ambiguity",
-          "ambiguity" in " ".join(
-              doc["restored_controls"]["CTL-ETA-T-COV"].keys()))
+    # V5 reported the plan's wording ambiguity rather than resolving it
+    # downward; the V6 clarification resolved it under T authority, so the
+    # plan now names the per-replicate release event explicitly.
+    check("the plan names the primary release event for CTL-ETA-T-COV",
+          doc["negative_control_release"]["CTL-ETA-T-COV"]["primary_release_event"]
+          == "FALSE_SUPPORT")
+    check("the covariance consequence is kept as mandatory recorded output",
+          "NOT a substitute" in
+          doc["negative_control_release"]["CTL-ETA-T-COV"]["secondary_status"])
 
 
 # ===========================================================================
