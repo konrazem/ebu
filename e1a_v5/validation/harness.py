@@ -15,6 +15,7 @@ import math
 from dataclasses import dataclass, field
 from typing import Callable, Mapping, Sequence
 
+from .. import certified as cert
 from .. import numerics as nm
 from ..confidence import (
     CriticalValues,
@@ -38,16 +39,22 @@ from ..gates import (
     geometry_statistic,
     stationarity_statistic,
 )
-from ..generate import GeneratorSpec, generate_record
+from ..generate import (
+    AxialMemorySpec, GeneratorSpec, axial_memory_dynamics,
+    generate_axial_memory_record, generate_record,
+    markov_closure_residual,
+)
 from ..numerics import NumericalFailure, clopper_pearson_lower, clopper_pearson_upper
 from ..optimize import OptimizerFailure
 from ..estimate import fit_record
 from ..packets import ValidationResult
 from ..observation import (
-    BANDWIDTH_CEILING, bandwidth_product, build_state_space,
-    effective_noise_to_signal, localization_ratio, model_lag_covariance,
+    BANDWIDTH_CEILING, ObservationQualification, bandwidth_product,
+    build_state_space, effective_noise_to_signal, localization_ratio,
+    model_lag_covariance, qualify_observation,
 )
 from ..calibration import (
+    AnalysisModel,
     ExperimentCalibration,
     FieldModel,
     Primitive,
@@ -58,9 +65,11 @@ from ..calibration import (
 from ..packets import RECORDS
 from ..reduction import (
     AxialEvidence,
+    RemainderSet,
     normalise_remainder,
     reduce_axial,
     remainder_impacts,
+    remainder_set_effects,
     schur_complement,
     schur_nonlinear_remainder,
     split_3d,
@@ -143,6 +152,10 @@ class RecordOutcome:
     reason: str = ""
     reasons: tuple[Refusal, ...] = ()
     bandwidth_product: float | None = None
+    #: Explicit T 15.2 / T.23 observation-domain qualification for this record.
+    observation: "ObservationQualification | None" = None
+    #: Optimiser outcome, or NOT_APPLICABLE where no fit was attempted.
+    optimizer_status: str = "NOT_APPLICABLE"
 
     def reason_codes(self) -> list[str]:
         return [r.code for r in self.reasons]
@@ -177,6 +190,7 @@ def run_record(
     stream: Stream,
     x_star: Sequence[float] = (0.0, 0.0),
     want_free: bool = True,
+    rate_factor: float = 1.0,
 ) -> RecordOutcome:
     """Generate and analyse one synthetic record end to end.
 
@@ -192,7 +206,13 @@ def run_record(
         reasons.append(refuse(NUMERICAL_REPRESENTATION_FAILURE,
                               "synthetic generation succeeds", str(exc)))
         return RecordOutcome(None, None, None, None, None, None, None, False,
-                             f"generator: {exc}", tuple(reasons))
+                             f"generator: {exc}", tuple(reasons),
+                             optimizer_status="NOT_ATTEMPTED")
+    return _analyse_record(y, spec, h_locked, x_star, want_free, rate_factor, reasons)
+
+
+def _analyse_record(y, spec, h_locked, x_star, want_free, rate_factor, reasons):
+    """The production analysis of one observed record, generator-agnostic."""
     try:
         fit = fit_record(
             y, h_locked, spec.p_matrix, spec.r_obs, list(spec.b_det), spec.dt, spec.t_exp,
@@ -202,12 +222,14 @@ def run_record(
         reasons.append(refuse(COMPUTATION_NOT_EVALUABLE,
                               "unique usable maximum established", str(exc)))
         return RecordOutcome(None, None, None, None, None, None, None, False,
-                             f"fit: {exc}", tuple(reasons))
+                             f"fit: {exc}", tuple(reasons),
+                             optimizer_status="OPTIMIZER_FAILURE")
     except NumericalFailure as exc:
         reasons.append(refuse(NUMERICAL_REPRESENTATION_FAILURE,
                               "likelihood evaluable", str(exc)))
         return RecordOutcome(None, None, None, None, None, None, None, False,
-                             f"fit: {exc}", tuple(reasons))
+                             f"fit: {exc}", tuple(reasons),
+                             optimizer_status="NUMERICAL_FAILURE")
 
     try:
         g = geometry_statistic(fit.sigma_free, h_locked)
@@ -271,9 +293,26 @@ def run_record(
             f"required lag-antisymmetry inputs unavailable: {exc}",
         ))
 
+    # --- T 15.2 / T.23 observation-domain qualification ---------------------
+    # Evaluated from the fitted free model, which is what the analysis can
+    # actually see, and never asserted by the caller.
+    try:
+        obs = qualify_observation(
+            fit.sigma_free, spec.r_obs, spec.p_matrix, fit.a_free,
+            spec.dt, spec.t_exp, spec.noise_model, rate_factor=rate_factor,
+        )
+    except NumericalFailure as exc:
+        obs = ObservationQualification(
+            valid=False,
+            refusals=(refuse(NUMERICAL_REPRESENTATION_FAILURE,
+                             "observation qualification computable", str(exc)),),
+        )
+    reasons.extend(obs.refusals)
+
     return RecordOutcome(
         fit.log_beta, fit.log_beta_se, g, m, stat, fit.r_irr, diag, True,
-        diag_reason or "", tuple(reasons), bandwidth,
+        diag_reason or "", tuple(reasons), bandwidth, obs,
+        optimizer_status="CONVERGED" if fit.converged else "NOT_CONVERGED",
     )
 
 
@@ -312,10 +351,11 @@ def design_specs(
                     coupling,
                 )
             temp = plan.nominal_temperature(fidx)
+            c_v = nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2)
             red = reduce_axial(
                 k3, temp,
-                evidence=AxialEvidence.fully_qualified(),
-                c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2),
+                evidence=AxialEvidence.fully_qualified(plan.remainder_set(k3)),
+                c_v=c_v,
             )
             if not red.ok:
                 raise NumericalFailure(f"design point refused: {red.refusals}")
@@ -404,20 +444,22 @@ SIGMA_LOG_T_STANDARD = 1.0e-3
 _CALIBRATION_CACHE: dict[tuple, "ExperimentCalibration"] = {}
 
 
-def _field_model_builder(
+def _field_model_builders(
     k3, temperature: float, dt: float, t_exp: float, r_obs,
     idx_shared: int, idx_temp: int, idx_field: int,
 ):
-    """``phi -> FieldModel`` for one record of the design point.
+    """``(float builder, generic builder)`` for one record of the design point.
 
-    The shared standard and the field-specific primitive both act on the
-    MEASURED stiffness, so two records sharing the standard move together.
-    The truth is whatever the unperturbed primitives describe.
+    Two builders over the same map: the float one supplies the fixed truth and
+    the linearisation point, the generic one accepts interval hyper-dual
+    primitives so the certified sensitivity can differentiate through it.  The
+    shared standard and the field-specific primitive both act on the MEASURED
+    stiffness, so two records sharing the standard move together.
     """
     red = reduce_axial(
         k3, temperature,
-        evidence=AxialEvidence.fully_qualified(),
-        c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2),
+        evidence=AxialEvidence.fully_qualified(plan.remainder_set(k3)),
+        c_v=nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2),
     )
     if not red.ok:
         raise NumericalFailure(f"calibration design point refused: {red.refusals}")
@@ -425,7 +467,7 @@ def _field_model_builder(
     sigma_true = nm.spd_inverse(red.h_eff)
     a_true = nm.scale(k_true, 1.0 / plan.drag_coefficient())
 
-    def build(phi: Sequence[float]) -> FieldModel:
+    def build_float(phi: Sequence[float]) -> FieldModel:
         log_k = float(phi[idx_shared]) + float(phi[idx_field])
         t_meas = temperature * math.exp(float(phi[idx_temp]))
         k_meas = nm.scale(k_true, math.exp(log_k))
@@ -436,11 +478,22 @@ def _field_model_builder(
             r_obs=r_obs, b_det=(0.0, 0.0), dt=dt, t_exp=t_exp,
         )
 
-    return build
+    def build_generic(phi: Sequence) -> AnalysisModel:
+        log_k = phi[idx_shared] + phi[idx_field]
+        inv_kt = cert.gexp(-phi[idx_temp]) * (1.0 / (K_B * temperature))
+        k_meas = cert.gscale(k_true, cert.gexp(log_k))
+        return AnalysisModel(
+            h_locked=cert.gsym(cert.gscale(k_meas, inv_kt)),
+            p_matrix=nm.eye(2), r_obs=r_obs, b_det=(0.0, 0.0),
+            dt=dt, t_exp=t_exp,
+        )
+
+    return build_float, build_generic
 
 
 def experiment_calibration(
     spec_kwargs: Mapping[str, object] | None = None,
+    omit_eta_t_covariance: bool = False,
 ) -> "ExperimentCalibration":
     """The joint ``C_b,cal`` of the eight endpoints at this design point.
 
@@ -450,7 +503,9 @@ def experiment_calibration(
     interval builder consumes; V3 left the assembler exercised only by tests.
     """
     kw = dict(spec_kwargs or {})
-    key = tuple(sorted((k, repr(v)) for k, v in kw.items()))
+    key = tuple(sorted((k, repr(v)) for k, v in kw.items())) + (
+        ("omit_eta_t_covariance", repr(bool(omit_eta_t_covariance))),
+    )
     if key in _CALIBRATION_CACHE:
         return _CALIBRATION_CACHE[key]
 
@@ -468,8 +523,14 @@ def experiment_calibration(
         vector.add(Primitive(PRIMITIVE_K_FIELD, Scope.FIELD, 0.0, plan.SIGMA_CAL_CELL, blk, fld))
     idx_shared = vector.index_of(PRIMITIVE_K_STANDARD)
     idx_temp = vector.index_of(PRIMITIVE_T_STANDARD)
+    if not omit_eta_t_covariance:
+        # The stiffness standard is realised by equipartition against the
+        # measured temperature, so the two share one thermometry error.  The
+        # CTL-ETA-T-COV alternative omits exactly this declaration.
+        vector.correlate(PRIMITIVE_K_STANDARD, PRIMITIVE_T_STANDARD,
+                         plan.ETA_T_CORRELATION)
 
-    builders: list[tuple[str, object]] = []
+    builders: list[tuple[str, object, object]] = []
     for blk, fld in RECORDS:
         fidx = fld.index
         if condition_target is None:
@@ -483,8 +544,9 @@ def experiment_calibration(
             )
         temperature = plan.nominal_temperature(fidx)
         red = reduce_axial(
-            k3, temperature, evidence=AxialEvidence.fully_qualified(),
-            c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2),
+            k3, temperature,
+            evidence=AxialEvidence.fully_qualified(plan.remainder_set(k3)),
+            c_v=nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2),
         )
         dt, t_exp = plan.timing(red.k_eff, exposure_fraction)
         sigma = nm.spd_inverse(red.h_eff)
@@ -493,30 +555,135 @@ def experiment_calibration(
         idx_field = vector.index_of(
             Primitive(PRIMITIVE_K_FIELD, Scope.FIELD, 0.0, plan.SIGMA_CAL_CELL, blk, fld).key
         )
-        builders.append((
-            f"{blk.value}/{fld.value}",
-            _field_model_builder(k3, temperature, dt, t_exp, r_obs,
-                                 idx_shared, idx_temp, idx_field),
-        ))
+        bf, bg = _field_model_builders(
+            k3, temperature, dt, t_exp, r_obs, idx_shared, idx_temp, idx_field)
+        builders.append((f"{blk.value}/{fld.value}", bf, bg))
     cal = build_experiment_calibration(vector, builders)
     _CALIBRATION_CACHE[key] = cal
     return cal
 
 
-def axial_remainder_bias(
-    fidx: int, coupling: float = plan.AXIAL_COUPLING
-) -> float:
-    """This record's certified axial remainder contribution to its bias budget.
+def axial_effects(fidx: int, coupling: float = plan.AXIAL_COUPLING,
+                  condition_target: float | None = None):
+    """Exact finite effects of this record's CERTIFIED REMAINDER SET.
 
-    The design point certifies the remainder at a 5% axial perturbation; it is
-    normalised against ``K_eff`` and enters the EXISTING per-record bounded
-    bias rather than carrying an allowance of its own.
+    V4's ``axial_remainder_bias`` evaluated one proportional 5 percent
+    perturbation whose trace nearly cancelled and used its first-order scale
+    effect as the qualification.  That qualifies one member of the set, not
+    the set, and the first-order quantity is not the finite effect.  This
+    returns the exact suprema over the whole declared set.
     """
-    k3 = plan.nominal_k3(fidx, coupling)
-    _, b, kappa = split_3d(nm.symmetrise(k3))
-    rem = schur_nonlinear_remainder(
-        [b[0][0], b[1][0]], kappa,
-        [0.05 * b[0][0], 0.05 * b[1][0]], 0.05 * kappa,
+    if condition_target is None:
+        k3 = plan.nominal_k3(fidx, coupling)
+    else:
+        k3 = plan.k3_from_lateral(
+            plan.conditioned_stiffness(plan.nominal_stiffness(fidx), condition_target),
+            coupling,
+        )
+    return remainder_set_effects(plan.remainder_set(k3), d=2)
+
+
+# ---------------------------------------------------------------------------
+# CTL-AXIAL-MEMORY: full-pipeline records from the 3D hidden-memory world
+# ---------------------------------------------------------------------------
+
+def axial_memory_specs(
+    n_frames: int = plan.SMOKE_FRAMES,
+    localization_ratio_target: float = plan.LOCALIZATION_RATIO_NOMINAL,
+) -> list[tuple[AxialMemorySpec, list[list[float]]]]:
+    """The eight (3D spec, locked H) pairs of one hidden-memory experiment.
+
+    ``h_locked`` is built from the Schur complement, so Branch A reports
+    exactly the field whose density the 3D world realises.  The analysis then
+    fits the retained 2D temporal model to a path that no 2D generator
+    produces.
+    """
+    out: list[tuple[AxialMemorySpec, list[list[float]]]] = []
+    for _block in range(2):
+        for fidx in range(4):
+            k3 = plan.axial_memory_k3(fidx)
+            temp = plan.nominal_temperature(fidx)
+            red = reduce_axial(
+                k3, temp,
+                evidence=AxialEvidence.fully_qualified(plan.remainder_set(k3)),
+                c_v=nm.scale(nm.eye(6),
+                             (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2),
+            )
+            if not red.ok:
+                raise NumericalFailure(f"axial-memory design refused: {red.refusals}")
+            dt, t_exp = plan.timing(red.k_eff)
+            sigma = nm.spd_inverse(red.h_eff)
+            a_eff = nm.scale(red.k_eff, 1.0 / plan.drag_coefficient())
+            r_obs = solve_r_obs(a_eff, sigma, dt, t_exp, localization_ratio_target)
+            out.append((
+                AxialMemorySpec(
+                    k3=k3, temperature=temp, gamma=plan.drag_coefficient(),
+                    p_matrix=nm.eye(2), r_obs=r_obs, b_det=(0.0, 0.0),
+                    dt=dt, t_exp=t_exp, n_frames=n_frames,
+                ),
+                red.h_eff,
+            ))
+    return out
+
+
+def axial_memory_witness(spec: AxialMemorySpec) -> dict:
+    """Deterministic proof that this world is the one the control declares.
+
+    Established before any replicate is generated:
+
+    * ``K3`` is positive definite and its Schur complement is valid;
+    * the stationary 3D covariance is the canonical ``k_B T K3^{-1}``;
+    * the lateral MARGINAL covariance equals ``k_B T K_eff^{-1}`` exactly;
+    * the lateral LAG structure violates the Chapman-Kolmogorov identity that
+      every 2D Markov process satisfies, so no admissible 2D generator
+      reproduces it.
+    """
+    a3, sigma3 = axial_memory_dynamics(spec)
+    k_eff = schur_complement(spec.k3)
+    sigma_q = [[sigma3[i][j] for j in range(2)] for i in range(2)]
+    expected = nm.scale(nm.spd_inverse(k_eff), K_B * spec.temperature)
+    marginal_error = (
+        nm.max_abs(nm.sub(sigma_q, expected)) / max(nm.max_abs(expected), 1e-300)
     )
-    impacts = remainder_impacts(normalise_remainder(rem, schur_complement(k3)))
-    return impacts.log_beta_bias
+    vals, _ = nm.eigh(nm.symmetrise(spec.k3))
+    tau_slow = spec.gamma / min(vals)
+    residuals = {
+        f"tau_slow_x{m}": markov_closure_residual(a3, sigma3, m * tau_slow)
+        for m in (0.25, 0.5, 1.0)
+    }
+    return {
+        "k3_spd": nm.is_spd(spec.k3),
+        "schur_spd": nm.is_spd(k_eff),
+        "lateral_marginal_relative_error": marginal_error,
+        "markov_closure_residual": residuals,
+        "worst_markov_closure_residual": max(residuals.values()),
+        "condition_k_eff": nm.cond2_spd(k_eff),
+    }
+
+
+def run_axial_memory_record(
+    spec: AxialMemorySpec, h_locked, stream: Stream,
+    x_star: Sequence[float] = (0.0, 0.0), rate_factor: float = 1.0,
+) -> RecordOutcome:
+    """Generate from the 3D world, then analyse with the ordinary 2D pipeline.
+
+    Only the generator changes.  The estimator, the gates and the diagnostics
+    are exactly the production ones, which is what makes this a full-pipeline
+    control rather than a flag flip.
+    """
+    reasons: list[Refusal] = []
+    try:
+        y = generate_axial_memory_record(spec, stream)
+    except NumericalFailure as exc:
+        reasons.append(refuse(NUMERICAL_REPRESENTATION_FAILURE,
+                              "3D synthetic generation succeeds", str(exc)))
+        return RecordOutcome(None, None, None, None, None, None, None, False,
+                             f"generator: {exc}", tuple(reasons),
+                             optimizer_status="NOT_ATTEMPTED")
+    proxy = GeneratorSpec(
+        h_true=h_locked, beta_true=1.0, mu_true=(0.0, 0.0),
+        d_true=nm.scale(nm.eye(2), 1.0), omega_true=0.0,
+        p_matrix=spec.p_matrix, r_obs=spec.r_obs, b_det=spec.b_det,
+        dt=spec.dt, t_exp=spec.t_exp, n_frames=spec.n_frames,
+    )
+    return _analyse_record(y, proxy, h_locked, x_star, True, rate_factor, reasons)

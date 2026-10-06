@@ -383,37 +383,170 @@ def cardinality_refusals(report: CardinalityReport, what: str) -> list[Refusal]:
 # Calibrated gate limits
 # ---------------------------------------------------------------------------
 
+class GateFamily(str, Enum):
+    """The four precision gates, as a closed set of typed families."""
+
+    SHAPE = "shape"
+    CENTRE = "centre"
+    STATIONARITY = "stationarity"
+    CURRENT = "current"
+
+
+#: Identity namespace reserved for test-only calibration artifacts.  The
+#: production record builder refuses anything carrying it.
+FIXTURE_NAMESPACE = "SYNTHETIC-FIXTURE"
+
+
+@dataclass(frozen=True)
+class CalibratedGateProcedure:
+    """The artifact that entitles a raw statistic to become an upper limit.
+
+    V4 accepted a bare non-empty string as proof of calibration, so
+
+        GateLimit.calibrated(statistic=0.0, limit=0.0, identity="arbitrary")
+
+    turned a raw zero statistic into a passing calibrated upper limit.  A
+    string carries no gate family, no procedure version, no calibration
+    stream, no coverage target and no domain of applicability, so nothing
+    about it could be checked.
+
+    A procedure carries all of them, and :meth:`upper_limit` is the only way
+    to obtain a limit: it is the statistic plus the procedure's own calibrated
+    confidence radius, never the statistic itself.
+    """
+
+    family: GateFamily
+    #: V-stage procedure version this calibration belongs to.
+    procedure_version: int
+    #: Identity of the frozen validation procedure that produced it.
+    procedure_identity: str
+    #: Identity of the calibration stream and its replicate count.
+    calibration_identity: str
+    #: One-sided coverage the radius was calibrated to.
+    coverage_target: float
+    #: Identity of the nuisance/domain envelope it is applicable within.
+    domain_identity: str
+    #: The calibrated one-sided confidence radius, in the statistic's units.
+    radius: float
+    status: CriticalValueStatus = CriticalValueStatus.UNCALIBRATED
+    #: True only for test-only artifacts; refused by the production builder.
+    fixture_only: bool = False
+
+    def defects(self) -> list[str]:
+        bad: list[str] = []
+        if not isinstance(self.family, GateFamily):
+            bad.append("gate_family_untyped")
+        if self.status is not CriticalValueStatus.CALIBRATED:
+            bad.append(f"status_{self.status.value.lower()}")
+        if not self.procedure_identity:
+            bad.append("procedure_identity_missing")
+        if not self.calibration_identity:
+            bad.append("calibration_identity_missing")
+        if not self.domain_identity:
+            bad.append("domain_identity_missing")
+        if not math.isfinite(self.radius) or self.radius < 0.0:
+            bad.append("radius_invalid")
+        if not (0.0 < self.coverage_target < 1.0):
+            bad.append("coverage_target_invalid")
+        return bad
+
+    @property
+    def usable(self) -> bool:
+        return not self.defects()
+
+    def upper_limit(self, statistic: float) -> float:
+        """``statistic + radius``.  There is no path that returns the statistic."""
+        if not self.usable:
+            raise ValueError(f"gate procedure unusable: {self.defects()}")
+        return float(statistic) + float(self.radius)
+
+
+def synthetic_calibrated_gate_fixture(
+    family: GateFamily, radius: float, coverage_target: float = 0.975,
+) -> CalibratedGateProcedure:
+    """A TEST-ONLY calibrated gate artifact.
+
+    Every identity sits in :data:`FIXTURE_NAMESPACE`, and ``fixture_only`` is
+    set, so the production record builder refuses it.  It exists only so
+    deterministic unit tests can exercise verdict code past the uncalibrated
+    gate.
+    """
+    return CalibratedGateProcedure(
+        family=family,
+        procedure_version=-1,
+        procedure_identity=f"{FIXTURE_NAMESPACE}/procedure",
+        calibration_identity=f"{FIXTURE_NAMESPACE}/not-a-calibration",
+        coverage_target=coverage_target,
+        domain_identity=f"{FIXTURE_NAMESPACE}/domain",
+        radius=float(radius),
+        status=CriticalValueStatus.CALIBRATED,
+        fixture_only=True,
+    )
+
+
+GATE_UNCALIBRATED = "uncalibrated"
+GATE_NO_PROCEDURE = "no_calibration_procedure"
+GATE_WRONG_FAMILY = "procedure_is_for_a_different_gate"
+GATE_WRONG_VERSION = "procedure_is_for_a_different_procedure_version"
+GATE_WRONG_DOMAIN = "procedure_domain_does_not_cover_this_record"
+GATE_FIXTURE_IN_PRODUCTION = "test_only_fixture_used_in_production"
+GATE_STATISTIC_NONFINITE = "statistic_nonfinite"
+
+
 @dataclass(frozen=True)
 class GateLimit:
-    """A one-sided upper confidence limit with its calibration status.
+    """A one-sided upper confidence limit, with the artifact that produced it.
 
-    The four precision gates (shape, centre, stationarity, current) are
-    calibrated one-sided upper limits, not raw statistics.  An uncalibrated
-    limit cannot pass: comparing the raw statistic against the tolerance is
-    exactly the shortcut the audit found in the control runner.
+    The raw statistic and the upper limit are separate fields and the limit is
+    always ``statistic + procedure.radius``.  There is no constructor that
+    accepts a limit directly, so ``upper_limit = raw_statistic`` cannot be
+    expressed.
     """
 
     statistic: float | None = None
     limit: float | None = None
-    status: CriticalValueStatus = CriticalValueStatus.UNCALIBRATED
-    identity: str = ""
+    procedure: CalibratedGateProcedure | None = None
+    defects: tuple[str, ...] = (GATE_NO_PROCEDURE,)
 
     @staticmethod
     def uncalibrated(statistic: float | None = None) -> "GateLimit":
-        return GateLimit(statistic, None, CriticalValueStatus.UNCALIBRATED, "")
+        """A measured statistic with no calibration behind it."""
+        return GateLimit(statistic, None, None, (GATE_NO_PROCEDURE,))
 
     @staticmethod
-    def calibrated(statistic: float, limit: float, identity: str) -> "GateLimit":
-        if not identity:
-            return GateLimit(statistic, limit, CriticalValueStatus.INVALID, "")
-        if not (math.isfinite(limit) and math.isfinite(statistic)):
-            return GateLimit(statistic, limit, CriticalValueStatus.INVALID, identity)
-        return GateLimit(statistic, limit, CriticalValueStatus.CALIBRATED, identity)
+    def from_procedure(
+        statistic: float | None,
+        procedure: CalibratedGateProcedure | None,
+        family: GateFamily,
+        procedure_version: int,
+        domain_identity: str,
+        allow_fixture: bool = False,
+    ) -> "GateLimit":
+        """Build a limit, refusing every way the artifact can fail to apply."""
+        bad: list[str] = []
+        if statistic is None or not math.isfinite(statistic):
+            bad.append(GATE_STATISTIC_NONFINITE)
+        if procedure is None:
+            bad.append(GATE_NO_PROCEDURE)
+            return GateLimit(statistic, None, None, tuple(bad))
+        bad.extend(procedure.defects())
+        if procedure.family is not family:
+            bad.append(GATE_WRONG_FAMILY)
+        if procedure.fixture_only and not allow_fixture:
+            bad.append(GATE_FIXTURE_IN_PRODUCTION)
+        if not procedure.fixture_only:
+            if procedure.procedure_version != procedure_version:
+                bad.append(GATE_WRONG_VERSION)
+            if procedure.domain_identity != domain_identity:
+                bad.append(GATE_WRONG_DOMAIN)
+        if bad:
+            return GateLimit(statistic, None, procedure, tuple(bad))
+        return GateLimit(statistic, procedure.upper_limit(statistic), procedure, ())
 
     @property
     def usable(self) -> bool:
         return (
-            self.status is CriticalValueStatus.CALIBRATED
+            not self.defects
             and self.limit is not None
             and math.isfinite(self.limit)
         )
@@ -423,3 +556,21 @@ class GateLimit:
         if not self.usable:
             return None
         return self.limit < tolerance  # type: ignore[operator]
+
+    def enlarged(self, systematic: float) -> "GateLimit":
+        """Add a certified systematic shift to the limit.
+
+        Used to route the exact finite axial-remainder effect into the gate's
+        EXISTING budget rather than giving it an allowance of its own.
+        """
+        if not self.usable:
+            return self
+        return GateLimit(self.statistic, self.limit + float(systematic),
+                         self.procedure, ())
+
+    def scaled(self, factor: float) -> "GateLimit":
+        """Multiply the limit by a certified factor (a purely multiplicative effect)."""
+        if not self.usable:
+            return self
+        return GateLimit(self.statistic, self.limit * float(factor),
+                         self.procedure, ())

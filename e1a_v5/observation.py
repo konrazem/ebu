@@ -251,3 +251,175 @@ def bandwidth_product(a_drift: Matrix, sigma: Matrix, dt: float) -> float:
     wi = nm.sqrtm_spd(sigma)
     b = nm.matmul(nm.matmul(w, a_drift), wi)
     return nm.op_norm(b) * dt
+
+
+# ---------------------------------------------------------------------------
+# Record-level observation qualification (T 15.2 / T.23)
+# ---------------------------------------------------------------------------
+
+from .refusals import (  # noqa: E402  (kept local to this section)
+    OBSERVATION_MODEL_UNQUALIFIED,
+    NUMERICAL_REPRESENTATION_FAILURE,
+    Refusal,
+    refuse,
+)
+
+#: Observation noise models the declared T/U domain admits.
+QUALIFIED_NOISE_MODELS = frozenset({"gaussian"})
+
+
+@dataclass(frozen=True)
+class ObservationQualification:
+    """Whether one record's observation model lies inside the declared domain.
+
+    V4 set ``observation_valid=True`` unconditionally for every synthetic
+    record, so ``CTL-NOISE-HI`` generated a localisation ratio of 0.25 --
+    five times the T.23 ceiling -- and was still marked observation-valid.
+    The control's whole scientific purpose is that such a record must not
+    enter complete support, so the flag defeated the control.
+
+    Every required predicate is evaluated here, and each failure carries its
+    own structured refusal.  ``valid`` is the conjunction; there is no caller
+    override.
+    """
+
+    valid: bool
+    refusals: tuple[Refusal, ...] = ()
+    localization_ratio: float | None = None
+    #: Upper end of the ratio's enclosure, after the certified axial
+    #: remainder's multiplicative effect on the latent covariance.
+    localization_ratio_upper: float | None = None
+    exposure_fraction: float | None = None
+    exposure_fraction_upper: float | None = None
+    bandwidth_product: float | None = None
+    bandwidth_product_upper: float | None = None
+    noise_model: str = "gaussian"
+
+    def as_dict(self) -> dict:
+        return {
+            "valid": self.valid,
+            "localization_ratio": self.localization_ratio,
+            "localization_ratio_upper": self.localization_ratio_upper,
+            "exposure_fraction": self.exposure_fraction,
+            "exposure_fraction_upper": self.exposure_fraction_upper,
+            "bandwidth_product": self.bandwidth_product,
+            "bandwidth_product_upper": self.bandwidth_product_upper,
+            "noise_model": self.noise_model,
+            "refusals": [r.code for r in self.refusals],
+        }
+
+
+def qualify_observation(
+    sigma: Matrix,
+    r_obs: Matrix,
+    p_matrix: Matrix,
+    a_drift: Matrix,
+    dt: float,
+    t_exp: float,
+    noise_model: str = "gaussian",
+    rate_factor: float = 1.0,
+) -> ObservationQualification:
+    """Evaluate every T/U observation requirement for one record.
+
+    ``rate_factor`` is the certified multiplicative bound by which the axial
+    remainder set can inflate the true relaxation rates and shrink the latent
+    covariance.  It enlarges the localisation ratio, the exposure fraction and
+    the bandwidth product, each of which is then compared against its own
+    declared ceiling with T's INCLUSIVE semantics.  A quantity whose enclosure
+    straddles its ceiling does not pass: the record is not demonstrated to lie
+    inside the qualified envelope.
+    """
+    reasons: list[Refusal] = []
+    ratio = ratio_up = None
+    exposure = exposure_up = None
+    bandwidth = bandwidth_up = None
+
+    if not nm.is_spd(r_obs):
+        reasons.append(refuse(
+            OBSERVATION_MODEL_UNQUALIFIED, "R_obs positive definite",
+            "the localisation noise covariance is not positive definite",
+        ))
+    try:
+        nm.general_inverse(p_matrix)
+    except NumericalFailure as exc:
+        reasons.append(refuse(
+            OBSERVATION_MODEL_UNQUALIFIED, "P invertible",
+            f"the physical-to-detector map is not invertible: {exc}",
+        ))
+    if noise_model not in QUALIFIED_NOISE_MODELS:
+        reasons.append(refuse(
+            OBSERVATION_MODEL_UNQUALIFIED, "noise model qualified",
+            f"observation noise model {noise_model!r} is outside the declared "
+            "Gaussian domain",
+            noise_model=noise_model,
+        ))
+    if not (0.0 <= t_exp <= dt):
+        reasons.append(refuse(
+            OBSERVATION_MODEL_UNQUALIFIED, "0 <= t_exp <= dt",
+            "the shutter does not fit inside the frame interval",
+            t_exp=t_exp, dt=dt,
+        ))
+
+    try:
+        ratio = localization_ratio(sigma, r_obs)
+        ratio_up = ratio * rate_factor
+        if not (ratio_up <= LOCALIZATION_RATIO_CEILING):
+            reasons.append(refuse(
+                OBSERVATION_MODEL_UNQUALIFIED,
+                f"instantaneous localisation ratio <= {LOCALIZATION_RATIO_CEILING}",
+                "the record lies outside the declared T 15.2 / T.23 "
+                "localisation-noise envelope",
+                ratio=ratio, ratio_upper=ratio_up,
+                ceiling=LOCALIZATION_RATIO_CEILING,
+            ))
+    except NumericalFailure as exc:
+        reasons.append(refuse(
+            NUMERICAL_REPRESENTATION_FAILURE, "localisation ratio computable", str(exc),
+        ))
+
+    try:
+        vals, _ = nm.eigh(nm.symmetrise(
+            nm.scale(nm.add(a_drift, nm.transpose(a_drift)), 0.5)))
+        rate_fast = max(vals)
+        if rate_fast <= 0.0:
+            raise NumericalFailure("fast relaxation rate is not positive")
+        exposure = t_exp * rate_fast
+        exposure_up = exposure * rate_factor
+        if not (exposure_up <= EXPOSURE_CEILING_FRACTION):
+            reasons.append(refuse(
+                OBSERVATION_MODEL_UNQUALIFIED,
+                f"t_exp / tau_fast <= {EXPOSURE_CEILING_FRACTION}",
+                "the exposure exceeds the declared blur envelope",
+                exposure_fraction=exposure, exposure_upper=exposure_up,
+            ))
+    except NumericalFailure as exc:
+        reasons.append(refuse(
+            NUMERICAL_REPRESENTATION_FAILURE, "exposure fraction computable", str(exc),
+        ))
+
+    try:
+        bandwidth = bandwidth_product(a_drift, sigma, dt)
+        bandwidth_up = bandwidth * rate_factor
+        if not (bandwidth_up <= BANDWIDTH_CEILING):
+            reasons.append(refuse(
+                OBSERVATION_MODEL_UNQUALIFIED,
+                f"||B||_2 dt <= {BANDWIDTH_CEILING}",
+                "the record exceeds the non-aliasing bandwidth envelope",
+                bandwidth_product=bandwidth, bandwidth_upper=bandwidth_up,
+            ))
+    except NumericalFailure as exc:
+        reasons.append(refuse(
+            NUMERICAL_REPRESENTATION_FAILURE, "bandwidth product computable", str(exc),
+        ))
+
+    return ObservationQualification(
+        valid=not reasons,
+        refusals=tuple(reasons),
+        localization_ratio=ratio,
+        localization_ratio_upper=ratio_up,
+        exposure_fraction=exposure,
+        exposure_fraction_upper=exposure_up,
+        bandwidth_product=bandwidth,
+        bandwidth_product_upper=bandwidth_up,
+        noise_model=noise_model,
+    )

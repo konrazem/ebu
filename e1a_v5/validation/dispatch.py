@@ -70,6 +70,10 @@ class CaseInstantiation:
     sigma_cal: float | None = None
     #: Deterministic battery key, when the case is exact.
     deterministic_key: str | None = None
+    #: Generate from the full 3D hidden-memory world.
+    axial_memory: bool = False
+    #: Analyse with a C_phi that omits the shared thermometry dependency.
+    omit_eta_t_covariance: bool = False
     #: Which declared config fields this instantiation consumed.
     consumed: tuple[str, ...] = ()
     #: Why a recognised case is not executable in this build.
@@ -97,6 +101,8 @@ class CaseInstantiation:
             "geometry": self.geometry,
             "selection": self.selection,
             "sigma_cal": self.sigma_cal,
+            "axial_memory": self.axial_memory,
+            "omit_eta_t_covariance": self.omit_eta_t_covariance,
         }
         if specs:
             spec, h_locked = specs[0]
@@ -162,6 +168,9 @@ def _route(cfg: CaseConfig, event: ExpectedEvent) -> tuple[str, dict, dict, list
     if r_true is not None:
         spec["r_irr_target"] = r_true
 
+    take("axial_memory", extra)
+    take("omit_eta_t_covariance", extra)
+
     driver = DRIVER_COMPLETE
     if event is ExpectedEvent.DETERMINISTIC or event is ExpectedEvent.REALIZATION_STATUS:
         # The case's declared event decides the driver, so a case exercised by
@@ -170,12 +179,8 @@ def _route(cfg: CaseConfig, event: ExpectedEvent) -> tuple[str, dict, dict, list
             n for n in ("realization", "optimiser_failure")
             if getattr(cfg, n) is not None
         )
-        if cfg.omit_eta_t_covariance is not None:
-            consumed.append("omit_eta_t_covariance")
-            extra["omit_eta_t_covariance"] = cfg.omit_eta_t_covariance
         extra["deterministic_key"] = (
-            cfg.realization or cfg.optimiser_failure
-            or ("eta_t_covariance" if cfg.omit_eta_t_covariance else "exact")
+            cfg.realization or cfg.optimiser_failure or "exact"
         )
         driver = DRIVER_DETERMINISTIC
     elif cfg.realization is not None or cfg.optimiser_failure is not None:
@@ -196,9 +201,6 @@ def _route(cfg: CaseConfig, event: ExpectedEvent) -> tuple[str, dict, dict, list
         driver = DRIVER_GATE_BOUNDARY
     elif cfg.b_true is not None:
         driver = DRIVER_SINGLE_RECORD
-    if cfg.omit_eta_t_covariance is not None:
-        consumed.append("omit_eta_t_covariance")
-        extra["omit_eta_t_covariance"] = cfg.omit_eta_t_covariance
     return driver, spec, extra, consumed
 
 
@@ -235,6 +237,8 @@ def instantiate(case_id: str) -> CaseInstantiation:
         selection=extra.get("selection"),
         sigma_cal=extra.get("sigma_cal"),
         deterministic_key=extra.get("deterministic_key"),
+        axial_memory=bool(extra.get("axial_memory")),
+        omit_eta_t_covariance=bool(extra.get("omit_eta_t_covariance")),
         consumed=tuple(sorted(consumed)),
         not_run_reason=NOT_RUN_REASONS.get(driver, ""),
     )

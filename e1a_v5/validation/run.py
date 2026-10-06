@@ -49,9 +49,12 @@ from ..diagnostics import (
 )
 from ..evidence import (
     BiasEvidence,
+    CalibratedGateProcedure,
     ContrastKey,
+    GateFamily,
     GateLimit,
     RecordKey,
+    synthetic_calibrated_gate_fixture,
 )
 from ..gates import DELTA_G, DELTA_M, DELTA_R_IRR
 from ..numerics import NumericalFailure, clopper_pearson_lower, clopper_pearson_upper
@@ -65,10 +68,13 @@ from ..pipeline import (
 )
 from ..realization import FIELD_REALIZATION_VALID
 from ..reduction import (
-    AxialEvidence, axial_ratio, normalise_covariance_to_h, plane_block_bias,
+    AxialEvidence, FiniteRemainderEffects, axial_ratio,
+    normalise_covariance_to_h, plane_block_bias,
     propagate_schur_covariance, reduce_axial, schur_complement,
 )
-from ..refusals import CALIBRATION_UNCERTAINTY_EXCESS, Refusal, refuse
+from ..refusals import (
+    CALIBRATION_UNCERTAINTY_EXCESS, INCOMPLETE_INPUT, Refusal, refuse,
+)
 from ..rng import Stream
 from ..units import K_B
 from ..seeds import CALIBRATION, CONTROL, DIAGNOSTIC, ENGINEERING, POWER, SIZE, SeedMap
@@ -90,10 +96,13 @@ from .events import (
 )
 from .harness import (
     Aggregator,
-    axial_remainder_bias,
+    axial_effects,
+    axial_memory_specs,
+    axial_memory_witness,
     current_control_drift,
     design_specs,
     experiment_calibration,
+    run_axial_memory_record,
     run_record,
 )
 
@@ -182,8 +191,10 @@ def deterministic_controls() -> list[dict]:
     r = axial_ratio(k3)
     lb, gp = plane_block_bias(r)
     k_qq = [[k3[0][0], k3[0][1]], [k3[1][0], k3[1][1]]]
-    red = reduce_axial(k3, plan.T_REF, evidence=AxialEvidence.fully_qualified(),
-                       c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2))
+    red = reduce_axial(
+        k3, plan.T_REF,
+        evidence=AxialEvidence.fully_qualified(plan.remainder_set(k3)),
+        c_v=nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2))
     used_schur = nm.max_abs(nm.sub(red.k_eff, k_qq)) > 0.0
     rec("CTL-AXIAL-COUPLE", "pipeline uses H_eff; K_qq bias quantified",
         f"r={r:.6f} log_beta_plane={lb:.6f} G_plane={gp:.6f}",
@@ -200,17 +211,33 @@ def deterministic_controls() -> list[dict]:
     # control set was dead.  The evidence object now carries the unqualified
     # temporal reduction explicitly.
     evidence = AxialEvidence(
-        **{**AxialEvidence.fully_qualified().__dict__,
+        **{**AxialEvidence.fully_qualified(plan.remainder_set(plan.nominal_k3(0))).__dict__,
            "temporal_reduction_qualified": False}
     )
     red2 = reduce_axial(
         plan.nominal_k3(0), plan.T_REF, evidence=evidence,
-        c_v=nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2),
+        c_v=nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2),
     )
     codes = {x.detail.get("component") for x in red2.refusals}
-    rec("CTL-AXIAL-MEMORY", "TEMPORAL_MODEL_UNQUALIFIED or linked axial refusal",
+    rec("REF-AXIAL-REFUSAL", "unqualified temporal reduction is refused",
         sorted(c for c in codes if c), "temporal_reduction_qualified" in codes,
-        note="no 3D hidden-state model is silently substituted")
+        note="SUPPLEMENTARY exact reference, not the CTL-AXIAL-MEMORY control. "
+             "It exercises the refusal path only. The control itself now "
+             "generates an actual 3D hidden-memory world and runs the full "
+             "pipeline on it.")
+
+    # --- the axial-memory WITNESS, established before any replicate ---------
+    from .harness import axial_memory_specs, axial_memory_witness
+    w = axial_memory_witness(axial_memory_specs(n_frames=16)[0][0])
+    rec("REF-AXIAL-MEMORY-WITNESS",
+        "lateral density matches Schur while the 2D Markov closure fails",
+        w,
+        bool(w["k3_spd"]) and bool(w["schur_spd"])
+        and w["lateral_marginal_relative_error"] < 1e-12
+        and w["worst_markov_closure_residual"] > 1e-3,
+        note="the Chapman-Kolmogorov identity C(2t) = C(t) Sigma^-1 C(t) holds "
+             "for EVERY 2D Markov generator, so a nonzero residual proves no "
+             "admissible 2D temporal model reproduces this lateral path")
 
     # --- omitted eta/T covariance control ----------------------------------
     # Exact: the same primitive uncertainties propagate to two different
@@ -234,12 +261,14 @@ def deterministic_controls() -> list[dict]:
     ratio = [
         math.sqrt(with_cov[i][i]) / math.sqrt(without[i][i]) for i in range(3)
     ]
-    rec("CTL-ETA-T-COV", "coverage consequence detected",
+    rec("REF-ETA-T-COV-ALGEBRA", "the two propagations differ",
         {"sigma_ratio_with_over_without": ratio},
-        all(r != 1.0 for r in ratio) and any(r < 1.0 for r in ratio),
-        note="omitting the shared eta/T covariance drops a cross term, so the "
-             "omitted propagation is not merely different but systematically "
-             "misstated; the correct shared covariance is the reference")
+        all(r != 1.0 for r in ratio),
+        note="SUPPLEMENTARY exact reference, not the CTL-ETA-T-COV control. "
+             "It shows only that the two covariance propagations differ. V4 "
+             "additionally asserted that omission always understates the "
+             "uncertainty; its own ratios (0.327, 1.005, 0.317) contradict a "
+             "universal direction, so no such claim is made.")
 
     # --- optimiser failure control ----------------------------------------
     observed = []
@@ -275,29 +304,63 @@ def deterministic_coverage() -> tuple[set[str], set[str]]:
 # Building one record's typed result
 # ---------------------------------------------------------------------------
 
+#: The V-stage procedure version this build implements.  A calibrated gate
+#: artifact from another version does not apply to these records.
+PROCEDURE_VERSION = 5
+#: Identity of the nuisance/domain envelope these records are qualified in.
+DOMAIN_IDENTITY = "e1a_v5_candidate_2026-10-06/nominal-envelope"
+
+#: Live V5 state: finite-N calibration has NOT run, so there is no calibrated
+#: gate procedure for any family and every gate is UNCALIBRATED.  Complete
+#: support is therefore unavailable outside explicitly marked fixtures.
+NO_GATE_PROCEDURES: Mapping[GateFamily, CalibratedGateProcedure] = {}
+
+
 def build_record_result(
     block: BlockId,
     fld: FieldId,
     out,
     calibration,
     critical: CriticalValues = NORMAL_CRITICAL,
-    gate_identity: str = "",
+    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
+    axial: FiniteRemainderEffects | None = None,
+    allow_fixtures: bool = False,
+    domain_identity: str = DOMAIN_IDENTITY,
 ) -> RecordResultV4:
     """Translate a harness RecordOutcome into the typed pipeline result.
 
-    The absolute interval is built on the TOTAL standard error, combining the
-    conditional fitted error with this record's calibration contribution read
-    from the joint ``C_b,cal``.  The bounded-bias enlargement is explicit
-    evidence that includes the certified axial remainder; it is never a
-    default of zero.  Anything the harness did not establish stays absent.
+    Three V5 repairs land here.
+
+    *Observation validity is evaluated, not asserted.*  It comes from
+    :func:`~e1a_v5.observation.qualify_observation`, which checks the T 15.2 /
+    T.23 localisation ceiling, the exposure and bandwidth envelopes, the noise
+    model and the invertibility of the detector map.  V4 passed
+    ``observation_valid=True`` unconditionally.
+
+    *Gate limits come from a calibration artifact.*  Each is built by
+    :meth:`GateLimit.from_procedure`, which checks the gate family, the
+    procedure version, the domain identity and the fixture flag.  There is no
+    constructor that accepts a limit, so a raw statistic cannot become one.
+
+    *The axial remainder's EXACT finite effects are routed into the existing
+    budgets.*  The scale effect enlarges the per-record bounded bias, the
+    geometry effect enlarges the T4 shape limit, the centre effect multiplies
+    the centre limit, and the rate effect already enlarged the observation
+    envelope inside the harness.  No budget of its own.
     """
     key = RecordKey(block, fld)
     name = str(key)
     reasons: list[Refusal] = list(out.reasons)
+    procedures = NO_GATE_PROCEDURES if gate_procedures is None else gate_procedures
+
+    obs = out.observation
+    observation_valid = None if obs is None else bool(obs.valid)
 
     if not out.evaluable or out.log_beta is None or out.se is None:
-        return RecordResultV4(key=key, embedded_key=key, evaluable=False,
-                              reasons=tuple(reasons))
+        return RecordResultV4(
+            key=key, embedded_key=key, evaluable=False,
+            observation_valid=observation_valid, reasons=tuple(reasons),
+        )
 
     cal_sigma = calibration.absolute_sigma(name)
     if calibration.absolute_qualification(name) != CEILING_PASS:
@@ -311,38 +374,51 @@ def build_record_result(
         ))
     se_total = combined_standard_error(out.se, cal_sigma.point)
 
-    bias = BiasEvidence.qualified(
-        plan.BIAS_PER_CELL + axial_remainder_bias(fld.index),
-        source="design-point T.18 budget plus the certified axial remainder",
+    axial_bias = 0.0 if axial is None else axial.log_beta_bias
+    axial_geometry = 0.0 if axial is None else axial.geometry
+    axial_centre = 1.0 if axial is None else axial.centre_factor
+    if axial is None:
+        reasons.append(refuse(
+            INCOMPLETE_INPUT, "certified axial remainder effects supplied",
+            "no exact finite axial-remainder effects were established for "
+            "this record; a missing bound is not a bound of zero",
+            record=name,
+        ))
+        bias = BiasEvidence.missing("no certified axial remainder effects")
+    else:
+        bias = BiasEvidence.qualified(
+            plan.BIAS_PER_CELL + axial_bias,
+            source="design-point T.18 budget plus the EXACT finite effect of "
+                   "the certified axial remainder set",
+        )
+    interval = (
+        build_interval(out.log_beta, se_total, critical, bias.require())
+        if bias.usable else None
     )
-    interval = build_interval(out.log_beta, se_total, critical, bias.require())
 
     from ..evidence import ScientificInterval
-    sci = ScientificInterval(
+    sci = None if interval is None else ScientificInterval(
         interval=interval, estimate=out.log_beta, standard_error=se_total,
         critical=critical, bias_bound=bias.require(),
     )
 
-    def limit(stat: float | None) -> GateLimit:
-        # No finite-N calibration exists for V4, so no calibrated upper limit
-        # can be published and the gate fails closed.  Comparing the raw
-        # statistic against the tolerance in its place is the shortcut this
-        # repair removes.
-        if stat is None or gate_identity == "":
-            return GateLimit.uncalibrated(stat)
-        return GateLimit.calibrated(stat, stat, gate_identity)
+    def limit(stat: float | None, family: GateFamily) -> GateLimit:
+        return GateLimit.from_procedure(
+            stat, procedures.get(family), family, PROCEDURE_VERSION,
+            domain_identity, allow_fixture=allow_fixtures,
+        )
 
     return RecordResultV4(
         key=key, embedded_key=key,
         branch_a_valid=True,           # synthetic packet, qualified by construction
-        observation_valid=True,
+        observation_valid=observation_valid,
         realization_status=FIELD_REALIZATION_VALID,
         log_beta=out.log_beta, log_beta_se=se_total, absolute=sci,
         absolute_bias=bias,
-        shape=limit(out.geometry),
-        centre=limit(out.centre),
-        stationarity=limit(out.stationarity),
-        current=limit(out.r_irr),
+        shape=limit(out.geometry, GateFamily.SHAPE).enlarged(axial_geometry),
+        centre=limit(out.centre, GateFamily.CENTRE).scaled(axial_centre),
+        stationarity=limit(out.stationarity, GateFamily.STATIONARITY),
+        current=limit(out.r_irr, GateFamily.CURRENT),
         evaluable=True,
         reasons=tuple(reasons),
     )
@@ -398,11 +474,16 @@ def build_contrast_results(
             out.append(ContrastResultV4(key=key, reasons=tuple(reasons)))
             continue
         se = combined_contrast_standard_error(cond_a, cond_b, cal_sigma.point)
+        # Jointly computed: the two records' certified remainder sets are
+        # independent certifications, so the contrast carries the sum of their
+        # EXACT finite contrast effects.  Never inferred from two absolute
+        # bounds.
         bias = BiasEvidence.qualified(
             2.0 * plan.BIAS_PER_CELL
-            + axial_remainder_bias(fld.index) + axial_remainder_bias(0),
-            source="jointly computed contrast bias; never inferred from two "
-                   "absolute bounds",
+            + axial_effects(fld.index).contrast_bias
+            + axial_effects(0).contrast_bias,
+            source="jointly computed contrast bias, from the exact finite "
+                   "effects of both records' certified remainder sets",
         )
         est = a.log_beta - b.log_beta
         iv = build_interval(est, se, critical, bias.require())
@@ -466,7 +547,8 @@ def run_complete_experiment(
     frames: int,
     namespace: str | None = None,
     critical: CriticalValues = NORMAL_CRITICAL,
-    gate_identity: str = "",
+    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
+    allow_fixtures: bool = False,
     fixture: bool = False,
 ):
     """Run one complete eight-record experiment through the ONE path.
@@ -476,22 +558,42 @@ def run_complete_experiment(
     authoritative predicate.
     """
     ns = namespace or case.seed_namespace
-    specs = design_specs(n_frames=frames, **inst.spec_kwargs)
-    calibration = experiment_calibration(inst.spec_kwargs)
+    calibration = experiment_calibration(
+        inst.spec_kwargs, omit_eta_t_covariance=inst.omit_eta_t_covariance,
+    )
+    if inst.axial_memory:
+        specs = axial_memory_specs(
+            n_frames=frames,
+            localization_ratio_target=float(inst.spec_kwargs.get(
+                "localization_ratio_target", plan.LOCALIZATION_RATIO_NOMINAL)),
+        )
+    else:
+        specs = design_specs(n_frames=frames, **inst.spec_kwargs)
     records: list[RecordResultV4] = []
     diag_inputs: list[tuple[str, object, str]] = []
     seeds: list[int] = []
-    for idx, ((spec, h_locked), (block, fld)) in enumerate(zip(specs, RECORDS)):
-        if inst.geometry is not None:
+    for idx, (pair, (block, fld)) in enumerate(zip(specs, RECORDS)):
+        spec, h_locked = pair
+        axial = axial_effects(
+            fld.index,
+            coupling=float(inst.spec_kwargs.get("coupling", plan.AXIAL_COUPLING)),
+            condition_target=inst.spec_kwargs.get("condition_target"),
+        ) if not inst.axial_memory else axial_effects(fld.index)
+        if inst.geometry is not None and not inst.axial_memory:
             spec, h_locked = apply_geometry(inst.geometry, spec, h_locked)
         if inst.blind_scale is not None:
             h_locked = nm.scale(h_locked, inst.blind_scale)
         seed = seed_map.replicate_seed(ns, case.case_id, rep * 100 + idx)
         seeds.append(seed)
         stream = Stream(seed, label=f"{ns}/{case.case_id}/{rep}/{idx}")
-        out = run_record(spec, h_locked, stream)
+        if inst.axial_memory:
+            out = run_axial_memory_record(
+                spec, h_locked, stream, rate_factor=axial.rate_factor)
+        else:
+            out = run_record(spec, h_locked, stream, rate_factor=axial.rate_factor)
         records.append(build_record_result(
-            block, fld, out, calibration, critical, gate_identity,
+            block, fld, out, calibration, critical, gate_procedures, axial,
+            allow_fixtures=allow_fixtures,
         ))
         diag_inputs.append((
             f"{block.value}/{fld.value}", out.diagnostic, out.reason,
@@ -499,12 +601,31 @@ def run_complete_experiment(
     contrasts = build_contrast_results(records, calibration, critical)
     family = build_diagnostic_family(diag_inputs, fixture=fixture)
     result = complete_pipeline_result(records, contrasts, family)
-    return result, inst.digest(specs), seeds
+    digest = inst.digest(specs if not inst.axial_memory else None)
+    if inst.axial_memory:
+        digest["axial_memory_witness"] = axial_memory_witness(specs[0][0])
+    if inst.omit_eta_t_covariance:
+        correct = experiment_calibration(inst.spec_kwargs)
+        k = calibration.keys[0]
+        digest["eta_t_covariance_consequence"] = {
+            "sigma_abs_correct_shared_model": correct.absolute_sigma(k).point,
+            "sigma_abs_omitted_covariance": calibration.absolute_sigma(k).point,
+            "ratio_omitted_over_correct": (
+                calibration.absolute_sigma(k).point / correct.absolute_sigma(k).point
+            ),
+            "declared_correlation": plan.ETA_T_CORRELATION,
+            "note": "the DIRECTION of the consequence is a property of this "
+                    "primitive map, not a general rule; no universal claim is "
+                    "made that omission understates uncertainty",
+        }
+    return result, digest, seeds
 
 
 def run_power_case(
     seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
-    critical: CriticalValues = NORMAL_CRITICAL, gate_identity: str = "",
+    critical: CriticalValues = NORMAL_CRITICAL,
+    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
+    allow_fixtures: bool = False,
     fixture: bool = False,
 ) -> dict:
     """Complete eight-record experiments, counted by the authoritative verdict."""
@@ -518,10 +639,14 @@ def run_power_case(
     for rep in range(reps):
         result, digest, seeds = run_complete_experiment(
             seed_map, case, inst, rep, frames, critical=critical,
-            gate_identity=gate_identity, fixture=fixture,
+            gate_procedures=gate_procedures, allow_fixtures=allow_fixtures,
+            fixture=fixture,
         )
         outcome = ReplicateOutcome.from_complete(
             case.case_id, rep, seeds[0], result, configuration=digest,
+            optimizer_status=_worst_optimizer_status(result),
+            realization_status=_realization_status(result),
+            bandwidth_product=_bandwidth(digest),
         )
         reasons.add(outcome)
         agg.add(evaluate_event(case, outcome))
@@ -538,7 +663,9 @@ def run_power_case(
 
 def run_control_case(
     seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
-    critical: CriticalValues = NORMAL_CRITICAL, gate_identity: str = "",
+    critical: CriticalValues = NORMAL_CRITICAL,
+    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
+    allow_fixtures: bool = False,
     fixture: bool = False,
 ) -> dict:
     """Stochastic negative controls, judged by the authoritative verdict.
@@ -558,9 +685,14 @@ def run_control_case(
     for rep in range(reps):
         result, digest, seeds = run_complete_experiment(
             seed_map, case, inst, rep, frames, critical=critical,
-            gate_identity=gate_identity, fixture=fixture,
+            gate_procedures=gate_procedures, allow_fixtures=allow_fixtures,
+            fixture=fixture,
         )
-        extra: dict = {}
+        extra: dict = {
+            "optimizer_status": _worst_optimizer_status(result),
+            "realization_status": _realization_status(result),
+            "bandwidth_product": _bandwidth(digest),
+        }
         if inst.blind_scale is not None:
             lb = next((r.log_beta for r in result.records if r.log_beta is not None), None)
             extra["blinded_error"] = (
@@ -650,3 +782,49 @@ def run_size_case(
         "seconds": round(time.time() - t0, 1),
     })
     return res.as_dict()
+
+
+# ---------------------------------------------------------------------------
+# Per-replicate metadata (V5 brief section 49)
+# ---------------------------------------------------------------------------
+#
+# The V4 audit noted these fields were left blank.  They are populated
+# wherever the underlying result exists, and carry NOT_APPLICABLE rather than
+# a blank where the quantity is not defined for that replicate.  Nothing is
+# fabricated.
+
+NOT_APPLICABLE = "NOT_APPLICABLE"
+
+
+def _worst_optimizer_status(result) -> str:
+    """The least successful optimiser outcome across the eight records."""
+    order = ["NOT_ATTEMPTED", "OPTIMIZER_FAILURE", "NUMERICAL_FAILURE",
+             "NOT_CONVERGED", "CONVERGED"]
+    seen = [r for r in result.records if r.evaluable]
+    if not seen:
+        return "NOT_ATTEMPTED"
+    statuses = [
+        "NOT_CONVERGED" if r.log_beta is None else "CONVERGED" for r in seen
+    ]
+    if len(seen) != len(result.records):
+        statuses.append("OPTIMIZER_FAILURE")
+    return min(statuses, key=order.index)
+
+
+def _realization_status(result) -> str:
+    statuses = {r.realization_status for r in result.records
+                if r.realization_status is not None}
+    if not statuses:
+        return NOT_APPLICABLE
+    if len(statuses) == 1:
+        return next(iter(statuses))
+    return "MIXED:" + ",".join(sorted(statuses))
+
+
+def _bandwidth(digest: Mapping[str, object]) -> float | None:
+    measured = digest.get("measured") if isinstance(digest, dict) else None
+    if isinstance(measured, dict):
+        v = measured.get("bandwidth_product")
+        if isinstance(v, float):
+            return v
+    return None

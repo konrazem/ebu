@@ -68,8 +68,12 @@ class AxialEvidence:
     temporal_reduction_qualified: bool | None = None
     #: U section 19: lateral observation / defocus transfer.
     observation_transfer_qualified: bool | None = None
-    #: U section 5.4: certified bound on the second-order Schur remainder,
-    #: carried as a TYPED residual with declared units.
+    #: U section 5.4: the CERTIFIED SET of admissible normalised remainders.
+    #: Qualification is a supremum over this whole set.  A single evaluated
+    #: witness does not qualify it (V-stage V5 brief section 21).
+    remainder_set: "RemainderSet | None" = None
+    #: Optional typed residual witness, in N/m.  Illustration only: it names
+    #: one member of the set and never stands in for the set.
     nonlinear_remainder: "NonlinearRemainder | None" = None
     #: U sections 26-27: projected absolute and contrast uncertainty budgets.
     uncertainty_budget_qualified: bool | None = None
@@ -100,6 +104,7 @@ class AxialEvidence:
 
     @staticmethod
     def fully_qualified(
+        remainder_set: "RemainderSet | None" = None,
         nonlinear_remainder: "NonlinearRemainder | None" = None,
     ) -> "AxialEvidence":
         """Construct complete passing evidence, for synthetic fixtures only."""
@@ -109,10 +114,11 @@ class AxialEvidence:
             support_qualified=True,
             temporal_reduction_qualified=True,
             observation_transfer_qualified=True,
-            nonlinear_remainder=(
-                NonlinearRemainder.zero() if nonlinear_remainder is None
-                else nonlinear_remainder
+            remainder_set=(
+                RemainderSet(0.0, "synthetic fixture: certified zero remainder")
+                if remainder_set is None else remainder_set
             ),
+            nonlinear_remainder=nonlinear_remainder,
             uncertainty_budget_qualified=True,
             geometry_centre_qualified=True,
             provenance_complete=True,
@@ -133,9 +139,10 @@ class SchurReduction:
     c_vech_s: Matrix | None = None
     #: Covariance of ``vech(H_eff)``, including the ``-H dT/T`` term.
     c_vech_h: Matrix | None = None
-    #: Where the certified nonlinear remainder lands in the existing budgets.
-    #: ``None`` means it was never established, which fails closed downstream.
-    remainder_impacts: "RemainderImpacts | None" = None
+    #: Exact finite effects of the certified remainder SET, routed into the
+    #: existing budgets.  ``None`` means never established, which fails
+    #: closed downstream.
+    remainder_impacts: "FiniteRemainderEffects | None" = None
     refusals: tuple[Refusal, ...] = ()
 
     @property
@@ -388,67 +395,235 @@ def normalise_remainder(remainder: NonlinearRemainder, k_eff: Matrix) -> Matrix:
 
 
 @dataclass(frozen=True)
-class RemainderImpacts:
-    """Where a certified remainder lands in the EXISTING error budgets.
+class RemainderSet:
+    """The certified set of admissible normalised remainders.
 
-    U-stage 5.4 gives the remainder no allowance of its own.  Its effect is a
-    perturbation ``H_A -> H_A + Delta H`` of the locked comparison field, and
-    that perturbation already has places to go:
-
-    ``log_beta_bias``
-        The locked-scale estimator satisfies ``tr(H_A Sigma) = d`` at its
-        maximum, so ``H_A -> H_A(I + E)`` moves it to
-        ``b = log(d / (d + tr E))``, i.e. ``|tr(E_K)| / d`` to first order.
-        Enters the per-record absolute bounded bias (T.18 / U.22, 0.0005).
-
-    ``contrast_bias``
-        Two records' remainders are independent certifications, so the
-        within-block contrast carries the sum of their magnitudes.  The caller
-        combines the pair; this field reports this record's contribution.
-
-    ``geometry_bias``
-        ``G = ||log M - (log|M|/d) I||_op`` with ``M`` similar to ``H_A Sigma``,
-        so the same perturbation shifts ``G`` by the deviatoric part of
-        ``log(I + E)``, bounded to first order by ``||E - (tr E / d) I||_op``.
-        Enters the T4 shape budget (DELTA_G).
-
-    ``centre_relative``
-        ``m = sqrt(delta^T H_A delta)`` scales as ``sqrt(1 + E)``, so the
-        centre statistic carries a RELATIVE enlargement of ``||E||_op / 2``.
+    Declared as a spectral ball ``E in {E = E^T : ||E||_op <= rho}``.  Every
+    downstream effect is qualified by its **supremum over this whole set**, not
+    by evaluating one convenient member: V4's ``axial_remainder_bias`` used a
+    single proportional 5 percent perturbation whose trace nearly cancelled,
+    which qualifies nothing.
     """
 
-    norm: float
+    rho: float
+    source: str = ""
+
+    def __post_init__(self) -> None:
+        if not math.isfinite(self.rho) or self.rho < 0.0:
+            raise NumericalFailure("remainder set radius must be finite and nonnegative")
+
+    @property
+    def within_domain(self) -> bool:
+        """``I + E`` is positive definite for every member of the set."""
+        return self.rho < REMAINDER_DOMAIN_LIMIT
+
+
+@dataclass(frozen=True)
+class FiniteRemainderEffects:
+    """EXACT finite effects of a remainder, never first-order surrogates.
+
+    V4 reported ``|tr E| / d`` and ``||E - (tr E / d) I||_op``.  Both are the
+    leading terms of the exact effects, and the audit's counterexamples show
+    the difference is decisive at the budget boundary: at ``E = -0.0004999 I``
+    the first-order scale effect is 0.0004999 and passes the 0.0005 budget,
+    while the exact effect is 0.00050002499 and fails it.
+
+    Every field below is a supremum over the whole declared remainder set.
+    """
+
+    rho: float
+    #: sup |b*| over the set, from the exact population pseudo-true relation.
     log_beta_bias: float
+    #: This record's contribution to a within-block contrast bias.
     contrast_bias: float
-    geometry_bias: float
-    centre_relative: float
+    #: sup of the exact T4 geometry statistic induced by the set.
+    geometry: float
+    #: sup multiplicative factor on the centre statistic m.
+    centre_factor: float
+    #: sup multiplicative factor on every relaxation rate, hence on the
+    #: exposure fraction, the bandwidth product and the localisation ratio.
+    rate_factor: float
     within_domain: bool
 
     def as_dict(self) -> dict:
         return {
-            "normalised_operator_norm": self.norm,
+            "remainder_set_radius": self.rho,
             "log_beta_bias": self.log_beta_bias,
             "contrast_bias": self.contrast_bias,
-            "geometry_bias": self.geometry_bias,
-            "centre_relative_enlargement": self.centre_relative,
+            "geometry": self.geometry,
+            "centre_factor": self.centre_factor,
+            "rate_factor": self.rate_factor,
             "within_domain": self.within_domain,
+            "basis": "exact finite effects, supremum over the declared set",
         }
 
 
-def remainder_impacts(e_k: Matrix) -> RemainderImpacts:
-    """Propagate the dimensionless remainder into the existing budgets."""
+def exact_log_beta_bias(e_k: Matrix) -> float:
+    """EXACT population log-beta shift induced by one normalised remainder.
+
+    The locked analysis fixes the shape of the latent covariance to
+    ``H_A^{-1}`` and fits only the scale, so the pseudo-true ``b`` maximises
+
+        E[l] = -1/2 ( -d b + log det M + e^b tr(M^{-1} Sigma_true) + ... )
+
+    with ``M = H_A^{-1}``.  Setting the derivative to zero gives
+
+        b* = log d - log tr(H_A Sigma_true) .
+
+    With ``H_A = K_eff/(k_B T)``, ``Sigma_true = k_B T K_true^{-1}`` and
+    ``K_true = K_eff^{1/2}(I + E) K_eff^{1/2}``, cyclicity collapses the trace:
+
+        tr(H_A Sigma_true) = tr(K_eff K_true^{-1}) = tr((I + E)^{-1}) ,
+
+    so the exact finite effect is
+
+        b* = log d - log tr((I + E)^{-1}) .
+
+    The orientation is the experimental one: ``K_eff`` is what Branch A
+    reports and locks, ``K_true`` is the physical field, and ``E`` is the
+    certified residual by which the reported Schur complement misses it.
+    First order this is ``tr(E)/d``, which is what V4 used.
+    """
     d = len(e_k)
-    tr = sum(e_k[i][i] for i in range(d))
-    dev = [[e_k[i][j] - (tr / d if i == j else 0.0) for j in range(d)] for i in range(d)]
-    norm = nm.op_norm_sym(nm.symmetrise(e_k))
-    scale_bias = abs(tr) / d
-    return RemainderImpacts(
-        norm=norm,
-        log_beta_bias=scale_bias,
-        contrast_bias=scale_bias,
-        geometry_bias=nm.op_norm_sym(nm.symmetrise(dev)),
-        centre_relative=0.5 * norm,
-        within_domain=norm < REMAINDER_DOMAIN_LIMIT,
+    vals, _ = nm.eigh(nm.symmetrise(e_k))
+    if min(vals) <= -1.0:
+        raise NumericalFailure("I + E is not positive definite; the effect is undefined")
+    tr_inv = sum(1.0 / (1.0 + v) for v in vals)
+    return math.log(d) - math.log(tr_inv)
+
+
+def exact_geometry_effect(e_k: Matrix) -> float:
+    """EXACT T4 geometry statistic induced by one normalised remainder.
+
+    T4 evaluates ``G = ||log M - (log det M / d) I||_op`` with ``M`` similar to
+    ``H_A Sigma_B``.  Under the remainder, ``H_A Sigma_true = K_eff K_true^{-1}``
+    is similar to ``(I + E)^{-1}``, whose logarithm has eigenvalues
+    ``-log(1 + lambda_i(E))``.  The deviatoric part therefore has
+
+        G = max_i | log(1 + lambda_i) - mean_j log(1 + lambda_j) | .
+
+    This is the actual downstream T4 object, evaluated through the matrix
+    logarithm, not the first-order surrogate ``||E - (tr E/d) I||_op``.
+    """
+    d = len(e_k)
+    vals, _ = nm.eigh(nm.symmetrise(e_k))
+    if min(vals) <= -1.0:
+        raise NumericalFailure("I + E is not positive definite; the effect is undefined")
+    g = [math.log(1.0 + v) for v in vals]
+    mean = sum(g) / d
+    return max(abs(x - mean) for x in g)
+
+
+def remainder_set_effects(rs: RemainderSet, d: int = 2) -> FiniteRemainderEffects:
+    """Exact suprema of every downstream effect over the whole declared set.
+
+    Each supremum is in closed form, so the qualification covers the entire
+    admissible set rather than one evaluated witness.
+
+    ``log beta``
+        ``b*(E) = log d - log sum_i 1/(1+lambda_i)`` is strictly increasing in
+        every ``lambda_i``, so over ``lambda_i in [-rho, rho]`` its range is
+        ``[log(1-rho), log(1+rho)]`` and ``sup |b*| = -log(1-rho)``.
+
+    ``geometry``
+        ``G = max_i |g_i - mean g|`` with ``g_i = log(1+lambda_i)`` monotone in
+        ``lambda_i``.  Over the box the spread is maximised with one
+        eigenvalue at ``+rho`` and the rest at ``-rho``, giving
+        ``(d-1)/d * log((1+rho)/(1-rho))``; for ``d = 2`` that is
+        ``artanh(rho)``.
+
+    ``centre``
+        ``m = sqrt(delta^T H_A delta)``.  The remainder perturbs ``H_A`` but
+        does NOT translate the trap, so ``delta`` is unchanged and the only
+        effect is the multiplicative factor ``sqrt(1 + lambda)``, bounded by
+        ``sqrt(1 + rho)``.  A first-order additive enlargement, as V4 applied,
+        misrepresents a purely multiplicative effect.
+
+    ``rates``
+        ``A = K/gamma``, so every relaxation rate carries a factor
+        ``1 + lambda``, bounded by ``1 + rho``.  That propagates to the
+        exposure fraction ``t_exp/tau_fast``, the bandwidth product
+        ``||B|| dt`` and the localisation ratio, each of which has its own
+        declared ceiling.
+    """
+    rho = rs.rho
+    if not rs.within_domain:
+        return FiniteRemainderEffects(
+            rho, float("inf"), float("inf"), float("inf"),
+            float("inf"), float("inf"), False,
+        )
+    scale = -math.log1p(-rho)
+    geometry = (d - 1) / d * (math.log1p(rho) - math.log1p(-rho))
+    return FiniteRemainderEffects(
+        rho=rho,
+        log_beta_bias=scale,
+        contrast_bias=scale,
+        geometry=geometry,
+        centre_factor=math.sqrt(1.0 + rho),
+        rate_factor=1.0 + rho,
+        within_domain=True,
+    )
+
+
+def certified_remainder_radius(
+    b: Sequence[float], kappa: float, k_eff: Matrix,
+    db_norm: float, dkappa: float,
+) -> float:
+    """A certified bound on ``||E||_op`` over a primitive uncertainty region.
+
+    The exact second-order Schur remainder has the closed form
+
+        R = ( -u^2 S + u T - D ) / (kappa (1 + u)) ,
+        S = b b^T,  T = b db^T + db b^T,  D = db db^T,  u = dkappa / kappa ,
+
+    obtained by subtracting the (U.A10) linearisation from
+    ``-(b+db)(b+db)^T/(kappa+dkappa)`` and collecting terms.  Submultiplicativity
+    and the triangle inequality then give, for ``|dkappa| <= dkappa`` and
+    ``||db|| <= db_norm``,
+
+        ||R|| <= ( u^2 ||b||^2 + 2 u ||b|| db_norm + db_norm^2 )
+                 / ( kappa (1 - u) ) ,     u = dkappa / kappa ,
+
+    and normalising, ``rho = ||R|| / lambda_min(K_eff)``.  Every step is an
+    inequality, so this bounds the whole region rather than sampling it.
+    """
+    if kappa <= 0.0:
+        raise NumericalFailure("axial stiffness must be positive")
+    u = abs(dkappa) / kappa
+    if u >= 1.0:
+        raise NumericalFailure("axial stiffness uncertainty reaches zero stiffness")
+    bn = math.sqrt(sum(float(v) * float(v) for v in b))
+    num = u * u * bn * bn + 2.0 * u * bn * db_norm + db_norm * db_norm
+    r_bound = num / (kappa * (1.0 - u))
+    vals, _ = nm.eigh(nm.symmetrise(k_eff))
+    lam_min = min(vals)
+    if lam_min <= 0.0:
+        raise NumericalFailure("K_eff is not positive definite")
+    return r_bound / lam_min
+
+
+def remainder_impacts(e_k: Matrix) -> FiniteRemainderEffects:
+    """Exact finite effects of ONE normalised remainder, as a set of radius ``||E||``.
+
+    Retained as an illustration and for the auditor's counterexamples.  The
+    scale and geometry entries are the exact effects of this specific ``E``;
+    the remaining entries are suprema over the ball of the same radius.
+    """
+    rho = nm.op_norm_sym(nm.symmetrise(e_k))
+    if rho >= REMAINDER_DOMAIN_LIMIT:
+        return FiniteRemainderEffects(
+            rho, float("inf"), float("inf"), float("inf"),
+            float("inf"), float("inf"), False,
+        )
+    scale = abs(exact_log_beta_bias(e_k))
+    return FiniteRemainderEffects(
+        rho=rho,
+        log_beta_bias=scale,
+        contrast_bias=scale,
+        geometry=exact_geometry_effect(e_k),
+        centre_factor=math.sqrt(1.0 + rho),
+        rate_factor=1.0 + rho,
+        within_domain=True,
     )
 
 
@@ -622,22 +797,34 @@ def reduce_axial(
             )
         )
 
-    # --- nonlinear remainder: certified, typed, and routed to the budgets ---
-    remainder = evidence.nonlinear_remainder
-    if remainder is None:
+    # --- the certified remainder SET, not one evaluated witness -------------
+    remainder_set = evidence.remainder_set
+    if remainder_set is None:
         refusals.append(
             refuse(
                 AXIAL_REDUCTION_UNQUALIFIED,
-                "nonlinear remainder bound supplied",
-                "no certified second-order Schur remainder bound",
+                "certified remainder set supplied",
+                "no certified set of admissible second-order Schur remainders; "
+                "a single evaluated perturbation does not qualify the set",
             )
         )
-    elif not remainder.finite:
+    elif not remainder_set.within_domain:
+        refusals.append(
+            refuse(
+                AXIAL_REDUCTION_UNQUALIFIED,
+                f"||E_K||_op < {REMAINDER_DOMAIN_LIMIT}",
+                "the certified remainder set leaves the domain where the "
+                "linearisation it bounds is defined; K_eff + Delta K need not "
+                "be positive definite",
+                remainder_set_radius=remainder_set.rho,
+            )
+        )
+    if evidence.nonlinear_remainder is not None and not evidence.nonlinear_remainder.finite:
         refusals.append(
             refuse(
                 NUMERICAL_REPRESENTATION_FAILURE,
-                "nonlinear remainder entries finite",
-                "certified second-order Schur remainder is not finite",
+                "remainder witness entries finite",
+                "the supplied remainder witness is not finite",
             )
         )
 
@@ -708,31 +895,10 @@ def reduce_axial(
                 )
             )
 
-    # --- route the certified remainder into the existing budgets -----------
-    impacts: RemainderImpacts | None = None
-    if remainder is not None and remainder.finite and nm.is_spd(k_eff):
-        try:
-            impacts = remainder_impacts(normalise_remainder(remainder, k_eff))
-        except NumericalFailure as exc:
-            refusals.append(
-                refuse(
-                    AXIAL_REDUCTION_UNQUALIFIED,
-                    "nonlinear remainder normalisable",
-                    f"the remainder could not be made dimensionless: {exc}",
-                )
-            )
-        else:
-            if not impacts.within_domain:
-                refusals.append(
-                    refuse(
-                        AXIAL_REDUCTION_UNQUALIFIED,
-                        f"||E_K||_op < {REMAINDER_DOMAIN_LIMIT}",
-                        "the normalised second-order remainder is outside the "
-                        "domain where the linearisation it bounds is defined; "
-                        "K_eff + Delta K need not be positive definite",
-                        normalised_norm=impacts.norm,
-                    )
-                )
+    # --- exact finite effects of the whole set, into the existing budgets ---
+    impacts: FiniteRemainderEffects | None = None
+    if remainder_set is not None:
+        impacts = remainder_set_effects(remainder_set, d=len(k_eff))
 
     c_vech_s: Matrix | None = None
     c_vech_h: Matrix | None = None

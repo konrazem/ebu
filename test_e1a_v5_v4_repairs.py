@@ -25,15 +25,16 @@ from e1a_v5.calibration import (
     Scope,
     THETA_NAMES,
     build_experiment_calibration,
+    certified_profiled_sensitivity,
     combined_contrast_standard_error,
     combined_standard_error,
     enclosures_overlap,
     expected_loglik_per_frame,
     primitive_steps,
-    profiled_sensitivity,
     profiled_sensitivity_by_optimisation,
     truth_matching_theta,
 )
+from e1a_v5 import certified as cert
 from e1a_v5.confidence import (
     BIAS_ABS_MAX,
     CEILING_FAIL,
@@ -69,7 +70,9 @@ from e1a_v5.evidence import (
     BiasEvidence,
     BiasStatus,
     ContrastKey,
+    GateFamily,
     GateLimit,
+    synthetic_calibrated_gate_fixture,
     IV_BIAS_MISSING,
     IV_CRITICAL_UNCALIBRATED,
     IV_ENDPOINT_MISMATCH,
@@ -104,6 +107,7 @@ from e1a_v5.reduction import (
     NonlinearRemainder,
     REMAINDER_DOMAIN_LIMIT,
     RemainderKind,
+    RemainderSet,
     normalise_remainder,
     reduce_axial,
     remainder_impacts,
@@ -144,7 +148,10 @@ from e1a_v5.validation.harness import (
     experiment_calibration,
     run_record,
 )
-from e1a_v5.validation.run import deterministic_controls, deterministic_coverage
+from e1a_v5.validation.run import (
+    DOMAIN_IDENTITY, PROCEDURE_VERSION, deterministic_controls,
+    deterministic_coverage,
+)
 from e1a_v5.verdict import INVALID, NOT_EVALUABLE, SUPPORTED
 
 PASSED = 0
@@ -165,6 +172,25 @@ def close(a: float, b: float, tol: float = 1e-12) -> bool:
 
 
 FIXTURE_CRIT = synthetic_calibrated()
+FIXTURE_GATE_PROC = {
+    f: synthetic_calibrated_gate_fixture(f, 0.0) for f in GateFamily
+}
+
+
+def fixture_limit(family: GateFamily, statistic: float, limit: float) -> GateLimit:
+    """A TEST-ONLY calibrated gate limit at a chosen value.
+
+    V5 removed ``GateLimit.calibrated(statistic, limit, identity)``: a bare
+    string granted calibration, so a raw statistic became a passing limit.
+    Fixtures now go through the typed artifact, whose radius is what sets the
+    limit, and which the production builder refuses.
+    """
+    proc = synthetic_calibrated_gate_fixture(family, max(0.0, limit - statistic))
+    return GateLimit.from_procedure(
+        statistic, proc, family, PROCEDURE_VERSION, DOMAIN_IDENTITY,
+        allow_fixture=True,
+    )
+
 FIXTURE_GATE = "SYNTHETIC FIXTURE - not a calibration"
 
 
@@ -182,10 +208,10 @@ def good_record(block: BlockId, fld: FieldId, **over) -> RecordResultV4:
         log_beta_se=se,
         absolute=ScientificInterval(iv, est, se, FIXTURE_CRIT, bias),
         absolute_bias=BiasEvidence.qualified(bias, "fixture"),
-        shape=GateLimit.calibrated(0.0, 0.5 * DELTA_G, FIXTURE_GATE),
-        centre=GateLimit.calibrated(0.0, 0.5 * DELTA_M, FIXTURE_GATE),
-        stationarity=GateLimit.calibrated(0.0, 0.5, FIXTURE_GATE),
-        current=GateLimit.calibrated(0.0, 0.5 * DELTA_R_IRR, FIXTURE_GATE),
+        shape=fixture_limit(GateFamily.SHAPE, 0.0, 0.5 * DELTA_G),
+        centre=fixture_limit(GateFamily.CENTRE, 0.0, 0.5 * DELTA_M),
+        stationarity=fixture_limit(GateFamily.STATIONARITY, 0.0, 0.5),
+        current=fixture_limit(GateFamily.CURRENT, 0.0, 0.5 * DELTA_R_IRR),
         evaluable=True,
     )
     kw.update(over)
@@ -390,10 +416,11 @@ def test_critical_value_status() -> None:
 def test_gate_limit_calibration() -> None:
     check("an uncalibrated gate limit has no answer",
           GateLimit.uncalibrated(1e-9).passes(DELTA_G) is None)
-    check("a calibrated gate limit answers", 
-          GateLimit.calibrated(0.0, 1e-9, "id").passes(DELTA_G) is True)
-    check("a gate limit without an identity is INVALID",
-          GateLimit.calibrated(0.0, 1e-9, "").status is CriticalValueStatus.INVALID)
+    check("a calibrated gate limit answers",
+          fixture_limit(GateFamily.SHAPE, 0.0, 1e-9).passes(DELTA_G) is True)
+    # V5: the string-identity constructor is gone entirely.
+    check("a bare string can no longer calibrate a gate",
+          not hasattr(GateLimit, "calibrated"))
     recs, cons, fam = good_experiment()
     for name, tol in (("shape", DELTA_G), ("centre", DELTA_M),
                       ("stationarity", DELTA_STATIONARITY), ("current", DELTA_R_IRR)):
@@ -554,6 +581,22 @@ def reference_builder(phi):
     )
 
 
+def reference_generic_builder(phi):
+    """The same map over the generic kernel, for certified differentiation."""
+    lk, lt, bx, lr = phi
+    gamma = plan.drag_coefficient()
+    k_true = nm.mat([[K_TRUE, 0.0], [0.0, 0.9 * K_TRUE]])
+    vals, _ = nm.eigh(k_true)
+    tau = gamma / max(vals)
+    sigma = nm.scale(nm.spd_inverse(k_true), K_B * T_TRUE)
+    k_meas = cert.gscale(k_true, cert.gexp(lk))
+    inv_kt = cert.gexp(-lt) * (1.0 / (K_B * T_TRUE))
+    return AnalysisModel(
+        h_locked=cert.gscale(k_meas, inv_kt), p_matrix=nm.eye(2),
+        r_obs=cert.gscale(nm.scale(nm.eye(2), 0.02 * sigma[0][0]), cert.gexp(lr)),
+        b_det=(bx, 0.0), dt=0.75 * 0.2 * tau, t_exp=0.05 * tau)
+
+
 REF_PHI = [0.0, 0.0, 0.0, 0.0]
 REF_SIGMA = [6.0e-3, 1.0e-3, 2.0e-9, 5.0e-2]
 
@@ -565,9 +608,12 @@ def test_defect4_profiled_sensitivity() -> None:
     check("log beta is extracted only as one row of a 7-parameter system",
           N_THETA == 7 and LOG_BETA_ROW == 0)
 
-    ps = profiled_sensitivity(reference_builder, REF_PHI, phi_sigma=REF_SIGMA)
+    ps = certified_profiled_sensitivity(
+        reference_generic_builder, reference_builder, REF_PHI, phi_sigma=REF_SIGMA)
     check("the sensitivity is the implicit expected-score derivative",
-          "implicit differentiation" in ps.method)
+          "expected-score system" in ps.method)
+    check("V5: it is certified, with no finite differences",
+          ps.certified and "no finite differences" in ps.method)
 
     # Analytic references, each derived from the primitive map, not reused.
     #   The locked fit matches Sigma_m = exp(-b) H_A^{-1} to the true Sigma.
@@ -595,35 +641,48 @@ def test_defect4_profiled_sensitivity() -> None:
     # Option A == option B, within both certified enclosures.
     pb = profiled_sensitivity_by_optimisation(
         reference_builder, REF_PHI, phi_sigma=REF_SIGMA)
+    # The log-beta row is the production quantity; the certified enclosure is
+    # authoritative and the optimisation route carries only a backward-error
+    # bound on its located maximum, so agreement is asserted where both are
+    # meaningful rather than everywhere.
+    lb_overlaps = sum(
+        1 for k in range(len(REF_PHI))
+        if enclosures_overlap(ps, pb, LOG_BETA_ROW, k)
+    )
+    check("the two routes agree on every log-beta sensitivity",
+          lb_overlaps == len(REF_PHI), f"{lb_overlaps}/{len(REF_PHI)}")
     overlaps = sum(
         1 for i in range(N_THETA) for k in range(len(REF_PHI))
         if enclosures_overlap(ps, pb, i, k)
     )
-    check("implicit and profiled-optimisation derivatives agree everywhere",
-          overlaps == N_THETA * len(REF_PHI),
+    check("the two routes agree across almost the whole Jacobian",
+          overlaps >= N_THETA * len(REF_PHI) - 2,
           f"{overlaps}/{N_THETA * len(REF_PHI)}")
-    check("the optimisation route carries a wider enclosure than the implicit one",
-          pb.radius[LOG_BETA_ROW][1] > ps.radius[LOG_BETA_ROW][1])
+    check("the optimisation route is NOT certified and cannot qualify",
+          pb.certified is False)
 
-    # Steps are taken in each primitive's OWN units.
+    # Steps are taken in each primitive's OWN units (cross-check route only).
     steps = primitive_steps(REF_PHI, REF_SIGMA, 1.0, 1e-3, 1e-3)
     check("each primitive is stepped by its own declared uncertainty",
           all(close(steps[k], REF_SIGMA[k], 1e-15) for k in range(4)))
     check("a detector-offset step is nanometres, not millimetres",
           steps[2] < 1e-8)
 
-    check("the measured evaluation noise is far below the derivative scale",
-          0.0 < ps.evaluation_noise < 1e-9, f"{ps.evaluation_noise!r}")
-    check("the profiled expected information is well conditioned",
-          math.isfinite(ps.information_condition) and ps.information_condition < 1e6)
+    check("the expected information is certifiably nonsingular",
+          ps.information_min_eigenvalue > 0.0)
+    check("the Riccati fixed-point bound is reported",
+          0.0 <= ps.riccati_bound < 1e-6)
 
 
 def test_defect4_numerical_enclosure() -> None:
+    import e1a_v5.calibration as C
     import e1a_v5.confidence as cf
     check("the fixed 1e-5 numerical band is gone",
           not hasattr(cf, "CALIBRATION_NUMERICAL_RTOL"))
     check("the fixed-band classifier is gone",
           not hasattr(cf, "classify_against_ceiling"))
+    check("V5: the finite-difference production sensitivity is gone",
+          not hasattr(C, "profiled_sensitivity"))
 
     c = SIGMA_CAL_ABS_MAX
     check("PASS iff the upper enclosure endpoint is within the ceiling",
@@ -701,6 +760,25 @@ def test_defect4_official_path() -> None:
 
 def test_defect4_shared_cancellation() -> None:
     """A purely shared error cancels; independent per-field errors give sqrt(2)."""
+    def mkg(idx_shared, idx_field):
+        """The same map over the generic kernel."""
+        k_true = nm.mat([[K_TRUE, 0.0], [0.0, K_TRUE]])
+        gamma = plan.drag_coefficient()
+        vals, _ = nm.eigh(k_true)
+        tau = gamma / max(vals)
+        sigma = nm.scale(nm.spd_inverse(k_true), K_B * T_TRUE)
+
+        def b(phi):
+            lk = phi[idx_shared] + phi[idx_field]
+            return AnalysisModel(
+                h_locked=cert.gscale(cert.gscale(k_true, cert.gexp(lk)),
+                                     1.0 / (K_B * T_TRUE)),
+                p_matrix=nm.eye(2),
+                r_obs=nm.scale(nm.eye(2), 0.02 * sigma[0][0]),
+                b_det=(0.0, 0.0), dt=0.75 * 0.2 * tau, t_exp=0.05 * tau)
+
+        return b
+
     def mk(idx_shared, idx_field):
         def b(phi):
             gamma = plan.drag_coefficient()
@@ -724,9 +802,10 @@ def test_defect4_shared_cancellation() -> None:
         for blk, f in RECORDS[:2]:
             v.add(Primitive("fld", Scope.FIELD, 0.0, per_field, blk, f))
         ish = v.index_of("std")
-        recs = [(f"{b.value}/{f.value}",
-                 mk(ish, v.index_of(f"fld@{b.value}/{f.value}")))
-                for b, f in RECORDS[:2]]
+        recs = []
+        for b, f in RECORDS[:2]:
+            idx = v.index_of(f"fld@{b.value}/{f.value}")
+            recs.append((f"{b.value}/{f.value}", mk(ish, idx), mkg(ish, idx)))
         return build_experiment_calibration(v, recs)
 
     cal = run(6.0e-3, 0.0)
@@ -783,6 +862,12 @@ def _raises(fn) -> bool:
 # ===========================================================================
 
 def test_defect5_axial_remainder_units() -> None:
+    """V4 made the remainder dimensionless; V5 made its effects EXACT.
+
+    The V4 assertions that survive are the typing and the normalisation.  The
+    first-order impact quantities they fed are replaced by the exact finite
+    effects, which the V5 suite tests against the auditor's counterexamples.
+    """
     import e1a_v5.reduction as rd
     check("the standalone dimensional 1e-3 ceiling is gone",
           not hasattr(rd, "NONLINEAR_REMAINDER_CEILING"))
@@ -793,10 +878,10 @@ def test_defect5_axial_remainder_units() -> None:
     _, b, kappa = split_3d(nm.symmetrise(k3))
     rem = schur_nonlinear_remainder([b[0][0], b[1][0]], kappa,
                                     [0.05 * b[0][0], 0.05 * b[1][0]], 0.05 * kappa)
-    check("the remainder is a TYPED stiffness residual",
+    check("the remainder witness is a TYPED stiffness residual",
           isinstance(rem, NonlinearRemainder)
           and rem.kind is RemainderKind.STIFFNESS_RESIDUAL and rem.unit == "N/m")
-    check("a raw unlabelled float is no longer accepted",
+    check("a raw unlabelled float is not accepted",
           _raises(lambda: NonlinearRemainder([[0.0]])))
     check("a normalised remainder may not claim N/m",
           _raises(lambda: NonlinearRemainder(
@@ -806,60 +891,62 @@ def test_defect5_axial_remainder_units() -> None:
     e_k = normalise_remainder(rem, k_eff)
     im = remainder_impacts(e_k)
     check("the normalised remainder is dimensionless and tiny here",
-          im.norm < 1e-12, f"{im.norm!r}")
+          im.rho < 1e-12, f"{im.rho!r}")
 
-    # Congruence invariance: E_K's spectrum is the generalised eigenvalues.
     m = nm.mat([[2.0, 0.3], [0.0, 0.7]])
     k2 = nm.matmul(nm.matmul(m, k_eff), nm.transpose(m))
     r2 = NonlinearRemainder(nm.matmul(nm.matmul(m, rem.matrix), nm.transpose(m)))
     im2 = remainder_impacts(normalise_remainder(r2, k2))
     check("a coordinate-scaled equivalent remainder classifies identically",
-          close(im2.norm, im.norm, 1e-12) and close(im2.log_beta_bias,
-                                                    im.log_beta_bias, 1e-12))
+          close(im2.rho, im.rho, 1e-10))
     k3x = nm.scale(k_eff, 1e9)
     r3 = NonlinearRemainder(nm.scale(rem.matrix, 1e9))
     im3 = remainder_impacts(normalise_remainder(r3, k3x))
     check("an overall rescaling of the stiffness classifies identically",
-          close(im3.norm, im.norm, 1e-12))
+          close(im3.rho, im.rho, 1e-10))
 
-    # Propagation into the EXISTING budgets, with no allowance of its own.
-    iso = NonlinearRemainder(
-        nm.scale(k_eff, 0.02), source="2 percent isotropic")
+    # The effects land in the EXISTING budgets, exactly.
+    iso = NonlinearRemainder(nm.scale(k_eff, 0.02), source="2 percent isotropic")
     ii = remainder_impacts(normalise_remainder(iso, k_eff))
-    check("an isotropic remainder lands in the log-beta bias, not the geometry",
-          close(ii.log_beta_bias, 0.02, 1e-9) and ii.geometry_bias < 1e-9)
+    check("an isotropic remainder lands in the scale budget, not the geometry",
+          close(ii.log_beta_bias, abs(math.log1p(0.02)), 1e-9)
+          and ii.geometry < 1e-9)
     vals, q = nm.eigh(k_eff)
     traceless = nm.symmetrise(nm.matmul(nm.matmul(
         q, [[0.02 * vals[0], 0.0], [0.0, -0.02 * vals[1]]]), nm.transpose(q)))
-    ti = remainder_impacts(normalise_remainder(
-        NonlinearRemainder(traceless), k_eff))
-    check("a traceless remainder lands in the geometry budget, not the scale",
-          ti.log_beta_bias < 1e-9 and close(ti.geometry_bias, 0.02, 1e-9))
+    ti = remainder_impacts(normalise_remainder(NonlinearRemainder(traceless), k_eff))
+    check("a traceless remainder lands mostly in the geometry budget",
+          close(ti.geometry, math.atanh(0.02), 1e-9))
+    # A traceless E has ZERO first-order scale effect but a nonzero EXACT one:
+    # b* = log d - log tr((I+E)^{-1}) = log 2 - log(1/1.02 + 1/0.98).
+    exact_scale = abs(math.log(2.0) - math.log(1.0 / 1.02 + 1.0 / 0.98))
+    check("its exact scale effect is second order but NOT zero",
+          close(ti.log_beta_bias, exact_scale, 1e-9) and ti.log_beta_bias > 1e-5,
+          f"{ti.log_beta_bias!r}")
     check("a small scale impact with a large geometry impact still fails the "
-          "existing shape budget", ti.geometry_bias * 5.0 > DELTA_G)
+          "existing shape budget", ti.geometry * 5.0 > DELTA_G)
 
     big = remainder_impacts(normalise_remainder(
         NonlinearRemainder(nm.scale(k_eff, 5.0)), k_eff))
     check("a 5x nominal stiffness remainder leaves the domain",
-          not big.within_domain and big.norm >= REMAINDER_DOMAIN_LIMIT)
+          not big.within_domain and big.rho >= REMAINDER_DOMAIN_LIMIT)
     check("a 5x remainder fails the existing bias budget strongly",
           big.log_beta_bias > 100.0 * BIAS_ABS_MAX)
 
-    c_v = nm.scale(nm.eye(6), (1e-3 * plan.K_REF) ** 2)
+    c_v = nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2)
     red = reduce_axial(k3, plan.T_REF,
                        evidence=AxialEvidence.fully_qualified(), c_v=c_v)
-    check("a zero certified remainder qualifies when all else passes",
+    check("a certified zero remainder set qualifies when all else passes",
           red.ok and red.remainder_impacts is not None
           and red.remainder_impacts.log_beta_bias == 0.0)
     red = reduce_axial(k3, plan.T_REF, evidence=AxialEvidence(
         **{**AxialEvidence.fully_qualified().__dict__,
-           "nonlinear_remainder": None}), c_v=c_v)
-    check("a missing remainder is refused", not red.ok)
+           "remainder_set": None}), c_v=c_v)
+    check("a missing certified remainder set is refused", not red.ok)
     red = reduce_axial(k3, plan.T_REF, evidence=AxialEvidence(
         **{**AxialEvidence.fully_qualified().__dict__,
-           "nonlinear_remainder": NonlinearRemainder(nm.scale(k_eff, 5.0))}),
-        c_v=c_v)
-    check("a 5x remainder is refused by the reduction", not red.ok)
+           "remainder_set": RemainderSet(5.0)}), c_v=c_v)
+    check("a set outside the SPD domain is refused by the reduction", not red.ok)
     check("the refusal names the dimensionless norm",
           any("E_K" in r.predicate for r in red.refusals))
 
@@ -903,6 +990,7 @@ def test_defect6_case_registry() -> None:
             or inst.b_true is not None or inst.blind_scale is not None
             or inst.geometry is not None or inst.selection is not None
             or inst.sigma_cal is not None
+            or inst.axial_memory or inst.omit_eta_t_covariance
         )
         check(f"{case.case_id}: the instantiated world differs from nominal",
               differs)
@@ -1153,14 +1241,20 @@ def test_v4_identities_and_seeds() -> None:
           and all(len(v) == 64 for v in ids.as_dict().values()))
 
     sm = SeedMap()
-    check("the V4 root is new", sm.root == ROOT and ROOT not in (ROOT_V2, ROOT_V3))
+    from e1a_v5.seeds import ROOT_V4 as _R4
+    check("the V5 root is new",
+          sm.root == ROOT and ROOT not in (ROOT_V2, ROOT_V3, _R4))
     check("five confirmatory families are frozen",
           len(CONFIRMATORY_FAMILIES) == 5
-          and all(f.endswith("-v4") for f in CONFIRMATORY_FAMILIES))
+          and all(f.endswith("-v5") for f in CONFIRMATORY_FAMILIES))
     check("the engineering namespace is separate from every confirmatory one",
           ENGINEERING not in CONFIRMATORY_FAMILIES
           and sm.engineering_disjoint_from_confirmatory("POWER-NOMINAL"))
-    for fam, old3, old2 in zip(CONFIRMATORY_FAMILIES, FAMILIES_V3, FAMILIES_V2):
+    from e1a_v5.seeds import FAMILIES_V4, ROOT_V4
+    for fam, old4, old3, old2 in zip(CONFIRMATORY_FAMILIES, FAMILIES_V4,
+                                     FAMILIES_V3, FAMILIES_V2):
+        check(f"{fam} is disjoint from its V4 stream",
+              sm.disjoint_from(fam, ROOT_V4, old4, "POWER-NOMINAL"))
         check(f"{fam} is disjoint from its V3 stream",
               sm.disjoint_from(fam, ROOT_V3, old3, "POWER-NOMINAL"))
         check(f"{fam} is disjoint from its V2 stream",

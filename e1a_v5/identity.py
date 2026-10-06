@@ -52,7 +52,15 @@ GENERATOR_MODULES: tuple[str, ...] = ("rng.py", "generate.py")
 #: ``verdict.py`` is likewise included: the authoritative success predicate
 #: lives there, and the power runner now delegates to it.
 #:
-#: V4 adds the four modules that decide what a result MEANS: ``evidence.py``
+#: V5 adds every remaining module whose bytes can change a validation
+#: outcome: ``certified.py`` and ``calibration.py`` (the certified
+#: sensitivity and its enclosure), ``observation.py`` (whether a record is
+#: inside the declared T 15.2 envelope at all), ``reduction.py`` (the exact
+#: finite axial effects routed into the budgets), ``generate.py`` (the 3D
+#: hidden-memory world) and ``validation/contract.py`` (the plan-to-code
+#: correspondence rule itself).
+#:
+#: V4 added the four modules that decide what a result MEANS: ``evidence.py``
 #: (whether the evidence is the preregistered experiment at all),
 #: ``diagnostics.py`` (the one authoritative diagnostic-family result),
 #: ``validation/dispatch.py`` (which world each case instantiates) and
@@ -66,9 +74,15 @@ VALIDATION_MODULES: tuple[str, ...] = (
     "evidence.py",
     "pipeline.py",
     "diagnostics.py",
+    "certified.py",
+    "calibration.py",
+    "observation.py",
+    "reduction.py",
+    "generate.py",
     os.path.join("validation", "__init__.py"),
     os.path.join("validation", "plan.py"),
     os.path.join("validation", "cases.py"),
+    os.path.join("validation", "contract.py"),
     os.path.join("validation", "dispatch.py"),
     os.path.join("validation", "events.py"),
     os.path.join("validation", "harness.py"),
@@ -178,6 +192,12 @@ def validation_preimage() -> dict[str, object]:
             "validation/events.py": "whether a replicate realised its event",
             "evidence.py": "whether the evidence is the planned experiment",
             "diagnostics.py": "the authoritative diagnostic-family result",
+            "certified.py": "the certified derivative arithmetic",
+            "calibration.py": "the certified sensitivity and its enclosure",
+            "observation.py": "the T 15.2 observation-domain qualification",
+            "reduction.py": "the exact finite axial-remainder effects",
+            "generate.py": "the synthetic worlds, including 3D hidden memory",
+            "validation/contract.py": "the plan-to-code correspondence rule",
             "verdict.py": "verdict classification table",
             "pipeline.py": "the authoritative complete-success predicate",
             "validation/harness.py": "record execution and gate evaluation",

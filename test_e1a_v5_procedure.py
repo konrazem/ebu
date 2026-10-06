@@ -134,12 +134,13 @@ def test_axial_refusals() -> None:
     from e1a_v5.reduction import (
         AxialEvidence, NonlinearRemainder, REMAINDER_DOMAIN_LIMIT, schur_complement,
     )
-    full = AxialEvidence.fully_qualified()
     Cv = nm.scale(nm.eye(6), 1e-12)
-    # V4: the remainder is a typed stiffness residual compared against K_eff,
-    # so an "excessive" remainder is one that is large RELATIVE to the matrix
-    # it perturbs, not one that exceeds a number in N/m.
-    big_remainder = NonlinearRemainder(nm.scale(schur_complement(K), 5.0))
+    # V5: qualification is over a certified SET of admissible normalised
+    # remainders, not one evaluated witness, and an "excessive" set is one
+    # that leaves the domain where the linearisation it bounds is defined.
+    from e1a_v5.reduction import RemainderSet
+    full = AxialEvidence.fully_qualified(RemainderSet(1.0e-4, "test"))
+    big_remainder = RemainderSet(5.0, "outside the SPD domain")
 
     def ev(**kw):
         return AxialEvidence(**{**full.__dict__, **kw})
@@ -156,8 +157,10 @@ def test_axial_refusals() -> None:
          "support_qualified qualified"),
         ("unqualified temporal", dict(k3=K, evidence=ev(temporal_reduction_qualified=False)),
          "temporal_reduction_qualified qualified"),
-        ("large remainder", dict(k3=K, evidence=ev(nonlinear_remainder=big_remainder)),
+        ("large remainder set", dict(k3=K, evidence=ev(remainder_set=big_remainder)),
          f"||E_K||_op < {REMAINDER_DOMAIN_LIMIT}"),
+        ("missing remainder set", dict(k3=K, evidence=ev(remainder_set=None)),
+         "certified remainder set supplied"),
         ("unqualified conservativity", dict(k3=K, evidence=ev(conservativity_qualified=False)),
          "conservativity qualified"),
         ("asymmetric K3",

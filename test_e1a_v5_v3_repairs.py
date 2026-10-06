@@ -23,12 +23,13 @@ from e1a_v5.calibration import (
     PrimitiveVector,
     Scope,
     build_experiment_calibration,
+    certified_profiled_sensitivity,
     expected_loglik_per_frame,
     innovation_covariance_under_truth,
-    profiled_sensitivity,
     steady_state_gain,
     truth_matching_theta,
 )
+from e1a_v5 import certified as cert
 from e1a_v5.confidence import (
     CEILING_FAIL, CEILING_PASS, CEILING_UNRESOLVED, DELTA_A, DELTA_C, Interval,
     SIGMA_CAL_ABS_MAX, SIGMA_CAL_CONTRAST_MAX, BIAS_ABS_MAX,
@@ -56,8 +57,10 @@ from e1a_v5.pipeline import (
     record_key,
 )
 from e1a_v5.evidence import (
-    BiasEvidence, ContrastKey, GateLimit, RecordKey, ScientificInterval,
+    BiasEvidence, ContrastKey, GateFamily, GateLimit, RecordKey,
+    ScientificInterval, synthetic_calibrated_gate_fixture,
 )
+from e1a_v5.validation.run import DOMAIN_IDENTITY, PROCEDURE_VERSION
 from e1a_v5.diagnostics import (
     DiagnosticComponents, NullScales, RecordDiagnostic, evaluate_diagnostic_family,
 )
@@ -88,6 +91,25 @@ def close(a: float, b: float, tol: float = 1e-12) -> bool:
 # ===========================================================================
 
 FIXTURE_CRIT = synthetic_calibrated()
+FIXTURE_GATE_PROC = {
+    f: synthetic_calibrated_gate_fixture(f, 0.0) for f in GateFamily
+}
+
+
+def fixture_limit(family: GateFamily, statistic: float, limit: float) -> GateLimit:
+    """A TEST-ONLY calibrated gate limit at a chosen value.
+
+    V5 removed ``GateLimit.calibrated(statistic, limit, identity)``: a bare
+    string granted calibration, so a raw statistic became a passing limit.
+    Fixtures now go through the typed artifact, whose radius is what sets the
+    limit, and which the production builder refuses.
+    """
+    proc = synthetic_calibrated_gate_fixture(family, max(0.0, limit - statistic))
+    return GateLimit.from_procedure(
+        statistic, proc, family, PROCEDURE_VERSION, DOMAIN_IDENTITY,
+        allow_fixture=True,
+    )
+
 FIXTURE_GATE = "SYNTHETIC FIXTURE - not a calibration"
 
 
@@ -104,10 +126,10 @@ def _good_record(b: BlockId, f: FieldId) -> RecordResultV4:
         log_beta=est, log_beta_se=se,
         absolute=ScientificInterval(iv, est, se, FIXTURE_CRIT, bias),
         absolute_bias=BiasEvidence.qualified(bias, "fixture"),
-        shape=GateLimit.calibrated(0.01, 0.02, FIXTURE_GATE),
-        centre=GateLimit.calibrated(0.01, 0.02, FIXTURE_GATE),
-        stationarity=GateLimit.calibrated(0.3, 0.5, FIXTURE_GATE),
-        current=GateLimit.calibrated(0.001, 0.005, FIXTURE_GATE),
+        shape=fixture_limit(GateFamily.SHAPE, 0.01, 0.02),
+        centre=fixture_limit(GateFamily.CENTRE, 0.01, 0.02),
+        stationarity=fixture_limit(GateFamily.STATIONARITY, 0.3, 0.5),
+        current=fixture_limit(GateFamily.CURRENT, 0.001, 0.005),
         evaluable=True,
     )
 
@@ -161,11 +183,11 @@ def test_defect1_complete_counting() -> None:
         "absolute interval outside margin":
             ("absolute", ScientificInterval(Interval(-0.2, 0.2))),
         "geometry limit at tolerance":
-            ("shape", GateLimit.calibrated(0.01, DELTA_G, FIXTURE_GATE)),
+            ("shape", fixture_limit(GateFamily.SHAPE, 0.01, DELTA_G)),
         "centre limit at tolerance":
-            ("centre", GateLimit.calibrated(0.01, DELTA_M, FIXTURE_GATE)),
+            ("centre", fixture_limit(GateFamily.CENTRE, 0.01, DELTA_M)),
         "current limit at tolerance":
-            ("current", GateLimit.calibrated(0.001, DELTA_R_IRR, FIXTURE_GATE)),
+            ("current", fixture_limit(GateFamily.CURRENT, 0.001, DELTA_R_IRR)),
         "NaN absolute interval":
             ("absolute", ScientificInterval(Interval(float("nan"), 0.0))),
     }
@@ -450,10 +472,11 @@ def test_defect6_axial_fail_closed() -> None:
         rr2 = reduce_axial(K, 298.0, partial_false, Cv)
         check(f"defect6: failed {name} is refused", not rr2.ok)
 
-    # A missing remainder bound is refused even though 0.0 would pass.
+    # A missing remainder SET is refused even though a zero set would pass.
+    # V5 qualifies the certified set, not one evaluated witness.
     full = AxialEvidence.fully_qualified()
-    no_rem = AxialEvidence(**{**full.__dict__, "nonlinear_remainder": None})
-    check("defect6: missing nonlinear remainder bound is refused",
+    no_rem = AxialEvidence(**{**full.__dict__, "remainder_set": None})
+    check("defect6: missing certified remainder set is refused",
           not reduce_axial(K, 298.0, no_rem, Cv).ok)
 
     # Complete evidence plus covariance qualifies.
@@ -573,8 +596,25 @@ def _scalar_builder(stiffness: float = 1.0e-4, temperature: float = 298.0):
     return build
 
 
+def _scalar_generic_builder(stiffness: float = 1.0e-4, temperature: float = 298.0):
+    """The same map over the generic kernel, for certified differentiation."""
+    k_true = nm.mat([[stiffness, 0.0], [0.0, stiffness]])
+    from e1a_v5.calibration import AnalysisModel
+
+    def build(phi):
+        k_meas = cert.gscale(k_true, cert.gexp(phi[0]))
+        inv_kt = cert.gexp(-phi[1]) * (1.0 / (K_B * temperature))
+        return AnalysisModel(
+            h_locked=cert.gscale(k_meas, inv_kt), p_matrix=nm.eye(2),
+            r_obs=nm.scale(nm.eye(2), 0.02 * (K_B * temperature / stiffness)),
+            b_det=(0.0, 0.0), dt=1.2e-5, t_exp=4e-6)
+
+    return build
+
+
 def test_cphi_end_to_end() -> None:
     build = _scalar_builder()
+    generic = _scalar_generic_builder()
     base_model = build([0.0, 0.0])
     H0 = base_model.h_eff
     truth = base_model.truth_state_space()
@@ -592,7 +632,8 @@ def test_cphi_end_to_end() -> None:
     # Sensitivities match the exact analytic values, with the PRODUCTION sign.
     #   Sigma_m = exp(-b) H_A^{-1} matched to Sigma_true with
     #   H_A = K exp(phi0) / (k_B T exp(phi1))  gives  b* = phi1 - phi0.
-    ps = profiled_sensitivity(build, [0.0, 0.0], phi_sigma=[6.0e-3, 1.0e-3])
+    ps = certified_profiled_sensitivity(
+        generic, build, [0.0, 0.0], phi_sigma=[6.0e-3, 1.0e-3])
     j = ps.jacobian[LOG_BETA_ROW]
     r = ps.radius[LOG_BETA_ROW]
     check("cphi: d log beta / d log MEASURED stiffness = -1",
@@ -633,7 +674,8 @@ def test_cphi_end_to_end() -> None:
     shared.add(Primitive("common_T", Scope.GLOBAL, 0.0, 1e-12))
     k0 = record_key(BlockId.BLOCK1, FieldId.THETA0)
     k1 = record_key(BlockId.BLOCK1, FieldId.THETA1)
-    cov = build_experiment_calibration(shared, [(k0, build), (k1, build)])
+    cov = build_experiment_calibration(
+        shared, [(k0, build, generic), (k1, build, generic)])
     a0 = cov.absolute_sigma(k0).point
     a1 = cov.absolute_sigma(k1).point
     check("cphi: a common scale error gives equal absolute sigmas",
@@ -656,7 +698,14 @@ def test_cphi_end_to_end() -> None:
     def b1(phi):
         return build([phi[1], 0.0])
 
-    cov2 = build_experiment_calibration(perfield, [(k0, b0), (k1, b1)])
+    def g0(phi):
+        return _scalar_generic_builder()([phi[0], 0.0])
+
+    def g1(phi):
+        return _scalar_generic_builder()([phi[1], 0.0])
+
+    cov2 = build_experiment_calibration(
+        perfield, [(k0, b0, g0), (k1, b1, g1)])
     got = cov2.contrast_sigma(k1, k0).point
     check("cphi: independent per-field errors do not cancel",
           close(got, math.sqrt(2) * 0.006, 1e-3), f"{got}")
@@ -666,7 +715,7 @@ def test_cphi_end_to_end() -> None:
         v = PrimitiveVector()
         v.add(Primitive("s", Scope.GLOBAL, 0.0, sigma))
         v.add(Primitive("t", Scope.GLOBAL, 0.0, 1e-12))
-        c = build_experiment_calibration(v, [(k0, build)])
+        c = build_experiment_calibration(v, [(k0, build, generic)])
         cls = c.absolute_qualification(k0)
         check(f"cphi: absolute sigma {sigma} vs the 0.009 ceiling",
               cls == expect, f"{c.absolute_sigma(k0).point} -> {cls}")
@@ -677,7 +726,7 @@ def test_cphi_end_to_end() -> None:
                         block=BlockId.BLOCK1, fld=FieldId.THETA0))
         v.add(Primitive("scale", Scope.FIELD, 0.0, sq,
                         block=BlockId.BLOCK1, fld=FieldId.THETA1))
-        c = build_experiment_calibration(v, [(k0, b0), (k1, b1)])
+        c = build_experiment_calibration(v, [(k0, b0, g0), (k1, b1, g1)])
         cls = c.contrast_qualification(k1, k0)
         check(f"cphi: contrast sigma {sigma} vs the 0.003 ceiling",
               cls == expect, f"{c.contrast_sigma(k1, k0).point} -> {cls}")
@@ -686,7 +735,7 @@ def test_cphi_end_to_end() -> None:
     v = PrimitiveVector()
     v.add(Primitive("s", Scope.GLOBAL, 0.0, SIGMA_CAL_ABS_MAX))
     v.add(Primitive("t", Scope.GLOBAL, 0.0, 1e-12))
-    c = build_experiment_calibration(v, [(k0, build)])
+    c = build_experiment_calibration(v, [(k0, build, generic)])
     check("cphi: a value exactly at the 0.009 ceiling is not silently passed",
           c.absolute_qualification(k0) in (CEILING_PASS, CEILING_UNRESOLVED),
           f"{c.absolute_sigma(k0).point} -> {c.absolute_qualification(k0)}")
@@ -695,25 +744,28 @@ def test_cphi_end_to_end() -> None:
 def test_v3_seed_namespaces() -> None:
     from e1a_v5.seeds import (
         CONFIRMATORY_FAMILIES, ENGINEERING, FAMILIES, FAMILIES_V2, FAMILIES_V3,
-        ROOT, ROOT_V2, ROOT_V3, SeedMap,
+        FAMILIES_V4, ROOT, ROOT_V2, ROOT_V3, ROOT_V4, SeedMap,
     )
     sm = SeedMap()
-    check("seeds: the V4 root differs from V3 and V2",
-          ROOT != ROOT_V3 and ROOT != ROOT_V2)
+    check("seeds: the V5 root differs from V4, V3 and V2",
+          ROOT not in (ROOT_V4, ROOT_V3, ROOT_V2))
     check("seeds: every confirmatory family name is versioned",
-          all(f.endswith("-v4") for f in CONFIRMATORY_FAMILIES))
+          all(f.endswith("-v5") for f in CONFIRMATORY_FAMILIES))
     check("seeds: five distinct confirmatory families",
           len({sm.family_seed(f) for f in CONFIRMATORY_FAMILIES}) == 5)
-    for f4, f3, f2 in zip(CONFIRMATORY_FAMILIES, FAMILIES_V3, FAMILIES_V2):
-        check(f"seeds: {f4} is disjoint from the V3 stream",
-              sm.disjoint_from(f4, ROOT_V3, f3, "POWER-NOMINAL"))
-        check(f"seeds: {f4} is disjoint from the V2 stream",
-              sm.disjoint_from(f4, ROOT_V2, f2, "POWER-NOMINAL"))
+    for f5, f4, f3, f2 in zip(CONFIRMATORY_FAMILIES, FAMILIES_V4,
+                              FAMILIES_V3, FAMILIES_V2):
+        check(f"seeds: {f5} is disjoint from the V4 stream",
+              sm.disjoint_from(f5, ROOT_V4, f4, "POWER-NOMINAL"))
+        check(f"seeds: {f5} is disjoint from the V3 stream",
+              sm.disjoint_from(f5, ROOT_V3, f3, "POWER-NOMINAL"))
+        check(f"seeds: {f5} is disjoint from the V2 stream",
+              sm.disjoint_from(f5, ROOT_V2, f2, "POWER-NOMINAL"))
     check("seeds: the engineering namespace is not confirmatory",
           ENGINEERING not in CONFIRMATORY_FAMILIES)
     allseeds = {sm.replicate_seed(f, c, r)
                 for f in FAMILIES for c in ("A", "B") for r in range(40)}
-    check("seeds: V4 replicate namespaces are disjoint",
+    check("seeds: V5 replicate namespaces are disjoint",
           len(allseeds) == len(FAMILIES) * 2 * 40)
     check("seeds: derivation is reproducible",
           sm.replicate_seed(FAMILIES[0], "X", 7)

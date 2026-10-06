@@ -53,6 +53,11 @@ SIGMA_CAL_ABSOLUTE = 0.0060
 SIGMA_CAL_CELL = 0.0015
 #: Certified bounded systematic log-beta contribution per cell.
 BIAS_PER_CELL = 0.00025
+#: Relative standard uncertainty of each axial primitive in the declared
+#: Branch-A covariance, and the coverage factor the certified remainder set is
+#: constructed at.
+PRIMITIVE_RELATIVE_SIGMA = 1.0e-3
+REMAINDER_COVERAGE_K = 3.0
 
 
 def rotation(theta: float) -> list[list[float]]:
@@ -131,7 +136,8 @@ def conditioned_stiffness(
 
 
 def k3_from_lateral(
-    k_lateral: list[list[float]], coupling: float = AXIAL_COUPLING
+    k_lateral: list[list[float]], coupling: float = AXIAL_COUPLING,
+    axial_fraction: float = AXIAL_FRACTION,
 ) -> list[list[float]]:
     """Build a 3D stiffness whose SCHUR COMPLEMENT is exactly ``k_lateral``.
 
@@ -139,8 +145,8 @@ def k3_from_lateral(
     conditioning target set on the lateral matrix survives the axial reduction
     instead of being perturbed by the coupling.
     """
-    kz = AXIAL_FRACTION * K_REF
-    b = [coupling * K_REF, 0.5 * coupling * K_REF]
+    kz = axial_fraction * K_REF
+    b = [coupling * K_REF, 0.6 * coupling * K_REF]
     k_qq = [
         [k_lateral[i][j] + b[i] * b[j] / kz for j in range(2)] for i in range(2)
     ]
@@ -180,3 +186,74 @@ SMOKE_POWER_REPLICATES = 12
 SMOKE_CONTROL_REPLICATES = 20
 SMOKE_CALIBRATION_REPLICATES = 240
 SMOKE_LABEL = "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT"
+
+
+def remainder_set(k3: list[list[float]], coverage_k: float = REMAINDER_COVERAGE_K):
+    """The certified admissible remainder set for one record's reduction.
+
+    Built from the declared primitive covariance by the closed-form bound in
+    :func:`~e1a_v5.reduction.certified_remainder_radius`, at a stated coverage
+    factor.  Every step of that bound is an inequality, so the resulting set
+    covers the whole primitive uncertainty region rather than one sampled
+    perturbation.
+    """
+    from ..reduction import RemainderSet, certified_remainder_radius, schur_complement, split_3d
+    _, b, kappa = split_3d(nm.symmetrise(k3))
+    sd = PRIMITIVE_RELATIVE_SIGMA * K_REF
+    rho = certified_remainder_radius(
+        [b[0][0], b[1][0]], kappa, schur_complement(k3),
+        db_norm=coverage_k * sd * math.sqrt(2.0),
+        dkappa=coverage_k * sd,
+    )
+    return RemainderSet(
+        rho,
+        f"closed-form Schur remainder bound at {coverage_k} sigma of the "
+        f"declared primitive covariance",
+    )
+
+
+# ---------------------------------------------------------------------------
+# CTL-AXIAL-MEMORY: the prospective 3D hidden-memory world
+# ---------------------------------------------------------------------------
+#
+# Chosen prospectively, before any outcome is inspected: the largest coupling
+# that keeps K3 positive definite and the lateral Schur complement comfortably
+# inside the conditioning limit while leaving a clearly non-Markov lateral lag
+# structure.  The axial mode is deliberately SOFT, so it relaxes slowly and its
+# memory survives at the sampled lags.
+AXIAL_MEMORY_COUPLING = 0.15
+AXIAL_MEMORY_AXIAL_FRACTION = 0.08
+
+
+def axial_memory_k3(field_index: int) -> list[list[float]]:
+    """3D stiffness whose SCHUR COMPLEMENT is the nominal lateral field.
+
+    The lateral marginal density is therefore exactly the one the bridge
+    expects, ``Sigma_qq = k_B T K_eff^{-1}``, and only the lateral PATH
+    differs.  That isolates the control on temporal-model qualification rather
+    than confounding it with a density mismatch.
+    """
+    return k3_from_lateral(
+        nominal_stiffness(field_index),
+        coupling=AXIAL_MEMORY_COUPLING,
+        axial_fraction=AXIAL_MEMORY_AXIAL_FRACTION,
+    )
+
+
+# ---------------------------------------------------------------------------
+# CTL-ETA-T-COV: the shared thermometry dependency
+# ---------------------------------------------------------------------------
+#
+# The stiffness standard is realised by equipartition against a measured
+# temperature, so an error in the temperature standard enters the reported
+# stiffness as well as the explicit ``-H dT/T`` term.  The two therefore share
+# one variable and are POSITIVELY correlated.
+#
+# The misspecified alternative treats them as independent.  Because
+# ``d log beta*/d log k_A = -1`` and ``d log beta*/d log T_A = +1``, the
+# correct variance carries ``-2 rho sigma_k sigma_T`` and the omission
+# OVERSTATES the uncertainty at this design point.  That direction is a
+# property of this primitive map, not a general rule: V4 asserted that
+# omitting the covariance always understates, which the V4 exact check itself
+# contradicted, and the assertion is removed.
+ETA_T_CORRELATION = 0.7

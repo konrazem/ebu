@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Callable, Mapping, Sequence
 
+from . import certified as cert
 from . import numerics as nm
 from .numerics import Matrix, NumericalFailure
 from .likelihood import (
@@ -36,6 +37,7 @@ from .likelihood import (
 from .observation import StateSpace, build_state_space
 from .optimize import minimise
 from .confidence import (
+    CEILING_UNRESOLVED,
     SIGMA_CAL_ABS_MAX,
     SIGMA_CAL_CONTRAST_MAX,
     NumericalEnclosure,
@@ -466,65 +468,6 @@ class SensitivityFailure(NumericalFailure):
     """The U.20 system could not be formed or solved."""
 
 
-def _evaluation_noise(f: Callable[[Sequence[float]], float], n_z: int) -> float:
-    """Measure the absolute evaluation noise of ``f`` near the origin.
-
-    ``f`` is mathematically smooth, so over a window far narrower than any
-    real curvature scale its exact values lie on a low-order polynomial.
-    Whatever departs from that polynomial is floating-point noise.  Fitting a
-    quadratic by least squares over a 1e-6 window and taking the largest
-    residual gives the absolute error of ONE evaluation, which is the
-    constant the finite-difference roundoff bound needs.  It is measured here
-    rather than assumed, because it depends on the conditioning of this
-    record's own Riccati and Lyapunov solves.
-    """
-    width = 1e-6
-    probes = 9
-    ts = [width * (2.0 * k / (probes - 1) - 1.0) for k in range(probes)]
-    vals = []
-    for t in ts:
-        z = [0.0] * n_z
-        z[0] = t
-        vals.append(f(z))
-    # Least squares quadratic fit in t.
-    n = len(ts)
-    basis = [[1.0, t, t * t] for t in ts]
-    ata = [[sum(basis[k][i] * basis[k][j] for k in range(n)) for j in range(3)]
-           for i in range(3)]
-    atb = [[sum(basis[k][i] * vals[k] for k in range(n))] for i in range(3)]
-    coef = [row[0] for row in nm.lu_solve(ata, atb)]
-    resid = max(abs(vals[k] - sum(coef[i] * basis[k][i] for i in range(3)))
-                for k in range(n))
-    floor = 8.0 * 2.220446049250313e-16 * max(abs(v) for v in vals)
-    return max(resid, floor)
-
-
-@dataclass(frozen=True)
-class ProfiledSensitivity:
-    """``d theta* / d phi`` with a certified componentwise error enclosure."""
-
-    #: Full profiled Jacobian, ``N_THETA`` rows by ``len(phi)`` columns.
-    jacobian: Matrix
-    #: Componentwise certified absolute error radius of ``jacobian``.
-    radius: Matrix
-    #: Measured absolute evaluation error of the expected log likelihood.
-    evaluation_noise: float
-    #: Condition of the profiled expected-information matrix.
-    information_condition: float
-    #: Dimensionless differencing steps actually used.
-    theta_step: float
-    phi_step: tuple[float, ...]
-    method: str = "implicit differentiation of the expected-score system"
-
-    @property
-    def log_beta_row(self) -> list[float]:
-        return list(self.jacobian[LOG_BETA_ROW])
-
-    @property
-    def log_beta_radius(self) -> list[float]:
-        return list(self.radius[LOG_BETA_ROW])
-
-
 def primitive_steps(
     phi: Sequence[float],
     phi_sigma: Sequence[float] | None,
@@ -532,18 +475,12 @@ def primitive_steps(
     rel_step: float,
     abs_step: float,
 ) -> list[float]:
-    """Differencing step for each primitive, in that primitive's own units.
+    """Step for each primitive, in that primitive's own units.
 
-    The declared standard uncertainty is the right scale: it is exactly the
-    range over which the linearisation is going to be used, and it carries the
-    primitive's units, so one dimensionless fraction serves every primitive.
-    A single absolute step cannot: 1e-3 is a sensible log-stiffness step and a
-    one-millimetre detector offset, and the second is nine orders of magnitude
-    past the bead's own position scale.
-
-    Falling back to a relative or absolute step when no uncertainty is
-    declared is for diagnostics only; the official path always supplies
-    ``phi_sigma`` from ``C_phi``'s own diagonal.
+    Used only by the non-certified optimisation cross-check.  The declared
+    standard uncertainty carries the primitive's units, so one dimensionless
+    fraction serves every primitive; a single absolute step cannot, since 1e-3
+    is a sensible log-stiffness step and a one-millimetre detector offset.
     """
     out: list[float] = []
     for k, v in enumerate(phi):
@@ -557,155 +494,37 @@ def primitive_steps(
     return out
 
 
-def profiled_sensitivity(
-    builder: FieldModelBuilder,
-    phi: Sequence[float],
-    truth: StateSpace | None = None,
-    theta_step: float = 1e-3,
-    phi_sigma: Sequence[float] | None = None,
-    phi_step_fraction: float = 1.0,
-    phi_rel_step: float = 1e-3,
-    phi_abs_step: float = 1e-3,
-) -> ProfiledSensitivity:
-    """The U.20 production derivative, with the full nuisance system profiled.
+@dataclass(frozen=True)
+class ProfiledSensitivity:
+    """A NON-CERTIFIED profiled sensitivity, retained only as a cross-check.
 
-    Implements option A of the brief directly::
+    V4 produced this by central differences and attached a "certified"
+    enclosure built from fine/coarse agreement plus a least-squares smoothness
+    residual.  Independent audit rejected that, correctly: agreement between
+    two finite-difference steps constrains the difference of their truncation
+    remainders, not either remainder, and a fitted residual at sampled points
+    bounds nothing between them.
 
-        d theta* / d phi = - (d_theta E s)^{-1} (d_phi E s)
-
-    where ``E s = d_theta L`` and ``L`` is the exact expected T.6 log
-    likelihood per frame.  Because ``L`` is available in closed form through a
-    discrete Lyapunov solve, both blocks are second derivatives of a smooth
-    deterministic function; no trajectory is generated and no inner optimiser
-    noise enters.  The log-beta row is extracted only after the full system --
-    scale, centre and the temporal nuisance ``A`` -- has been solved.
-
-    The truth is held FIXED.  ``phi`` moves the analysis side only, which is
-    what a calibration measurement error physically does.
+    The finite-difference route is gone from the production path.  What
+    remains here is the profiled-optimisation cross-check, whose radius comes
+    from a genuine backward-error bound on the located maximum -- but which is
+    still not a bound on truncation, so ``certified`` is False and no
+    qualification may be taken from it.
     """
-    phi = [float(v) for v in phi]
-    base = builder(phi)
-    if truth is None:
-        truth = base.truth_state_space()
-    theta0 = truth_matching_theta(base)
-    sc = ThetaScaling.for_model(base, theta0)
-    p = len(phi)
 
-    # Keyed by the STEP as well as the direction: the coarse pass uses a
-    # different phi step, and reusing the fine models there would silently
-    # halve the coarse derivative and poison the consistency radius.
-    analysis_cache: dict[tuple[int, int, float], AnalysisModel] = {}
+    jacobian: Matrix
+    radius: Matrix
+    phi_step: tuple[float, ...] = ()
+    certified: bool = False
+    method: str = "central differences of the profiled pseudo-true parameter"
 
-    def analysis_at(k: int, sign: int, step: float) -> AnalysisModel:
-        if sign == 0:
-            return base.analysis
-        key = (k, sign, step)
-        if key not in analysis_cache:
-            q = list(phi)
-            q[k] += sign * step
-            analysis_cache[key] = builder(q).analysis
-        return analysis_cache[key]
+    @property
+    def log_beta_row(self) -> list[float]:
+        return list(self.jacobian[LOG_BETA_ROW])
 
-    def loglik(z: Sequence[float], am: AnalysisModel) -> float:
-        try:
-            return expected_loglik_per_frame(truth, model_state_space(sc.to_theta(theta0, z), am))
-        except NumericalFailure as exc:
-            raise SensitivityFailure(f"expected likelihood not evaluable: {exc}") from exc
-
-    eps_l = _evaluation_noise(lambda z: loglik(z, base.analysis), N_THETA)
-
-    steps_phi = primitive_steps(
-        phi, phi_sigma, phi_step_fraction, phi_rel_step, phi_abs_step
-    )
-
-    def jac_at(h: float, gfac: float) -> tuple[Matrix, Matrix, float]:
-        """Return ``(J, H, cond)`` at dimensionless theta step ``h``."""
-        zero = [0.0] * N_THETA
-        l0 = loglik(zero, base.analysis)
-
-        def lz(idx: Sequence[int], signs: Sequence[int], am: AnalysisModel) -> float:
-            z = [0.0] * N_THETA
-            for i, sgn in zip(idx, signs):
-                z[i] += sgn * h
-            return loglik(z, am)
-
-        hess = nm.zeros(N_THETA, N_THETA)
-        for i in range(N_THETA):
-            hess[i][i] = (lz([i], [1], base.analysis) - 2.0 * l0
-                          + lz([i], [-1], base.analysis)) / (h * h)
-        for i in range(N_THETA):
-            for jx in range(i + 1, N_THETA):
-                v = (lz([i, jx], [1, 1], base.analysis)
-                     - lz([i, jx], [1, -1], base.analysis)
-                     - lz([i, jx], [-1, 1], base.analysis)
-                     + lz([i, jx], [-1, -1], base.analysis)) / (4.0 * h * h)
-                hess[i][jx] = v
-                hess[jx][i] = v
-
-        cross = nm.zeros(N_THETA, p)
-        for k in range(p):
-            gk = gfac * steps_phi[k]
-            am_up = analysis_at(k, +1, gk)
-            am_dn = analysis_at(k, -1, gk)
-            for i in range(N_THETA):
-                zp = [0.0] * N_THETA; zp[i] = h
-                zm = [0.0] * N_THETA; zm[i] = -h
-                cross[i][k] = (
-                    loglik(zp, am_up) - loglik(zm, am_up)
-                    - loglik(zp, am_dn) + loglik(zm, am_dn)
-                ) / (4.0 * h * gk)
-
-        try:
-            sol = nm.lu_solve(hess, cross)
-        except NumericalFailure as exc:
-            raise SensitivityFailure(
-                f"profiled expected information is not invertible: {exc}"
-            ) from exc
-        jz = nm.scale(sol, -1.0)
-        vals, _ = nm.eigh(nm.symmetrise(hess))
-        lo = min(abs(v) for v in vals)
-        hi = max(abs(v) for v in vals)
-        cond = hi / lo if lo > 0.0 else float("inf")
-        # Back to model coordinates: theta = theta0 + S z.
-        j = [[sc.scale[i] * jz[i][k] for k in range(p)] for i in range(N_THETA)]
-        return j, hess, cond
-
-    j_fine, hess, cond = jac_at(theta_step, 1.0)
-    j_coarse, _, _ = jac_at(2.0 * theta_step, 2.0)
-
-    # Certified radius.  Two independent contributions, added:
-    #   * step consistency: the full fine/coarse gap, which for an h^2 scheme
-    #     is three times the Richardson error estimate, so this is
-    #     conservative;
-    #   * roundoff propagated through the linear solve: the mixed block
-    #     carries eps/(h g) and the information block eps/h^2, and the solve
-    #     amplifies both by ||H^{-1}||.
-    h = theta_step
-    inv_norm = 0.0
-    try:
-        hinv = nm.lu_solve(hess, nm.eye(N_THETA))
-        inv_norm = nm.op_norm(hinv)
-    except NumericalFailure:
-        inv_norm = float("inf")
-    radius = nm.zeros(N_THETA, p)
-    for i in range(N_THETA):
-        for k in range(p):
-            gk = steps_phi[k]
-            d_cross = eps_l / (h * gk)
-            d_hess = eps_l / (h * h)
-            # |dJ| <= ||H^-1|| (|dM| + |dH| |J|), in dimensionless coordinates.
-            jz_ik = abs(j_fine[i][k]) / sc.scale[i]
-            prop = inv_norm * (d_cross + d_hess * jz_ik) * sc.scale[i]
-            consistency = abs(j_fine[i][k] - j_coarse[i][k])
-            radius[i][k] = consistency + prop
-    return ProfiledSensitivity(
-        jacobian=j_fine,
-        radius=radius,
-        evaluation_noise=eps_l,
-        information_condition=cond,
-        theta_step=theta_step,
-        phi_step=tuple(steps_phi),
-    )
+    @property
+    def log_beta_radius(self) -> list[float]:
+        return list(self.radius[LOG_BETA_ROW])
 
 
 def dimensionless_score_and_information(
@@ -835,13 +654,7 @@ def profiled_sensitivity_by_optimisation(
             jac[i][k] = (t_up[i] - t_dn[i]) / (2.0 * step)
             rad[i][k] = sc.scale[i] * (e_up[i] + e_dn[i]) / (2.0 * step)
     return ProfiledSensitivity(
-        jacobian=jac,
-        radius=rad,
-        evaluation_noise=float("nan"),
-        information_condition=float("nan"),
-        theta_step=float("nan"),
-        phi_step=tuple(steps),
-        method="central differences of the profiled pseudo-true parameter",
+        jacobian=jac, radius=rad, phi_step=tuple(steps), certified=False,
     )
 
 
@@ -889,7 +702,7 @@ class ExperimentCalibration:
     c_phi: Matrix
     phi_names: tuple[str, ...]
     #: Full profiled sensitivity per record, retained for audit.
-    sensitivities: tuple[ProfiledSensitivity, ...] = ()
+    sensitivities: tuple["CertifiedSensitivity", ...] = ()
 
     def index_of(self, key: str) -> int:
         if key not in self.keys:
@@ -956,10 +769,27 @@ class ExperimentCalibration:
             "certified Jacobian enclosure propagated through C_phi",
         )
 
+    @property
+    def fully_certified(self) -> bool:
+        """Every record's sensitivity carries a certified enclosure.
+
+        Without this the three-way rule would be applied to an uncertified
+        number, which is exactly what the V4 audit rejected.  A single
+        uncertified row makes every qualification UNRESOLVED, which is
+        fail-closed.
+        """
+        return bool(self.sensitivities) and all(
+            s.certified for s in self.sensitivities
+        )
+
     def absolute_qualification(self, key: str) -> str:
+        if not self.fully_certified:
+            return CEILING_UNRESOLVED
         return classify_with_enclosure(self.absolute_sigma(key), SIGMA_CAL_ABS_MAX)
 
     def contrast_qualification(self, key: str, reference: str) -> str:
+        if not self.fully_certified:
+            return CEILING_UNRESOLVED
         return classify_with_enclosure(
             self.contrast_sigma(key, reference), SIGMA_CAL_CONTRAST_MAX
         )
@@ -979,9 +809,7 @@ class ExperimentCalibration:
 
 def build_experiment_calibration(
     vector: PrimitiveVector,
-    records: Sequence[tuple[str, FieldModelBuilder]],
-    theta_step: float = 1e-3,
-    phi_step_fraction: float = 1.0,
+    records: Sequence[tuple[str, FieldModelBuilder, GenericAnalysisBuilder]],
 ) -> ExperimentCalibration:
     """Propagate ``C_phi`` through every record to the joint log-beta covariance.
 
@@ -998,11 +826,10 @@ def build_experiment_calibration(
     rows: list[list[float]] = []
     radii: list[list[float]] = []
     keys: list[str] = []
-    sens: list[ProfiledSensitivity] = []
-    for key, builder in records:
-        ps = profiled_sensitivity(
-            builder, phi, theta_step=theta_step, phi_sigma=sigma,
-            phi_step_fraction=phi_step_fraction,
+    sens: list[CertifiedSensitivity] = []
+    for key, float_builder, generic_builder in records:
+        ps = certified_profiled_sensitivity(
+            generic_builder, float_builder, phi, phi_sigma=sigma,
         )
         keys.append(key)
         rows.append(ps.log_beta_row)
@@ -1060,4 +887,259 @@ def combined_contrast_standard_error(
         conditional_se_a * conditional_se_a
         + conditional_se_b * conditional_se_b
         + calibration_sigma * calibration_sigma
+    )
+
+
+# ---------------------------------------------------------------------------
+# Certified U.20 sensitivity: interval hyper-dual, no finite differences
+# ---------------------------------------------------------------------------
+
+def _spd_from_chol_generic(p):
+    """``L L^T`` from ``(log l11, l21, log l22)``, generically."""
+    l11 = cert.gexp(p[0])
+    l22 = cert.gexp(p[2])
+    L = [[l11, 0.0], [p[1], l22]]
+    return cert.gsym(cert.gmatmul(L, cert.gtranspose(L)))
+
+
+def model_state_space_generic(theta: Sequence, am: AnalysisModel):
+    """The analysis model at ``theta``, over float or interval hyper-dual.
+
+    Identical algebra to :func:`model_state_space`; the only difference is
+    that it runs on the generic kernel so a hyper-dual seed propagates through
+    it.  ``dt`` and ``t_exp`` must stay plain floats: they index the shutter
+    geometry, are compared against each other, and no calibration primitive in
+    the declared model moves them.
+    """
+    b = theta[0]
+    sigma = cert.gscale(cert.gspd_inverse(am.h_locked), cert.gexp(-b))
+    d_mat = _spd_from_chol_generic(theta[3:6])
+    om = theta[6]
+    q_mat = [[0.0, -om], [om, 0.0]]
+    a = cert.gmatmul(cert.gadd(d_mat, q_mat), cert.gspd_inverse(sigma))
+    return cert.gbuild_state_space(
+        a, sigma, [theta[1], theta[2]], am.p_matrix, am.r_obs,
+        list(am.b_det), am.dt, am.t_exp,
+    )
+
+
+#: A generic analysis builder maps a (possibly hyper-dual) primitive vector to
+#: an AnalysisModel whose matrices carry the same scalar type.
+GenericAnalysisBuilder = Callable[[Sequence], AnalysisModel]
+
+
+@dataclass(frozen=True)
+class CertifiedSensitivity:
+    """``d theta* / d phi`` with a rigorous enclosure of every component.
+
+    The enclosure covers, with nothing estimated:
+
+    ``truncation``
+        exactly zero.  Hyper-dual arithmetic evaluates the chain rule; there
+        is no step size and therefore no remainder term.
+
+    ``floating point``
+        interval arithmetic with outward rounding after every operation, so
+        the reported interval encloses the exact real result of the algorithm.
+
+    ``Riccati fixed point``
+        the one-step residual at the stopping point, divided by
+        ``1 - ||F_cl||^2``, the contraction factor of the Riccati map.
+
+    ``linear solve``
+        residual of the computed solution enclosed in interval arithmetic,
+        amplified by a Weyl-certified lower bound on the smallest eigenvalue
+        of the symmetric expected information.
+    """
+
+    jacobian: Matrix
+    radius: Matrix
+    #: Symmetric expected-information matrix and its certified inverse norm.
+    information: Matrix
+    information_inverse_norm: float
+    information_min_eigenvalue: float
+    #: Largest Riccati fixed-point bound over every evaluation, relative to
+    #: the latent covariance scale.
+    riccati_bound: float
+    #: Largest enclosure half-width over the second-derivative blocks,
+    #: relative to the largest entry of those blocks.
+    worst_second_derivative_radius: float
+    linear_solve_residual: float
+    certified: bool = True
+    method: str = (
+        "interval-arithmetic hyper-dual differentiation of the expected-score "
+        "system; no finite differences"
+    )
+
+    @property
+    def log_beta_row(self) -> list[float]:
+        return list(self.jacobian[LOG_BETA_ROW])
+
+    @property
+    def log_beta_radius(self) -> list[float]:
+        return list(self.radius[LOG_BETA_ROW])
+
+
+def _second_partial(
+    builder: GenericAnalysisBuilder,
+    truth,
+    theta0: Sequence[float],
+    scaling: "ThetaScaling",
+    phi: Sequence[float],
+    i_theta: int,
+    j_theta: int | None,
+    k_phi: int | None,
+    phi_scale: Sequence[float],
+):
+    """One exact mixed second partial of ``L``, with its enclosure.
+
+    ``e1`` is seeded on a dimensionless theta coordinate; ``e2`` on either a
+    second theta coordinate or a scaled primitive coordinate.
+    """
+    theta = []
+    for n in range(N_THETA):
+        s1 = scaling.scale[n] if n == i_theta else 0.0
+        s2 = scaling.scale[n] if (j_theta is not None and n == j_theta) else 0.0
+        if s1 == 0.0 and s2 == 0.0:
+            theta.append(float(theta0[n]))
+        else:
+            theta.append(cert.IHD.seed(float(theta0[n]), s1, s2))
+    if k_phi is None:
+        phi_g = [float(v) for v in phi]
+    else:
+        phi_g = [
+            cert.IHD.seed(float(v), 0.0, phi_scale[n] if n == k_phi else 0.0)
+            for n, v in enumerate(phi)
+        ]
+    am = builder(phi_g)
+    model = model_state_space_generic(theta, am)
+    res = cert.gexpected_loglik(truth, model)
+    return res
+
+
+def certified_profiled_sensitivity(
+    builder: GenericAnalysisBuilder,
+    float_builder: FieldModelBuilder,
+    phi: Sequence[float],
+    phi_sigma: Sequence[float] | None = None,
+) -> CertifiedSensitivity:
+    """The U.20 production derivative, certified.
+
+    Solves the expected-score system ``F(theta, phi) = 0`` by implicit
+    differentiation::
+
+        d theta* / d phi = - F_theta^{-1} F_phi
+        F_theta = d^2 L / d theta d theta
+        F_phi   = d^2 L / d theta d phi
+
+    Both blocks are exact second derivatives of the expected T.6 log
+    likelihood, obtained by hyper-dual arithmetic rather than by differencing.
+    The log-beta row is extracted only after the full nuisance system is
+    solved.
+    """
+    phi = [float(v) for v in phi]
+    base = float_builder(phi)
+    truth_ss = base.truth_state_space()
+    truth = cert.gbuild_state_space(
+        base.a_drift, base.sigma, [0.0, 0.0], base.p_matrix, base.r_obs,
+        list(base.b_det), base.dt, base.t_exp,
+    )
+    theta0 = truth_matching_theta(base)
+    sc = ThetaScaling.for_model(base, theta0)
+    p = len(phi)
+    phi_scale = [
+        float(phi_sigma[k]) if phi_sigma is not None and phi_sigma[k] > 0.0
+        else (abs(phi[k]) if phi[k] != 0.0 else 1.0)
+        for k in range(p)
+    ]
+
+    sigma_scale = nm.max_abs(base.sigma)
+    riccati_bound = 0.0
+    worst_rel = 0.0
+    block_scale = 0.0
+
+    def mixed(i, j=None, k=None):
+        nonlocal riccati_bound, worst_rel
+        res = _second_partial(builder, truth, theta0, sc, phi, i, j, k, phi_scale)
+        val = res.value
+        riccati_bound = max(riccati_bound, res.riccati_fixed_point_bound / sigma_scale)
+        lo, hi = val.d12
+        mid = 0.5 * (lo + hi)
+        rad = 0.5 * (hi - lo)
+        # Width relative to the BLOCK's scale, not the entry's own value: a
+        # structurally zero entry has no meaningful relative width.
+        worst_rel = max(worst_rel, rad)
+        return mid, rad
+
+    # Symmetric expected information in dimensionless theta coordinates.
+    info = nm.zeros(N_THETA, N_THETA)
+    info_rad = nm.zeros(N_THETA, N_THETA)
+    for i in range(N_THETA):
+        for j in range(i, N_THETA):
+            m, r = mixed(i, j=j)
+            info[i][j] = info[j][i] = m
+            info_rad[i][j] = info_rad[j][i] = r
+
+    cross = nm.zeros(N_THETA, p)
+    cross_rad = nm.zeros(N_THETA, p)
+    for i in range(N_THETA):
+        for k in range(p):
+            m, r = mixed(i, k=k)
+            cross[i][k] = m
+            cross_rad[i][k] = r
+    block_scale = max(nm.max_abs(info), nm.max_abs(cross), 1e-300)
+    worst_rel = worst_rel / block_scale
+
+    # Certified inverse norm of the symmetric information, by Weyl:
+    # |lambda(A) - lambda(mid A)| <= ||A - mid A||, and the computed
+    # eigenvalues of mid A carry their own backward error.
+    vals, qmat = nm.eigh(nm.symmetrise(info))
+    back = nm.eig_backward_error(nm.symmetrise(info), vals, qmat)
+    perturb = max(sum(info_rad[i][j] for j in range(N_THETA))
+                  for i in range(N_THETA))
+    lam_min = min(abs(v) for v in vals) - back - perturb
+    if lam_min <= 0.0:
+        raise SensitivityFailure(
+            "the expected information is not certifiably nonsingular: "
+            f"min |lambda| {min(abs(v) for v in vals):.3e}, backward error "
+            f"{back:.3e}, interval perturbation {perturb:.3e}"
+        )
+    inv_norm = 1.0 / lam_min
+
+    try:
+        jz = nm.scale(nm.lu_solve(info, cross), -1.0)
+    except NumericalFailure as exc:
+        raise SensitivityFailure(f"expected-information solve failed: {exc}") from exc
+
+    # Residual of the computed solution, per column, enclosing both interval
+    # inputs.  A single global residual would charge every column the worst
+    # column's error.
+    resid_by_col: list[float] = []
+    for k in range(p):
+        worst = 0.0
+        for i in range(N_THETA):
+            acc = cross[i][k]
+            rr = cross_rad[i][k]
+            for t in range(N_THETA):
+                acc += info[i][t] * jz[t][k]
+                rr += info_rad[i][t] * abs(jz[t][k])
+            worst = max(worst, abs(acc) + rr)
+        resid_by_col.append(worst)
+    resid = max(resid_by_col)
+
+    jac = nm.zeros(N_THETA, p)
+    rad = nm.zeros(N_THETA, p)
+    for i in range(N_THETA):
+        for k in range(p):
+            jac[i][k] = sc.scale[i] * jz[i][k] / phi_scale[k]
+            rad[i][k] = sc.scale[i] * inv_norm * resid_by_col[k] / phi_scale[k]
+    return CertifiedSensitivity(
+        jacobian=jac,
+        radius=rad,
+        information=info,
+        information_inverse_norm=inv_norm,
+        information_min_eigenvalue=lam_min,
+        riccati_bound=riccati_bound,
+        worst_second_derivative_radius=worst_rel,
+        linear_solve_residual=resid,
     )

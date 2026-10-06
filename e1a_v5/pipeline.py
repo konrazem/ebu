@@ -390,10 +390,11 @@ def complete_pipeline_result(
             elif ok is None:
                 reasons.append(refuse(
                     INCOMPLETE_INPUT, f"{name} upper limit calibrated",
-                    f"no calibrated {name} upper limit ("
-                    f"{limit.status.value}); the raw statistic may not be "
-                    "compared against the tolerance in its place",
-                    record=ident,
+                    f"no calibrated {name} upper limit "
+                    f"({'; '.join(limit.defects) or 'unavailable'}); the raw "
+                    "statistic may not be compared against the tolerance in "
+                    "its place",
+                    record=ident, defects=list(limit.defects),
                 ))
             elif name == "current" and limit.statistic is not None and (
                 math.isfinite(limit.statistic) and limit.statistic < tol

@@ -116,8 +116,10 @@ class CaseConfig:
     realization: str | None = None
     #: Forced optimiser failure mode.
     optimiser_failure: str | None = None
-    #: Omitted eta/T covariance control.
+    #: Analyse with a C_phi that omits the shared thermometry dependency.
     omit_eta_t_covariance: bool | None = None
+    #: Generate from the full 3D hidden-memory world (CTL-AXIAL-MEMORY).
+    axial_memory: bool | None = None
     #: Statistic being calibrated, for the calibration family.
     statistic: str | None = None
 
@@ -281,13 +283,15 @@ CONTROL_CASES = (
     _c("CTL-CURRENT", "Current-preserving Gaussian, A Sigma = D + omega J",
        "control", CONTROL, 200, "density/geometry pass; current gate blocks support",
        E.COMPLETE_SUPPORT, r_irr_target=0.05),
-    # Exact, not sampled: this control compares two COVARIANCE PROPAGATIONS of
-    # the same primitives, so no generated world distinguishes them.  Declaring
-    # it as a stochastic support case made it a no-op that ran nominal records
-    # under a non-nominal name -- the defect-6 pattern.
+    # Restored to the frozen plan: a 200-replicate FULL-PIPELINE control.  The
+    # V4 one-check replacement compared two covariance propagations in
+    # isolation, which is a useful reference but is not the declared control:
+    # the plan asks for the consequence of the misspecified covariance model
+    # on the pipeline's own output.  The exact algebra survives as a
+    # supplementary deterministic reference.
     _c("CTL-ETA-T-COV", "Omitted eta/T covariance versus the correct shared covariance",
-       "control", CONTROL, 1, "coverage consequence detected",
-       E.DETERMINISTIC, omit_eta_t_covariance=True),
+       "control", CONTROL, 200, "coverage consequence detected",
+       E.COMPLETE_SUPPORT, omit_eta_t_covariance=True),
     _c("CTL-NOISE-HI", "Localisation noise above the qualified ratio",
        "control", CONTROL, 200, "diagnose, refuse or lose support",
        E.COMPLETE_SUPPORT, noise_ratio=0.25),
@@ -312,9 +316,14 @@ CONTROL_CASES = (
     _c("CTL-AXIAL-COUPLE", "3D stiffness with K_qz != 0; plane block would bias",
        "control", CONTROL, 1, "pipeline uses H_eff; K_qq bias quantified",
        E.DETERMINISTIC, axial_coupling=0.30),
+    # Restored to the frozen plan: a 200-replicate FULL-PIPELINE control
+    # generated from an actual 3D hidden-memory world.  V4 replaced it with a
+    # single call that set the temporal qualification flag to False, which
+    # exercises the refusal path and not the physics the control exists to
+    # detect.
     _c("CTL-AXIAL-MEMORY", "Lateral density matches Schur but the 2D temporal model fails",
-       "control", CONTROL, 1, "TEMPORAL_MODEL_UNQUALIFIED or model failure",
-       E.DETERMINISTIC, realization="axial_temporal_unqualified"),
+       "control", CONTROL, 200, "TEMPORAL_MODEL_UNQUALIFIED or model failure",
+       E.COMPLETE_SUPPORT, axial_memory=True),
     _c("CTL-RF-TEMP-304", "Realized temperature 304 K",
        "control", CONTROL, 1, "FIELD_REALIZATION_OUT_OF_SPEC",
        E.REALIZATION_STATUS, "OUT_OF_SPEC", realization="temperature_304"),

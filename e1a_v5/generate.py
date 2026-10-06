@@ -22,6 +22,8 @@ from typing import Sequence
 from . import numerics as nm
 from .numerics import Matrix, NumericalFailure
 from .observation import augmented_generator, van_loan
+from .units import K_B
+from .observation import augmented_generator, van_loan
 from .rng import Stream, mvn_sample
 
 #: Gauss-Legendre nodes/weights on [-1, 1], 24 points (symmetric half stored).
@@ -255,4 +257,143 @@ def generate_record(spec: GeneratorSpec, stream: Stream) -> list[list[float]]:
             u = [sum(phi_gap[k][j] * u_end[j] for j in range(d)) + noise[k] for k in range(d)]
         else:
             u = u_end
+    return out
+
+
+# ---------------------------------------------------------------------------
+# Three-dimensional hidden-memory world (CTL-AXIAL-MEMORY)
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class AxialMemorySpec:
+    """A full 3D Gaussian world observed only in its lateral coordinates.
+
+    The lateral MARGINAL density is exactly the Schur one the bridge expects,
+    ``Sigma_qq = k_B T K_eff^{-1}``, because the ``qq`` block of a block
+    matrix's inverse is the inverse of its Schur complement.  The lateral
+    PATH, however, is a projection of a three-mode Ornstein-Uhlenbeck process,
+    so its lag structure carries the axial mode's memory and no single 2D
+    Markov generator reproduces it.
+
+    That is the scientific content of the control: density agreement is not
+    temporal-model qualification.  V4 reduced it to setting a qualification
+    flag to False, which tests the refusal path and not the physics.
+    """
+
+    #: Full 3D stiffness, N/m, ordered (x, y, z).
+    k3: Matrix
+    temperature: float
+    #: Isotropic drag coefficient, N s/m.
+    gamma: float
+    p_matrix: Matrix
+    r_obs: Matrix
+    b_det: tuple[float, float]
+    dt: float
+    t_exp: float
+    n_frames: int
+
+
+def axial_memory_dynamics(spec: AxialMemorySpec):
+    """``(A3, Sigma3)`` of the declared 3D world."""
+    k3 = nm.symmetrise(spec.k3)
+    if not nm.is_spd(k3):
+        raise NumericalFailure("3D stiffness must be positive definite")
+    a3 = nm.scale(k3, 1.0 / spec.gamma)
+    sigma3 = nm.symmetrise(nm.scale(nm.spd_inverse(k3), K_B * spec.temperature))
+    return a3, sigma3
+
+
+def lateral_lag_covariance(a3: Matrix, sigma3: Matrix, tau: float) -> Matrix:
+    """``[e^{-A3 tau} Sigma3]_qq``: the exact lateral lag covariance."""
+    full = nm.matmul(nm.expm(nm.scale(a3, -tau)), sigma3)
+    return [[full[i][j] for j in range(2)] for i in range(2)]
+
+
+def markov_closure_residual(a3: Matrix, sigma3: Matrix, tau: float) -> float:
+    """Relative Chapman-Kolmogorov residual of the lateral marginal.
+
+    A stationary 2D Ornstein-Uhlenbeck process satisfies
+    ``C(tau) = e^{-A tau} Sigma`` exactly, hence
+
+        C(2 tau) = C(tau) Sigma^{-1} C(tau)
+
+    for every ``tau`` and every admissible ``A``.  The identity is a property
+    of the process, not of a particular fit, so a nonzero residual proves that
+    NO 2D Markov generator reproduces the observed lag structure -- without
+    fitting anything.  That is the witness underlying the control.
+    """
+    sig_q = [[sigma3[i][j] for j in range(2)] for i in range(2)]
+    c1 = lateral_lag_covariance(a3, sigma3, tau)
+    c2 = lateral_lag_covariance(a3, sigma3, 2.0 * tau)
+    pred = nm.matmul(nm.matmul(c1, nm.spd_inverse(sig_q)), c1)
+    return nm.max_abs(nm.sub(c2, pred)) / max(nm.max_abs(sig_q), 1e-300)
+
+
+def generate_axial_memory_record(
+    spec: AxialMemorySpec, stream: Stream
+) -> list[list[float]]:
+    """Generate lateral observations of the full 3D process.
+
+    The latent path is advanced in three dimensions through the exact
+    stationary transition law, the shutter average is taken in three
+    dimensions, and only the lateral components are observed.  Nothing about
+    the generation assumes a 2D model.
+    """
+    d = 3
+    a3, sigma3 = axial_memory_dynamics(spec)
+    te = spec.t_exp
+    gap = spec.dt - te
+    if gap < 0.0:
+        raise NumericalFailure("generator exposure exceeds the frame interval")
+
+    asig = nm.matmul(a3, sigma3)
+    ll = nm.symmetrise(nm.add(asig, nm.transpose(asig)))
+    nm.cholesky(ll)
+
+    if te > 0.0:
+        g = augmented_generator(a3)
+        diff = nm.zeros(2 * d, 2 * d)
+        for i in range(d):
+            for j in range(d):
+                diff[i][j] = ll[i][j]
+        phi_exp, q_exp = van_loan(g, diff, te)
+        phi_uu = [[phi_exp[i][j] for j in range(d)] for i in range(d)]
+        phi_ju = [[phi_exp[d + i][j] for j in range(d)] for i in range(d)]
+        joint_chol = nm.cholesky(nm.symmetrise(q_exp))
+    else:
+        phi_uu = nm.eye(d)
+        phi_ju = nm.zeros(d, d)
+        joint_chol = None
+
+    phi_gap = nm.expm(nm.scale(a3, -gap)) if gap > 0.0 else nm.eye(d)
+    q_gap = (
+        nm.symmetrise(nm.sub(sigma3, nm.matmul(nm.matmul(phi_gap, sigma3),
+                                               nm.transpose(phi_gap))))
+        if gap > 0.0 else nm.zeros(d, d)
+    )
+    gap_chol = nm.cholesky(q_gap) if gap > 0.0 and nm.max_abs(q_gap) > 0.0 else None
+    r_chol = nm.cholesky(spec.r_obs)
+
+    u = mvn_sample(stream, [0.0] * d, nm.cholesky(sigma3))
+    out: list[list[float]] = []
+    for _ in range(spec.n_frames):
+        if te > 0.0:
+            w = mvn_sample(stream, [0.0] * (2 * d), joint_chol)
+            u_end = [sum(phi_uu[k][j] * u[j] for j in range(d)) + w[k] for k in range(d)]
+            j_int = [sum(phi_ju[k][j] * u[j] for j in range(d)) + w[d + k]
+                     for k in range(d)]
+            z = [j_int[k] / te for k in range(2)]
+            u = u_end
+        else:
+            z = [u[k] for k in range(2)]
+        eps = mvn_sample(stream, [0.0, 0.0], r_chol)
+        out.append([
+            spec.b_det[i]
+            + sum(spec.p_matrix[i][j] * z[j] for j in range(2))
+            + eps[i]
+            for i in range(2)
+        ])
+        if gap > 0.0:
+            n = mvn_sample(stream, [0.0] * d, gap_chol) if gap_chol else [0.0] * d
+            u = [sum(phi_gap[k][j] * u[j] for j in range(d)) + n[k] for k in range(d)]
     return out
