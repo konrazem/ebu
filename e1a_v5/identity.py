@@ -33,6 +33,8 @@ ANALYSIS_MODULES: tuple[str, ...] = (
     "realization.py",
     "verdict.py",
     "estimate.py",
+    "calibration.py",
+    "pipeline.py",
 )
 
 #: Modules entering the synthetic-generator identity.
@@ -52,6 +54,7 @@ VALIDATION_MODULES: tuple[str, ...] = (
     "seeds.py",
     "identity.py",
     "verdict.py",
+    "pipeline.py",
     os.path.join("validation", "__init__.py"),
     os.path.join("validation", "plan.py"),
     os.path.join("validation", "cases.py"),
@@ -158,7 +161,8 @@ def validation_preimage() -> dict[str, object]:
         ],
         "rationale": {
             "validation/run.py": "result counting and release semantics",
-            "verdict.py": "authoritative success predicate",
+            "verdict.py": "verdict classification table",
+            "pipeline.py": "the authoritative complete-success predicate",
             "validation/harness.py": "record execution and gate evaluation",
             "validation/cases.py": "case generation and replicate counts",
             "validation/plan.py": "design point and smoke configuration",

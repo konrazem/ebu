@@ -3,7 +3,7 @@
 ```text
 STATUS:                  NON-CONTROLLING CANDIDATE
 POLICY VERSION:          E1A-T11a-RF-v1
-PROCEDURE VERSION:       2  (version 1 repaired before any validation outcome existed)
+PROCEDURE VERSION:       3  (v1 superseded; v2 AUDIT FAILED and superseded)
 AUTHORITY MODIFIED:      NO
 EXECUTION AUTHORISED:    FALSE
 E1a-v4:                  UNTOUCHED (identities, contracts, plan, seal)
@@ -23,11 +23,12 @@ validated quantity was tuned using the validation it was judged by.
 
 | Object | SHA-256 |
 |---|---|
-| analysis procedure | `659d6e16321b545511915c7cdd3d0f68aab2978ee0bb83470e7e7dd3fd2240e3` |
-| packet schema | `576ebed583fb8c5399efff493df3b96c57aa615c1be73c86fd03a95d70c1fe3b` |
-| seed map | `ca903abf11b5cab40dd0b21ae3ff546506d399fe8a46ffb9a4e52485842930df` |
-| synthetic generator | `7f0859e02ee40a073471b74dd406913252c95043dff0f379a3ffd92164f9a83e` |
-| validation procedure | `c53761d760cedfff1d18906ab6d744ba00479433b019301d2ae3c039222e6196` |
+| analysis procedure | `feb287294cec4bbf85d430336a6a6b9a63dbac049b0c27ebaf8b011cff038078` |
+| packet schema | `a7db3c424bdb906a22a605169350d45802c3af56ef5e936df91287150cca3eb3` |
+| gate semantics | `ffd6247e4fb0acb5af5c5d400c299b255bd84035e52178a4c6d9f5403f99f147` |
+| seed map | `37785e764fb5b03613a9ad3d54fda80f39b343370a8ecaaeb7ad15b258990654` |
+| synthetic generator | `82f75d515d1cdb630429f339af19241f304c1a31d4fa81cca07e855efc882199` |
+| validation procedure | `0b6ea6b7f230846938c42667fc42cb3510ba1fc2264f02120201183c6e76aac0` |
 
 Each identity is taken over an ordered preimage of module path and file digest,
 followed by the canonical JSON of the declared configuration
@@ -218,3 +219,24 @@ seeds. A failed power result does not grant permission to lengthen a record.
 It modifies no authority. It does not adopt the candidate procedure, authorise
 physical data collection, authorise an official campaign, or authorise
 unblinding. W-stage remains a separate authorisation.
+
+## 11. Procedure version 3 additions
+
+| Item | V3 state |
+|---|---|
+| authoritative success predicate | `e1a_v5.pipeline.complete_pipeline_result` -> `e1a_v5.verdict.decide`; success iff `SUPPORTED_WITHIN_DECLARED_TOLERANCES`. Runners may not reconstruct it. |
+| missing-result semantics | fail closed; missing, `None`, `NaN`, unevaluated, optimiser-failed and qualification-unavailable all prevent success |
+| current control | constructed from the dimensionless `r_irr` target, not a dimensional angular rate |
+| profile standard error | published only from a converged, usable maximum; `ProfileFit.require()` raises otherwise |
+| lag antisymmetry | required input; absent lag data makes the diagnostic family non-evaluable |
+| validation identity | binds `validation/run.py`, `verdict.py` and `pipeline.py`, hierarchically over the analysis, generator, seed-map, gate and packet identities |
+| axial qualification | fail-closed `AxialEvidence`; covariance mandatory; scale-invariant relative skew |
+| calibration covariance `C_phi` | implemented end to end, with the sensitivity from the U.20 implicit derivative |
+| ceiling comparison | three-way, with `UNRESOLVED_AT_NUMERICAL_PRECISION` inside the sensitivity's own numerical band |
+| seeds | fresh V3 namespaces, checked disjoint from the inspected V2 streams |
+
+V2 results are retained as historical evidence and are labelled
+**V2 / SUPERSEDED PROCEDURE EVIDENCE**. They are not V3 validation.
+
+Open release blockers are unchanged and are listed in the JSON contract under
+`open_release_blockers`.

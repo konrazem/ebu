@@ -6,7 +6,32 @@
   "size_max_events_at_5000": 106
  },
  "authority_modified": false,
+ "axial_qualification": {
+  "covariance_mandatory": true,
+  "fail_closed": true,
+  "missing_evidence": "AXIAL_REDUCTION_UNQUALIFIED",
+  "nonlinear_remainder_ceiling": 0.001,
+  "relative_skew_ceiling": 1e-09,
+  "required_evidence": [
+   "conservativity_qualified",
+   "harmonic_domain_qualified",
+   "support_qualified",
+   "temporal_reduction_qualified",
+   "observation_transfer_qualified",
+   "uncertainty_budget_qualified",
+   "geometry_centre_qualified",
+   "provenance_complete"
+  ]
+ },
  "baseline_sign_defect": "STILL OWED before W-stage authority freeze; not repaired here",
+ "calibration_covariance": {
+  "bounded_bias": "separate structure; never converted into covariance",
+  "expected_likelihood": "closed form via a discrete Lyapunov solve; no trajectory generated",
+  "forbidden_shortcut": "the ideal Gaussian trace formula is NOT used as the production sensitivity",
+  "sensitivity_method": "U.20 implicit derivative by definition, maximising the exact expected likelihood of the exposure-integrated noise-bearing state-space model",
+  "shared_primitive_rule": "one variable identity per shared standard",
+  "status": "IMPLEMENTED END TO END"
+ },
  "cases": [
   {
    "case_id": "CAL-SCALE-01",
@@ -17,7 +42,7 @@
    "family": "calibration",
    "purpose": "Calibrate c_minus/c_plus for the absolute log-beta interval",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "CAL-CONTRAST-01",
@@ -28,7 +53,7 @@
    "family": "calibration",
    "purpose": "Calibrate the within-block contrast critical values",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "CAL-SHAPE-01",
@@ -39,7 +64,7 @@
    "family": "calibration",
    "purpose": "Calibrate the T4 geometry upper-limit radius",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "CAL-CENTRE-01",
@@ -50,7 +75,7 @@
    "family": "calibration",
    "purpose": "Calibrate the centre upper-limit radius",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "CAL-STAT-01",
@@ -61,7 +86,7 @@
    "family": "calibration",
    "purpose": "Calibrate the four-quarter stationarity upper limit",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "CAL-CURRENT-01",
@@ -72,7 +97,7 @@
    "family": "calibration",
    "purpose": "Calibrate the r_irr upper-limit radius at omega = 0",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "CAL-DIAG-01",
@@ -83,7 +108,7 @@
    "family": "calibration",
    "purpose": "Calibrate the joint diagnostic maximum and its null scales",
    "replicates": 4000,
-   "seed_namespace": "calibration"
+   "seed_namespace": "calibration-v3"
   },
   {
    "case_id": "SIZE-ABS-LO",
@@ -94,7 +119,7 @@
    "family": "size",
    "purpose": "Absolute equivalence at the lower boundary b = -log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-ABS-HI",
@@ -105,7 +130,7 @@
    "family": "size",
    "purpose": "Absolute equivalence at the upper boundary b = +log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-CON-LO",
@@ -116,7 +141,7 @@
    "family": "size",
    "purpose": "Cross-field contrast at the lower boundary -log(1.02)",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-CON-HI",
@@ -127,7 +152,7 @@
    "family": "size",
    "purpose": "Cross-field contrast at the upper boundary +log(1.02)",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-SHAPE-BD",
@@ -138,7 +163,7 @@
    "family": "size",
    "purpose": "Geometry upper limit at the shape boundary G = log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-CENTRE-BD",
@@ -149,7 +174,7 @@
    "family": "size",
    "purpose": "Centre upper limit at the boundary m = 0.10",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-CURRENT-BD",
@@ -160,7 +185,7 @@
    "family": "size",
    "purpose": "Current upper limit at the boundary r_irr = 0.02",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-NUIS-NOISE",
@@ -171,7 +196,7 @@
    "family": "size",
    "purpose": "Absolute boundary at the top of the qualified noise range",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-NUIS-EXP",
@@ -182,7 +207,7 @@
    "family": "size",
    "purpose": "Absolute boundary at the exposure ceiling",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-NUIS-COND",
@@ -193,7 +218,7 @@
    "family": "size",
    "purpose": "Absolute boundary near the conditioning limit kappa_2 = 100",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "SIZE-NUIS-CAL",
@@ -204,7 +229,7 @@
    "family": "size",
    "purpose": "Absolute boundary with the full qualified calibration covariance",
    "replicates": 5000,
-   "seed_namespace": "size_validation"
+   "seed_namespace": "size_validation-v3"
   },
   {
    "case_id": "DIAG-NULL-NOM",
@@ -213,7 +238,7 @@
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size at the nominal true benchmark",
    "replicates": 5000,
-   "seed_namespace": "diagnostic_validation"
+   "seed_namespace": "diagnostic_validation-v3"
   },
   {
    "case_id": "DIAG-NULL-EXP",
@@ -224,7 +249,7 @@
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size at the exposure ceiling",
    "replicates": 5000,
-   "seed_namespace": "diagnostic_validation"
+   "seed_namespace": "diagnostic_validation-v3"
   },
   {
    "case_id": "DIAG-NULL-COND",
@@ -235,7 +260,7 @@
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size near the conditioning limit",
    "replicates": 5000,
-   "seed_namespace": "diagnostic_validation"
+   "seed_namespace": "diagnostic_validation-v3"
   },
   {
    "case_id": "POWER-NOMINAL",
@@ -244,7 +269,7 @@
    "family": "power",
    "purpose": "Complete eight-record success at the nominal true benchmark",
    "replicates": 2000,
-   "seed_namespace": "complete_power"
+   "seed_namespace": "complete_power-v3"
   },
   {
    "case_id": "POWER-CONDLIM",
@@ -255,7 +280,7 @@
    "family": "power",
    "purpose": "Complete success near the conditioning limit",
    "replicates": 2000,
-   "seed_namespace": "complete_power"
+   "seed_namespace": "complete_power-v3"
   },
   {
    "case_id": "POWER-NOISEHI",
@@ -266,7 +291,7 @@
    "family": "power",
    "purpose": "Complete success at the top of the qualified noise range",
    "replicates": 2000,
-   "seed_namespace": "complete_power"
+   "seed_namespace": "complete_power-v3"
   },
   {
    "case_id": "CTL-BLIND-107",
@@ -277,7 +302,7 @@
    "family": "control",
    "purpose": "Hidden A scale c = 1.07; expect beta_blinded = beta/c",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-BLIND-090",
@@ -288,7 +313,7 @@
    "family": "control",
    "purpose": "Hidden A scale c = 0.90; expect beta_blinded = beta/c",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-COMMON-07",
@@ -299,7 +324,7 @@
    "family": "control",
    "purpose": "Common wrong scale beta = 0.7 in every field",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-FIELD-106",
@@ -315,7 +340,7 @@
    "family": "control",
    "purpose": "Field-specific alternative (1, 1.06, 1, 1)",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-FIELD-MIX",
@@ -331,7 +356,7 @@
    "family": "control",
    "purpose": "Field-specific alternative (1, 0.93, 1.05, 1)",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-FIELD-110",
@@ -347,7 +372,7 @@
    "family": "control",
    "purpose": "Field-specific alternative (1, 1, 1, 1.10)",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-HARD-025",
@@ -358,7 +383,7 @@
    "family": "control",
    "purpose": "Hard 2.5% single-field contrast",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-GEOM-TRACE",
@@ -367,7 +392,7 @@
    "family": "control",
    "purpose": "Trace-preserving wrong geometry",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-GEOM-ROT",
@@ -376,7 +401,7 @@
    "family": "control",
    "purpose": "Correct eigenvalues, wrong orientation",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-CURRENT",
@@ -387,7 +412,7 @@
    "family": "control",
    "purpose": "Current-preserving Gaussian, A = I + omega J",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-ETA-T-COV",
@@ -396,7 +421,7 @@
    "family": "control",
    "purpose": "Omitted eta/T covariance versus the correct shared covariance",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-NOISE-HI",
@@ -407,7 +432,7 @@
    "family": "control",
    "purpose": "Localisation noise above the qualified ratio",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-NOISE-HEAVY",
@@ -418,7 +443,7 @@
    "family": "control",
    "purpose": "Non-Gaussian heavy-tailed localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-NOISE-COLOR",
@@ -429,7 +454,7 @@
    "family": "control",
    "purpose": "Coloured localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-NOISE-STATE",
@@ -440,7 +465,7 @@
    "family": "control",
    "purpose": "State-dependent localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-BLUR-MISMATCH",
@@ -449,7 +474,7 @@
    "family": "control",
    "purpose": "Generator exposure differs from the analysed shutter model",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-DRIFT",
@@ -458,7 +483,7 @@
    "family": "control",
    "purpose": "Slow centre drift during the record",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-SELECTION",
@@ -467,7 +492,7 @@
    "family": "control",
    "purpose": "Clipping / tracking selection of observations",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-AXIAL-COUPLE",
@@ -476,7 +501,7 @@
    "family": "control",
    "purpose": "3D stiffness with K_qz != 0; plane block would bias",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-AXIAL-MEMORY",
@@ -485,7 +510,7 @@
    "family": "control",
    "purpose": "Lateral density matches Schur but the 2D temporal model fails",
    "replicates": 200,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-RF-TEMP-304",
@@ -494,7 +519,7 @@
    "family": "control",
    "purpose": "Realized temperature 304 K",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-RF-STIFF-1021",
@@ -503,7 +528,7 @@
    "family": "control",
    "purpose": "Realized stiffness 1.021-fold",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-RF-MODES",
@@ -512,7 +537,7 @@
    "family": "control",
    "purpose": "One weak and one strong stiffness mode",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-RF-ELLIPSE",
@@ -521,7 +546,7 @@
    "family": "control",
    "purpose": "Unrotated target-eigenvalue ellipse",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-RF-STRADDLE",
@@ -530,7 +555,7 @@
    "family": "control",
    "purpose": "Uncertainty region straddling a realization boundary",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-RF-VALID",
@@ -539,7 +564,7 @@
    "family": "control",
    "purpose": "Nominal-like realized field",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   },
   {
    "case_id": "CTL-OPT-FAIL",
@@ -548,14 +573,14 @@
    "family": "control",
    "purpose": "Forced optimiser failure modes",
    "replicates": 1,
-   "seed_namespace": "negative_control"
+   "seed_namespace": "negative_control-v3"
   }
  ],
  "configuration": {
   "design_point": "e1a_v5_candidate_2026-10-06",
   "policy_version": "E1A-T11a-RF-v1",
-  "procedure_version": 2,
-  "supersedes": "procedure version 1 (pre-Riccati-repair)"
+  "procedure_version": 3,
+  "supersedes": "procedure version 2 (audit failed)"
  },
  "design_point": {
   "axial_coupling": 0.05,
@@ -583,6 +608,11 @@
    3,
    4
   ],
+  "antisymmetry_tau_multipliers": [
+   0.5,
+   1.0,
+   2.0
+  ],
   "components": [
    "cvm_chi2_2_radii",
    "angular_harmonics",
@@ -602,7 +632,9 @@
    8,
    9,
    10
-  ]
+  ],
+  "lag_inputs_required": true,
+  "missing_lag_inputs": "family is NON-EVALUABLE; antisymmetry may not default to zero"
  },
  "error_budget_one_sided": {
   "auxiliary_confidence_set": 0.001,
@@ -616,6 +648,7 @@
   "bias_absolute_max": 0.0005,
   "bias_contrast_max": 0.0005,
   "boundary_equality_is_not_a_pass": true,
+  "calibration_numerical_rtol": 1e-05,
   "critical_value_ceiling": 2.1,
   "delta_absolute_log": 0.04879016416943205,
   "delta_centre_thermal": 0.1,
@@ -629,52 +662,87 @@
   "sigma_cal_contrast_max": 0.003
  },
  "identities": {
-  "analysis_procedure": "659d6e16321b545511915c7cdd3d0f68aab2978ee0bb83470e7e7dd3fd2240e3",
-  "packet_schema": "576ebed583fb8c5399efff493df3b96c57aa615c1be73c86fd03a95d70c1fe3b",
-  "seed_map": "ca903abf11b5cab40dd0b21ae3ff546506d399fe8a46ffb9a4e52485842930df",
-  "synthetic_generator": "7f0859e02ee40a073471b74dd406913252c95043dff0f379a3ffd92164f9a83e",
-  "validation_procedure": "c53761d760cedfff1d18906ab6d744ba00479433b019301d2ae3c039222e6196"
+  "analysis_procedure": "feb287294cec4bbf85d430336a6a6b9a63dbac049b0c27ebaf8b011cff038078",
+  "gate_semantics": "ffd6247e4fb0acb5af5c5d400c299b255bd84035e52178a4c6d9f5403f99f147",
+  "packet_schema": "a7db3c424bdb906a22a605169350d45802c3af56ef5e936df91287150cca3eb3",
+  "seed_map": "37785e764fb5b03613a9ad3d54fda80f39b343370a8ecaaeb7ad15b258990654",
+  "synthetic_generator": "82f75d515d1cdb630429f339af19241f304c1a31d4fa81cca07e855efc882199",
+  "validation_procedure": "0b6ea6b7f230846938c42667fc42cb3510ba1fc2264f02120201183c6e76aac0"
  },
  "module_digests": {
   "analysis": {
    "__init__.py": "912a9b4635bf29280fc1be1bf631b46af24fe0f4790037f84749a8389ff60baa",
    "branch_a.py": "36eef41eabbbabdbff82abfb88bd99a8a32d69bf14a5ef63540c648ed33d1644",
-   "confidence.py": "2a423d27223e701b55f14a2a9fed1a559960c2c6e9a4407842802a9b58087e5f",
-   "diagnostics.py": "a44cd0bf6864d65ebdfe47c7eb4493e430b0096f780627c728f4a384d15b9020",
-   "estimate.py": "7c2ac04d44db9e0a5ec8adeeccbf92261a22ab031f44e73a8d786cd86b710a5f",
-   "gates.py": "e0d8201ddaabad048d01a59888f4cd12c9a5d0434226551e01419ba83157b52f",
+   "calibration.py": "78444285d6e17054f54eebe6f3598068bab61816b7b63f8bb93361d24d983200",
+   "confidence.py": "d6684785caf4b36e0226f1ce8805b6ea484aca94d1224dfbfac603969af03edf",
+   "diagnostics.py": "99eab8d4f1df35b85ceb805b9b6c6d1c10bfbada128fa56cf7ab27f9972f9243",
+   "estimate.py": "6df3087dfc031e0db7124a3ecb473bf21325abb8b375a38ea6641b1d062140a9",
+   "gates.py": "6e2f8e534edec3297a517cf5d0a83d3a568eca0f525acca9f70b4bc3cea16f5b",
    "likelihood.py": "86fc43f55f94024911991fc669808cce20c117d732690206bcab2fb4d9ba3369",
-   "numerics.py": "165ca4c11efd4f21a85b66d45ae4071197a0b2056812810db30cd6909ab61a8b",
-   "observation.py": "f91024ee01c84f6ccd7410fc676c6e9706594251f9b39d70f9f13c0ccd2c3f93",
-   "optimize.py": "bc20886bd7ca35ac51025cd327ca1940528c7f6c57859f4768e7342585e8138a",
+   "numerics.py": "e25c8f6a26a0923f1315bc98d51e1853176f8255515daa5138eda9afe3574f43",
+   "observation.py": "680796bb0d55341a83182ecce9a74b69585776430c3ed3a91aa58530bd8d2819",
+   "optimize.py": "d5c0237180521e25ebf288c42606731c2b5ca181fea939346b51f5b5e848810a",
    "packets.py": "c6f05d61f8ec22ae7cc75930caba2b9704d537884f8a17453d297f04b9af0914",
+   "pipeline.py": "84476c16f339d0924fcc99a41f4eee41c975cb4436ca33d13c7051a9a79df60c",
    "realization.py": "88d341a117da72560980bc26e6575feb0244891fcf04d3fc225fa96abb5ceb83",
-   "reduction.py": "681ed980561025763b4aa33b50f3b928de0b991870314c5df056cd10723902fb",
+   "reduction.py": "43ccdd08d7ba3b69a82be2ced1efa13e8db318878e8585508ca657a385f2bdde",
    "refusals.py": "1d10a89f4138e1b2fcecabbad1ad3118e067b215b325644df3c63e50cbcf9596",
    "units.py": "f53ee21027387cbeaf138cea9dd6c87a39a1e63351b9dd234f18d1e2b33ce379",
    "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
+  },
+  "gates": {
+   "confidence.py": "d6684785caf4b36e0226f1ce8805b6ea484aca94d1224dfbfac603969af03edf",
+   "diagnostics.py": "99eab8d4f1df35b85ceb805b9b6c6d1c10bfbada128fa56cf7ab27f9972f9243",
+   "gates.py": "6e2f8e534edec3297a517cf5d0a83d3a568eca0f525acca9f70b4bc3cea16f5b",
+   "realization.py": "88d341a117da72560980bc26e6575feb0244891fcf04d3fc225fa96abb5ceb83"
   },
   "generator": {
    "generate.py": "b6f1351747cc7e8be98d007c02c34e94100abe549f7b2b21c8ac9bcd3fce4105",
    "rng.py": "47bef207648ea393df7a338235d8d8fc15737173c3702a9fa5f82b10a9a7506d"
   },
   "validation": {
-   "identity.py": "2b4a3694de3256ab9077452cc7de02994cafd2ca3aab44a6e34bddb38864dc39",
-   "seeds.py": "2b7402d48b7a0e99ffd319ab4421eeafde579afca3f99ae352cda6ddf9c7ea30",
+   "identity.py": "f6837718873b6d6fb22bbf91fb0938873389148d593e06ce441ce2763025620e",
+   "pipeline.py": "84476c16f339d0924fcc99a41f4eee41c975cb4436ca33d13c7051a9a79df60c",
+   "seeds.py": "ed94cfb4ab97f192aad2737e047b360967cf12b797fe33e80697aab56d2d64dd",
    "validation/__init__.py": "cfb51def4ee4877b60dcc62a9636e6672244d8cc338a4979f1086a27e3d3bb9b",
    "validation/cases.py": "9d09ffceb7462d737d48b3920817ea7d45e15ae6b1ae531897648566ddec37bc",
-   "validation/harness.py": "7f1f6b40f0c693e35dc1ef7fc26ef7de58f0df839130ac10528b86b723ff292a",
-   "validation/plan.py": "c5f9f360cd64180d3669dd068bb280e648fd53204998a38244a85a152a2fd076"
+   "validation/harness.py": "9511f24cb53398233eb3288d8efe31edb3a57faa5b4f3ab6cf8f9cd0ed47d9d8",
+   "validation/plan.py": "c5f9f360cd64180d3669dd068bb280e648fd53204998a38244a85a152a2fd076",
+   "validation/run.py": "10bf436fdc7bd99870f3ea11ce9535fd97a80070d000d9e401b0a128daa73150",
+   "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
   }
+ },
+ "open_release_blockers": {
+  "complete_power_validation": "NOT RUN FOR V3",
+  "continuous_nuisance_domain_coverage": "OPEN",
+  "diagnostic_size_validation": "NOT RUN FOR V3",
+  "false_equivalence_validation": "NOT RUN FOR V3",
+  "finite_n_critical_calibration": "NOT RUN FOR V3",
+  "full_campaign_resource_requirement": "OPEN"
  },
  "policy_version": "E1A-T11a-RF-v1",
  "prng": {
   "algorithm": "python-stdlib-MersenneTwister-19937",
   "derivation": "sha256(root|family|case|'rep'|replicate)[:8] big-endian",
-  "seed_root": "e1a_v5/validation/2026-10-06"
+  "seed_root": "e1a_v5/validation/v3/2026-10-06",
+  "superseded_root": "e1a_v5/validation/2026-10-06"
  },
- "procedure_version": 2,
- "procedure_version_note": "version 1 was frozen at 0aea510 and REPAIRED before any validation outcome existed; no validation result was produced under version 1",
+ "procedure_history": {
+  "v1": {
+   "disposition": "SUPERSEDED",
+   "freeze": "0aea510aefe4067fceb4db6b11971f1538ddf4a2"
+  },
+  "v2": {
+   "disposition": "AUDIT FAILED",
+   "evidence_status": "V2 / SUPERSEDED PROCEDURE EVIDENCE - not V3 validation",
+   "freeze": "29872b00b5e126ae32d8f061736869915a1b7ffa",
+   "results_commit": "2e39ae682dd6d67561beaa5755b16546748d2f79"
+  },
+  "v3": {
+   "disposition": "REPAIRED - INDEPENDENT AUDIT REQUIRED"
+  }
+ },
+ "procedure_version": 3,
  "release_logic": {
   "no_majority_vote": true,
   "no_weighted_score": true,
@@ -687,14 +755,58 @@
   "diagnostic_per_configuration": 5000,
   "size_per_configuration": 5000
  },
- "schema": "e1a_v5_validation_plan/1",
+ "schema": "e1a_v5_validation_plan/2",
+ "seed_disjointness_from_v2": {
+  "calibration-v3": true,
+  "complete_power-v3": true,
+  "diagnostic_validation-v3": true,
+  "negative_control-v3": true,
+  "size_validation-v3": true
+ },
  "seed_families": {
-  "calibration": 2396107620527684409,
-  "complete_power": 7217564445189021162,
-  "diagnostic_validation": 13719029069151850289,
-  "negative_control": 16918612386897432844,
-  "size_validation": 4958039905325377084
+  "calibration-v3": 7588821365552340834,
+  "complete_power-v3": 15051213578820747040,
+  "diagnostic_validation-v3": 5015587012256155908,
+  "negative_control-v3": 156080632590497999,
+  "size_validation-v3": 8499666128153270966
  },
  "status": "NON-CONTROLLING CANDIDATE",
- "supersedes_nothing": "e1a_v4 identities, contracts, plans and seal are untouched"
+ "success_predicate": {
+  "delegates_to": "e1a_v5.verdict.decide",
+  "missing_result_semantics": "fail closed; never defaulted to pass",
+  "runners_may_not_reconstruct_it": true,
+  "single_source": "e1a_v5.pipeline.complete_pipeline_result",
+  "success_iff": "SUPPORTED_WITHIN_DECLARED_TOLERANCES"
+ },
+ "supersedes_nothing": "e1a_v4 identities, contracts, plans and seal are untouched",
+ "validation_identity_preimage": {
+  "bound_component_identities": [
+   "analysis_procedure",
+   "synthetic_generator",
+   "seed_map",
+   "gate_semantics",
+   "packet_schema"
+  ],
+  "modules": [
+   "seeds.py",
+   "identity.py",
+   "verdict.py",
+   "pipeline.py",
+   "validation/__init__.py",
+   "validation/plan.py",
+   "validation/cases.py",
+   "validation/harness.py",
+   "validation/run.py"
+  ],
+  "rationale": {
+   "identity.py": "the identity rule itself",
+   "pipeline.py": "the authoritative complete-success predicate",
+   "seeds.py": "seed interpretation",
+   "validation/cases.py": "case generation and replicate counts",
+   "validation/harness.py": "record execution and gate evaluation",
+   "validation/plan.py": "design point and smoke configuration",
+   "validation/run.py": "result counting and release semantics",
+   "verdict.py": "verdict classification table"
+  }
+ }
 }
