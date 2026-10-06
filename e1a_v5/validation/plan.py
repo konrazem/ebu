@@ -44,6 +44,18 @@ BANDWIDTH_FRACTION = 0.75
 #: limit; see :func:`conditioned_stiffness`.  Numerical placement only.
 CONDITION_PLACEMENT_MARGIN = 1.0e-11
 
+#: The declared configuration that enters every procedure identity.  It is
+#: the same object the frozen plan records, kept in code so the gate
+#: calibration receipt can be checked against the running procedure's own
+#: identities rather than against a transcription.
+IDENTITY_CONFIGURATION = {
+    "design_point": "e1a_v5_candidate_2026-10-06",
+    "domain_identity": "e1a_v5_candidate_2026-10-06/nominal-envelope",
+    "policy_version": "E1A-T11a-RF-v1",
+    "procedure_version": 6,
+    "supersedes": "procedure version 5 (audit: NOT CLEARED)",
+}
+
 #: Information target per cell (T.23).
 N_STAR = 450000
 I_STAR = 408164
@@ -54,10 +66,86 @@ SIGMA_CAL_CELL = 0.0015
 #: Certified bounded systematic log-beta contribution per cell.
 BIAS_PER_CELL = 0.00025
 #: Relative standard uncertainty of each axial primitive in the declared
-#: Branch-A covariance, and the coverage factor the certified remainder set is
-#: constructed at.
+#: Branch-A covariance.  The coverage FACTOR is no longer a free constant: the
+#: certified remainder set is built over the joint 99.9% calibration region,
+#: whose per-primitive factor comes from the region's own noncoverage
+#: allocation.  V5's informal 3 sigma is gone.
 PRIMITIVE_RELATIVE_SIGMA = 1.0e-3
-REMAINDER_COVERAGE_K = 3.0
+
+# ---------------------------------------------------------------------------
+# The complete declared auxiliary primitive model (U)
+# ---------------------------------------------------------------------------
+#
+# V5's production C_phi varied a stiffness standard, a temperature standard
+# and one per-field stiffness primitive.  Independent audit found that
+# incomplete, correctly: U requires every load-bearing auxiliary category to
+# be accounted for, and absence must never mean zero uncertainty.
+#
+# Every value below is a SYNTHETIC PROSPECTIVE declaration consistent with the
+# T/U domains.  None is a measured apparatus performance and none is a real
+# calibration.
+
+#: Shared standards.
+SIGMA_LOG_T_STANDARD = 1.0e-3
+#: Viscosity / eta(T).
+SIGMA_LOG_ETA_REF = 2.0e-3
+SIGMA_LOG_ETA_DT = 5.0e-3
+#: Bead radius / material transfer, as a log.
+SIGMA_LOG_BEAD_RADIUS = 1.0e-3
+#: 3D force / displacement calibration transfer.
+SIGMA_LOG_FORCE_CAL = 1.5e-3
+#: Axial stiffness and lateral-axial coupling, as logs of the nominal.
+SIGMA_LOG_AXIAL_STIFFNESS = 2.0e-2
+SIGMA_LOG_AXIAL_COUPLING = 5.0e-2
+#: Coordinate transform P: isotropic gain and off-diagonal shear.
+SIGMA_LOG_P_GAIN = 1.0e-3
+SIGMA_P_SHEAR = 5.0e-4
+#: Localisation covariance scale, as a log.
+SIGMA_LOG_R_OBS = 2.0e-2
+#: Detector offset and centre/fiducial transfer, in metres.
+SIGMA_B_DET = 2.0e-9
+SIGMA_FIDUCIAL = 2.0e-9
+#: Shutter / exposure and timing / synchronisation, as logs.
+SIGMA_LOG_T_EXP = 1.0e-3
+SIGMA_LOG_DT = 1.0e-4
+#: Block-scoped transfers.
+SIGMA_LOG_K_BLOCK = 1.0e-3
+SIGMA_LOG_T_BLOCK = 5.0e-4
+#: Deterministic bounded wall / hydrodynamic resistance correction, as a
+#: fractional bound on the drag.  A bounded model error, never a Gaussian.
+BOUND_WALL_HYDRODYNAMIC = 5.0e-3
+
+#: Primitive names.  The variable IDENTITY is the name plus its scope, so a
+#: standard shared by several records is one variable by construction.
+PRIMITIVE_K_STANDARD = "log_k_standard"
+PRIMITIVE_T_STANDARD = "log_T_standard"
+PRIMITIVE_ETA_REF = "log_eta_ref"
+PRIMITIVE_ETA_DT = "log_eta_dT"
+PRIMITIVE_BEAD_RADIUS = "log_bead_radius"
+PRIMITIVE_FORCE_CAL = "log_force_displacement_cal"
+PRIMITIVE_AXIAL_STIFFNESS = "log_axial_stiffness"
+PRIMITIVE_AXIAL_COUPLING = "log_axial_coupling"
+PRIMITIVE_P_GAIN = "log_p_gain"
+PRIMITIVE_P_SHEAR = "p_shear"
+PRIMITIVE_R_OBS = "log_r_obs_scale"
+PRIMITIVE_B_DET_X = "b_det_x"
+PRIMITIVE_B_DET_Y = "b_det_y"
+PRIMITIVE_FIDUCIAL_X = "fiducial_x"
+PRIMITIVE_FIDUCIAL_Y = "fiducial_y"
+PRIMITIVE_T_EXP = "log_t_exp"
+PRIMITIVE_DT = "log_dt"
+PRIMITIVE_K_BLOCK = "log_k_block"
+PRIMITIVE_T_BLOCK = "log_T_block"
+PRIMITIVE_K_FIELD = "log_k_field"
+
+#: The shared thermometry standard.  The stiffness standard is realised by
+#: equipartition against a measured temperature, so an error in the
+#: temperature standard enters the reported stiffness as well as the explicit
+#: ``-H dT/T`` term.  One LATENT variable carries that sharing, so it is a
+#: structural property of the generating law rather than an off-diagonal entry
+#: asserted only in the analyser's matrix.
+LATENT_THERMOMETRY = "thermometry_standard"
+ETA_T_CORRELATION = 0.7
 
 
 def rotation(theta: float) -> list[list[float]]:
@@ -176,6 +264,32 @@ def timing(
     return dt, t_exp
 
 
+# ---------------------------------------------------------------------------
+# The declared independent response-measurement architecture
+# ---------------------------------------------------------------------------
+#
+# Branch A qualifies the retained 2D temporal model against a measured
+# response.  These are SYNTHETIC PROSPECTIVE declarations of that measurement,
+# chosen before any outcome was inspected and sized so the measurement can
+# resolve a semigroup violation of the declared size.  They are properties of
+# the measurement, not scientific tolerances on the bridge.
+
+#: Response lag, as a multiple of the lateral slow relaxation time.  A longer
+#: lag separates a projected three-mode response from a 2D semigroup more
+#: strongly, while shrinking the response itself; this is where the two meet.
+RESPONSE_LAG_FRACTION = 1.5
+#: Independent prepared releases per lateral direction and per lag.
+RESPONSE_TRIALS = 6000
+#: Initial lateral displacement, in units of the stationary lateral sd.
+RESPONSE_DISPLACEMENT_SD = 6.0
+#: Coverage factor on the measurement's own standard error.  A residual inside
+#: this band does not exclude the 2D class.
+RESPONSE_BAND_SIGMA = 5.0
+#: Required resolution of the response measurement.  If the band is wider than
+#: this, the measurement cannot exclude anything and the temporal model is
+#: UNRESOLVED rather than qualified -- the fail-closed direction.
+RESPONSE_RESOLUTION = 0.20
+
 #: Smoke-sample configuration, used ONLY when the full campaign is infeasible.
 #: Every artefact produced under it is labelled ENGINEERING SMOKE SAMPLE and
 #: can never contribute to a RELEASE verdict.
@@ -188,27 +302,185 @@ SMOKE_CALIBRATION_REPLICATES = 240
 SMOKE_LABEL = "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT"
 
 
-def remainder_set(k3: list[list[float]], coverage_k: float = REMAINDER_COVERAGE_K):
+# ---------------------------------------------------------------------------
+# The declared auxiliary primitive vector and its joint region
+# ---------------------------------------------------------------------------
+
+def primitive_vector(share_thermometry: bool = True):
+    """The COMPLETE declared auxiliary primitive vector of the packet.
+
+    ``share_thermometry`` is the only switch: with it the stiffness and
+    temperature standards load on one latent thermometry variable, which is
+    the declared physics; without it they are independent, which is the
+    CTL-ETA-T-COV misspecification.  The switch changes the ANALYSER's model.
+    The generating law always uses the shared version.
+    """
+    from ..calibration import Primitive, PrimitiveVector, Scope
+    from ..packets import RECORDS
+
+    v = PrimitiveVector()
+    g = Scope.GLOBAL
+
+    def add(name, sigma, scope=g, block=None, fld=None):
+        v.add(Primitive(name, scope, 0.0, sigma, block, fld))
+
+    add(PRIMITIVE_K_STANDARD, SIGMA_CAL_ABSOLUTE)
+    add(PRIMITIVE_T_STANDARD, SIGMA_LOG_T_STANDARD)
+    add(PRIMITIVE_ETA_REF, SIGMA_LOG_ETA_REF)
+    add(PRIMITIVE_ETA_DT, SIGMA_LOG_ETA_DT)
+    add(PRIMITIVE_BEAD_RADIUS, SIGMA_LOG_BEAD_RADIUS)
+    add(PRIMITIVE_FORCE_CAL, SIGMA_LOG_FORCE_CAL)
+    add(PRIMITIVE_AXIAL_STIFFNESS, SIGMA_LOG_AXIAL_STIFFNESS)
+    add(PRIMITIVE_AXIAL_COUPLING, SIGMA_LOG_AXIAL_COUPLING)
+    add(PRIMITIVE_P_GAIN, SIGMA_LOG_P_GAIN)
+    add(PRIMITIVE_P_SHEAR, SIGMA_P_SHEAR)
+    add(PRIMITIVE_R_OBS, SIGMA_LOG_R_OBS)
+    add(PRIMITIVE_B_DET_X, SIGMA_B_DET)
+    add(PRIMITIVE_B_DET_Y, SIGMA_B_DET)
+    add(PRIMITIVE_FIDUCIAL_X, SIGMA_FIDUCIAL)
+    add(PRIMITIVE_FIDUCIAL_Y, SIGMA_FIDUCIAL)
+    add(PRIMITIVE_T_EXP, SIGMA_LOG_T_EXP)
+    add(PRIMITIVE_DT, SIGMA_LOG_DT)
+    seen_blocks = []
+    for blk, fld in RECORDS:
+        if blk not in seen_blocks:
+            seen_blocks.append(blk)
+            add(PRIMITIVE_K_BLOCK, SIGMA_LOG_K_BLOCK, Scope.BLOCK, blk, fld)
+            add(PRIMITIVE_T_BLOCK, SIGMA_LOG_T_BLOCK, Scope.BLOCK, blk, fld)
+        add(PRIMITIVE_K_FIELD, SIGMA_CAL_CELL, Scope.FIELD, blk, fld)
+    if share_thermometry:
+        root = math.sqrt(ETA_T_CORRELATION)
+        v.load_on_latent(PRIMITIVE_K_STANDARD, LATENT_THERMOMETRY, root)
+        v.load_on_latent(PRIMITIVE_T_STANDARD, LATENT_THERMOMETRY, root)
+    return v
+
+
+def category_declarations():
+    """How every required U primitive category is accounted for.
+
+    Four categories carry primitives whose sensitivity to the fitted log beta
+    is STRUCTURALLY zero rather than merely small: the viscosity parameters
+    and the centre/fiducial transfer never enter the analysis model at all,
+    because the estimator profiles the full drift ``A`` freely and the
+    fiducial moves only the centre statistic.  They are declared UNCERTAIN
+    anyway -- their uncertainty is real and U requires it accounted for -- and
+    the zero rows they produce are demonstrated, not assumed.
+    """
+    from ..calibration import CategoryDeclaration as D, PrimitiveClass as C
+
+    return (
+        D("viscosity_eta_of_T", C.UNCERTAIN,
+          (PRIMITIVE_ETA_REF, PRIMITIVE_ETA_DT),
+          justification="buffer viscosity and its temperature coefficient; "
+                        "they set the drag, which the estimator profiles"),
+        D("temperature_calibration", C.UNCERTAIN,
+          (PRIMITIVE_T_STANDARD, PRIMITIVE_T_BLOCK)),
+        D("bead_radius_material_transfer", C.UNCERTAIN,
+          (PRIMITIVE_BEAD_RADIUS,)),
+        D("force_displacement_calibration_3d", C.UNCERTAIN,
+          (PRIMITIVE_FORCE_CAL,)),
+        D("axial_stiffness_coupling", C.UNCERTAIN,
+          (PRIMITIVE_AXIAL_STIFFNESS, PRIMITIVE_AXIAL_COUPLING)),
+        D("wall_hydrodynamic_resistance", C.BOUNDED_SYSTEMATIC,
+          bound=BOUND_WALL_HYDRODYNAMIC,
+          justification="a deterministic near-surface drag correction with a "
+                        "stated fractional bound; U forbids converting a "
+                        "bounded model error into a Gaussian variable"),
+        D("coordinate_transform_P", C.UNCERTAIN,
+          (PRIMITIVE_P_GAIN, PRIMITIVE_P_SHEAR)),
+        D("centre_fiducial_transfer", C.UNCERTAIN,
+          (PRIMITIVE_FIDUCIAL_X, PRIMITIVE_FIDUCIAL_Y),
+          justification="the fiducial enters the centre statistic, not the "
+                        "scale; its log-beta row is a demonstrated zero"),
+        D("localization_covariance_R_obs", C.UNCERTAIN, (PRIMITIVE_R_OBS,)),
+        D("detector_offset", C.UNCERTAIN,
+          (PRIMITIVE_B_DET_X, PRIMITIVE_B_DET_Y)),
+        D("shutter_exposure", C.UNCERTAIN, (PRIMITIVE_T_EXP,)),
+        D("timing_synchronization", C.UNCERTAIN, (PRIMITIVE_DT,)),
+        D("shared_standards", C.UNCERTAIN, (PRIMITIVE_K_STANDARD,)),
+        D("block_specific", C.UNCERTAIN, (PRIMITIVE_K_BLOCK,)),
+        D("field_specific", C.UNCERTAIN, (PRIMITIVE_K_FIELD,)),
+    )
+
+
+_JOINT_REGION = None
+
+
+def default_joint_region():
+    """The packet's joint 99.9% physical calibration region, built once."""
+    global _JOINT_REGION
+    if _JOINT_REGION is None:
+        from ..calibration import build_joint_region
+        _JOINT_REGION = build_joint_region(
+            primitive_vector(), category_declarations(),
+        )
+    return _JOINT_REGION
+
+
+#: A construction-time semigroup residual at or below this is zero to
+#: rounding: a 2D world's lateral response IS the semigroup, so the residual
+#: is exactly zero in exact arithmetic and only matrix-exponential rounding
+#: separates it from zero.
+CONSTRUCTION_SEMIGROUP_TOLERANCE = 1.0e-10
+
+
+def construction_temporal_qualified(k_eff, temperature: float) -> bool:
+    """Derive -- never assert -- the temporal qualification of a built world.
+
+    The design builders construct a 2D overdamped world from ``K_eff``, so
+    there is no hidden mode and the exact semigroup residual is zero.  That is
+    COMPUTED here rather than written down as ``True``: a builder handed a
+    world with a hidden mode gets False and the reduction refuses it.
+    """
+    from ..generate import exact_semigroup_residual
+    sigma = nm.scale(nm.spd_inverse(nm.symmetrise(k_eff)), K_B * temperature)
+    a = nm.scale(nm.symmetrise(k_eff), 1.0 / drag_coefficient())
+    return exact_semigroup_residual(a, sigma) <= CONSTRUCTION_SEMIGROUP_TOLERANCE
+
+
+def remainder_set(k3: list[list[float]], region=None):
     """The certified admissible remainder set for one record's reduction.
 
-    Built from the declared primitive covariance by the closed-form bound in
-    :func:`~e1a_v5.reduction.certified_remainder_radius`, at a stated coverage
-    factor.  Every step of that bound is an inequality, so the resulting set
-    covers the whole primitive uncertainty region rather than one sampled
-    perturbation.
+    Built by the closed-form bound in
+    :func:`~e1a_v5.reduction.certified_remainder_radius` over the **joint
+    99.9% physical calibration region**, not over a marginal multiple of one
+    primitive's standard uncertainty.  Every step of that bound is an
+    inequality, so the resulting set covers the whole region rather than one
+    sampled perturbation or one convenient corner.
+
+    The axial half-extents come from the region itself.  Two primitives move
+    the Schur remainder: the axial stiffness ``kappa`` and the lateral-axial
+    coupling ``b``.  Their region half-widths are relative, so they are
+    applied to the nominal magnitudes of this record's own ``K3``, and the
+    bounded wall/hydrodynamic systematic is added to the coupling extent
+    rather than being folded into a variance.
     """
-    from ..reduction import RemainderSet, certified_remainder_radius, schur_complement, split_3d
+    from ..reduction import (
+        RemainderSet, certified_remainder_radius, schur_complement, split_3d,
+    )
+    if region is None:
+        region = default_joint_region()
     _, b, kappa = split_3d(nm.symmetrise(k3))
-    sd = PRIMITIVE_RELATIVE_SIGMA * K_REF
+    bvec = [b[0][0], b[1][0]]
+    b_norm = math.sqrt(sum(v * v for v in bvec))
+    rel_kappa = region.half_width_of_name(PRIMITIVE_AXIAL_STIFFNESS)
+    rel_coupling = region.half_width_of_name(PRIMITIVE_AXIAL_COUPLING)
+    rel_coupling += region.bounded_systematic("wall_hydrodynamic_resistance")
+    # exp(x) - 1 <= x e^x bounds the relative excursion of a log primitive
+    # over its own half-width, with no linearisation.
+    def _rel(x: float) -> float:
+        return math.expm1(abs(x)) if x >= 0.0 else abs(math.expm1(-abs(x)))
+
     rho = certified_remainder_radius(
-        [b[0][0], b[1][0]], kappa, schur_complement(k3),
-        db_norm=coverage_k * sd * math.sqrt(2.0),
-        dkappa=coverage_k * sd,
+        bvec, kappa, schur_complement(k3),
+        db_norm=_rel(rel_coupling) * b_norm,
+        dkappa=_rel(rel_kappa) * kappa,
     )
     return RemainderSet(
         rho,
-        f"closed-form Schur remainder bound at {coverage_k} sigma of the "
-        f"declared primitive covariance",
+        "closed-form Schur remainder bound over the joint "
+        f"{region.joint_coverage:.4f} physical calibration region "
+        f"(identity {region.identity()[:16]})",
     )
 
 
@@ -244,16 +516,13 @@ def axial_memory_k3(field_index: int) -> list[list[float]]:
 # CTL-ETA-T-COV: the shared thermometry dependency
 # ---------------------------------------------------------------------------
 #
-# The stiffness standard is realised by equipartition against a measured
-# temperature, so an error in the temperature standard enters the reported
-# stiffness as well as the explicit ``-H dT/T`` term.  The two therefore share
-# one variable and are POSITIVELY correlated.
+# The sharing is declared as a LATENT standard (see LATENT_THERMOMETRY), so
+# the control's generating law draws the shared thermometry error once and
+# feeds it to both primitives.  The misspecified analyser omits the latent and
+# treats the two as independent; the data it analyses still carry the true
+# shared structure.  V5 changed only the analyser's matrix and left the
+# auxiliary draws absent, which the audit rejected.
 #
-# The misspecified alternative treats them as independent.  Because
-# ``d log beta*/d log k_A = -1`` and ``d log beta*/d log T_A = +1``, the
-# correct variance carries ``-2 rho sigma_k sigma_T`` and the omission
-# OVERSTATES the uncertainty at this design point.  That direction is a
-# property of this primitive map, not a general rule: V4 asserted that
-# omitting the covariance always understates, which the V4 exact check itself
-# contradicted, and the assertion is removed.
-ETA_T_CORRELATION = 0.7
+# No direction is claimed.  V4 asserted that omitting the covariance always
+# understates the uncertainty; its own ratios contradicted that, and the
+# assertion is removed.

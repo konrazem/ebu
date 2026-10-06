@@ -101,14 +101,12 @@ def fixture_limit(family: GateFamily, statistic: float, limit: float) -> GateLim
 
     V5 removed ``GateLimit.calibrated(statistic, limit, identity)``: a bare
     string granted calibration, so a raw statistic became a passing limit.
-    Fixtures now go through the typed artifact, whose radius is what sets the
-    limit, and which the production builder refuses.
+    V6 separates fixtures from production by TYPE: this goes through
+    ``SyntheticGateFixture`` and ``GateLimit.from_fixture``, neither of which
+    any production API accepts.
     """
-    proc = synthetic_calibrated_gate_fixture(family, max(0.0, limit - statistic))
-    return GateLimit.from_procedure(
-        statistic, proc, family, PROCEDURE_VERSION, DOMAIN_IDENTITY,
-        allow_fixture=True,
-    )
+    fx = synthetic_calibrated_gate_fixture(family, max(0.0, limit - statistic))
+    return GateLimit.from_fixture(statistic, fx, family)
 
 FIXTURE_GATE = "SYNTHETIC FIXTURE - not a calibration"
 
@@ -744,13 +742,14 @@ def test_cphi_end_to_end() -> None:
 def test_v3_seed_namespaces() -> None:
     from e1a_v5.seeds import (
         CONFIRMATORY_FAMILIES, ENGINEERING, FAMILIES, FAMILIES_V2, FAMILIES_V3,
-        FAMILIES_V4, ROOT, ROOT_V2, ROOT_V3, ROOT_V4, SeedMap,
+        FAMILIES_V4, FAMILIES_V5, ROOT, ROOT_V2, ROOT_V3, ROOT_V4, ROOT_V5,
+        SeedMap,
     )
     sm = SeedMap()
-    check("seeds: the V5 root differs from V4, V3 and V2",
-          ROOT not in (ROOT_V4, ROOT_V3, ROOT_V2))
-    check("seeds: every confirmatory family name is versioned",
-          all(f.endswith("-v5") for f in CONFIRMATORY_FAMILIES))
+    check("seeds: the live root differs from every superseded root",
+          ROOT not in (ROOT_V5, ROOT_V4, ROOT_V3, ROOT_V2))
+    check("seeds: every confirmatory family name carries the live version",
+          all(f.endswith("-v6") for f in CONFIRMATORY_FAMILIES))
     check("seeds: five distinct confirmatory families",
           len({sm.family_seed(f) for f in CONFIRMATORY_FAMILIES}) == 5)
     for f5, f4, f3, f2 in zip(CONFIRMATORY_FAMILIES, FAMILIES_V4,

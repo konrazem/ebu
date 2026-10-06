@@ -397,3 +397,179 @@ def generate_axial_memory_record(
             n = mvn_sample(stream, [0.0] * d, gap_chol) if gap_chol else [0.0] * d
             u = [sum(phi_gap[k][j] * u[j] for j in range(d)) + n[k] for k in range(d)]
     return out
+
+
+# ---------------------------------------------------------------------------
+# Independent driven-response measurement (Branch-A temporal qualification)
+# ---------------------------------------------------------------------------
+#
+# T/U require the retained 2D temporal model to be QUALIFIED against an
+# independently measured response, not assumed.  V5 left that qualification as
+# a flag a caller set, so CTL-AXIAL-MEMORY exercised the refusal path and not
+# the physics: nothing in the pipeline ever measured whether a 2D generator
+# could reproduce the system's response.
+#
+# The measurement used here is the one property that separates the admissible
+# class from everything else, with no fitting at all.  For ANY 2D linear
+# system the mean response to a prepared displacement is a semigroup,
+#
+#     R(t) = e^{-A t} ,   hence   R(2 tau) = R(tau)^2
+#
+# for every tau and every admissible A.  A lateral projection of a
+# three-mode system is not a semigroup, because the hidden mode's state at
+# time tau is not a function of the lateral state alone.  So a measured
+# violation of R(2 tau) = R(tau)^2, beyond the measurement's own standard
+# error, excludes the WHOLE admissible 2D class at once.
+
+
+@dataclass(frozen=True)
+class ResponseSpec:
+    """The declared independent response-measurement architecture.
+
+    ``a_drift`` and ``sigma`` are the FULL physical system -- two modes for a
+    qualified world, three when a hidden axial mode is present.  The
+    measurement sees only the lateral coordinates, through the same declared
+    camera model as Branch B.
+    """
+
+    a_drift: Matrix
+    sigma: Matrix
+    p_matrix: Matrix
+    r_obs: Matrix
+    b_det: tuple[float, float]
+    #: Response lag; the measurement compares ``R(tau)`` with ``R(2 tau)``.
+    tau: float
+    #: Independent prepared releases per lateral direction.
+    trials: int
+    #: Initial lateral displacement, in units of the stationary lateral sd.
+    displacement_sd: float
+
+
+def _conditional_start(sigma: Matrix, direction: int, magnitude: float) -> list[float]:
+    """Prepared state: a lateral displacement with hidden modes equilibrated.
+
+    Holding the bead at a displaced lateral position lets any hidden mode
+    relax to its conditional equilibrium ``E[z | q] = Sigma_zq Sigma_qq^{-1} q``
+    before release.  That is the physical preparation, and it is also the one
+    that makes the measurement a property of the system rather than of an
+    arbitrary initial condition.
+    """
+    n = len(sigma)
+    q = [magnitude if i == direction else 0.0 for i in range(2)]
+    s_qq = [[sigma[i][j] for j in range(2)] for i in range(2)]
+    w = nm.matvec(nm.spd_inverse(s_qq), q)
+    out = list(q)
+    for i in range(2, n):
+        out.append(sum(sigma[i][j] * w[j] for j in range(2)))
+    return out
+
+
+def generate_response_record(spec: ResponseSpec, stream: Stream) -> dict:
+    """Measure ``R(tau)`` and ``R(2 tau)`` from prepared releases.
+
+    Each trial releases the prepared state and observes the lateral position
+    once, through ``P`` and the localisation noise.  The response matrices are
+    the per-direction sample means, divided by the displacement and mapped
+    back to physical coordinates.  Nothing is fitted.
+    """
+    n = len(spec.sigma)
+    if n < 2 or len(spec.a_drift) != n:
+        raise NumericalFailure("response measurement needs a square full system")
+    if spec.trials < 2:
+        raise NumericalFailure("a response measurement needs at least two trials")
+    f1 = nm.expm(nm.scale(spec.a_drift, -spec.tau))
+    f2 = nm.expm(nm.scale(spec.a_drift, -2.0 * spec.tau))
+    q1 = nm.symmetrise(nm.sub(spec.sigma,
+                              nm.matmul(nm.matmul(f1, spec.sigma), nm.transpose(f1))))
+    q2 = nm.symmetrise(nm.sub(spec.sigma,
+                              nm.matmul(nm.matmul(f2, spec.sigma), nm.transpose(f2))))
+    l1, l2 = nm.cholesky(q1), nm.cholesky(q2)
+    lr = nm.cholesky(nm.symmetrise(spec.r_obs))
+    pinv = nm.general_inverse(spec.p_matrix)
+    zero = [0.0] * n
+
+    cols1: list[list[float]] = []
+    cols2: list[list[float]] = []
+    for k in range(2):
+        d = spec.displacement_sd * math.sqrt(spec.sigma[k][k])
+        x0 = _conditional_start(spec.sigma, k, d)
+        acc = [[0.0, 0.0], [0.0, 0.0]]
+        for which, (f, l) in enumerate(((f1, l1), (f2, l2))):
+            mean = nm.matvec(f, x0)
+            for _ in range(spec.trials):
+                x = [mean[i] + v for i, v in enumerate(mvn_sample(stream, zero, l))]
+                y = [
+                    spec.b_det[i]
+                    + sum(spec.p_matrix[i][j] * x[j] for j in range(2))
+                    + sum(lr[i][j] * g for j, g in enumerate(stream.normals(2)))
+                    for i in range(2)
+                ]
+                for i in range(2):
+                    acc[which][i] += y[i]
+        for which, cols in ((0, cols1), (1, cols2)):
+            mean_y = [acc[which][i] / spec.trials - spec.b_det[i] for i in range(2)]
+            cols.append([v / d for v in nm.matvec(pinv, mean_y)])
+
+    r_tau = [[cols1[j][i] for j in range(2)] for i in range(2)]
+    r_2tau = [[cols2[j][i] for j in range(2)] for i in range(2)]
+
+    # Standard error of one entry of a response matrix: the per-trial lateral
+    # spread, seen through P^{-1}, divided by the displacement and sqrt(M).
+    per_trial = nm.symmetrise(nm.add(
+        nm.matmul(nm.matmul(spec.p_matrix,
+                            [[spec.sigma[i][j] for j in range(2)] for i in range(2)]),
+                  nm.transpose(spec.p_matrix)),
+        spec.r_obs,
+    ))
+    back = nm.symmetrise(nm.matmul(nm.matmul(pinv, per_trial), nm.transpose(pinv)))
+    d_min = spec.displacement_sd * math.sqrt(
+        min(spec.sigma[0][0], spec.sigma[1][1]))
+    entry_se = math.sqrt(max(back[0][0], back[1][1])) / (
+        d_min * math.sqrt(spec.trials))
+
+    predicted = nm.matmul(r_tau, r_tau)
+    scale = max(nm.max_abs(r_tau), 1e-300)
+    residual = nm.max_abs(nm.sub(r_2tau, predicted)) / scale
+    # |R(2t) - R(t)^2| picks up one entry error from R(2t) and, through the
+    # product, at most 2 ||R(t)|| more from R(t); the ratio adds one more.
+    residual_se = entry_se * (1.0 + 2.0 * scale) / scale + residual * entry_se / scale
+    return {
+        "r_tau": r_tau,
+        "r_2tau": r_2tau,
+        "tau": spec.tau,
+        "trials": spec.trials,
+        "semigroup_residual": residual,
+        "residual_standard_error": residual_se,
+        "entry_standard_error": entry_se,
+        "response_scale": scale,
+    }
+
+
+def exact_semigroup_residual(a_drift: Matrix, sigma: Matrix) -> float:
+    """Noise-free ``||R(2 tau) - R(tau)^2|| / ||R(tau)||`` of a system.
+
+    The deterministic counterpart of :func:`generate_response_record`, used at
+    CONSTRUCTION time so no design path has to assert that its own world is
+    temporally qualified.  For a 2D system it is zero to rounding, because the
+    lateral response IS the semigroup; for a system with a hidden mode it is
+    not.  ``tau`` is the system's own slow relaxation time, so the quantity is
+    a property of the system and takes no tuning.
+    """
+    n = len(sigma)
+    sym = nm.symmetrise(nm.scale(nm.add(a_drift, nm.transpose(a_drift)), 0.5))
+    vals, _ = nm.eigh(sym)
+    positive = [v for v in vals if v > 0.0]
+    if not positive:
+        raise NumericalFailure("the system has no positive relaxation rate")
+    tau = 1.0 / min(positive)
+    f1 = nm.expm(nm.scale(a_drift, -tau))
+    f2 = nm.expm(nm.scale(a_drift, -2.0 * tau))
+    c1, c2 = [], []
+    for k in range(2):
+        x0 = _conditional_start(sigma, k, 1.0)
+        c1.append(nm.matvec(f1, x0)[:2])
+        c2.append(nm.matvec(f2, x0)[:2])
+    r1 = [[c1[j][i] for j in range(2)] for i in range(2)]
+    r2 = [[c2[j][i] for j in range(2)] for i in range(2)]
+    scale = max(nm.max_abs(r1), 1e-300)
+    return nm.max_abs(nm.sub(r2, nm.matmul(r1, r1))) / scale

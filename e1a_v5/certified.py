@@ -26,23 +26,46 @@ bound.
 
 **Rigorous floating-point enclosure.**  Each hyper-dual component is an
 interval with outward rounding after every operation, so the returned interval
-is a genuine enclosure of the exact real result of the algorithm.  IEEE-754
-gives correctly-rounded ``+ - * /`` and ``sqrt``, within half an ulp, so a
-one-ulp outward widening is sound; ``log`` and ``exp`` are not guaranteed
-correctly rounded by the platform libm, so they are widened by two ulps.
+is a genuine enclosure of the exact real result of the algorithm.
+
+V6 removes the two places where V5 still *assumed* a bound instead of
+establishing one.
+
+*Transcendentals.*  V5 widened ``log`` and ``exp`` by two ulps on the
+reasoning that the platform libm is "usually" that accurate.  Independent
+audit rejected it, correctly: no documented guarantee was bound into the
+procedure, and an empirical accuracy test is not a proof.  V6 does not call
+the platform libm for either function.  ``ilog`` and ``iexp`` are computed
+from an explicit series with a **mathematically bounded range reduction and
+remainder**, evaluated in :mod:`decimal` with directed rounding, so every
+intermediate is rounded outward by the arithmetic itself.  The only property
+borrowed from a library is correctly-rounded decimal ``+ - * /`` under an
+explicit rounding mode, which the General Decimal Arithmetic specification
+requires and which is the same category of guarantee as IEEE-754 binary
+arithmetic.  Inputs enter through ``Decimal(float)``, which is the float's
+EXACT binary value -- never a parsed decimal display string.
+
+*Square root.*  ``isqrt`` does not appeal to the IEEE-754 correctly-rounded
+square root either.  It takes ``math.sqrt`` as an unverified candidate and
+then PROVES the enclosure by exact rational comparison: the returned endpoints
+satisfy ``lo * lo <= a_lo`` and ``hi * hi >= a_hi`` as exact integer
+arithmetic on the binary values, widened until they do.
 
 What this does **not** claim: the enclosure bounds the error of *this
-algorithm* evaluated in floating point.  It is not a bound on the distance
-between the algorithm's exact output and the mathematical quantity the
-algorithm approximates where the algorithm is itself iterative; those pieces
-carry their own explicitly computed residual bounds, in
-:mod:`e1a_v5.calibration`.
+algorithm* evaluated in floating point.  Where the algorithm is itself
+iterative -- the Riccati and Lyapunov fixed points -- the distance from the
+returned iterate to the exact fixed point is bounded separately, for the
+VALUE and for each DERIVATIVE component, by
+:func:`gsteady_state_gain` and :func:`glyapunov_certified`, and those bounds
+are added into the enclosure before the result is used.
 """
 
 from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from decimal import Decimal, ROUND_CEILING, ROUND_FLOOR, localcontext
+from fractions import Fraction
 from typing import Sequence
 
 #: Unit roundoff.
@@ -62,12 +85,34 @@ class CertificationFailure(Exception):
 _INF = float("inf")
 
 
+_nextafter = math.nextafter
+
+
 def _out(lo: float, hi: float, ulps: int = 1) -> Interval:
     """Widen outward by ``ulps`` in each direction."""
+    if ulps == 1:
+        return (_nextafter(lo, -_INF), _nextafter(hi, _INF))
     for _ in range(ulps):
-        lo = math.nextafter(lo, -_INF)
-        hi = math.nextafter(hi, _INF)
+        lo = _nextafter(lo, -_INF)
+        hi = _nextafter(hi, _INF)
     return (lo, hi)
+
+
+def _imulf(a: Interval, c: float) -> Interval:
+    """Interval times an exactly representable float.
+
+    Identical to ``imul(a, (c, c))`` -- a degenerate operand makes two of the
+    four cross products redundant -- and the common case by a wide margin,
+    because every scaling and every structurally constant matrix entry takes
+    this path.
+    """
+    if c == 0.0 or (a[0] == 0.0 and a[1] == 0.0):
+        return (0.0, 0.0)
+    p = a[0] * c
+    q = a[1] * c
+    if p <= q:
+        return (_nextafter(p, -_INF), _nextafter(q, _INF))
+    return (_nextafter(q, -_INF), _nextafter(p, _INF))
 
 
 def iv(x: float) -> Interval:
@@ -75,11 +120,29 @@ def iv(x: float) -> Interval:
     return (float(x), float(x))
 
 
+# An exactly-zero operand is handled explicitly in each operation below.  This
+# is not an optimisation with a rounding cost: ``x + 0``, ``x - 0`` and
+# ``x * 0`` are exact in IEEE-754 for every finite ``x``, so widening their
+# results by an ulp would be pure loss.  It matters structurally as well as
+# numerically -- ``_out(0.0, 0.0)`` returns ``(-5e-324, 5e-324)``, which would
+# turn a variable that provably does not enter a computation into one whose
+# derivative is merely very small, and a structural zero would stop being a
+# structural zero.
+
+
 def iadd(a: Interval, b: Interval) -> Interval:
+    if a[0] == 0.0 and a[1] == 0.0:
+        return b
+    if b[0] == 0.0 and b[1] == 0.0:
+        return a
     return _out(a[0] + b[0], a[1] + b[1])
 
 
 def isub(a: Interval, b: Interval) -> Interval:
+    if b[0] == 0.0 and b[1] == 0.0:
+        return a
+    if a[0] == 0.0 and a[1] == 0.0:
+        return (-b[1], -b[0])
     return _out(a[0] - b[1], a[1] - b[0])
 
 
@@ -88,6 +151,8 @@ def ineg(a: Interval) -> Interval:
 
 
 def imul(a: Interval, b: Interval) -> Interval:
+    if (a[0] == 0.0 and a[1] == 0.0) or (b[0] == 0.0 and b[1] == 0.0):
+        return (0.0, 0.0)
     p = (a[0] * b[0], a[0] * b[1], a[1] * b[0], a[1] * b[1])
     return _out(min(p), max(p))
 
@@ -99,21 +164,274 @@ def idiv(a: Interval, b: Interval) -> Interval:
     return _out(min(q), max(q))
 
 
+# ---------------------------------------------------------------------------
+# Certified transcendentals: self-contained series, no libm guarantee used
+# ---------------------------------------------------------------------------
+#
+# The audit's objection to V5 was precise: the two-ulp widening of ``log`` and
+# ``exp`` rested on an undocumented platform property.  Nothing below rests on
+# one.  Each function is an explicit truncated series with a proved remainder,
+# over a range reduction that is exact in binary floating point, evaluated in
+# decimal arithmetic under directed rounding so that the arithmetic itself
+# rounds outward.
+#
+# What IS borrowed: the General Decimal Arithmetic specification requires
+# ``+ - * /`` to be correctly rounded under the context's rounding mode.  That
+# is a specified property of the arithmetic, in the same category as IEEE-754
+# binary ``+ - * /``, which the interval primitives above already rely on.  No
+# library transcendental is called anywhere in the certified path.
+
+#: Working precision, in decimal digits, of the certified series evaluations.
+TRANSCENDENTAL_PRECISION = 60
+#: Terms retained in the ``atanh`` series behind ``log``.  With |u| <= 1/3 the
+#: proved remainder is below ``(1/3)^91 * 9/8 / 91``, far under one ulp.
+LOG_SERIES_TERMS = 45
+#: Terms retained in the ``exp`` series after halving to |y| <= 1/2.
+EXP_SERIES_TERMS = 40
+
+#: Declared, checkable description of what the certified route depends on.
+#: It names a SPECIFIED property of an arithmetic, not a measured accuracy.
+TRANSCENDENTAL_BACKEND = {
+    "route": "self-contained interval series over decimal basic arithmetic",
+    "library_transcendentals_used": [],
+    "arithmetic_guarantee": (
+        "General Decimal Arithmetic specification: add, subtract, multiply "
+        "and divide are correctly rounded under the context rounding mode"
+    ),
+    "directed_rounding": ["ROUND_FLOOR", "ROUND_CEILING"],
+    "input_conversion": (
+        "Decimal(float) and math.frexp/math.ldexp, both exact on the binary "
+        "value; no decimal display string is parsed"
+    ),
+    "log_reduction": "x = m * 2**e exactly; log x = log m + e log 2",
+    "log_series": "log m = -2 atanh((1-m)/(1+m)), |u| <= 1/3",
+    "log_remainder": "2 u^(2N+1) / ((2N+1) (1 - u^2))",
+    "exp_reduction": "y = x / 2**k exactly, |y| <= 1/2, then k squarings",
+    "exp_series": "sum_{j<=N} y^j / j!",
+    "exp_remainder": "|y|^(N+1) / (N+1)! / (1 - |y|/(N+2))",
+    "sqrt": "candidate from math.sqrt, PROVED by exact rational comparison",
+    "precision_digits": TRANSCENDENTAL_PRECISION,
+    "log_terms": LOG_SERIES_TERMS,
+    "exp_terms": EXP_SERIES_TERMS,
+}
+
+
+def _atanh_enclosure(u_lo: Decimal, u_hi: Decimal, terms: int
+                     ) -> tuple[Decimal, Decimal]:
+    """Enclosure of ``atanh(u)`` for ``0 <= u_lo <= u <= u_hi < 1``.
+
+    Every term is positive, so rounding the whole evaluation down gives a
+    lower bound and rounding it up gives an upper bound.  The truncation
+    remainder is bounded in closed form and added to the upper end:
+
+        sum_{k>=N} u^(2k+1)/(2k+1) <= u^(2N+1) / ((2N+1) (1 - u^2)) .
+    """
+    one = Decimal(1)
+    with localcontext() as ctx:
+        ctx.prec = TRANSCENDENTAL_PRECISION
+        ctx.rounding = ROUND_FLOOR
+        t = u_lo * u_lo
+        p = u_lo
+        lo = Decimal(0)
+        for k in range(terms):
+            lo += p / (2 * k + 1)
+            p = p * t
+        ctx.rounding = ROUND_CEILING
+        t = u_hi * u_hi
+        if t >= one:
+            raise CertificationFailure("atanh series outside its proved domain")
+        p = u_hi
+        hi = Decimal(0)
+        for k in range(terms):
+            hi += p / (2 * k + 1)
+            p = p * t
+        hi += (p / (2 * terms + 1)) / (one - t)
+    return lo, hi
+
+
+_LN2_ENCLOSURE: tuple[Decimal, Decimal] | None = None
+
+
+def _ln2_enclosure() -> tuple[Decimal, Decimal]:
+    """``log 2 = 2 atanh(1/3)``, enclosed once."""
+    global _LN2_ENCLOSURE
+    if _LN2_ENCLOSURE is None:
+        one, three = Decimal(1), Decimal(3)
+        with localcontext() as ctx:
+            ctx.prec = TRANSCENDENTAL_PRECISION
+            ctx.rounding = ROUND_FLOOR
+            u_lo = one / three
+            ctx.rounding = ROUND_CEILING
+            u_hi = one / three
+        lo, hi = _atanh_enclosure(u_lo, u_hi, LOG_SERIES_TERMS)
+        with localcontext() as ctx:
+            # The doubling MUST stay inside a directed context.  Performing it
+            # in the ambient context would round to the default 28 digits with
+            # ROUND_HALF_EVEN, which both discards precision and can round a
+            # lower bound upward -- it stops being a bound.
+            ctx.prec = TRANSCENDENTAL_PRECISION
+            ctx.rounding = ROUND_FLOOR
+            two_lo = Decimal(2) * lo
+            ctx.rounding = ROUND_CEILING
+            two_hi = Decimal(2) * hi
+        _LN2_ENCLOSURE = (two_lo, two_hi)
+    return _LN2_ENCLOSURE
+
+
+def _decimal_to_float_interval(lo: Decimal, hi: Decimal) -> Interval:
+    """Outward float enclosure of an exact decimal interval."""
+    return (math.nextafter(float(lo), -_INF), math.nextafter(float(hi), _INF))
+
+
+def _log_point(x: float) -> tuple[Decimal, Decimal]:
+    """Enclosure of ``log x`` for a single positive float."""
+    m, e = math.frexp(x)              # x = m * 2**e EXACTLY, m in [0.5, 1)
+    dm = Decimal(m)                   # the float's exact binary value
+    one = Decimal(1)
+    with localcontext() as ctx:
+        ctx.prec = TRANSCENDENTAL_PRECISION
+        ctx.rounding = ROUND_FLOOR
+        u_lo = (one - dm) / (one + dm)
+        ctx.rounding = ROUND_CEILING
+        u_hi = (one - dm) / (one + dm)
+    a_lo, a_hi = _atanh_enclosure(u_lo, u_hi, LOG_SERIES_TERMS)
+    with localcontext() as ctx:
+        ctx.prec = TRANSCENDENTAL_PRECISION
+        ctx.rounding = ROUND_FLOOR
+        lnm_lo = Decimal(-2) * a_hi
+        ctx.rounding = ROUND_CEILING
+        lnm_hi = Decimal(-2) * a_lo
+    l2_lo, l2_hi = _ln2_enclosure()
+    de = Decimal(e)
+    with localcontext() as ctx:
+        ctx.prec = TRANSCENDENTAL_PRECISION
+        ctx.rounding = ROUND_FLOOR
+        lo = lnm_lo + de * (l2_lo if e >= 0 else l2_hi)
+        ctx.rounding = ROUND_CEILING
+        hi = lnm_hi + de * (l2_hi if e >= 0 else l2_lo)
+    return lo, hi
+
+
+def _exp_point(x: float) -> tuple[Decimal, Decimal]:
+    """Enclosure of ``exp x`` for a single float.
+
+    The series is evaluated at ``|y|`` so every term is POSITIVE.  That is not
+    cosmetic: with alternating signs, rounding each intermediate downward does
+    not produce a lower bound of the next one, because multiplying a lower
+    bound by a negative factor gives an upper bound.  All-positive terms make
+    directed rounding monotone through the whole evaluation, and the negative
+    branch is recovered exactly by one reciprocal.
+    """
+    if x == 0.0:
+        return Decimal(1), Decimal(1)
+    _, e = math.frexp(x)
+    k = max(0, e + 1)
+    y = abs(math.ldexp(x, -k))        # exact: a binary exponent shift
+    dy = Decimal(y)
+    with localcontext() as ctx:
+        ctx.prec = TRANSCENDENTAL_PRECISION
+        ctx.rounding = ROUND_FLOOR
+        lo = Decimal(1)
+        term = Decimal(1)
+        for j in range(1, EXP_SERIES_TERMS + 1):
+            term = term * dy / j
+            lo += term
+        ctx.rounding = ROUND_CEILING
+        hi = Decimal(1)
+        term = Decimal(1)
+        for j in range(1, EXP_SERIES_TERMS + 1):
+            term = term * dy / j
+            hi += term
+        # |R_N| <= y^(N+1)/(N+1)! * 1/(1 - y/(N+2)), every factor positive.
+        rem = Decimal(1)
+        for j in range(1, EXP_SERIES_TERMS + 2):
+            rem = rem * dy / j
+        rem = rem / (Decimal(1) - dy / (EXP_SERIES_TERMS + 2))
+        hi += rem
+        if lo <= 0:
+            raise CertificationFailure("exp enclosure lost positivity")
+        for _ in range(k):
+            ctx.rounding = ROUND_FLOOR
+            lo = lo * lo
+            ctx.rounding = ROUND_CEILING
+            hi = hi * hi
+        if x < 0.0:
+            ctx.rounding = ROUND_FLOOR
+            inv_lo = Decimal(1) / hi
+            ctx.rounding = ROUND_CEILING
+            inv_hi = Decimal(1) / lo
+            lo, hi = inv_lo, inv_hi
+    return lo, hi
+
+
+#: Memo tables.  These are pure functions of their argument, so caching changes
+#: no result; it exists because the hyper-dual sweep evaluates the SAME value
+#: components thousands of times while only the seeded directions differ.
+_SQRT_CACHE: dict[Interval, Interval] = {}
+_LOG_CACHE: dict[Interval, Interval] = {}
+_EXP_CACHE: dict[Interval, Interval] = {}
+_CACHE_LIMIT = 1 << 20
+
+
+def _cache_put(table: dict, key, value):
+    if len(table) >= _CACHE_LIMIT:
+        table.clear()
+    table[key] = value
+    return value
+
+
 def isqrt(a: Interval) -> Interval:
+    """``sqrt`` of an interval, PROVED rather than assumed.
+
+    ``math.sqrt`` supplies a candidate; the endpoints are then widened until
+    exact rational arithmetic on the binary values confirms
+    ``lo^2 <= a_lo`` and ``hi^2 >= a_hi``.  No IEEE-754 or libm property is
+    appealed to, and the result is at least as tight as a blind one-ulp
+    widening.
+    """
     if a[0] < 0.0:
         raise CertificationFailure("interval sqrt of a possibly negative interval")
-    return _out(math.sqrt(a[0]), math.sqrt(a[1]))
+    got = _SQRT_CACHE.get(a)
+    if got is not None:
+        return got
+    lo = math.sqrt(a[0])
+    hi = math.sqrt(a[1])
+    if not (math.isfinite(lo) and math.isfinite(hi)):
+        raise CertificationFailure("interval sqrt produced a non-finite endpoint")
+    flo, fhi = Fraction(a[0]), Fraction(a[1])
+    while lo > 0.0 and Fraction(lo) * Fraction(lo) > flo:
+        lo = math.nextafter(lo, -_INF)
+    while Fraction(hi) * Fraction(hi) < fhi:
+        hi = math.nextafter(hi, _INF)
+    return _cache_put(_SQRT_CACHE, a, (lo, hi))
 
 
 def ilog(a: Interval) -> Interval:
+    """``log`` of an interval, from the certified series.  Monotone, so the
+    endpoints map to the endpoints."""
     if a[0] <= 0.0:
         raise CertificationFailure("interval log of a possibly non-positive interval")
-    # libm log is not guaranteed correctly rounded; widen by two ulps.
-    return _out(math.log(a[0]), math.log(a[1]), ulps=2)
+    got = _LOG_CACHE.get(a)
+    if got is not None:
+        return got
+    lo, _ = _log_point(a[0])
+    _, hi = _log_point(a[1])
+    return _cache_put(_LOG_CACHE, a, _decimal_to_float_interval(lo, hi))
 
 
 def iexp(a: Interval) -> Interval:
-    return _out(math.exp(a[0]), math.exp(a[1]), ulps=2)
+    """``exp`` of an interval, from the certified series."""
+    got = _EXP_CACHE.get(a)
+    if got is not None:
+        return got
+    if not (math.isfinite(a[0]) and math.isfinite(a[1])):
+        raise CertificationFailure("interval exp of a non-finite interval")
+    lo, _ = _exp_point(a[0])
+    _, hi = _exp_point(a[1])
+    out = _decimal_to_float_interval(lo, hi)
+    if not math.isfinite(out[0]):
+        raise CertificationFailure("interval exp underflowed its lower endpoint")
+    return _cache_put(_EXP_CACHE, a, out)
 
 
 def imid(a: Interval) -> float:
@@ -133,19 +451,33 @@ def imag(a: Interval) -> float:
 # Hyper-dual scalar over intervals
 # ---------------------------------------------------------------------------
 
-@dataclass(frozen=True)
+_ZERO: Interval = (0.0, 0.0)
+
+
 class IHD:
     """``v + d1 e1 + d2 e2 + d12 e1 e2`` with every component an interval.
 
     The ``d12`` component of a result is the exact mixed second partial
     derivative of the computation with respect to whatever ``e1`` and ``e2``
     were seeded on, enclosed to floating-point rigour.
+
+    Written with ``__slots__`` and a direct ``__init__`` rather than as a
+    frozen dataclass: the sweep constructs millions of these, and a frozen
+    dataclass pays ``object.__setattr__`` per field on every one.  The object
+    is still treated as immutable everywhere.
     """
 
-    v: Interval
-    d1: Interval = (0.0, 0.0)
-    d2: Interval = (0.0, 0.0)
-    d12: Interval = (0.0, 0.0)
+    __slots__ = ("v", "d1", "d2", "d12")
+
+    def __init__(self, v: Interval, d1: Interval = _ZERO,
+                 d2: Interval = _ZERO, d12: Interval = _ZERO) -> None:
+        self.v = v
+        self.d1 = d1
+        self.d2 = d2
+        self.d12 = d12
+
+    def __repr__(self) -> str:  # pragma: no cover - diagnostics only
+        return f"IHD(v={self.v}, d1={self.d1}, d2={self.d2}, d12={self.d12})"
 
     # -- construction ------------------------------------------------------
     @staticmethod
@@ -162,8 +494,20 @@ class IHD:
         return x if isinstance(x, IHD) else IHD.const(float(x))
 
     # -- arithmetic --------------------------------------------------------
+    #
+    # Every operator has a fast path for a plain-float operand.  It is not an
+    # approximation: a float promotes to a degenerate interval with zero
+    # derivative parts, so the general formula collapses to exactly these
+    # expressions.  Taking the collapse explicitly also AVOIDS the spurious
+    # one-ulp widening that adding an exact zero would otherwise incur, so the
+    # fast path is never wider than the general one.
     def __add__(self, o) -> "IHD":
-        o = IHD.promote(o)
+        if o.__class__ is not IHD:
+            c = float(o)
+            if c == 0.0:
+                return self
+            return IHD(_out(self.v[0] + c, self.v[1] + c),
+                       self.d1, self.d2, self.d12)
         return IHD(iadd(self.v, o.v), iadd(self.d1, o.d1),
                    iadd(self.d2, o.d2), iadd(self.d12, o.d12))
 
@@ -173,15 +517,23 @@ class IHD:
         return IHD(ineg(self.v), ineg(self.d1), ineg(self.d2), ineg(self.d12))
 
     def __sub__(self, o) -> "IHD":
-        o = IHD.promote(o)
+        if o.__class__ is not IHD:
+            c = float(o)
+            if c == 0.0:
+                return self
+            return IHD(_out(self.v[0] - c, self.v[1] - c),
+                       self.d1, self.d2, self.d12)
         return IHD(isub(self.v, o.v), isub(self.d1, o.d1),
                    isub(self.d2, o.d2), isub(self.d12, o.d12))
 
     def __rsub__(self, o) -> "IHD":
-        return IHD.promote(o) - self
+        return (-self) + o
 
     def __mul__(self, o) -> "IHD":
-        o = IHD.promote(o)
+        if o.__class__ is not IHD:
+            c = float(o)
+            return IHD(_imulf(self.v, c), _imulf(self.d1, c),
+                       _imulf(self.d2, c), _imulf(self.d12, c))
         v = imul(self.v, o.v)
         d1 = iadd(imul(self.v, o.d1), imul(self.d1, o.v))
         d2 = iadd(imul(self.v, o.d2), imul(self.d2, o.v))
@@ -314,6 +666,15 @@ def radius(x) -> float:
 # point, which is what entitles the IHD evaluation to stand in for the cleared
 # float core rather than quietly replacing it.
 
+def _is_exact_zero(x) -> bool:
+    """A plain float exactly equal to zero.
+
+    An IHD is never treated as zero here even when its value component is:
+    its derivative components may not be.
+    """
+    return x.__class__ is float and x == 0.0
+
+
 def gzeros(n: int, m: int | None = None):
     m = n if m is None else m
     return [[0.0 for _ in range(m)] for _ in range(n)]
@@ -328,18 +689,38 @@ def gshape(a) -> tuple[int, int]:
 
 
 def gmatmul(a, b):
+    """Matrix product, skipping terms whose factor is an exact float zero.
+
+    Skipping is not an approximation and not an optimisation that changes a
+    result.  ``0.0 * x`` is exactly ``+-0.0`` for finite ``x``, and adding an
+    exact zero to an accumulator leaves it bit-identical except possibly for
+    the sign of a zero.  It matters because the Van Loan block matrix is
+    three-quarters structural zeros, and interval arithmetic was paying full
+    price for every one of them.  Non-finite entries are refused up front by
+    the callers that can produce them, so no ``0 * inf`` is hidden.
+    """
     n, k = gshape(a)
     k2, m = gshape(b)
     if k != k2:
         raise CertificationFailure("gmatmul shape mismatch")
+    cols = [[b[t][j] for t in range(k)] for j in range(m)]
     out = []
     for i in range(n):
+        arow = a[i]
         row = []
         for j in range(m):
-            acc = a[i][0] * b[0][j]
-            for t in range(1, k):
-                acc = acc + a[i][t] * b[t][j]
-            row.append(acc)
+            col = cols[j]
+            acc = None
+            for t in range(k):
+                x = arow[t]
+                if _is_exact_zero(x):
+                    continue
+                y = col[t]
+                if _is_exact_zero(y):
+                    continue
+                p = x * y
+                acc = p if acc is None else acc + p
+            row.append(0.0 if acc is None else acc)
         out.append(row)
     return out
 
@@ -348,10 +729,18 @@ def gmatvec(a, v):
     n, k = gshape(a)
     out = []
     for i in range(n):
-        acc = a[i][0] * v[0]
-        for t in range(1, k):
-            acc = acc + a[i][t] * v[t]
-        out.append(acc)
+        arow = a[i]
+        acc = None
+        for t in range(k):
+            x = arow[t]
+            if _is_exact_zero(x):
+                continue
+            y = v[t]
+            if _is_exact_zero(y):
+                continue
+            p = x * y
+            acc = p if acc is None else acc + p
+        out.append(0.0 if acc is None else acc)
     return out
 
 
@@ -364,7 +753,13 @@ def gsub(a, b):
 
 
 def gscale(a, c):
-    return [[a[i][j] * c for j in range(len(a[0]))] for i in range(len(a))]
+    """Scale a matrix, keeping structural float zeros as float zeros.
+
+    ``0.0 * c`` is exactly zero for finite ``c``, so preserving the plain
+    float keeps the zero-skipping in :func:`gmatmul` effective even when the
+    scale factor is itself a hyper-dual (a shutter or timing primitive, say).
+    """
+    return [[(0.0 if _is_exact_zero(x) else x * c) for x in row] for row in a]
 
 
 def gtranspose(a):
@@ -475,6 +870,11 @@ def gexpm(a, terms: int = 18):
     n, m = gshape(a)
     if n != m:
         raise CertificationFailure("gexpm requires a square matrix")
+    # Mirrors numerics.expm's finiteness guard.  It also underwrites the
+    # zero-skipping in gmatmul: with every entry finite, a skipped term is an
+    # exact zero and never a hidden 0 * inf.
+    if not all(gfinite(v) for row in a for v in row):
+        raise CertificationFailure("gexpm received a non-finite matrix")
     nrm = max((sum(gmag(v) for v in row) for row in a), default=0.0)
     s = 0
     while nrm > 0.5:
@@ -552,6 +952,171 @@ def glyapunov_discrete(f, q, doublings: int = LYAP_DOUBLINGS, tol: float = 1e-15
         steps = glyapunov_steps(value_matrix(f), value_matrix(q), doublings, tol)
         return glyapunov_fixed(f, q, min(doublings, steps + ITERATION_PAD))
     return glyapunov_fixed(f, q, glyapunov_steps(f, q, doublings, tol))
+
+
+# ---------------------------------------------------------------------------
+# Certified fixed points: value AND every derivative component
+# ---------------------------------------------------------------------------
+#
+# V5 bounded only the VALUE of the Riccati fixed point, by a one-step residual
+# over ``1 - ||F_cl||^2``, and that bound was reported but never entered the
+# enclosure.  The audit was right on both counts: a value residual says
+# nothing about a derivative, and a bound that is printed rather than added
+# certifies nothing.
+#
+# The repair uses one observation.  Hyper-dual numbers under
+#
+#     ||x||_w = |x_0| + w |x_1| + w |x_2| + w^2 |x_12|
+#
+# form a Banach ALGEBRA for every weight ``w > 0``: expanding ``||x|| ||y||``
+# reproduces every cross term of the product's grading, so
+# ``||x y||_w <= ||x||_w ||y||_w``.  Matrices over that algebra inherit a
+# submultiplicative induced norm, the max row sum of entry norms.  So the
+# classical a posteriori contraction estimate applies to the hyper-dual
+# iterate AS A WHOLE:
+#
+#     ||X - X*||_w <= ||T(X) - X||_w / (1 - L_w) ,   L_w = sup ||DT||_w ,
+#
+# and reading the grading back off gives one bound per component:
+# ``|dP_0| <= B``, ``|dP_1|, |dP_2| <= B / w``, ``|dP_12| <= B / w^2``.  Every
+# admissible ``w`` yields a valid bound for every component, so the tightest
+# bound per component is the minimum over a grid of weights.
+#
+# For the Riccati operator the Frechet derivative is the classical
+# ``DT(P)[D] = F_cl D F_cl^T`` with ``F_cl = F - K(P) C``, so ``L_w`` is
+# ``||F_cl||_w^2``.  That is a derivative AT a point; the Lipschitz constant on
+# the ball must dominate it everywhere on the ball, which is why the bound is
+# computed, the ball inflated, ``F_cl`` re-enclosed over the whole inflated
+# ball, and the bound recomputed and required to still fit inside it.  That
+# epsilon-inflation acceptance test is what makes the contraction constant a
+# bound over the enclosure and not only at a midpoint.
+
+#: Safety factor for the epsilon-inflation acceptance test.
+BALL_INFLATION = 8.0
+#: Weights tried when reading component bounds out of the graded norm.
+WEIGHT_GRID: tuple[float, ...] = tuple(2.0 ** k for k in range(-40, 9))
+#: Smallest positive double; used where a proved tail bound underflows.
+TINY = 5e-324
+
+
+def _component_mags(x) -> tuple[float, float, float, float]:
+    """Sup magnitude of each hyper-dual component of one scalar."""
+    if x.__class__ is IHD:
+        return (imag(x.v), imag(x.d1), imag(x.d2), imag(x.d12))
+    v = abs(float(x))
+    return (v, 0.0, 0.0, 0.0)
+
+
+def ghd_norms(m) -> tuple[float, float, float, float]:
+    """Per-component induced infinity norms (max row sum) of a matrix."""
+    n = [0.0, 0.0, 0.0, 0.0]
+    for row in m:
+        acc = [0.0, 0.0, 0.0, 0.0]
+        for x in row:
+            mags = _component_mags(x)
+            for i in range(4):
+                acc[i] += mags[i]
+        for i in range(4):
+            if acc[i] > n[i]:
+                n[i] = acc[i]
+    return (n[0], n[1], n[2], n[3])
+
+
+def _graded(n: Sequence[float], w: float) -> float:
+    return n[0] + w * (n[1] + n[2]) + w * w * n[3]
+
+
+def contraction_bounds(
+    residual: Sequence[float], lipschitz: Sequence[float],
+) -> tuple[float, float, float, float]:
+    """Componentwise fixed-point bounds from a residual and a derivative norm.
+
+    ``lipschitz`` are the component norms of ``F_cl``; the Lipschitz constant
+    in the graded norm is its square.  Returns ``inf`` in a component when no
+    weight on the grid makes the map a contraction there.
+    """
+    best = [float("inf")] * 4
+    for w in WEIGHT_GRID:
+        c = _graded(lipschitz, w)
+        q = c * c
+        if not (q < 1.0):
+            continue
+        r = _graded(residual, w)
+        b = r / (1.0 - q)
+        cand = (b, b / w, b / w, b / (w * w))
+        for i in range(4):
+            if cand[i] < best[i]:
+                best[i] = cand[i]
+    return (best[0], best[1], best[2], best[3])
+
+
+def _inflate(x, b: Sequence[float]):
+    """Widen one scalar's components by a certified symmetric bound."""
+    if b[0] == 0.0 and b[1] == 0.0 and b[2] == 0.0 and b[3] == 0.0:
+        return x
+    if x.__class__ is not IHD:
+        x = IHD.const(float(x))
+    return IHD(
+        _out(x.v[0] - b[0], x.v[1] + b[0]),
+        _out(x.d1[0] - b[1], x.d1[1] + b[1]),
+        _out(x.d2[0] - b[2], x.d2[1] + b[2]),
+        _out(x.d12[0] - b[3], x.d12[1] + b[3]),
+    )
+
+
+def ginflate_matrix(m, b: Sequence[float]):
+    return [[_inflate(x, b) for x in row] for row in m]
+
+
+def glyapunov_certified(f, q, doublings: int = LYAP_DOUBLINGS, tol: float = 1e-15):
+    """``P = F P F^T + Q`` with a proved bound on the truncated tail.
+
+    The doubling iteration after ``m`` steps is exactly the partial sum
+    ``sum_{j < 2^m} F^j Q (F^j)^T``, so the omitted tail obeys
+
+        ||tail||_w <= ||Q||_w ||F||_w^(2 * 2^m) / (1 - ||F||_w^2) ,
+
+    which is evaluated in logarithms because the exponent is astronomically
+    large; where it underflows, the smallest positive double stands in, which
+    is still an upper bound.  The returned ``P`` has the bound folded into its
+    enclosure, so no caller can use the iterate without it.
+    """
+    generic = contains_ihd(f, q)
+    if generic:
+        steps = glyapunov_steps(value_matrix(f), value_matrix(q), doublings, tol)
+        steps = min(doublings, steps + ITERATION_PAD)
+    else:
+        steps = glyapunov_steps(f, q, doublings, tol)
+    p = glyapunov_fixed(f, q, steps)
+    fn = ghd_norms(f)
+    qn = ghd_norms(q)
+    best = [float("inf")] * 4
+    for w in WEIGHT_GRID:
+        nf = _graded(fn, w)
+        if not (nf < 1.0):
+            continue
+        qw = _graded(qn, w)
+        log_nf = math.log(nf) if nf > 0.0 else -float("inf")
+        expo = 2.0 * (2.0 ** min(steps, 1023))
+        power_log = expo * log_nf
+        power = math.exp(power_log) if power_log > -740.0 else TINY
+        b = qw * power / (1.0 - nf * nf)
+        cand = (b, b / w, b / w, b / (w * w))
+        for i in range(4):
+            if cand[i] < best[i]:
+                best[i] = cand[i]
+    if not all(math.isfinite(v) for v in best):
+        raise CertificationFailure(
+            "the discrete Lyapunov iteration is not certifiably contractive"
+        )
+    bounds = (best[0], best[1], best[2], best[3])
+    if not generic:
+        # The float path is the cross-check against the cleared core, not the
+        # certified path; folding an enclosure into it would turn its floats
+        # into intervals and break the bit-for-bit comparison that makes the
+        # cross-check meaningful.  The bound is still returned.
+        return p, bounds
+    return ginflate_matrix(p, bounds), bounds
 
 
 # ---------------------------------------------------------------------------
@@ -684,11 +1249,19 @@ def _riccati_float_solution(ss_float: GStateSpace):
     raise CertificationFailure("steady-state Riccati did not converge")
 
 
-#: Interval refinement steps taken from the float fixed point.  The Riccati
-#: map contracts by ``||F_cl||^2`` per step, which is of order 1e-4 here, so a
-#: handful of steps converges the derivative components far past double
-#: precision while the interval width is paid only once per step.
-RICCATI_REFINE = 6
+#: Interval refinement steps taken from the float fixed point.
+#:
+#: Correctness does not depend on this number: the returned enclosure is
+#: widened by a residual-based bound measured at whatever iterate the loop
+#: stops on, so every count is certified.  Only TIGHTNESS depends on it, and
+#: it has an interior optimum.  Too few steps and the derivative components,
+#: which start at zero because the float fixed point carries none, have not
+#: contracted far enough; too many and each additional interval step
+#: compounds width faster than the contraction removes it.  Three steps is
+#: where the two meet at this design point -- the certified distance to the
+#: fixed point is then of order 1e-27 against a covariance scale of 4e-17,
+#: twelve orders below the interval width that the step itself costs.
+RICCATI_REFINE = 3
 
 
 def _float_state_space(ss: GStateSpace) -> GStateSpace:
@@ -700,20 +1273,22 @@ def _float_state_space(ss: GStateSpace) -> GStateSpace:
 
 
 def gsteady_state_gain(ss: GStateSpace):
-    """Steady-state predictor gain, innovation covariance, and the residual.
+    """Steady-state predictor gain and innovation covariance, certified.
 
-    The returned residual is the exact one-step Riccati residual at the point
-    the iteration stopped.  The Riccati map is a contraction with factor
-    ``||F_cl||^2`` in the induced norm, so a one-step residual ``r`` places the
-    exact fixed point within ``r / (1 - ||F_cl||^2)``; that bound is what
-    enters the certified enclosure.
+    Returns ``(gain, s_inn, bounds, cl_norm)``.  ``bounds`` are the proved
+    distances from the returned iterate to the exact Riccati fixed point, one
+    per hyper-dual component: the value ``P - P*``, the two first-order
+    tangents ``dP/dtheta`` and ``dP/dphi``, and the mixed second derivative.
+    They are already folded into the enclosure of the ``P`` that ``gain`` and
+    ``s_inn`` are built from, so no caller can use the iterate without them.
 
     The iteration count is fixed from a float pre-run rather than decided by a
     convergence test on the interval iterate, for the reason given in
     :func:`glyapunov_steps`.
     """
     d = len(ss.sigma)
-    if contains_ihd(ss.sigma, ss.f, ss.q, ss.c_obs, ss.r_eff, ss.s_cross):
+    generic = contains_ihd(ss.sigma, ss.f, ss.q, ss.c_obs, ss.r_eff, ss.s_cross)
+    if generic:
         # Start the interval iteration AT the float fixed point.  Iterating
         # from Sigma instead means every early step differences two quantities
         # of Sigma's scale to produce a P several times smaller, and interval
@@ -727,14 +1302,49 @@ def gsteady_state_gain(ss: GStateSpace):
         _, refine = _riccati_float_solution(ss)
     for _ in range(min(RICCATI_MAX, refine)):
         p, gain, s_inn = _riccati_step(ss, p, d)
-    p_check, gain, s_inn = _riccati_step(ss, p, d)
-    residual = gmax_abs(gsub(p_check, p))
+    p_next, gain, s_inn = _riccati_step(ss, p, d)
+    residual = ghd_norms(gsub(p_next, p))
     closed = gsub(ss.f, gmatmul(gain, ss.c_obs))
-    cl_norm = max(sum(gmag(v) for v in row) for row in closed)
-    return gain, s_inn, residual, cl_norm
+    cl = ghd_norms(closed)
+    if not generic:
+        return gain, s_inn, (residual[0] / max(1.0 - cl[0] * cl[0], TINY),
+                             0.0, 0.0, 0.0), cl[0]
+
+    first = contraction_bounds(residual, cl)
+    if not all(math.isfinite(b) for b in first):
+        raise CertificationFailure(
+            "the Riccati map is not certifiably contractive at the iterate"
+        )
+    # Epsilon inflation: the contraction constant must dominate on the WHOLE
+    # ball the bound claims, not only at the iterate.  Re-enclose F_cl over an
+    # inflated ball and require the recomputed bound to fit back inside it.
+    claimed = tuple(BALL_INFLATION * b for b in first)
+    ball = ginflate_matrix(p, claimed)
+    _, gain_ball, _ = _riccati_step(ss, ball, d)
+    cl_ball = ghd_norms(gsub(ss.f, gmatmul(gain_ball, ss.c_obs)))
+    bounds = contraction_bounds(residual, cl_ball)
+    if not all(math.isfinite(b) for b in bounds) or any(
+        b > c for b, c in zip(bounds, claimed)
+    ):
+        raise CertificationFailure(
+            "the Riccati contraction constant is not verified over the "
+            f"enclosure: bounds {bounds}, claimed ball {claimed}"
+        )
+    # The bound is on ``p``, the iterate the residual was measured at, so the
+    # enclosure is built there.  Taking one more Riccati step first would be
+    # sound but needlessly wide: every interval step compounds width, and the
+    # certified bound already covers the whole remaining distance.
+    p_star = ginflate_matrix(p, bounds)
+    _, gain, s_inn = _riccati_step(ss, p_star, d)
+    return gain, s_inn, bounds, cl_ball[0]
 
 
 def ginnovation_covariance(truth: GStateSpace, model: GStateSpace, gain):
+    """Stationary innovation covariance under the truth; see below for bounds."""
+    return _ginnovation_covariance(truth, model, gain)[0]
+
+
+def _ginnovation_covariance(truth: GStateSpace, model: GStateSpace, gain):
     d = len(truth.sigma)
     fm_kc = gsub(model.f, gmatmul(gain, model.c_obs))
     kct = gmatmul(gain, truth.c_obs)
@@ -753,20 +1363,36 @@ def ginnovation_covariance(truth: GStateSpace, model: GStateSpace, gain):
             q[i][d + j] = sk[i][j]
             q[d + i][j] = sk[j][i]
             q[d + i][d + j] = krk[i][j]
-    p = glyapunov_discrete(m, gsym(q))
+    p, lyap_bounds = glyapunov_certified(m, gsym(q))
     g = gzeros(d, 2 * d)
     for i in range(d):
         for j in range(d):
             g[i][j] = truth.c_obs[i][j]
             g[i][d + j] = -model.c_obs[i][j]
     gpg = gmatmul(gmatmul(g, p), gtranspose(g))
-    return gsym(gadd(gpg, truth.r_eff))
+    return gsym(gadd(gpg, truth.r_eff)), lyap_bounds
+
+
+def gis_zero(x) -> bool:
+    """True only when EVERY hyper-dual component is exactly zero.
+
+    ``gmag`` reports the VALUE component alone.  A shortcut that tested it
+    would discard a derivative whenever the value happened to vanish, which is
+    exactly the situation at the linearisation point: the offset difference is
+    zero there while its derivative with respect to the centre parameters is
+    not.  Taking that shortcut silently removed the centre rows of the
+    expected information and made the system singular.
+    """
+    if x.__class__ is IHD:
+        return (x.v == (0.0, 0.0) and x.d1 == (0.0, 0.0)
+                and x.d2 == (0.0, 0.0) and x.d12 == (0.0, 0.0))
+    return float(x) == 0.0
 
 
 def ginnovation_mean(truth: GStateSpace, model: GStateSpace, gain):
     d = len(truth.sigma)
     dc = [truth.offset[i] - model.offset[i] for i in range(d)]
-    if all(gmag(v) == 0.0 for v in dc):
+    if all(gis_zero(v) for v in dc):
         return [0.0] * d
     closed = gsub(model.f, gmatmul(gain, model.c_obs))
     m = gsub(geye(d), closed)
@@ -778,29 +1404,43 @@ def ginnovation_mean(truth: GStateSpace, model: GStateSpace, gain):
 
 @dataclass(frozen=True)
 class LoglikResult:
+    """One expected-log-likelihood evaluation and its fixed-point evidence.
+
+    ``riccati_bounds`` and ``lyapunov_bounds`` are each
+    ``(value, d/dtheta, d/dphi, mixed)``.  They are reported as evidence; they
+    have ALREADY been folded into the enclosure of ``value``, which is what
+    the V5 audit found missing.
+    """
+
     value: object
-    riccati_residual: float
+    riccati_bounds: tuple[float, float, float, float]
+    lyapunov_bounds: tuple[float, float, float, float]
     closed_loop_norm: float
 
     @property
     def riccati_fixed_point_bound(self) -> float:
-        """Distance from the returned P to the exact Riccati fixed point.
+        """Distance from the returned P to the exact Riccati fixed point."""
+        return self.riccati_bounds[0]
 
-        The iteration ``P -> F_cl P F_cl^T + (.)`` is a contraction with factor
-        ``||F_cl||^2`` in the induced norm, so a one-step residual ``r`` puts
-        the fixed point within ``r / (1 - ||F_cl||^2)``.
-        """
-        c2 = self.closed_loop_norm * self.closed_loop_norm
-        if c2 >= 1.0:
-            return float("inf")
-        return self.riccati_residual / (1.0 - c2)
+    @property
+    def riccati_derivative_bound(self) -> float:
+        """Worst bound on ``dP/dtheta - dP*/dtheta`` and its phi counterpart."""
+        return max(self.riccati_bounds[1], self.riccati_bounds[2])
+
+    @property
+    def riccati_mixed_bound(self) -> float:
+        return self.riccati_bounds[3]
+
+    @property
+    def lyapunov_bound(self) -> float:
+        return max(self.lyapunov_bounds)
 
 
 def gexpected_loglik(truth: GStateSpace, model: GStateSpace) -> LoglikResult:
     """Expected log likelihood per frame of ``model`` under data from ``truth``."""
     d = len(truth.sigma)
-    gain, s_inn, residual, cl_norm = gsteady_state_gain(model)
-    var_v = ginnovation_covariance(truth, model, gain)
+    gain, s_inn, riccati_bounds, cl_norm = gsteady_state_gain(model)
+    var_v, lyap_bounds = _ginnovation_covariance(truth, model, gain)
     vbar = ginnovation_mean(truth, model, gain)
     l = gcholesky(s_inn)
     logdet = glog(l[0][0])
@@ -820,5 +1460,15 @@ def gexpected_loglik(truth: GStateSpace, model: GStateSpace) -> LoglikResult:
             if i == 0 and j == 0:
                 continue
             quad = quad + vbar[i] * s_inv[i][j] * vbar[j]
-    total = logdet + tr + quad + d * math.log(2.0 * math.pi)
-    return LoglikResult(total * -0.5, residual, cl_norm)
+    # The additive 2*pi constant is enclosed through the certified log on the
+    # interval path.  It shifts only the VALUE component -- its derivatives
+    # are exactly zero -- but an unenclosed float constant has no place in a
+    # certified result.  The float path keeps the plain constant, so it stays
+    # bit-identical to the cleared core it cross-checks.
+    partial = logdet + tr + quad
+    if partial.__class__ is IHD:
+        two_pi = ilog(iv(2.0 * math.pi))
+        total = partial + IHD(_out(d * two_pi[0], d * two_pi[1]))
+    else:
+        total = partial + d * math.log(2.0 * math.pi)
+    return LoglikResult(total * -0.5, riccati_bounds, lyap_bounds, cl_norm)

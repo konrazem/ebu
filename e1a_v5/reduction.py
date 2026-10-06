@@ -106,13 +106,23 @@ class AxialEvidence:
     def fully_qualified(
         remainder_set: "RemainderSet | None" = None,
         nonlinear_remainder: "NonlinearRemainder | None" = None,
+        *,
+        temporal_qualified: bool = True,
     ) -> "AxialEvidence":
-        """Construct complete passing evidence, for synthetic fixtures only."""
+        """Complete passing evidence, for synthetic fixtures only.
+
+        ``temporal_qualified`` is keyword-only and has no literal default on
+        any production path: every caller in the package derives it, either
+        from the construction-time semigroup residual of the world being built
+        or, per replicate, from the measured response.  V5 had this item set
+        to a literal True in every design builder and to a literal False in
+        one deterministic control, and nothing anywhere derived it.
+        """
         return AxialEvidence(
             conservativity_qualified=True,
             harmonic_domain_qualified=True,
             support_qualified=True,
-            temporal_reduction_qualified=True,
+            temporal_reduction_qualified=bool(temporal_qualified),
             observation_transfer_qualified=True,
             remainder_set=(
                 RemainderSet(0.0, "synthetic fixture: certified zero remainder")

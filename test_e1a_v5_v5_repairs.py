@@ -49,9 +49,11 @@ from e1a_v5.evidence import (
     GATE_WRONG_DOMAIN,
     GATE_WRONG_FAMILY,
     GATE_WRONG_VERSION,
-    CalibratedGateProcedure,
+    GateCalibrationReceipt,
+    GateExpectations,
     GateFamily,
     GateLimit,
+    SyntheticGateFixture,
     synthetic_calibrated_gate_fixture,
 )
 from e1a_v5.gates import DELTA_G, DELTA_M, DELTA_R_IRR
@@ -67,7 +69,8 @@ from e1a_v5.observation import (
     BANDWIDTH_CEILING,
     EXPOSURE_CEILING_FRACTION,
     LOCALIZATION_RATIO_CEILING,
-    qualify_observation,
+    ObservationEnvelope,
+    qualify_observation_envelope,
 )
 from e1a_v5.packets import RECORDS, BlockId, FieldId
 from e1a_v5.reduction import (
@@ -111,8 +114,11 @@ from e1a_v5.validation.harness import (
     axial_memory_specs,
     axial_memory_witness,
     design_specs,
+    observation_envelope,
     run_axial_memory_record,
     run_record,
+    temporal_qualification,
+    true_system,
 )
 from e1a_v5.validation.run import PROCEDURE_VERSION, DOMAIN_IDENTITY, deterministic_controls
 from e1a_v5.rng import Stream
@@ -454,9 +460,18 @@ def test_blocker2_certified_radius_and_routing() -> None:
     check("a set outside the SPD domain is refused", not out.ok)
 
     eff = axial_effects(0)
-    check("the design point's axial effects fit inside the existing bias budget",
-          eff.log_beta_bias + plan.BIAS_PER_CELL <= BIAS_ABS_MAX,
-          f"{eff.log_beta_bias + plan.BIAS_PER_CELL!r}")
+    # V5 asserted the design point's axial effects fitted inside the existing
+    # bias budget.  Over the V6 joint 99.9% region they do NOT, and the
+    # ceiling is now an enforced predicate rather than a figure to report, so
+    # what this regression protects is that the budget is CHECKED and that the
+    # axial contribution is routed into it -- not that this design point
+    # happens to pass.  Section 32 forbids shrinking the model error to make
+    # it pass.
+    total_bias = eff.log_beta_bias + plan.BIAS_PER_CELL
+    check("the axial scale effect is routed into the absolute bias budget",
+          total_bias > plan.BIAS_PER_CELL and math.isfinite(total_bias))
+    check("the design point EXCEEDS the 0.0005 absolute bias ceiling",
+          total_bias > BIAS_ABS_MAX, f"{total_bias!r}")
     check("the centre effect is multiplicative, not additive",
           eff.centre_factor > 1.0 and close(eff.centre_factor,
                                             math.sqrt(1.0 + eff.rho), 1e-14))
@@ -468,76 +483,117 @@ def test_blocker2_certified_radius_and_routing() -> None:
 # BLOCKER 3 -- a raw statistic can never become a calibrated limit
 # ===========================================================================
 
+def _receipt(expected, **over) -> GateCalibrationReceipt:
+    """A genuine, complete receipt for the running procedure."""
+    base = dict(
+        family=GateFamily.SHAPE,
+        procedure_version=expected.procedure_version,
+        analysis_identity=expected.analysis_identity,
+        validation_identity=expected.validation_identity,
+        plan_identity=expected.plan_identity,
+        seed_map_identity=expected.seed_map_identity,
+        calibration_seed_namespace=expected.calibration_seed_namespace,
+        calibration_identity="CAL-SHAPE-01/4000",
+        domain_identity=expected.domain_identity,
+        replicates=4000,
+        radius=1.0e-3,
+        coverage_target=expected.coverage_target,
+        result_digest="a" * 64,
+        released=True,
+    )
+    base.update(over)
+    return GateCalibrationReceipt(**base).sealed()
+
+
 def test_blocker3_gate_artifact() -> None:
+    """V5 typed the gate artifact; V6 makes it VERIFIABLE.
+
+    The V5 invariants are preserved -- no string identity, and the limit is
+    always statistic + radius -- and the trust model is replaced: a receipt is
+    bound to the running procedure's own frozen identities and carries a
+    digest the production builder recomputes.
+    """
+    from e1a_v5.validation.run import gate_expectations
     check("the string-identity constructor is gone",
           not hasattr(GateLimit, "calibrated"))
     check("the arbitrary-identity failure cannot be expressed",
           _raises(lambda: GateLimit.calibrated(0.0, 0.0, "arbitrary")))
 
-    real = CalibratedGateProcedure(
-        GateFamily.SHAPE, PROCEDURE_VERSION, "proc-id", "cal/4000", 0.975,
-        DOMAIN_IDENTITY, 1.0e-3, CriticalValueStatus.CALIBRATED)
-    ok = GateLimit.from_procedure(0.0, real, GateFamily.SHAPE, PROCEDURE_VERSION,
-                                  DOMAIN_IDENTITY)
-    check("a complete artifact yields a usable limit", ok.usable and ok.passes(DELTA_G))
+    exp = gate_expectations()
+    real = _receipt(exp)
+    ok = GateLimit.from_receipt(0.0, real, GateFamily.SHAPE, exp)
+    check("a verified receipt yields a usable limit",
+          ok.usable and ok.passes(DELTA_G), str(ok.defects))
     check("the limit is statistic + radius, never the statistic",
           close(ok.limit, 1.0e-3) and ok.statistic == 0.0)
 
-    cases = [
-        ("no procedure at all", None, GateFamily.SHAPE, PROCEDURE_VERSION,
-         DOMAIN_IDENTITY, GATE_NO_PROCEDURE),
-        ("wrong gate family", real, GateFamily.CENTRE, PROCEDURE_VERSION,
-         DOMAIN_IDENTITY, GATE_WRONG_FAMILY),
-        ("wrong procedure version", real, GateFamily.SHAPE, PROCEDURE_VERSION - 1,
-         DOMAIN_IDENTITY, GATE_WRONG_VERSION),
-        ("wrong nuisance domain", real, GateFamily.SHAPE, PROCEDURE_VERSION,
-         "a-different-envelope", GATE_WRONG_DOMAIN),
+    # Every forgery route the brief names, and the ones V5 left open.
+    forgeries = [
+        ("no receipt at all", None, GateFamily.SHAPE),
+        ("arbitrary identities", GateCalibrationReceipt(
+            GateFamily.SHAPE, exp.procedure_version, "x", "y", "z", "w",
+            exp.calibration_seed_namespace, "c", exp.domain_identity,
+            4000, 1e-3, exp.coverage_target, "d", "deadbeef", True),
+         GateFamily.SHAPE),
+        ("wrong analysis identity", _receipt(exp, analysis_identity="0" * 64),
+         GateFamily.SHAPE),
+        ("wrong validation identity", _receipt(exp, validation_identity="0" * 64),
+         GateFamily.SHAPE),
+        ("wrong plan identity", _receipt(exp, plan_identity="0" * 64),
+         GateFamily.SHAPE),
+        ("wrong seed map", _receipt(exp, seed_map_identity="0" * 64),
+         GateFamily.SHAPE),
+        ("wrong seed namespace",
+         _receipt(exp, calibration_seed_namespace="engineering-v6"),
+         GateFamily.SHAPE),
+        ("wrong domain", _receipt(exp, domain_identity="a-different-envelope"),
+         GateFamily.SHAPE),
+        ("wrong procedure version",
+         _receipt(exp, procedure_version=exp.procedure_version - 1),
+         GateFamily.SHAPE),
+        ("wrong gate family", real, GateFamily.CENTRE),
+        ("wrong coverage target", _receipt(exp, coverage_target=0.5),
+         GateFamily.SHAPE),
+        ("missing result digest", _receipt(exp, result_digest=""),
+         GateFamily.SHAPE),
+        ("invalid replicate count", _receipt(exp, replicates=0),
+         GateFamily.SHAPE),
+        ("not released", _receipt(exp, released=False), GateFamily.SHAPE),
+        ("negative radius", _receipt(exp, radius=-1e-3), GateFamily.SHAPE),
+        ("a plain string", "arbitrary-identity", GateFamily.SHAPE),
+        ("a synthetic fixture",
+         synthetic_calibrated_gate_fixture(GateFamily.SHAPE, 1e-3),
+         GateFamily.SHAPE),
     ]
-    for label, proc, fam, ver, dom, code in cases:
-        g = GateLimit.from_procedure(0.0, proc, fam, ver, dom)
-        check(f"{label} yields no calibrated gate",
-              not g.usable and g.passes(DELTA_G) is None and code in g.defects,
+    for label, art, fam in forgeries:
+        g = GateLimit.from_receipt(0.0, art, fam, exp)
+        check(f"forgery refused: {label}", not g.usable and g.passes(DELTA_G) is None,
               str(g.defects))
 
-    for label, proc in [
-        ("uncalibrated status", CalibratedGateProcedure(
-            GateFamily.SHAPE, PROCEDURE_VERSION, "p", "c", 0.975,
-            DOMAIN_IDENTITY, 1e-3)),
-        ("missing calibration identity", CalibratedGateProcedure(
-            GateFamily.SHAPE, PROCEDURE_VERSION, "p", "", 0.975,
-            DOMAIN_IDENTITY, 1e-3, CriticalValueStatus.CALIBRATED)),
-        ("missing procedure identity", CalibratedGateProcedure(
-            GateFamily.SHAPE, PROCEDURE_VERSION, "", "c", 0.975,
-            DOMAIN_IDENTITY, 1e-3, CriticalValueStatus.CALIBRATED)),
-        ("missing domain identity", CalibratedGateProcedure(
-            GateFamily.SHAPE, PROCEDURE_VERSION, "p", "c", 0.975, "",
-            1e-3, CriticalValueStatus.CALIBRATED)),
-        ("negative radius", CalibratedGateProcedure(
-            GateFamily.SHAPE, PROCEDURE_VERSION, "p", "c", 0.975,
-            DOMAIN_IDENTITY, -1e-3, CriticalValueStatus.CALIBRATED)),
-        ("impossible coverage target", CalibratedGateProcedure(
-            GateFamily.SHAPE, PROCEDURE_VERSION, "p", "c", 1.5,
-            DOMAIN_IDENTITY, 1e-3, CriticalValueStatus.CALIBRATED)),
-    ]:
-        g = GateLimit.from_procedure(0.0, proc, GateFamily.SHAPE,
-                                     PROCEDURE_VERSION, DOMAIN_IDENTITY)
-        check(f"{label} yields no calibrated gate", not g.usable, str(g.defects))
+    # Mutating any bound field after sealing breaks the digest.
+    mutated = GateCalibrationReceipt(**{**real.__dict__, "radius": 9.9})
+    check("a mutated critical value breaks the receipt digest",
+          not GateLimit.from_receipt(0.0, mutated, GateFamily.SHAPE, exp).usable)
+    check("the receipt digest recomputes on the genuine article",
+          real.receipt_digest == real.recomputed_digest())
 
+    # Fixtures are a different TYPE, not a flag.
     fx = synthetic_calibrated_gate_fixture(GateFamily.SHAPE, 1e-3)
-    check("the fixture is marked fixture-only", fx.fixture_only)
-    check("every fixture identity sits in the fixture namespace",
-          all(FIXTURE_NAMESPACE in s for s in
-              (fx.procedure_identity, fx.calibration_identity, fx.domain_identity)))
-    prod = GateLimit.from_procedure(0.0, fx, GateFamily.SHAPE,
-                                    PROCEDURE_VERSION, DOMAIN_IDENTITY)
-    check("the fixture is refused in production mode",
+    check("the fixture is a separate type",
+          isinstance(fx, SyntheticGateFixture)
+          and not isinstance(fx, GateCalibrationReceipt))
+    check("the fixture carries no forgeable production flag",
+          not hasattr(fx, "fixture_only"))
+    check("the fixture namespace is still marked",
+          FIXTURE_NAMESPACE in fx.namespace)
+    prod = GateLimit.from_receipt(0.0, fx, GateFamily.SHAPE, exp)
+    check("the fixture is refused by the production builder",
           not prod.usable and GATE_FIXTURE_IN_PRODUCTION in prod.defects)
-    test = GateLimit.from_procedure(0.0, fx, GateFamily.SHAPE, PROCEDURE_VERSION,
-                                    DOMAIN_IDENTITY, allow_fixture=True)
-    check("the fixture works when explicitly allowed", test.usable)
-    check("an unusable procedure refuses to produce a limit at all",
-          _raises(lambda: CalibratedGateProcedure(
-              GateFamily.SHAPE, 5, "", "", 0.975, "", 1e-3).upper_limit(0.0)))
+    test = GateLimit.from_fixture(0.0, fx, GateFamily.SHAPE)
+    check("the fixture works through its own constructor",
+          test.usable and test.fixture)
+    check("the fixture constructor refuses a real receipt",
+          not GateLimit.from_fixture(0.0, real, GateFamily.SHAPE).usable)
     check("enlarging an unusable limit leaves it unusable",
           not prod.enlarged(1.0).usable and not prod.scaled(2.0).usable)
 
@@ -554,42 +610,73 @@ def _obs_world(ratio_target: float, frames: int = 200):
     return spec, sigma, a
 
 
+def _bare_envelope(spec, h, **over) -> ObservationEnvelope:
+    """An envelope with no uncertainty, so the worst case IS the nominal.
+
+    It isolates the ceiling semantics from the envelope's own conservatism:
+    the production envelope is strictly wider, which a separate check below
+    confirms.
+    """
+    base = dict(
+        h_eff=spec.h_true,
+        k_eff=nm.scale(spec.h_true, K_B * plan.T_REF),
+        gamma=nm.scale(nm.eye(2), plan.drag_coefficient()),
+        p_matrix=spec.p_matrix, r_obs=spec.r_obs,
+        dt=spec.dt, t_exp=spec.t_exp,
+        log_beta_range=(0.0, 0.0), remainder_rho=0.0,
+        noise_model=spec.noise_model,
+    )
+    base.update(over)
+    return ObservationEnvelope(**base)
+
+
 def test_blocker4_observation_qualification() -> None:
     check("the declared ceiling is 0.05", LOCALIZATION_RATIO_CEILING == 0.05)
     for target, want in ((0.02, True), (0.049999, True), (0.05, True),
                          (0.050001, False), (0.25, False)):
         spec, sigma, a = _obs_world(target)
-        q = qualify_observation(sigma, spec.r_obs, spec.p_matrix, a,
-                                spec.dt, spec.t_exp, spec.noise_model)
+        q = qualify_observation_envelope(_bare_envelope(spec, None))
         check(f"localisation ratio {target} -> valid={want}", q.valid is want,
               f"ratio {q.localization_ratio!r}")
-    # Inclusive semantics, and a straddling enclosure does NOT pass.
+    # Inclusive semantics, and an envelope straddling the ceiling does NOT pass.
     spec, sigma, a = _obs_world(0.05)
-    q = qualify_observation(sigma, spec.r_obs, spec.p_matrix, a, spec.dt,
-                            spec.t_exp, spec.noise_model, rate_factor=1.0 + 1e-9)
-    check("an enclosure straddling the ceiling does not pass", not q.valid)
-    q = qualify_observation(sigma, spec.r_obs, spec.p_matrix, a, spec.dt,
-                            spec.t_exp, "heavy")
+    q = qualify_observation_envelope(
+        _bare_envelope(spec, None, remainder_rho=1e-9))
+    check("an envelope straddling the ceiling does not pass", not q.valid)
+    q = qualify_observation_envelope(
+        _bare_envelope(spec, None, noise_model="heavy"))
     check("a non-Gaussian noise model is unqualified", not q.valid)
     bad_r = nm.mat([[1.0, 2.0], [2.0, 1.0]])
-    q = qualify_observation(sigma, bad_r, spec.p_matrix, a, spec.dt, spec.t_exp)
+    q = qualify_observation_envelope(_bare_envelope(spec, None, r_obs=bad_r))
     check("a non-PSD R_obs is unqualified", not q.valid)
-    q = qualify_observation(sigma, spec.r_obs, nm.zeros(2, 2), a, spec.dt, spec.t_exp)
+    q = qualify_observation_envelope(
+        _bare_envelope(spec, None, p_matrix=nm.zeros(2, 2)))
     check("a singular detector map is unqualified", not q.valid)
-    q = qualify_observation(sigma, spec.r_obs, spec.p_matrix, a, spec.dt,
-                            spec.dt * 2.0)
+    q = qualify_observation_envelope(
+        _bare_envelope(spec, None, t_exp=spec.dt * 2.0))
     check("an exposure longer than the frame interval is unqualified", not q.valid)
     spec2, sigma2, a2 = _obs_world(0.02)
-    q = qualify_observation(sigma2, spec2.r_obs, spec2.p_matrix, a2, spec2.dt,
-                            spec2.dt * 0.999)
+    q = qualify_observation_envelope(
+        _bare_envelope(spec2, None, t_exp=spec2.dt * 0.999))
     check("an exposure beyond the blur envelope is unqualified", not q.valid)
+
+    # The PRODUCTION envelope is strictly more conservative than the bare one.
+    spec3, _, _ = _obs_world(0.02)
+    bare = qualify_observation_envelope(_bare_envelope(spec3, None))
+    prod = qualify_observation_envelope(observation_envelope(
+        spec3.h_true, plan.T_REF, spec3, axial_effects(0).rho))
+    check("the production envelope is wider than the nominal",
+          prod.localization_ratio_upper > bare.localization_ratio_upper
+          and prod.valid)
 
 
 def test_blocker4_no_caller_override() -> None:
     sm = SeedMap()
     spec, h = design_specs(n_frames=400,
                            **instantiate("CTL-NOISE-HI").spec_kwargs)[0]
-    out = run_record(spec, h, Stream(sm.replicate_seed(ENGINEERING, "OBS", 1)))
+    env = observation_envelope(h, plan.T_REF, spec, axial_effects(0).rho)
+    out = run_record(spec, h, Stream(sm.replicate_seed(ENGINEERING, "OBS", 1)),
+                     envelope=env)
     check("CTL-NOISE-HI generates a ratio far above the ceiling",
           out.observation is not None
           and out.observation.localization_ratio > 4.0 * LOCALIZATION_RATIO_CEILING)
@@ -794,9 +881,9 @@ def test_systematic_fail_open() -> None:
     check("a missing bias bound is not zero", not BiasEvidence.missing().usable)
     # Fixture objects must not be accepted in production.
     fx = synthetic_calibrated_gate_fixture(GateFamily.CURRENT, 1e-9)
+    from e1a_v5.validation.run import gate_expectations as _ge
     check("a fixture gate is refused in production",
-          not GateLimit.from_procedure(0.0, fx, GateFamily.CURRENT,
-                                       PROCEDURE_VERSION, DOMAIN_IDENTITY).usable)
+          not GateLimit.from_receipt(0.0, fx, GateFamily.CURRENT, _ge()).usable)
     # Unknown case IDs must not become nominal runs.
     check("an unknown case id is refused", _raises(lambda: instantiate("NOPE")))
 
@@ -820,12 +907,12 @@ def test_event_search() -> None:
 
 
 def test_live_gate_state() -> None:
-    from e1a_v5.validation.run import NO_GATE_PROCEDURES
-    check("live V5 has no calibrated gate procedure", not NO_GATE_PROCEDURES)
+    from e1a_v5.validation.run import NO_GATE_RECEIPTS, gate_expectations
+    check("no production calibration receipt exists", not NO_GATE_RECEIPTS)
+    exp = gate_expectations()
     for fam in GateFamily:
-        g = GateLimit.from_procedure(0.0, NO_GATE_PROCEDURES.get(fam), fam,
-                                     PROCEDURE_VERSION, DOMAIN_IDENTITY)
-        check(f"the {fam.value} gate is UNCALIBRATED in live V5",
+        g = GateLimit.from_receipt(0.0, NO_GATE_RECEIPTS.get(fam), fam, exp)
+        check(f"the {fam.value} gate is UNCALIBRATED",
               g.passes(1.0) is None)
 
 
@@ -847,13 +934,15 @@ def test_v5_identities_and_seeds() -> None:
           and all(len(v) == 64 for v in ids.as_dict().values()))
 
     sm = SeedMap()
-    check("the V5 root is new",
-          sm.root == ROOT and ROOT not in (ROOT_V2, ROOT_V3, ROOT_V4))
+    from e1a_v5.seeds import FAMILIES_V5, ROOT_V5
+    check("the live root is new",
+          sm.root == ROOT and ROOT not in (ROOT_V2, ROOT_V3, ROOT_V4, ROOT_V5))
     check("five confirmatory families are frozen",
           len(CONFIRMATORY_FAMILIES) == 5
-          and all(f.endswith("-v5") for f in CONFIRMATORY_FAMILIES))
+          and all(f.endswith("-v6") for f in CONFIRMATORY_FAMILIES))
     for i, fam in enumerate(CONFIRMATORY_FAMILIES):
-        for root, old, label in ((ROOT_V4, FAMILIES_V4[i], "V4"),
+        for root, old, label in ((ROOT_V5, FAMILIES_V5[i], "V5"),
+                                 (ROOT_V4, FAMILIES_V4[i], "V4"),
                                  (ROOT_V3, FAMILIES_V3[i], "V3"),
                                  (ROOT_V2, FAMILIES_V2[i], "V2")):
             check(f"{fam} is disjoint from its {label} stream",
@@ -879,9 +968,15 @@ def test_deterministic_battery() -> None:
     ids = {r["case_id"] for r in results}
     check("the two restored controls are NOT in the deterministic battery",
           "CTL-ETA-T-COV" not in ids and "CTL-AXIAL-MEMORY" not in ids)
+    # V5's REF-AXIAL-REFUSAL set the temporal flag by hand to exercise the
+    # refusal path.  V6 removes the manual flag entirely and DERIVES the
+    # temporal qualification from a measured response, so the supplementary
+    # reference is now the derivation itself.
     check("their exact checks survive as supplementary references",
-          {"REF-ETA-T-COV-ALGEBRA", "REF-AXIAL-REFUSAL",
+          {"REF-ETA-T-COV-ALGEBRA", "REF-TEMPORAL-QUALIFICATION",
            "REF-AXIAL-MEMORY-WITNESS"} <= ids)
+    check("no deterministic control supplies a temporal-qualification flag",
+          "REF-AXIAL-REFUSAL" not in ids)
 
 
 # ===========================================================================

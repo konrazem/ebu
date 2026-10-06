@@ -182,14 +182,12 @@ def fixture_limit(family: GateFamily, statistic: float, limit: float) -> GateLim
 
     V5 removed ``GateLimit.calibrated(statistic, limit, identity)``: a bare
     string granted calibration, so a raw statistic became a passing limit.
-    Fixtures now go through the typed artifact, whose radius is what sets the
-    limit, and which the production builder refuses.
+    V6 separates fixtures from production by TYPE: this goes through
+    ``SyntheticGateFixture`` and ``GateLimit.from_fixture``, neither of which
+    any production API accepts.
     """
-    proc = synthetic_calibrated_gate_fixture(family, max(0.0, limit - statistic))
-    return GateLimit.from_procedure(
-        statistic, proc, family, PROCEDURE_VERSION, DOMAIN_IDENTITY,
-        allow_fixture=True,
-    )
+    fx = synthetic_calibrated_gate_fixture(family, max(0.0, limit - statistic))
+    return GateLimit.from_fixture(statistic, fx, family)
 
 FIXTURE_GATE = "SYNTHETIC FIXTURE - not a calibration"
 
@@ -1019,7 +1017,7 @@ def test_defect6_declared_worlds_are_built() -> None:
     # POWER-NOISEHI really changes the observation model.
     inst = instantiate("POWER-NOISEHI")
     spec = design_specs(n_frames=200, **inst.spec_kwargs)[0][0]
-    ratio = localization_ratio(nm.spd_inverse(spec.h_true), spec.r_obs)
+    ratio = localization_ratio(nm.spd_inverse(spec.h_true), spec.r_obs, spec.p_matrix)
     check("POWER-NOISEHI generates the declared noise ratio",
           close(ratio, 0.05, 1e-9), f"{ratio!r}")
     check("POWER-NOISEHI changes R_obs relative to nominal",
@@ -1241,12 +1239,12 @@ def test_v4_identities_and_seeds() -> None:
           and all(len(v) == 64 for v in ids.as_dict().values()))
 
     sm = SeedMap()
-    from e1a_v5.seeds import ROOT_V4 as _R4
-    check("the V5 root is new",
-          sm.root == ROOT and ROOT not in (ROOT_V2, ROOT_V3, _R4))
+    from e1a_v5.seeds import ROOT_V4 as _R4, ROOT_V5 as _R5
+    check("the live root is new",
+          sm.root == ROOT and ROOT not in (ROOT_V2, ROOT_V3, _R4, _R5))
     check("five confirmatory families are frozen",
           len(CONFIRMATORY_FAMILIES) == 5
-          and all(f.endswith("-v5") for f in CONFIRMATORY_FAMILIES))
+          and all(f.endswith("-v6") for f in CONFIRMATORY_FAMILIES))
     check("the engineering namespace is separate from every confirmatory one",
           ENGINEERING not in CONFIRMATORY_FAMILIES
           and sm.engineering_disjoint_from_confirmatory("POWER-NOMINAL"))

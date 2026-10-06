@@ -30,8 +30,14 @@ from typing import Any, Callable, Mapping, Sequence
 
 from .. import numerics as nm
 from .. import realization as rf
-from ..calibration import combined_contrast_standard_error, combined_standard_error
+from ..calibration import (
+    REQUIRED_PRIMITIVE_CATEGORIES,
+    combined_contrast_standard_error,
+    combined_standard_error,
+)
 from ..confidence import (
+    BIAS_ABS_MAX,
+    BIAS_CONTRAST_MAX,
     DELTA_A,
     DELTA_C,
     CEILING_PASS,
@@ -49,16 +55,19 @@ from ..diagnostics import (
 )
 from ..evidence import (
     BiasEvidence,
-    CalibratedGateProcedure,
     ContrastKey,
+    GateCalibrationReceipt,
+    GateExpectations,
     GateFamily,
     GateLimit,
     RecordKey,
+    SyntheticGateFixture,
     synthetic_calibrated_gate_fixture,
 )
 from ..gates import DELTA_G, DELTA_M, DELTA_R_IRR
 from ..numerics import NumericalFailure, clopper_pearson_lower, clopper_pearson_upper
 from ..optimize import OptimizerFailure, minimise
+from ..observation import LOCALIZATION_RATIO_CEILING, localization_ratio
 from ..packets import CONTRASTS, RECORDS, BlockId, FieldId
 from ..pipeline import (
     ContrastResultV4,
@@ -67,15 +76,17 @@ from ..pipeline import (
     complete_pipeline_result,
 )
 from ..realization import FIELD_REALIZATION_VALID
+from ..generate import axial_memory_dynamics
 from ..reduction import (
-    AxialEvidence, FiniteRemainderEffects, axial_ratio,
+    AxialEvidence, FiniteRemainderEffects, axial_ratio, schur_complement,
     normalise_covariance_to_h, plane_block_bias,
-    propagate_schur_covariance, reduce_axial, schur_complement,
+    propagate_schur_covariance, reduce_axial,
 )
 from ..refusals import (
-    CALIBRATION_UNCERTAINTY_EXCESS, INCOMPLETE_INPUT, Refusal, refuse,
+    CALIBRATION_UNCERTAINTY_EXCESS, INCOMPLETE_INPUT, TEMPORAL_MODEL_UNQUALIFIED,
+    Refusal, refuse,
 )
-from ..rng import Stream
+from ..rng import Stream, derive_seed
 from ..units import K_B
 from ..seeds import CALIBRATION, CONTROL, DIAGNOSTIC, ENGINEERING, POWER, SIZE, SeedMap
 from . import plan
@@ -96,7 +107,14 @@ from .events import (
 )
 from .harness import (
     Aggregator,
+    TEMPORAL_QUALIFIED,
+    auxiliary_measurement,
     axial_effects,
+    design_evidence,
+    measured_analysis_spec,
+    observation_envelope,
+    temporal_qualification,
+    true_system,
     axial_memory_specs,
     axial_memory_witness,
     current_control_drift,
@@ -193,7 +211,7 @@ def deterministic_controls() -> list[dict]:
     k_qq = [[k3[0][0], k3[0][1]], [k3[1][0], k3[1][1]]]
     red = reduce_axial(
         k3, plan.T_REF,
-        evidence=AxialEvidence.fully_qualified(plan.remainder_set(k3)),
+        evidence=design_evidence(k3, plan.T_REF),
         c_v=nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2))
     used_schur = nm.max_abs(nm.sub(red.k_eff, k_qq)) > 0.0
     rec("CTL-AXIAL-COUPLE", "pipeline uses H_eff; K_qq bias quantified",
@@ -204,30 +222,45 @@ def deterministic_controls() -> list[dict]:
         exceeds_absolute_margin=bool(abs(lb) > DELTA_A),
         exceeds_shape_margin=bool(gp > DELTA_G))
 
-    # --- axial temporal-memory control ------------------------------------
-    # The V3 call passed ``temporal_qualified=False``, a keyword the
-    # fail-closed AxialEvidence repair had already removed, so this battery
-    # raised TypeError before reaching any assertion: the whole deterministic
-    # control set was dead.  The evidence object now carries the unqualified
-    # temporal reduction explicitly.
-    evidence = AxialEvidence(
-        **{**AxialEvidence.fully_qualified(plan.remainder_set(plan.nominal_k3(0))).__dict__,
-           "temporal_reduction_qualified": False}
+    # --- Branch-A temporal-model qualification, DERIVED --------------------
+    # V5 set ``temporal_reduction_qualified=False`` by hand here, which
+    # exercises the refusal path and not the physics.  The flag is gone: the
+    # ordinary qualification machinery now MEASURES a driven response and
+    # derives the answer, and this reference shows it deriving both answers
+    # from the two worlds.
+    from .harness import (
+        axial_memory_specs, axial_memory_witness, temporal_qualification,
+        true_system, TEMPORAL_QUALIFIED, TEMPORAL_UNQUALIFIED,
     )
-    red2 = reduce_axial(
-        plan.nominal_k3(0), plan.T_REF, evidence=evidence,
-        c_v=nm.scale(nm.eye(6), (plan.PRIMITIVE_RELATIVE_SIGMA * plan.K_REF) ** 2),
+    from ..generate import axial_memory_dynamics as _amd
+    nominal_spec, nominal_h = design_specs(n_frames=16)[0]
+    a_nom, sigma_nom = true_system(nominal_spec)
+    q_nom = temporal_qualification(
+        a_nom, sigma_nom,
+        nm.scale(nominal_spec.h_true, K_B * plan.T_REF),
+        nominal_spec.p_matrix, nominal_spec.r_obs, nominal_spec.b_det,
+        Stream(derive_seed(ENGINEERING, "REF-TEMPORAL", "nominal"),
+               label="ref/temporal/nominal"),
     )
-    codes = {x.detail.get("component") for x in red2.refusals}
-    rec("REF-AXIAL-REFUSAL", "unqualified temporal reduction is refused",
-        sorted(c for c in codes if c), "temporal_reduction_qualified" in codes,
-        note="SUPPLEMENTARY exact reference, not the CTL-AXIAL-MEMORY control. "
-             "It exercises the refusal path only. The control itself now "
-             "generates an actual 3D hidden-memory world and runs the full "
-             "pipeline on it.")
+    mem_spec = axial_memory_specs(n_frames=16)[0][0]
+    a_mem, sigma_mem = _amd(mem_spec)
+    q_mem = temporal_qualification(
+        a_mem, sigma_mem, schur_complement(mem_spec.k3),
+        mem_spec.p_matrix, mem_spec.r_obs, mem_spec.b_det,
+        Stream(derive_seed(ENGINEERING, "REF-TEMPORAL", "memory"),
+               label="ref/temporal/memory"),
+    )
+    rec("REF-TEMPORAL-QUALIFICATION",
+        "the measured response qualifies a 2D world and excludes a 3D one",
+        {"nominal": q_nom, "hidden_memory": q_mem},
+        q_nom["status"] == TEMPORAL_QUALIFIED
+        and q_mem["status"] == TEMPORAL_UNQUALIFIED,
+        note="no flag is supplied anywhere. For EVERY 2D linear generator the "
+             "mean response is a semigroup, R(2t) = R(t)^2, so a measured "
+             "violation beyond the measurement's own 5-sigma error excludes "
+             "the whole admissible 2D class without fitting anything.")
 
     # --- the axial-memory WITNESS, established before any replicate ---------
-    from .harness import axial_memory_specs, axial_memory_witness
     w = axial_memory_witness(axial_memory_specs(n_frames=16)[0][0])
     rec("REF-AXIAL-MEMORY-WITNESS",
         "lateral density matches Schur while the 2D Markov closure fails",
@@ -238,6 +271,39 @@ def deterministic_controls() -> list[dict]:
         note="the Chapman-Kolmogorov identity C(2t) = C(t) Sigma^-1 C(t) holds "
              "for EVERY 2D Markov generator, so a nonzero residual proves no "
              "admissible 2D temporal model reproduces this lateral path")
+
+    # --- observation comparison is in DETECTOR coordinates ------------------
+    # The auditor's case.  The latent covariance is the identity, the detector
+    # map shrinks it a hundredfold, and the localisation noise is 1% of the
+    # LATENT scale -- which is 100% of what the detector actually sees.
+    sig_i, p_small = nm.eye(2), nm.scale(nm.eye(2), 0.1)
+    r_small = nm.scale(nm.eye(2), 0.01)
+    detector_ratio = localization_ratio(sig_i, r_small, p_small)
+    latent_only = localization_ratio(sig_i, r_small, nm.eye(2))
+    rec("REF-OBS-DETECTOR-COORDS",
+        "P enters the localisation ratio; the P = 0.1 I case FAILS",
+        {"detector_coordinate_ratio": detector_ratio,
+         "latent_only_ratio_v5_would_report": latent_only,
+         "ceiling": LOCALIZATION_RATIO_CEILING},
+        abs(detector_ratio - 1.0) < 1e-12
+        and detector_ratio > LOCALIZATION_RATIO_CEILING
+        and latent_only <= LOCALIZATION_RATIO_CEILING,
+        note="S_y = P Sigma P^T, so r_loc = lambda_max(S_y^-1/2 R S_y^-1/2) = 1.0. "
+             "V5 compared against the latent Sigma and reported 0.01, which "
+             "passes. Both the P = I and the nontrivial P cases are regressed.")
+
+    # --- the joint 99.9% physical calibration region ------------------------
+    region = plan.default_joint_region()
+    rec("REF-JOINT-REGION",
+        "a joint region with a GUARANTEED coverage, not a marginal 3 sigma",
+        region.as_dict(),
+        region.joint_coverage >= 0.999
+        and abs(region.total_noncoverage - 0.001) < 1e-12
+        and len(region.categories) == len(REQUIRED_PRIMITIVE_CATEGORIES),
+        note="allocated noncoverage per primitive, intersected; the union "
+             "bound makes the joint coverage valid for ANY dependence "
+             "structure, so the declared shared thermometry latent is "
+             "retained rather than being assumed away")
 
     # --- omitted eta/T covariance control ----------------------------------
     # Exact: the same primitive uncertainties propagate to two different
@@ -266,9 +332,9 @@ def deterministic_controls() -> list[dict]:
         all(r != 1.0 for r in ratio),
         note="SUPPLEMENTARY exact reference, not the CTL-ETA-T-COV control. "
              "It shows only that the two covariance propagations differ. V4 "
-             "additionally asserted that omission always understates the "
-             "uncertainty; its own ratios (0.327, 1.005, 0.317) contradict a "
-             "universal direction, so no such claim is made.")
+             "additionally asserted a universal SIGN for the effect of "
+             "omitting the covariance; its own ratios (0.327, 1.005, 0.317) "
+             "contradict any universal sign, so no such claim is made.")
 
     # --- optimiser failure control ----------------------------------------
     observed = []
@@ -304,16 +370,38 @@ def deterministic_coverage() -> tuple[set[str], set[str]]:
 # Building one record's typed result
 # ---------------------------------------------------------------------------
 
-#: The V-stage procedure version this build implements.  A calibrated gate
-#: artifact from another version does not apply to these records.
-PROCEDURE_VERSION = 5
+#: The V-stage procedure version this build implements.  A calibration
+#: receipt from another version does not apply to these records.
+PROCEDURE_VERSION = 6
 #: Identity of the nuisance/domain envelope these records are qualified in.
 DOMAIN_IDENTITY = "e1a_v5_candidate_2026-10-06/nominal-envelope"
 
-#: Live V5 state: finite-N calibration has NOT run, so there is no calibrated
-#: gate procedure for any family and every gate is UNCALIBRATED.  Complete
-#: support is therefore unavailable outside explicitly marked fixtures.
-NO_GATE_PROCEDURES: Mapping[GateFamily, CalibratedGateProcedure] = {}
+#: Live V6 state: finite-N calibration has NOT run, so NO production
+#: GateCalibrationReceipt exists for any family and every gate is
+#: UNCALIBRATED.  That is the expected state, not a defect.  Complete support
+#: is therefore unavailable outside explicitly marked test fixtures.
+NO_GATE_RECEIPTS: Mapping[GateFamily, GateCalibrationReceipt] = {}
+
+
+def gate_expectations(
+    domain_identity: str = DOMAIN_IDENTITY,
+    coverage_target: float = 0.975,
+) -> GateExpectations:
+    """The CURRENT frozen identities a production gate receipt must match."""
+    from ..identity import compute_identities
+    from ..seeds import CALIBRATION
+    from .contract import plan_identity
+    ids = compute_identities(plan.IDENTITY_CONFIGURATION)
+    return GateExpectations(
+        procedure_version=PROCEDURE_VERSION,
+        analysis_identity=ids.analysis,
+        validation_identity=ids.validation,
+        plan_identity=plan_identity(),
+        seed_map_identity=ids.seed_map,
+        domain_identity=domain_identity,
+        coverage_target=coverage_target,
+        calibration_seed_namespace=CALIBRATION,
+    )
 
 
 def build_record_result(
@@ -322,10 +410,11 @@ def build_record_result(
     out,
     calibration,
     critical: CriticalValues = NORMAL_CRITICAL,
-    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
+    gate_receipts: Mapping[GateFamily, GateCalibrationReceipt] | None = None,
     axial: FiniteRemainderEffects | None = None,
-    allow_fixtures: bool = False,
+    gate_fixtures: Mapping[GateFamily, SyntheticGateFixture] | None = None,
     domain_identity: str = DOMAIN_IDENTITY,
+    temporal: Mapping[str, object] | None = None,
 ) -> RecordResultV4:
     """Translate a harness RecordOutcome into the typed pipeline result.
 
@@ -337,9 +426,12 @@ def build_record_result(
     model and the invertibility of the detector map.  V4 passed
     ``observation_valid=True`` unconditionally.
 
-    *Gate limits come from a calibration artifact.*  Each is built by
-    :meth:`GateLimit.from_procedure`, which checks the gate family, the
-    procedure version, the domain identity and the fixture flag.  There is no
+    *Gate limits come from a VERIFIED calibration receipt.*  Each is built by
+    :meth:`GateLimit.from_receipt`, which recomputes the receipt's digest and
+    compares the gate family, the procedure version and the analysis,
+    validation, plan, seed-map and domain identities against the running
+    procedure's own.  Test fixtures are a different TYPE with a different
+    constructor, so no production call can be made to accept one.  There is no
     constructor that accepts a limit, so a raw statistic cannot become one.
 
     *The axial remainder's EXACT finite effects are routed into the existing
@@ -351,10 +443,34 @@ def build_record_result(
     key = RecordKey(block, fld)
     name = str(key)
     reasons: list[Refusal] = list(out.reasons)
-    procedures = NO_GATE_PROCEDURES if gate_procedures is None else gate_procedures
+    receipts = NO_GATE_RECEIPTS if gate_receipts is None else gate_receipts
+    fixtures = gate_fixtures or {}
+    expected = gate_expectations(domain_identity)
 
     obs = out.observation
     observation_valid = None if obs is None else bool(obs.valid)
+
+    # Branch-A temporal-model qualification, DERIVED from the independently
+    # measured response.  V5 had no production path that measured it at all:
+    # the only place the flag was ever set was one deterministic control that
+    # set it by hand.  A record with no measurement is unqualified, because a
+    # missing qualification is not a qualification.
+    if temporal is None or temporal.get("status") != TEMPORAL_QUALIFIED:
+        reasons.append(refuse(
+            TEMPORAL_MODEL_UNQUALIFIED,
+            "a 2D temporal model represents the measured response",
+            "the independently measured response is not reproduced by any "
+            "admissible 2D generator within the measurement's own error"
+            if temporal is not None else
+            "no independent response measurement was made for this record",
+            record=name,
+            **({} if temporal is None else {
+                "temporal_status": temporal.get("status"),
+                "semigroup_residual": temporal.get("semigroup_residual"),
+                "band": temporal.get("band"),
+                "response_lag": temporal.get("tau"),
+            }),
+        ))
 
     if not out.evaluable or out.log_beta is None or out.se is None:
         return RecordResultV4(
@@ -391,6 +507,21 @@ def build_record_result(
             source="design-point T.18 budget plus the EXACT finite effect of "
                    "the certified axial remainder set",
         )
+    # T.18 / U.22: the absolute bounded log-beta bias ceiling is 0.0005, and
+    # it is a QUALIFICATION PREDICATE, not a figure to report.  V5 computed
+    # the bound, carried it into the interval and never compared it against
+    # anything, so a design point whose bounded bias exceeded the ceiling was
+    # labelled qualified.  Comparison is inclusive, as everywhere else.
+    if bias.usable and not (abs(bias.require()) <= BIAS_ABS_MAX):
+        reasons.append(refuse(
+            CALIBRATION_UNCERTAINTY_EXCESS,
+            f"absolute bounded log-beta bias <= {BIAS_ABS_MAX}",
+            "the record's certified bounded bias exceeds its T.18 / U.22 "
+            "ceiling",
+            record=name, bias_bound=bias.require(), ceiling=BIAS_ABS_MAX,
+            design_point_budget=plan.BIAS_PER_CELL,
+            axial_remainder_contribution=axial_bias,
+        ))
     interval = (
         build_interval(out.log_beta, se_total, critical, bias.require())
         if bias.usable else None
@@ -403,10 +534,14 @@ def build_record_result(
     )
 
     def limit(stat: float | None, family: GateFamily) -> GateLimit:
-        return GateLimit.from_procedure(
-            stat, procedures.get(family), family, PROCEDURE_VERSION,
-            domain_identity, allow_fixture=allow_fixtures,
-        )
+        # Production first.  A fixture is only reachable through the separate
+        # TYPE and the separate constructor, so no production call can be
+        # talked into accepting one.
+        if family in receipts:
+            return GateLimit.from_receipt(stat, receipts[family], family, expected)
+        if family in fixtures:
+            return GateLimit.from_fixture(stat, fixtures[family], family)
+        return GateLimit.uncalibrated(stat)
 
     return RecordResultV4(
         key=key, embedded_key=key,
@@ -485,6 +620,17 @@ def build_contrast_results(
             source="jointly computed contrast bias, from the exact finite "
                    "effects of both records' certified remainder sets",
         )
+        # The within-block contrast ceiling is its own predicate on its own
+        # jointly computed bound, never inferred from two absolute bounds.
+        if bias.usable and not (abs(bias.require()) <= BIAS_CONTRAST_MAX):
+            reasons.append(refuse(
+                CALIBRATION_UNCERTAINTY_EXCESS,
+                f"within-block contrast bounded bias <= {BIAS_CONTRAST_MAX}",
+                "the contrast's jointly computed bounded bias exceeds its "
+                "T.18 / U.22 ceiling",
+                contrast=str(key), bias_bound=bias.require(),
+                ceiling=BIAS_CONTRAST_MAX,
+            ))
         est = a.log_beta - b.log_beta
         iv = build_interval(est, se, critical, bias.require())
         out.append(ContrastResultV4(
@@ -547,8 +693,8 @@ def run_complete_experiment(
     frames: int,
     namespace: str | None = None,
     critical: CriticalValues = NORMAL_CRITICAL,
-    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
-    allow_fixtures: bool = False,
+    gate_receipts: Mapping[GateFamily, GateCalibrationReceipt] | None = None,
+    gate_fixtures: Mapping[GateFamily, SyntheticGateFixture] | None = None,
     fixture: bool = False,
 ):
     """Run one complete eight-record experiment through the ONE path.
@@ -569,8 +715,21 @@ def run_complete_experiment(
         )
     else:
         specs = design_specs(n_frames=frames, **inst.spec_kwargs)
+    # CTL-ETA-T-COV draws FRESH auxiliary measurements from the declared
+    # generating law, shared thermometry latent included, and the analyst
+    # locks in exactly what those measurements say.  The misspecification is
+    # that the analyser's C_phi omits the shared latent; the data do not.
+    measured = None
+    aux_phi: list[float] = []
+    if inst.omit_eta_t_covariance:
+        aux_stream = Stream(
+            seed_map.replicate_seed(ns, case.case_id + "/auxiliary", rep),
+            label=f"{ns}/{case.case_id}/{rep}/auxiliary",
+        )
+        _vec, aux_phi, measured = auxiliary_measurement(inst.spec_kwargs, aux_stream)
     records: list[RecordResultV4] = []
     diag_inputs: list[tuple[str, object, str]] = []
+    temporal_records: list[dict] = []
     seeds: list[int] = []
     for idx, (pair, (block, fld)) in enumerate(zip(specs, RECORDS)):
         spec, h_locked = pair
@@ -586,15 +745,44 @@ def run_complete_experiment(
         seed = seed_map.replicate_seed(ns, case.case_id, rep * 100 + idx)
         seeds.append(seed)
         stream = Stream(seed, label=f"{ns}/{case.case_id}/{rep}/{idx}")
+        analysis_spec = spec
+        if measured is not None:
+            fm = measured[idx][1]
+            h_locked = fm.h_eff
+            analysis_spec = measured_analysis_spec(spec, fm)
+        envelope = observation_envelope(
+            h_locked, plan.nominal_temperature(fld.index), analysis_spec,
+            axial.rho)
+        # The Branch-A response measurement is independent of the Branch-B
+        # record: its own prepared releases, its own stream, and the TRUE
+        # physical system -- three modes where a hidden axial mode exists.
+        response_stream = stream.spawn("branch-a-response")
+        if inst.axial_memory:
+            a_full, sigma_full = axial_memory_dynamics(spec)
+            k_for_tau = schur_complement(spec.k3)
+        else:
+            a_full, sigma_full = true_system(spec)
+            k_for_tau = nm.scale(
+                spec.h_true, K_B * plan.nominal_temperature(fld.index))
+        try:
+            temporal = temporal_qualification(
+                a_full, sigma_full, k_for_tau, spec.p_matrix, spec.r_obs,
+                spec.b_det, response_stream,
+            )
+        except NumericalFailure as exc:
+            temporal = {"status": "MEASUREMENT_FAILED", "error": str(exc)}
         if inst.axial_memory:
             out = run_axial_memory_record(
-                spec, h_locked, stream, rate_factor=axial.rate_factor)
+                spec, h_locked, stream, envelope=envelope,
+                analysis_spec=analysis_spec)
         else:
-            out = run_record(spec, h_locked, stream, rate_factor=axial.rate_factor)
+            out = run_record(spec, h_locked, stream, envelope=envelope,
+                             analysis_spec=analysis_spec)
         records.append(build_record_result(
-            block, fld, out, calibration, critical, gate_procedures, axial,
-            allow_fixtures=allow_fixtures,
+            block, fld, out, calibration, critical, gate_receipts, axial,
+            gate_fixtures=gate_fixtures, temporal=temporal,
         ))
+        temporal_records.append({"record": f"{block.value}/{fld.value}", **temporal})
         diag_inputs.append((
             f"{block.value}/{fld.value}", out.diagnostic, out.reason,
         ))
@@ -602,21 +790,44 @@ def run_complete_experiment(
     family = build_diagnostic_family(diag_inputs, fixture=fixture)
     result = complete_pipeline_result(records, contrasts, family)
     digest = inst.digest(specs if not inst.axial_memory else None)
+    digest["temporal_qualification"] = temporal_records
     if inst.axial_memory:
         digest["axial_memory_witness"] = axial_memory_witness(specs[0][0])
     if inst.omit_eta_t_covariance:
         correct = experiment_calibration(inst.spec_kwargs)
         k = calibration.keys[0]
+        ref = correct.keys[1]
+        s_cor = correct.absolute_sigma(k).point
+        s_mis = calibration.absolute_sigma(k).point
+        c_cor = correct.contrast_sigma(ref, k).point
+        c_mis = calibration.contrast_sigma(ref, k).point
+        widths = [
+            r.absolute.interval.width
+            for r in result.records if r.absolute is not None
+        ]
         digest["eta_t_covariance_consequence"] = {
-            "sigma_abs_correct_shared_model": correct.absolute_sigma(k).point,
-            "sigma_abs_omitted_covariance": calibration.absolute_sigma(k).point,
-            "ratio_omitted_over_correct": (
-                calibration.absolute_sigma(k).point / correct.absolute_sigma(k).point
-            ),
+            "sigma_abs_correct_shared_model": s_cor,
+            "sigma_abs_omitted_covariance": s_mis,
+            "sigma_abs_difference": s_mis - s_cor,
+            "ratio_omitted_over_correct": s_mis / s_cor if s_cor else None,
+            "sigma_contrast_correct_shared_model": c_cor,
+            "sigma_contrast_omitted_covariance": c_mis,
+            "sigma_contrast_difference": c_mis - c_cor,
+            "absolute_interval_width_max": max(widths) if widths else None,
+            "absolute_interval_width_min": min(widths) if widths else None,
+            "classification": result.verdict.classification,
             "declared_correlation": plan.ETA_T_CORRELATION,
+            "auxiliary_draw": {
+                "drawn": True,
+                "shared_latent": plan.LATENT_THERMOMETRY,
+                "log_k_standard": aux_phi[0] if aux_phi else None,
+                "log_T_standard": aux_phi[1] if len(aux_phi) > 1 else None,
+            },
             "note": "the DIRECTION of the consequence is a property of this "
                     "primitive map, not a general rule; no universal claim is "
-                    "made that omission understates uncertainty",
+                    "made about the SIGN of the effect. This is MANDATORY "
+                    "recorded output and is not the release criterion, which "
+                    "is false complete support.",
         }
     return result, digest, seeds
 
@@ -624,8 +835,8 @@ def run_complete_experiment(
 def run_power_case(
     seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
     critical: CriticalValues = NORMAL_CRITICAL,
-    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
-    allow_fixtures: bool = False,
+    gate_receipts: Mapping[GateFamily, GateCalibrationReceipt] | None = None,
+    gate_fixtures: Mapping[GateFamily, SyntheticGateFixture] | None = None,
     fixture: bool = False,
 ) -> dict:
     """Complete eight-record experiments, counted by the authoritative verdict."""
@@ -639,7 +850,7 @@ def run_power_case(
     for rep in range(reps):
         result, digest, seeds = run_complete_experiment(
             seed_map, case, inst, rep, frames, critical=critical,
-            gate_procedures=gate_procedures, allow_fixtures=allow_fixtures,
+            gate_receipts=gate_receipts, gate_fixtures=gate_fixtures,
             fixture=fixture,
         )
         outcome = ReplicateOutcome.from_complete(
@@ -664,8 +875,8 @@ def run_power_case(
 def run_control_case(
     seed_map: SeedMap, case: ValidationCaseV4, reps: int, frames: int,
     critical: CriticalValues = NORMAL_CRITICAL,
-    gate_procedures: Mapping[GateFamily, CalibratedGateProcedure] | None = None,
-    allow_fixtures: bool = False,
+    gate_receipts: Mapping[GateFamily, GateCalibrationReceipt] | None = None,
+    gate_fixtures: Mapping[GateFamily, SyntheticGateFixture] | None = None,
     fixture: bool = False,
 ) -> dict:
     """Stochastic negative controls, judged by the authoritative verdict.
@@ -685,7 +896,7 @@ def run_control_case(
     for rep in range(reps):
         result, digest, seeds = run_complete_experiment(
             seed_map, case, inst, rep, frames, critical=critical,
-            gate_procedures=gate_procedures, allow_fixtures=allow_fixtures,
+            gate_receipts=gate_receipts, gate_fixtures=gate_fixtures,
             fixture=fixture,
         )
         extra: dict = {
@@ -757,7 +968,12 @@ def run_size_case(
         spec, h_locked = specs[0]
         spec = type(spec)(**{**spec.__dict__, "beta_true": math.exp(inst.b_true)})
         seed = seed_map.replicate_seed(case.seed_namespace, case.case_id, rep)
-        out = run_record(spec, h_locked, Stream(seed, label=case.case_id))
+        envelope = observation_envelope(
+            h_locked, plan.nominal_temperature(0), spec,
+            axial_effects(0, coupling=float(inst.spec_kwargs.get(
+                "coupling", plan.AXIAL_COUPLING))).rho)
+        out = run_record(spec, h_locked, Stream(seed, label=case.case_id),
+                         envelope=envelope)
         rec = build_record_result(
             BlockId.BLOCK1, FieldId.THETA0, out, calibration, critical,
         )

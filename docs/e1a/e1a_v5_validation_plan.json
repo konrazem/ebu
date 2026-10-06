@@ -76,303 +76,385 @@
  },
  "cases": [
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-SCALE-01",
    "detail": {
     "statistic": "studentised log beta"
    },
+   "expectation": "c_minus, c_plus <= 2.10",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate c_minus/c_plus for the absolute log-beta interval",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-CONTRAST-01",
    "detail": {
     "statistic": "contrast"
    },
+   "expectation": "c_minus, c_plus <= 2.10",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate the within-block contrast critical values",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-SHAPE-01",
    "detail": {
     "statistic": "G"
    },
+   "expectation": "radius finite at the zero-distance boundary",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate the T4 geometry upper-limit radius",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-CENTRE-01",
    "detail": {
     "statistic": "m"
    },
+   "expectation": "radius finite",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate the centre upper-limit radius",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-STAT-01",
    "detail": {
     "statistic": "stationarity max"
    },
+   "expectation": "radius finite",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate the four-quarter stationarity upper limit",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-CURRENT-01",
    "detail": {
     "statistic": "r_irr"
    },
+   "expectation": "radius finite at the nonregular boundary",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate the r_irr upper-limit radius at omega = 0",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "calibration output; no pass/fail event",
    "case_id": "CAL-DIAG-01",
    "detail": {
     "statistic": "diagnostic max"
    },
+   "expectation": "all four null scales strictly positive",
    "expected_event": "calibration_output",
+   "false_support_event": false,
    "family": "calibration",
    "purpose": "Calibrate the joint diagnostic maximum and its null scales",
    "replicates": 4000,
-   "seed_namespace": "critical-calibration-v5"
+   "seed_namespace": "critical-calibration-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-ABS-LO",
    "detail": {
     "b_true": -0.04879016416943205
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Absolute equivalence at the lower boundary b = -log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-ABS-HI",
    "detail": {
     "b_true": 0.04879016416943205
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Absolute equivalence at the upper boundary b = +log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-CON-LO",
    "detail": {
     "contrast_true": -0.01980262729617973
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Cross-field contrast at the lower boundary -log(1.02)",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-CON-HI",
    "detail": {
     "contrast_true": 0.01980262729617973
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Cross-field contrast at the upper boundary +log(1.02)",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-SHAPE-BD",
    "detail": {
     "g_true": 0.04879016416943205
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Geometry upper limit at the shape boundary G = log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-CENTRE-BD",
    "detail": {
     "m_true": 0.1
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Centre upper limit at the boundary m = 0.10",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-CURRENT-BD",
    "detail": {
     "r_irr_true": 0.02
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Current upper limit at the boundary r_irr = 0.02",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-NUIS-NOISE",
    "detail": {
     "b_true": 0.04879016416943205,
     "noise_ratio": 0.05
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Absolute boundary at the top of the qualified noise range",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-NUIS-EXP",
    "detail": {
     "b_true": 0.04879016416943205,
     "exposure_fraction": 0.1
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Absolute boundary at the exposure ceiling",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-NUIS-COND",
    "detail": {
     "b_true": 0.04879016416943205,
     "condition": 100.0
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Absolute boundary near the conditioning limit kappa_2 = 100",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.025",
    "case_id": "SIZE-NUIS-CAL",
    "detail": {
     "b_true": 0.04879016416943205,
     "sigma_cal": 0.009
    },
+   "expectation": "CP upper <= 0.025",
    "expected_event": "false_equivalence",
+   "false_support_event": false,
    "family": "size",
    "purpose": "Absolute boundary with the full qualified calibration covariance",
    "replicates": 5000,
-   "seed_namespace": "size-validation-v5"
+   "seed_namespace": "size-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.005",
    "case_id": "DIAG-NULL-NOM",
    "detail": {},
+   "expectation": "CP upper <= 0.005",
    "expected_event": "diagnostic_family_rejection",
+   "false_support_event": false,
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size at the nominal true benchmark",
    "replicates": 5000,
-   "seed_namespace": "diagnostic-validation-v5"
+   "seed_namespace": "diagnostic-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.005",
    "case_id": "DIAG-NULL-EXP",
    "detail": {
     "exposure_fraction": 0.1
    },
+   "expectation": "CP upper <= 0.005",
    "expected_event": "diagnostic_family_rejection",
+   "false_support_event": false,
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size at the exposure ceiling",
    "replicates": 5000,
-   "seed_namespace": "diagnostic-validation-v5"
+   "seed_namespace": "diagnostic-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper <= 0.005",
    "case_id": "DIAG-NULL-COND",
    "detail": {
     "condition": 100.0
    },
+   "expectation": "CP upper <= 0.005",
    "expected_event": "diagnostic_family_rejection",
+   "false_support_event": false,
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size near the conditioning limit",
    "replicates": 5000,
-   "seed_namespace": "diagnostic-validation-v5"
+   "seed_namespace": "diagnostic-validation-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson lower >= 0.9",
    "case_id": "POWER-NOMINAL",
    "detail": {},
+   "expectation": "CP lower >= 0.90",
    "expected_event": "complete_support",
+   "false_support_event": false,
    "family": "power",
    "purpose": "Complete eight-record success at the nominal true benchmark",
    "replicates": 2000,
-   "seed_namespace": "complete-power-v5"
+   "seed_namespace": "complete-power-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson lower >= 0.9",
    "case_id": "POWER-CONDLIM",
    "detail": {
     "condition": 100.0
    },
+   "expectation": "CP lower >= 0.90",
    "expected_event": "complete_support",
+   "false_support_event": false,
    "family": "power",
    "purpose": "Complete success near the conditioning limit",
    "replicates": 2000,
-   "seed_namespace": "complete-power-v5"
+   "seed_namespace": "complete-power-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson lower >= 0.9",
    "case_id": "POWER-NOISEHI",
    "detail": {
     "noise_ratio": 0.05
    },
+   "expectation": "CP lower >= 0.90",
    "expected_event": "complete_support",
+   "false_support_event": false,
    "family": "power",
    "purpose": "Complete success at the top of the qualified noise range",
    "replicates": 2000,
-   "seed_namespace": "complete-power-v5"
+   "seed_namespace": "complete-power-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-BLIND-107",
    "detail": {
     "blind_scale": 1.07
    },
+   "expectation": "recovered log beta matches after multiplying by c",
    "expected_event": "blinded_recovery",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Hidden A scale c = 1.07; expect beta_blinded = beta/c",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-BLIND-090",
    "detail": {
     "blind_scale": 0.9
    },
+   "expectation": "recovered log beta matches after multiplying by c",
    "expected_event": "blinded_recovery",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Hidden A scale c = 0.90; expect beta_blinded = beta/c",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-COMMON-07",
    "detail": {
     "beta_common": 0.7
    },
+   "expectation": "cross-field contrasts may pass; absolute must fail",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Common wrong scale beta = 0.7 in every field",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-FIELD-106",
    "detail": {
     "betas": [
@@ -382,13 +464,16 @@
      1.0
     ]
    },
+   "expectation": "false support bounded",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Field-specific alternative (1, 1.06, 1, 1)",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-FIELD-MIX",
    "detail": {
     "betas": [
@@ -398,13 +483,16 @@
      1.0
     ]
    },
+   "expectation": "false support bounded",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Field-specific alternative (1, 0.93, 1.05, 1)",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-FIELD-110",
    "detail": {
     "betas": [
@@ -414,13 +502,16 @@
      1.1
     ]
    },
+   "expectation": "false support bounded",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Field-specific alternative (1, 1, 1, 1.10)",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-HARD-025",
    "detail": {
     "betas": [
@@ -430,112 +521,142 @@
      1.0
     ]
    },
+   "expectation": "false support bounded",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Hard 2.5% single-field contrast",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-GEOM-TRACE",
    "detail": {
     "geometry": "trace_preserving"
    },
+   "expectation": "scalar beta plausible; T4 geometry rejects",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Trace-preserving wrong geometry",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-GEOM-ROT",
    "detail": {
     "geometry": "rotation"
    },
+   "expectation": "geometry detects the rotation",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Correct eigenvalues, wrong orientation",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-CURRENT",
    "detail": {
     "r_irr_target": 0.05
    },
+   "expectation": "density/geometry pass; current gate blocks support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Current-preserving Gaussian, A Sigma = D + omega J",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-ETA-T-COV",
    "detail": {
     "omit_eta_t_covariance": true
    },
+   "expectation": "false complete support bounded; covariance consequence recorded",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Omitted eta/T covariance versus the correct shared thermometry covariance",
    "replicates": 5000,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-NOISE-HI",
    "detail": {
     "noise_ratio": 0.25
    },
+   "expectation": "diagnose, refuse or lose support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Localisation noise above the qualified ratio",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-NOISE-HEAVY",
    "detail": {
     "noise_model": "heavy"
    },
+   "expectation": "diagnose, refuse or lose support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Non-Gaussian heavy-tailed localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-NOISE-COLOR",
    "detail": {
     "noise_model": "colored"
    },
+   "expectation": "diagnose, refuse or lose support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Coloured localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-NOISE-STATE",
    "detail": {
     "noise_model": "state_dependent"
    },
+   "expectation": "diagnose, refuse or lose support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "State-dependent localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-BLUR-MISMATCH",
    "detail": {
     "blur_mismatch": 0.9
    },
+   "expectation": "diagnose, refuse or lose support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Generator exposure differs from the analysed shutter model",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-DRIFT",
    "detail": {
     "drift_rate": [
@@ -543,121 +664,153 @@
      0.0
     ]
    },
+   "expectation": "stationarity or diagnostics prevent full support",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Slow centre drift during the record",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-SELECTION",
    "detail": {
     "selection": "clipping"
    },
+   "expectation": "invalid measurement or model, not a reconditioned pass",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Clipping / tracking selection of observations",
    "replicates": 200,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-AXIAL-COUPLE",
    "detail": {
     "axial_coupling": 0.3
    },
+   "expectation": "pipeline uses H_eff; K_qq bias quantified",
    "expected_event": "deterministic_control",
+   "false_support_event": false,
    "family": "control",
    "purpose": "3D stiffness with K_qz != 0; plane block would bias",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "one-sided 95% Clopper-Pearson upper on false complete support <= 0.025",
    "case_id": "CTL-AXIAL-MEMORY",
    "detail": {
     "axial_memory": true
    },
+   "expectation": "TEMPORAL_MODEL_UNQUALIFIED / INVALID; false complete support bounded",
    "expected_event": "complete_support",
+   "false_support_event": true,
    "family": "control",
    "purpose": "Lateral density matches Schur but the 2D temporal model fails",
    "replicates": 5000,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-RF-TEMP-304",
    "detail": {
     "realization": "temperature_304"
    },
+   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
    "expected_event": "realized_field_status",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Realized temperature 304 K",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-RF-STIFF-1021",
    "detail": {
     "realization": "stiffness_1021"
    },
+   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
    "expected_event": "realized_field_status",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Realized stiffness 1.021-fold",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-RF-MODES",
    "detail": {
     "realization": "split_modes"
    },
+   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
    "expected_event": "realized_field_status",
+   "false_support_event": false,
    "family": "control",
    "purpose": "One weak and one strong stiffness mode",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-RF-ELLIPSE",
    "detail": {
     "realization": "unrotated_ellipse"
    },
+   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
    "expected_event": "realized_field_status",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Unrotated target-eigenvalue ellipse",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-RF-STRADDLE",
    "detail": {
     "realization": "straddle"
    },
+   "expectation": "FIELD_REALIZATION_UNRESOLVED",
    "expected_event": "realized_field_status",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Uncertainty region straddling a realization boundary",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-RF-VALID",
    "detail": {
     "realization": "nominal"
    },
+   "expectation": "FIELD_REALIZATION_VALID (synthetic)",
    "expected_event": "realized_field_status",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Nominal-like realized field",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   },
   {
+   "acceptance_rule": "exact deterministic control",
    "case_id": "CTL-OPT-FAIL",
    "detail": {
     "optimiser_failure": "nan_inf_singular_budget"
    },
+   "expectation": "COMPUTATION_NOT_EVALUABLE; beta never fabricated",
    "expected_event": "deterministic_control",
+   "false_support_event": false,
    "family": "control",
    "purpose": "Forced optimiser failure modes",
    "replicates": 1,
-   "seed_namespace": "negative-controls-v5"
+   "seed_namespace": "negative-controls-v6"
   }
  ],
  "configuration": {

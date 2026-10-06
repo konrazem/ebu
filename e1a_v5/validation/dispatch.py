@@ -108,7 +108,8 @@ class CaseInstantiation:
             spec, h_locked = specs[0]
             sigma = nm.spd_inverse(spec.h_true)
             out["measured"] = {
-                "localization_ratio": localization_ratio(sigma, spec.r_obs),
+                "localization_ratio": localization_ratio(
+                    sigma, spec.r_obs, spec.p_matrix),
                 "exposure_over_dt": spec.t_exp / spec.dt if spec.dt else None,
                 "condition_h_true": nm.cond2_spd(spec.h_true),
                 "omega_true": spec.omega_true,

@@ -13,27 +13,27 @@ from .rng import Stream, derive_seed
 
 #: Root namespace tag.  Changing it changes every derived seed.
 #:
-#: V5 uses a NEW root.  The procedure changed again between V4 and V5 -- the
-#: sensitivity is certified rather than estimated, the axial effects are exact
-#: rather than first-order, gate calibration is an artifact rather than a
-#: string, observation qualification is enforced, and two controls generate
-#: entirely different worlds -- so V4 streams, whose outcomes the V4 audit has
-#: inspected, must not be reused for V5 confirmatory validation.
-ROOT = "e1a_v5/validation/v5/2026-10-06"
+#: V6 uses a NEW root.  The plan's negative-control counts and release events
+#: changed, the auxiliary primitive model and its joint region changed, the
+#: observation qualification moved into detector coordinates and onto an
+#: independent envelope, the temporal model is now qualified from a measured
+#: response, and the gate trust model became a verifiable receipt.  V5
+#: streams, whose outcomes the V5 audit has inspected, must not be reused.
+ROOT = "e1a_v5/validation/v6/2026-10-06"
 
 #: Superseded roots, retained so disjointness can be checked rather than
 #: asserted.
+ROOT_V5 = "e1a_v5/validation/v5/2026-10-06"
 ROOT_V4 = "e1a_v5/validation/v4/2026-10-06"
 ROOT_V3 = "e1a_v5/validation/v3/2026-10-06"
 ROOT_V2 = "e1a_v5/validation/2026-10-06"
 
-#: Disjoint CONFIRMATORY seed families (V-stage brief section 53), V4.
-#: These are frozen here and are NOT executed in this stage.
-CALIBRATION = "critical-calibration-v5"
-SIZE = "size-validation-v5"
-DIAGNOSTIC = "diagnostic-validation-v5"
-POWER = "complete-power-v5"
-CONTROL = "negative-controls-v5"
+#: Disjoint CONFIRMATORY seed families.  Frozen here and NOT executed.
+CALIBRATION = "critical-calibration-v6"
+SIZE = "size-validation-v6"
+DIAGNOSTIC = "diagnostic-validation-v6"
+POWER = "complete-power-v6"
+CONTROL = "negative-controls-v6"
 
 CONFIRMATORY_FAMILIES = (CALIBRATION, SIZE, DIAGNOSTIC, POWER, CONTROL)
 
@@ -42,11 +42,16 @@ CONFIRMATORY_FAMILIES = (CALIBRATION, SIZE, DIAGNOSTIC, POWER, CONTROL)
 #: confirmatory validation and no result drawn from it may be reported as a
 #: validation outcome; keeping it separate is what stops a repair session from
 #: consuming -- and so inspecting -- a future confirmatory stream.
-ENGINEERING = "engineering-v5"
+ENGINEERING = "engineering-v6"
 
 FAMILIES = CONFIRMATORY_FAMILIES + (ENGINEERING,)
 
 #: Earlier family names, for the disjointness regressions only.
+FAMILIES_V5 = (
+    "critical-calibration-v5", "size-validation-v5", "diagnostic-validation-v5",
+    "complete-power-v5", "negative-controls-v5",
+)
+ENGINEERING_V5 = "engineering-v5"
 FAMILIES_V4 = (
     "critical-calibration-v4", "size-validation-v4", "diagnostic-validation-v4",
     "complete-power-v4", "negative-controls-v4",
@@ -125,7 +130,8 @@ class SeedMap:
         inspected just as thoroughly as its confirmatory ones.
         """
         new = {self.replicate_seed(family, case_id, r) for r in range(replicates)}
-        for root, eng in ((ROOT, ENGINEERING), (ROOT_V4, ENGINEERING_V4)):
+        for root, eng in ((ROOT, ENGINEERING), (ROOT_V5, ENGINEERING_V5),
+                          (ROOT_V4, ENGINEERING_V4)):
             old = {
                 derive_seed(derive_seed(derive_seed(root, eng), case_id), "rep", r)
                 for r in range(replicates)

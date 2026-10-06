@@ -457,7 +457,7 @@ def test_likelihood_and_generator() -> None:
     check("instantaneous limit loads P directly", nm.max_abs(nm.sub(ss0.c_obs, nm.eye(2))) == 0.0)
     check("zero exposure recovers the OU transition",
           nm.max_abs(nm.sub(ss0.f, nm.expm(nm.scale(A, -0.005)))) < 1e-15)
-    check("localisation ratio", close(localization_ratio(Sig, nm.scale(Sig, 0.05)), 0.05))
+    check("localisation ratio", close(localization_ratio(Sig, nm.scale(Sig, 0.05), nm.eye(2)), 0.05))
 
     # r_irr through the likelihood parameterisation matches the matrix route
     for w in (0.0, 0.05, 0.2):

@@ -163,6 +163,40 @@ class ValidationCaseV4:
     def detail(self) -> dict[str, Any]:
         return self.config.as_dict()
 
+    @property
+    def false_support_event(self) -> bool:
+        """Does this case count FALSE complete support as its release event?
+
+        True for every required negative control: the world is one the bridge
+        must NOT support, so a complete SUPPORTED_WITHIN_DECLARED_TOLERANCES
+        verdict is an error whose probability is bounded.
+        """
+        return (self.family == "control"
+                and self.expected_event is ExpectedEvent.COMPLETE_SUPPORT)
+
+    @property
+    def acceptance_rule(self) -> str:
+        """The exact release rule this case is judged by.
+
+        Derived from the family and the declared event rather than written out
+        per case, so a case cannot carry a rule that contradicts how it is
+        actually counted.  It is compared against the frozen plan.
+        """
+        if self.family == "calibration":
+            return "calibration output; no pass/fail event"
+        if self.family == "size":
+            return f"one-sided 95% Clopper-Pearson upper <= {SIZE_TARGET}"
+        if self.family == "diagnostic":
+            return f"one-sided 95% Clopper-Pearson upper <= {DIAGNOSTIC_TARGET}"
+        if self.family == "power":
+            return f"one-sided 95% Clopper-Pearson lower >= {POWER_TARGET}"
+        if self.false_support_event:
+            return (
+                "one-sided 95% Clopper-Pearson upper on false complete "
+                f"support <= {NEGATIVE_CONTROL_FALSE_SUPPORT_TARGET}"
+            )
+        return "exact deterministic control"
+
 
 def _c(case_id, purpose, family, ns, reps, expectation, event, target=None, **cfg):
     return ValidationCaseV4(

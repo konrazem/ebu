@@ -11,10 +11,23 @@ Here the plan JSON is parsed and compared field by field against the
 implementation.  The plan is the source of truth: any difference is a
 failure, there is no warning-only mode, and there is no fallback that treats
 the registry as authoritative.
+
+The comparison covers the case identity, its purpose, its replicate count,
+its seed family, its declared event, its expected scientific classification,
+whether its release event is FALSE complete support, its exact acceptance
+rule and its complete case parameters.  V6 added the last four: V5 compared
+neither the classification a case expects nor the rule it is judged by, so a
+case could be counted under a rule the plan never stated.
+
+The plan's ``cases`` block is generated once, at a procedure freeze, from the
+reviewed registry, and is frozen with the procedure.  From that point it is
+the compared source of truth and any later divergence -- in either direction
+-- fails the deterministic suite.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 from dataclasses import dataclass
@@ -30,6 +43,9 @@ COMPARED_FIELDS = (
     "replicates",
     "seed_namespace",
     "expected_event",
+    "expectation",
+    "false_support_event",
+    "acceptance_rule",
     "family",
     "detail",
 )
@@ -48,6 +64,19 @@ def load_plan(path: str | None = None) -> dict:
     full = path or os.path.join(_repo_root(), PLAN_PATH)
     with open(full, "r", encoding="utf-8") as fh:
         return json.load(fh)
+
+
+def plan_identity(path: str | None = None) -> str:
+    """SHA-256 of the machine plan's exact bytes.
+
+    The plan is the source of truth for the case contract, so a gate
+    calibration drawn under a different plan does not apply.  Hashing the
+    bytes rather than a re-serialisation keeps the identity tied to the frozen
+    artefact an auditor can read.
+    """
+    full = path or os.path.join(_repo_root(), PLAN_PATH)
+    with open(full, "rb") as fh:
+        return hashlib.sha256(fh.read()).hexdigest()
 
 
 def _normalise(value: Any) -> Any:
@@ -69,6 +98,9 @@ def case_as_plan_entry(case) -> dict:
         "replicates": case.replicates,
         "seed_namespace": case.seed_namespace,
         "expected_event": case.expected_event.value,
+        "expectation": case.expectation,
+        "false_support_event": case.false_support_event,
+        "acceptance_rule": case.acceptance_rule,
         "family": case.family,
         "detail": _normalise(case.config.as_dict()),
     }

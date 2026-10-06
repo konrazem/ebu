@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import Mapping
 
 from . import numerics as nm
 from .numerics import Matrix, NumericalFailure
@@ -185,24 +186,62 @@ def observed_mean_covariance(ss: StateSpace) -> Matrix:
     )
 
 
-def localization_ratio(sigma: Matrix, r_obs: Matrix) -> float:
+def observed_signal_covariance(sigma: Matrix, p_matrix: Matrix) -> Matrix:
+    """``S_y = P Sigma P^T``: the instantaneous signal in DETECTOR coordinates."""
+    return nm.symmetrise(
+        nm.matmul(nm.matmul(p_matrix, sigma), nm.transpose(p_matrix))
+    )
+
+
+def localization_ratio(sigma: Matrix, r_obs: Matrix, p_matrix: Matrix) -> float:
     """Largest instantaneous localisation variance ratio in whitened directions.
 
     This is the quantity the T-stage qualification limits actually constrain:
     T.23 reads "at most 5% independent *instantaneous localisation* variance in
-    each whitened direction", and the 15.2 ceiling is its companion.  It is
-    ``lambda_max(Sigma^{-1/2} R_obs Sigma^{-1/2})`` and deliberately excludes
-    the exposure-averaging self-term, which is a separate effect with its own
-    exposure ceiling.
+    each whitened direction", and the 15.2 ceiling is its companion.
+
+    The comparison is in DETECTOR coordinates, which is where ``R_obs`` lives::
+
+        S_y = P Sigma P^T ,
+        r_loc = lambda_max( S_y^{-1/2} R_obs S_y^{-1/2} ) .
+
+    V5 compared ``R_obs`` against the LATENT ``Sigma`` with no ``P``, which is
+    a unit error whenever ``P`` is not the identity and understates the ratio
+    by ``lambda(P)^2``.  The auditor's case makes that decisive: with
+    ``Sigma = I``, ``P = 0.1 I`` and ``R_obs = 0.01 I`` the signal the detector
+    actually sees is ``0.01 I``, so the ratio is 1.0 -- twenty times the
+    ceiling -- while the latent comparison reports 0.01 and passes.
+
+    The exposure-averaging self-term is deliberately excluded; it is a
+    separate effect with its own exposure ceiling, and
+    :func:`effective_noise_to_signal` keeps that role distinct.
     """
-    w = nm.inv_sqrtm_spd(sigma)
+    w = nm.inv_sqrtm_spd(observed_signal_covariance(sigma, p_matrix))
     m = nm.symmetrise(nm.matmul(nm.matmul(w, r_obs), w))
     vals, _ = nm.eigh(m)
     return max(vals)
 
 
+def generalized_relaxation_rates(k_eff: Matrix, gamma: Matrix) -> list[float]:
+    """Relaxation rates of ``Gamma dx = -K x``, as generalized eigenvalues.
+
+    The rates are ``lambda(K, Gamma)``, not ``lambda(K) / scalar_gamma``.  With
+    an anisotropic or uncertain drag the two differ, and the generalized
+    construction is the one U specifies: a scalar factor on an isotropic drag
+    cannot represent a drag whose own anisotropy widens the rate range.
+    """
+    return list(nm.generalized_eigvals_spd(nm.symmetrise(k_eff),
+                                           nm.symmetrise(gamma)))
+
+
 def effective_noise_to_signal(ss: StateSpace) -> float:
-    """Blur-inclusive effective noise-to-signal ratio (diagnostic only)."""
+    """Blur-inclusive effective noise-to-signal ratio.
+
+    U keeps this role separate from the instantaneous 0.05 rule: exposure
+    integration must not be allowed to hide inadequate per-frame
+    signal-to-noise by averaging it away.  It is recorded alongside the
+    instantaneous ratio, never in place of it.
+    """
     latent = nm.symmetrise(
         nm.matmul(nm.matmul(ss.c_obs, ss.sigma), nm.transpose(ss.c_obs))
     )
@@ -294,6 +333,11 @@ class ObservationQualification:
     bandwidth_product: float | None = None
     bandwidth_product_upper: float | None = None
     noise_model: str = "gaussian"
+    #: Exposure-averaged ratio and the worst-case envelope record.  The
+    #: exposure-averaged quantity is U's SEPARATE requirement and never
+    #: replaces the instantaneous ceiling above.
+    exposure_averaged_ratio: float | None = None
+    envelope: Mapping[str, object] | None = None
 
     def as_dict(self) -> dict:
         return {
@@ -305,121 +349,183 @@ class ObservationQualification:
             "bandwidth_product": self.bandwidth_product,
             "bandwidth_product_upper": self.bandwidth_product_upper,
             "noise_model": self.noise_model,
+            "exposure_averaged_ratio": self.exposure_averaged_ratio,
+            "envelope": dict(self.envelope) if self.envelope else None,
             "refusals": [r.code for r in self.refusals],
         }
 
 
-def qualify_observation(
-    sigma: Matrix,
-    r_obs: Matrix,
-    p_matrix: Matrix,
-    a_drift: Matrix,
-    dt: float,
-    t_exp: float,
-    noise_model: str = "gaussian",
-    rate_factor: float = 1.0,
-) -> ObservationQualification:
-    """Evaluate every T/U observation requirement for one record.
+@dataclass(frozen=True)
+class ObservationEnvelope:
+    """The INDEPENDENT, pre-Branch-B observation qualification envelope.
 
-    ``rate_factor`` is the certified multiplicative bound by which the axial
-    remainder set can inflate the true relaxation rates and shrink the latent
-    covariance.  It enlarges the localisation ratio, the exposure fraction and
-    the bandwidth product, each of which is then compared against its own
-    declared ceiling with T's INCLUSIVE semantics.  A quantity whose enclosure
-    straddles its ceiling does not pass: the record is not demonstrated to lie
-    inside the qualified envelope.
+    T/U require the observation apparatus to be qualified *prospectively*,
+    from Branch-A physics and instrument calibration, before any Branch-B fit
+    exists.  V5 evaluated every predicate from the fitted free model, which
+    inverts the dependency: a record whose fit happened to land somewhere
+    convenient could qualify its own observation model, and a record whose fit
+    failed could not be qualified at all.
+
+    Nothing here comes from a Branch-B fit.  ``h_eff`` is the Branch-A locked
+    Hessian, ``p_matrix`` and ``r_obs`` are instrument calibrations, the
+    relaxation rates come from the Branch-A stiffness against the calibrated
+    drag, and the scale range is T's declared design/power envelope rather
+    than one estimate.  Every predicate is then evaluated at the WORST CASE
+    over the whole envelope.
+    """
+
+    #: Branch-A locked thermal Hessian, so ``Sigma_beta = exp(-b) H_eff^{-1}``.
+    h_eff: Matrix
+    #: Branch-A effective stiffness and the calibrated drag matrix.
+    k_eff: Matrix
+    gamma: Matrix
+    #: Instrument-calibrated detector map and localisation covariance.
+    p_matrix: Matrix
+    r_obs: Matrix
+    #: Frame interval and shutter, from the timing calibration.
+    dt: float
+    t_exp: float
+    #: T's declared design/power range of ``log beta``.  The smallest latent
+    #: covariance, hence the largest localisation ratio, sits at its top end.
+    log_beta_range: tuple[float, float] = (0.0, 0.0)
+    #: Certified axial-remainder radius; ``H_true <= (1 + rho) H_A``.
+    remainder_rho: float = 0.0
+    #: Bounded relative uncertainties of the instrument calibrations.
+    p_relative: float = 0.0
+    r_relative: float = 0.0
+    drag_relative: float = 0.0
+    t_exp_relative: float = 0.0
+    dt_relative: float = 0.0
+    noise_model: str = "gaussian"
+
+    def worst_case(self) -> dict:
+        """Worst-case value of every qualified quantity over the envelope.
+
+        Each bound is a closed-form worst case, not a sample:
+
+        ``localisation``
+            ``Sigma = exp(-b) (H_A (I + E))^{-1}`` is smallest at the top of
+            the scale range and at the positive extreme of the remainder, and
+            ``P Sigma P^T`` shrinks by at most ``(1 - u_P)^2``, so
+
+                r_loc <= (1 + u_R) e^{b_max} (1 + rho) / (1 - u_P)^2
+                         * lambda_max(R_cal, P_cal H_A^{-1} P_cal^T) .
+
+        ``rates``
+            the relaxation rates are the generalized eigenvalues
+            ``lambda(K, Gamma)``, enlarged by ``(1 + rho)`` for the remainder
+            and by ``1 / (1 - u_gamma)`` for the drag region.  They set both
+            the exposure fraction and the bandwidth product.
+        """
+        b_max = max(self.log_beta_range)
+        rho = self.remainder_rho
+        if not (0.0 <= rho < 1.0):
+            raise NumericalFailure("remainder radius outside its domain")
+        for u, what in ((self.p_relative, "P"), (self.r_relative, "R_obs"),
+                        (self.drag_relative, "drag"),
+                        (self.t_exp_relative, "shutter"),
+                        (self.dt_relative, "timing")):
+            if not (0.0 <= u < 1.0):
+                raise NumericalFailure(
+                    f"{what} relative uncertainty {u!r} outside [0, 1)")
+        sigma_nominal = nm.spd_inverse(nm.symmetrise(self.h_eff))
+        base_ratio = localization_ratio(sigma_nominal, self.r_obs, self.p_matrix)
+        ratio_up = (
+            base_ratio * (1.0 + self.r_relative) * math.exp(b_max)
+            * (1.0 + rho) / ((1.0 - self.p_relative) ** 2)
+        )
+        rates = generalized_relaxation_rates(self.k_eff, self.gamma)
+        rate_max = max(rates) * (1.0 + rho) / (1.0 - self.drag_relative)
+        t_exp_up = self.t_exp * (1.0 + self.t_exp_relative)
+        dt_up = self.dt * (1.0 + self.dt_relative)
+        return {
+            "localization_ratio": base_ratio,
+            "localization_ratio_upper": ratio_up,
+            "exposure_fraction": self.t_exp * max(rates),
+            "exposure_fraction_upper": t_exp_up * rate_max,
+            "bandwidth_product": self.dt * max(rates),
+            "bandwidth_product_upper": dt_up * rate_max,
+            "relaxation_rates": rates,
+            "generalized_rate_max_upper": rate_max,
+        }
+
+
+def qualify_observation_envelope(env: ObservationEnvelope) -> "ObservationQualification":
+    """Evaluate every T/U observation requirement over the whole envelope.
+
+    No Branch-B quantity enters.  Ceiling semantics are T's INCLUSIVE ones,
+    and a quantity whose worst case exceeds its ceiling fails: the record is
+    not demonstrated to lie inside the qualified envelope.
     """
     reasons: list[Refusal] = []
-    ratio = ratio_up = None
-    exposure = exposure_up = None
-    bandwidth = bandwidth_up = None
+    w: dict = {}
 
-    if not nm.is_spd(r_obs):
+    if not nm.is_spd(env.r_obs):
         reasons.append(refuse(
             OBSERVATION_MODEL_UNQUALIFIED, "R_obs positive definite",
             "the localisation noise covariance is not positive definite",
         ))
     try:
-        nm.general_inverse(p_matrix)
+        nm.general_inverse(env.p_matrix)
     except NumericalFailure as exc:
         reasons.append(refuse(
             OBSERVATION_MODEL_UNQUALIFIED, "P invertible",
             f"the physical-to-detector map is not invertible: {exc}",
         ))
-    if noise_model not in QUALIFIED_NOISE_MODELS:
+    if env.noise_model not in QUALIFIED_NOISE_MODELS:
         reasons.append(refuse(
             OBSERVATION_MODEL_UNQUALIFIED, "noise model qualified",
-            f"observation noise model {noise_model!r} is outside the declared "
-            "Gaussian domain",
-            noise_model=noise_model,
+            f"observation noise model {env.noise_model!r} is outside the "
+            "declared Gaussian domain",
+            noise_model=env.noise_model,
         ))
-    if not (0.0 <= t_exp <= dt):
+    if not (0.0 <= env.t_exp <= env.dt):
         reasons.append(refuse(
             OBSERVATION_MODEL_UNQUALIFIED, "0 <= t_exp <= dt",
             "the shutter does not fit inside the frame interval",
-            t_exp=t_exp, dt=dt,
+            t_exp=env.t_exp, dt=env.dt,
         ))
 
     try:
-        ratio = localization_ratio(sigma, r_obs)
-        ratio_up = ratio * rate_factor
-        if not (ratio_up <= LOCALIZATION_RATIO_CEILING):
-            reasons.append(refuse(
-                OBSERVATION_MODEL_UNQUALIFIED,
-                f"instantaneous localisation ratio <= {LOCALIZATION_RATIO_CEILING}",
-                "the record lies outside the declared T 15.2 / T.23 "
-                "localisation-noise envelope",
-                ratio=ratio, ratio_upper=ratio_up,
-                ceiling=LOCALIZATION_RATIO_CEILING,
-            ))
+        w = env.worst_case()
     except NumericalFailure as exc:
         reasons.append(refuse(
-            NUMERICAL_REPRESENTATION_FAILURE, "localisation ratio computable", str(exc),
+            NUMERICAL_REPRESENTATION_FAILURE,
+            "observation envelope evaluable", str(exc),
         ))
+        return ObservationQualification(
+            valid=False, refusals=tuple(reasons), noise_model=env.noise_model,
+        )
 
-    try:
-        vals, _ = nm.eigh(nm.symmetrise(
-            nm.scale(nm.add(a_drift, nm.transpose(a_drift)), 0.5)))
-        rate_fast = max(vals)
-        if rate_fast <= 0.0:
-            raise NumericalFailure("fast relaxation rate is not positive")
-        exposure = t_exp * rate_fast
-        exposure_up = exposure * rate_factor
-        if not (exposure_up <= EXPOSURE_CEILING_FRACTION):
+    for key, ceiling, predicate, detail in (
+        ("localization_ratio", LOCALIZATION_RATIO_CEILING,
+         f"instantaneous detector-coordinate localisation ratio <= "
+         f"{LOCALIZATION_RATIO_CEILING}",
+         "the record lies outside the declared T 15.2 / T.23 localisation-"
+         "noise envelope"),
+        ("exposure_fraction", EXPOSURE_CEILING_FRACTION,
+         f"t_exp / tau_fast <= {EXPOSURE_CEILING_FRACTION}",
+         "the exposure exceeds the declared blur envelope"),
+        ("bandwidth_product", BANDWIDTH_CEILING,
+         f"||B||_2 dt <= {BANDWIDTH_CEILING}",
+         "the record exceeds the non-aliasing bandwidth envelope"),
+    ):
+        up = w[key + "_upper"]
+        if not (up <= ceiling):
             reasons.append(refuse(
-                OBSERVATION_MODEL_UNQUALIFIED,
-                f"t_exp / tau_fast <= {EXPOSURE_CEILING_FRACTION}",
-                "the exposure exceeds the declared blur envelope",
-                exposure_fraction=exposure, exposure_upper=exposure_up,
+                OBSERVATION_MODEL_UNQUALIFIED, predicate, detail,
+                **{key: w[key], key + "_upper": up, "ceiling": ceiling},
             ))
-    except NumericalFailure as exc:
-        reasons.append(refuse(
-            NUMERICAL_REPRESENTATION_FAILURE, "exposure fraction computable", str(exc),
-        ))
-
-    try:
-        bandwidth = bandwidth_product(a_drift, sigma, dt)
-        bandwidth_up = bandwidth * rate_factor
-        if not (bandwidth_up <= BANDWIDTH_CEILING):
-            reasons.append(refuse(
-                OBSERVATION_MODEL_UNQUALIFIED,
-                f"||B||_2 dt <= {BANDWIDTH_CEILING}",
-                "the record exceeds the non-aliasing bandwidth envelope",
-                bandwidth_product=bandwidth, bandwidth_upper=bandwidth_up,
-            ))
-    except NumericalFailure as exc:
-        reasons.append(refuse(
-            NUMERICAL_REPRESENTATION_FAILURE, "bandwidth product computable", str(exc),
-        ))
 
     return ObservationQualification(
         valid=not reasons,
         refusals=tuple(reasons),
-        localization_ratio=ratio,
-        localization_ratio_upper=ratio_up,
-        exposure_fraction=exposure,
-        exposure_fraction_upper=exposure_up,
-        bandwidth_product=bandwidth,
-        bandwidth_product_upper=bandwidth_up,
-        noise_model=noise_model,
+        localization_ratio=w.get("localization_ratio"),
+        localization_ratio_upper=w.get("localization_ratio_upper"),
+        exposure_fraction=w.get("exposure_fraction"),
+        exposure_fraction_upper=w.get("exposure_fraction_upper"),
+        bandwidth_product=w.get("bandwidth_product"),
+        bandwidth_product_upper=w.get("bandwidth_product_upper"),
+        noise_model=env.noise_model,
+        envelope=w,
     )

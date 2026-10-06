@@ -25,6 +25,8 @@ which is ``INCOMPLETE_INPUT`` or ``INVALID``, never a quiet pass.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 from dataclasses import dataclass
 from enum import Enum
@@ -392,103 +394,187 @@ class GateFamily(str, Enum):
     CURRENT = "current"
 
 
-#: Identity namespace reserved for test-only calibration artifacts.  The
-#: production record builder refuses anything carrying it.
+#: Identity namespace reserved for test-only calibration artifacts.
 FIXTURE_NAMESPACE = "SYNTHETIC-FIXTURE"
 
 
 @dataclass(frozen=True)
-class CalibratedGateProcedure:
-    """The artifact that entitles a raw statistic to become an upper limit.
+class GateExpectations:
+    """What a production gate calibration must match to be applicable here.
 
-    V4 accepted a bare non-empty string as proof of calibration, so
+    These are the CURRENT frozen identities of the running procedure.  A
+    receipt that does not reproduce every one of them was produced by a
+    different procedure, a different plan, a different seed architecture or a
+    different nuisance domain, and does not apply to these records.
+    """
 
-        GateLimit.calibrated(statistic=0.0, limit=0.0, identity="arbitrary")
+    procedure_version: int
+    analysis_identity: str
+    validation_identity: str
+    plan_identity: str
+    seed_map_identity: str
+    domain_identity: str
+    coverage_target: float
+    calibration_seed_namespace: str
 
-    turned a raw zero statistic into a passing calibrated upper limit.  A
-    string carries no gate family, no procedure version, no calibration
-    stream, no coverage target and no domain of applicability, so nothing
-    about it could be checked.
 
-    A procedure carries all of them, and :meth:`upper_limit` is the only way
-    to obtain a limit: it is the statistic plus the procedure's own calibrated
-    confidence radius, never the statistic itself.
+@dataclass(frozen=True)
+class GateCalibrationReceipt:
+    """A VERIFIABLE record that a gate's critical value was actually calibrated.
+
+    V5 replaced V4's bare identity string with a typed artifact, which the
+    audit still rejected -- and rightly.  Typing the fields does not make them
+    evidence: an ordinary caller could still construct the type and fill every
+    field with whatever strings it liked, so a nonempty identity remained the
+    whole of the trust model.
+
+    A receipt is different in kind.  It binds the calibration to the exact
+    frozen identities of the procedure that produced it, to the plan and seed
+    architecture it was drawn under, to the case domain it covers and to the
+    digest of the calibration result itself; and it carries a digest OF ALL OF
+    THAT, which the production builder recomputes.  A caller who invents field
+    values gets a receipt whose digest does not recompute; a caller who copies
+    a real receipt and alters one field gets the same; a caller who supplies a
+    genuine receipt from another procedure version, another plan or another
+    domain is refused on the identity comparison.
     """
 
     family: GateFamily
-    #: V-stage procedure version this calibration belongs to.
     procedure_version: int
-    #: Identity of the frozen validation procedure that produced it.
-    procedure_identity: str
-    #: Identity of the calibration stream and its replicate count.
+    analysis_identity: str
+    validation_identity: str
+    plan_identity: str
+    seed_map_identity: str
+    calibration_seed_namespace: str
     calibration_identity: str
-    #: One-sided coverage the radius was calibrated to.
-    coverage_target: float
-    #: Identity of the nuisance/domain envelope it is applicable within.
     domain_identity: str
-    #: The calibrated one-sided confidence radius, in the statistic's units.
+    replicates: int
     radius: float
-    status: CriticalValueStatus = CriticalValueStatus.UNCALIBRATED
-    #: True only for test-only artifacts; refused by the production builder.
-    fixture_only: bool = False
+    coverage_target: float
+    #: Digest of the calibration result the radius was read from.
+    result_digest: str
+    #: Digest of every field above.  Recomputed on use.
+    receipt_digest: str = ""
+    #: Whether the calibration run is complete and released.
+    released: bool = False
 
-    def defects(self) -> list[str]:
+    def payload(self) -> str:
+        """The canonical preimage of :attr:`receipt_digest`."""
+        return json.dumps(
+            {
+                "family": self.family.value if isinstance(self.family, GateFamily)
+                else str(self.family),
+                "procedure_version": self.procedure_version,
+                "analysis_identity": self.analysis_identity,
+                "validation_identity": self.validation_identity,
+                "plan_identity": self.plan_identity,
+                "seed_map_identity": self.seed_map_identity,
+                "calibration_seed_namespace": self.calibration_seed_namespace,
+                "calibration_identity": self.calibration_identity,
+                "domain_identity": self.domain_identity,
+                "replicates": self.replicates,
+                "radius": self.radius,
+                "coverage_target": self.coverage_target,
+                "result_digest": self.result_digest,
+                "released": bool(self.released),
+            },
+            sort_keys=True, separators=(",", ":"),
+        )
+
+    def recomputed_digest(self) -> str:
+        return hashlib.sha256(self.payload().encode("utf-8")).hexdigest()
+
+    def sealed(self) -> "GateCalibrationReceipt":
+        """The same receipt with its digest computed.  Used by the issuer."""
+        return GateCalibrationReceipt(
+            **{**self.__dict__, "receipt_digest": self.recomputed_digest()}
+        )
+
+    def defects(self, expected: GateExpectations, family: GateFamily) -> list[str]:
         bad: list[str] = []
         if not isinstance(self.family, GateFamily):
             bad.append("gate_family_untyped")
-        if self.status is not CriticalValueStatus.CALIBRATED:
-            bad.append(f"status_{self.status.value.lower()}")
-        if not self.procedure_identity:
-            bad.append("procedure_identity_missing")
+        elif self.family is not family:
+            bad.append(GATE_WRONG_FAMILY)
+        if not self.released:
+            bad.append(GATE_NOT_RELEASED)
+        if self.procedure_version != expected.procedure_version:
+            bad.append(GATE_WRONG_VERSION)
+        for got, want, code in (
+            (self.analysis_identity, expected.analysis_identity, GATE_WRONG_ANALYSIS),
+            (self.validation_identity, expected.validation_identity,
+             GATE_WRONG_VALIDATION),
+            (self.plan_identity, expected.plan_identity, GATE_WRONG_PLAN),
+            (self.seed_map_identity, expected.seed_map_identity, GATE_WRONG_SEED_MAP),
+            (self.domain_identity, expected.domain_identity, GATE_WRONG_DOMAIN),
+            (self.calibration_seed_namespace, expected.calibration_seed_namespace,
+             GATE_WRONG_SEED_NAMESPACE),
+        ):
+            if not got or got != want:
+                bad.append(code)
+        if self.coverage_target != expected.coverage_target:
+            bad.append(GATE_WRONG_COVERAGE)
         if not self.calibration_identity:
             bad.append("calibration_identity_missing")
-        if not self.domain_identity:
-            bad.append("domain_identity_missing")
-        if not math.isfinite(self.radius) or self.radius < 0.0:
+        if not self.result_digest:
+            bad.append(GATE_RESULT_DIGEST_MISSING)
+        if not isinstance(self.replicates, int) or self.replicates <= 0:
+            bad.append(GATE_REPLICATES_INVALID)
+        if not (isinstance(self.radius, float) and math.isfinite(self.radius)
+                and self.radius >= 0.0):
             bad.append("radius_invalid")
-        if not (0.0 < self.coverage_target < 1.0):
-            bad.append("coverage_target_invalid")
+        if not self.receipt_digest or self.receipt_digest != self.recomputed_digest():
+            bad.append(GATE_DIGEST_MISMATCH)
         return bad
-
-    @property
-    def usable(self) -> bool:
-        return not self.defects()
 
     def upper_limit(self, statistic: float) -> float:
         """``statistic + radius``.  There is no path that returns the statistic."""
-        if not self.usable:
-            raise ValueError(f"gate procedure unusable: {self.defects()}")
+        return float(statistic) + float(self.radius)
+
+
+@dataclass(frozen=True)
+class SyntheticGateFixture:
+    """A TEST-ONLY calibrated gate artifact, of a DIFFERENT TYPE.
+
+    V5 marked fixtures with a ``fixture_only`` boolean on the same class the
+    production builder trusted, so an ordinary caller could forge a production
+    artifact by leaving the flag False.  Separation is by type instead: no
+    production API accepts this class, and the separation cannot be defeated
+    by setting a field.
+    """
+
+    family: GateFamily
+    radius: float
+    coverage_target: float = 0.975
+    namespace: str = FIXTURE_NAMESPACE
+
+    def upper_limit(self, statistic: float) -> float:
         return float(statistic) + float(self.radius)
 
 
 def synthetic_calibrated_gate_fixture(
     family: GateFamily, radius: float, coverage_target: float = 0.975,
-) -> CalibratedGateProcedure:
-    """A TEST-ONLY calibrated gate artifact.
-
-    Every identity sits in :data:`FIXTURE_NAMESPACE`, and ``fixture_only`` is
-    set, so the production record builder refuses it.  It exists only so
-    deterministic unit tests can exercise verdict code past the uncalibrated
-    gate.
-    """
-    return CalibratedGateProcedure(
-        family=family,
-        procedure_version=-1,
-        procedure_identity=f"{FIXTURE_NAMESPACE}/procedure",
-        calibration_identity=f"{FIXTURE_NAMESPACE}/not-a-calibration",
-        coverage_target=coverage_target,
-        domain_identity=f"{FIXTURE_NAMESPACE}/domain",
-        radius=float(radius),
-        status=CriticalValueStatus.CALIBRATED,
-        fixture_only=True,
-    )
+) -> SyntheticGateFixture:
+    """A TEST-ONLY calibrated gate artifact.  Production APIs refuse the type."""
+    return SyntheticGateFixture(family, float(radius), coverage_target)
 
 
 GATE_UNCALIBRATED = "uncalibrated"
-GATE_NO_PROCEDURE = "no_calibration_procedure"
-GATE_WRONG_FAMILY = "procedure_is_for_a_different_gate"
-GATE_WRONG_VERSION = "procedure_is_for_a_different_procedure_version"
-GATE_WRONG_DOMAIN = "procedure_domain_does_not_cover_this_record"
+GATE_NO_PROCEDURE = "no_calibration_receipt"
+GATE_NOT_A_RECEIPT = "artifact_is_not_a_calibration_receipt"
+GATE_NOT_RELEASED = "calibration_result_not_released"
+GATE_WRONG_FAMILY = "receipt_is_for_a_different_gate"
+GATE_WRONG_VERSION = "receipt_is_for_a_different_procedure_version"
+GATE_WRONG_DOMAIN = "receipt_domain_does_not_cover_this_record"
+GATE_WRONG_ANALYSIS = "receipt_analysis_identity_mismatch"
+GATE_WRONG_VALIDATION = "receipt_validation_identity_mismatch"
+GATE_WRONG_PLAN = "receipt_validation_plan_identity_mismatch"
+GATE_WRONG_SEED_MAP = "receipt_seed_map_identity_mismatch"
+GATE_WRONG_SEED_NAMESPACE = "receipt_calibration_seed_namespace_mismatch"
+GATE_WRONG_COVERAGE = "receipt_coverage_target_mismatch"
+GATE_DIGEST_MISMATCH = "receipt_digest_does_not_recompute"
+GATE_RESULT_DIGEST_MISSING = "calibration_result_digest_missing"
+GATE_REPLICATES_INVALID = "calibration_replicate_count_invalid"
 GATE_FIXTURE_IN_PRODUCTION = "test_only_fixture_used_in_production"
 GATE_STATISTIC_NONFINITE = "statistic_nonfinite"
 
@@ -498,15 +584,16 @@ class GateLimit:
     """A one-sided upper confidence limit, with the artifact that produced it.
 
     The raw statistic and the upper limit are separate fields and the limit is
-    always ``statistic + procedure.radius``.  There is no constructor that
-    accepts a limit directly, so ``upper_limit = raw_statistic`` cannot be
-    expressed.
+    always ``statistic + radius``.  There is no constructor that accepts a
+    limit, so ``upper_limit = raw_statistic`` cannot be expressed.
     """
 
     statistic: float | None = None
     limit: float | None = None
-    procedure: CalibratedGateProcedure | None = None
+    receipt: GateCalibrationReceipt | None = None
     defects: tuple[str, ...] = (GATE_NO_PROCEDURE,)
+    #: True when the limit came from a TEST-ONLY fixture.
+    fixture: bool = False
 
     @staticmethod
     def uncalibrated(statistic: float | None = None) -> "GateLimit":
@@ -514,34 +601,55 @@ class GateLimit:
         return GateLimit(statistic, None, None, (GATE_NO_PROCEDURE,))
 
     @staticmethod
-    def from_procedure(
+    def from_receipt(
         statistic: float | None,
-        procedure: CalibratedGateProcedure | None,
+        receipt: object,
         family: GateFamily,
-        procedure_version: int,
-        domain_identity: str,
-        allow_fixture: bool = False,
+        expected: GateExpectations,
     ) -> "GateLimit":
-        """Build a limit, refusing every way the artifact can fail to apply."""
+        """Build a limit from a VERIFIED production calibration receipt.
+
+        Everything is checked: the artifact's type, the gate family, the
+        procedure version, the analysis / validation / plan / seed-map
+        identities, the calibration seed namespace, the coverage target, the
+        release state, the replicate count, the result digest and the
+        receipt's own digest.  Nothing is taken on the strength of a field
+        being nonempty.
+        """
         bad: list[str] = []
         if statistic is None or not math.isfinite(statistic):
             bad.append(GATE_STATISTIC_NONFINITE)
-        if procedure is None:
+        if receipt is None:
             bad.append(GATE_NO_PROCEDURE)
             return GateLimit(statistic, None, None, tuple(bad))
-        bad.extend(procedure.defects())
-        if procedure.family is not family:
-            bad.append(GATE_WRONG_FAMILY)
-        if procedure.fixture_only and not allow_fixture:
+        if isinstance(receipt, SyntheticGateFixture):
             bad.append(GATE_FIXTURE_IN_PRODUCTION)
-        if not procedure.fixture_only:
-            if procedure.procedure_version != procedure_version:
-                bad.append(GATE_WRONG_VERSION)
-            if procedure.domain_identity != domain_identity:
-                bad.append(GATE_WRONG_DOMAIN)
+            return GateLimit(statistic, None, None, tuple(bad))
+        if not isinstance(receipt, GateCalibrationReceipt):
+            bad.append(GATE_NOT_A_RECEIPT)
+            return GateLimit(statistic, None, None, tuple(bad))
+        bad.extend(receipt.defects(expected, family))
         if bad:
-            return GateLimit(statistic, None, procedure, tuple(bad))
-        return GateLimit(statistic, procedure.upper_limit(statistic), procedure, ())
+            return GateLimit(statistic, None, receipt, tuple(bad))
+        return GateLimit(statistic, receipt.upper_limit(statistic), receipt, ())
+
+    @staticmethod
+    def from_fixture(
+        statistic: float | None, fixture: object, family: GateFamily,
+    ) -> "GateLimit":
+        """TEST-ONLY.  Accepts the fixture type and nothing else."""
+        bad: list[str] = []
+        if statistic is None or not math.isfinite(statistic):
+            bad.append(GATE_STATISTIC_NONFINITE)
+        if not isinstance(fixture, SyntheticGateFixture):
+            return GateLimit(statistic, None, None, (GATE_NOT_A_RECEIPT,), True)
+        if fixture.family is not family:
+            bad.append(GATE_WRONG_FAMILY)
+        if not (math.isfinite(fixture.radius) and fixture.radius >= 0.0):
+            bad.append("radius_invalid")
+        if bad:
+            return GateLimit(statistic, None, None, tuple(bad), True)
+        return GateLimit(statistic, fixture.upper_limit(statistic), None, (), True)
 
     @property
     def usable(self) -> bool:
@@ -566,11 +674,11 @@ class GateLimit:
         if not self.usable:
             return self
         return GateLimit(self.statistic, self.limit + float(systematic),
-                         self.procedure, ())
+                         self.receipt, (), self.fixture)
 
     def scaled(self, factor: float) -> "GateLimit":
         """Multiply the limit by a certified factor (a purely multiplicative effect)."""
         if not self.usable:
             return self
         return GateLimit(self.statistic, self.limit * float(factor),
-                         self.procedure, ())
+                         self.receipt, (), self.fixture)

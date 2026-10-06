@@ -20,6 +20,8 @@ random covariance and are never converted into one (U-stage 25, T.18).
 
 from __future__ import annotations
 
+import hashlib
+import json
 import math
 from dataclasses import dataclass, field
 from enum import Enum
@@ -56,6 +58,75 @@ class Scope(str, Enum):
     FIELD = "field"        # specific to one (block, field) record
 
 
+class PrimitiveClass(str, Enum):
+    """How a required calibration primitive category is accounted for.
+
+    U requires every load-bearing category to be *declared*.  Absence must
+    never mean zero uncertainty, which is the strongest possible claim
+    obtainable by supplying nothing, so a category that is not stochastic must
+    say which of the other four it is and why.
+    """
+
+    UNCERTAIN = "uncertain"
+    EXACT_CONSTANT = "exact_constant"
+    FIXED_BY_VALIDATION_CASE = "fixed_by_validation_case"
+    BOUNDED_SYSTEMATIC = "bounded_systematic"
+    NOT_APPLICABLE = "not_applicable"
+
+
+#: Every auxiliary primitive category U requires the packet to account for.
+#: A declaration set missing any of these is refused.
+REQUIRED_PRIMITIVE_CATEGORIES: tuple[str, ...] = (
+    "viscosity_eta_of_T",
+    "temperature_calibration",
+    "bead_radius_material_transfer",
+    "force_displacement_calibration_3d",
+    "axial_stiffness_coupling",
+    "wall_hydrodynamic_resistance",
+    "coordinate_transform_P",
+    "centre_fiducial_transfer",
+    "localization_covariance_R_obs",
+    "detector_offset",
+    "shutter_exposure",
+    "timing_synchronization",
+    "shared_standards",
+    "block_specific",
+    "field_specific",
+)
+
+
+@dataclass(frozen=True)
+class CategoryDeclaration:
+    """How one required category is accounted for in this packet."""
+
+    category: str
+    classification: PrimitiveClass
+    #: Primitive NAMES (not keys) carrying this category, when UNCERTAIN.
+    members: tuple[str, ...] = ()
+    #: Deterministic magnitude, when BOUNDED_SYSTEMATIC.
+    bound: float | None = None
+    justification: str = ""
+
+    def validate(self) -> list[str]:
+        bad: list[str] = []
+        if self.category not in REQUIRED_PRIMITIVE_CATEGORIES:
+            bad.append(f"{self.category}: not a required category")
+        if self.classification is PrimitiveClass.UNCERTAIN and not self.members:
+            bad.append(f"{self.category}: UNCERTAIN with no primitive members")
+        if self.classification is PrimitiveClass.BOUNDED_SYSTEMATIC and not (
+            self.bound is not None and math.isfinite(self.bound)
+            and self.bound >= 0.0
+        ):
+            bad.append(f"{self.category}: BOUNDED_SYSTEMATIC with no finite bound")
+        if self.classification in (
+            PrimitiveClass.EXACT_CONSTANT,
+            PrimitiveClass.FIXED_BY_VALIDATION_CASE,
+            PrimitiveClass.NOT_APPLICABLE,
+        ) and not self.justification:
+            bad.append(f"{self.category}: {self.classification.value} with no justification")
+        return bad
+
+
 @dataclass(frozen=True)
 class Primitive:
     """One calibration primitive with an explicit variable identity."""
@@ -67,6 +138,12 @@ class Primitive:
     sigma: float
     block: BlockId | None = None
     fld: FieldId | None = None
+    #: Loadings on declared independent latent standards, as fractions of
+    #: ``sigma``.  ``phi_i = sum_l a_il sigma_i z_l + sqrt(1 - sum a^2) sigma_i e_i``
+    #: with ``z`` and ``e`` independent standard normals, so a standard shared
+    #: by two primitives is ONE latent variable rather than an asserted
+    #: off-diagonal entry.
+    loadings: tuple[tuple[str, float], ...] = ()
 
     @property
     def key(self) -> str:
@@ -91,6 +168,8 @@ class PrimitiveVector:
     _index: dict[str, int] = field(default_factory=dict)
     #: Optional explicit correlations between distinct keys.
     correlations: dict[tuple[str, str], float] = field(default_factory=dict)
+    #: Declared independent latent standard variables, in fixed order.
+    latents: list[str] = field(default_factory=list)
 
     def add(self, p: Primitive) -> int:
         if p.key in self._index:
@@ -128,17 +207,92 @@ class PrimitiveVector:
     def values(self) -> list[float]:
         return [p.value for p in self.primitives]
 
+    def declare_latent(self, name: str) -> None:
+        """Declare an independent unit-variance latent standard variable."""
+        if name not in self.latents:
+            self.latents.append(name)
+
+    def load_on_latent(self, key: str, latent: str, fraction: float) -> None:
+        """Make primitive ``key`` load on ``latent`` with the given fraction.
+
+        ``fraction`` is a coefficient on ``sigma`` of a unit-variance latent,
+        so two primitives loading ``sqrt(rho)`` on the same latent acquire
+        correlation exactly ``rho`` while keeping their declared variances.
+        The sharing is then a STRUCTURAL property of the generating law and
+        survives into the draw, rather than an off-diagonal number asserted
+        only in the analyser's matrix.
+        """
+        self.declare_latent(latent)
+        i = self.index_of(key)
+        p = self.primitives[i]
+        loadings = dict(p.loadings)
+        loadings[latent] = float(fraction)
+        total = sum(v * v for v in loadings.values())
+        if total > 1.0 + 1e-12:
+            raise NumericalFailure(
+                f"latent loadings on {key!r} sum to {total!r} > 1; the "
+                "declared standard uncertainty cannot be exceeded by its own "
+                "shared part"
+            )
+        self.primitives[i] = Primitive(
+            p.name, p.scope, p.value, p.sigma, p.block, p.fld,
+            tuple(sorted(loadings.items())),
+        )
+
+    def loading_matrix(self) -> Matrix:
+        """``Lambda`` with ``Lambda[i][l] = a_il * sigma_i``."""
+        n, m = len(self.primitives), len(self.latents)
+        lam = nm.zeros(n, m) if m else []
+        for i, p in enumerate(self.primitives):
+            for name, frac in p.loadings:
+                lam[i][self.latents.index(name)] = frac * p.sigma
+        return lam
+
+    def residual_sigma(self) -> list[float]:
+        """Independent part of each primitive's standard uncertainty."""
+        out = []
+        for p in self.primitives:
+            shared = sum(f * f for _, f in p.loadings)
+            out.append(p.sigma * math.sqrt(max(0.0, 1.0 - shared)))
+        return out
+
+    def draw(self, stream) -> list[float]:
+        """One draw of ``phi = Lambda z + e`` from the declared law.
+
+        The latent standards are drawn ONCE and enter every primitive that
+        loads on them, so a control that misspecifies the analyser's
+        covariance still faces data generated with the true shared structure.
+        """
+        z = dict(zip(self.latents, stream.normals(len(self.latents))))
+        res = self.residual_sigma()
+        e = stream.normals(len(self.primitives))
+        return [
+            p.value
+            + sum(frac * p.sigma * z[name] for name, frac in p.loadings)
+            + res[i] * e[i]
+            for i, p in enumerate(self.primitives)
+        ]
+
     def covariance(self) -> Matrix:
         """Assemble ``C_phi``.
 
-        Diagonal entries are the declared variances; off-diagonal entries come
-        only from explicitly declared correlations. Sharing is expressed by a
-        shared *identity*, not by an off-diagonal term.
+        Diagonal entries are the declared variances.  Off-diagonal entries
+        come from declared latent loadings -- ``Lambda Lambda^T`` -- and from
+        any explicitly declared correlation.  Sharing is expressed by a shared
+        *identity* and by a shared latent, never by an asserted number alone.
         """
         n = len(self.primitives)
         c = nm.zeros(n, n)
         for i, p in enumerate(self.primitives):
             c[i][i] = p.sigma * p.sigma
+        lam = self.loading_matrix()
+        if self.latents:
+            for i in range(n):
+                for j in range(n):
+                    if i == j:
+                        continue
+                    c[i][j] += sum(lam[i][l] * lam[j][l]
+                                   for l in range(len(self.latents)))
         for (ka, kb), rho in self.correlations.items():
             i, j = self.index_of(ka), self.index_of(kb)
             cov = rho * self.primitives[i].sigma * self.primitives[j].sigma
@@ -153,6 +307,236 @@ class PrimitiveVector:
                     f"C_phi is not positive semidefinite (min eigenvalue {min(vals):.3e})"
                 )
         return c
+
+
+# ---------------------------------------------------------------------------
+# The joint 99.9% physical calibration region (U)
+# ---------------------------------------------------------------------------
+
+#: Total noncoverage the joint physical calibration region is allowed.  This
+#: is U's declared auxiliary confidence-set allowance, also carried as a line
+#: of the one-sided error budget in the validation plan.  It is not a new
+#: scientific threshold.
+JOINT_REGION_NONCOVERAGE = 0.001
+
+
+@dataclass(frozen=True)
+class JointCalibrationRegion:
+    """The joint 99.9% physical calibration region of the complete packet.
+
+    V5 qualified the axial reduction over an informal "3 sigma" marginal
+    shorthand.  That is not U's object: U requires a region with a *stated
+    joint* coverage for the whole packet, and a marginal multiple of a single
+    primitive's standard uncertainty has none.
+
+    The construction here is deliberately conservative and, crucially, valid
+    **regardless of the dependence structure**.  Each stochastic primitive is
+    given its own noncoverage allocation ``alpha_i`` with
+    ``sum_i alpha_i <= 0.001``; the region is the intersection of the
+    individually calibrated marginal regions
+
+        R = { phi : |phi_i - phi_i^| <= k_i sigma_i for every i } ,
+        k_i = Phi^{-1}(1 - alpha_i / 2) ,
+
+    and the union bound gives ``P(phi not in R) <= sum_i alpha_i <= 0.001``
+    whatever the correlations are.  No independence is assumed anywhere, and
+    the correlated primitives are NOT redrawn as if independent: the declared
+    latent structure stays in ``C_phi`` and in the generating law, and is
+    recorded here alongside the region.
+
+    The deterministic bounded systematics are a SEPARATE set.  They are never
+    converted into Gaussian random variables; the total physical
+    qualification domain is the combined enlargement of this statistical
+    region by that bounded set.
+    """
+
+    version: int
+    #: Stochastic primitive keys, in the vector's own order.
+    primitives: tuple[str, ...]
+    sigma: tuple[float, ...]
+    alpha: tuple[float, ...]
+    coverage_factor: tuple[float, ...]
+    #: Declared independent latent standards and the loading matrix, retained
+    #: so the dependency structure the region was built over is inspectable.
+    latent_basis: tuple[str, ...]
+    loadings: tuple[tuple[float, ...], ...]
+    #: Deterministic bounded systematics, by category, kept apart.
+    bounded_systematics: tuple[tuple[str, float], ...]
+    categories: tuple[CategoryDeclaration, ...]
+
+    def __post_init__(self) -> None:
+        if not self.primitives:
+            raise NumericalFailure("a joint calibration region needs primitives")
+        total = sum(self.alpha)
+        if not (total <= JOINT_REGION_NONCOVERAGE * (1.0 + 1e-12)):
+            raise NumericalFailure(
+                f"allocated noncoverage {total!r} exceeds the declared "
+                f"{JOINT_REGION_NONCOVERAGE!r}"
+            )
+
+    @property
+    def total_noncoverage(self) -> float:
+        return sum(self.alpha)
+
+    @property
+    def joint_coverage(self) -> float:
+        """The region's GUARANTEED joint coverage, by the union bound."""
+        return 1.0 - self.total_noncoverage
+
+    def index_of(self, key: str) -> int:
+        if key not in self.primitives:
+            raise NumericalFailure(f"{key!r} is not in the joint region")
+        return self.primitives.index(key)
+
+    def half_width(self, key: str) -> float:
+        """``k_i sigma_i``: the region's half-extent along one primitive."""
+        i = self.index_of(key)
+        return self.coverage_factor[i] * self.sigma[i]
+
+    def half_width_of_name(self, name: str) -> float:
+        """Largest half-width over every key sharing a primitive NAME.
+
+        Field- and block-scoped primitives appear once per record; a bound
+        that must cover the packet takes the widest of them.
+        """
+        got = [
+            self.coverage_factor[i] * self.sigma[i]
+            for i, k in enumerate(self.primitives)
+            if k == name or k.startswith(name + "@")
+        ]
+        if not got:
+            raise NumericalFailure(f"no primitive named {name!r} in the region")
+        return max(got)
+
+    def bounded_systematic(self, category: str) -> float:
+        for name, value in self.bounded_systematics:
+            if name == category:
+                return value
+        raise NumericalFailure(
+            f"no bounded systematic declared for {category!r}; absence is not "
+            "a bound of zero"
+        )
+
+    def as_dict(self) -> dict:
+        return {
+            "version": self.version,
+            "construction": (
+                "intersection of individually calibrated marginal primitive "
+                "regions with allocated noncoverage; valid for any dependence "
+                "structure by the union bound"
+            ),
+            "primitive_count": len(self.primitives),
+            "allocated_noncoverage": self.total_noncoverage,
+            "guaranteed_joint_coverage": self.joint_coverage,
+            "coverage_factor_min": min(self.coverage_factor),
+            "coverage_factor_max": max(self.coverage_factor),
+            "latent_basis": list(self.latent_basis),
+            "bounded_systematics": {k: v for k, v in self.bounded_systematics},
+            "categories": [
+                {
+                    "category": c.category,
+                    "classification": c.classification.value,
+                    "members": list(c.members),
+                    "bound": c.bound,
+                    "justification": c.justification,
+                }
+                for c in self.categories
+            ],
+            "identity": self.identity(),
+        }
+
+    def identity(self) -> str:
+        """SHA-256 over the region's complete canonical construction record."""
+        payload = json.dumps(
+            {
+                "version": self.version,
+                "primitives": list(self.primitives),
+                "sigma": list(self.sigma),
+                "alpha": list(self.alpha),
+                "coverage_factor": list(self.coverage_factor),
+                "latent_basis": list(self.latent_basis),
+                "loadings": [list(r) for r in self.loadings],
+                "bounded_systematics": [list(b) for b in self.bounded_systematics],
+                "categories": [
+                    [c.category, c.classification.value, list(c.members),
+                     c.bound, c.justification]
+                    for c in self.categories
+                ],
+            },
+            sort_keys=True, separators=(",", ":"),
+        )
+        return hashlib.sha256(payload.encode("utf-8")).hexdigest()
+
+
+#: Version of the joint-region construction rule itself.
+JOINT_REGION_VERSION = 1
+
+
+def build_joint_region(
+    vector: PrimitiveVector,
+    categories: Sequence[CategoryDeclaration],
+    noncoverage: float = JOINT_REGION_NONCOVERAGE,
+) -> JointCalibrationRegion:
+    """Build the joint region and check the category declarations are complete.
+
+    Every required category must be declared exactly once, every UNCERTAIN
+    category's members must exist in the vector, and every stochastic
+    primitive in the vector must belong to some UNCERTAIN category.  A
+    primitive that no declaration claims would be carrying uncertainty that
+    the packet never accounted for; a category with no declaration would be
+    carrying zero uncertainty by default.  Both are refused.
+    """
+    defects: list[str] = []
+    for c in categories:
+        defects.extend(c.validate())
+    declared = [c.category for c in categories]
+    for required in REQUIRED_PRIMITIVE_CATEGORIES:
+        n = declared.count(required)
+        if n == 0:
+            defects.append(f"{required}: not declared; absence is not zero uncertainty")
+        elif n > 1:
+            defects.append(f"{required}: declared {n} times")
+    claimed: set[str] = set()
+    for c in categories:
+        if c.classification is not PrimitiveClass.UNCERTAIN:
+            continue
+        for name in c.members:
+            hits = [p for p in vector.primitives if p.name == name]
+            if not hits:
+                defects.append(f"{c.category}: member {name!r} is not registered")
+            claimed.add(name)
+    for p in vector.primitives:
+        if p.sigma > 0.0 and p.name not in claimed:
+            defects.append(
+                f"primitive {p.name!r} carries uncertainty but no category claims it"
+            )
+    if defects:
+        raise NumericalFailure(
+            "incomplete calibration primitive declaration:\n  " + "\n  ".join(defects)
+        )
+
+    keys = [p.key for p in vector.primitives]
+    sig = [p.sigma for p in vector.primitives]
+    n = len(keys)
+    alpha_i = noncoverage / n
+    k_i = nm.norm_ppf(1.0 - alpha_i / 2.0)
+    lam = vector.loading_matrix()
+    return JointCalibrationRegion(
+        version=JOINT_REGION_VERSION,
+        primitives=tuple(keys),
+        sigma=tuple(sig),
+        alpha=tuple(alpha_i for _ in range(n)),
+        coverage_factor=tuple(k_i for _ in range(n)),
+        latent_basis=tuple(vector.latents),
+        loadings=tuple(tuple(row) for row in lam),
+        bounded_systematics=tuple(
+            (c.category, float(c.bound))
+            for c in categories
+            if c.classification is PrimitiveClass.BOUNDED_SYSTEMATIC
+            and c.bound is not None
+        ),
+        categories=tuple(categories),
+    )
 
 
 @dataclass(frozen=True)
@@ -828,9 +1212,19 @@ def build_experiment_calibration(
     keys: list[str] = []
     sens: list[CertifiedSensitivity] = []
     for key, float_builder, generic_builder in records:
-        ps = certified_profiled_sensitivity(
-            generic_builder, float_builder, phi, phi_sigma=sigma,
-        )
+        # Fail-closed (V6 brief section 16).  If the transcendental enclosure,
+        # the Riccati or tangent enclosure, the nonsingularity certificate or
+        # the roundoff bound cannot be established, the record carries an
+        # UNCERTIFIED sensitivity and every qualification taken from this
+        # calibration becomes UNRESOLVED.  There is no heuristic fallback and
+        # no partially certified result.
+        try:
+            ps = certified_profiled_sensitivity(
+                generic_builder, float_builder, phi, phi_sigma=sigma,
+            )
+        except (SensitivityFailure, cert.CertificationFailure,
+                NumericalFailure) as exc:
+            ps = CertifiedSensitivity.uncertified(len(phi), f"{key}: {exc}")
         keys.append(key)
         rows.append(ps.log_beta_row)
         radii.append(ps.log_beta_radius)
@@ -947,9 +1341,16 @@ class CertifiedSensitivity:
         ``1 - ||F_cl||^2``, the contraction factor of the Riccati map.
 
     ``linear solve``
-        residual of the computed solution enclosed in interval arithmetic,
-        amplified by a Weyl-certified lower bound on the smallest eigenvalue
-        of the symmetric expected information.
+        residual of the computed solution enclosed in interval arithmetic --
+        every product and every accumulation outward rounded, with the matrix
+        entries entering as the intervals they are -- amplified by a lower
+        bound on the smallest eigenvalue of the symmetric expected
+        information that an interval Cholesky of the shifted matrix PROVES
+        rather than estimates.
+
+    Every one of these is folded into :attr:`radius`.  A failure to establish
+    any of them sets :attr:`certified` to False, which makes the 0.009 / 0.003
+    qualification UNRESOLVED; there is no fallback.
     """
 
     jacobian: Matrix
@@ -959,17 +1360,55 @@ class CertifiedSensitivity:
     information_inverse_norm: float
     information_min_eigenvalue: float
     #: Largest Riccati fixed-point bound over every evaluation, relative to
-    #: the latent covariance scale.
+    #: the latent covariance scale: the VALUE component ``P - P*``.
     riccati_bound: float
+    #: Largest bound on the Riccati TANGENT fixed points -- ``dP/dtheta``,
+    #: ``dP/dphi`` and the mixed second derivative -- over every evaluation,
+    #: relative to the same scale.  V5 bounded only the value.
+    riccati_derivative_bound: float
+    #: Largest bound on the truncated discrete Lyapunov tail, same scale.
+    lyapunov_bound: float
     #: Largest enclosure half-width over the second-derivative blocks,
     #: relative to the largest entry of those blocks.
     worst_second_derivative_radius: float
     linear_solve_residual: float
+    #: Columns of ``phi`` the analysis model provably does not read, so their
+    #: sensitivity is exactly zero.  U permits a zero row only when the zero
+    #: is demonstrated; this is the demonstration, and the suite re-derives it
+    #: numerically.
+    structural_zeros: tuple[int, ...] = ()
     certified: bool = True
+    #: Why certification failed, when it did.  Empty on the certified path.
+    failure: str = ""
     method: str = (
         "interval-arithmetic hyper-dual differentiation of the expected-score "
         "system; no finite differences"
     )
+
+    @staticmethod
+    def uncertified(p: int, reason: str) -> "CertifiedSensitivity":
+        """A sensitivity that could NOT be certified.
+
+        The Jacobian is zero and every radius infinite, so any qualification
+        taken from it is UNRESOLVED and no interval built from it can be
+        narrow enough to support anything.  That is the required outcome:
+        ``UNRESOLVED_AT_NUMERICAL_PRECISION`` is preferable to a false PASS.
+        """
+        inf = float("inf")
+        return CertifiedSensitivity(
+            jacobian=[[0.0] * p for _ in range(N_THETA)],
+            radius=[[inf] * p for _ in range(N_THETA)],
+            information=[[0.0] * N_THETA for _ in range(N_THETA)],
+            information_inverse_norm=inf,
+            information_min_eigenvalue=0.0,
+            riccati_bound=inf,
+            riccati_derivative_bound=inf,
+            lyapunov_bound=inf,
+            worst_second_derivative_radius=inf,
+            linear_solve_residual=inf,
+            certified=False,
+            failure=reason,
+        )
 
     @property
     def log_beta_row(self) -> list[float]:
@@ -1017,6 +1456,38 @@ def _second_partial(
     return res
 
 
+def _seeded(x) -> bool:
+    """True when ``x`` carries a nonzero second-direction infinitesimal."""
+    return isinstance(x, cert.IHD) and (x.d2[0] != 0.0 or x.d2[1] != 0.0)
+
+
+def _primitive_enters(
+    builder: GenericAnalysisBuilder, phi: Sequence[float], k: int,
+    phi_scale: Sequence[float],
+) -> bool:
+    """Does primitive ``k`` reach the analysis model at all?
+
+    Builds the model with a seed on that primitive alone and asks whether the
+    seed survives into any object the likelihood reads.  ``H_A``, ``P``,
+    ``R_obs``, ``b_det``, ``dt`` and ``t_exp`` are the complete set; the
+    analysis uses nothing else from ``phi``.
+    """
+    phi_g = [
+        cert.IHD.seed(float(v), 0.0, phi_scale[n] if n == k else 0.0)
+        for n, v in enumerate(phi)
+    ]
+    am = builder(phi_g)
+    for m in (am.h_locked, am.p_matrix, am.r_obs):
+        for row in m:
+            for x in row:
+                if _seeded(x):
+                    return True
+    for x in tuple(am.b_det) + (am.dt, am.t_exp):
+        if _seeded(x):
+            return True
+    return False
+
+
 def certified_profiled_sensitivity(
     builder: GenericAnalysisBuilder,
     float_builder: FieldModelBuilder,
@@ -1055,14 +1526,22 @@ def certified_profiled_sensitivity(
 
     sigma_scale = nm.max_abs(base.sigma)
     riccati_bound = 0.0
+    riccati_derivative_bound = 0.0
+    lyapunov_bound = 0.0
     worst_rel = 0.0
     block_scale = 0.0
 
     def mixed(i, j=None, k=None):
         nonlocal riccati_bound, worst_rel
+        nonlocal riccati_derivative_bound, lyapunov_bound
         res = _second_partial(builder, truth, theta0, sc, phi, i, j, k, phi_scale)
         val = res.value
         riccati_bound = max(riccati_bound, res.riccati_fixed_point_bound / sigma_scale)
+        riccati_derivative_bound = max(
+            riccati_derivative_bound,
+            max(res.riccati_derivative_bound, res.riccati_mixed_bound) / sigma_scale,
+        )
+        lyapunov_bound = max(lyapunov_bound, res.lyapunov_bound / sigma_scale)
         lo, hi = val.d12
         mid = 0.5 * (lo + hi)
         rad = 0.5 * (hi - lo)
@@ -1082,48 +1561,53 @@ def certified_profiled_sensitivity(
 
     cross = nm.zeros(N_THETA, p)
     cross_rad = nm.zeros(N_THETA, p)
-    for i in range(N_THETA):
-        for k in range(p):
+    structural_zeros: list[int] = []
+    for k in range(p):
+        if not _primitive_enters(builder, phi, k, phi_scale):
+            # A variable the analysis model does not read cannot change what
+            # the analysis model computes, so this column is EXACTLY zero with
+            # zero radius.  That is a proof, not a shortcut: the seeded
+            # infinitesimal is absent from every matrix the likelihood is
+            # built from.  It is recorded so the zero is inspectable, and the
+            # deterministic suite also evaluates these columns numerically and
+            # confirms they come back zero.
+            structural_zeros.append(k)
+            continue
+        for i in range(N_THETA):
             m, r = mixed(i, k=k)
             cross[i][k] = m
             cross_rad[i][k] = r
     block_scale = max(nm.max_abs(info), nm.max_abs(cross), 1e-300)
     worst_rel = worst_rel / block_scale
 
-    # Certified inverse norm of the symmetric information, by Weyl:
-    # |lambda(A) - lambda(mid A)| <= ||A - mid A||, and the computed
-    # eigenvalues of mid A carry their own backward error.
-    vals, qmat = nm.eigh(nm.symmetrise(info))
-    back = nm.eig_backward_error(nm.symmetrise(info), vals, qmat)
-    perturb = max(sum(info_rad[i][j] for j in range(N_THETA))
-                  for i in range(N_THETA))
-    lam_min = min(abs(v) for v in vals) - back - perturb
-    if lam_min <= 0.0:
-        raise SensitivityFailure(
-            "the expected information is not certifiably nonsingular: "
-            f"min |lambda| {min(abs(v) for v in vals):.3e}, backward error "
-            f"{back:.3e}, interval perturbation {perturb:.3e}"
-        )
-    inv_norm = 1.0 / lam_min
+    inv_norm, lam_min = certified_inverse_norm(info, info_rad)
 
     try:
         jz = nm.scale(nm.lu_solve(info, cross), -1.0)
     except NumericalFailure as exc:
         raise SensitivityFailure(f"expected-information solve failed: {exc}") from exc
 
-    # Residual of the computed solution, per column, enclosing both interval
-    # inputs.  A single global residual would charge every column the worst
-    # column's error.
+    # Residual of the computed solution, per column, in INTERVAL arithmetic.
+    # V5 accumulated it in ordinary floating point and then called the result
+    # certified; the audit was right that an unbounded accumulation cannot
+    # underwrite a bound on itself.  Here every product and every addition is
+    # outward rounded, and the matrix entries enter as the intervals they
+    # actually are, so the returned number encloses the exact residual of the
+    # computed solution against the exact interval system.  Per column, not
+    # globally: a single residual would charge every column the worst one.
     resid_by_col: list[float] = []
     for k in range(p):
         worst = 0.0
         for i in range(N_THETA):
-            acc = cross[i][k]
-            rr = cross_rad[i][k]
+            acc = cert._out(cross[i][k] - cross_rad[i][k],
+                            cross[i][k] + cross_rad[i][k])
             for t in range(N_THETA):
-                acc += info[i][t] * jz[t][k]
-                rr += info_rad[i][t] * abs(jz[t][k])
-            worst = max(worst, abs(acc) + rr)
+                acc = cert.iadd(acc, cert.imul(
+                    cert._out(info[i][t] - info_rad[i][t],
+                              info[i][t] + info_rad[i][t]),
+                    cert.iv(jz[t][k]),
+                ))
+            worst = max(worst, cert.imag(acc))
         resid_by_col.append(worst)
     resid = max(resid_by_col)
 
@@ -1131,8 +1615,13 @@ def certified_profiled_sensitivity(
     rad = nm.zeros(N_THETA, p)
     for i in range(N_THETA):
         for k in range(p):
-            jac[i][k] = sc.scale[i] * jz[i][k] / phi_scale[k]
-            rad[i][k] = sc.scale[i] * inv_norm * resid_by_col[k] / phi_scale[k]
+            scale = sc.scale[i] / phi_scale[k]
+            jac[i][k] = scale * jz[i][k]
+            # The two roundings in forming this entry from the solved
+            # dimensionless one are widened by two ulps each, so the reported
+            # radius also covers the rescaling itself.
+            r = scale * inv_norm * resid_by_col[k]
+            rad[i][k] = r + 4.0 * cert.EPS * abs(jac[i][k])
     return CertifiedSensitivity(
         jacobian=jac,
         radius=rad,
@@ -1140,6 +1629,65 @@ def certified_profiled_sensitivity(
         information_inverse_norm=inv_norm,
         information_min_eigenvalue=lam_min,
         riccati_bound=riccati_bound,
+        riccati_derivative_bound=riccati_derivative_bound,
+        lyapunov_bound=lyapunov_bound,
         worst_second_derivative_radius=worst_rel,
         linear_solve_residual=resid,
+        structural_zeros=tuple(structural_zeros),
+    )
+
+
+def certified_inverse_norm(info: Matrix, info_rad: Matrix) -> tuple[float, float]:
+    """``(||A^{-1}||_2 bound, certified lambda_min)`` for a symmetric interval matrix.
+
+    V5 bounded this by Weyl plus the eigensolver's reconstruction residual.
+    Two things were wrong with that: the residual was returned RELATIVE to the
+    matrix scale and then subtracted as if it were absolute, and the
+    reconstruction was computed in ordinary floating point with no account of
+    the eigenvector matrix's own loss of orthogonality.
+
+    The replacement needs no eigensolver.  ``lambda_min(S) >= mu`` is
+    equivalent to ``S - mu I`` being positive definite, and an interval
+    Cholesky that completes with every pivot's LOWER endpoint positive proves
+    positive definiteness for **every** member of the interval matrix: the
+    interval intermediates enclose each member's own Cholesky quantities, so
+    each member's pivots are at least those positive lower bounds.  The
+    float eigenvalues are used only to propose candidate shifts; nothing in
+    the certificate depends on their accuracy.
+    """
+    n = len(info)
+    vals, _ = nm.eigh(nm.symmetrise(info))
+    if min(vals) > 0.0:
+        sgn = 1.0
+    elif max(vals) < 0.0:
+        sgn = -1.0
+    else:
+        raise SensitivityFailure(
+            "the expected information is indefinite at the linearisation "
+            f"point; eigenvalues {['%.3e' % v for v in vals]}"
+        )
+    lam0 = min(abs(v) for v in vals)
+    for frac in (0.98, 0.9, 0.75, 0.5, 0.25, 0.1, 0.01):
+        mu = frac * lam0
+        if mu <= 0.0:
+            break
+        shifted = [
+            [
+                cert.IHD(cert._out(
+                    sgn * info[i][j] - info_rad[i][j] - (mu if i == j else 0.0),
+                    sgn * info[i][j] + info_rad[i][j] - (mu if i == j else 0.0),
+                ))
+                for j in range(n)
+            ]
+            for i in range(n)
+        ]
+        try:
+            cert.gcholesky(shifted)
+        except cert.CertificationFailure:
+            continue
+        return 1.0 / mu, mu
+    raise SensitivityFailure(
+        "the expected information is not certifiably nonsingular: no shift "
+        f"below |lambda|_min {lam0:.3e} passes an interval Cholesky with the "
+        "declared second-derivative enclosure"
     )
