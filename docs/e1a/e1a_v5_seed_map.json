@@ -3,116 +3,127 @@
  "derivation": "seed = int(sha256(parts joined by '|').digest()[:8], 'big')",
  "disjointness": "families, cases and replicates occupy disjoint namespaces by construction",
  "families": {
-  "complete-power-v4": {
+  "complete-power-v5": {
    "cases": {
-    "POWER-CONDLIM": 6922483466259699719,
-    "POWER-NOISEHI": 8060539038037051159,
-    "POWER-NOMINAL": 1835141278016525416
+    "POWER-CONDLIM": 16453527133658900448,
+    "POWER-NOISEHI": 13766522695013736776,
+    "POWER-NOMINAL": 15147641812288525473
    },
    "confirmatory": true,
+   "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
+   "disjoint_from_v4": true,
    "executed": false,
-   "seed": 6447534061085332118
+   "seed": 3060025210657503379
   },
-  "critical-calibration-v4": {
+  "critical-calibration-v5": {
    "cases": {
-    "CAL-CENTRE-01": 1349261226803284318,
-    "CAL-CONTRAST-01": 10625514403240591728,
-    "CAL-CURRENT-01": 5743519469740947950,
-    "CAL-DIAG-01": 12279965877039964198,
-    "CAL-SCALE-01": 10213787285776495336,
-    "CAL-SHAPE-01": 11638122228000506632,
-    "CAL-STAT-01": 7447295832756015503
+    "CAL-CENTRE-01": 6747827454430955482,
+    "CAL-CONTRAST-01": 1914448784679562047,
+    "CAL-CURRENT-01": 8934199794837688809,
+    "CAL-DIAG-01": 7138552482139497636,
+    "CAL-SCALE-01": 10845640537192840641,
+    "CAL-SHAPE-01": 17095939895026883758,
+    "CAL-STAT-01": 7317663188134574227
    },
    "confirmatory": true,
+   "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
+   "disjoint_from_v4": true,
    "executed": false,
-   "seed": 12175842811704036618
+   "seed": 15280046052714316182
   },
-  "diagnostic-validation-v4": {
+  "diagnostic-validation-v5": {
    "cases": {
-    "DIAG-NULL-COND": 5304699660132338883,
-    "DIAG-NULL-EXP": 4209713670782071233,
-    "DIAG-NULL-NOM": 9284932182042892611
+    "DIAG-NULL-COND": 1068424245152736671,
+    "DIAG-NULL-EXP": 16389777921036503050,
+    "DIAG-NULL-NOM": 8807998683988577678
    },
    "confirmatory": true,
+   "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
+   "disjoint_from_v4": true,
    "executed": false,
-   "seed": 2372191960314171408
+   "seed": 8067945209365484799
   },
-  "engineering-v4": {
+  "engineering-v5": {
    "cases": {},
    "confirmatory": false,
    "disjoint_from_confirmatory": true,
    "purpose": "implementation and smoke draws only; explicitly NOT part of any confirmatory validation and no result drawn from it may be reported as a validation outcome",
-   "seed": 8141223138503822625
+   "seed": 12900281823331069400
   },
-  "negative-controls-v4": {
+  "negative-controls-v5": {
    "cases": {
-    "CTL-AXIAL-COUPLE": 6211059453515895894,
-    "CTL-AXIAL-MEMORY": 7686151517973360153,
-    "CTL-BLIND-090": 2882882727980680908,
-    "CTL-BLIND-107": 7706957465009508716,
-    "CTL-BLUR-MISMATCH": 6763292663251646277,
-    "CTL-COMMON-07": 3408821031915315018,
-    "CTL-CURRENT": 9209892232467524147,
-    "CTL-DRIFT": 1316633534228750638,
-    "CTL-ETA-T-COV": 17288767318343855807,
-    "CTL-FIELD-106": 16648544028142888223,
-    "CTL-FIELD-110": 812344451336526673,
-    "CTL-FIELD-MIX": 7195962844725025103,
-    "CTL-GEOM-ROT": 16342614902540497132,
-    "CTL-GEOM-TRACE": 3500296999490873016,
-    "CTL-HARD-025": 8063025639851232512,
-    "CTL-NOISE-COLOR": 16258120443476004113,
-    "CTL-NOISE-HEAVY": 10658792282385927397,
-    "CTL-NOISE-HI": 11637428529339182770,
-    "CTL-NOISE-STATE": 4190349195047197741,
-    "CTL-OPT-FAIL": 10374808333717298216,
-    "CTL-RF-ELLIPSE": 17474110381469723796,
-    "CTL-RF-MODES": 7966952399662795280,
-    "CTL-RF-STIFF-1021": 11517388214005457713,
-    "CTL-RF-STRADDLE": 12771984798054889408,
-    "CTL-RF-TEMP-304": 10195143627873451378,
-    "CTL-RF-VALID": 1302988805328401076,
-    "CTL-SELECTION": 10729521296830746114
+    "CTL-AXIAL-COUPLE": 8816225252422960238,
+    "CTL-AXIAL-MEMORY": 5143456290733815711,
+    "CTL-BLIND-090": 15208690308283763241,
+    "CTL-BLIND-107": 3271400562978350234,
+    "CTL-BLUR-MISMATCH": 11956819931739857783,
+    "CTL-COMMON-07": 3186028193909302096,
+    "CTL-CURRENT": 15396096369031985480,
+    "CTL-DRIFT": 14469401876994683860,
+    "CTL-ETA-T-COV": 15648734113529640722,
+    "CTL-FIELD-106": 1964325213471673458,
+    "CTL-FIELD-110": 6045842276316091975,
+    "CTL-FIELD-MIX": 10679331934035865161,
+    "CTL-GEOM-ROT": 755179018860206213,
+    "CTL-GEOM-TRACE": 5118010485878460709,
+    "CTL-HARD-025": 8916347094291951838,
+    "CTL-NOISE-COLOR": 6806459404375843914,
+    "CTL-NOISE-HEAVY": 15177068610165747394,
+    "CTL-NOISE-HI": 5965317152676090084,
+    "CTL-NOISE-STATE": 12422646341716797279,
+    "CTL-OPT-FAIL": 6867267702328640870,
+    "CTL-RF-ELLIPSE": 731570404953024141,
+    "CTL-RF-MODES": 3077428413122589281,
+    "CTL-RF-STIFF-1021": 4828875454421734794,
+    "CTL-RF-STRADDLE": 13511554098106592965,
+    "CTL-RF-TEMP-304": 7431625840195474069,
+    "CTL-RF-VALID": 8424086428127964822,
+    "CTL-SELECTION": 2494413683356947384
    },
    "confirmatory": true,
+   "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
+   "disjoint_from_v4": true,
    "executed": false,
-   "seed": 6660955642057257706
+   "seed": 17829790455794060110
   },
-  "size-validation-v4": {
+  "size-validation-v5": {
    "cases": {
-    "SIZE-ABS-HI": 17062384070237146248,
-    "SIZE-ABS-LO": 8820848311486951206,
-    "SIZE-CENTRE-BD": 6039130619798416672,
-    "SIZE-CON-HI": 4431423658353433264,
-    "SIZE-CON-LO": 1392296323327909833,
-    "SIZE-CURRENT-BD": 7755484632887168957,
-    "SIZE-NUIS-CAL": 2428883701233921123,
-    "SIZE-NUIS-COND": 7006225057919789668,
-    "SIZE-NUIS-EXP": 18251948800144576606,
-    "SIZE-NUIS-NOISE": 7310821589716244908,
-    "SIZE-SHAPE-BD": 2135872189809021125
+    "SIZE-ABS-HI": 9377359857785546803,
+    "SIZE-ABS-LO": 10426814947525078510,
+    "SIZE-CENTRE-BD": 15603122351860702088,
+    "SIZE-CON-HI": 17997125123801183517,
+    "SIZE-CON-LO": 12529269346084096696,
+    "SIZE-CURRENT-BD": 6041378878986148777,
+    "SIZE-NUIS-CAL": 394729240377289375,
+    "SIZE-NUIS-COND": 10527259394421906114,
+    "SIZE-NUIS-EXP": 8422705647772660547,
+    "SIZE-NUIS-NOISE": 10613000378081279659,
+    "SIZE-SHAPE-BD": 5774422783890861594
    },
    "confirmatory": true,
+   "disjoint_from_all_engineering": true,
    "disjoint_from_v2": true,
    "disjoint_from_v3": true,
+   "disjoint_from_v4": true,
    "executed": false,
-   "seed": 3157330279942037537
+   "seed": 10157267318770872789
   }
  },
  "frozen_before_results_inspected": true,
- "procedure_version": 4,
- "root": "e1a_v5/validation/v4/2026-10-06",
- "schema": "e1a_v5_seed_map/3",
+ "procedure_version": 5,
+ "root": "e1a_v5/validation/v5/2026-10-06",
+ "schema": "e1a_v5_seed_map/4",
  "superseded_roots": {
   "v2": "e1a_v5/validation/2026-10-06",
-  "v3": "e1a_v5/validation/v3/2026-10-06"
+  "v3": "e1a_v5/validation/v3/2026-10-06",
+  "v4": "e1a_v5/validation/v4/2026-10-06"
  }
 }

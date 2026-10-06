@@ -1,0 +1,324 @@
+{
+ "axial_effects": {
+  "basis": "exact finite effects, supremum over the declared set",
+  "centre_factor": 1.000066566472836,
+  "contrast_bias": 0.00013314624033499575,
+  "geometry": 0.0001331373775543709,
+  "log_beta_bias": 0.00013314624033499575,
+  "rate_factor": 1.0001331373767677,
+  "remainder_set_radius": 0.00013313737676772598,
+  "within_domain": true
+ },
+ "certified_calibration": {
+  "absolute_enclosure_radius": {
+   "block1/theta0": 9.42185515310015e-08,
+   "block1/theta1": 9.399277662788807e-08,
+   "block1/theta2": 5.32210564975228e-06,
+   "block1/theta3": 9.323861691751256e-08,
+   "block2/theta0": 9.42185515310015e-08,
+   "block2/theta1": 9.399277662788807e-08,
+   "block2/theta2": 5.32210564975228e-06,
+   "block2/theta3": 9.323861691751256e-08
+  },
+  "absolute_qualification": {
+   "block1/theta0": "PASS",
+   "block1/theta1": "PASS",
+   "block1/theta2": "PASS",
+   "block1/theta3": "PASS",
+   "block2/theta0": "PASS",
+   "block2/theta1": "PASS",
+   "block2/theta2": "PASS",
+   "block2/theta3": "PASS"
+  },
+  "absolute_sigma": {
+   "block1/theta0": 0.0055542776307995366,
+   "block1/theta1": 0.005554277630799536,
+   "block1/theta2": 0.005554277630800527,
+   "block1/theta3": 0.005554277630799541,
+   "block2/theta0": 0.0055542776307995366,
+   "block2/theta1": 0.005554277630799536,
+   "block2/theta2": 0.005554277630800527,
+   "block2/theta3": 0.005554277630799541
+  },
+  "contrast_enclosure_radius": 1.8597153725536178e-07,
+  "contrast_qualification": "PASS",
+  "contrast_sigma": 0.0021213203435596463,
+  "fully_certified": true,
+  "information_min_eigenvalue": 0.07342930992766772,
+  "linear_solve_residual": 6.020635527539814e-09,
+  "log_beta_jacobian_row": [
+   -1.0000000000000018,
+   1.0000000000000002,
+   -1.0000000000000018,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0
+  ],
+  "log_beta_radius_row": [
+   1.3665377702424508e-05,
+   1.351642509005678e-05,
+   1.3665377702424508e-05,
+   2.696028328099011e-281,
+   2.696028328099011e-281,
+   2.696028328099011e-281,
+   2.696028328099011e-281,
+   2.696028328099011e-281,
+   2.696028328099011e-281,
+   2.696028328099011e-281
+  ],
+  "method": "interval-arithmetic hyper-dual differentiation of the expected-score system; no finite differences",
+  "phi_names": [
+   "log_k_standard",
+   "log_T_standard",
+   "log_k_field@block1/theta0",
+   "log_k_field@block1/theta1",
+   "log_k_field@block1/theta2",
+   "log_k_field@block1/theta3",
+   "log_k_field@block2/theta0",
+   "log_k_field@block2/theta1",
+   "log_k_field@block2/theta2",
+   "log_k_field@block2/theta3"
+  ],
+  "riccati_fixed_point_bound": 3.5169359189551805e-10,
+  "seconds": 49.7,
+  "worst_second_derivative_enclosure": 1.315576143798865e-06
+ },
+ "complete_experiment_synthetic_fixture": {
+  "classification": "COMPUTATION_NOT_EVALUABLE",
+  "diagnostic": "CALIBRATED",
+  "evidence_ok": true,
+  "gate_tally": {
+   "centre": 0,
+   "current": 0,
+   "shape": 0,
+   "stationarity": 0
+  },
+  "label": "SYNTHETIC FIXTURE CALIBRATION INJECTED - ENGINEERING CHECK ONLY",
+  "seconds": 27.3
+ },
+ "complete_experiment_uncalibrated": {
+  "classification": "COMPUTATION_NOT_EVALUABLE",
+  "counts_as_complete_success": false,
+  "diagnostic": "UNCALIBRATED",
+  "evidence_ok": false,
+  "gate_state": "UNCALIBRATED for shape, centre, stationarity and current",
+  "seconds": 27.2
+ },
+ "confirmatory_seeds_consumed": false,
+ "deterministic_controls": [
+  {
+   "case_id": "CTL-RF-TEMP-304",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.00022744358522184182,
+   "retained_fraction": 0.306879010005119
+  },
+  {
+   "case_id": "CTL-RF-STIFF-1021",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true,
+   "planning_detection": 0.0005218639151212723,
+   "retained_fraction": 0.0280111782081937
+  },
+  {
+   "case_id": "CTL-RF-MODES",
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "harmonic_scalar": 2.060240963855422,
+   "harmonic_would_have_passed": true,
+   "modes": [
+    1.9000000000000004,
+    2.25
+   ],
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-ELLIPSE",
+   "distance": 0.45814536593707744,
+   "epsilon_2": 0.051082562376599076,
+   "expected": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "observed": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-STRADDLE",
+   "expected": "FIELD_REALIZATION_UNRESOLVED",
+   "observed": "FIELD_REALIZATION_UNRESOLVED",
+   "passed": true
+  },
+  {
+   "case_id": "CTL-RF-VALID",
+   "expected": "FIELD_REALIZATION_VALID",
+   "note": "synthetic qualification only; no physical packet is asserted VALID",
+   "observed": "FIELD_REALIZATION_VALID",
+   "passed": true
+  },
+  {
+   "axial_ratio": 0.5625,
+   "case_id": "CTL-AXIAL-COUPLE",
+   "declared_coupling": 0.3,
+   "exceeds_absolute_margin": true,
+   "exceeds_shape_margin": true,
+   "expected": "pipeline uses H_eff; K_qq bias quantified",
+   "observed": "r=0.562500 log_beta_plane=-0.496437 G_plane=0.413339",
+   "passed": true,
+   "plane_geometry_bias": 0.41333928659223396,
+   "plane_log_beta_bias": -0.496436886313891
+  },
+  {
+   "case_id": "REF-AXIAL-REFUSAL",
+   "expected": "unqualified temporal reduction is refused",
+   "note": "SUPPLEMENTARY exact reference, not the CTL-AXIAL-MEMORY control. It exercises the refusal path only. The control itself now generates an actual 3D hidden-memory world and runs the full pipeline on it.",
+   "observed": [
+    "temporal_reduction_qualified"
+   ],
+   "passed": true
+  },
+  {
+   "case_id": "REF-AXIAL-MEMORY-WITNESS",
+   "expected": "lateral density matches Schur while the 2D Markov closure fails",
+   "note": "the Chapman-Kolmogorov identity C(2t) = C(t) Sigma^-1 C(t) holds for EVERY 2D Markov generator, so a nonzero residual proves no admissible 2D temporal model reproduces this lateral path",
+   "observed": {
+    "condition_k_eff": 1.0,
+    "k3_spd": true,
+    "lateral_marginal_relative_error": 1.497927925171023e-16,
+    "markov_closure_residual": {
+     "tau_slow_x0.25": 0.09328433987059101,
+     "tau_slow_x0.5": 0.05688287263765277,
+     "tau_slow_x1.0": 0.020926338785410763
+    },
+    "schur_spd": true,
+    "worst_markov_closure_residual": 0.09328433987059101
+   },
+   "passed": true
+  },
+  {
+   "case_id": "REF-ETA-T-COV-ALGEBRA",
+   "expected": "the two propagations differ",
+   "note": "SUPPLEMENTARY exact reference, not the CTL-ETA-T-COV control. It shows only that the two covariance propagations differ. V4 additionally asserted that omission always understates the uncertainty; its own ratios (0.327, 1.005, 0.317) contradict a universal direction, so no such claim is made.",
+   "observed": {
+    "sigma_ratio_with_over_without": [
+     0.32720772447490043,
+     1.0054001348026205,
+     0.31702759704842215
+    ]
+   },
+   "passed": true
+  },
+  {
+   "case_id": "CTL-OPT-FAIL",
+   "expected": "COMPUTATION_NOT_EVALUABLE; beta never fabricated",
+   "observed": [
+    "NaN objective: OptimizerFailure",
+    "inadmissible start: OptimizerFailure",
+    "singular factorisation: OptimizerFailure",
+    "budget exhausted: converged=False"
+   ],
+   "passed": true
+  }
+ ],
+ "deterministic_seconds": 0.0,
+ "frames_per_record": 300,
+ "identities": {
+  "analysis_procedure": "c10efe5109da9d8b3f4a6bd2ec0bb0f57e4718bed7ee5b763f06f646a92f4e75",
+  "gate_semantics": "694f0769f547ebccdc13d664041ccc10f601d2042a264552081a9aea023c59ac",
+  "packet_schema": "b6e1e9b276ee8039e9784baa6d60e6cc3edcdd064956a0a5feaf783c348cd9f9",
+  "seed_map": "909521bc2204f714108aebeee0b882ad406cc2d537b226ea5221c8bbfe25a165",
+  "synthetic_generator": "95b14ee4321f522c17fdded41c8e7521f327543caed82c753c536fb3209530a9",
+  "validation_procedure": "6be714826bd8d6d08125dd0f1b5a8f40cc71622f122e5cf351712a924953cba9"
+ },
+ "label": "ENGINEERING SMOKE SAMPLE - NOT A VALIDATION RESULT",
+ "note": "300 frames is about 0.01 percent of the T.23 information target, so every statistic here is at small-N noise. The point is that the path runs and that the authoritative verdict is what decides.",
+ "procedure_version": 5,
+ "restored_controls": {
+  "CTL-AXIAL-MEMORY": {
+   "axial_memory_witness": {
+    "condition_k_eff": 1.0,
+    "k3_spd": true,
+    "lateral_marginal_relative_error": 1.497927925171023e-16,
+    "markov_closure_residual": {
+     "tau_slow_x0.25": 0.09328433987059101,
+     "tau_slow_x0.5": 0.05688287263765277,
+     "tau_slow_x1.0": 0.020926338785410763
+    },
+    "schur_spd": true,
+    "worst_markov_closure_residual": 0.09328433987059101
+   },
+   "classification": "COMPUTATION_NOT_EVALUABLE",
+   "counts_as_complete_success": false,
+   "observation_valid_per_record": [
+    true,
+    true,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+   ],
+   "reason_codes": {
+    "COMPUTATION_NOT_EVALUABLE": 5,
+    "INCOMPLETE_INPUT": 47,
+    "OBSERVATION_MODEL_UNQUALIFIED": 11
+   },
+   "replicates_required_by_plan": 200,
+   "seconds": 26.4
+  },
+  "CTL-ETA-T-COV": {
+   "classification": "COMPUTATION_NOT_EVALUABLE",
+   "counts_as_complete_success": false,
+   "eta_t_covariance_consequence": {
+    "declared_correlation": 0.7,
+    "note": "the DIRECTION of the consequence is a property of this primitive map, not a general rule; no universal claim is made that omission understates uncertainty",
+    "ratio_omitted_over_correct": 1.127956227526387,
+    "sigma_abs_correct_shared_model": 0.0055542776307995366,
+    "sigma_abs_omitted_covariance": 0.006264982043070844
+   },
+   "observation_valid_per_record": [
+    false,
+    true,
+    true,
+    true,
+    false,
+    true,
+    false,
+    true
+   ],
+   "reason_codes": {
+    "COMPUTATION_NOT_EVALUABLE": 3,
+    "INCOMPLETE_INPUT": 47,
+    "OBSERVATION_MODEL_UNQUALIFIED": 6
+   },
+   "replicates_required_by_plan": 200,
+   "seconds": 76.0
+  },
+  "CTL-NOISE-HI": {
+   "classification": "COMPUTATION_NOT_EVALUABLE",
+   "counts_as_complete_success": false,
+   "observation_valid_per_record": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+   ],
+   "reason_codes": {
+    "COMPUTATION_NOT_EVALUABLE": 8,
+    "INCOMPLETE_INPUT": 47,
+    "OBSERVATION_MODEL_UNQUALIFIED": 16
+   },
+   "replicates_required_by_plan": 200,
+   "seconds": 92.6
+  }
+ },
+ "seed_namespace": "engineering-v5"
+}

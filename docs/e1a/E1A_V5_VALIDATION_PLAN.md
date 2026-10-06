@@ -3,7 +3,8 @@
 ```text
 STATUS:                  NON-CONTROLLING CANDIDATE
 POLICY VERSION:          E1A-T11a-RF-v1
-PROCEDURE VERSION:       4  (v1 superseded; v2 AUDIT FAILED; v3 NOT CLEARED)
+PROCEDURE VERSION:       5  (v1 superseded; v2 AUDIT FAILED;
+                             v3 NOT CLEARED; v4 NOT CLEARED)
 AUTHORITY MODIFIED:      NO
 EXECUTION AUTHORISED:    FALSE
 E1a-v4:                  UNTOUCHED (identities, contracts, plan, seal)
@@ -23,16 +24,16 @@ validated quantity was tuned using the validation it was judged by.
 
 | Object | SHA-256 |
 |---|---|
-| analysis procedure | `a687ea512a33561a8630d9c0b60e486b49bf72fb59242f0a2fbaa199141d1498` |
+| analysis procedure | `c10efe5109da9d8b3f4a6bd2ec0bb0f57e4718bed7ee5b763f06f646a92f4e75` |
 | packet schema | `b6e1e9b276ee8039e9784baa6d60e6cc3edcdd064956a0a5feaf783c348cd9f9` |
 | gate semantics | `694f0769f547ebccdc13d664041ccc10f601d2042a264552081a9aea023c59ac` |
-| seed map | `1357c19ea90a9912da088db68569311d8b7caf7ccc309bf28c7c818f8999e633` |
-| synthetic generator | `a734b184f7169ee715005992171af69f2b9918c4c71bc299901410fb660ca7a9` |
-| validation procedure | `305f4c7fbf25e1b92008b4d1a82fa684830c855711a7f2369de81135656e415c` |
+| seed map | `909521bc2204f714108aebeee0b882ad406cc2d537b226ea5221c8bbfe25a165` |
+| synthetic generator | `95b14ee4321f522c17fdded41c8e7521f327543caed82c753c536fb3209530a9` |
+| validation procedure | `6be714826bd8d6d08125dd0f1b5a8f40cc71622f122e5cf351712a924953cba9` |
 
 Each identity is taken over an ordered preimage of module path and file digest,
 followed by the canonical JSON of the declared configuration
-`{"design_point": "e1a_v5_candidate_2026-10-06", "policy_version": "E1A-T11a-RF-v1", "procedure_version": 4, "supersedes": "procedure version 3 (audit: NOT CLEARED)"}`. Nothing ambient enters the preimage.
+`{"design_point": "e1a_v5_candidate_2026-10-06", "policy_version": "E1A-T11a-RF-v1", "procedure_version": 5, "supersedes": "procedure version 4 (audit: NOT CLEARED)"}`. Nothing ambient enters the preimage.
 
 The validation identity binds, in addition to its own modules, the four
 modules that decide what a result *means*: `evidence.py`, `diagnostics.py`,
@@ -92,27 +93,27 @@ optimiser-failed experiments remain in the denominator.
 
 ## 6. Seed architecture
 
-PRNG `python-stdlib-MersenneTwister-19937`, seed root `e1a_v5/validation/v4/2026-10-06`.
+PRNG `python-stdlib-MersenneTwister-19937`, seed root `e1a_v5/validation/v5/2026-10-06`.
 Derivation `sha256(root|family|case|'rep'|replicate)[:8] big-endian`.
 
 | Family | Family seed | Role |
 |---|---:|---|
-| `critical-calibration-v4` | 12175842811704036618 | confirmatory |
-| `size-validation-v4` | 3157330279942037537 | confirmatory |
-| `diagnostic-validation-v4` | 2372191960314171408 | confirmatory |
-| `complete-power-v4` | 6447534061085332118 | confirmatory |
-| `negative-controls-v4` | 6660955642057257706 | confirmatory |
-| `engineering-v4` | 8141223138503822625 | engineering only |
+| `critical-calibration-v5` | 15280046052714316182 | confirmatory |
+| `size-validation-v5` | 10157267318770872789 | confirmatory |
+| `diagnostic-validation-v5` | 8067945209365484799 | confirmatory |
+| `complete-power-v5` | 3060025210657503379 | confirmatory |
+| `negative-controls-v5` | 17829790455794060110 | confirmatory |
+| `engineering-v5` | 12900281823331069400 | engineering only |
 
 The five confirmatory families are frozen here and are **not executed**. Each
-is checked disjoint from the corresponding V3 stream (root `e1a_v5/validation/v3/2026-10-06`) and
-V2 stream (root `e1a_v5/validation/2026-10-06`), whose outcomes have already been inspected.
+is checked disjoint from the corresponding V4 (`e1a_v5/validation/v4/2026-10-06`), V3 and V2
+streams, and from **every** engineering stream past and present — an earlier
+version's engineering draws have been inspected just as thoroughly as its
+confirmatory ones.
 
-`engineering-v4` is a separate namespace carrying every draw made during
-implementation and smoke testing. It is explicitly not part of any
-confirmatory validation, and no result drawn from it may be reported as a
-validation outcome. Keeping it separate is what stops a repair session from
-consuming — and so inspecting — a future confirmatory stream.
+`engineering-v5` carries every draw made during implementation and smoke
+testing. It is explicitly not part of any confirmatory validation, and no
+result drawn from it may be reported as a validation outcome.
 
 **No `e1a_v4` seed is reused**: its scientific identity does not match this
 procedure.
@@ -187,7 +188,7 @@ procedure.
 | `POWER-CONDLIM` | Complete success near the conditioning limit | 2000 | CP lower >= 0.90 |
 | `POWER-NOISEHI` | Complete success at the top of the qualified noise range | 2000 | CP lower >= 0.90 |
 
-### control (27 cases, 3410 replicates)
+### control (27 cases, 3808 replicates)
 
 | Case | Purpose | Replicates | Expectation |
 |---|---|---:|---|
@@ -201,7 +202,7 @@ procedure.
 | `CTL-GEOM-TRACE` | Trace-preserving wrong geometry | 200 | scalar beta plausible; T4 geometry rejects |
 | `CTL-GEOM-ROT` | Correct eigenvalues, wrong orientation | 200 | geometry detects the rotation |
 | `CTL-CURRENT` | Current-preserving Gaussian, A Sigma = D + omega J | 200 | density/geometry pass; current gate blocks support |
-| `CTL-ETA-T-COV` | Omitted eta/T covariance versus the correct shared covariance | 1 | coverage consequence detected |
+| `CTL-ETA-T-COV` | Omitted eta/T covariance versus the correct shared covariance | 200 | coverage consequence detected |
 | `CTL-NOISE-HI` | Localisation noise above the qualified ratio | 200 | diagnose, refuse or lose support |
 | `CTL-NOISE-HEAVY` | Non-Gaussian heavy-tailed localisation noise | 200 | diagnose, refuse or lose support |
 | `CTL-NOISE-COLOR` | Coloured localisation noise | 200 | diagnose, refuse or lose support |
@@ -210,7 +211,7 @@ procedure.
 | `CTL-DRIFT` | Slow centre drift during the record | 200 | stationarity or diagnostics prevent full support |
 | `CTL-SELECTION` | Clipping / tracking selection of observations | 200 | invalid measurement or model, not a reconditioned pass |
 | `CTL-AXIAL-COUPLE` | 3D stiffness with K_qz != 0; plane block would bias | 1 | pipeline uses H_eff; K_qq bias quantified |
-| `CTL-AXIAL-MEMORY` | Lateral density matches Schur but the 2D temporal model fails | 1 | TEMPORAL_MODEL_UNQUALIFIED or model failure |
+| `CTL-AXIAL-MEMORY` | Lateral density matches Schur but the 2D temporal model fails | 200 | TEMPORAL_MODEL_UNQUALIFIED or model failure |
 | `CTL-RF-TEMP-304` | Realized temperature 304 K | 1 | FIELD_REALIZATION_OUT_OF_SPEC |
 | `CTL-RF-STIFF-1021` | Realized stiffness 1.021-fold | 1 | FIELD_REALIZATION_OUT_OF_SPEC |
 | `CTL-RF-MODES` | One weak and one strong stiffness mode | 1 | FIELD_REALIZATION_OUT_OF_SPEC |
@@ -235,45 +236,44 @@ It modifies no authority. It does not adopt the candidate procedure, authorise
 physical data collection, authorise an official campaign, or authorise
 unblinding. W-stage remains a separate authorisation.
 
-## 11. Procedure version 4 repairs
+## 11. Procedure version 5 repairs
 
-V3 was **NOT CLEARED** by independent audit. Version 4 repairs the seven
-material defects it found, and three more that surfaced while doing so.
+V4 was **NOT CLEARED** by independent audit. Version 5 repairs the five
+material blockers it found, and two further defects of the same classes that
+surfaced while doing so.
 
-| Item | V4 state |
+| Item | V5 state |
 |---|---|
-| evidence validation | runs **before** the conjunction, in `e1a_v5.evidence`: exactly eight canonical `(block, field)` records and exactly six within-block contrasts, each present once |
-| duplicate records | `INVALID / INCOMPLETE EVIDENCE`; no first, last, best, valid or latest selection is permitted |
-| interval validity | one `ScientificInterval` carrying the estimate, SE, critical values and bias bound; endpoints are re-derived from them, so a reversed, non-finite or unexplained interval is refused |
-| unusable interval containment | returns `None`, never `True` and never `False` |
-| critical-value status | `UNCALIBRATED` / `CALIBRATED` / `INVALID`; the normal quantile is the *starting value* of the search and is marked `UNCALIBRATED` |
-| gate limits | the same three statuses; an uncalibrated limit has no answer, and the raw statistic may not be compared against the tolerance in its place |
-| diagnostic family | one `DiagnosticFamilyResult` **derived** from the per-record components and a calibrated familywise critical value; a caller-supplied boolean is checked for consistency, never substituted |
-| record/family contradiction | `CONTRADICTORY`; never silently resolved in either direction |
-| current control | the runner passes the dimensionless `r_irr_target`; the obsolete `omega` field is gone from the case schema |
-| `CTL-AXIAL-MEMORY`, `CTL-ETA-T-COV` | reclassified from 200 sampled replicates to 1 **exact** deterministic check each. Both compare closed-form quantities — an axial reduction refusal and two covariance propagations — so sampling them repeated an exact computation. No threshold or acceptance criterion changes; `CTL-ETA-T-COV` was additionally a no-op as a stochastic case, which is how the reclassification was found. |
-| `C_phi` | on the official path: one experiment-level `C_b,cal = J_beta C_phi J_beta^T`, with contrasts `C_d = D C_b D^T` read off the same matrix |
-| U.20 sensitivity | implicit differentiation of the expected-score system over the full production nuisance vector (scale, centre and the temporal `A`); the log-beta row is extracted only after the system is solved |
-| numerical error | a certified per-quantity enclosure with a measured evaluation-noise constant; the fixed `1e-5` band is removed |
-| 0.009 / 0.003 | `PASS` iff `u+ <= c`, `FAIL` iff `u- > c`, `UNRESOLVED` otherwise, with inclusive ceiling semantics and `c` never widened |
-| bounded bias | a missing bound is `MISSING`, not `0.0`, everywhere |
-| axial remainder | a typed stiffness residual in N/m, normalised to `E_K = K_eff^{-1/2} ΔK K_eff^{-1/2}` and propagated into the existing log-beta, contrast, geometry and centre budgets; the dimensional `1e-3` predicate is removed |
-| validation cases | typed `CaseConfig`; an unknown case ID or an unconsumed declaration is an invalid plan, never a nominal run |
-| case events | one versioned evaluator; a complete-support event reads the authoritative verdict and nothing else |
-| per-replicate reasons | retained in full alongside the histograms; the summary is a convenience, the records are the evidence |
-| seeds | fresh V4 confirmatory namespaces plus a separate `engineering-v4` namespace |
+| numerical sensitivity | **certified**. Derivatives come from interval-arithmetic hyper-dual arithmetic: the chain rule is evaluated, not approximated, so truncation error is exactly zero and there is no step size to bound |
+| floating point | every hyper-dual component is an interval, outward rounded after each operation — one ulp for the IEEE-correctly-rounded `+ - * /` and `sqrt`, two for `log` and `exp` |
+| Riccati fixed point | one-step residual divided by `1 − ‖F_cl‖²`, the map's own contraction factor |
+| linear solve | residual enclosed in interval arithmetic, amplified by a Weyl-certified lower bound on the smallest eigenvalue of the symmetric expected information |
+| fine/coarse heuristic | **removed from qualification**. The finite-difference production sensitivity is deleted; the profiled-optimisation route survives only as a cross-check and is explicitly `certified = False` |
+| no enclosure | `UNRESOLVED_AT_NUMERICAL_PRECISION`, which is fail-closed; an uncertified calibration cannot qualify at all |
+| axial scale effect | **exact and finite**: `b* = log d − log tr((I+E)⁻¹)`, with supremum `−log(1−ρ)` over the certified set. The first-order `|tr E|/d` is gone |
+| axial geometry effect | **exact and finite**: `G = maxᵢ |log(1+λᵢ) − mean_j log(1+λⱼ)|`, with supremum `(d−1)/d · log((1+ρ)/(1−ρ))`. The first-order deviatoric norm is gone |
+| axial qualification object | a certified **set** `‖E‖_op ≤ ρ` built by a closed-form bound on the exact Schur remainder over the declared primitive covariance; every step is an inequality. One evaluated witness no longer qualifies anything |
+| axial centre effect | a purely **multiplicative** factor `√(1+ρ)`. The remainder is not a translation, so no additive centre enlargement is applied |
+| axial rate effect | factor `1+ρ` on every relaxation rate, routed into the exposure, bandwidth and localisation envelopes |
+| gate calibration | a typed `CalibratedGateProcedure` carrying family, procedure version, procedure identity, calibration identity, coverage target, domain identity, radius, status and a fixture flag. `GateLimit.calibrated(statistic, limit, identity)` is **deleted** |
+| raw statistic separation | `limit = statistic + procedure.radius` always; no constructor accepts a limit, so `upper_limit = raw_statistic` cannot be expressed |
+| test fixtures | `synthetic_calibrated_gate_fixture` sets `fixture_only` and puts every identity in the `SYNTHETIC-FIXTURE` namespace; the production builder refuses it |
+| observation qualification | evaluated per record against T 15.2 / T.23: `R_obs` PSD, `P` invertible, localisation ratio ≤ 0.05, exposure ≤ 0.1 τ_fast, `‖B‖dt` ≤ 0.2, shutter inside the frame, noise model in the qualified set. No caller may assert `observation_valid` |
+| `CTL-ETA-T-COV` | **restored** to 200 replicates as a full-pipeline stochastic control. The analysis `C_φ` omits the declared correlation between the stiffness and temperature standards, which share one thermometry error |
+| `CTL-AXIAL-MEMORY` | **restored** to 200 replicates, generated from an actual 3D hidden-memory world whose lateral marginal is exactly the Schur density and whose lateral path no 2D Markov generator produces |
+| plan correspondence | the deterministic suite parses this plan's JSON and compares case ID, purpose, replicate count, seed family, expected event, parameter specification and validation family. Any difference fails; there is no warning-only mode and no registry-as-source-of-truth fallback |
 
-Three further defects surfaced during the repair and are also fixed: V3's
-deterministic control battery raised `TypeError` before its first assertion and
-so never ran at all; `CTL-ETA-T-COV` declared a world no generated record could
-distinguish, making it a no-op case of the same class as defect 6; and three
-`confidence.py` helpers returned a pass from `all(())` on an empty
-qualification sequence.
+Two further defects surfaced during the repair and are also fixed: the V4
+meta-test compared the case registry to the dispatcher — both of them code —
+and never to the machine plan; and the V4 machine plan's `cases` block was
+never regenerated, so it still carried V3 seed namespaces and had no
+`expected_event` field at all.
 
-V2 and V3 results are retained as historical evidence and are labelled
-**SUPERSEDED PROCEDURE EVIDENCE**. They are not V4 validation.
+V2, V3 and V4 results are retained as historical evidence and are labelled
+**SUPERSEDED PROCEDURE EVIDENCE**. They are not V5 validation.
 
 Open release blockers are listed in the JSON contract under
 `open_release_blockers`. Finite-N critical calibration, false-equivalence
-size, diagnostic size and complete power are all **NOT RUN FOR V4**, and
-continuous nuisance-domain coverage remains **OPEN**.
+size, diagnostic size and complete power are all **NOT RUN FOR V5**,
+continuous nuisance-domain coverage remains **OPEN**, and the `e1a_v5` test
+suites still require CI integration before W.

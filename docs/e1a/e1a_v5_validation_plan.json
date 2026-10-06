@@ -7,23 +7,19 @@
  },
  "authority_modified": false,
  "axial_qualification": {
+  "centre_effect": "a purely MULTIPLICATIVE factor sqrt(1+rho); the remainder is not a translation and no additive centre enlargement is applied",
   "covariance_mandatory": true,
   "domain_guard": 1.0,
-  "domain_guard_derivation": "||E_K||_op >= 1 means K_eff + Delta K need not stay positive definite, so the linearisation whose remainder is being bounded is undefined; this is a domain condition, not a tolerance",
+  "exact_geometry_effect": "G = max_i |log(1+lambda_i) - mean_j log(1+lambda_j)|; sup over the set is (d-1)/d log((1+rho)/(1-rho))",
+  "exact_scale_effect": "b* = log d - log tr((I+E)^{-1}); sup over the set is -log(1-rho)",
   "fail_closed": true,
+  "first_order_surrogates_removed": "|tr E|/d and ||E - (tr E/d) I||_op both pass the audit's counterexamples where the exact effects fail",
   "missing_evidence": "AXIAL_REDUCTION_UNQUALIFIED",
+  "new_budget": "NONE",
+  "qualified_object": "a certified SET E in {||E||_op <= rho}, not one evaluated witness",
+  "rate_effect": "factor 1+rho on every relaxation rate, hence on the exposure fraction, the bandwidth product and the localisation ratio",
   "relative_skew_ceiling": 1e-09,
-  "remainder_invariance": "the spectrum of E_K is the generalised eigenvalues of (Delta K, K_eff), so the classification is invariant under congruence and under an overall rescaling",
-  "remainder_normalisation": "E_K = K_eff^{-1/2} Delta K K_eff^{-1/2}; identically the normalised thermal-Hessian residual because H_eff and K_eff differ by the scalar k_B T",
-  "remainder_propagation": {
-   "centre": "a relative enlargement of ||E_K||_op / 2 on the centre statistic",
-   "contrast_bias": "the two records' magnitudes, into the existing contrast bias",
-   "geometry_bias": "||E_K - (tr E_K / d) I||_op, into the existing T4 shape budget",
-   "log_beta_bias": "|tr(E_K)| / d, into the existing per-record absolute bounded bias",
-   "new_budget": "NONE; the remainder has no allowance of its own"
-  },
-  "remainder_type": "NonlinearRemainder: a symmetric 2x2 STIFFNESS residual in N/m, typed and unit-declared; a raw float is refused",
-  "removed": "the V3 constant 1e-3 was compared against a DIMENSIONAL N/m quantity and is removed as a release predicate",
+  "remainder_normalisation": "E_K = K_eff^{-1/2} Delta K K_eff^{-1/2}",
   "required_evidence": [
    "conservativity_qualified",
    "harmonic_domain_qualified",
@@ -33,7 +29,8 @@
    "uncertainty_budget_qualified",
    "geometry_centre_qualified",
    "provenance_complete"
-  ]
+  ],
+  "set_construction": "closed-form bound on the exact second-order Schur remainder over the declared primitive covariance, at 3.0 sigma; every step is an inequality"
  },
  "baseline_sign_defect": "STILL OWED before W-stage authority freeze; not repaired here",
  "calibration_covariance": {
@@ -62,299 +59,317 @@
   "status": "IMPLEMENTED ON THE OFFICIAL PATH",
   "used_by_official_intervals": true
  },
+ "case_contract": {
+  "checker": "e1a_v5.validation.contract.check_correspondence",
+  "compared_fields": [
+   "case_id",
+   "purpose",
+   "replicates",
+   "seed_namespace",
+   "expected_event",
+   "family",
+   "detail"
+  ],
+  "mode": "any difference fails the deterministic suite; there is no warning-only mode and no registry-as-source-of-truth fallback",
+  "source_of_truth": "this file"
+ },
  "cases": [
   {
    "case_id": "CAL-SCALE-01",
    "detail": {
     "statistic": "studentised log beta"
    },
-   "expectation": "c_minus, c_plus <= 2.10",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate c_minus/c_plus for the absolute log-beta interval",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "CAL-CONTRAST-01",
    "detail": {
     "statistic": "contrast"
    },
-   "expectation": "c_minus, c_plus <= 2.10",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate the within-block contrast critical values",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "CAL-SHAPE-01",
    "detail": {
     "statistic": "G"
    },
-   "expectation": "radius finite at the zero-distance boundary",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate the T4 geometry upper-limit radius",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "CAL-CENTRE-01",
    "detail": {
     "statistic": "m"
    },
-   "expectation": "radius finite",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate the centre upper-limit radius",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "CAL-STAT-01",
    "detail": {
     "statistic": "stationarity max"
    },
-   "expectation": "radius finite",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate the four-quarter stationarity upper limit",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "CAL-CURRENT-01",
    "detail": {
     "statistic": "r_irr"
    },
-   "expectation": "radius finite at the nonregular boundary",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate the r_irr upper-limit radius at omega = 0",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "CAL-DIAG-01",
    "detail": {
     "statistic": "diagnostic max"
    },
-   "expectation": "all four null scales strictly positive",
+   "expected_event": "calibration_output",
    "family": "calibration",
    "purpose": "Calibrate the joint diagnostic maximum and its null scales",
    "replicates": 4000,
-   "seed_namespace": "calibration-v3"
+   "seed_namespace": "critical-calibration-v5"
   },
   {
    "case_id": "SIZE-ABS-LO",
    "detail": {
     "b_true": -0.04879016416943205
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Absolute equivalence at the lower boundary b = -log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-ABS-HI",
    "detail": {
     "b_true": 0.04879016416943205
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Absolute equivalence at the upper boundary b = +log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-CON-LO",
    "detail": {
-    "contrast": -0.01980262729617973
+    "contrast_true": -0.01980262729617973
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Cross-field contrast at the lower boundary -log(1.02)",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-CON-HI",
    "detail": {
-    "contrast": 0.01980262729617973
+    "contrast_true": 0.01980262729617973
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Cross-field contrast at the upper boundary +log(1.02)",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-SHAPE-BD",
    "detail": {
     "g_true": 0.04879016416943205
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Geometry upper limit at the shape boundary G = log(1.05)",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-CENTRE-BD",
    "detail": {
     "m_true": 0.1
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Centre upper limit at the boundary m = 0.10",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-CURRENT-BD",
    "detail": {
     "r_irr_true": 0.02
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Current upper limit at the boundary r_irr = 0.02",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-NUIS-NOISE",
    "detail": {
+    "b_true": 0.04879016416943205,
     "noise_ratio": 0.05
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Absolute boundary at the top of the qualified noise range",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-NUIS-EXP",
    "detail": {
+    "b_true": 0.04879016416943205,
     "exposure_fraction": 0.1
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Absolute boundary at the exposure ceiling",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-NUIS-COND",
    "detail": {
+    "b_true": 0.04879016416943205,
     "condition": 100.0
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Absolute boundary near the conditioning limit kappa_2 = 100",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "SIZE-NUIS-CAL",
    "detail": {
+    "b_true": 0.04879016416943205,
     "sigma_cal": 0.009
    },
-   "expectation": "CP upper <= 0.025",
+   "expected_event": "false_equivalence",
    "family": "size",
    "purpose": "Absolute boundary with the full qualified calibration covariance",
    "replicates": 5000,
-   "seed_namespace": "size_validation-v3"
+   "seed_namespace": "size-validation-v5"
   },
   {
    "case_id": "DIAG-NULL-NOM",
    "detail": {},
-   "expectation": "CP upper <= 0.005",
+   "expected_event": "diagnostic_family_rejection",
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size at the nominal true benchmark",
    "replicates": 5000,
-   "seed_namespace": "diagnostic_validation-v3"
+   "seed_namespace": "diagnostic-validation-v5"
   },
   {
    "case_id": "DIAG-NULL-EXP",
    "detail": {
     "exposure_fraction": 0.1
    },
-   "expectation": "CP upper <= 0.005",
+   "expected_event": "diagnostic_family_rejection",
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size at the exposure ceiling",
    "replicates": 5000,
-   "seed_namespace": "diagnostic_validation-v3"
+   "seed_namespace": "diagnostic-validation-v5"
   },
   {
    "case_id": "DIAG-NULL-COND",
    "detail": {
     "condition": 100.0
    },
-   "expectation": "CP upper <= 0.005",
+   "expected_event": "diagnostic_family_rejection",
    "family": "diagnostic",
    "purpose": "Diagnostic familywise size near the conditioning limit",
    "replicates": 5000,
-   "seed_namespace": "diagnostic_validation-v3"
+   "seed_namespace": "diagnostic-validation-v5"
   },
   {
    "case_id": "POWER-NOMINAL",
    "detail": {},
-   "expectation": "CP lower >= 0.90",
+   "expected_event": "complete_support",
    "family": "power",
    "purpose": "Complete eight-record success at the nominal true benchmark",
    "replicates": 2000,
-   "seed_namespace": "complete_power-v3"
+   "seed_namespace": "complete-power-v5"
   },
   {
    "case_id": "POWER-CONDLIM",
    "detail": {
     "condition": 100.0
    },
-   "expectation": "CP lower >= 0.90",
+   "expected_event": "complete_support",
    "family": "power",
    "purpose": "Complete success near the conditioning limit",
    "replicates": 2000,
-   "seed_namespace": "complete_power-v3"
+   "seed_namespace": "complete-power-v5"
   },
   {
    "case_id": "POWER-NOISEHI",
    "detail": {
     "noise_ratio": 0.05
    },
-   "expectation": "CP lower >= 0.90",
+   "expected_event": "complete_support",
    "family": "power",
    "purpose": "Complete success at the top of the qualified noise range",
    "replicates": 2000,
-   "seed_namespace": "complete_power-v3"
+   "seed_namespace": "complete-power-v5"
   },
   {
    "case_id": "CTL-BLIND-107",
    "detail": {
-    "c": 1.07
+    "blind_scale": 1.07
    },
-   "expectation": "recovered log beta matches after multiplying by c",
+   "expected_event": "blinded_recovery",
    "family": "control",
    "purpose": "Hidden A scale c = 1.07; expect beta_blinded = beta/c",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-BLIND-090",
    "detail": {
-    "c": 0.9
+    "blind_scale": 0.9
    },
-   "expectation": "recovered log beta matches after multiplying by c",
+   "expected_event": "blinded_recovery",
    "family": "control",
    "purpose": "Hidden A scale c = 0.90; expect beta_blinded = beta/c",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-COMMON-07",
    "detail": {
-    "beta": 0.7
+    "beta_common": 0.7
    },
-   "expectation": "cross-field contrasts may pass; absolute must fail",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Common wrong scale beta = 0.7 in every field",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-FIELD-106",
@@ -366,11 +381,11 @@
      1.0
     ]
    },
-   "expectation": "false support bounded",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Field-specific alternative (1, 1.06, 1, 1)",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-FIELD-MIX",
@@ -382,11 +397,11 @@
      1.0
     ]
    },
-   "expectation": "false support bounded",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Field-specific alternative (1, 0.93, 1.05, 1)",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-FIELD-110",
@@ -398,219 +413,258 @@
      1.1
     ]
    },
-   "expectation": "false support bounded",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Field-specific alternative (1, 1, 1, 1.10)",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-HARD-025",
    "detail": {
-    "contrast": 0.025
+    "betas": [
+     1.0,
+     1.025,
+     1.0,
+     1.0
+    ]
    },
-   "expectation": "false support bounded",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Hard 2.5% single-field contrast",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-GEOM-TRACE",
-   "detail": {},
-   "expectation": "scalar beta plausible; T4 geometry rejects",
+   "detail": {
+    "geometry": "trace_preserving"
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Trace-preserving wrong geometry",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-GEOM-ROT",
-   "detail": {},
-   "expectation": "geometry detects the rotation",
+   "detail": {
+    "geometry": "rotation"
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Correct eigenvalues, wrong orientation",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-CURRENT",
    "detail": {
-    "omega": 0.05
+    "r_irr_target": 0.05
    },
-   "expectation": "density/geometry pass; current gate blocks support",
+   "expected_event": "complete_support",
    "family": "control",
-   "purpose": "Current-preserving Gaussian, A = I + omega J",
+   "purpose": "Current-preserving Gaussian, A Sigma = D + omega J",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-ETA-T-COV",
-   "detail": {},
-   "expectation": "coverage consequence detected",
+   "detail": {
+    "omit_eta_t_covariance": true
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Omitted eta/T covariance versus the correct shared covariance",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-NOISE-HI",
    "detail": {
-    "noise_model": "inflated"
+    "noise_ratio": 0.25
    },
-   "expectation": "diagnose, refuse or lose support",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Localisation noise above the qualified ratio",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-NOISE-HEAVY",
    "detail": {
     "noise_model": "heavy"
    },
-   "expectation": "diagnose, refuse or lose support",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Non-Gaussian heavy-tailed localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-NOISE-COLOR",
    "detail": {
     "noise_model": "colored"
    },
-   "expectation": "diagnose, refuse or lose support",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Coloured localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-NOISE-STATE",
    "detail": {
     "noise_model": "state_dependent"
    },
-   "expectation": "diagnose, refuse or lose support",
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "State-dependent localisation noise",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-BLUR-MISMATCH",
-   "detail": {},
-   "expectation": "diagnose, refuse or lose support",
+   "detail": {
+    "blur_mismatch": 0.9
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Generator exposure differs from the analysed shutter model",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-DRIFT",
-   "detail": {},
-   "expectation": "stationarity or diagnostics prevent full support",
+   "detail": {
+    "drift_rate": [
+     2e-07,
+     0.0
+    ]
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Slow centre drift during the record",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-SELECTION",
-   "detail": {},
-   "expectation": "invalid measurement or model, not a reconditioned pass",
+   "detail": {
+    "selection": "clipping"
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Clipping / tracking selection of observations",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-AXIAL-COUPLE",
-   "detail": {},
-   "expectation": "pipeline uses H_eff; K_qq bias quantified",
+   "detail": {
+    "axial_coupling": 0.3
+   },
+   "expected_event": "deterministic_control",
    "family": "control",
    "purpose": "3D stiffness with K_qz != 0; plane block would bias",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-AXIAL-MEMORY",
-   "detail": {},
-   "expectation": "TEMPORAL_MODEL_UNQUALIFIED or model failure",
+   "detail": {
+    "axial_memory": true
+   },
+   "expected_event": "complete_support",
    "family": "control",
    "purpose": "Lateral density matches Schur but the 2D temporal model fails",
    "replicates": 200,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-RF-TEMP-304",
-   "detail": {},
-   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "detail": {
+    "realization": "temperature_304"
+   },
+   "expected_event": "realized_field_status",
    "family": "control",
    "purpose": "Realized temperature 304 K",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-RF-STIFF-1021",
-   "detail": {},
-   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "detail": {
+    "realization": "stiffness_1021"
+   },
+   "expected_event": "realized_field_status",
    "family": "control",
    "purpose": "Realized stiffness 1.021-fold",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-RF-MODES",
-   "detail": {},
-   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "detail": {
+    "realization": "split_modes"
+   },
+   "expected_event": "realized_field_status",
    "family": "control",
    "purpose": "One weak and one strong stiffness mode",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-RF-ELLIPSE",
-   "detail": {},
-   "expectation": "FIELD_REALIZATION_OUT_OF_SPEC",
+   "detail": {
+    "realization": "unrotated_ellipse"
+   },
+   "expected_event": "realized_field_status",
    "family": "control",
    "purpose": "Unrotated target-eigenvalue ellipse",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-RF-STRADDLE",
-   "detail": {},
-   "expectation": "FIELD_REALIZATION_UNRESOLVED",
+   "detail": {
+    "realization": "straddle"
+   },
+   "expected_event": "realized_field_status",
    "family": "control",
    "purpose": "Uncertainty region straddling a realization boundary",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-RF-VALID",
-   "detail": {},
-   "expectation": "FIELD_REALIZATION_VALID (synthetic)",
+   "detail": {
+    "realization": "nominal"
+   },
+   "expected_event": "realized_field_status",
    "family": "control",
    "purpose": "Nominal-like realized field",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   },
   {
    "case_id": "CTL-OPT-FAIL",
-   "detail": {},
-   "expectation": "COMPUTATION_NOT_EVALUABLE; beta never fabricated",
+   "detail": {
+    "optimiser_failure": "nan_inf_singular_budget"
+   },
+   "expected_event": "deterministic_control",
    "family": "control",
    "purpose": "Forced optimiser failure modes",
    "replicates": 1,
-   "seed_namespace": "negative_control-v3"
+   "seed_namespace": "negative-controls-v5"
   }
  ],
  "configuration": {
   "design_point": "e1a_v5_candidate_2026-10-06",
+  "domain_identity": "e1a_v5_candidate_2026-10-06/nominal-envelope",
   "policy_version": "E1A-T11a-RF-v1",
-  "procedure_version": 4,
-  "supersedes": "procedure version 3 (audit: NOT CLEARED)"
+  "procedure_version": 5,
+  "supersedes": "procedure version 4 (audit: NOT CLEARED)"
  },
  "critical_value_status": {
   "normal_start": "1.959963984540054 is the STARTING value of the calibration search and is marked UNCALIBRATED",
@@ -689,7 +743,7 @@
  "engineering_seed_namespace": {
   "confirmatory": false,
   "disjoint_from_confirmatory": true,
-  "family": "engineering-v4",
+  "family": "engineering-v5",
   "rule": "every draw made during implementation and smoke testing comes from here; no result drawn from it may be reported as a validation outcome"
  },
  "error_budget_one_sided": {
@@ -716,7 +770,7 @@
   "unusable_interval_containment": "returns None, never True and never False; an unusable interval has no containment answer"
  },
  "execution_authorised": false,
- "frozen_at_commit": "6cc6d0a30a26b2784b1ce80342d447f4bb516388",
+ "frozen_at_commit": "52f375f0b8688c8fa43eed5ba19f7340de26989d",
  "frozen_thresholds": {
   "bias_absolute_max": 0.0005,
   "bias_contrast_max": 0.0005,
@@ -734,37 +788,63 @@
   "sigma_cal_absolute_max": 0.009,
   "sigma_cal_contrast_max": 0.003
  },
+ "gate_calibration": {
+  "artifact": "e1a_v5.evidence.CalibratedGateProcedure",
+  "checked_on_use": [
+   "gate family",
+   "procedure version",
+   "domain identity",
+   "calibration status",
+   "provenance",
+   "fixture flag"
+  ],
+  "fields": [
+   "family",
+   "procedure_version",
+   "procedure_identity",
+   "calibration_identity",
+   "coverage_target",
+   "domain_identity",
+   "radius",
+   "status",
+   "fixture_only"
+  ],
+  "fixture": "synthetic_calibrated_gate_fixture sets fixture_only and puts every identity in the SYNTHETIC-FIXTURE namespace; the production builder refuses it",
+  "live_v5_state": "UNCALIBRATED for shape, centre, stationarity and current",
+  "raw_statistic_separation": "limit = statistic + procedure.radius always; no constructor accepts a limit",
+  "string_identity_removed": "GateLimit.calibrated(statistic, limit, identity) is deleted; a bare non-empty string could make a raw zero statistic a passing calibrated limit"
+ },
  "gate_limits": {
   "representation": "e1a_v5.evidence.GateLimit with the same three statuses",
   "uncalibrated_limit": "passes(tolerance) returns None; the raw statistic may NOT be compared against the tolerance in its place",
   "v4_state": "UNCALIBRATED for shape, centre, stationarity and current"
  },
  "identities": {
-  "analysis_procedure": "a687ea512a33561a8630d9c0b60e486b49bf72fb59242f0a2fbaa199141d1498",
+  "analysis_procedure": "c10efe5109da9d8b3f4a6bd2ec0bb0f57e4718bed7ee5b763f06f646a92f4e75",
   "gate_semantics": "694f0769f547ebccdc13d664041ccc10f601d2042a264552081a9aea023c59ac",
   "packet_schema": "b6e1e9b276ee8039e9784baa6d60e6cc3edcdd064956a0a5feaf783c348cd9f9",
-  "seed_map": "1357c19ea90a9912da088db68569311d8b7caf7ccc309bf28c7c818f8999e633",
-  "synthetic_generator": "a734b184f7169ee715005992171af69f2b9918c4c71bc299901410fb660ca7a9",
-  "validation_procedure": "305f4c7fbf25e1b92008b4d1a82fa684830c855711a7f2369de81135656e415c"
+  "seed_map": "909521bc2204f714108aebeee0b882ad406cc2d537b226ea5221c8bbfe25a165",
+  "synthetic_generator": "95b14ee4321f522c17fdded41c8e7521f327543caed82c753c536fb3209530a9",
+  "validation_procedure": "6be714826bd8d6d08125dd0f1b5a8f40cc71622f122e5cf351712a924953cba9"
  },
  "module_digests": {
   "analysis": {
    "__init__.py": "912a9b4635bf29280fc1be1bf631b46af24fe0f4790037f84749a8389ff60baa",
    "branch_a.py": "36eef41eabbbabdbff82abfb88bd99a8a32d69bf14a5ef63540c648ed33d1644",
-   "calibration.py": "a1b0bf0d099c74477e2fadf43191c091734f2ca49fc0080fd51b37f043f5f225",
+   "calibration.py": "69f43804dbd8f376e84e24aa0025b86afc7584934ea65fc8789f9c5e7802a962",
    "confidence.py": "d9ed2a6ebb4ab883cfcb54b145abba02e69f810ef518b7e157604741d4ffa975",
    "diagnostics.py": "2d33b3547f93c59ede121e5ad0f398fb9508ec41c78f702f29d9e9248893f645",
    "estimate.py": "6df3087dfc031e0db7124a3ecb473bf21325abb8b375a38ea6641b1d062140a9",
-   "evidence.py": "d997200acad07d5a86cd2dbb6c2316bfb8e0118ab125feda757b4fd19d309c1a",
+   "evidence.py": "9199024e54a926201a6b2e238d2e9046846aab1bf213837d2fc6d2f60d5aff36",
    "gates.py": "6e2f8e534edec3297a517cf5d0a83d3a568eca0f525acca9f70b4bc3cea16f5b",
    "likelihood.py": "86fc43f55f94024911991fc669808cce20c117d732690206bcab2fb4d9ba3369",
    "numerics.py": "e25c8f6a26a0923f1315bc98d51e1853176f8255515daa5138eda9afe3574f43",
-   "observation.py": "680796bb0d55341a83182ecce9a74b69585776430c3ed3a91aa58530bd8d2819",
+   "observation.py": "2f80aa6ebfe0a1667e5a3e751b699699f7f5982d3613a51f1d00a4fa7a58037e",
    "optimize.py": "d5c0237180521e25ebf288c42606731c2b5ca181fea939346b51f5b5e848810a",
    "packets.py": "c6f05d61f8ec22ae7cc75930caba2b9704d537884f8a17453d297f04b9af0914",
-   "pipeline.py": "5ee1f232a91deda9abdbb3e8d8b868932f845d7db1acf9493505feaca6874ade",
+   "pipeline.py": "a2873e8a91e4230e03fcc21908914e2a4987204774fbe61be8ebca150c317710",
    "realization.py": "88d341a117da72560980bc26e6575feb0244891fcf04d3fc225fa96abb5ceb83",
-   "reduction.py": "782fd780e4fd0193db30564f73af06d3e40287325c6cd063a1b09963ac94b5cb",
+   "reduction.py": "d6114bd031b56b1e3835d7fd42bd30d152398ad5194e4d5758ed340bd91587d4",
    "refusals.py": "1d10a89f4138e1b2fcecabbad1ad3118e067b215b325644df3c63e50cbcf9596",
    "units.py": "f53ee21027387cbeaf138cea9dd6c87a39a1e63351b9dd234f18d1e2b33ce379",
    "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
@@ -776,39 +856,67 @@
    "realization.py": "88d341a117da72560980bc26e6575feb0244891fcf04d3fc225fa96abb5ceb83"
   },
   "generator": {
-   "generate.py": "b6f1351747cc7e8be98d007c02c34e94100abe549f7b2b21c8ac9bcd3fce4105",
+   "generate.py": "8bf8a2278b9eba519b9480c73e062e84816646cc3c53d51623b2a5331ad183d2",
    "rng.py": "47bef207648ea393df7a338235d8d8fc15737173c3702a9fa5f82b10a9a7506d"
   },
   "validation": {
+   "calibration.py": "69f43804dbd8f376e84e24aa0025b86afc7584934ea65fc8789f9c5e7802a962",
+   "certified.py": "aab2139ad6483c340c3fcfe855a1fc0e1a890e59e399030e363f60f0f97f6af4",
    "diagnostics.py": "2d33b3547f93c59ede121e5ad0f398fb9508ec41c78f702f29d9e9248893f645",
-   "evidence.py": "d997200acad07d5a86cd2dbb6c2316bfb8e0118ab125feda757b4fd19d309c1a",
-   "identity.py": "aeb176d773dd987648bc72787ef54adf221e7671b01982522a53353c180601bb",
-   "pipeline.py": "5ee1f232a91deda9abdbb3e8d8b868932f845d7db1acf9493505feaca6874ade",
-   "seeds.py": "f908cc5a6f1a4c2af0df22583f11add720e57a23428c588f0650c988dabba302",
+   "evidence.py": "9199024e54a926201a6b2e238d2e9046846aab1bf213837d2fc6d2f60d5aff36",
+   "generate.py": "8bf8a2278b9eba519b9480c73e062e84816646cc3c53d51623b2a5331ad183d2",
+   "identity.py": "fb0de704d416807e39239ceaa5ca6103adf29f0bfc88c9f5488243ab1bf7d012",
+   "observation.py": "2f80aa6ebfe0a1667e5a3e751b699699f7f5982d3613a51f1d00a4fa7a58037e",
+   "pipeline.py": "a2873e8a91e4230e03fcc21908914e2a4987204774fbe61be8ebca150c317710",
+   "reduction.py": "d6114bd031b56b1e3835d7fd42bd30d152398ad5194e4d5758ed340bd91587d4",
+   "seeds.py": "89b791bce68c4440f0f263928309b90bf780625cbf42ae950dfd26e5917046bc",
    "validation/__init__.py": "cfb51def4ee4877b60dcc62a9636e6672244d8cc338a4979f1086a27e3d3bb9b",
-   "validation/cases.py": "0b4616cd4d06a58d37967b94af51dd66400066aedc9a0557d1688bc248256faf",
-   "validation/dispatch.py": "8aa5a5fb34b3a9f78aef502508ba31fe216b3e0e8ffab0a866d039c93e859afa",
+   "validation/cases.py": "32a3092af4bbd8907571321965f29e0da892a3583a29e927d83f0b6535872230",
+   "validation/contract.py": "86b2ef22ae0b8bb2d10639247d9c0f190f136f11d400c05cb695796ef07b7171",
+   "validation/dispatch.py": "6a7377144d841990b8ff8adddfb2a1a52b7ddbd5bdfe258dbf4f10457c26710b",
    "validation/events.py": "e6785c8397039acaed6a127d53741fe5de74e5634153bd51cf35b06614c7c926",
-   "validation/harness.py": "2d0db71c578d2659e963ead741c3f746b907be48fdea040830e839bbf402caff",
-   "validation/plan.py": "f2912e7eac9643ef799f6dab926656382029e70a3118ab142185554c8b02370c",
-   "validation/run.py": "8ab2c7312f692da5e72221225d8f6bd57e895ff8c5b4a007ac4968769a9fda4c",
+   "validation/harness.py": "0e87c0af6cfec868a2cc15fdc9ef6eb65ffb805814433b8754037f466fce9ca6",
+   "validation/plan.py": "6a978e96f05dad461299b5711738ac57ee30bfd27c4bf8a9f3e700ae6d3f44dc",
+   "validation/run.py": "a67ae9bbc0fff6c0cd24106df45da44ee5227711aee7a0d59657a7631496a046",
    "verdict.py": "834ef43d44e3cb2aea6172fcf2720f4db1b515c5ea7636053c57f4e2b1780d4c"
   }
  },
  "numerical_error_certification": {
-  "evaluation_noise": "MEASURED per record by least-squares fitting the exact low-order polynomial the smooth objective must follow over a 1e-6 window and taking the largest residual",
-  "fixed_band_removed": "the V3 CALIBRATION_NUMERICAL_RTOL = 1e-5 and the fixed-band classifier are deleted",
-  "method": "certified componentwise enclosure of the Jacobian, from (a) the full fine/coarse step-consistency gap, which for an h^2 scheme is three times the Richardson estimate and so conservative, and (b) the measured evaluation noise of the expected log likelihood propagated through the linear solve as ||H^{-1}|| (eps/(h g) + eps/h^2 |J|)",
+  "floating_point": "every hyper-dual component is an interval, outward rounded after each operation (one ulp for the IEEE-correctly-rounded + - * / and sqrt, two for log and exp, which the platform libm does not guarantee)",
+  "linear_solve": "residual enclosed in interval arithmetic, amplified by a Weyl-certified lower bound on the smallest eigenvalue of the symmetric expected information",
+  "method": "interval-arithmetic hyper-dual differentiation of the expected-score system",
   "no_enclosure": "UNRESOLVED_AT_NUMERICAL_PRECISION, which is fail-closed",
-  "propagation_to_sigma": "x -> sqrt(x^T C x) is a seminorm, so |sigma(j+d) - sigma(j)| <= sigma(d), and the supremum over the box |d_k| <= radius_k is bounded by sqrt(radius^T |C_phi| radius) entrywise",
-  "qualification_rule": "PASS iff u_+ <= c; FAIL iff u_- > c; UNRESOLVED otherwise, with T/U inclusive ceiling semantics and c never widened"
+  "qualification_rule": "PASS iff u+ <= c; FAIL iff u- > c; UNRESOLVED otherwise, with inclusive ceiling semantics and c never widened",
+  "removed": "the V4 fine/coarse agreement plus nine-point least-squares smoothness residual, which bounded neither truncation nor an unobserved higher derivative",
+  "riccati_fixed_point": "one-step residual divided by 1 - ||F_cl||^2, the contraction factor of the Riccati map",
+  "truncation_error": "EXACTLY ZERO: the chain rule is evaluated, not approximated; there is no step size"
+ },
+ "observation_qualification": {
+  "caller_override": "none; observation_valid comes from qualify_observation",
+  "ceiling_semantics": "inclusive",
+  "evaluated_per_record": true,
+  "predicates": [
+   "R_obs positive definite",
+   "P invertible",
+   "instantaneous localisation ratio <= 0.05",
+   "t_exp / tau_fast <= 0.1",
+   "||B||_2 dt <= 0.2",
+   "0 <= t_exp <= dt",
+   "noise model in the qualified set"
+  ],
+  "qualified_noise_models": [
+   "gaussian"
+  ],
+  "ratio_definition": "lambda_max(Sigma^{-1/2} R_obs Sigma^{-1/2}) (T.23 / T 15.2)",
+  "uncertainty": "each quantity is enlarged by the certified axial rate factor; a value whose enclosure straddles its ceiling does NOT pass"
  },
  "open_release_blockers": {
-  "complete_power_validation": "NOT RUN FOR V4",
+  "ci_integration": "e1a_v5 test suites still require CI integration before W",
+  "complete_power_validation": "NOT RUN FOR V5",
   "continuous_nuisance_domain_coverage": "OPEN",
-  "diagnostic_size_validation": "NOT RUN FOR V4",
-  "false_equivalence_validation": "NOT RUN FOR V4",
-  "finite_n_critical_calibration": "NOT RUN FOR V4",
+  "diagnostic_size_validation": "NOT RUN FOR V5",
+  "false_equivalence_validation": "NOT RUN FOR V5",
+  "finite_n_critical_calibration": "NOT RUN FOR V5",
   "full_campaign_resource_requirement": "OPEN",
   "geometry_centre_gate_boundary_driver": "NOT IMPLEMENTED",
   "multi_record_contrast_driver": "NOT IMPLEMENTED"
@@ -839,24 +947,28 @@
    "report_commit": "86b95d4f44a090c5eddf753980c959a59e52dbff"
   },
   "v4": {
-   "additional_defects_found_during_repair": [
-    "the deterministic control battery raised TypeError on CTL-AXIAL-MEMORY and so never ran at all in V3",
-    "CTL-ETA-T-COV declared a world no generated record could distinguish, so it was itself a no-op case of the defect-6 class",
-    "all(), on an empty qualification sequence, returned a pass in three confidence.py helpers"
+   "disposition": "NOT CLEARED BY INDEPENDENT AUDIT",
+   "evidence_status": "V4 / SUPERSEDED PROCEDURE EVIDENCE - not V5 validation",
+   "freeze": "efaa423784e7972190ec8dd5fc733109a20e02bd",
+   "repair_commit": "6cc6d0a30a26b2784b1ce80342d447f4bb516388",
+   "report_commit": "c56aa6338995414a329353af7c5ccdc86c7875ed"
+  },
+  "v5": {
+   "additional_findings": [
+    "the V4 plan/code meta-test compared the registry to the dispatcher, both of them code, and never to the machine plan",
+    "the V4 machine plan's case block was never regenerated: it still carried V3 seed namespaces and had no expected_event field"
    ],
-   "disposition": "REPAIRED - INDEPENDENT AUDIT REQUIRED",
-   "repairs": [
-    "malformed evidence can still yield complete SUPPORT",
-    "record diagnostic rejection can contradict the family result",
-    "the current-control runner calls the constructor with the obsolete omega",
-    "C_phi is not connected to official intervals and the sensitivity is not the U.20 mean-and-drift-profiled one",
-    "axial nonlinear-remainder qualification compares N/m against a relative number",
-    "declared validation cases do not instantiate their declared worlds and some control support uses a raw-statistic shortcut",
-    "structured per-replicate control refusal reasons are dropped by aggregation"
-   ]
+   "blockers_repaired": [
+    "the numerical sensitivity enclosure was heuristic, not certified",
+    "axial nonlinear-remainder bounds used first-order quantities and were not routed to every affected budget",
+    "an arbitrary non-empty gate identity converted a raw statistic into a CALIBRATED gate limit",
+    "observation qualification did not enforce T 15.2's localisation ceiling",
+    "CTL-ETA-T-COV and CTL-AXIAL-MEMORY were weakened away from the frozen plan and plan/code correspondence was therefore false"
+   ],
+   "disposition": "REPAIRED - INDEPENDENT AUDIT REQUIRED"
   }
  },
- "procedure_version": 4,
+ "procedure_version": 5,
  "reason_retention": {
   "aggregate": [
    "classification counts",
@@ -893,36 +1005,66 @@
   "diagnostic_per_configuration": 5000,
   "size_per_configuration": 5000
  },
- "schema": "e1a_v5_validation_plan/3",
+ "restored_controls": {
+  "CTL-AXIAL-MEMORY": {
+   "axial_fraction": 0.08,
+   "coupling": 0.15,
+   "kind": "full-pipeline stochastic control",
+   "replicates": 200,
+   "supplementary_exact_check": "REF-AXIAL-REFUSAL, REF-AXIAL-MEMORY-WITNESS",
+   "witness": "K3 SPD; Schur K_eff valid; lateral marginal covariance equals k_B T K_eff^{-1} exactly; the lateral lag structure violates the Chapman-Kolmogorov identity C(2t) = C(t) Sigma^{-1} C(t) that EVERY 2D Markov generator satisfies, so no admissible 2D temporal model reproduces it",
+   "world": "a full 3D Gaussian Ornstein-Uhlenbeck process observed only in its lateral coordinates through the declared camera model"
+  },
+  "CTL-ETA-T-COV": {
+   "declared_correlation": 0.7,
+   "direction_claim": "NONE. V4 asserted that omitting the covariance always understates uncertainty; its own ratios contradicted that and the assertion is removed.",
+   "kind": "full-pipeline stochastic control",
+   "misspecification": "the analysis C_phi omits the declared correlation between the stiffness standard and the temperature standard, which share one thermometry error",
+   "plan_wording_ambiguity": "the plan's expectation reads 'coverage consequence detected', which does not name a per-replicate event. The control family's standard event (complete support, bounded) is used, which is the stronger reading; the coverage consequence itself is measured and recorded in each result rather than being reduced to a pass/fail.",
+   "replicates": 200,
+   "supplementary_exact_check": "REF-ETA-T-COV-ALGEBRA"
+  }
+ },
+ "schema": "e1a_v5_validation_plan/4",
  "seed_disjointness": {
-  "complete-power-v4": {
+  "complete-power-v5": {
+   "from_all_engineering": true,
    "from_v2": true,
-   "from_v3": true
+   "from_v3": true,
+   "from_v4": true
   },
-  "critical-calibration-v4": {
+  "critical-calibration-v5": {
+   "from_all_engineering": true,
    "from_v2": true,
-   "from_v3": true
+   "from_v3": true,
+   "from_v4": true
   },
-  "diagnostic-validation-v4": {
+  "diagnostic-validation-v5": {
+   "from_all_engineering": true,
    "from_v2": true,
-   "from_v3": true
+   "from_v3": true,
+   "from_v4": true
   },
-  "negative-controls-v4": {
+  "negative-controls-v5": {
+   "from_all_engineering": true,
    "from_v2": true,
-   "from_v3": true
+   "from_v3": true,
+   "from_v4": true
   },
-  "size-validation-v4": {
+  "size-validation-v5": {
+   "from_all_engineering": true,
    "from_v2": true,
-   "from_v3": true
+   "from_v3": true,
+   "from_v4": true
   }
  },
  "seed_families": {
-  "complete-power-v4": 6447534061085332118,
-  "critical-calibration-v4": 12175842811704036618,
-  "diagnostic-validation-v4": 2372191960314171408,
-  "engineering-v4": 8141223138503822625,
-  "negative-controls-v4": 6660955642057257706,
-  "size-validation-v4": 3157330279942037537
+  "complete-power-v5": 3060025210657503379,
+  "critical-calibration-v5": 15280046052714316182,
+  "diagnostic-validation-v5": 8067945209365484799,
+  "engineering-v5": 12900281823331069400,
+  "negative-controls-v5": 17829790455794060110,
+  "size-validation-v5": 10157267318770872789
  },
  "status": "NON-CONTROLLING CANDIDATE",
  "success_predicate": {
@@ -934,10 +1076,9 @@
   "success_iff": "SUPPORTED_WITHIN_DECLARED_TOLERANCES"
  },
  "supersedes_nothing": "e1a_v4 identities, contracts, plans and seal are untouched",
- "v4_core_status": "REPAIRED AND FROZEN - INDEPENDENT AUDIT REQUIRED",
+ "v5_core_status": "REPAIRED AND FROZEN - INDEPENDENT AUDIT REQUIRED",
  "v_release": "NON-RELEASE - VALIDATION NOT YET COMPLETE",
  "validation_case_architecture": {
-  "configuration_digest": "every result carries the declared AND measured properties of the world it actually generated",
   "dispatcher": "e1a_v5.validation.dispatch.instantiate",
   "driver_assignment": {
    "CAL-CENTRE-01": "finite_n_calibration",
@@ -948,14 +1089,14 @@
    "CAL-SHAPE-01": "finite_n_calibration",
    "CAL-STAT-01": "finite_n_calibration",
    "CTL-AXIAL-COUPLE": "deterministic",
-   "CTL-AXIAL-MEMORY": "deterministic",
+   "CTL-AXIAL-MEMORY": "complete_experiment",
    "CTL-BLIND-090": "complete_experiment",
    "CTL-BLIND-107": "complete_experiment",
    "CTL-BLUR-MISMATCH": "complete_experiment",
    "CTL-COMMON-07": "complete_experiment",
    "CTL-CURRENT": "complete_experiment",
    "CTL-DRIFT": "complete_experiment",
-   "CTL-ETA-T-COV": "deterministic",
+   "CTL-ETA-T-COV": "complete_experiment",
    "CTL-FIELD-106": "complete_experiment",
    "CTL-FIELD-110": "complete_experiment",
    "CTL-FIELD-MIX": "complete_experiment",
@@ -993,59 +1134,6 @@
    "SIZE-SHAPE-BD": "gate_boundary"
   },
   "event_evaluator": "e1a-v5-event-evaluator-v4",
-  "expected_events": {
-   "CAL-CENTRE-01": "calibration_output",
-   "CAL-CONTRAST-01": "calibration_output",
-   "CAL-CURRENT-01": "calibration_output",
-   "CAL-DIAG-01": "calibration_output",
-   "CAL-SCALE-01": "calibration_output",
-   "CAL-SHAPE-01": "calibration_output",
-   "CAL-STAT-01": "calibration_output",
-   "CTL-AXIAL-COUPLE": "deterministic_control",
-   "CTL-AXIAL-MEMORY": "deterministic_control",
-   "CTL-BLIND-090": "blinded_recovery",
-   "CTL-BLIND-107": "blinded_recovery",
-   "CTL-BLUR-MISMATCH": "complete_support",
-   "CTL-COMMON-07": "complete_support",
-   "CTL-CURRENT": "complete_support",
-   "CTL-DRIFT": "complete_support",
-   "CTL-ETA-T-COV": "deterministic_control",
-   "CTL-FIELD-106": "complete_support",
-   "CTL-FIELD-110": "complete_support",
-   "CTL-FIELD-MIX": "complete_support",
-   "CTL-GEOM-ROT": "complete_support",
-   "CTL-GEOM-TRACE": "complete_support",
-   "CTL-HARD-025": "complete_support",
-   "CTL-NOISE-COLOR": "complete_support",
-   "CTL-NOISE-HEAVY": "complete_support",
-   "CTL-NOISE-HI": "complete_support",
-   "CTL-NOISE-STATE": "complete_support",
-   "CTL-OPT-FAIL": "deterministic_control",
-   "CTL-RF-ELLIPSE": "realized_field_status",
-   "CTL-RF-MODES": "realized_field_status",
-   "CTL-RF-STIFF-1021": "realized_field_status",
-   "CTL-RF-STRADDLE": "realized_field_status",
-   "CTL-RF-TEMP-304": "realized_field_status",
-   "CTL-RF-VALID": "realized_field_status",
-   "CTL-SELECTION": "complete_support",
-   "DIAG-NULL-COND": "diagnostic_family_rejection",
-   "DIAG-NULL-EXP": "diagnostic_family_rejection",
-   "DIAG-NULL-NOM": "diagnostic_family_rejection",
-   "POWER-CONDLIM": "complete_support",
-   "POWER-NOISEHI": "complete_support",
-   "POWER-NOMINAL": "complete_support",
-   "SIZE-ABS-HI": "false_equivalence",
-   "SIZE-ABS-LO": "false_equivalence",
-   "SIZE-CENTRE-BD": "false_equivalence",
-   "SIZE-CON-HI": "false_equivalence",
-   "SIZE-CON-LO": "false_equivalence",
-   "SIZE-CURRENT-BD": "false_equivalence",
-   "SIZE-NUIS-CAL": "false_equivalence",
-   "SIZE-NUIS-COND": "false_equivalence",
-   "SIZE-NUIS-EXP": "false_equivalence",
-   "SIZE-NUIS-NOISE": "false_equivalence",
-   "SIZE-SHAPE-BD": "false_equivalence"
-  },
   "implemented_drivers": [
    "complete_experiment",
    "deterministic",
@@ -1064,9 +1152,8 @@
    "SIZE-CON-LO": "requires the multi-record contrast driver",
    "SIZE-SHAPE-BD": "requires the geometry/centre gate-boundary driver"
   },
-  "raw_statistic_shortcut": "REMOVED; a complete-support event reads the authoritative verdict and nothing else",
   "registry": "e1a_v5.validation.cases, typed CaseConfig per case",
-  "unconsumed_declaration": "InvalidValidationPlan; a declared world must be instantiated, not ignored",
+  "unconsumed_declaration": "InvalidValidationPlan",
   "unknown_case_id": "InvalidValidationPlan; never a nominal run"
  },
  "validation_identity_preimage": {
