@@ -23,6 +23,8 @@ STATIONARITY_CENTRE_SCALE = 0.10
 STATIONARITY_COV_SCALE = math.log(1.05)
 #: Number of fixed equal-duration quarters.
 N_QUARTERS = 4
+#: Relative tolerance for cancellation noise in the centre quadratic form.
+QUADRATIC_RTOL = 1e-12
 
 
 def geometry_statistic(sigma_b: Matrix, h_a: Matrix) -> float:
@@ -45,12 +47,20 @@ def centre_statistic(mu_b: Sequence[float], x_star: Sequence[float], h_a: Matrix
     """``m = sqrt((mu_B - x_A*)^T H_A (mu_B - x_A*))`` in thermal coordinate units."""
     d = len(h_a)
     delta = [mu_b[i] - x_star[i] for i in range(d)]
-    q = sum(delta[i] * h_a[i][j] * delta[j] for i in range(d) for j in range(d))
+    terms = [delta[i] * h_a[i][j] * delta[j] for i in range(d) for j in range(d)]
+    q = sum(terms)
     if q < 0.0:
-        if q > -1e-18 * max(1.0, abs(q)):
+        # Scale by the magnitude of the summands, which is what cancellation
+        # noise is proportional to.  Scaling by |q| itself is meaningless when
+        # q is near zero, and a max(1.0, .) floor makes this an absolute test.
+        scale = sum(abs(t) for t in terms)
+        if scale > 0.0 and q > -QUADRATIC_RTOL * scale:
             q = 0.0
         else:
-            raise NumericalFailure("centre quadratic form is negative; H_A is not SPD")
+            raise NumericalFailure(
+                f"centre quadratic form {q:.3e} is negative beyond cancellation "
+                f"noise (summand scale {scale:.3e}); H_A is not SPD"
+            )
     return math.sqrt(q)
 
 

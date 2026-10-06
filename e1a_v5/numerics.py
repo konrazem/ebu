@@ -26,6 +26,20 @@ Vector = list[float]
 #: Prospective relative backward-error ceiling, T-stage section 11.
 BACKWARD_ERROR_CEILING = 1e-10
 
+# ---------------------------------------------------------------------------
+# Relative tolerances.  Every one of these is deliberately RELATIVE to the
+# scale of the matrix it judges.  Physical quantities here span roughly 1e-29
+# (exposure covariance blocks) to 1e+16 (thermal Hessians), so any absolute
+# floor -- including the common ``max(1.0, ||A||)`` idiom -- silently becomes
+# either vacuous or impossibly strict depending on the operand.
+# ---------------------------------------------------------------------------
+#: Relative defect above which a matrix offered as symmetric is refused.
+SYMMETRY_RTOL = 1e-12
+#: Relative discriminant below which a 2-by-2 symmetric matrix is isotropic.
+DEGENERACY_RTOL = 1e-300
+#: Relative pivot below which an LU factorisation declares singularity.
+PIVOT_RTOL = 1e-290
+
 
 class NumericalFailure(Exception):
     """A numerical operation could not be completed to the required accuracy."""
@@ -210,15 +224,25 @@ def eigh2(a: Matrix) -> tuple[tuple[float, float], Matrix]:
         raise NumericalFailure("eigh2 requires a 2-by-2 matrix")
     p, q = a[0][0], a[0][1]
     q2, r = a[1][0], a[1][1]
-    if abs(q - q2) > 1e-12 * max(1.0, abs(q), abs(q2)):
-        raise NumericalFailure("eigh2 requires a symmetric matrix")
+    # Relative to the matrix's OWN scale.  A max(1.0, .) floor here would make
+    # this an absolute test, so a grossly asymmetric matrix of scale 1e-29
+    # (an exposure block, say) would pass as symmetric.
+    sym_scale = max(abs(p), abs(r), abs(q), abs(q2))
+    if sym_scale > 0.0 and abs(q - q2) > SYMMETRY_RTOL * sym_scale:
+        raise NumericalFailure(
+            f"eigh2 requires a symmetric matrix "
+            f"(relative defect {abs(q - q2) / sym_scale:.3e})"
+        )
     q = 0.5 * (q + q2)
     tr = p + r
     diff = p - r
     disc = math.hypot(diff, 2.0 * q)
     lo = 0.5 * (tr - disc)
     hi = 0.5 * (tr + disc)
-    if disc <= 1e-300:
+    # Degenerate (isotropic) case, judged relative to the matrix scale rather
+    # than against a fixed denormal constant.
+    iso_scale = max(abs(p), abs(r), abs(q))
+    if disc <= 0.0 or (iso_scale > 0.0 and disc <= DEGENERACY_RTOL * iso_scale):
         return (lo, hi), eye(2)
     # Eigenvector for ``hi``: use the numerically larger of the two rows.
     if abs(diff) >= 0.0:
@@ -649,7 +673,13 @@ def min_successes_for_lower_bound(n: int, target: float, conf: float = 0.95) -> 
 # ---------------------------------------------------------------------------
 
 def lu_solve(a: Matrix, b: Matrix) -> Matrix:
-    """Solve ``a X = b`` by LU with partial pivoting (general square ``a``)."""
+    """Solve ``a X = b`` by LU with partial pivoting (general square ``a``).
+
+    Singularity is judged relative to the matrix's own scale.  An absolute
+    pivot floor would declare a genuinely singular matrix of scale 1e-29
+    non-singular, which is exactly the SI-scale failure mode this package
+    audits for.
+    """
     n, m = shape(a)
     if n != m:
         raise NumericalFailure("lu_solve requires a square matrix")
@@ -658,10 +688,15 @@ def lu_solve(a: Matrix, b: Matrix) -> Matrix:
         raise NumericalFailure("lu_solve shape mismatch")
     A = [row[:] for row in a]
     B = [row[:] for row in b]
+    a_scale = max_abs(a)
+    pivot_floor = PIVOT_RTOL * a_scale if a_scale > 0.0 else 0.0
     for col in range(n):
         piv = max(range(col, n), key=lambda r: abs(A[r][col]))
-        if abs(A[piv][col]) <= 1e-300:
-            raise NumericalFailure(f"lu_solve: matrix is singular at column {col}")
+        if abs(A[piv][col]) <= pivot_floor:
+            raise NumericalFailure(
+                f"lu_solve: matrix is singular at column {col} "
+                f"(pivot {abs(A[piv][col]):.3e} vs scale {a_scale:.3e})"
+            )
         if piv != col:
             A[col], A[piv] = A[piv], A[col]
             B[col], B[piv] = B[piv], B[col]

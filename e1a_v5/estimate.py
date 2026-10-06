@@ -54,7 +54,8 @@ SE_INNER_EVALUATIONS = 1500
 @dataclass(frozen=True)
 class RecordFit:
     log_beta: float
-    log_beta_se: float
+    #: Standard error, present ONLY when ``profile.usable`` is true.
+    log_beta_se: float | None
     mu: tuple[float, float]
     sigma_free: Matrix
     mu_free: tuple[float, float]
@@ -66,6 +67,17 @@ class RecordFit:
     innovation_cov: Matrix
     evaluations: int
     converged: bool
+    profile: "ProfileFit | None" = None
+
+    @property
+    def inferential(self) -> bool:
+        """True only when a confidence interval may be published from this fit."""
+        return (
+            self.converged
+            and self.profile is not None
+            and self.profile.usable
+            and self.log_beta_se is not None
+        )
 
 
 def moment_log_beta(sample_cov: Matrix, h_a: Matrix) -> float:
@@ -284,6 +296,45 @@ def _fit(
     )
 
 
+#: Reason codes for an unusable profile standard error.
+SE_OK = "valid"
+SE_PROFILE_NOT_CONVERGED = "profile_optimisation_not_converged"
+SE_PROFILE_EXCEEDS_INCUMBENT = "profile_exceeds_incumbent_maximum"
+SE_CURVATURE_NONPOSITIVE = "profile_curvature_nonpositive"
+SE_NONFINITE = "profile_value_nonfinite"
+SE_STEP_SEARCH_EXHAUSTED = "step_rescaling_exhausted"
+
+
+@dataclass(frozen=True)
+class ProfileFit:
+    """Status of the profile standard-error calculation for ``log beta``.
+
+    No inferential quantity may be published from a fit that is not a valid
+    usable maximum, so the standard error is carried here together with the
+    explicit status that licenses it.  ``value`` is ``None`` whenever
+    ``status != SE_OK``; there is deliberately no way to read a number out of
+    a failed profile.
+    """
+
+    status: str
+    value: float | None = None
+    step: float | None = None
+    drop: float | None = None
+    evaluations: int = 0
+    #: Optimiser reason codes from the two profile points, for audit.
+    point_reasons: tuple[str, ...] = ()
+
+    @property
+    def usable(self) -> bool:
+        return self.status == SE_OK and self.value is not None and math.isfinite(self.value)
+
+    def require(self) -> float:
+        """Return the standard error, or raise if the profile was not usable."""
+        if not self.usable:
+            raise OptimizerFailure(f"standard error unavailable: {self.status}")
+        return float(self.value)  # type: ignore[arg-type]
+
+
 def _profile_se(
     best: Parameters,
     scaling: Scaling,
@@ -295,18 +346,21 @@ def _profile_se(
     dt: float,
     t_exp: float,
     ll_hat: float,
-) -> float:
+) -> ProfileFit:
     """Standard error of ``log beta`` from the profile curvature at the maximum.
 
-    The step is chosen adaptively so the profile log-likelihood drop is of
-    order one.  This matters: the log likelihood is O(N), so a fixed small step
-    makes the second difference a difference of nearly equal large numbers and
-    the optimiser's own convergence noise dominates it.  The nuisance
-    re-optimisation runs in the same dimensionless coordinates as the main fit.
+    Both profile points must themselves be converged, usable optimisations.  A
+    non-converged profile point, a non-finite value, a profile that beats the
+    incumbent, or a non-positive curvature each yields an UNUSABLE result with
+    its reason; none of them yields a number.  The step is chosen adaptively so
+    the profile drop is of order one, because the log likelihood is ``O(N)``
+    and a fixed small step makes the second difference a difference of nearly
+    equal large numbers.
     """
     u_best = scaling.from_parameters(best, False)
+    total_evals = 0
 
-    def profile_at(log_beta: float) -> float:
+    def profile_at(log_beta: float) -> tuple[float | None, str, int]:
         """Maximised log likelihood with ``log beta`` fixed, offset by ``ll_hat``."""
 
         def obj(u: Sequence[float]) -> float:
@@ -315,35 +369,47 @@ def _profile_se(
                 log_likelihood(p, h_a, y, p_matrix, r_obs, b_det, dt, t_exp).loglik - ll_hat
             )
 
-        res = minimise(obj, u_best[1:], max_evaluations=SE_INNER_EVALUATIONS)
-        return -res.fun
+        try:
+            res = minimise(obj, u_best[1:], max_evaluations=SE_INNER_EVALUATIONS)
+        except OptimizerFailure as exc:
+            return None, f"optimiser_failure:{exc}", 0
+        if not res.usable:
+            return None, res.reason or SE_PROFILE_NOT_CONVERGED, res.evaluations
+        return -res.fun, res.reason, res.evaluations
 
     step = SE_INITIAL_STEP
+    reasons: list[str] = []
     for _ in range(SE_MAX_ROUNDS):
-        try:
-            lo = profile_at(best.log_beta - step)
-            hi = profile_at(best.log_beta + step)
-        except OptimizerFailure:
-            step *= 0.5
-            continue
+        lo, lo_reason, lo_ev = profile_at(best.log_beta - step)
+        hi, hi_reason, hi_ev = profile_at(best.log_beta + step)
+        total_evals += lo_ev + hi_ev
+        reasons = [lo_reason, hi_reason]
+        if lo is None or hi is None:
+            # A non-converged profile point is NOT a licence to shrink the step
+            # and try again with a number taken from the final iterate.
+            return ProfileFit(SE_PROFILE_NOT_CONVERGED, None, step, None,
+                              total_evals, tuple(reasons))
         drop = -0.5 * (lo + hi)
         if not math.isfinite(drop):
-            step *= 0.5
-            continue
+            return ProfileFit(SE_NONFINITE, None, step, None, total_evals, tuple(reasons))
         if drop <= 0.0:
-            # The profile beats the incumbent: no unique usable maximum was
-            # established.  That is a declared failure, never a fabricated SE.
-            raise OptimizerFailure(
-                "profile exceeds the incumbent maximum; no unique maximum established"
-            )
+            return ProfileFit(SE_PROFILE_EXCEEDS_INCUMBENT, None, step, drop,
+                              total_evals, tuple(reasons))
         if SE_DROP_MIN <= drop <= SE_DROP_MAX:
             curv = 2.0 * drop / (step * step)
             if curv > 0.0 and math.isfinite(curv):
-                return 1.0 / math.sqrt(curv)
+                se = 1.0 / math.sqrt(curv)
+                if not math.isfinite(se) or se <= 0.0:
+                    return ProfileFit(SE_NONFINITE, None, step, drop,
+                                      total_evals, tuple(reasons))
+                return ProfileFit(SE_OK, se, step, drop, total_evals, tuple(reasons))
+            return ProfileFit(SE_CURVATURE_NONPOSITIVE, None, step, drop,
+                              total_evals, tuple(reasons))
         step *= math.sqrt(SE_TARGET_DROP / drop)
         if not math.isfinite(step) or step <= 0.0:
             break
-    raise OptimizerFailure("profile curvature for log beta is not positive")
+    return ProfileFit(SE_STEP_SEARCH_EXHAUSTED, None, step, None,
+                      total_evals, tuple(reasons))
 
 
 def fit_record(
@@ -360,7 +426,17 @@ def fit_record(
     locked, ll_locked, ev1, conv1, scaling = _fit(
         y, h_a, p_matrix, r_obs, b_det, dt, t_exp, free_sigma=False
     )
-    se = _profile_se(locked, scaling, h_a, y, p_matrix, r_obs, b_det, dt, t_exp, ll_locked)
+    profile = _profile_se(
+        locked, scaling, h_a, y, p_matrix, r_obs, b_det, dt, t_exp, ll_locked
+    )
+    if not profile.usable:
+        # No inferential quantity is published from a fit that did not
+        # establish a valid usable maximum.
+        raise OptimizerFailure(
+            f"profile standard error unavailable: {profile.status} "
+            f"(points {profile.point_reasons})"
+        )
+    se = profile.value
 
     if want_free:
         free, ll_free, ev2, conv2, _ = _fit(
@@ -390,6 +466,7 @@ def fit_record(
     return RecordFit(
         log_beta=locked.log_beta,
         log_beta_se=se,
+        profile=profile,
         mu=locked.mu,
         sigma_free=sigma_free,
         mu_free=mu_free,

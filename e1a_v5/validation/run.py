@@ -32,11 +32,16 @@ from ..gates import DELTA_G, DELTA_M, DELTA_R_IRR
 from ..numerics import clopper_pearson_lower, clopper_pearson_upper
 from ..optimize import OptimizerFailure, minimise
 from ..reduction import axial_ratio, plane_block_bias, reduce_axial, schur_complement
+from ..packets import CONTRASTS, RECORDS
+from ..pipeline import (
+    RecordResultV3, complete_pipeline_result, contrast_key, record_key,
+)
+from ..realization import FIELD_REALIZATION_VALID
 from ..rng import Stream
 from ..seeds import CALIBRATION, CONTROL, DIAGNOSTIC, POWER, SIZE, SeedMap
 from . import plan
 from .cases import ALL_CASES
-from .harness import Aggregator, design_specs, run_record
+from .harness import Aggregator, current_control_drift, design_specs, run_record
 
 SMOKE = "smoke"
 FULL = "full"
@@ -197,38 +202,90 @@ def run_size_case(seed_map: SeedMap, case, reps: int, frames: int) -> dict:
     return res.as_dict()
 
 
+def build_record_result(
+    block, fld, out, h_locked, crit=NORMAL_CRITICAL, bias=None,
+) -> RecordResultV3:
+    """Translate a harness RecordOutcome into the typed pipeline result.
+
+    Anything the harness did not establish stays ``None`` here.  Nothing is
+    defaulted to a value that would read as a pass.
+    """
+    from ..validation import plan as _plan
+
+    bias_bound = _plan.BIAS_PER_CELL if bias is None else bias
+    if not out.evaluable or out.log_beta is None or out.se is None:
+        return RecordResultV3(
+            block=block, fld=fld, evaluable=False, reasons=tuple(out.reasons),
+        )
+    interval = build_interval(out.log_beta, out.se, crit, bias_bound)
+    return RecordResultV3(
+        block=block, fld=fld,
+        branch_a_valid=True,           # synthetic packet, qualified by construction
+        observation_valid=True,
+        realization_status=FIELD_REALIZATION_VALID,
+        log_beta=out.log_beta, log_beta_se=out.se, absolute_interval=interval,
+        geometry=out.geometry,
+        # No finite-N calibration exists yet, so no calibrated upper limit can
+        # be published.  These stay None and therefore fail closed.
+        geometry_limit=None,
+        centre=out.centre, centre_limit=None,
+        stationarity=out.stationarity, stationarity_limit=None,
+        r_irr=out.r_irr, r_irr_limit=None,
+        diagnostic_max=None if out.diagnostic is None else 0.0,
+        diagnostic_rejected=None if out.diagnostic is None else False,
+        evaluable=True,
+        reasons=tuple(out.reasons),
+    )
+
+
+def run_complete_experiment(
+    seed_map: SeedMap, case_id: str, rep: int, frames: int, **spec_kw
+):
+    """Run one complete eight-record synthetic experiment through the ONE path.
+
+    This function does NOT decide success.  It assembles typed results and
+    hands them to :func:`complete_pipeline_result`, which is the single
+    authoritative predicate.  A runner that re-derived its own weaker
+    conjunction is exactly the V2 defect being repaired here.
+    """
+    specs = design_specs(n_frames=frames, **spec_kw)
+    records = []
+    contrast_inputs: dict[tuple, float | None] = {}
+    diag_evaluated = True
+    for idx, ((spec, h_locked), (block, fld)) in enumerate(zip(specs, RECORDS)):
+        stream = seed_map.stream(POWER, case_id, rep * 100 + idx)
+        out = run_record(spec, h_locked, stream)
+        rec = build_record_result(block, fld, out, h_locked)
+        records.append(rec)
+        contrast_inputs[(block, fld)] = rec.log_beta
+        if out.diagnostic is None:
+            diag_evaluated = False
+    # Within-block contrasts. No finite-N contrast calibration exists, so the
+    # interval cannot be published and the contrast fails closed.
+    contrasts: dict[str, None] = {contrast_key(b, f): None for b, f in CONTRASTS}
+    return complete_pipeline_result(
+        records, contrasts, False if diag_evaluated else None
+    )
+
+
 def run_power_case(seed_map: SeedMap, case, reps: int, frames: int) -> dict:
-    """Complete eight-record experiment: every record must pass every gate."""
+    """Complete eight-record experiments, counted by the authoritative verdict."""
     agg = Aggregator(case.case_id, "power", "cp_lower", 0.90)
     t0 = time.time()
-    refused = 0
+    classifications: dict[str, int] = {}
+    reason_tally: dict[str, int] = {}
     for rep in range(reps):
-        specs = design_specs(n_frames=frames)
-        ok = True
-        for idx, (spec, h_locked) in enumerate(specs):
-            stream = seed_map.stream(POWER, case.case_id, rep * 100 + idx)
-            out = run_record(spec, h_locked, stream)
-            if not out.evaluable or out.log_beta is None:
-                refused += 1
-                ok = False
-                break
-            iv = build_interval(out.log_beta, out.se, NORMAL_CRITICAL, plan.BIAS_PER_CELL)
-            if not iv.strictly_inside(DELTA_A):
-                ok = False
-                break
-            if out.geometry is None or out.geometry >= DELTA_G:
-                ok = False
-                break
-            if out.centre is None or out.centre >= DELTA_M:
-                ok = False
-                break
-            if out.r_irr is None or out.r_irr >= DELTA_R_IRR:
-                ok = False
-                break
-        agg.add(ok)
+        result = run_complete_experiment(seed_map, case.case_id, rep, frames)
+        agg.add(result.counts_as_complete_success)
+        cls = result.verdict.classification
+        classifications[cls] = classifications.get(cls, 0) + 1
+        for code in result.reason_codes():
+            reason_tally[code] = reason_tally.get(code, 0) + 1
     res = agg.result({
-        "refused_or_nonevaluable": refused,
-        "note": "refusals remain in the denominator",
+        "classifications": classifications,
+        "reason_codes": reason_tally,
+        "note": "refusals remain in the denominator; success requires the "
+                "authoritative verdict SUPPORTED_WITHIN_DECLARED_TOLERANCES",
         "seconds": round(time.time() - t0, 1),
     })
     return res.as_dict()

@@ -215,6 +215,36 @@ def effective_noise_to_signal(ss: StateSpace) -> float:
     return max(vals)
 
 
+def model_lag_covariance(ss: StateSpace, lag: int) -> Matrix:
+    """Model observation autocovariance ``Cov(y_i, y_{i+lag})`` for ``lag >= 0``.
+
+    With correlated noises the exposure cross-covariance enters at every lag::
+
+        lag = 0 : C Sigma C^T + R_eff
+        lag = k : C Sigma (F^k)^T C^T + S^T (F^{k-1})^T C^T
+
+    The second term is the one a filter that ignores exposure correlation
+    would omit, so it is carried explicitly here too.
+    """
+    if lag < 0:
+        raise NumericalFailure("lag must be nonnegative")
+    d = len(ss.sigma)
+    base = nm.matmul(nm.matmul(ss.c_obs, ss.sigma), nm.transpose(ss.c_obs))
+    if lag == 0:
+        return nm.symmetrise(nm.add(base, ss.r_eff))
+    fk = nm.eye(d)
+    for _ in range(lag):
+        fk = nm.matmul(fk, ss.f)
+    fkm1 = nm.eye(d)
+    for _ in range(lag - 1):
+        fkm1 = nm.matmul(fkm1, ss.f)
+    term1 = nm.matmul(nm.matmul(ss.c_obs, ss.sigma), nm.transpose(fk))
+    term1 = nm.matmul(term1, nm.transpose(ss.c_obs))
+    term2 = nm.matmul(nm.matmul(nm.transpose(ss.s_cross), nm.transpose(fkm1)),
+                      nm.transpose(ss.c_obs))
+    return nm.add(term1, term2)
+
+
 def bandwidth_product(a_drift: Matrix, sigma: Matrix, dt: float) -> float:
     """``||B||_2 * dt`` with ``B = Sigma^{-1/2} A Sigma^{1/2}`` (T-stage 12.2)."""
     w = nm.inv_sqrtm_spd(sigma)

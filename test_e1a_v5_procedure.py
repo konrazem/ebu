@@ -127,24 +127,44 @@ def test_schur_reduction() -> None:
 
 def test_axial_refusals() -> None:
     K = nm.mat([[1.2e-4, 1e-5, 3e-5], [1e-5, 1.0e-4, 2e-5], [3e-5, 2e-5, 5e-5]])
+    # V3: axial qualification is fail-closed, so every case supplies explicit
+    # evidence and the defect under test is the one named.
+    from e1a_v5.reduction import AxialEvidence
+    full = AxialEvidence.fully_qualified()
+    Cv = nm.scale(nm.eye(6), 1e-12)
+
+    def ev(**kw):
+        return AxialEvidence(**{**full.__dict__, **kw})
+
     cases = [
-        ("missing K3", dict(k3=None), "K3 present"),
-        ("bad kappa", dict(k3=nm.mat([[1e-4, 0, 3e-5], [0, 1e-4, 0], [3e-5, 0, -1e-9]])), "kappa > 0"),
-        ("non-SPD full K", dict(k3=nm.mat([[1e-4, 0, 9e-4], [0, 1e-4, 0], [9e-4, 0, 1e-5]])), "K3 SPD"),
-        ("unqualified support", dict(k3=K, support_qualified=False), "product support reduction qualified"),
-        ("unqualified temporal", dict(k3=K, temporal_qualified=False), "lateral temporal reduction qualified"),
-        ("large remainder", dict(k3=K, nonlinear_remainder=1.0), "nonlinear remainder <= 0.001"),
-        ("unqualified conservativity", dict(k3=K, conservativity_qualified=False), "conservativity qualified"),
-        ("asymmetric K3", dict(k3=nm.mat([[1e-4, 5e-5, 0], [1e-5, 1e-4, 0], [0, 0, 5e-5]])),
-         "K3 symmetric after conservativity qualification"),
+        ("missing K3", dict(k3=None, evidence=full), "K3 present"),
+        ("bad kappa",
+         dict(k3=nm.mat([[1e-4, 0, 3e-5], [0, 1e-4, 0], [3e-5, 0, -1e-9]]), evidence=full),
+         "kappa > 0"),
+        ("non-SPD full K",
+         dict(k3=nm.mat([[1e-4, 0, 9e-4], [0, 1e-4, 0], [9e-4, 0, 1e-5]]), evidence=full),
+         "K3 SPD"),
+        ("unqualified support", dict(k3=K, evidence=ev(support_qualified=False)),
+         "support_qualified qualified"),
+        ("unqualified temporal", dict(k3=K, evidence=ev(temporal_reduction_qualified=False)),
+         "temporal_reduction_qualified qualified"),
+        ("large remainder", dict(k3=K, evidence=ev(nonlinear_remainder=1.0)),
+         "nonlinear remainder <= 0.001"),
+        ("unqualified conservativity", dict(k3=K, evidence=ev(conservativity_qualified=False)),
+         "conservativity qualified"),
+        ("asymmetric K3",
+         dict(k3=nm.mat([[1e-4, 5e-5, 0], [1e-5, 1e-4, 0], [0, 0, 5e-5]]), evidence=full),
+         "K3 numerically symmetric after conservativity qualification"),
     ]
     for label, kw, pred in cases:
-        red = reduce_axial(temperature=298.0, **kw)
+        red = reduce_axial(temperature=298.0, c_v=Cv, **kw)
         check(f"refused: {label}", any(r.predicate == pred for r in red.refusals),
               f"got {[r.predicate for r in red.refusals]}")
         check(f"no fallback for {label}", not red.ok)
-    red = reduce_axial(K, 298.0)
+    red = reduce_axial(K, 298.0, full, Cv)
     check("nominal axial reduction qualifies", red.ok and nm.is_spd(red.h_eff))
+    check("V3: absent evidence is refused", not reduce_axial(K, 298.0, c_v=Cv).ok)
+    check("V3: absent covariance is refused", not reduce_axial(K, 298.0, full).ok)
 
 
 def test_t11a_predicates() -> None:
@@ -385,7 +405,11 @@ def test_seeds_and_identity() -> None:
     ids = compute_identities({"design": "v5-candidate"})
     check("identities are 64-hex", all(len(v) == 64 and all(c in "0123456789abcdef" for c in v)
                                        for v in ids.as_dict().values()))
-    check("identities are distinct", len(set(ids.as_dict().values())) == 5)
+    check("identities are distinct", len(set(ids.as_dict().values())) == 6)
+    check("V3: six identities including gate semantics",
+          set(ids.as_dict()) == {"analysis_procedure", "synthetic_generator",
+                                 "validation_procedure", "packet_schema",
+                                 "seed_map", "gate_semantics"})
     check("identity depends on configuration",
           compute_identities({"design": "other"}).analysis != ids.analysis)
 

@@ -29,6 +29,36 @@ INNOVATION_LAGS = tuple(range(1, 11))
 #: Familywise false-rejection target across all eight records.
 FAMILYWISE_TARGET = 0.005
 
+#: T-stage 12.2 fixes three antisymmetry lags at tau_slow/2, tau_slow and
+#: 2 tau_slow; these multipliers are frozen here before any calibration.
+ANTISYMMETRY_TAU_MULTIPLIERS = (0.5, 1.0, 2.0)
+
+
+class DiagnosticNotEvaluable(Exception):
+    """Required diagnostic inputs were absent; the family is non-evaluable."""
+
+
+def required_antisymmetry_lags(tau_slow: float, dt: float) -> tuple[int, int, int]:
+    """Integer frame lags nearest ``tau_slow/2``, ``tau_slow`` and ``2 tau_slow``.
+
+    Actual timestamps are preserved by working in frame units of the real
+    sampling interval rather than assuming a nominal one.
+    """
+    if not (math.isfinite(tau_slow) and tau_slow > 0.0):
+        raise DiagnosticNotEvaluable("tau_slow is not finite and positive")
+    if not (math.isfinite(dt) and dt > 0.0):
+        raise DiagnosticNotEvaluable("sampling interval is not finite and positive")
+    lags = []
+    for m in ANTISYMMETRY_TAU_MULTIPLIERS:
+        k = int(round(m * tau_slow / dt))
+        if k < 1:
+            raise DiagnosticNotEvaluable(
+                f"antisymmetry lag for multiplier {m} rounds to {k}; "
+                "the sampling interval does not resolve it"
+            )
+        lags.append(k)
+    return tuple(lags)  # type: ignore[return-value]
+
 
 def standardise_innovations(
     innovations: Sequence[Sequence[float]], inn_cov: Matrix
@@ -151,17 +181,33 @@ class DiagnosticComponents:
 def diagnostic_components(
     innovations: Sequence[Sequence[float]],
     inn_cov: Matrix,
-    observed_lags: Sequence[Matrix] | None = None,
-    fitted_lags: Sequence[Matrix] | None = None,
+    observed_lags: Sequence[Matrix],
+    fitted_lags: Sequence[Matrix],
 ) -> DiagnosticComponents:
-    """Compute the four frozen diagnostic components for one record."""
+    """Compute the four frozen diagnostic components for one record.
+
+    The lag-antisymmetry inputs are **required**.  Previously they defaulted to
+    ``None``, which silently set that component to zero and removed a frozen
+    member of the family from the maximum.  Absent lag data now makes the whole
+    family non-evaluable, which is the scientifically correct outcome: a
+    diagnostic that was not computed is not a diagnostic that passed.
+    """
+    if observed_lags is None or fitted_lags is None:
+        raise DiagnosticNotEvaluable(
+            "observed and fitted lag matrices are required; the antisymmetry "
+            "component may not default to zero"
+        )
+    if len(observed_lags) == 0 or len(fitted_lags) == 0:
+        raise DiagnosticNotEvaluable("lag matrix sets are empty")
+    if len(observed_lags) != len(fitted_lags):
+        raise DiagnosticNotEvaluable(
+            f"observed ({len(observed_lags)}) and fitted ({len(fitted_lags)}) "
+            "lag sets do not align"
+        )
     z = standardise_innovations(innovations, inn_cov)
-    anti = 0.0
-    if observed_lags is not None and fitted_lags is not None:
-        anti = lag_antisymmetry_residuals(observed_lags, fitted_lags)
     return DiagnosticComponents(
         cvm=cvm_chi2_2(z),
         angular=angular_harmonic_statistic(z),
         lagcov=lag_covariance_statistic(z),
-        antisym=anti,
+        antisym=lag_antisymmetry_residuals(observed_lags, fitted_lags),
     )

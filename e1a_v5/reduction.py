@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass
+from typing import ClassVar
 from typing import Sequence
 
 from . import numerics as nm
@@ -29,6 +30,77 @@ from .units import K_B
 
 #: Maximum admissible relative second-order Schur remainder (U-stage 5.4).
 NONLINEAR_REMAINDER_CEILING = 1.0e-3
+
+#: Relative numerical-skew ceiling used as a SUPPORTING diagnostic only.  The
+#: scientific conservativity pass comes from U's own qualification evidence;
+#: this metric exists so a numerically asymmetric matrix cannot slip through
+#: on a dimensional absolute tolerance.
+SKEW_RTOL = 1.0e-9
+
+
+@dataclass(frozen=True)
+class AxialEvidence:
+    """Explicit U-required evidence for one axial reduction.
+
+    Every field is ``None`` by default, meaning NO EVIDENCE SUPPLIED.  Missing
+    evidence fails closed: it is never read as qualified.  This reverses the
+    previous boolean-default-True behaviour, under which a packet with no
+    conservativity, support, temporal or covariance evidence qualified.
+    """
+
+    #: U section 12: curl/conservativity qualification of the 3D response.
+    conservativity_qualified: bool | None = None
+    #: U section 5.6: 3D harmonic / model-domain qualification.
+    harmonic_domain_qualified: bool | None = None
+    #: U section 5.6: product-support and tail bounds.
+    support_qualified: bool | None = None
+    #: U section 5.7: the retained 2D lateral temporal reduction.
+    temporal_reduction_qualified: bool | None = None
+    #: U section 19: lateral observation / defocus transfer.
+    observation_transfer_qualified: bool | None = None
+    #: U section 5.4: certified bound on the second-order Schur remainder.
+    nonlinear_remainder: float | None = None
+    #: U sections 26-27: projected absolute and contrast uncertainty budgets.
+    uncertainty_budget_qualified: bool | None = None
+    #: T.29: geometry and centre qualification availability.
+    geometry_centre_qualified: bool | None = None
+    #: Complete provenance chain for every primitive entering the reduction.
+    provenance_complete: bool | None = None
+
+    #: Names of every load-bearing field, in refusal-report order.
+    REQUIRED: ClassVar[tuple[str, ...]] = (
+        "conservativity_qualified",
+        "harmonic_domain_qualified",
+        "support_qualified",
+        "temporal_reduction_qualified",
+        "observation_transfer_qualified",
+        "uncertainty_budget_qualified",
+        "geometry_centre_qualified",
+        "provenance_complete",
+    )
+
+    def missing(self) -> list[str]:
+        """Fields with no evidence supplied at all."""
+        return [n for n in self.REQUIRED if getattr(self, n) is None]
+
+    def failed(self) -> list[str]:
+        """Fields with evidence that explicitly does not qualify."""
+        return [n for n in self.REQUIRED if getattr(self, n) is False]
+
+    @staticmethod
+    def fully_qualified(nonlinear_remainder: float = 0.0) -> "AxialEvidence":
+        """Construct complete passing evidence, for synthetic fixtures only."""
+        return AxialEvidence(
+            conservativity_qualified=True,
+            harmonic_domain_qualified=True,
+            support_qualified=True,
+            temporal_reduction_qualified=True,
+            observation_transfer_qualified=True,
+            nonlinear_remainder=nonlinear_remainder,
+            uncertainty_budget_qualified=True,
+            geometry_centre_qualified=True,
+            provenance_complete=True,
+        )
 
 
 @dataclass(frozen=True)
@@ -60,12 +132,35 @@ def split_3d(k3: Matrix) -> tuple[Matrix, Matrix, float]:
     return a, b, kappa
 
 
+def relative_skew(k3: Matrix) -> float:
+    """Dimensionless numerical skew ``||K - K^T|| / ||(K + K^T)/2||``.
+
+    Scale invariant by construction, so a stiffness of order ``1e-4 N/m`` is
+    never compared against a tolerance implicitly anchored at ``1 N/m``.
+    Raises if the symmetric physical scale is zero: that case is refused, not
+    rescued by substituting a unit denominator.
+    """
+    sym = nm.symmetrise(k3)
+    denom = nm.max_abs(sym)
+    if denom <= 0.0 or not math.isfinite(denom):
+        raise NumericalFailure(
+            "relative skew is undefined: the symmetric physical scale is zero "
+            "or unqualified"
+        )
+    return nm.asymmetry(k3) / denom
+
+
 def validate_3d_stiffness(
     k3: Matrix | None,
-    symmetry_tolerance: float = 1e-9,
-    conservativity_qualified: bool = True,
+    evidence: AxialEvidence,
+    skew_rtol: float = SKEW_RTOL,
 ) -> tuple[Refusal, ...]:
-    """Validate the full 3D stiffness packet (V-stage brief section 12)."""
+    """Validate the full 3D stiffness packet (V-stage brief section 12).
+
+    Conservativity must be qualified by U evidence; the scale-invariant skew
+    metric is a supporting numerical check, not a substitute scientific
+    tolerance.
+    """
     if k3 is None:
         return (
             refuse(
@@ -91,7 +186,15 @@ def validate_3d_stiffness(
                 "full 3D stiffness contains a non-finite entry",
             ),
         )
-    if not conservativity_qualified:
+    if evidence.conservativity_qualified is None:
+        return (
+            refuse(
+                AXIAL_REDUCTION_UNQUALIFIED,
+                "conservativity evidence supplied",
+                "no curl/conservativity evidence; missing evidence fails closed",
+            ),
+        )
+    if not evidence.conservativity_qualified:
         return (
             refuse(
                 AXIAL_REDUCTION_UNQUALIFIED,
@@ -99,16 +202,24 @@ def validate_3d_stiffness(
                 "symmetry may be imposed only after curl/conservativity qualification",
             ),
         )
-    defect = nm.asymmetry(k3)
-    denom = max(1.0, nm.max_abs(k3))
-    if defect / denom > symmetry_tolerance:
+    try:
+        skew = relative_skew(k3)
+    except NumericalFailure as exc:
         return (
             refuse(
                 AXIAL_REDUCTION_UNQUALIFIED,
-                "K3 symmetric after conservativity qualification",
-                "stiffness symmetry defect exceeds tolerance",
-                relative_defect=defect / denom,
-                tolerance=symmetry_tolerance,
+                "symmetric physical scale qualified positive",
+                str(exc),
+            ),
+        )
+    if skew > skew_rtol:
+        return (
+            refuse(
+                AXIAL_REDUCTION_UNQUALIFIED,
+                "K3 numerically symmetric after conservativity qualification",
+                "relative stiffness skew exceeds the scale-invariant ceiling",
+                relative_skew=skew,
+                ceiling=skew_rtol,
             ),
         )
     ks = nm.symmetrise(k3)
@@ -277,40 +388,93 @@ def normalise_covariance_to_h(
 def reduce_axial(
     k3: Matrix | None,
     temperature: float,
+    evidence: AxialEvidence | None = None,
     c_v: Matrix | None = None,
     var_log_t: float = 0.0,
     cov_s_logt: Sequence[float] | None = None,
-    conservativity_qualified: bool = True,
-    support_qualified: bool = True,
-    temporal_qualified: bool = True,
-    nonlinear_remainder: float | None = None,
     condition_limit: float = 100.0,
+    skew_rtol: float = SKEW_RTOL,
 ) -> SchurReduction:
     """Full axial reduction with its qualification predicate (U-stage 5.8).
 
-    Any failing dependency yields ``AXIAL_REDUCTION_UNQUALIFIED`` with that
-    precise reason.  There is no fallback to a plane-only calibration.
+    **Fail-closed.** Every U-required component must carry explicit evidence.
+    Absent evidence is refused, never read as qualified, and the covariance is
+    mandatory: a point Schur matrix without uncertainty is not a valid
+    Branch-A comparison field. Any failing dependency yields
+    ``AXIAL_REDUCTION_UNQUALIFIED`` with its precise reason, and there is no
+    fallback to a plane-only calibration.
     """
-    refusals = list(validate_3d_stiffness(k3, conservativity_qualified=conservativity_qualified))
+    if evidence is None:
+        return SchurReduction(
+            [], [], [], float("nan"),
+            refusals=(
+                refuse(
+                    AXIAL_REDUCTION_UNQUALIFIED,
+                    "axial evidence supplied",
+                    "no axial qualification evidence was supplied; "
+                    "missing evidence fails closed",
+                ),
+            ),
+        )
+
+    refusals: list[Refusal] = list(validate_3d_stiffness(k3, evidence, skew_rtol))
     if refusals:
         return SchurReduction([], [], [], float("nan"), refusals=tuple(refusals))
     assert k3 is not None
 
-    if not support_qualified:
+    # --- every remaining U-required evidence item, fail-closed --------------
+    for name in evidence.missing():
+        if name == "conservativity_qualified":
+            continue  # already handled above
         refusals.append(
             refuse(
                 AXIAL_REDUCTION_UNQUALIFIED,
-                "product support reduction qualified",
-                "harmonic / product-support reduction is not qualified",
+                f"{name} evidence supplied",
+                f"no evidence for {name}; missing evidence fails closed",
+                component=name,
             )
         )
-    if not temporal_qualified:
+    for name in evidence.failed():
+        if name == "conservativity_qualified":
+            continue
         refusals.append(
             refuse(
                 AXIAL_REDUCTION_UNQUALIFIED,
-                "lateral temporal reduction qualified",
-                "retained 2D temporal model is not qualified; "
-                "no 3D hidden-state model is silently substituted",
+                f"{name} qualified",
+                f"{name} is explicitly not qualified",
+                component=name,
+            )
+        )
+
+    # --- covariance is mandatory -------------------------------------------
+    if c_v is None:
+        refusals.append(
+            refuse(
+                MISSING_COVARIANCE,
+                "axial primitive covariance supplied",
+                "a point Schur matrix without uncertainty is not a valid "
+                "Branch-A comparison field",
+            )
+        )
+
+    # --- nonlinear remainder must be certified, not merely small ------------
+    if evidence.nonlinear_remainder is None:
+        refusals.append(
+            refuse(
+                AXIAL_REDUCTION_UNQUALIFIED,
+                "nonlinear remainder bound supplied",
+                "no certified second-order Schur remainder bound",
+            )
+        )
+    elif not math.isfinite(evidence.nonlinear_remainder) or (
+        evidence.nonlinear_remainder > NONLINEAR_REMAINDER_CEILING
+    ):
+        refusals.append(
+            refuse(
+                AXIAL_REDUCTION_UNQUALIFIED,
+                f"nonlinear remainder <= {NONLINEAR_REMAINDER_CEILING}",
+                "second-order Schur remainder exceeds its enclosure ceiling",
+                remainder=evidence.nonlinear_remainder,
             )
         )
 
@@ -341,21 +505,11 @@ def reduce_axial(
             )
         )
 
-    a, b, kappa = split_3d(nm.symmetrise(k3))
+    _, b, kappa = split_3d(nm.symmetrise(k3))
     delta_k = nm.scale(
         [[b[0][0] * b[0][0], b[0][0] * b[1][0]], [b[1][0] * b[0][0], b[1][0] * b[1][0]]],
         -1.0 / kappa,
     )
-
-    if nonlinear_remainder is not None and nonlinear_remainder > NONLINEAR_REMAINDER_CEILING:
-        refusals.append(
-            refuse(
-                AXIAL_REDUCTION_UNQUALIFIED,
-                f"nonlinear remainder <= {NONLINEAR_REMAINDER_CEILING}",
-                "second-order Schur remainder exceeds its enclosure ceiling",
-                remainder=nonlinear_remainder,
-            )
-        )
 
     kbt = K_B * temperature
     if not math.isfinite(kbt) or kbt <= 0.0:

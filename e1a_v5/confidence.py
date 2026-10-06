@@ -31,6 +31,38 @@ SIGMA_CAL_ABS_MAX = 0.009
 SIGMA_CAL_CONTRAST_MAX = 0.003
 BIAS_ABS_MAX = 0.0005
 BIAS_CONTRAST_MAX = 0.0005
+#: Relative tolerance for clamping a rounding-level negative variance to zero.
+PSD_RTOL = 1e-12
+#: Declared numerical precision of the propagated calibration sensitivity.
+#: The log-beta sensitivity is obtained by differencing a numerically located
+#: pseudo-true maximum, so it carries about this relative error; a comparison
+#: against a ceiling cannot be sharper than its own inputs.
+CALIBRATION_NUMERICAL_RTOL = 1e-5
+
+CEILING_PASS = "PASS"
+CEILING_FAIL = "FAIL"
+CEILING_UNRESOLVED = "UNRESOLVED_AT_NUMERICAL_PRECISION"
+
+
+def classify_against_ceiling(
+    value: float, ceiling: float, rtol: float = CALIBRATION_NUMERICAL_RTOL
+) -> str:
+    """Three-way comparison of a propagated quantity against a declared ceiling.
+
+    A value within the sensitivity's own numerical precision of the ceiling is
+    UNRESOLVED, not a pass: the enclosure straddles the boundary, exactly as
+    the realized-field predicates treat a straddling region.
+    """
+    if not math.isfinite(value):
+        return CEILING_FAIL
+    band = rtol * ceiling
+    if value <= ceiling - band:
+        return CEILING_PASS
+    if value > ceiling + band:
+        return CEILING_FAIL
+    return CEILING_UNRESOLVED
+
+
 #: T-stage 20.3 error budget decomposition for the scale procedures.
 BUDGET_MODEL_TAIL = 0.020
 BUDGET_AUXILIARY_SET = 0.001
@@ -84,9 +116,16 @@ def contrast_variance(c_b: Matrix, j: int, ref: int) -> float:
     """``Var(b_j - b_0) = C[j,j] + C[0,0] - 2 C[j,0]`` (T-stage section 10)."""
     v = c_b[j][j] + c_b[ref][ref] - 2.0 * c_b[j][ref]
     if v < 0.0:
-        if v > -1e-18 * max(1.0, abs(c_b[j][j])):
+        # Relative to the covariance's OWN diagonal scale.  A max(1.0, .) floor
+        # would make this an absolute test, and log-beta variances are of order
+        # 1e-5, so it would mask a genuine PSD violation.
+        scale = max(abs(c_b[j][j]), abs(c_b[ref][ref]))
+        if scale > 0.0 and v > -PSD_RTOL * scale:
             return 0.0
-        raise NumericalFailure("contrast variance is negative; covariance is not PSD")
+        raise NumericalFailure(
+            f"contrast variance {v:.3e} is negative beyond rounding "
+            f"(diagonal scale {scale:.3e}); the covariance is not PSD"
+        )
     return v
 
 

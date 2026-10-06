@@ -34,6 +34,13 @@ class OptimizerFailure(Exception):
     """The optimiser did not establish a unique usable maximum."""
 
 
+#: Reason codes recorded on every optimiser outcome.
+REASON_CONVERGED = "converged"
+REASON_BUDGET = "evaluation_budget_exhausted"
+REASON_RESTARTS = "restarts_exhausted_without_convergence"
+REASON_NONFINITE = "objective_nonfinite_at_optimum"
+
+
 @dataclass(frozen=True)
 class OptimizeResult:
     x: list[float]
@@ -41,6 +48,15 @@ class OptimizeResult:
     evaluations: int
     converged: bool
     reason: str = ""
+
+    @property
+    def usable(self) -> bool:
+        """True only for a converged result with a finite objective and point."""
+        return (
+            self.converged
+            and math.isfinite(self.fun)
+            and all(math.isfinite(v) for v in self.x)
+        )
 
 
 def _initial_simplex(x0: Sequence[float]) -> list[list[float]]:
@@ -131,9 +147,11 @@ def minimise(
         if fvals[idx] < best_f:
             best_f, best_x = fvals[idx], list(simplex[idx])
         if converged and attempt >= 1:
-            return OptimizeResult(best_x, best_f, evals, True)
+            if not (math.isfinite(best_f) and all(math.isfinite(v) for v in best_x)):
+                return OptimizeResult(best_x, best_f, evals, False, REASON_NONFINITE)
+            return OptimizeResult(best_x, best_f, evals, True, REASON_CONVERGED)
         if evals >= max_evaluations:
-            return OptimizeResult(
-                best_x, best_f, evals, False, "evaluation budget exhausted"
-            )
-    return OptimizeResult(best_x, best_f, evals, True)
+            return OptimizeResult(best_x, best_f, evals, False, REASON_BUDGET)
+    # Restarts exhausted without a converged attempt.  This is NOT success:
+    # returning converged=True here would let a non-maximum reach inference.
+    return OptimizeResult(best_x, best_f, evals, False, REASON_RESTARTS)
