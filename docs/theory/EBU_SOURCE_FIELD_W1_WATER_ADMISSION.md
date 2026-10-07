@@ -5,18 +5,22 @@ Date: 2026-10-07.
 ```text
 CANDIDATE: W1 — LOCAL FINITE WATER-STORAGE / HYDRAULIC FIELD
 STATUS: NON-CONTROLLING SCIENTIFIC ASSESSMENT
-INDEPENDENT AUDIT: PENDING
-EBU SEMANTICS: REFUSE
-PRIMARY RESULT: B
+INDEPENDENT RE-AUDIT: PENDING
+COMPLETE-ACTION SIGN SEMANTICS: REFUSE FOR SELECTED CANDIDATE
+SCOPED WATER SOURCE FACTOR: POSSIBLE IN PRINCIPLE / NOT CERTIFIED
+PRIMARY RESULT: B — SELECTED COMPLETE-ACTION CANDIDATE REFUSED
+THERMAL ROOT STATUS: PARTIALLY CHALLENGED
 ```
 
 ## 1. Scientific decision
 
-**B. W1 IS MATHEMATICALLY CONNECTABLE BUT ITS PHYSICAL ORIENTATION / ROOT
-RELATION IS NOT YET SUFFICIENT FOR EBU ADMISSION.**
+**B — THE SELECTED COMPLETE W1 WATER–DRIVE–BATH ACTION POTENTIAL IS NOT
+ADMISSIBLE FOR THE REQUESTED WHOLE-ACTION SIGN SEMANTICS. A SCOPED WATER SOURCE
+FACTOR REMAINS POSSIBLE IN PRINCIPLE BUT IS NOT YET CERTIFIED.**
 
-**The requested admission is refused. The decisive failure is the sign of the
-complete action under the proposed joint thermal potential.** It is not a
+**The selected complete-action candidate is refused for the requested signs.
+The decisive failure is the sign of the complete action under the proposed
+joint thermal potential.** It is not a
 failure of endpoint arithmetic, calibration-loop algebra, or recursive
 accounting. No scarcity coefficient is needed to obtain local state dependence.
 However, that dependence does not establish the required negative value for
@@ -42,18 +46,34 @@ values. A reversible transfer has zero joint value in this model. Neither case
 implements “depletion negative, restoration positive” across the admitted
 action family. Increasing dissipation increases this value.
 
-This assessment therefore does **not** admit W1 by silently dropping the drive
-contribution, reversing the root sign, calling a partial factor the whole
-action, or adding an unproved scarcity term. The foundation expressly allows
-declared audit-only coordinates; it does not authorize relabeling this full
-joint claim as a water-only claim after inspecting its sign.
+This assessment therefore does **not** admit the selected complete-action
+candidate by silently dropping the drive contribution, reversing the root sign,
+calling a partial factor the whole action, or adding an unproved scarcity term.
+The foundation expressly allows declared audit-only coordinates and physically
+justified factors. A scoped root-calibrated water factor remains possible in
+principle, but it is not certified here and is not established as an independently
+settled actor value. Its favorable sign cannot replace the total settlement.
 
 The outcome is B rather than a fundamental incompatibility conclusion because
 the candidate has a coherent physical accounting model and a conditional
 same-kind connection to the proposed root. What fails is the additional W1
-orientation requirement for this complete boundary and potential. No theorem
-here excludes all water potentials, all restricted water observables, or the
-general recursive architecture.
+whole-action orientation requirement for this complete boundary and potential.
+W1 has not proved that a scoped root-calibrated water source factor is impossible.
+No theorem here excludes all water potentials, all restricted water observables,
+or the general recursive architecture.
+
+### 1.1 Three distinct objects
+
+| Object | Meaning and present status |
+|---|---|
+| **A. Scoped source factor** `φ_W(w_A,w_B)` | A physically justified hydraulic contribution. The canonical coordinate `V_w` in (6) is a scoped diagnostic / candidate factor coordinate under its fixed-temperature assumptions; it is not a certified independent settlement. |
+| **B. Compatible joint potential** `𝒱(Θ)` | One potential for the declared joint state, allowing coupled/nonseparable factors. Equation (9) is the selected exact finite-bath potential. |
+| **C. Registered-action settlement** `E_total=𝒱(Θ_pre)−𝒱(Θ_post)` | The complete endpoint contrast of that declared potential for the registered action. This is the action value, distinct from the conserved physical energy `E_tot` in (7). |
+
+A scoped factor may be scientifically meaningful without being the complete
+registered-action settlement. A favorable factor sign may not be substituted
+for the total action value. The present refusal applies to C evaluated with
+the selected B under the requested whole-action signs; it does not rule out A.
 
 ## 2. Repository coordinate, authority, and authorization
 
@@ -61,12 +81,21 @@ general recursive architecture.
 |---|---|
 | Repository | `/Users/konrad.grzyb/code/ebu` |
 | Branch | `codex/v6-minimal-recovery-assessment` |
-| Starting commit | `7e912b9e3b0b3b8fd75db1fd9443b55bda9b73b2` |
+| Original assessment starting commit | `7e912b9e3b0b3b8fd75db1fd9443b55bda9b73b2` |
+| Original report / narrow repair starting commit | `646e7d0c9864259c61c968349c22007019f10854` |
 | Starting working tree | Clean |
 | Cached `origin/main` | `660d6e5a56cb096fe6d1e4d202f592155d982c79` |
 | Remote operations | No fetch or push; cached reference is not a freshly checked server HEAD |
 | Authorized change | This report alone, followed by a local commit |
-| Report commit | The enclosing Git commit, reported in the completion response |
+| Repair commit | The enclosing Git commit, reported in the completion response |
+
+The narrow-repair brief supplies the independent audit disposition **“W1
+SOURCE-FIELD REFUSAL: VERDICT REQUIRES NARROWING”** and acceptance of the W1
+mathematics. This report records that supplied disposition; this author did not
+perform the independent audit. The correction separates the selected complete
+action's refusal from the unresolved scoped-factor certification question.
+The revised wording remains non-controlling and **pending independent re-audit**.
+No mathematical result, numerical value, physical model or authority is changed.
 
 The [frozen foundation](../physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md)
 and [working baseline](EBU_THEORY_BASELINE.md) were read in full, in the required
@@ -101,8 +130,10 @@ availability functional concealed under a different name.
 The brief's sign requirement is a **candidate-admission requirement being
 tested**, not an established universal sign theorem of the foundation. The
 baseline protects `V` and its physical identification, not the historical word
-“burden.” A failed sign test must therefore refuse this admission rather than
-rewrite the physical equations to fit that word.
+“burden.” A failed whole-action sign test therefore refuses the selected
+complete-action candidate for that requirement; it does not refuse every scoped
+water factor or authorize rewriting the equations. The programme-level choice
+of where the sign requirement applies is recorded, not made, in §17.1.
 
 ## 3. One prospectively bounded candidate and action family
 
@@ -377,10 +408,36 @@ the same finite-excursion numerical value. A varying bath temperature is not
 handled by blindly dividing each mechanical state by its instantaneous `k_BT`
 and declaring the difference equal to (9).
 
-**Root disposition:** a non-arbitrary connection exists conditionally in this
-specified ideal model. Practical calibration has not been performed. Even
-granting an exact realization of the bridge, the sign requirement below fails.
-This isolates the scientific refusal from an avoidable metrology limitation.
+**THERMAL ROOT STATUS: PARTIALLY CHALLENGED.** The thermal ruler remains
+available as a denomination candidate, but the ruler alone does not determine
+application orientation. The selected complete thermal W1 potential does not
+satisfy the desired whole-action sign semantics. This is not a universal
+failure of the thermal root.
+
+A non-arbitrary connection exists conditionally in this specified ideal model.
+Practical calibration has not been performed. Even granting an exact realization
+of the bridge, the selected complete-action sign requirement below fails. This
+isolates that refusal from an avoidable metrology limitation.
+
+### 6.3 Factor embedding does not establish independent settlement
+
+The cleared recursive-field architecture permits physically justified factors
+inside a compatible joint potential, including coupled/nonseparable factors.
+It does not require every source to have an independently settled node value.
+W1 has **not** established an exact independent decomposition
+`V_total = V_water + V_drive + V_bath` for its finite-bath potential.
+
+In the independent coordinates `(w,e)`, equation (19) gives
+`𝒱_we=c_b U'/u²≠0` on the declared domain below equal levels. The selected
+potential is therefore nonseparable in these variables. Writing a bath term
+as a function of `u=E_tot−e−U_w(w)` retains that coupling; it does not create
+independent water and drive factors or an extra water entitlement.
+
+The canonical water contrast is a **scoped diagnostic / candidate factor
+coordinate**, not automatically an independently settled component of the exact
+W1 finite-bath total. Nonseparability does not prohibit physically justified
+factor embedding; its compatibility, interaction accounting and settlement
+meaning remain to be established. No such embedding theorem is executed here.
 
 ## 7. Physical coupling and one complete action update
 
@@ -466,9 +523,13 @@ positive. Moreover,
 \]
 
 The same withdrawal therefore increases hydraulic energy more from a depleted
-A. This localism effect is real within the model and uses no arbitrary
-scarcity factor. Outside the selected domain, withdrawing from an over-high A
-can instead reduce imbalance; “less water” alone is not a universal sign law.
+A, giving a larger magnitude of the negative water-factor contrast. This is a
+positive scientific result derived from **gravity, geometry and finite storage**,
+without an arbitrary scarcity coefficient. Withdrawal from the lower local
+store raises hydraulic imbalance and has `E_w<0`; restoration toward equal
+levels lowers imbalance and has `E_w>0`. Outside the selected domain,
+withdrawing from an over-high A can instead reduce imbalance; “less water”
+alone is not a universal sign law.
 
 For comparison, treating A alone with `U_A=ρgw_A²/(2A_t)` and discarding its
 destination gives a positive thermal potential drop on withdrawal and a
@@ -489,7 +550,7 @@ L>0\Longrightarrow E_{\rm joint}>0,
 \tag{18}
 \]
 
-| Operation/contribution | Water contribution at fixed `T` | Complete finite-bath value | Required W1 semantics |
+| Operation/contribution | Water contribution at fixed `T` | Complete finite-bath value | Requested whole-action semantics |
 |---|---:|---:|---|
 | Withdraw A→B, increasing imbalance | Negative | Positive for lossy pumping; zero if reversible | Negative — **fails jointly** |
 | Return B→A toward equal levels | Positive | Positive for dissipative recovery; zero if reversible | Positive — only the lossy case meets this sign |
@@ -499,13 +560,12 @@ L>0\Longrightarrow E_{\rm joint}>0,
 | Unassisted leakage/drainage | Physical potential can change | No registered actor entry | Ledger remains unchanged |
 
 The water-only result establishes a possible **scoped hydraulic-imbalance
-observable**. It does not settle the complete action required here. The frozen
-foundation permits explicit audit-only coordinates, so the report does not
-claim that a water-only boundary is mathematically forbidden. But such a
-limited certificate would have to state that it is valuing only hydraulic
-configuration, and could not be presented as this full water–drive–bath
-admission or its total physical consequence. This task does not switch to that
-smaller claim to manufacture a PASS.
+observable / candidate source factor**. It remains possible in principle and
+not yet certified. The frozen foundation permits explicit audit-only coordinates
+and justified factors; a water factor is not mathematically forbidden. Its
+limited scope must remain explicit, and its favorable sign cannot be presented
+as the full water–drive–bath settlement. No independent actor settlement for
+that factor is established here.
 
 ### 8.3 No admissible scale adjustment repairs the sign
 
@@ -520,6 +580,19 @@ different objects.** A correct ruler can measure a physical quantity whose
 orientation does not meet this application requirement. This is the finite-bath
 dissipation warning from the cleared architecture, now realized explicitly for
 hydraulic depletion and restoration rather than left as a general caveat.
+
+### 8.4 Source-factor sign is not total-action sign
+
+The water-only factor has the desired depletion/restoration orientation on
+the declared domain. The complete finite-bath action does not. These statements
+are not contradictory: they refer to different physical quantities/boundaries.
+The canonical comparison also has the fixed-temperature assumptions of §6.1;
+it is not an independently additive part of the exact finite-bath result.
+
+The programme must separately specify whether its sign requirement applies to
+**(a) source-factor orientation, (b) total registered-action settlement, or
+(c) both**. This repair does not choose a new programme policy. It preserves
+the failed whole-action test while leaving scoped-factor certification open.
 
 ## 9. Integrability, comparison walks, and physical routes
 
@@ -664,9 +737,11 @@ E_n=\mathcal V(\Theta_n)-\mathcal V(\widetilde\Theta_n).
 \]
 
 Only registration would authorize `B_i,n+1=B_i,n+E_n`; passive evolution leaves
-all actor balances unchanged. Since W1 is refused here, this equation describes
-the candidate accounting interface, **not authorization to issue actual W1
-entries**. No historical entry is repriced after the temperature or stock changes.
+all actor balances unchanged. Since the selected complete-action candidate is
+refused for the requested signs, and the scoped water factor is not certified,
+this equation describes the candidate accounting interface, **not authorization
+to issue actual W1 entries**. No historical entry is repriced after the
+temperature or stock changes.
 Concurrent uncontrolled flows during a transfer would need an identified joint
 transition and attribution boundary; sequential splitting is not assumed exact
 for such a different operating condition.
@@ -771,9 +846,10 @@ For the depleted pair, the corresponding source-to-bath transfer is
 and exposes** the finite-bath sign problem; it does not avoid it.
 
 No positive value in these examples is interpreted as social improvement.
-The complete accounting model is nonempty and coherent, but the examples do
-not witness a nonempty class satisfying **all** W1 admission requirements:
-the load-bearing sign requirement fails even under the favorable idealizations.
+The complete accounting model is nonempty and coherent, but this selected
+complete-action candidate does not satisfy the requested whole-action signs,
+even under the favorable idealizations. This does not prove that a scoped water
+source factor is impossible; the water-only orientation result remains intact.
 
 ## 13. Two histories: a failure for water level alone and a sufficient-state test
 
@@ -967,7 +1043,7 @@ are recorded without pretending to have resolved them experimentally.
 
 ## 17. Admission matrix, failure owner, and falsifiers
 
-| Requirement | W1 disposition |
+| Requirement | Selected complete-action / scoped-factor disposition |
 |---|---|
 | Common non-arbitrary denomination | Conditional physical bridge supplied for the ideal model; no free multiplier |
 | Same-kind traceability | Derived via the specified constrained reservoir entropy/log weight; actual realization remains uncertified |
@@ -980,11 +1056,12 @@ are recorded without pretending to have resolved them experimentally.
 | Restoration positive and depletion negative jointly | **FAILS:** dissipative depletion has positive EBU; reversible operations have zero joint EBU |
 | No historical repricing or price replay | Preserved by the candidate interface |
 | No double counting | Preserved if the one coupled potential and unique events are used |
-| Overall requested admission | **REFUSE** |
+| Selected complete-action candidate under requested whole-action signs | **REFUSE** |
+| Scoped water source factor | **POSSIBLE IN PRINCIPLE / NOT CERTIFIED**; no independently settled actor value established |
 
 **Primary failure owner: sign/orientation of the selected complete joint
-potential relative to the W1 semantic requirement.** It is not arbitrary
-multiplicative normalization, carrier imbalance, integrability, or a proof that
+potential relative to the requested whole-action semantic requirement.** It is
+not arbitrary multiplicative normalization, carrier imbalance, integrability, or a proof that
 the entire architecture is impossible. Water level alone additionally fails
 state sufficiency; the explicit current source/bath variables repair that
 particular mathematical omission under the ideal response law.
@@ -1006,12 +1083,23 @@ Specific falsifiers/refusal triggers are:
    empirical conjecture.
 6. A long-range hydraulic connection has no represented state or adequate
    omission bound: **locality** fails.
-7. Positive dissipative withdrawal under (1): **the requested sign semantics
-   already fail analytically**, as the numerical witness illustrates.
+7. Positive dissipative withdrawal under (1): **the requested whole-action sign
+   semantics already fail analytically**, as the numerical witness illustrates.
 
 A future physically different W1 contract could require a new assessment.
 No such replacement, sign reversal, root amendment or authority change is
-undertaken here. This is one bounded refusal, not a menu of repairs.
+undertaken here. This is a bounded refusal of the selected complete-action
+potential for the requested signs, not a refusal of all scoped water factors.
+
+### 17.1 Human scientific decision required
+
+**HUMAN SCIENTIFIC DECISION REQUIRED:** Specify whether depletion-negative /
+restoration-positive semantics are required for the **total registered action**,
+for the **scoped source factor**, or for **both**.
+
+The present W1 report does not choose or amend that programme-level rule.
+Recording this question neither changes existing authority nor certifies a
+factor settlement. It does not prevent completion of this documentary repair.
 
 ## 18. Consequences for E1a and the apple chain
 
@@ -1020,18 +1108,20 @@ undertaken here. This is one bounded refusal, not a menu of repairs.
 **E1a tests only part of the root property needed by W1.**
 
 E1a can test the independently normalized canonical thermal ruler and its
-field-to-field consistency. It does not establish the sign of a complete
-water–drive–reservoir valuation relative to local restoration/depletion. W1
+field-to-field consistency. **`beta_bridge = 1` concerns scale/denomination
+consistency; it does not determine application orientation.** It does not
+establish the sign of a complete water–drive–reservoir valuation relative to
+local restoration/depletion. W1
 shows that this is a structural application condition, not something additional
 precision in the optical benchmark would repair.
 
-The current joint thermal potential is unsuitable for **this W1 admission
-contract's required signs**. That narrower conclusion is established here.
+The selected joint thermal potential is unsuitable for **the requested
+whole-action signs**. That narrower conclusion is established here.
 It does not show that the thermal root is unsuitable for every hydraulic
 observable or every water-source class; the water-only imbalance result is
 already a reason not to make that stronger inference. This is why the selected
 programme implication is the middle option above. E1a authority is unchanged,
-and W1's refusal is not a reinterpretation of its apparatus results.
+and the complete-action refusal is not a reinterpretation of its apparatus results.
 
 ### 18.2 Limited downstream interface
 
@@ -1045,25 +1135,42 @@ potential and root relation.
 No EBU amount for the whole chain is authorized by this refusal. There is no
 transfer of an accumulated historical water-price burden into an apple. Orchard
 and apple physics are not certified. The useful result is that physical local
-dependence and recursive accounting survive the analysis, while the sign needed
-for this proposed source admission does not.
+dependence and recursive accounting survive the analysis, while the selected
+complete-action potential fails the requested whole-action signs. A scoped
+water factor remains possible in principle and uncertified.
+
+### 18.3 Non-authoritative next mathematical interface
+
+The next theorem programme must define a **SOURCE-FACTOR EMBEDDING AND
+ORIENTATION CRITERION**, addressing root denomination, factor orientation,
+factor versus total-action sign, joint-potential compatibility, nonseparable
+interactions, single-count settlement, recursive sufficiency, locality and
+calibration composition. This is the interface for the **SOURCE-FACTOR
+EMBEDDING / ORIENTATION + RECURSIVE FIELD UNIFICATION THEOREM**.
+
+This handoff is non-authoritative. That theorem is not begun here; the repair
+neither chooses the programme sign rule nor designs a new source candidate.
 
 ## 19. Validation, coverage, and final disposition
 
 ### 19.1 Validation record
 
-Completed checks comprise controlling-source inspection, direct derivation of
-hydraulic energies, cross-partial and telescoping identities, exact rational
-arithmetic for all water/drive/heat balances and history partitions, and
+The original assessment's completed checks comprise controlling-source
+inspection, direct derivation of hydraulic energies, cross-partial and telescoping
+identities, exact rational arithmetic for all water/drive/heat balances and history partitions, and
 high-precision deterministic evaluation of the logarithms. No model runner,
 trajectory, simulation, confirmatory seed or physical experiment was used.
 The comparisons are symbolic endpoint arithmetic, not executed W1 actions.
 
-Document validation covers numbered equations, internal source links, source
-hashes, whitespace and the complete report diff. Only this report is staged
-and locally committed. The completion response records the commit and final
-clean worktree. Independent audit is the next possible stage and has **not**
-been performed by this author.
+The narrow repair uses static document comparison against the original report
+commit: all 32 numbered equations and the numerical witness are preserved.
+Validation also covers the unchanged state, history and accounting sections,
+internal source links, source hashes, whitespace and the complete report diff.
+No numerical recalculation, model runner, simulation or physical experiment is
+needed or executed for this repair. Only this report is staged and locally
+committed. The completion response records the repair commit and final clean
+worktree. The user-supplied audit accepted the mathematics and required a narrower
+verdict; **independent re-audit of this wording repair remains pending**.
 
 ### 19.2 Brief coverage
 
@@ -1082,11 +1189,18 @@ been performed by this author.
 | Uncertainty and failure ownership | §§16–17 |
 | Dissipation warning and current semantics | §§1, 8, 12, 17 |
 | E1a and apple-chain implications | §18 |
+| Narrow verdict, factor/joint/settlement distinction | §§1, 6.3, 8.4, 17 |
+| Partial thermal-root challenge and human sign decision | §§6.2, 17.1, 18.1 |
+| Non-authoritative next theorem interface | §18.3 |
 
-The final result is **REFUSE / B**: the physical model can be connected and
-updated consistently, but it does not meet the full requested sign semantics.
-No new scarcity weight, negative root multiplier or selective reclassification
-of the action boundary is used to change that outcome.
+**PRIMARY RESULT: B — THE SELECTED COMPLETE W1 WATER–DRIVE–BATH ACTION
+POTENTIAL IS NOT ADMISSIBLE FOR THE REQUESTED WHOLE-ACTION SIGN SEMANTICS.
+A SCOPED WATER SOURCE FACTOR REMAINS POSSIBLE IN PRINCIPLE BUT IS NOT YET
+CERTIFIED.**
+
+The selected model's mathematics and arithmetic are unchanged. A favorable
+factor sign does not replace its total action settlement. No scarcity weight,
+negative root multiplier or new programme sign rule is introduced.
 
 ```text
 AUTHORITY MODIFIED: NO
@@ -1096,6 +1210,9 @@ MONTE CARLO: NO
 PHYSICAL EXECUTION: NO
 PUSH: NO
 
-EBU SOURCE FIELD W1:
-NOT YET ADMISSIBLE
+EBU W1 COMPLETE-ACTION CANDIDATE:
+REFUSED
+
+EBU W1 SCOPED WATER FACTOR:
+NOT YET CERTIFIED
 ```
