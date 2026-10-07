@@ -7,8 +7,8 @@ STATUS: NON-CONTROLLING THEORETICAL CANDIDATE
 AUDIT STATUS: PENDING INDEPENDENT THEOREM AUDIT
 PRIMARY CONCLUSION: A — COMPATIBLE UNDER EXPLICIT CONDITIONS
 FOUNDATION IMPACT: NO FOUNDATION CHANGE REQUIRED
-GLOBAL SF / TA / BT CHOICE: NOT REQUIRED
-APPLICATION-SPECIFIC ORIENTATION PREDICATE SELECTED: NONE
+ORIENTATION-REGIME TAXONOMY: NONE — NO ALTERNATIVE VALUATION SEMANTICS EXIST
+SOURCE AND TOTAL SIGNS: ORDINARY PROPERTIES OF IDENTIFIED QUANTITIES
 LATER MASTER UNIFICATION THEOREM: NOT EXECUTED
 ```
 
@@ -30,13 +30,16 @@ Three findings resolve the missing interface:
    physical identification, common denomination, a justified remainder and
    interaction accounting. Refactorization can change a factor's sign while
    leaving the joint potential and all total settlements unchanged.
-2. **Source and total orientation are distinct conditions.** SF requires the
-   source sign; TA requires the total sign; BT requires both. SF and TA are
-   generally incomparable. BT is their intersection and is strictly stronger
-   than either in the unrestricted class. All three are conditionally coherent;
-   no regime is eliminated by the current foundation alone.
+2. **Source and total orientation are distinct properties.** That an
+   identified source contribution carries a declared physical sign, and that
+   the complete action value carries it, are two separate mathematical facts.
+   Neither implies the other. Their conjunction is strictly stronger than
+   either in the unrestricted class. All three situations occur and none is
+   eliminated by the current foundation alone. None of them is a mode, branch
+   or regime of valuation: each is a property of an already defined quantity.
 3. **Exact embedding gives an exact sign-margin test.** With
-   `E_tot=E_s+E_rest` and desired sign `s∈{−1,+1}`, BT holds precisely when
+   `E_tot=E_s+E_rest` and declared sign `s∈{−1,+1}`, the identified source
+   contrast and the complete action share that sign precisely when
    `M_s=sE_s>0` and `sE_rest>−M_s`. A sign-aligned remainder needs no magnitude
    ceiling. A sufficiently adverse remainder defeats the total sign.
 
@@ -44,31 +47,42 @@ The repaired W1 finding is preserved: its canonical water coordinate has the
 requested signs on its restricted domain; its selected complete finite-bath
 potential fails the requested total signs; its exact independent water-factor
 embedding remains uncertified. This report supplies a criterion, not that
-missing physical certification. It designs no replacement water source. That
-failed total-sign claim is a verdict on that claim under that selected
-potential; it neither obliges nor forbids the programme to adopt TA elsewhere.
+missing physical certification. It designs no replacement water source. The
+scoped water coordinate is a diagnostic physical quantity; its favorable sign
+neither replaces nor competes with the one complete W1 action value, which is
+why the selected complete candidate remains refused for the physical
+interpretation it was testing.
 
 A uniform positive orientation margin is a useful robust certificate, but is
 stronger than pointwise strict orientation. Arbitrarily small actions can have
 positive margins tending to zero. This distinction is essential for later
 uncertainty qualification and is made explicit below.
 
-No global SF / TA / BT choice is required to define or operate EBU valuation.
-The cleared architecture already supplies one value: a complete current state,
-an admitted joint potential, the complete endpoint difference `E=V_pre−V_post`
-and, where the potential is differentiable, the pairing of its differential
-with a physical action response. SF, TA and BT are additional certification
-predicates for orientation, applied on top of that value; none of them
-constructs or aggregates it. An application or scientific claim that asserts an
-orientation property must prospectively specify which predicate it invokes —
-SF for source-factor orientation, TA for complete total-action orientation, BT
-for both — together with the corresponding physical label, comparison domain,
-uncertainty scope and certification conditions. Once invoked, that predicate is
-binding for that claim: a failed TA claim cannot be retrospectively replaced by
-SF and called a pass, and vice versa. This report establishes the consequences
-of each predicate and selects none. It specifies compatible action labels as an
-obligation of whichever claim invokes a predicate, not as a programme-wide
-prerequisite.
+EBU has one valuation architecture: a complete multidimensional physical
+state, an admitted joint potential, its differential or marginal covector, a
+physical action response, the resulting local scalar action slope, and the
+exact finite joint endpoint value `E=V_pre−V_post`. Complete physical response
+comes first; decomposition comes second — the same ordering already used for
+coalitions, where the endpoint value is taken first and the Möbius
+decomposition afterward. A source-factor, coordinate or interaction
+decomposition explains or diagnoses that one value; it does not define an
+alternative valuation semantics. Exact factorized computation remains
+permitted; the ordering is one of semantic authority, not of arithmetic.
+
+**One settlement channel.** There is one complete finite action EBU value,
+`E=V_pre−V_post`. A factor contrast is not another EBU settlement. A coordinate
+differential is not another EBU settlement. A local action slope is not another
+EBU settlement. A Möbius coefficient is not another EBU settlement. A
+source-specific sign is not another valuation mode. Each of these explains,
+diagnoses or bounds the one value; none competes with it.
+
+Orientation statements are ordinary properties of those already defined
+quantities. For a declared physical label `s∈{−1,+1}`, an identified source
+contrast may satisfy `sE_s>0`, the complete action value may satisfy
+`sE_tot>0`, both may hold at once, or neither may. Each is a scientific claim
+about a specific quantity on a declared comparison domain and uncertainty
+scope, and must stand or fail on its own evidence; a label chosen after the
+result is seen certifies nothing. No such claim alters `E_tot`.
 No market price, welfare, fairness, ownership or incentive result is inferred.
 
 ## 2. Authority, provenance and documentary issues
@@ -169,12 +183,13 @@ require `E=0`; one may not reinterpret a failed strict sign as neutral afterward
 An uncertain class boundary must be included in the qualification domain.
 
 If one action depletes one source but restores another, their source labels
-can differ. TA needs a **single consistent total-action label** or an explicit
-restricted class. Requiring both `E_tot<0` and `E_tot>0` for the same event is
-inconsistent. SF with separately identified source factors has no such logical
-conflict merely because their individual signs differ. BT inherits the need
-for compatible total labels. This is an additional specification obligation,
-not a programme choice made here.
+can differ. A claim about the complete action value needs a **single consistent
+total-action label** or an explicit restricted class. Requiring both `E_tot<0`
+and `E_tot>0` for the same event is inconsistent. Claims about separately
+identified source factors carry no such logical conflict merely because their
+individual signs differ, and a claim about both source and total inherits the
+need for compatible total labels. This is an additional specification
+obligation on whichever claim is made.
 
 ## 4. Physical root contract and Theorem 1 — Positive-scale orientation invariance
 
@@ -282,7 +297,7 @@ RF's joint assembly, not a new definition of settlement. “Factor settlement”
 means decomposition of one total, not adding a second issue of each component
 on top of that total. For one registered actor, the authorized total entry is
 `E_tot`; for several actors, an additional allocation must sum to `E_tot`.
-SF does not alter this rule.
+An identified source contribution does not alter this rule.
 
 ### 5.1 Unique counting and locality
 
@@ -441,7 +456,7 @@ chosen, but those choices do not create physical ownership or allocation.
 §7. No unary requirement is added to the architecture. This result clarifies
 why W1's joint gradient cannot be split into independently priced source nodes.
 
-## 8. Theorem 5 — Orientation compatibility under residual factors
+## 8. Theorem 5 — Source and total orientation under residual factors
 
 **Assumptions.** Independently identified `φ_s` and a justified exact embedding
 `𝒱=φ_s+Ψ` on the same comparison domain. Let `E_rest=Ψ(z)−Ψ(z⁺)` and
@@ -458,30 +473,33 @@ M_{\rm tot}=sE_{\rm tot}=M_s+M_r.
 \]
 
 For every comparison in the certified domain the exact necessary and sufficient
-conditions for the three sign regimes are:
+conditions for the source contrast, for the complete action, and for both
+together are:
 
 \[
 \begin{array}{ll}
-\mathrm{SF}:&M_s>0,\\
-\mathrm{TA}:&M_s+M_r>0,\\
-\mathrm{BT}:&M_s>0\ \text{and}\ M_r>-M_s.
+\text{source:}&M_s>0,\\
+\text{complete action:}&M_s+M_r>0,\\
+\text{both:}&M_s>0\ \text{and}\ M_r>-M_s.
 \end{array}
 \tag{9}
 \]
 
-For TA without an identified additive factorization the equivalent criterion
-is directly `s[𝒱(z)−𝒱(z⁺)]>0`; TA does not require an artificial decomposition.
-When `M_s>0`, `|E_rest|<|E_s|` is sufficient for BT but not necessary.
+These are three statements about identified quantities, not three semantics.
+For the complete action without an identified additive factorization the
+equivalent criterion is directly `s[𝒱(z)−𝒱(z⁺)]>0`, which requires no
+artificial decomposition. When `M_s>0`, `|E_rest|<|E_s|` is sufficient for both
+to hold but not necessary.
 The sharper adverse-residual condition is
 `max(0,−M_r)<M_s`. If `M_r≥0`, any magnitude is permitted. Equality
 `M_r=−M_s` gives zero total and fails a strict requirement.
 
-**Proof.** Theorem 2 gives (8); the definitions of the regimes give (9).
+**Proof.** Theorem 2 gives (8); the definitions of the three statements give (9).
 Since `M_r≥−|E_rest|` and `M_s=|E_s|` when oriented correctly, the absolute
 bound ensures a positive sum. Only the negative part of `M_r` can reduce it,
 which proves the sharper statement. **QED.**
 
-### 8.1 SF and TA are incomparable; BT can be nonempty
+### 8.1 Source sign and total sign are incomparable; both can hold together
 
 The following are finite **mathematical countermodels**, not new physical
 source designs or certification claims. Fix the same factor identities and
@@ -491,31 +509,33 @@ and its reverse as restoration. Within each test action family include the
 listed transition and its reverse. No factor is redefined after selecting a
 sign, and no claim that lower stock is universally harmful is needed.
 
-| Test family: depletion endpoint comparison | `E_s` | `E_rest` | `E_tot` | Regime consequence for the action and its reverse |
+| Test family: depletion endpoint comparison | `E_s` | `E_rest` | `E_tot` | Sign outcome for the action and its reverse |
 |---|---:|---:|---:|---|
-| `(1,10)→(0,0)` | `−3` | `+10` | `+7` | SF holds; TA fails |
-| `(3,0)→(2,2)` | `+1` | `−2` | `−1` | TA holds; SF fails |
-| `(1,0)→(0,0)` | `−3` | `0` | `−3` | BT holds |
+| `(1,10)→(0,0)` | `−3` | `+10` | `+7` | source orientation satisfied; complete-action orientation not satisfied |
+| `(3,0)→(2,2)` | `+1` | `−2` | `−1` | complete-action orientation satisfied; source orientation not satisfied |
+| `(1,0)→(0,0)` | `−3` | `0` | `−3` | both satisfied |
 
 The reverse comparison negates every contrast and reverses the label, so each
 row tests both signs. These identities show that neither sign predicate implies
 the other even with an exact decomposition. Physical use additionally requires
 independent legitimacy of the chosen factors, labels and transitions; numerical
-examples do not supply those premises. The BT row demonstrates mathematical
+examples do not supply those premises. The third row demonstrates mathematical
 nonemptiness within the foundation's conditional-potential framework, not a
 new certified apparatus. W1 supplies the already-derived physical-model
 factor/total sign mismatch, with its separate embedding limitation (§14).
 
 **Removed residual condition.** The first row has a correctly oriented source
 but an adverse residual larger than its margin. Conversely, an oriented
-source with `M_s=1` and `M_r=100` satisfies BT although the absolute residual
-bound fails. A derivative sign at one state does not certify finite-action
+source with `M_s=1` and `M_r=100` satisfies both statements although the
+absolute residual bound fails. A derivative sign at one state does not certify finite-action
 orientation over an entire domain; the finite endpoint contrast is controlling.
 
-**EBU meaning and authority.** SF preserves the total actor settlement
-`E_tot`, potentially of a different sign. TA constrains total settlement without
-promising each source factor's sign. BT requires both and therefore restricts
-the admissible comparison family further. All preserve F's endpoint definition
+**EBU meaning and authority.** A source-orientation statement preserves the
+total actor settlement `E_tot`, which may carry a different sign. A
+complete-action orientation statement constrains that total without promising
+each source factor's sign. Asserting both restricts the admissible comparison
+family further. None of the three is an alternative settlement: the registered
+value is `E_tot` in every case. All preserve F's endpoint definition
 and RF's recursion/passive/ledger separation. None independently certifies a
 source or determines actor allocation.
 
@@ -535,8 +555,9 @@ m_{\rm tot}=\inf_{\omega\in\mathcal K}M_{\rm tot}(\omega)>0,
 \tag{10}
 \]
 
-using the relevant expression for SF, TA or both for BT. A useful BT sufficient
-condition is `m_s>0` and `sup_𝒦 max(0,−M_r)<m_s`. It can be conservative
+using the relevant expression for the source contrast, for the complete action,
+or for both. A useful sufficient condition for both is `m_s>0` and
+`sup_𝒦 max(0,−M_r)<m_s`. It can be conservative
 because the weakest source margin and worst residual may not occur together.
 The exact robust total test uses their **joint** sum on `𝒦`.
 
@@ -703,7 +724,7 @@ For infinite graphs no converse is asserted here.
 
 **EBU meaning and authority.** This is F §§12, 17–18 and RF §§10, 14 applied
 also to a source factor. It exposes inconsistent semantic labels without
-selecting SF, TA or BT or introducing actor-level conservation.
+selecting any orientation statement or introducing actor-level conservation.
 
 ## 11. Theorem 8 — A sharply sufficient source-factor embedding criterion
 
@@ -728,7 +749,7 @@ A wrong sign can defeat the third without making the physical scalar meaningless
 | C9 | Action/passive transitions and any shared/concurrent event boundary identified; no duplicate event and no passive actor issuance |
 | C10 | Actual affected spatial support and boundaries included, or omitted contrasts bounded; needed delays and memory retained |
 | C11 | Approximation, calibration, state-observation and numerical uncertainty separately bounded, with dependencies retained and qualification valid over the required horizon |
-| C12 | For any claimed SF/TA/BT orientation, the relevant exact or error-adjusted margins are positive throughout the declared uncertainty/action set; neutral cases separately specified |
+| C12 | For any claimed source or complete-action orientation, the relevant exact or error-adjusted margins are positive throughout the declared uncertainty/action set; neutral cases separately specified |
 
 **Definition.** An EBU-admissible source-factor embedding on a specified
 comparison domain is the data `(Z,Ω_s,root,φ_s,𝒱,Ψ,π,A,P)` together with
@@ -737,7 +758,8 @@ C1–C11. It is *exact* when the embedding and retained-state claims are exact;
 it is *bounded* when declared embedding/evaluation error sets replace exact
 values. Approximate reduced dynamics additionally require RF's separately
 justified horizon-valid closure bounds. An orientation-certified
-embedding additionally satisfies C12 for the chosen regime. These are
+embedding additionally satisfies C12 for the sign statement actually claimed.
+These are
 factor-specific admission conditions within the existing conditional physical
 framework, not a change to frozen authority.
 
@@ -752,8 +774,9 @@ them or prevent their accumulation.
 Where identification remains set-valued, the identities apply to each admitted
 physical model; a unique point value is not asserted across that set. C12
 supplies precisely the additional sign certification selected in (9).
-Thus each regime is compatible with the cleared architecture under these
-conditions, without changing its endpoint definition or passive/actor boundary.
+Thus each of the three sign statements is compatible with the cleared
+architecture under these conditions, without changing its endpoint definition
+or passive/actor boundary.
 
 **Proof.** C1–C4 supply the physical and mathematical objects; their physical
 truth is a premise, not a conclusion of calculus. Theorems 1 and 10 give a
@@ -865,8 +888,9 @@ one sufficient certificate is
 
 Here `𝒦` includes states, actions, outcomes and joint uncertainty. Pointwise
 strict positivity of the bracket suffices for pointwise sign stability even
-if its infimum is zero. BT requires both the factor and total bounds; an error
-bound for the total does not bound the accuracy of an arbitrary component.
+if its infimum is zero. Claiming both orientations requires the factor and the
+total bounds; an error bound for the total does not bound the accuracy of an
+arbitrary component.
 Embedding error (15) alone does not prove accuracy of the factor's constitutive
 physical model.
 
@@ -1059,13 +1083,13 @@ form, not every coupled embedding.
 |---|---|
 | Is the scoped canonical water orientation possible on the restricted domain? | Yes, as a scoped physical-model coordinate |
 | Is a physically identified water-factor embedding thereby certified? | No — possible in principle / not certified |
-| Does the selected complete potential satisfy TA for withdrawal? | No |
-| Does that selected potential satisfy BT? | No, because its total sign already fails |
+| Does the selected complete potential carry the requested orientation for withdrawal? | No |
+| Do the source contrast and the complete action carry it together? | No, because the total sign already fails |
 | Does positive root rescaling cure the total sign? | No, by Theorem 1 |
 | Does this invalidate the thermal root? | No; scale, embedding and application orientation are separate |
 
 Thus W1 is a counterexample to inferring total orientation from a favorable
-scoped diagnostic. It is not a certified example of an SF-admitted embedded
+scoped diagnostic. It is not a certified example of an admitted embedded
 water factor. The exact-factor countermodels in §8 independently establish
 logical incomparability of the two sign requirements. This report leaves W1's
 arithmetic and narrowed refusal unchanged.
@@ -1260,7 +1284,7 @@ must align these declarations without equating their different objects.
 | 2. Exact decomposition / total invariance | Proved for finite exact factorization | Physical legitimacy and unique counting are separate premises |
 | 3. Identifiability | Necessary and sufficient contrast criterion proved | Permitted physical representation class must be independently specified |
 | 4. Nonseparability | Both directions proved on a product domain | Connectedness alone does not supply the converse |
-| 5. Residual orientation | Exact SF/TA/BT tests and useful sufficient bounds proved | Strict pointwise orientation differs from a uniform margin |
+| 5. Residual orientation | Exact source, complete-action and simultaneous tests and useful sufficient bounds proved | Strict pointwise orientation differs from a uniform margin |
 | 6. Recursive factor sufficiency | Proved under descent; stochastic joint-law extension stated and justified | Static formula or joint reward alone does not retain a source contrast |
 | 7. Telescoping | Factor and joint action/passive identities proved | Passive changes and full state/context closure cannot be omitted |
 | 8. Embedding criterion | Sharply sufficient conditional composition proved | Physical identification is a premise; no new actual source is admitted |
@@ -1329,11 +1353,11 @@ a self-reference problem.
 | Brief sections | Report coverage |
 |---|---|
 | 0–8: scope, objects, root, embedding, orientation domain | §§1–4, 11, 14 |
-| 9–12: SF/TA/BT and margins | §§8, 12, 18 |
+| 9–12: source and total sign conditions and margins | §§8, 12, 18 |
 | 13–25: factors, gauges, interactions, criterion, errors | §§5–8, 11–12 |
 | 26–31: recursive state, passive change, telescoping, loops | §§9–10 |
 | 32–35: cross-field/root/orientation transport and W1 | §§13–14 |
-| 36–38: programme regimes and institutional boundary | §§1, 18 |
+| 36–38: orientation statements and institutional boundary | §§1, 18 |
 | 39–47: existing mathematics interfaces | §15 |
 | 48–49: ten theorems and counterexamples | §§4–13, 16.1–16.2 |
 | 50–55: decision packet, later theorem, foundation, delivery | §§17–18 and completion response |
@@ -1365,11 +1389,10 @@ remaining composition obligations are:
 2. **Factor:** place independently identified exact or bounded source,
    interaction, reservoir and boundary factors on one common full-state domain;
    align gauges and provenance, and carry the residual explicitly.
-3. **Orientation:** incorporate whichever SF/TA/BT predicate an application
-   claim invokes, or retain separately parameterized branches; establish label
-   compatibility and domain-wise exact or error-adjusted margins for each
-   claimed branch. Do not decide by algebraic refactorization or assume
-   uniform positivity from pointwise signs.
+3. **Orientation:** for any sign statement a later application actually
+   asserts, establish label compatibility and domain-wise exact or
+   error-adjusted margins for the quantity it names. Do not decide by algebraic
+   refactorization or assume uniform positivity from pointwise signs.
 4. **Joint potential:** prove compatibility of the assembled physical `𝒱`
    and complete endpoint settlement under the same boundaries and units. A
    sum of individually calibrated quantities is not enough.
@@ -1411,73 +1434,79 @@ cleared component theorems should be invoked, not reproved for novelty. This
 checklist authorizes no implementation, experiment, W2 design or repair of
 T/U/V, and supplies none of their missing physical certificates.
 
-## 18. APPLICATION-SPECIFIC ORIENTATION CERTIFICATION OPTIONS
+## 18. Orientation relations and diagnostic use
 
-**All three regimes are CONDITIONALLY COHERENT.** None conflicts with the
-foundation's endpoint accounting or the cleared recursive-field theorem.
-The conditions include an admitted physical potential, valid state and action
-scope, appropriate factor identification where used, and consistent labels.
-No unconditional guarantee for arbitrary physical sources follows.
+This section records what source and total signs mean, that neither determines
+the other, how uncertainty affects a sign claim, and that none of them modifies
+`E_tot`. It contains no decision to be taken and no classification to be
+selected. EBU's valuation semantics is the unified hierarchy of §1; the
+statements below are properties of quantities that hierarchy has already
+defined.
 
-The table below is not a menu from which the programme must select one global
-regime. Valuation operates without any of them. It answers a narrower question:
-if an application asserts this type of orientation, what additional conditions
-must be certified? Different applications may invoke different predicates when
-they make different physical orientation claims, provided each claim is
-prospectively declared and certified on its own domain. Selecting a predicate
-after a result is seen is not permitted.
+Each statement below is **conditional** in the ordinary mathematical sense:
+it holds where its premises hold. None conflicts with the foundation's endpoint
+accounting or the cleared recursive-field theorem. The premises include an
+admitted physical potential, valid state and action scope, appropriate factor
+identification where used, and consistent labels. No unconditional guarantee
+for arbitrary physical sources follows.
 
-| Regime | Meaning / mathematical strength | Actor settlement | W1 disposition | Advantage | Scientific risk | Additional theorem obligations |
+| Statement about an already defined quantity | Meaning / mathematical strength | Actor settlement | W1 disposition | What it is good for | Scientific risk | What must additionally be established |
 |---|---|---|---|---|---|---|
-| **SF — CONDITIONAL** | `M_s>0`; generally incomparable with TA | Complete `E_tot`, which may have another sign | Favorable scoped water sign; actual embedding remains possible in principle / not certified | Preserves an explicit source-specific physical diagnostic alongside complete accounting | Mistaking that diagnostic for total value or an extra issue; arbitrary factor identity | Identify and embed the factor; establish its recursive sufficiency and uncertainty-adjusted source sign |
-| **TA — CONDITIONAL** | `M_tot>0`; generally incomparable with SF | Complete `E_tot`, constrained to the requested total sign | Selected complete potential fails withdrawal class | Makes the sign condition apply directly to the registered complete action | Hiding adverse source changes behind other terms; incompatible labels across sources | Specify one consistent total label and prove its full-domain total margin; source-sign claim needs a separate theorem |
-| **BT — CONDITIONAL** | `M_s>0` and `M_tot>0`; intersection, strictly stronger than either alone in general | Complete `E_tot`; source contrast remains a component/diagnostic | Selected model fails total condition; water embedding remains uncertified | Requires agreement between the identified source and complete action | May exclude physically valid actions because adverse residuals defeat agreement; cannot be repaired by sign engineering | All source-identification/recursion obligations plus exact or robust residual-margin test and compatible total labels |
+| **Identified source contrast carries the declared sign** | `M_s>0`; does not determine the total sign | Complete `E_tot`, which may have another sign | Favorable scoped water sign; actual embedding remains possible in principle / not certified | Preserves an explicit source-specific physical diagnostic alongside complete accounting | Mistaking that diagnostic for total value or an extra issue; arbitrary factor identity | Identify and embed the factor; establish its recursive sufficiency and uncertainty-adjusted source sign |
+| **Complete action value carries the declared sign** | `M_tot>0`; does not determine the source sign | Complete `E_tot`, constrained to the requested total sign | Selected complete potential fails withdrawal class | Makes the sign condition apply directly to the registered complete action | Hiding adverse source changes behind other terms; incompatible labels across sources | Specify one consistent total label and prove its full-domain total margin; a source-sign claim needs a separate theorem |
+| **Both of the above hold at once** | `M_s>0` and `M_tot>0`; strictly stronger than either alone in general | Complete `E_tot`; source contrast remains a component/diagnostic | Selected model fails the total condition; water embedding remains uncertified | Requires agreement between the identified source and complete action | May exclude physically valid actions because adverse residuals defeat agreement; cannot be repaired by sign engineering | All source-identification/recursion obligations plus exact or robust residual-margin test and compatible total labels |
 
-### 18.1 Consequences common to the three predicates
+The third row is simply the conjunction of the first two. It has no separate
+name, no separate status and no separate settlement.
 
-**Foundation and recursive compatibility.** SF changes neither total settlement
-nor the physical update. TA restricts the admitted labelled action family by
-its complete sign. BT adds both predicates. All can retain current sufficient
-state, coupled factors, passive dynamics and fixed historical entries. A
-regime cannot promise a sign on a domain where its condition fails. This is a
-refusal of that model/domain under that regime, not automatically a defect in
-the endpoint foundation or thermal denomination.
+### 18.1 Consequences common to the three statements
+
+**Foundation and recursive compatibility.** A source-sign statement changes
+neither total settlement nor the physical update. A total-sign statement
+restricts the admitted labelled action family by its complete sign. Asserting
+both imposes both. All can retain current sufficient state, coupled factors,
+passive dynamics and fixed historical entries. No such statement can promise a
+sign on a domain where its condition fails. That is a refusal of that claim on
+that model and domain, not automatically a defect in the endpoint foundation or
+thermal denomination.
 
 **Downstream apple-chain accounting.** At every source, production, transport
 and shop event, evaluate the actual incremental complete physical transition
 from current sufficient state, including material/energy ports, reservoirs and
-any memory. Do not sum inherited historical prices into a new value. Under SF,
-a source-oriented decrement can coexist with a differently signed total;
-under TA, a favorable total does not certify every source; under BT both must
-be established on the claimed stage/action domain. None proves that an entire
-apple chain satisfies the chosen regime, has a small closed observable state
-or generates welfare. A later application must supply those physical premises.
+any memory. Do not sum inherited historical prices into a new value. A
+source-oriented decrement can coexist with a differently signed total; a
+favorable total does not certify every source; and if both are asserted, both
+must be established on the claimed stage/action domain. None proves that an
+entire apple chain satisfies any claimed sign statement, has a small closed
+observable state or generates welfare. A later application must supply those physical premises.
 The apple is not assigned a fundamental source potential just by naming it.
 
-**Double counting and allocation.** In all three regimes, the factor ledger
-explains the one complete action contrast. It is not additional settlement.
+**Double counting and allocation.** In every case the factor ledger explains
+the one complete action contrast. It is not additional settlement.
 A changed interaction is included once in the complete potential; unchanged
 inherited contributions cancel. Source attribution of an interaction requires
 an explicit convention if a source-bundled value is requested. One registered
 actor can receive the complete entry; multiple actor entries require an
 allocation that closes to that total under the foundation's stated convention.
-The regime itself provides no ownership, fairness or unique allocation rule.
+A sign statement provides no ownership, fairness or unique allocation rule.
 
-**Falsification conditions.** A comparison with `M_s≤0` refutes a strict SF
-claim; `M_tot≤0` refutes a strict TA claim; either refutes BT. A single admitted
+**Falsification conditions.** A comparison with `M_s≤0` refutes a strict
+source-sign claim; `M_tot≤0` refutes a strict total-sign claim; either refutes
+a claim that both hold. A single admitted
 uncertainty/outcome case suffices against an all-case guarantee. Unknown or
 unbounded uncertainty makes a claim uncertified rather than supplying a
 counterexample by itself. Failure of factor identification, embedding or state
 sufficiency defeats the respective prerequisite regardless of nominal signs.
 Positive calibration cannot rescue any demonstrated wrong sign.
 
-**Mathematical narrowing of an invoked orientation claim.** TA is not a
-stronger version of SF. BT is the conjunction. Requiring contradictory total
-labels for one event is inconsistent, and a strict-label cycle is impossible
-for a scalar potential. Within those constraints, mathematics does not select
-which predicate a claim should assert. No global selection is required for
-valuation to operate; the declaration belongs to each claim that asserts an
-orientation property, and none is made here.
+**Mathematical narrowing of an orientation claim.** A total-sign statement is
+not a stronger version of a source-sign statement; the two are incomparable,
+and asserting both is their conjunction. Requiring contradictory total labels
+for one event is inconsistent, and a strict-label cycle is impossible for a
+scalar potential. Within those constraints, mathematics does not settle which
+sign statement a given physical claim should assert; that is decided by the
+physics the claim is about and the evidence offered for it. Valuation operates
+without any such statement, and none is asserted here.
 
 ### 18.2 Foundation impact and final disposition
 
@@ -1493,13 +1522,13 @@ WITH THE CLEARED RECURSIVE EBU ARCHITECTURE UNDER EXPLICIT CONDITIONS.**
 ```text
 STATUS: NON-CONTROLLING THEORETICAL CANDIDATE
 AUDIT STATUS: PENDING INDEPENDENT THEOREM AUDIT
-SF REGIME: CONDITIONAL
-TA REGIME: CONDITIONAL
-BT REGIME: CONDITIONAL
+SOURCE-SIGN STATEMENT: CONDITIONAL MATHEMATICAL PROPERTY
+TOTAL-SIGN STATEMENT: CONDITIONAL MATHEMATICAL PROPERTY
+BOTH TOGETHER: THEIR CONJUNCTION; NO SEPARATE STATUS
 FOUNDATION: NO CHANGE
-GLOBAL SF / TA / BT DECISION: NOT REQUIRED
-APPLICATION-SPECIFIC ORIENTATION DECISION:
-REQUIRED ONLY WHEN AN SF / TA / BT CLAIM IS INVOKED
+ORIENTATION-REGIME TAXONOMY: NONE
+NO GLOBAL ORIENTATION-REGIME DECISION EXISTS; SPECIFIC SIGN STATEMENTS ARE
+ORDINARY SCIENTIFIC CLAIMS ABOUT ALREADY DEFINED QUANTITIES
 W1 ADMISSION OR ARITHMETIC MODIFIED: NO
 LATER MASTER UNIFICATION THEOREM EXECUTED: NO
 AUTHORITY MODIFIED: NO

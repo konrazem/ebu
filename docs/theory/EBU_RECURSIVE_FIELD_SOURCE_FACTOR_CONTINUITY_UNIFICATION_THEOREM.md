@@ -7,8 +7,8 @@ STATUS: NON-CONTROLLING MASTER THEOREM CANDIDATE
 AUDIT STATUS: PENDING INDEPENDENT THEOREM AUDIT
 MASTER CONCLUSION: A — COMPATIBLE UNDER EXPLICIT LAYERED ASSUMPTIONS
 FOUNDATION IMPACT: NO FOUNDATION CHANGE REQUIRED
-GLOBAL SF / TA / BT CHOICE: NOT REQUIRED
-ORIENTATION BRANCH SELECTED: NONE
+ORIENTATION-REGIME TAXONOMY: NONE
+ORIENTATION: OPTIONAL DECLARED SIGN PROPERTY, NOT A BRANCH PARAMETER
 ```
 
 ## 1. Main conclusion
@@ -21,7 +21,23 @@ on a complete current state, with declared registered-action and passive
 updates. Endpoint subtraction, physically identified factor contributions,
 recursive sufficient-state valuation, path calculus, finite coalition
 interactions and action/passive telescoping fit that object without changing
-its definition. Most of these identities do not depend on choosing SF, TA or BT.
+its definition. None of these identities depends on asserting any sign
+property of a source contrast or of the complete action.
+
+**Complete physical response first; decomposition second.** This is the
+ordering the coalition results already use: the complete endpoint value is
+taken first and the Möbius decomposition afterward. For a multidimensional
+field the joint endpoint and directional-action values come first, and
+coordinate, factor and source diagnostics follow. Exact factorized computation
+remains permitted; the ordering is one of semantic authority, not of
+arithmetic. A decomposition explains one value and does not compete with it.
+
+**One settlement channel.** There is one complete finite action EBU value,
+`E=V_pre−V_post`. A factor contrast is not another EBU settlement. A coordinate
+differential is not another EBU settlement. A local action slope is not another
+EBU settlement. A Möbius coefficient is not another EBU settlement. A
+source-specific sign is not another valuation mode. Each of these explains,
+diagnoses or bounds the one value; none competes with it.
 
 The hierarchy is **not a chain of universal implications**. Static marginal
 potentials, Gaussian/Schur reduction, supplied OU dynamics, canonical density
@@ -83,10 +99,10 @@ source. The scientific-record directory is absent on this checkout.
 | [S — Equilibrium thermodynamic anchor](EBU_EQUILIBRIUM_THERMODYNAMIC_ANCHOR.md) | `5b92fdf5749ee05db63f32320e2b34a10afa2c98ceaf2e7a996f78b2df60505f` |
 | [RF — Recursive field and sufficiency](EBU_FIELD_RELATION_AND_RECURSIVE_SUFFICIENCY.md) | `685b90eb6acef40b5a8277a9652ef3dceaf4017f91c47df3853a75e2a7f139e3` |
 | [W1 — Narrowed water verdict](EBU_SOURCE_FIELD_W1_WATER_ADMISSION.md) | `382df7347f162006450c60cea44e00d6e8b54115d8b0182ca6dee450752611e7` |
-| [SF — Source-factor embedding and orientation](EBU_SOURCE_FACTOR_EMBEDDING_AND_ORIENTATION_THEOREM.md) | `547de25e1c847bca29c894fbc68def76162ea4b27d1b21dfae54670ce7124f3e` |
+| [SFE — Source-factor embedding and orientation](EBU_SOURCE_FACTOR_EMBEDDING_AND_ORIENTATION_THEOREM.md), cited below as SFE | `547de25e1c847bca29c894fbc68def76162ea4b27d1b21dfae54670ce7124f3e` |
 
 Frozen foundation has precedence. The present brief supplies independent
-clearance of the conditional predecessor results, including SF with conclusion
+clearance of the conditional predecessor results, including SFE with conclusion
 A and no foundation change. Their historical pending-audit headers remain
 unchanged; this report does not claim to have performed those audits. The new
 master candidate is itself pending independent audit.
@@ -101,7 +117,7 @@ Documentary issues are recorded separately from mathematical conflicts:
   context. As MG already clarifies, with nonlinear response a higher-order
   coefficient diagnoses the composite response, not the potential alone.
 - Old next-stage labels and audit-status text confer no implementation or
-  experimental permission. SF §17's future checklist is the present task's
+  experimental permission. SFE §17's future checklist is the present task's
   input, not a claim that this work had already been done.
 
 No documentary issue is silently repaired in another file. No novelty claim is
@@ -169,9 +185,9 @@ the physical premises in A0–A4.
 | **A0 — Root** | Independently justified quantity-kind/constitutive bridges; positive affine same-kind calibrations on matching comparisons; common root normalization; consistent loop slopes and aligned gauges where levels are compared |
 | **A1 — State/domain** | Declared complete state, supports, boundaries, context and comparison domain; required endpoints remain admitted; same physical versions or valid bridges |
 | **A2 — Potential** | Finite single-valued joint `𝒱` on compared states; no regularity, equilibrium or separability implied |
-| **A3 — Factor identity** | Independent physical meaning, fixed supports and provenance; unique physical contribution/event counting; only justified gauges or declared identification sets; SF criterion C1–C11 where a source certificate is claimed |
+| **A3 — Factor identity** | Independent physical meaning, fixed supports and provenance; unique physical contribution/event counting; only justified gauges or declared identification sets; SFE criterion C1–C11 where a source certificate is claimed |
 | **A4e / A4b — Embedding** | Respectively finite exact identity (1), or `𝒱=b+Σφ_α+r_emb` with declared residual bounds; no arbitrary subtraction presented as physical certification |
-| **A5(r) — Orientation** | Fixed physical labels and admitted comparison set, with `r∈{SF,TA,BT}` and its exact or robust sign predicate; consistent total labels; neutral classes explicitly separate |
+| **A5 — Declared orientation property** | Optional. If a theorem or application asserts a specific physical sign for an identified contrast or for the complete action, then its physical label, comparison domain, uncertainty scope and required inequality are declared independently of the computed result; consistent total labels; neutral classes explicitly separate |
 | **A6 — Events** | Well-defined action/passive maps or kernels; available actions and new inputs declared; full event endpoints and any concurrent evolution included; no passive actor issue automatically |
 | **A7u — Update descent** | Availability is constant on fibers; `πA_a=Ā_aπ`, `πP=P̄π`, with conditioned inputs retained |
 | **A7r — Reward descent** | In addition to A7u, the joint action drop is fiber-constant; factor/passive drops only if separately included |
@@ -235,7 +251,7 @@ U2, U4, U11 and U13 apply under their explicitly added modules and all use the
 same drops. This is compatibility by shared objects, not an inference of the
 additional modules from A2. **QED.**
 
-**Dependencies.** F §§3, 12–18; RF §8; SF Theorems 1–2, 6–7.
+**Dependencies.** F §§3, 12–18; RF §8; SFE Theorems 1–2, 6–7.
 
 **Removed-assumption witness.** Retaining only `𝒱(x)=x²/2` identifies `x=1`
 and `x=−1`, but the same action `x→x+1` has drops `−3/2` and `+1/2`.
@@ -250,7 +266,7 @@ accounting architecture, not an economic valuation or a physical source certific
 
 **Assumptions.** A1+A2+A3+A4e+A6. Recursive computation from a reduced state
 additionally requires A7p with factor descent or A7r/A7k for each required
-factor reward. Local approximation adds A16. Orientation adds A5(r).
+factor reward. Local approximation adds A16. A declared sign property adds A5.
 
 **Statement.** Define factor action/passive drops at the actual endpoints.
 Finite exact summation gives
@@ -284,18 +300,24 @@ The factor-shift formula is `E_s′−E_s=g(z)−g(z̃)`; vanishing on edges is
 equivalent to component constancy by propagation along comparison walks.
 Unchanged terms are zero; the triangle inequality gives the omitted bound.
 The residual statement follows by the same subtraction. These invoke and
-compose SF Theorems 2–3, 7 and 9 without changing them. **QED.**
+compose SFE Theorems 2–3, 7 and 9 without changing them. **QED.**
 
-**Orientation specialization, assumptions A5(r).** With identified source and
+**Orientation specialization, assumption A5.** With identified source and
 exact remainder, `E=E_s+E_rest`, put `M_s=sE_s`, `M_tot=sE` for fixed
-physical labels `s∈{−1,+1}`. Then
+physical labels `s∈{−1,+1}`, so that `M_tot=M_s+sE_rest`. Then
 
 \[
-\mathrm{SF}:M_s>0,\qquad
-\mathrm{TA}:M_{\rm tot}>0,\qquad
-\mathrm{BT}:M_s>0\ \text{and}\ sE_{\rm rest}>-M_s.
+\text{source:}\ M_s>0,\qquad
+\text{complete action:}\ M_{\rm tot}>0,\qquad
+\text{both:}\ M_s>0\ \text{and}\ sE_{\rm rest}>-M_s.
 \tag{4}
 \]
+
+`M_s>0` means the identified source contrast has the declared orientation.
+`M_tot>0` means the complete action value has it. Both may be true, one may be
+true, or neither may be true; the third line of (4) is simply the condition for
+the two to hold together and has no separate name or status. None of them
+changes `E`.
 
 This is substitution into the sign definitions. A5 is not required for (3),
 locality, path calculus, reduction, Möbius, canonical identities or telescoping.
@@ -309,11 +331,12 @@ bounded errors, subtract the appropriate error budget before certifying a sign.
 `0→1` value. Redistributing `x=(−x)+2x` changes the first factor's sign while
 preserving the total. For fixed `φ_s(w)=(w−2)²`, `Ψ(y)=y`, a depletion
 `(1,10)→(0,0)` has `(E_s,E_rest,E)=(−3,10,7)`; another admitted comparison
-`(3,0)→(2,2)` has `(1,−2,−1)`. Thus SF and TA are incomparable even under
-exact algebraic embedding; physical certification remains an additional premise.
-These are SF's cleared countermodels, not new source designs.
+`(3,0)→(2,2)` has `(1,−2,−1)`. Thus a source sign does not determine the total
+sign and a total sign does not determine the source sign, even under exact
+algebraic embedding; physical certification remains an additional premise.
+These are SFE's cleared countermodels, not new source designs.
 
-**Dependencies and EBU interpretation.** F §13; RF §§7, 11, 14; SF Theorems
+**Dependencies and EBU interpretation.** F §13; RF §§7, 11, 14; SFE Theorems
 2–5, 7–9. Overlapping variables do not mean duplicated physics. The factor
 ledger explains one total; it is not issuance on top of that total. A source
 sign cannot replace complete action settlement.
@@ -343,7 +366,7 @@ walks. Contrast consistency alone requires slope product one.
 **Proof.** Subtract at the two endpoints. Affine composition gives the two
 chain formulas. Any two paths differ by a closed walk using inverses, so
 identity around all walks is necessary and sufficient for path agreement.
-This is SF Theorems 1 and 10 / RF §6. **QED.**
+This is SFE Theorems 1 and 10 / RF §6. **QED.**
 
 If scale/reference varies with physical context, the difference is instead
 `c_pre V_pre−c_post V_post+d_pre−d_post`; it cannot be replaced by one fixed
@@ -357,7 +380,7 @@ canonical prediction one is for the declared root-normalized potential.
 numbers `a_i` and loop slopes `a_j/a_i` closes every slope loop without proving
 any physical traceability. Context-dependent offsets do not cancel generally.
 
-**Dependencies and EBU interpretation.** RF §§3–6; SF Theorems 1, 10; S §7.
+**Dependencies and EBU interpretation.** RF §§3–6; SFE Theorems 1, 10; S §7.
 Calibration supplies a ruler, not factor physics or an orientation policy.
 
 ## 7. U4 — Path, extended-field and integrability compatibility
@@ -441,7 +464,7 @@ the drop is `−4`, the context part `−7/2`, and the full drop `−15/2`.
 Omitting context fails even with a valid smooth potential.
 
 **Dependencies and EBU interpretation.** F §3 and §17; R §§2–7; RF §7.2;
-SF §15.1. These are one potential's calculus and existence conditions. They
+SFE §15.1. These are one potential's calculus and existence conditions. They
 do not convert all physical changes into actor settlements.
 
 ## 8. U5 — Exact recursive reduction and finite-horizon approximation
@@ -497,7 +520,7 @@ and passive identity. The reduced update is identity and the reward is always
 potential. Separately, `φ_s=xh`, `Ψ=−xh`, `𝒱=0` with action `x→x+1` has a
 closed joint reward under `π(x,h)=x`, while `E_s=−h` does not descend.
 
-**Dependencies and EBU interpretation.** RF §8 and SF Theorem 6. A reduced
+**Dependencies and EBU interpretation.** RF §8 and SFE Theorem 6. A reduced
 model may be adequate for total action rewards but inadequate for source
 certification or passive accounting. Each required output must be named.
 
@@ -573,9 +596,9 @@ does not give a small long-horizon error. A small potential residual also says
 nothing about update defects. This is symbolic arithmetic, not an executed
 trajectory.
 
-**Dependencies and EBU interpretation.** RF §8.5; R §16; SF Theorem 9. The
+**Dependencies and EBU interpretation.** RF §8.5; R §16; SFE Theorem 9. The
 new composition explicitly separates action and passive error propagation.
-It closes the mathematical interface left conditional in SF without claiming
+It closes the mathematical interface left conditional in SFE without claiming
 that any real apparatus satisfies the required bounds.
 
 ## 9. U6 — Static marginalization and valuation noncommutation
@@ -655,7 +678,7 @@ gives `𝔐_{b/c}[cV+d]=c𝔐_b[V]+d`. Holding the exponent coefficient fixed
 while rescaling `V` generally fails this relation. This is U3's ruler rule
 inside the statistical operator, not permission to rescale physical factors.
 
-**Dependencies and EBU interpretation.** S §12.3; RF §§5.3, 8; SF §§12,
+**Dependencies and EBU interpretation.** S §12.3; RF §§5.3, 8; SFE §§12,
 15.2. The new residual criterion identifies exactly what must be proved before
 a marginal endpoint difference can replace a detailed physical settlement.
 
@@ -748,7 +771,7 @@ integration in different orders gives the same final marginal by Tonelli;
 intermediate factor supports can differ. Independent ad hoc conditional
 measures need not represent one joint measure and confer no such guarantee.
 
-**Dependencies and EBU interpretation.** F §13; S §12.3; SF Theorems 2–4
+**Dependencies and EBU interpretation.** F §13; S §12.3; SFE Theorems 2–4
 and the static-reduction boundary. This is standard variable elimination
 expressed with EBU factor provenance. Locality must be recomputed after
 elimination. A generated effective factor is not automatically an independently
@@ -873,7 +896,7 @@ State-dependent `H_yy(x)` generates a retained `log det` term, generally destroy
 quadratic closure. A Schur effective potential has no automatic source identity,
 even when its algebra is exact.
 
-**Dependencies and EBU interpretation.** F §4; B §§5, 7; S §§11–12; SF
+**Dependencies and EBU interpretation.** F §4; B §§5, 7; S §§11–12; SFE
 §15.2. U8 supplies an exact test of U6/U7, with induced locality and interaction
 changes visible rather than hidden inside the word “reduction.”
 
@@ -944,7 +967,7 @@ quantified approximation is needed. This is a restriction on that realization
 class, not a theorem excluding every nonlinear representation. “Current state”
 may be function-valued; no small finite observable state is universally proved.
 
-**Dependencies and EBU interpretation.** RF §§8–9; SF Theorem 6. Retaining
+**Dependencies and EBU interpretation.** RF §§8–9; SFE Theorem 6. Retaining
 physical memory is consistent with no replay of historical prices. An effective
 potential alone cannot authorize a recursively priced field.
 
@@ -1054,7 +1077,7 @@ well defined, but applying U4's ordinary piecewise smooth integral to a
 Brownian realization is invalid. The statistical/dynamic branch has its own
 calculus rather than contradicting the classical one.
 
-**Dependencies and EBU interpretation.** S §§11, 15; RF §§8–9; SF §15.3.
+**Dependencies and EBU interpretation.** S §§11, 15; RF §§8–9; SFE §15.3.
 OU is an optional supplied realization. The invariant density, current,
 projection and reward-sufficiency tests have separate jobs. No dynamics is
 adopted into frozen EBU by this corollary.
@@ -1163,7 +1186,7 @@ With `𝒱=x²/2`, the complete drops are `−15/2` and `−4`, respectively.
 Each ordering telescopes correctly; no one order-independent coalition table
 has been supplied. A missing coalition corner is undefined, never zero-filled.
 
-**Dependencies and EBU interpretation.** MG §§3–8, 14–18, 22–26; SF §15.4;
+**Dependencies and EBU interpretation.** MG §§3–8, 14–18, 22–26; SFE §15.4;
 U6–U8. The unification connects recursive physical response to interaction
 analysis while preserving the separation between physical factors, coalition
 coefficients and actor/source allocation.
@@ -1297,7 +1320,7 @@ breaks the supplied inference. The result applies neither to every registered
 action nor to every individual source factor. A canonical density alone does
 not establish P4, as the rotating-current witness shows.
 
-**Dependencies and EBU interpretation.** R §§9–15; S §§4–20; SF §15.5.
+**Dependencies and EBU interpretation.** R §§9–15; S §§4–20; SFE §15.5.
 The canonical branch calibrates a scoped physical/statistical relation. It
 neither turns every field into a Gaussian nor supplies a social sign rule.
 
@@ -1307,7 +1330,7 @@ neither turns every field into a Gaussian nor supplies a social sign rule.
 sum version; A17 for ledger identities; A15 separately for carrier balances.
 The same potential/version and actual adjacent endpoints are used throughout,
 or a justified extended potential explicitly incorporates changing context.
-No differentiability, equilibrium, Gaussianity, sign regime or reduction is
+No differentiability, equilibrium, Gaussianity, sign statement or reduction is
 required for the endpoint identity.
 
 **Statement.** The central recursive spine is
@@ -1386,7 +1409,7 @@ There is no conversion `joules = kilograms = EBU`, and no proof that EBU is
 itself a carrier merely because it telescopes.
 
 **Dependencies and EBU interpretation.** F §§12, 17–18; RF §§10, 14;
-SF Theorem 7. The master identity keeps passive evolution visible while
+SFE Theorem 7. The master identity keeps passive evolution visible while
 preserving historical actor entries and physical carrier distinctions.
 
 ## 17. U14 — Full hierarchy compatibility theorem
@@ -1408,7 +1431,7 @@ hold exactly under their listed additional assumptions:
 | Activated branch | Additional modules / exact compatibility test |
 |---|---|
 | Fixed/extended path | A8d; for reconstruction, A8i plus zero comparison periods |
-| SF, TA or BT | A5(r), with its independently identified source/total margin; all core identities unchanged |
+| Declared orientation property | A5, with the independently identified source or total margin it names; optional physical diagnostic or assertion on an already defined contrast or complete action value; does not alter valuation and leaves all core identities unchanged |
 | Static marginal comparison | A9; equality with detailed settlement iff U6's residual is invariant on the comparison edges |
 | Factor survival under marginalization | A9b for blockwise survival; otherwise use U7's partition-ratio test or merged factors |
 | Gaussian/Schur | A9+A10g for the integral; A10q alone for finite polynomial endpoint identity; retain determinant/context terms |
@@ -1556,7 +1579,7 @@ flowchart TD
     CORR --> MASTER
     COV --> MASTER
     ENT --> MASTER
-    SIGN["A5: SF / TA / BT admission parameter"] --> MASTER
+    SIGN["A5: declared orientation property (optional)"] --> MASTER
     ERR["A16: U5b error and horizon bounds"] --> MASTER
     CARRIER["A15: independent physical carrier balances"] --> MASTER
 ```
@@ -1567,7 +1590,7 @@ flowchart TD
 | Root traceability across fields | **NECESSARY FOR THE DECLARED RECURSIVE FIELD ARCHITECTURE'S COMMON DENOMINATION**, not for bare subtraction algebra |
 | State/update/reward sufficiency | **NECESSARY FOR EXACT RECURSIVE USE OF A CHOSEN REDUCED STATE**; potential descent is a **SUFFICIENT SPECIAL CASE** |
 | Identified source factors, embedding, unique counting | **NECESSARY ONLY FOR A DECLARED SOURCE CERTIFICATE**; an un-factorized joint potential still has endpoint values |
-| SF / TA / BT signs | **NECESSARY ONLY FOR THE CHOSEN ORIENTATION CERTIFICATE** |
+| Source or complete-action sign statements | **NECESSARY ONLY FOR A SIGN CLAIM THAT IS ACTUALLY ASSERTED**; valuation, recursion and all accounting identities hold without any of them |
 | Path smoothness | **NECESSARY FOR THE STATED CLASSICAL CALCULUS BRANCH**, not for finite endpoint differences |
 | Conditional block marginalization | **SUFFICIENT SPECIAL CASE** of exact factor survival |
 | Quadratic finite-step algebra | **SUFFICIENT SPECIAL CASE** of finite endpoint valuation |
@@ -1596,7 +1619,7 @@ that does not erase S's distinction between a density and reversible dynamics.
 | X6 | Quadratic potential bounds Möbius order for arbitrary response | `z_S=|S|²`, `𝒱=z²/2`, third coefficient `−18`; U11 |
 | X7 | Interior `K=H` implies inverse covariance | Truncated Gaussian: `Var=1−2e^{-1/2}/𝒵<1`; U12 |
 | X8 | Stationary Gaussian density implies reversibility | Rotating OU: `Σ=H=I`, nonzero `j=(-y,x)p`; U10 |
-| X9 | Favorable source sign implies favorable total sign | Cleared SF exact-factor witness `(−3,10,7)`; W1 scoped water negative while selected complete lossy withdrawal is positive; U2 and §23 |
+| X9 | Favorable source sign implies favorable total sign | Cleared SFE exact-factor witness `(−3,10,7)`; W1 scoped water negative while selected complete lossy withdrawal is positive; U2 and §23 |
 | X10 | Closed calibration algebra proves physical traceability | Arbitrary slopes `a_j/a_i` close every loop; U3 |
 | X11 | Closed physical state forces zero registered actor sum | Registered `0→1`, passive `1→0`, action `−1`, passive `+1`; U13 |
 | X12 | Reward descent implies a reduced potential | Hidden `h→h+1` gives reduced self-loop reward `−1`; U5 |
@@ -1741,7 +1764,7 @@ in this report; no external numerical result is imported.
 | 25–29: dynamic reduction, memory, OU density and projection | U9–U10 |
 | 30–35: finite quadratic, Möbius, nonlinear response, protocol distinctions | U8, U11 |
 | 36–40: canonical beta, general curvature, covariance, P4 | U12 |
-| 41–47: ruler/sign branches, strict cycles, loops, ledger and carriers | U2–U3, U13–U14, §23 |
+| 41–47: ruler and sign statements, strict cycles, loops, ledger and carriers | U2–U3, U13–U14, §23 |
 | 48–49: factor–marginalization–Möbius composition and mandatory example | U7–U8, U11 |
 | 50–52: commutation table, dependency DAG, branch status | §§18–19 |
 | 53–57: existing-theorem impact, theorem package, final statement, counterexamples | U14, §§20–21 |
@@ -1764,43 +1787,38 @@ fairness, market-price, ownership or incentive theorem is produced here. Book
 files, experimental materials and authority documents are not modified. The
 next stage is independent theorem audit, not implementation or field admission.
 
-## 23. OPTIONAL APPLICATION-SPECIFIC ORIENTATION CERTIFICATION BRANCHES
+## 23. Orientation statements and their diagnostic use
 
-The master valuation hierarchy requires **no single global SF / TA / BT
-choice**. The base endpoint valuation, recursion, path calculus, factor
-structure, marginalization results, Möbius algebra and accounting identities
-are established without A5(r) and do not depend on globally selecting one
-branch; §3's assumption lattice and U14's branch table already carry
-orientation as an optional module. One value exists before any predicate is
-invoked — complete current state, admitted joint potential, complete endpoint
-difference and, where differentiable, that potential's differential paired
-with a physical action response — which is why sign predicates are a secondary
-certification layer rather than a prerequisite for valuation.
+**There is no orientation regime, branch, mode or policy in EBU, and no global
+orientation decision to take.** The master valuation hierarchy is the one given
+in §1: complete multidimensional state, admitted joint potential, its
+differential or marginal covector, physical action response, local scalar
+action slope, and the exact finite joint endpoint value. Endpoint valuation,
+recursion, path calculus, factor structure, marginalization, Möbius algebra and
+the accounting identities are all established without A5, which §3's lattice
+and U14's branch table already carry as an optional module.
 
-MASTER-SF, MASTER-TA and MASTER-BT remain optional conditional certification
-branches for applications asserting the corresponding orientation properties.
-All are conditionally coherent. SF and TA do not imply each other; BT is their
-conjunction. The table answers one question: if an application asserts this
-type of orientation, what additional conditions must it certify? Different
-applications may invoke different predicates when they make different physical
-orientation claims, provided every claim is prospectively declared and
-certified on its own domain. A predicate is binding once a claim invokes it:
-a failed MASTER-TA claim cannot be retrospectively replaced by MASTER-SF and
-called a pass, and vice versa. Selecting a branch after a result is seen is
-not permitted.
+A specific physical sign statement is an ordinary scientific claim about an
+already defined quantity, and must stand or fail on its own evidence. Three
+such statements recur, and this section records what each means, what it needs,
+and what it does not touch.
 
-| Branch | Where it enters / extra assumptions | What is certified and what remains diagnostic | Admissions and W1 consequence | Actor settlement / tradeoff |
+| Statement about an already defined quantity | Where it enters / extra assumptions | What it establishes and what remains diagnostic | W1 consequence | Actor settlement / tradeoff |
 |---|---|---|---|---|
-| **MASTER-SF — CONDITIONAL** | A5(SF), on independently identified and embedded source contrasts: `sE_s>0` throughout the claimed domain/uncertainty set | Source orientation is certified if all source prerequisites hold; the total has no required matching sign | W1's canonical water diagnostic is favorable on its restricted domain, but its actual embedding remains uncertified; no W1 admission follows | Complete `E_tot`; preserves source-specific meaning but permits a different total sign and risks confusing diagnostic value with extra issuance |
-| **MASTER-TA — CONDITIONAL** | A5(TA), with one consistent physical total-action label: `sE_tot>0` | Complete action orientation is certified; individual source orientation remains unproved unless separately supplied | Selected W1 finite-bath total fails the withdrawal class | Complete `E_tot`; aligns the requested sign with the action while allowing adverse individual components |
-| **MASTER-BT — CONDITIONAL** | A5(BT), source identification/embedding and both margins; for exact embedding `sE_rest>−sE_s` | Both source and complete-action orientation are certified on the declared domain | Selected W1 fails its total condition and still lacks certified water embedding | Complete `E_tot`; stronger agreement requirement can exclude otherwise valid physical models/actions |
+| **The identified source contrast carries the declared sign** | A5, on independently identified and embedded source contrasts: `sE_s>0` throughout the claimed domain/uncertainty set | Source orientation holds if all source prerequisites hold; the total has no required matching sign | W1's canonical water diagnostic is favorable on its restricted domain, but its actual embedding remains uncertified; no W1 admission follows | Complete `E_tot`; preserves source-specific meaning but permits a different total sign and risks confusing diagnostic value with extra issuance |
+| **The complete action value carries the declared sign** | A5, with one consistent physical total-action label: `sE_tot>0` | Complete action orientation holds; individual source orientation remains unproved unless separately supplied | Selected W1 finite-bath total fails the withdrawal class | Complete `E_tot`; aligns the requested sign with the action while allowing adverse individual components |
+| **Both hold at once** | A5, source identification/embedding and both margins; for exact embedding `sE_rest>−sE_s` | Both source and complete-action orientation hold on the declared domain | Selected W1 fails its total condition and still lacks certified water embedding | Complete `E_tot`; the stronger agreement requirement can exclude otherwise valid physical models/actions |
 
-No branch replaces the total with one scoped factor. With several actors,
-allocation must close to that complete total under a separately declared
-foundation-compatible convention. Coupled-factor allocation is not decided
-by the sign branch. Potential definitions, root calibration, factor sums,
-recursive sufficiency, path identities, Möbius algebra, conditional canonical
-results and telescoping remain unchanged in every branch.
+The third row is the conjunction of the first two. It is not a third kind of
+claim and carries no separate status.
+
+No sign statement replaces the total with one scoped factor. With several
+actors, allocation must close to that complete total under a separately
+declared foundation-compatible convention. Coupled-factor allocation is not
+decided by a sign statement. Potential definitions, root calibration, factor
+sums, recursive sufficiency, path identities, Möbius algebra, conditional
+canonical results and telescoping are unchanged whether or not any sign
+statement is asserted.
 
 **W1 preserved precisely.** Its fixed-reference canonical water contrast is
 negative for withdrawal below equal head and positive for restoration within
@@ -1809,9 +1827,12 @@ that domain. The selected complete finite-bath potential instead gives
 reversible one. Positive calibration cannot repair that strict total-sign
 failure. The water coordinate's favorable sign does not certify its exact
 physical embedding. No arithmetic, potential, metrology or W1 design is changed.
-That failed total-sign claim is a verdict on the claim actually made under the
-selected potential; it neither obliges nor forbids EBU to adopt or reject TA
-for any other application.
+The selected complete W1 potential yields its one complete action value; the
+scoped water coordinate is a diagnostic scoped physical quantity whose
+favorable sign neither replaces nor competes with that value. The selected
+complete W1 candidate therefore remains refused for the physical interpretation
+it was testing. That refusal is a verdict on the claim actually made under the
+selected potential, and carries no consequence for any other application.
 
 **Semantic-consistency test (A2+A5(r), fixed comparison graph).** For a scalar
 whose drop must be positive on
@@ -1823,13 +1844,14 @@ via a topological ranking, but does not identify the physical potential or
 certify the prescribed one. With multiple sources, one action may deplete one
 and restore another; opposing source labels are possible, but requiring both
 opposite total signs for that same event is inconsistent. These tests narrow
-the admissible semantics without choosing SF, TA or BT.
+the admissible semantics without asserting any sign statement.
 
 **Downstream meaning.** For an apple production/transport/shop chain, every
 branch uses complete incremental current-state transitions and all affected
 physical factors. Historical upstream prices are not replayed or reissued.
-SF permits source and total signs to differ; TA does not certify every source;
-BT requires both on each claimed class. None supplies a complete chain model,
+Source and total signs may differ; a favorable total does not certify every
+source; and asserting both requires establishing both on each claimed class.
+None supplies a complete chain model,
 observable sufficient state or institutional allocation by itself.
 
 **Final scientific disposition:**
@@ -1838,8 +1860,8 @@ observable sufficient state or institutional allocation by itself.
 RECURSIVE-FIELD THEOREM HIERARCHY UNDER EXPLICIT LAYERED ASSUMPTIONS.**
 
 **NO FOUNDATION CHANGE REQUIRED.** This is a non-controlling master theorem
-candidate pending independent theorem audit. No global sign policy is required
-and no orientation branch is selected here.
+candidate pending independent theorem audit. No orientation regime, branch or
+policy exists to be selected.
 
 ```text
 EXISTING FOUNDATION: UNCHANGED
@@ -1848,12 +1870,12 @@ S-MG: UNCHANGED
 S EQUILIBRIUM ANCHOR: UNCHANGED
 RECURSIVE FIELD THEORY: UNCHANGED
 SOURCE-FACTOR THEORY: UNCHANGED
-SF BRANCH: CONDITIONAL
-TA BRANCH: CONDITIONAL
-BT BRANCH: CONDITIONAL
-GLOBAL SF / TA / BT DECISION: NOT REQUIRED
-APPLICATION-SPECIFIC ORIENTATION DECISION:
-REQUIRED ONLY WHEN AN SF / TA / BT CLAIM IS INVOKED
+SOURCE-SIGN STATEMENT: CONDITIONAL MATHEMATICAL PROPERTY
+TOTAL-SIGN STATEMENT: CONDITIONAL MATHEMATICAL PROPERTY
+BOTH TOGETHER: THEIR CONJUNCTION; NO SEPARATE STATUS
+ORIENTATION-REGIME TAXONOMY: NONE
+NO GLOBAL ORIENTATION-REGIME DECISION EXISTS; SPECIFIC SIGN STATEMENTS ARE
+ORDINARY SCIENTIFIC CLAIMS ABOUT ALREADY DEFINED QUANTITIES
 AUTHORITY MODIFIED: NO
 EXPERIMENTAL DESIGN MODIFIED: NO
 CODE MODIFIED: NO

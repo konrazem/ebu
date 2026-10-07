@@ -7,8 +7,8 @@ STATUS: NON-CONTROLLING THEORY RECONSTRUCTION
 AUDIT STATUS: PENDING INDEPENDENT AUDIT
 PRIMARY CONCLUSION: A
 FOUNDATION IMPACT: NO FOUNDATION CHANGE REQUIRED
-GLOBAL SF / TA / BT CHOICE: NOT REQUIRED
-SIGN POLICY SELECTED: NONE
+ORIENTATION-REGIME TAXONOMY: NONE
+SOURCE AND TOTAL SIGNS: DIAGNOSTIC PROPERTIES OF ONE VALUATION
 ```
 
 ## 1. Result
@@ -17,8 +17,8 @@ SIGN POLICY SELECTED: NONE
 At a differentiable state, the potential's marginal components and an action's
 state-direction components pair to give one scalar slope. For a finite action,
 the controlling value is the complete potential drop between its endpoints.
-Neither construction requires first assigning components to sources or choosing
-SF, TA or BT.
+Neither construction requires first assigning components to sources or
+asserting any sign property.
 
 The hierarchy is
 
@@ -33,20 +33,34 @@ not specify an action, its endpoint, or how the system moves. Smoothness gives
 a connection between the local slope and the finite drop; it is not required
 for the finite definition itself.
 
-SF certifies a physically identified **source contrast**. TA tests the sign
-of the **already unified total action contrast**. BT requires both. These are
-substantive, generally distinct certification predicates, but none aggregates
-field dimensions or creates an alternative settlement formula. They are
-optional relative to the valuation law and binding once a particular claim
-invokes them.
+A sign statement about a physically identified **source contrast**, and a sign
+statement about the **already unified total action contrast**, are two distinct
+and substantive mathematical facts. Either may hold without the other, and both
+may hold at once. Neither aggregates field dimensions, and neither creates an
+alternative settlement formula.
 
-**GLOBAL CHOICE NOT REQUIRED; sign predicates are claim-specific/application-specific.**
-The prior unqualified “human sign-semantics decision still required” wording
-in SF §18 and M §23 needs a narrow semantic clarification. M's actual assumption
-lattice already makes orientation optional: A5 is not needed for its base
-valuation, calculus, reduction, interaction or accounting identities. A programme
-may choose to promise a particular sign property for an application, but the
-mathematics does not require one global policy to make valuation exist.
+**COMPLETE PHYSICAL RESPONSE FIRST; DECOMPOSITION SECOND.** This is the
+ordering already used for coalitions, where the complete endpoint value is
+taken first and the Möbius decomposition afterward. For a multidimensional
+field the joint endpoint and directional-action values come first, and
+coordinate, factor and source diagnostics follow. A decomposition explains one
+value; it does not compete with it, and no decomposition opens a second
+settlement channel.
+
+**One settlement channel.** There is one complete finite action EBU value,
+`E=V_pre−V_post`. A factor contrast is not another EBU settlement. A coordinate
+differential is not another EBU settlement. A local action slope is not another
+EBU settlement. A Möbius coefficient is not another EBU settlement. A
+source-specific sign is not another valuation mode. Each of these explains,
+diagnoses or bounds the one value; none competes with it.
+
+There is accordingly **no orientation regime, mode, branch or policy** in EBU
+and no global sign decision to take. M's assumption lattice already makes
+orientation optional: A5 is not needed for its base valuation, calculus,
+reduction, interaction or accounting identities. A particular application may
+still assert a sign property for a quantity it names; that is an ordinary
+scientific claim, carrying the usual obligations of an independently declared
+physical label, comparison domain, uncertainty scope and evidence.
 
 This is principally **semantic recovery and reorganization of cleared
 mathematics**, with explicit chain-rule corollaries. It is not a new physical
@@ -76,7 +90,7 @@ sequential–parallel passages were inspected directly, including Git history.
 The source hashes in Appendix A fix the exact versions used.
 
 The present brief supplies independent clearance of F, R, MG, S, RF, the
-narrowed W1 result, SF and the master theorem M at the starting commit.
+narrowed W1 result, SFE and the master theorem M at the starting commit.
 That clearance is an input, not an audit performed by this report. Existing
 pending-audit headers are preserved. F's legacy “freeze candidate” header is
 resolved for precedence by B §0 and the pinned frozen hash, not edited here.
@@ -91,7 +105,7 @@ provenance is used where accessible in committed files and Git objects.
 | MG | [Möbius–generator continuity](EBU_MOBIUS_GENERATOR_CONTINUITY_THEOREM.md), §§3–16, 18–23: endpoint protocol, contextual marginals, affine and nonlinear response |
 | S | [Equilibrium anchor](EBU_EQUILIBRIUM_THERMODYNAMIC_ANCHOR.md), §§4–13, 16–19: conditional canonical scale and denomination |
 | RF | [Recursive field theory](EBU_FIELD_RELATION_AND_RECURSIVE_SUFFICIENCY.md), §§3–14: root, joint assembly, sufficiency, memory, event boundaries and localism |
-| SF | [Source-factor theorem](EBU_SOURCE_FACTOR_EMBEDDING_AND_ORIENTATION_THEOREM.md), Theorems 1–10 and §§14–18: identified factors, unchanged total and orientation predicates |
+| SFE | [Source-factor theorem](EBU_SOURCE_FACTOR_EMBEDDING_AND_ORIENTATION_THEOREM.md), Theorems 1–10 and §§14–18: identified factors, unchanged total and orientation properties |
 | M | [Master theorem](EBU_RECURSIVE_FIELD_SOURCE_FACTOR_CONTINUITY_UNIFICATION_THEOREM.md), §§3–7, 14–19, 23: optional assumptions and compatible shared scalar |
 | W1 | [Narrowed water verdict](EBU_SOURCE_FIELD_W1_WATER_ADMISSION.md), §§5–10: distinct scoped water observable and selected coupled total |
 | FB | [Feedback reconciliation](EBU_FEEDBACK_OSCILLATION_THEORY_RECONCILIATION.md), §§2–4, 18, 20–21: source provenance and complete loss-aware direction |
@@ -157,8 +171,8 @@ The mathematical assumptions are modular:
 | Sign certificate | Independently specified orientation label and the corresponding source/total margin |
 | Actor entry | Registered allowed event, identified boundary and an allocation/accounting rule closing to its complete value |
 
-None of smoothness, source factorization, equilibrium or SF/TA/BT is necessary
-for the bare finite endpoint definition. This is M's modular structure, not a
+None of smoothness, source factorization, equilibrium or any sign statement is
+necessary for the bare finite endpoint definition. This is M's modular structure, not a
 relaxation of physical admission obligations.
 
 ## 4. Marginal potential, action direction and invariant pairing
@@ -608,11 +622,11 @@ and units must match. Approximate embeddings retain their residual contrast.
 
 **Proof.** Differentiate the finite sum and use linearity of the covector
 pairing; subtract the finite sum at the two endpoints. **QED.** This is F §13,
-SF Theorem 2 and M U2. A touched coupled factor is reevaluated as a whole.
+SFE Theorem 2 and M U2. A touched coupled factor is reevaluated as a whole.
 
 `−dφ_α(s_a)` is a **local factor contribution** to the slope; `δφ_α` is a
 **finite factor contribution**. Calling either a source contribution requires
-independent physical source identification and embedding as in SF Theorems
+independent physical source identification and embedding as in SFE Theorems
 3, 4 and 8. The term “marginal contribution” must specify derivative versus
 finite contextual meaning. Gradient components are indexed by coordinates;
 factor contributions are indexed by factors. Their indices need not even
@@ -629,7 +643,7 @@ f_a=-d\phi_A(s_a)-d\phi_B(s_a)-d\phi_{AB}(s_a).
 The interaction enters once without first deciding whether A or B owns it.
 A source-bundled decomposition may later assign parts of that interaction by
 an explicit convention; the complete action value is unaffected. This is
-exactly the separation retained by SF §7.1 and M U2.
+exactly the separation retained by SFE §7.1 and M U2.
 
 ### 11.1 One coupled example, three distinct decompositions
 
@@ -649,7 +663,7 @@ prices. This is an algebraic witness, not a proposed physical source model.
 
 Writing `V=φ_s+Ψ=(φ_s+g)+(Ψ−g)` preserves the total and its derivatives
 but changes the proposed source contrast by `g(pre)−g(post)`. Algebra alone
-cannot certify which source interpretation is correct. SF Theorem 3 requires
+cannot certify which source interpretation is correct. SFE Theorem 3 requires
 allowed gauges to be constant on connected components of the claimed comparison
 graph to preserve all source contrasts. Root calibration and a favorable sign
 do not remove this identification requirement.
@@ -839,51 +853,54 @@ or response changes. It does not retrospectively change a historical entry,
 and a shared denomination does not assert equal prices for identically named
 but physically different events.
 
-## 15. SF, TA and BT: exact roles and logical independence
+## 15. Source and total signs as diagnostic properties
 
 For one predeclared physical sign claim, let `σ∈{−1,+1}` be its intended
 orientation, fixed independently of the computed sign. This symbol replaces
-SF's `s` here to avoid collision with the action direction `s_a`. A source
+SFE's `s` here to avoid collision with the action direction `s_a`. A source
 claim uses a physically identified embedded factor contrast `E_s`. Let
 `E=E_s+E_rest` when the exact decomposition is justified. Then
 
 \[
-\mathrm{SF}:\ \sigma E_s>0,\qquad
-\mathrm{TA}:\ \sigma E>0,\qquad
-\mathrm{BT}:\ (\sigma E_s>0)\ \land\ (\sigma E>0). \tag{29}
+\text{source:}\ \sigma E_s>0,\qquad
+\text{complete action:}\ \sigma E>0,\qquad
+\text{both:}\ (\sigma E_s>0)\ \land\ (\sigma E>0). \tag{29}
 \]
 
-For exact factorization BT can equivalently use
+For exact factorization the third line can equivalently use
 `σE_s>0` and `σE_rest>−σE_s`.
-This is SF Theorem 5 / M U2 equation (4), unchanged.
+This is SFE Theorem 5 / M U2 equation (4), unchanged.
 
-| Regime | Exact category | What it adds | Effect on the valuation law |
+| Statement | Exact category | What it adds | Effect on the valuation law |
 |---|---|---|---|
-| SF | Source-orientation certification predicate | A sign property of an independently identified source contribution on the declared comparison set | None: complete settlement remains `E`, possibly with a different sign |
-| TA | Total-action sign predicate; an admission filter if adopted for an application | A constraint on the already defined total for an independently labelled action class | None: it filters/adjudicates a scalar, and aggregates nothing |
-| BT | Joint source-and-total certification | Conjunction of the two claims | None: not a rule for combining dimensions and not a second total |
+| `σE_s>0` | A sign property of an identified source contribution | That property on the declared comparison set | None: complete settlement remains `E`, possibly with a different sign |
+| `σE>0` | A sign property of the complete action value | A constraint on the already defined total for an independently labelled action class | None: it adjudicates a scalar, and aggregates nothing |
+| both at once | Their conjunction | Nothing beyond the two statements | None: not a rule for combining dimensions and not a second total |
 
-TA itself needs no source factorization. SF and BT need source identification
-and embedding before their algebraic signs can be physical certificates.
-All three can be used as diagnostic truth tests; satisfying a numerical
-inequality alone does not establish every physical prerequisite.
+The total statement needs no source factorization. The source statement, and
+therefore the conjunction, needs source identification and embedding before its
+algebraic sign can be a physical certificate. All three are diagnostic truth
+tests about quantities the valuation has already defined; satisfying a
+numerical inequality alone does not establish every physical prerequisite, and
+none of them is a mode, branch or regime of valuation.
 
-### 15.1 Why unified valuation does not make the predicates redundant
+### 15.1 Why unified valuation does not make these statements redundant
 
-The cleared SF examples use `φ_s(w)=(w−2)²`, `Ψ(y)=y`, and the independently
+The cleared SFE examples use `φ_s(w)=(w−2)²`, `Ψ(y)=y`, and the independently
 declared depletion label `σ=−1`:
 
-| Complete comparison | `E_s` | `E_rest` | `E` | Predicate result |
+| Complete comparison | `E_s` | `E_rest` | `E` | Sign outcome |
 |---|---:|---:|---:|---|
-| `(1,10)→(0,0)` | `−3` | `10` | `7` | SF true, TA false, BT false |
-| `(3,0)→(2,2)` | `1` | `−2` | `−1` | SF false, TA true, BT false |
-| `(1,0)→(0,0)` | `−3` | `0` | `−3` | SF, TA and BT true |
+| `(1,10)→(0,0)` | `−3` | `10` | `7` | source orientation satisfied; complete-action orientation not satisfied |
+| `(3,0)→(2,2)` | `1` | `−2` | `−1` | complete-action orientation satisfied; source orientation not satisfied |
+| `(1,0)→(0,0)` | `−3` | `0` | `−3` | both satisfied |
 
 These are mathematical countermodels, not physical certificates for a source.
-They prove SF and TA are generally incomparable, and BT can be nonempty.
-Every row nevertheless has a unique unified total before any predicate is
-chosen. They disprove both “one regime is necessary to calculate E” and
-“unification makes source/total distinctions meaningless.”
+They prove that a source sign does not determine the total sign, that a total
+sign does not determine the source sign, and that both can nevertheless hold
+together. Every row has a unique unified total before any sign statement is
+considered. They disprove both “some sign statement is necessary to calculate
+E” and “unification makes source/total distinctions meaningless.”
 
 Pointwise strict signs and uniform robust margins are different claims.
 A uniform certificate requires a positive infimum over its declared joint
@@ -891,39 +908,42 @@ state/action/outcome/uncertainty domain. Pointwise positivity can approach zero
 as action size shrinks. Existing source and total error bounds must accompany
 a robust claim; this reconstruction introduces no thresholds or sign repairs.
 
-### 15.2 No logically necessary global choice
+### 15.2 Orientation is not an input to the valuation map
 
 **Proposition — orientation is not an input to the valuation map.** Given the
 admitted complete potential and action endpoints, (6), (10), (13) and the
-conditional identities derived from them are defined without `σ`, `E_s` or a
-regime variable. Therefore no one-time global SF/TA/BT choice is necessary
-for unified EBU valuation or for its recursive extension.
+conditional identities derived from them are defined without `σ`, `E_s` or any
+sign statement. Therefore no orientation decision of any kind is necessary for
+unified EBU valuation or for its recursive extension.
 
 **Proof.** The right sides use only the stated potential, response, state and
 calibration. Introducing a predicate on the resulting values does not change
 those right sides. F §§3, 13–17 establishes that order; RF §§7–10 preserves it;
-SF §18.1 says all regimes keep complete settlement. M §3 explicitly separates
-A5 from its base, U2 says it is unnecessary for the other identities, and M §19
-calls signs necessary only for the chosen orientation certificate. **QED.**
+SFE §18.1 says every such statement keeps complete settlement. M §3 explicitly
+separates A5 from its base, U2 says it is unnecessary for the other identities,
+and M §19 calls signs necessary only for a sign claim that is actually
+asserted. **QED.**
 
-A programme may make a uniform sign promise as an additional application
-requirement. It must then specify which quantity, independently defined physical
-labels, domain, uncertainty and strict/neutral cases it means. It cannot switch
-from TA to SF after a TA failure and call the old claim successful. The same
-action may deplete one source and restore another; opposite source labels can
-coexist, but demanding both opposite signs of its single total is inconsistent.
-Likewise, strict positive-drop labels around a complete comparison cycle
-contradict telescoping. These restrictions remain substantive.
+An application may make a uniform sign promise as an additional requirement. It
+must then specify which quantity, independently defined physical labels,
+domain, uncertainty and strict/neutral cases it means. Having asserted a
+statement about the complete action and seen it fail, it cannot substitute the
+source statement and call the original claim successful: that is a different
+claim about a different quantity. The same action may deplete one source and
+restore another; opposite source labels can coexist, but demanding both
+opposite signs of its single total is inconsistent. Likewise, strict
+positive-drop labels around a complete comparison cycle contradict telescoping.
+These restrictions remain substantive.
 
-The precise replacement for the over-broad earlier framing is:
+The controlling semantics is:
 
-> No global SF/TA/BT choice is required to define or operate the conditional
-> valuation mathematics. For each additional orientation claim, specify and
-> certify the source predicate, total predicate, or their conjunction on its
-> declared domain. Until then no such sign guarantee is claimed.
+> EBU has one valuation architecture, and no orientation regime, mode, branch
+> or policy. A sign statement about an identified source contrast, or about the
+> complete action value, is an ordinary scientific claim about an already
+> defined quantity; it must be declared independently of the computed result
+> and certified on its own domain, and it changes nothing about `E`.
 
-This is a proposed **semantic clarification only**, not a change to SF/M
-inequalities, hypotheses or proofs and not an adopted sign policy.
+This changes no SFE or M inequality, hypothesis or proof.
 
 ## 16. Restorative meaning and the primacy of total settlement
 
@@ -936,10 +956,11 @@ A separate physical label such as replenishing a particular stock, restoring
 an ecological function or depleting a source need not coincide with that
 ordering of the **complete** potential. Establishing the correspondence is
 an additional physical/semantic claim. A desire that whole-action degradation
-always receives negative settlement is a programme intent expressed as a TA
-claim on those independently labelled complete events. A source-only intent
-is an SF claim. Neither follows merely by attaching the word “restoration”
-to a coordinate change. A label chosen from the answer's sign makes the
+always receives negative settlement is a programme intent expressed as a sign
+claim about the complete action value on those independently labelled events.
+A source-only intent is a sign claim about an identified source contrast.
+Neither follows merely by attaching the word “restoration” to a coordinate
+change. A label chosen from the answer's sign makes the
 claim tautological, not a test of an independently described physical property.
 
 Whenever a complete valid joint potential and a registered, identified action
@@ -1157,8 +1178,8 @@ why its intended total-sign interpretation fails.
 | S-MG | **UNCHANGED** | Complete-table, contextual marginal and smooth composite-response theorems applied exactly |
 | S equilibrium anchor | **UNCHANGED** | Root/canonical branch remains conditional; no universal field or action-response claim added |
 | Recursive field theory | **UNCHANGED** | Current state, ports, sufficiency, action/passive channels and no historical repricing retained |
-| Source-factor theory | **SEMANTIC CLARIFICATION ONLY** | Its theorems already preserve total settlement. SF §18's unqualified final “decision still required” line is narrowed to an additional declared orientation claim, not a global valuation prerequisite |
-| Master unification theorem | **SEMANTIC CLARIFICATION ONLY** | M §23's global-choice framing is narrowed using M's own optional A5 and U1/U2/§19. No theorem equation or condition changes |
+| Source-factor theory | **SEMANTIC REORGANIZATION ONLY** | Its theorems already preserve total settlement. Its orientation results are retained as ordinary sign properties of identified quantities; the regime taxonomy is removed and no inequality, hypothesis or proof changes |
+| Master unification theorem | **SEMANTIC REORGANIZATION ONLY** | M §23's branch framing is removed in favour of M's own optional A5 and U1/U2/§19. No theorem equation or condition changes |
 | W1 narrowed result | **UNCHANGED** | Existing selected total-sign refusal and uncertified source embedding retained; no re-admission or potential redesign |
 
 No narrow mathematical repair or foundation conflict was found in this
@@ -1170,10 +1191,10 @@ file or authority wording is amended.
 | M location | Content recovered here |
 |---|---|
 | §3, A1/A2/A6 and the base after the assumption table | Joint state, finite scalar and event boundary precede orientation |
-| §3, A5; §19 branch-status table | Orientation is an added claim, necessary only for the chosen certificate |
+| §3, A5; §19 branch-status table | Orientation is an optional added claim, necessary only where it is actually asserted |
 | U1, §4 | Complete recursively evaluable action total; no second settlement from additional descriptions |
 | U2, §5, equation (3) | Exact factor sums, unchanged total under legitimate refactorization |
-| U2, §5, equation (4) | SF/TA/BT predicates; explicit statement that A5 is not needed for the other identities |
+| U2, §5, equation (4) | Source, complete-action and simultaneous sign statements; explicit statement that A5 is not needed for the other identities |
 | U3, §6 | Positive calibration covariance and agreement after root conversion |
 | U4, §7, equations (5)–(6) | Joint path pairing, vector context and event registration boundaries |
 | U8, §11, equation (19) | Exact finite quadratic correction |
@@ -1182,7 +1203,7 @@ file or authority wording is amended.
 | U12, §15 | Conditional canonical scale, covariance and entropy branches |
 | U13, §16, equations (34)–(36) | Action/passive telescoping and conditional ledger closure |
 | U14, §17 | Compatibility under separately named hypotheses rather than universal implications |
-| §23 | The over-broad global decision wording to clarify, while keeping its mathematical regime table |
+| §23 | The orientation wording reorganized around ordinary sign statements, keeping every mathematical entry of its table |
 
 The explicit `S`-matrix formulation and coordinate-covector language foreground
 existing chain-rule content. They do not require revising the cleared master
@@ -1271,13 +1292,13 @@ on conversational memory. Existing scientific documents remain byte-identical.
 | 22: monitoring role | §18 |
 | 23–28: incidence, nonlinear response, action maps and feedback | §§7, 9 |
 | 29–31: root and localism | §14 |
-| 32–37: regimes, global choice and sign semantics | §§15–16 |
+| 32–37: source and total sign semantics | §§15–16 |
 | 38–40: table, unified principle and continuity | §§13, 17 |
-| 41–42: SF/master relationship | §§15.2, 21 |
+| 41–42: source-factor/master relationship | §§15.2, 21 |
 | 43–44: E1a and W1 | §20 |
 | 45–47: data outputs, health and current action map | §§9, 18 |
 | 48: apple example | §19 |
-| 49–50: primary verdict and human sign decision | §§1, 15.2, 24 |
+| 49–50: primary verdict and sign semantics | §§1, 15.2, 24 |
 | 51–54: formulas, terminology and theorem/foundation impact | §§21–22 |
 | 55–57: deliverable, completion fields and verdict | §24, completion response and enclosing commit |
 
@@ -1313,7 +1334,7 @@ sequence; W1 and the historical sources provide the additional interfaces.
 | MG | `2378f618f9bff309c77ccdb940be1b86500fbf97b1398133d88d1aec4bc1dbee` |
 | S | `5b92fdf5749ee05db63f32320e2b34a10afa2c98ceaf2e7a996f78b2df60505f` |
 | RF | `685b90eb6acef40b5a8277a9652ef3dceaf4017f91c47df3853a75e2a7f139e3` |
-| SF | `547de25e1c847bca29c894fbc68def76162ea4b27d1b21dfae54670ce7124f3e` |
+| SFE | `547de25e1c847bca29c894fbc68def76162ea4b27d1b21dfae54670ce7124f3e` |
 | M | `634bfc654a1f54f0fe537559f324aba58423e008b9d71182f8a71d2b9200b8cf` |
 | W1 | `382df7347f162006450c60cea44e00d6e8b54115d8b0182ca6dee450752611e7` |
 | FB | `a18d11d309efcb4490e8dc0b7a86a327026c0a58a755e649722d9a9071882c18` |
@@ -1344,7 +1365,7 @@ checker is not a production implementation and is not part of the commit.
 | Coupled factors and sequential values | 12 | Gradient and action slope, factor closure, finite total, standalone/rebased values and pair coefficient in §11–§12 |
 | Nonlinear response | 11 | Two Jacobian pullback components, four composite Hessian entries, integrated mixed derivative, finite-response acceleration terms and both noncommuting endpoint values |
 | Möbius identities and order boundary | 5 | Quadratic-affine zero triple, quadratic-nonlinear `−18`, cubic-affine `−6`, complete-table inversion and contextual recursion |
-| Sign predicates | 3 | All three SF/TA/BT countermodel rows, including their source and residual arithmetic |
+| Sign statements | 3 | All three source/total countermodel rows, including their source and residual arithmetic |
 | Localism and state sufficiency | 5 | Both finite localism values, an unchanged projection, equal potential levels with different next-action values |
 | Event/accounting identities | 2 | Action-plus-passive telescoping and passive ledger remainder |
 | W1 differential interface | 2 | Cancellation of water/drive differential terms and the endpoint bath-energy ratio; logarithm sign follows analytically from monotonicity |
@@ -1381,7 +1402,7 @@ need them.
 
 ```text
 PRIMARY CONCLUSION: A
-GLOBAL SF / TA / BT CHOICE: NOT REQUIRED
+ORIENTATION-REGIME TAXONOMY: NONE
 HUMAN SCIENTIFIC DECISION REQUIRED FOR THIS RECONSTRUCTION: NONE
 NEXT BOUNDED TASK: INDEPENDENT AUDIT OF THIS REPORT — NOT BEGUN
 FOUNDATION: UNCHANGED — NO FOUNDATION CHANGE REQUIRED
@@ -1389,8 +1410,8 @@ R: UNCHANGED
 S-MG: UNCHANGED
 S: UNCHANGED
 RECURSIVE FIELD THEORY: UNCHANGED
-SOURCE-FACTOR THEORY: SEMANTIC CLARIFICATION ONLY
-MASTER THEORY: SEMANTIC CLARIFICATION ONLY
+SOURCE-FACTOR THEORY: SEMANTIC REORGANIZATION ONLY
+MASTER THEORY: SEMANTIC REORGANIZATION ONLY
 W1: UNCHANGED
 AUTHORITY MODIFIED: NO
 EXPERIMENTAL DESIGN MODIFIED: NO
@@ -1400,8 +1421,9 @@ PHYSICAL EXECUTION: NO
 PUSH: NO
 ```
 
-A. SF / TA / BT ARE SECONDARY CERTIFICATION PREDICATES;
-UNIFIED JOINT-FIELD VALUATION IS PRIMARY
+A. UNIFIED JOINT-FIELD VALUATION IS THE EBU ACTION-VALUATION SEMANTICS;
+SOURCE, FACTOR AND INTERACTION SIGNS ARE DIAGNOSTIC PROPERTIES OF ITS
+DECOMPOSITIONS, NOT ALTERNATIVE VALUATION REGIMES
 
 EBU UNIFIED MARGINAL-VECTOR / DIRECTIONAL-ACTION SEMANTICS:
 RECONSTRUCTION COMPLETE
