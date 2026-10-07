@@ -7,7 +7,8 @@ STATUS: NON-CONTROLLING THEORETICAL CANDIDATE
 AUDIT STATUS: PENDING INDEPENDENT THEOREM AUDIT
 PRIMARY CONCLUSION: A — COMPATIBLE UNDER EXPLICIT CONDITIONS
 FOUNDATION IMPACT: NO FOUNDATION CHANGE REQUIRED
-PROGRAMME SIGN CHOICE: NOT MADE
+GLOBAL SF / TA / BT CHOICE: NOT REQUIRED
+APPLICATION-SPECIFIC ORIENTATION PREDICATE SELECTED: NONE
 LATER MASTER UNIFICATION THEOREM: NOT EXECUTED
 ```
 
@@ -43,15 +44,31 @@ The repaired W1 finding is preserved: its canonical water coordinate has the
 requested signs on its restricted domain; its selected complete finite-bath
 potential fails the requested total signs; its exact independent water-factor
 embedding remains uncertified. This report supplies a criterion, not that
-missing physical certification. It designs no replacement water source.
+missing physical certification. It designs no replacement water source. That
+failed total-sign claim is a verdict on that claim under that selected
+potential; it neither obliges nor forbids the programme to adopt TA elsewhere.
 
 A uniform positive orientation margin is a useful robust certificate, but is
 stronger than pointwise strict orientation. Arbitrarily small actions can have
 positive margins tending to zero. This distinction is essential for later
 uncertainty qualification and is made explicit below.
 
-The programme must still choose SF, TA or BT and specify compatible action
-labels. This report establishes their consequences without making that choice.
+No global SF / TA / BT choice is required to define or operate EBU valuation.
+The cleared architecture already supplies one value: a complete current state,
+an admitted joint potential, the complete endpoint difference `E=V_pre−V_post`
+and, where the potential is differentiable, the pairing of its differential
+with a physical action response. SF, TA and BT are additional certification
+predicates for orientation, applied on top of that value; none of them
+constructs or aggregates it. An application or scientific claim that asserts an
+orientation property must prospectively specify which predicate it invokes —
+SF for source-factor orientation, TA for complete total-action orientation, BT
+for both — together with the corresponding physical label, comparison domain,
+uncertainty scope and certification conditions. Once invoked, that predicate is
+binding for that claim: a failed TA claim cannot be retrospectively replaced by
+SF and called a pass, and vice versa. This report establishes the consequences
+of each predicate and selects none. It specifies compatible action labels as an
+obligation of whichever claim invokes a predicate, not as a programme-wide
+prerequisite.
 No market price, welfare, fairness, ownership or incentive result is inferred.
 
 ## 2. Authority, provenance and documentary issues
@@ -1332,8 +1349,9 @@ traceable physical mapping; a justified embedding/remainder; observable
 sufficient state for the declared family and horizon; valid domain/boundary
 and uncertainty sets; and consistent physical labels. None is resolved by an
 arbitrary factorization, chosen negative scale, additive offset, effective
-marginal, numerical sign fit or reference to a thermal root alone. Which sign
-regime the programme requires remains a human decision.
+marginal, numerical sign fit or reference to a thermal root alone. Which
+orientation predicate applies is declared by the claim that asserts one; no
+global programme-level selection is required.
 
 ## 17. Exact remaining scope of the later master theorem
 
@@ -1347,10 +1365,11 @@ remaining composition obligations are:
 2. **Factor:** place independently identified exact or bounded source,
    interaction, reservoir and boundary factors on one common full-state domain;
    align gauges and provenance, and carry the residual explicitly.
-3. **Orientation:** incorporate the human SF/TA/BT choice or retain separately
-   parameterized branches; establish label compatibility and domain-wise exact
-   or error-adjusted margins for each claimed branch. Do not decide by algebraic
-   refactorization or assume uniform positivity from pointwise signs.
+3. **Orientation:** incorporate whichever SF/TA/BT predicate an application
+   claim invokes, or retain separately parameterized branches; establish label
+   compatibility and domain-wise exact or error-adjusted margins for each
+   claimed branch. Do not decide by algebraic refactorization or assume
+   uniform positivity from pointwise signs.
 4. **Joint potential:** prove compatibility of the assembled physical `𝒱`
    and complete endpoint settlement under the same boundaries and units. A
    sum of individually calibrated quantities is not enough.
@@ -1392,7 +1411,7 @@ cleared component theorems should be invoked, not reproved for novelty. This
 checklist authorizes no implementation, experiment, W2 design or repair of
 T/U/V, and supplies none of their missing physical certificates.
 
-## 18. PROGRAMME SIGN-SEMANTICS DECISION
+## 18. APPLICATION-SPECIFIC ORIENTATION CERTIFICATION OPTIONS
 
 **All three regimes are CONDITIONALLY COHERENT.** None conflicts with the
 foundation's endpoint accounting or the cleared recursive-field theorem.
@@ -1400,13 +1419,21 @@ The conditions include an admitted physical potential, valid state and action
 scope, appropriate factor identification where used, and consistent labels.
 No unconditional guarantee for arbitrary physical sources follows.
 
+The table below is not a menu from which the programme must select one global
+regime. Valuation operates without any of them. It answers a narrower question:
+if an application asserts this type of orientation, what additional conditions
+must be certified? Different applications may invoke different predicates when
+they make different physical orientation claims, provided each claim is
+prospectively declared and certified on its own domain. Selecting a predicate
+after a result is seen is not permitted.
+
 | Regime | Meaning / mathematical strength | Actor settlement | W1 disposition | Advantage | Scientific risk | Additional theorem obligations |
 |---|---|---|---|---|---|---|
 | **SF — CONDITIONAL** | `M_s>0`; generally incomparable with TA | Complete `E_tot`, which may have another sign | Favorable scoped water sign; actual embedding remains possible in principle / not certified | Preserves an explicit source-specific physical diagnostic alongside complete accounting | Mistaking that diagnostic for total value or an extra issue; arbitrary factor identity | Identify and embed the factor; establish its recursive sufficiency and uncertainty-adjusted source sign |
 | **TA — CONDITIONAL** | `M_tot>0`; generally incomparable with SF | Complete `E_tot`, constrained to the requested total sign | Selected complete potential fails withdrawal class | Makes the sign condition apply directly to the registered complete action | Hiding adverse source changes behind other terms; incompatible labels across sources | Specify one consistent total label and prove its full-domain total margin; source-sign claim needs a separate theorem |
 | **BT — CONDITIONAL** | `M_s>0` and `M_tot>0`; intersection, strictly stronger than either alone in general | Complete `E_tot`; source contrast remains a component/diagnostic | Selected model fails total condition; water embedding remains uncertified | Requires agreement between the identified source and complete action | May exclude physically valid actions because adverse residuals defeat agreement; cannot be repaired by sign engineering | All source-identification/recursion obligations plus exact or robust residual-margin test and compatible total labels |
 
-### 18.1 Consequences common to the decision
+### 18.1 Consequences common to the three predicates
 
 **Foundation and recursive compatibility.** SF changes neither total settlement
 nor the physical update. TA restricts the admitted labelled action family by
@@ -1444,11 +1471,13 @@ counterexample by itself. Failure of factor identification, embedding or state
 sufficiency defeats the respective prerequisite regardless of nominal signs.
 Positive calibration cannot rescue any demonstrated wrong sign.
 
-**Mathematical narrowing of the human choice.** TA is not a stronger version
-of SF. BT is the conjunction. Requiring contradictory total labels for one
-event is inconsistent, and a strict-label cycle is impossible for a scalar
-potential. Within those constraints, mathematics does not select the programme's
-semantics. Human choice is still required; no option is chosen here.
+**Mathematical narrowing of an invoked orientation claim.** TA is not a
+stronger version of SF. BT is the conjunction. Requiring contradictory total
+labels for one event is inconsistent, and a strict-label cycle is impossible
+for a scalar potential. Within those constraints, mathematics does not select
+which predicate a claim should assert. No global selection is required for
+valuation to operate; the declaration belongs to each claim that asserts an
+orientation property, and none is made here.
 
 ### 18.2 Foundation impact and final disposition
 
@@ -1468,7 +1497,9 @@ SF REGIME: CONDITIONAL
 TA REGIME: CONDITIONAL
 BT REGIME: CONDITIONAL
 FOUNDATION: NO CHANGE
-HUMAN SIGN-SEMANTICS DECISION: STILL REQUIRED
+GLOBAL SF / TA / BT DECISION: NOT REQUIRED
+APPLICATION-SPECIFIC ORIENTATION DECISION:
+REQUIRED ONLY WHEN AN SF / TA / BT CLAIM IS INVOKED
 W1 ADMISSION OR ARITHMETIC MODIFIED: NO
 LATER MASTER UNIFICATION THEOREM EXECUTED: NO
 AUTHORITY MODIFIED: NO

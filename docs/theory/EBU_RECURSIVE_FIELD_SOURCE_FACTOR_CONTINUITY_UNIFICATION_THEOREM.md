@@ -7,7 +7,8 @@ STATUS: NON-CONTROLLING MASTER THEOREM CANDIDATE
 AUDIT STATUS: PENDING INDEPENDENT THEOREM AUDIT
 MASTER CONCLUSION: A — COMPATIBLE UNDER EXPLICIT LAYERED ASSUMPTIONS
 FOUNDATION IMPACT: NO FOUNDATION CHANGE REQUIRED
-SIGN-SEMANTICS CHOICE: NOT MADE
+GLOBAL SF / TA / BT CHOICE: NOT REQUIRED
+ORIENTATION BRANCH SELECTED: NONE
 ```
 
 ## 1. Main conclusion
@@ -1763,11 +1764,30 @@ fairness, market-price, ownership or incentive theorem is produced here. Book
 files, experimental materials and authority documents are not modified. The
 next stage is independent theorem audit, not implementation or field admission.
 
-## 23. HUMAN SIGN-SEMANTICS DECISION
+## 23. OPTIONAL APPLICATION-SPECIFIC ORIENTATION CERTIFICATION BRANCHES
 
-The master hierarchy leaves the programme choice **STILL REQUIRED**. It is
-parameterized over MASTER-SF, MASTER-TA and MASTER-BT. All are conditionally
-coherent. SF and TA do not imply each other; BT is their conjunction.
+The master valuation hierarchy requires **no single global SF / TA / BT
+choice**. The base endpoint valuation, recursion, path calculus, factor
+structure, marginalization results, Möbius algebra and accounting identities
+are established without A5(r) and do not depend on globally selecting one
+branch; §3's assumption lattice and U14's branch table already carry
+orientation as an optional module. One value exists before any predicate is
+invoked — complete current state, admitted joint potential, complete endpoint
+difference and, where differentiable, that potential's differential paired
+with a physical action response — which is why sign predicates are a secondary
+certification layer rather than a prerequisite for valuation.
+
+MASTER-SF, MASTER-TA and MASTER-BT remain optional conditional certification
+branches for applications asserting the corresponding orientation properties.
+All are conditionally coherent. SF and TA do not imply each other; BT is their
+conjunction. The table answers one question: if an application asserts this
+type of orientation, what additional conditions must it certify? Different
+applications may invoke different predicates when they make different physical
+orientation claims, provided every claim is prospectively declared and
+certified on its own domain. A predicate is binding once a claim invokes it:
+a failed MASTER-TA claim cannot be retrospectively replaced by MASTER-SF and
+called a pass, and vice versa. Selecting a branch after a result is seen is
+not permitted.
 
 | Branch | Where it enters / extra assumptions | What is certified and what remains diagnostic | Admissions and W1 consequence | Actor settlement / tradeoff |
 |---|---|---|---|---|
@@ -1789,6 +1809,9 @@ that domain. The selected complete finite-bath potential instead gives
 reversible one. Positive calibration cannot repair that strict total-sign
 failure. The water coordinate's favorable sign does not certify its exact
 physical embedding. No arithmetic, potential, metrology or W1 design is changed.
+That failed total-sign claim is a verdict on the claim actually made under the
+selected potential; it neither obliges nor forbids EBU to adopt or reject TA
+for any other application.
 
 **Semantic-consistency test (A2+A5(r), fixed comparison graph).** For a scalar
 whose drop must be positive on
@@ -1815,7 +1838,8 @@ observable sufficient state or institutional allocation by itself.
 RECURSIVE-FIELD THEOREM HIERARCHY UNDER EXPLICIT LAYERED ASSUMPTIONS.**
 
 **NO FOUNDATION CHANGE REQUIRED.** This is a non-controlling master theorem
-candidate pending independent theorem audit. No human sign decision is made.
+candidate pending independent theorem audit. No global sign policy is required
+and no orientation branch is selected here.
 
 ```text
 EXISTING FOUNDATION: UNCHANGED
@@ -1827,7 +1851,9 @@ SOURCE-FACTOR THEORY: UNCHANGED
 SF BRANCH: CONDITIONAL
 TA BRANCH: CONDITIONAL
 BT BRANCH: CONDITIONAL
-HUMAN SIGN-SEMANTICS DECISION: STILL REQUIRED
+GLOBAL SF / TA / BT DECISION: NOT REQUIRED
+APPLICATION-SPECIFIC ORIENTATION DECISION:
+REQUIRED ONLY WHEN AN SF / TA / BT CLAIM IS INVOKED
 AUTHORITY MODIFIED: NO
 EXPERIMENTAL DESIGN MODIFIED: NO
 CODE MODIFIED: NO
