@@ -102,7 +102,7 @@ No market price, welfare, fairness, ownership or incentive result is inferred.
 brief's order. Frozen foundation controls; the working baseline and cleared
 conditional research results do not silently amend it.
 
-| Reference | Dependency used | SHA-256 |
+| Reference | Dependency used | SHA-256 (original reading) |
 |---|---|---|
 | [F: frozen foundation](../physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md) | §§3, 12–18, 21–22: endpoint/path, factors, attribution, gauge and entropy scope | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
 | [B: working baseline](EBU_THEORY_BASELINE.md) | §§4–8, 13–18: denomination, Schur geometry, history and dynamics limits | `0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa` |
@@ -110,7 +110,17 @@ conditional research results do not silently amend it.
 | [MG: Möbius–generator theorem](EBU_MOBIUS_GENERATOR_CONTINUITY_THEOREM.md) | §§3–8, 14–18, 22–26: complete coalition tables, composite response and allocation boundary | `2378f618f9bff309c77ccdb940be1b86500fbf97b1398133d88d1aec4bc1dbee` |
 | [S: equilibrium anchor](EBU_EQUILIBRIUM_THERMODYNAMIC_ANCHOR.md) | §§4–18: canonical scale, reference measures, marginalization and separate P4 hypotheses | `5b92fdf5749ee05db63f32320e2b34a10afa2c98ceaf2e7a996f78b2df60505f` |
 | [RF: recursive-field theory](EBU_FIELD_RELATION_AND_RECURSIVE_SUFFICIENCY.md) | §§3–14: calibration, joint assembly, state reduction, locality and passive accounting | `685b90eb6acef40b5a8277a9652ef3dceaf4017f91c47df3853a75e2a7f139e3` |
-| [W1: narrowed water report](EBU_SOURCE_FIELD_W1_WATER_ADMISSION.md) | §§1, 6–14, 17–18: factor/total distinction, nonseparability and sign decision | `382df7347f162006450c60cea44e00d6e8b54115d8b0182ca6dee450752611e7` |
+| [W1: narrowed water report](EBU_SOURCE_FIELD_W1_WATER_ADMISSION.md) | §§1, 6–14, 17–18: factor/total distinction, nonseparability and quantity-specific sign relations | `382df7347f162006450c60cea44e00d6e8b54115d8b0182ca6dee450752611e7` |
+
+**W1 version provenance — 2026-10-08.** The W1 digest in this table is the
+exact version originally read for this report and is retained as that
+historical identity. The later narrative-only W1 repair at commit
+`5434bcd78412d61985c41d5fa162b0e6b60a96b3` produced the current W1 SHA-256
+`70efbc4988dc32fdc5d49e98020c81afe3f33c04ceb8e4b151dd75426f0ebf85`.
+That repair changed regime wording only; the equations, numerical values and
+scientific content used here remained unchanged, including the selected
+complete-action refusal and uncertified factor status. This note does not
+attribute the later bytes to the original reading.
 
 The current brief supplies independent clearance of the listed predecessor
 results, including the narrowed W1 verdict. Historical audit-pending wording

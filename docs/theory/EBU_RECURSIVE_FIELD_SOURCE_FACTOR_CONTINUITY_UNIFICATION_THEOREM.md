@@ -66,8 +66,9 @@ The main new composition results are:
 
 No new source is certified. W1's selected total-sign refusal and uncertified
 water-factor embedding remain unchanged. No scientific result here determines
-ownership, prices, welfare or actor allocation. The unresolved sign choice is
-carried as a parameter, with a decision packet in §23.
+ownership, prices, welfare or actor allocation. Section 23 states the ordinary
+sign properties of already-defined quantities and their physical justification
+requirements.
 
 ## 2. Scientific coordinate, source ledger and documentary issues
 
@@ -90,7 +91,7 @@ readings; the proof-bearing interfaces were re-read from the repository. No
 scientific dependency is inferred from chat recollection in place of a committed
 source. The scientific-record directory is absent on this checkout.
 
-| Ref. / committed source | SHA-256 |
+| Ref. / committed source | SHA-256 (original reading) |
 |---|---|
 | [F — Frozen foundation](../physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md) | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
 | [B — Working baseline](EBU_THEORY_BASELINE.md) | `0a01b3566c5ba37674f87ba827732e8d7f694fb5a532901e5883ea8317b74eaa` |
@@ -100,6 +101,16 @@ source. The scientific-record directory is absent on this checkout.
 | [RF — Recursive field and sufficiency](EBU_FIELD_RELATION_AND_RECURSIVE_SUFFICIENCY.md) | `685b90eb6acef40b5a8277a9652ef3dceaf4017f91c47df3853a75e2a7f139e3` |
 | [W1 — Narrowed water verdict](EBU_SOURCE_FIELD_W1_WATER_ADMISSION.md) | `382df7347f162006450c60cea44e00d6e8b54115d8b0182ca6dee450752611e7` |
 | [SFE — Source-factor embedding and orientation](EBU_SOURCE_FACTOR_EMBEDDING_AND_ORIENTATION_THEOREM.md), cited below as SFE | `547de25e1c847bca29c894fbc68def76162ea4b27d1b21dfae54670ce7124f3e` |
+
+**W1 version provenance — 2026-10-08.** The W1 digest in this table is the
+exact version originally read for this report and is retained as that
+historical identity. The later narrative-only W1 repair at commit
+`5434bcd78412d61985c41d5fa162b0e6b60a96b3` produced the current W1 SHA-256
+`70efbc4988dc32fdc5d49e98020c81afe3f33c04ceb8e4b151dd75426f0ebf85`.
+That repair changed regime wording only; the equations, numerical values and
+scientific content used here remained unchanged, including the selected
+complete-action refusal and uncertified factor status. This note does not
+attribute the later bytes to the original reading.
 
 Frozen foundation has precedence. The present brief supplies independent
 clearance of the conditional predecessor results, including SFE with conclusion
@@ -1697,8 +1708,10 @@ Independent audit should test especially:
    equivalence under an impossible conjunction of assumptions.
 
 There is no unresolved algebraic gap claimed inside the stated theorem
-package. Physical existence, calibration, observability, realization accuracy
-and the programme's sign choice remain external obligations. In particular,
+package. Physical existence, calibration, observability and realization
+accuracy remain external obligations. Any asserted relationship between an
+independently described physical change and the sign of an already-defined EBU
+quantity requires its own physical justification. In particular,
 this report does not resolve W1's missing source-factor embedding or qualify
 an experimental design. Those are not filled by the master theorem.
 

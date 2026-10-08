@@ -1207,9 +1207,9 @@ file or authority wording is amended.
 
 The explicit `S`-matrix formulation and coordinate-covector language foreground
 existing chain-rule content. They do not require revising the cleared master
-proofs. The substantive new output is the logically narrower framing of the
-human sign decision, together with an unambiguous vocabulary for the three
-kinds of marginal.
+proofs. The substantive semantic output is the recovery of unified joint-field
+valuation and the removal of a separate sign-regime framing, together with an
+unambiguous vocabulary for the three kinds of marginal.
 
 ## 22. Proposed canonical formula set and terminology
 
@@ -1305,8 +1305,8 @@ on conversational memory. Existing scientific documents remain byte-identical.
 ### 23.3 Focus of the next bounded task
 
 The next task is **one independent audit of this report**, not yet begun.
-Its key questions are whether the global-choice narrowing follows from the
-cleared optional A5 structure; whether local/finite and state/action marginals
+Its key questions are whether unified valuation remains independent of optional
+quantity-specific sign assertions; whether local/finite and state/action marginals
 stay distinct; whether the covariance, loss and nonlinear-response formulas
 are correct; and whether W1's actual refusal and uncertified factor status
 remain intact. The source/total independence examples, noncommuting response,
@@ -1325,7 +1325,7 @@ rechecked after the mathematical validation. References are defined in §2.
 The eight scientific dependencies F through M are the brief's controlling
 sequence; W1 and the historical sources provide the additional interfaces.
 
-| Reference | SHA-256 |
+| Reference | SHA-256 (original reading) |
 |---|---|
 | AGENTS | `168307e07f79d980a5545bc4283619f44e5ba54eb750212783daf65356bb2e94` |
 | F | `6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507` |
@@ -1341,6 +1341,16 @@ sequence; W1 and the historical sources provide the additional interfaces.
 | SP | `34feaae6bdd8e7b9f8b8989933c847f725a1557609eb8fb059a563d9c3db4f10` |
 | H28 | `e5e2eb523a2da34fe0d248ce564a0b7f37d13bb0da6c56370a98413622cf3fe4` |
 | H27 | `4f0de05073760ba280c4f82f9e3036f8de248e1033a180ce87742d336a4547df` |
+
+**W1 version provenance — 2026-10-08.** The W1 digest in this table is the
+exact version originally read for this report and is retained as that
+historical identity. The later narrative-only W1 repair at commit
+`5434bcd78412d61985c41d5fa162b0e6b60a96b3` produced the current W1 SHA-256
+`70efbc4988dc32fdc5d49e98020c81afe3f33c04ceb8e4b151dd75426f0ebf85`.
+That repair changed regime wording only; the equations, numerical values and
+scientific content used here remained unchanged, including the selected
+complete-action refusal and uncertified factor status. This note does not
+attribute the later bytes to the original reading.
 
 The historical stock note has Git blob `0abb01f86d47b77ff3f96a0a9ece31c7a896f963`
 at the snapshot in §2.1 and SHA-256
