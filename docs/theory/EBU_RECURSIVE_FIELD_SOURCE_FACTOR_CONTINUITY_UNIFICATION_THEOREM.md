@@ -1847,7 +1847,7 @@ complete W1 candidate therefore remains refused for the physical interpretation
 it was testing. That refusal is a verdict on the claim actually made under the
 selected potential, and carries no consequence for any other application.
 
-**Semantic-consistency test (A2+A5(r), fixed comparison graph).** For a scalar
+**Semantic-consistency test (A2+A5, fixed comparison graph).** For a scalar
 whose drop must be positive on
 restoration and negative on depletion, orient comparison edges in the desired
 positive-drop direction: keep restoration edges and formally reverse depletion

@@ -1302,8 +1302,10 @@ must align these declarations without equating their different objects.
 | 10. Transportability | Calibration path and matched-endpoint results proved | Closed calibration loops alone do not prove physical traceability |
 
 “Proved” here describes the candidate derivations, not an independent-audit
-clearance. No theorem proves a universal physical source potential or uniquely
-selects the programme's institutional sign semantics.
+clearance. No theorem proves a universal physical source potential. Any
+institutional interpretation of a sign belongs to a separate later layer that
+uses already-defined EBU values; no theorem here selects that interpretation,
+and it does not alter the physical EBU value.
 
 ### 16.2 Explicit adverse cases
 
