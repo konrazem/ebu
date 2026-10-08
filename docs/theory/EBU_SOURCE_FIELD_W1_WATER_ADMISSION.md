@@ -132,8 +132,8 @@ tested**, not an established universal sign theorem of the foundation. The
 baseline protects `V` and its physical identification, not the historical word
 “burden.” A failed whole-action sign test therefore refuses the selected
 complete-action candidate for that requirement; it does not refuse every scoped
-water factor or authorize rewriting the equations. The programme-level choice
-of where the sign requirement applies is recorded, not made, in §17.1.
+water factor or authorize rewriting the equations. Which quantity each sign
+statement in this report concerns is made explicit in §17.1.
 
 ## 3. One prospectively bounded candidate and action family
 
@@ -589,10 +589,15 @@ are not contradictory: they refer to different physical quantities/boundaries.
 The canonical comparison also has the fixed-temperature assumptions of §6.1;
 it is not an independently additive part of the exact finite-bath result.
 
-The programme must separately specify whether its sign requirement applies to
-**(a) source-factor orientation, (b) total registered-action settlement, or
-(c) both**. This repair does not choose a new programme policy. It preserves
-the failed whole-action test while leaving scoped-factor certification open.
+The complete registered action retains one unified endpoint value under the
+selected joint potential. The scoped water coordinate and the complete action
+may have different signs because they are different physical quantities with
+different boundaries. Any statement about the sign of either must refer
+explicitly to that quantity and its declared physical comparison. No
+alternative EBU valuation regime, and no programme-level choice between source
+orientation, total-action orientation or both, is introduced here. This repair
+preserves the failed whole-action test while leaving scoped-factor
+certification open.
 
 ## 9. Integrability, comparison walks, and physical routes
 
@@ -1091,15 +1096,22 @@ No such replacement, sign reversal, root amendment or authority change is
 undertaken here. This is a bounded refusal of the selected complete-action
 potential for the requested signs, not a refusal of all scoped water factors.
 
-### 17.1 Human scientific decision required
+### 17.1 Which quantity each sign statement is about
 
-**HUMAN SCIENTIFIC DECISION REQUIRED:** Specify whether depletion-negative /
-restoration-positive semantics are required for the **total registered action**,
-for the **scoped source factor**, or for **both**.
+Every sign statement in this report names the quantity it concerns. The
+water-only contrast and the complete registered action are different physical
+quantities over different boundaries, so they may carry different signs without
+contradiction. The refusal recorded above is a statement about the **complete
+registered action** under the selected joint potential. The favorable
+depletion-negative / restoration-positive orientation is a statement about the
+**scoped water coordinate** on its declared restricted domain. Neither displaces
+the other, and the complete action retains one unified endpoint value.
 
-The present W1 report does not choose or amend that programme-level rule.
-Recording this question neither changes existing authority nor certifies a
-factor settlement. It does not prevent completion of this documentary repair.
+No alternative EBU valuation regime, and no programme-level choice between
+source orientation, total-action orientation or both, is introduced or required
+here. A later claim about either quantity must name that quantity and its
+declared physical comparison, and stands or falls on its own evidence. Stating
+this neither changes existing authority nor certifies a factor settlement.
 
 ## 18. Consequences for E1a and the apple chain
 
@@ -1149,7 +1161,7 @@ calibration composition. This is the interface for the **SOURCE-FACTOR
 EMBEDDING / ORIENTATION + RECURSIVE FIELD UNIFICATION THEOREM**.
 
 This handoff is non-authoritative. That theorem is not begun here; the repair
-neither chooses the programme sign rule nor designs a new source candidate.
+introduces no programme sign rule and designs no new source candidate.
 
 ## 19. Validation, coverage, and final disposition
 
@@ -1190,7 +1202,7 @@ verdict; **independent re-audit of this wording repair remains pending**.
 | Dissipation warning and current semantics | §§1, 8, 12, 17 |
 | E1a and apple-chain implications | §18 |
 | Narrow verdict, factor/joint/settlement distinction | §§1, 6.3, 8.4, 17 |
-| Partial thermal-root challenge and human sign decision | §§6.2, 17.1, 18.1 |
+| Partial thermal-root challenge and the scope of each sign statement | §§6.2, 17.1, 18.1 |
 | Non-authoritative next theorem interface | §18.3 |
 
 **PRIMARY RESULT: B — THE SELECTED COMPLETE W1 WATER–DRIVE–BATH ACTION
