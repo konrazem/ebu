@@ -1,7 +1,7 @@
 {
-  "document_kind": "CANONICAL PHYSICAL EBU FOUNDATION - FROZEN",
-  "status": "frozen",
-  "frozen": true,
+  "document_kind": "CANONICAL PHYSICAL EBU FOUNDATION - AMENDED, NOT YET RE-FROZEN OR PUBLISHED",
+  "status": "amended_text_audited_not_yet_refrozen_or_published",
+  "frozen": false,
   "committed": false,
   "pushed": false,
   "build_date": "2026-09-24",
@@ -94,7 +94,7 @@
     "historical_audit_reports_modified": false,
     "new_physical_coordinates_introduced": false
   },
-  "next_step": "none - canonical physical foundation frozen and published",
+  "next_step": "focused independent re-audit of this metadata repair and the versioned authority chain; if cleared, a separate freeze/publication gate for the amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395",
   "canonical_file_audit_corrections": {
     "disposition_received": "INDEPENDENT CANONICAL FILE AUDIT CONDITIONAL PASS",
     "scope": "presentation/documentation only; no equation, hierarchy, layer assignment or historical record changed",
@@ -123,6 +123,6 @@
     "canonical_document_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
     "byte_count": 49098,
     "scientific_content_changed_at_freeze": false,
-    "note": "Freeze records metadata only. The canonical markdown approved by the final narrow audit is committed byte-for-byte unaltered."
+    "note": "HISTORICAL: this block records the 2026-09-24 freeze of the superseded parent identity 6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507 (49098 bytes), now recorded under canonical_document.supersedes. It does not certify the current amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395. Original note at that freeze: 'Freeze records metadata only. The canonical markdown approved by the final narrow audit is committed byte-for-byte unaltered.'"
   }
 }
