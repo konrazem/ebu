@@ -1,7 +1,7 @@
 {
-  "document_kind": "CANONICAL PHYSICAL EBU FOUNDATION - AMENDED, NOT YET RE-FROZEN OR PUBLISHED",
-  "status": "amended_text_audited_not_yet_refrozen_or_published",
-  "frozen": false,
+  "document_kind": "CANONICAL PHYSICAL EBU FOUNDATION - FROZEN",
+  "status": "frozen",
+  "frozen": true,
   "committed": false,
   "pushed": false,
   "build_date": "2026-09-24",
@@ -94,7 +94,7 @@
     "historical_audit_reports_modified": false,
     "new_physical_coordinates_introduced": false
   },
-  "next_step": "focused independent re-audit of this metadata repair and the versioned authority chain; if cleared, a separate freeze/publication gate for the amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395",
+  "next_step": "independent audit of this local freeze of the amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395; external publication of that identity is not performed and requires separate authorization; baseline reconciliation to the amended identity remains outstanding as a separate task; the E1a V4 historical foundation pin is unchanged and any rebase is a separate task",
   "canonical_file_audit_corrections": {
     "disposition_received": "INDEPENDENT CANONICAL FILE AUDIT CONDITIONAL PASS",
     "scope": "presentation/documentation only; no equation, hierarchy, layer assignment or historical record changed",
@@ -118,11 +118,19 @@
     }
   },
   "freeze": {
-    "freeze_basis": "FINAL NARROW AUDIT PASS",
-    "freeze_date": "2026-09-24",
-    "canonical_document_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
-    "byte_count": 49098,
+    "freeze_basis": "FOCUSED METADATA RE-AUDIT: READY FOR SEPARATE FREEZE/PUBLICATION GATE",
+    "freeze_date": "2026-10-09",
+    "canonical_document_sha256": "ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395",
+    "byte_count": 51470,
     "scientific_content_changed_at_freeze": false,
-    "note": "HISTORICAL: this block records the 2026-09-24 freeze of the superseded parent identity 6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507 (49098 bytes), now recorded under canonical_document.supersedes. It does not certify the current amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395. Original note at that freeze: 'Freeze records metadata only. The canonical markdown approved by the final narrow audit is committed byte-for-byte unaltered.'"
+    "note": "Local freeze of the amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395 (51470 bytes). Freeze records metadata only. The canonical markdown committed at 2741b8bdc0f67f82169240c7938ad2bc613af10d, including the independently cleared section 2.1 PHYSICAL ADMISSION AND COMMON DENOMINATION, is unaltered. Authority chain: promotion authority 5843e3bc70b402581bd3fd4ee2200a329d525ef9, section 2.1 amendment 2741b8bdc0f67f82169240c7938ad2bc613af10d, metadata repair b4a00dfa10b40c745e4dcabdc925cb001bd2b3cb, verified integrated coordinate fc5b2b2466789bd8d6baf067693115594df00940. The freeze basis and the clearance of section 2.1 are dispositions supplied by the commissioning brief; no audit artifact for them is committed. Nothing outside these bytes becomes foundation through this freeze. Not published: no publication branch was pushed. The 2026-09-24 freeze of the superseded parent 6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507 is preserved value-identical under supersedes.",
+    "supersedes": {
+      "freeze_basis": "FINAL NARROW AUDIT PASS",
+      "freeze_date": "2026-09-24",
+      "canonical_document_sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+      "byte_count": 49098,
+      "scientific_content_changed_at_freeze": false,
+      "note": "HISTORICAL: this block records the 2026-09-24 freeze of the superseded parent identity 6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507 (49098 bytes), now recorded under canonical_document.supersedes. It does not certify the current amended identity ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395. Original note at that freeze: 'Freeze records metadata only. The canonical markdown approved by the final narrow audit is committed byte-for-byte unaltered.'"
+    }
   }
 }
