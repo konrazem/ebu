@@ -21,16 +21,21 @@
   },
   "canonical_document": {
     "path": "docs/physical_foundation/EBU_PHYSICAL_FOUNDATION_CANONICAL.md",
-    "sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
-    "byte_count": 49098,
+    "sha256": "ba0077ce8260c1e0b8c8f1b4665fafc0ea6b9d12d2671a5811c35c22c4112395",
+    "byte_count": 51470,
     "supersedes": {
-      "sha256": "aa664afdaece50d03eca26c2b5bc908bbedd6d1c4b7ebecd66f257cb9c778268",
-      "byte_count": 49003,
-      "reason": "final one-sentence presentation correction to the valued-sink explanation from the narrow independent recheck",
+      "sha256": "6d9aed2440196f7f85d9651649b7168574f365adf8057b8d4ae2709b03f01507",
+      "byte_count": 49098,
+      "reason": "versioned post-freeze amendment of the frozen version recorded under freeze: one inserted subordinate section 2.1 PHYSICAL ADMISSION AND COMMON DENOMINATION, byte-identical to the proposed block in section 12 of docs/theory/EBU_FOUNDATION_CANDIDATE_PROMOTION_ANALYSIS.md (sha256 e47f77714b5068db024db705648f8fb20a0d592193f9197907267e69eb8c790e) at commit 5843e3bc70b402581bd3fd4ee2200a329d525ef9, independently cleared exactly as written; zero replacements, zero deletions, zero equation changes, zero main-section renumbering; pending independent re-audit of this amendment",
       "supersedes": {
-        "sha256": "7d3a444c8ec50fbc4cac2fc7fc379ef6a01cb4680aef737b96d6057202e4f660",
-        "byte_count": 44590,
-        "reason": "six required corrections from the independent canonical file audit"
+        "sha256": "aa664afdaece50d03eca26c2b5bc908bbedd6d1c4b7ebecd66f257cb9c778268",
+        "byte_count": 49003,
+        "reason": "final one-sentence presentation correction to the valued-sink explanation from the narrow independent recheck",
+        "supersedes": {
+          "sha256": "7d3a444c8ec50fbc4cac2fc7fc379ef6a01cb4680aef737b96d6057202e4f660",
+          "byte_count": 44590,
+          "reason": "six required corrections from the independent canonical file audit"
+        }
       }
     }
   },

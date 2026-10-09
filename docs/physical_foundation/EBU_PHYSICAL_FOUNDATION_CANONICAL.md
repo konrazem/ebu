@@ -89,6 +89,46 @@ V(x;θ) = ½ Σ_i ((x_i − x*_i)/σ_i)²
 Likewise `E := V_pre − V_post` is a **declared definition of the measured
 quantity**. Conservation alone does not force it.
 
+## 2.1 PHYSICAL ADMISSION AND COMMON DENOMINATION
+
+These conditions govern claims of physical denomination and composition.
+They do not change the conditional mathematics for a declared `V`, establish
+its physical origin, or select a particular root realization, physical scale
+or ensemble.
+
+**Common denomination.** Historical or simultaneous contributions may be
+combined as one physical scalar EBU account only after justified conversion
+into its declared common denomination. The conversion must preserve physical
+quantity meaning and orientation on the stated state, context and comparison
+domains, through quantity-kind compatibility or an independently justified
+physical bridge. Dimensionlessness alone is insufficient.
+
+**Noncommensurability refusal.** Where a relative denomination is not
+justified, retain tagged components by compatible denomination rather than
+claiming an unqualified physical scalar EBU total. This is an admission and
+aggregation boundary, not a new settlement definition or an affordability
+condition. Historical entries remain as recorded. Institutional weightings
+must be identified as institutional scores and must not modify `V`, `μ` or
+`E` backwards.
+
+**Joint physical composition.** Common denomination does not establish a
+joint potential. Forming one joint physical action value from source
+contributions requires one physically justified, single-valued `V` on the
+declared complete valued state, boundary and context, consistent with any
+proposed marginals. Every source, interaction and boundary contribution
+required by that admitted valuation must be included once. Decomposition creates neither additional EBU nor a
+unique actor allocation; the factor and accounting rules of §§13–18 apply.
+
+**Root class and calibration consistency.** One declared denomination may
+have many physically compatible realizations. At the level of exact,
+invertible, physically justified representation relations on a declared
+common comparison domain, these realizations form its root class.
+Conversions of the same physical comparison must compose consistently and
+be independent of calibration path. Algebraic closure does not establish
+independent physical identification. Empirical qualification must retain
+joint uncertainty and validity domains; pairwise agreement within tolerance
+does not by itself define an equivalence relation.
+
 ---
 
 # 3. CANONICAL GENERAL EBU EQUATIONS
