@@ -1,0 +1,88 @@
+{
+  "sources": [
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_cells_study_book_2026-11-10/EBU_CELLS_A_STUDY_BOOK.md",
+      "original_sha256": "07895d631c58fdf80db9ffeb471d091f7bdec56c513fa4102f6b13b969258a8b",
+      "destination": "docs/books/EBU_ECONOMIC_CELLS.md",
+      "copied_sha256": "4ac10d4cf7703793aa28953c084100ec6270ddaf7b7e29ed4c803664dbaae2ac",
+      "changes": "Local Markdown destinations and final-newline formatting only; prose and mathematics retained."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/figures/payment-path.png",
+      "original_sha256": "145a90bac72b6e7221a0a029b567f24fcf00e4856ed6ba69f45ae4bd5256abd6",
+      "destination": "docs/books/figures/payment-path.png"
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/figures/four-topologies.png",
+      "original_sha256": "e1a1ad40f9dbecaa74227333ef23a34d97aa949ef868596f398d0879e08a0328",
+      "destination": "docs/books/figures/four-topologies.png"
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/figures/split-payment-access.png",
+      "original_sha256": "ee7854491ca2edc1e063b5ecb9858a8e549517e2f03a8756dad3102284dc0f1a",
+      "destination": "docs/books/figures/split-payment-access.png"
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/EBU_TOKEN_TRANSFER_GRAPH_THEORY.md",
+      "original_sha256": "e998259a2b4940666de1b50566c00ac2531f058f0afc24b19deba4109bf6e724",
+      "destination": "docs/books/EBU_BETWEEN_ECONOMIC_CELLS.md",
+      "copied_sha256": "1205b02bd25a44776ead3abeb1450712d819dea3cbd430adbb0eef6565566ab6",
+      "changes": "Local Markdown destinations and final-newline formatting only; prose and mathematics retained."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_cells_growth_limits_and_localism_book_2026-11-12/EBU_ECONOMIC_CELLS_GROWTH_LIMITS_AND_LOCALISM.md",
+      "original_sha256": "69d8f11f87532fb51adebd22c30d275e1c0b90e3b30fd5fdeeaa2fa8688628ad",
+      "destination": "docs/books/EBU_REAL_LIMITS.md",
+      "copied_sha256": "effa47b0f509856eee6bb35f8106d9e87bf42044acf88feee7dbbb6c2ceac041",
+      "changes": "Local Markdown destinations and final-newline formatting only; prose and mathematics retained."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/cell_split_merge_explained_2026-11-09/EBU_CELL_SPLIT_AND_MERGE_EXPLAINED.md",
+      "original_sha256": "4d2b4cd18b826b5ca8f8c490274ba020ef40e7292b355fe9a59ebe8e26f3f081",
+      "archive_name": "reference-1-EBU_CELL_SPLIT_AND_MERGE_EXPLAINED.md",
+      "role": "Historical citation only; content excluded from active framework."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/astra3_reserve_organisation_field_2026-11-09/EBU_RESERVE_ORGANISATION_FIELD_AND_TOKEN_INCENTIVES_v1.md",
+      "original_sha256": "9c7b8f7923063c8c2bdf029f19ee27867bae52a0482f5c42ee224bea56784617",
+      "archive_name": "reference-2-EBU_RESERVE_ORGANISATION_FIELD_AND_TOKEN_INCENTIVES_v1.md",
+      "role": "Historical citation only; content excluded from active framework."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/consistent_interacting_ph_reserve_2026-11-04/EBU_CONSISTENT_INTERACTING_PH_RESERVE_AND_LOCAL_OPTIMALITY_v1.md",
+      "original_sha256": "d7a496e311c143ef06f00e6cac8667d9a3d24a3ebfd427f1c61071b254960c4e",
+      "archive_name": "reference-3-EBU_CONSISTENT_INTERACTING_PH_RESERVE_AND_LOCAL_OPTIMALITY_v1.md",
+      "role": "Historical citation only; content excluded from active framework."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/audits/EBU_INTERACTING_RESERVE_LOCAL_OPTIMALITY_INDEPENDENT_AUDIT_2026-11-04.md",
+      "original_sha256": "806818722a2f8d457719d8e9ee3918de7d3447613be981136f675bdd09da2c95",
+      "archive_name": "reference-4-EBU_INTERACTING_RESERVE_LOCAL_OPTIMALITY_INDEPENDENT_AUDIT_2026-11-04.md",
+      "role": "Historical citation only; content excluded from active framework."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/one_source_transferable_ebu_reconciliation_2026-11-02/EBU_ONE_SOURCE_TRANSFERABLE_EBU_RECONCILIATION_v1.md",
+      "original_sha256": "120644eff54972ca28c191982c37addfda5cfbf3cccfbf3ea42120216428add3",
+      "archive_name": "reference-5-EBU_ONE_SOURCE_TRANSFERABLE_EBU_RECONCILIATION_v1.md",
+      "role": "Historical citation only; content excluded from active framework."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/figures/payment-path.svg",
+      "original_sha256": "52bc0aa89386ca72b9e064545f7d7731b8f815288885d1c5f4c45b52b88d80e0",
+      "destination": "docs/books/figures/payment-path.svg",
+      "role": "Editable original of a retained figure."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/figures/four-topologies.svg",
+      "original_sha256": "59491c0b27b5e9d07f715c73b1682a38d554049394169d963ec114c203544550",
+      "destination": "docs/books/figures/four-topologies.svg",
+      "role": "Editable original of a retained figure."
+    },
+    {
+      "source": "/Users/konrad.grzyb/.codex/.chatgpt-projects/g-p-6a75bb54e06881919e51c9696205e4d4/reports/ebu_token_transfer_graph_2026-11-10/figures/split-payment-access.svg",
+      "original_sha256": "0da6ec2fa391fe43abdb46d1dd066020a6fb6c8afe3eba570d5b8d9dacca2ccc",
+      "destination": "docs/books/figures/split-payment-access.svg",
+      "role": "Editable original of a retained figure."
+    }
+  ]
+}

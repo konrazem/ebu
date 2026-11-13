@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="550" viewBox="0 0 1100 550" role="img" aria-labelledby="title desc">
+  <title id="title">A proportional cell split also needs a payment-access check</title>
+  <desc id="desc">Before the split, C has 20 EBU and can pay X. After C splits proportionally, A has 0 EBU and the external payment connection to X, while B has 20 EBU. A two-way internal payment connection lets B send funds to A, then A pays X. Total EBU and total field are preserved.</desc>
+  <defs><marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#2563a6"/></marker></defs>
+  <rect width="1100" height="550" fill="#fff"/>
+  <style>text{font-family:Arial,sans-serif;fill:#172b40}.box{fill:#eef5fb;stroke:#7e9bb7;stroke-width:2}.edge{stroke:#2563a6;stroke-width:3;fill:none;marker-end:url(#arr)}.main{font-size:24px;font-weight:bold}.small{font-size:20px}</style>
+  <text x="35" y="47" font-size="28" font-weight="bold">Preserve the field—and check access to the same EBU</text>
+  <text x="35" y="85" class="small">This example uses a proportional split. Arrows carry existing tokens only.</text>
+  <text x="35" y="140" class="main">Before</text>
+  <rect class="box" x="55" y="200" width="150" height="100" rx="10"/><rect class="box" x="325" y="200" width="125" height="100" rx="10"/>
+  <text x="130" y="239" text-anchor="middle" class="main">C</text><text x="130" y="273" text-anchor="middle" class="small">20 EBU</text>
+  <text x="388" y="259" text-anchor="middle" class="main">X</text><path class="edge" d="M220 250H310"/><text x="266" y="225" text-anchor="middle" class="small">may pay</text>
+  <path d="M500 125V425" stroke="#d6e1ec"/>
+  <text x="545" y="140" class="main">After C becomes A and B</text>
+  <rect class="box" x="565" y="180" width="160" height="100" rx="10"/><rect class="box" x="565" y="355" width="160" height="90" rx="10"/><rect class="box" x="920" y="180" width="125" height="100" rx="10"/>
+  <text x="645" y="219" text-anchor="middle" class="main">A</text><text x="645" y="253" text-anchor="middle" class="small">0 EBU initially</text>
+  <text x="645" y="391" text-anchor="middle" class="main">B</text><text x="645" y="425" text-anchor="middle" class="small">20 EBU</text>
+  <text x="983" y="239" text-anchor="middle" class="main">X</text>
+  <path class="edge" d="M645 345V290" marker-start="url(#arr)"/>
+  <text x="748" y="325" class="small">B can fund A</text>
+  <path class="edge" d="M740 230H905"/><text x="822" y="205" text-anchor="middle" class="small">A can then pay X</text>
+  <text x="550" y="485" text-anchor="middle" font-size="23">Field(A) + Field(B) = Field(C) · Holdings(A) + Holdings(B) = 20 EBU</text>
+  <text x="550" y="523" text-anchor="middle" class="small">Without the A–B payment path, the original external payment may be blocked.</text>
+</svg>
